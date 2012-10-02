@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>About MIDI Player</title>
+    <base target="_top" />
+    <link href="../../styleSheet.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        a:link
+        {
+            text-decoration: none;
+        }
+        a:hover
+        {
+            text-decoration: underline;
+        }
+        a:active
+        {
+            text-decoration: underline;
+        }
+        a:visited
+        {
+            text-decoration: none;
+        }
+        hr.localStyle
+        {
+            border-style: none;
+            height: 1px;
+            background-color: #1010C6;
+            margin-top: 14px;
+            margin-bottom: 10px;
+        }
+        .code
+        {
+            font-family: 'Courier New' , Courier, monospace;
+            color: #000000;
+        }
+        .attcon
+        {
+            color: #0000AA;
+        }
+    </style>
+    <script src="../../javascript.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        trap();
+    </script>
+</head>
+<body style="width: 600px">
+    <div>
+        <p class="header1">
+            Assistant Performer (web version)</p>
+        <p class="boldHeader2">
+            Summary</p>
+        The aim of this project is to give a single performer maximum control over the performance
+        of a music score displayed in a browser.<br />
+        The project is written in HTML5 and Javascript. Webkit browsers (Chrome and Safari)
+        are supported. Other browsers may work too, but this is not guaranteed.<br />
+        MIDI devices are used for input and output.<br />
+        <br />
+        The idea for a <a href="http://james-ingram-act-two.de/open-source/assistantPerformer/assistantPerformer.html">
+            web version of the Assistant Performer</a> arose while working on an earlier
+        <a href="../../moritz2/assistantPerformer/assistantPerformer.html">desktop application</a>.
+        Unlike its predecessor, the web application can use an advanced set of options and
+        tools to control the playback of the displayed score. Building on these capabilities,
+        users will eventually be able to play scores live, in their own time, using their
+        own MIDI input and output devices.<br />
+        A simple application would be like ordinary music-minus-one played in private, but
+        with the live performer in control of the timing (think Mozart’s Clarinet concerto).
+        Other applications include playing specially written scores, possibly with other
+        players, in live concerts; controlling robot orchestras, etc.<br />
+        <br />
+        This project is part of an effort to re-enable writing as a means of creating large-scale
+        structures in music. Music notation collapsed in the 20th century, with catastrophic
+        results...<br />
+        <br />
+        <p class="boldHeader2">
+            Some details</p>
+        The MIDI input and output devices can be selected from those attached to the user&rsquo;s
+        computer. At the moment, this is done using the <a href="http://jazz-soft.net/">Jazz</a>
+        plugin and <a href="https://github.com/abudaan/JazzMIDIBridge">JazzMIDIBridge</a>
+        wrapper code, so <span style="color: #FF0000">the Jazz plugin currently has to be installed
+            before using this application</span>. But this restriction should eventually
+        be removed when browsers implement the standard MIDI API for browsers being developed
+        by the <a href="http://www.w3.org/2011/audio/">W3C Audio Group</a> (October 2012).<br />
+        Note that the live performer&rsquo;s control over the score need not be just via
+        MIDI note-on and note-off messages. The use of continuous controllers is also forseen.<br />
+        <br />
+        The score is in a <a href="http://james-ingram-act-two.de/open-source/svgScoreExtensions.html">
+            hybrid SVG-MIDI format</a>. Such scores could, in principle, be loaded from
+        anywhere on the web &mdash; if they existed anywhere else but on this
+        site.<br />
+        The development of authoring software for such scores is a separate issue, which
+        will doubtless be the subject of a future project here. At the moment (October 2012),
+        I am using my <a href="../../moritz2/assistantComposer/assistantComposer.html">
+            Assistant Composer</a> software, but it would be perfectly feasible for the
+        standard music notation editors (Finale, Sibelius, capella etc.) to export in this
+        format. Standard music notation is a superset of the required notation. The Assistant
+        Performer simply ignores annotations such as performance instructons or tuplet symbols.
+        The Assistant Composer already creates such scores on the basis of abstract MIDI
+        information, so automatic transcription of Standard MIDI files is also a distinct
+        possibility.<br />
+        <br />
+        <p class="boldHeader2">
+            Acknowlegements</p>
+        <ul class="ulStandard">
+            <li>I would like to thank the authors of Jazz and JazzMIDIBridge for being able to use
+                their software. Wonderful stuff! Without them, this project would not have got off
+                the ground. </li>
+            <li>This <a href="http://www.cursor.cc/">beautiful cursor editor</a> deserves a mention.
+                I used it to create the Assistant Performer&rsquo;s "Set Start Marker" and "Set
+                End Marker" tools. Unfortunately, (most?) browsers currently insist that a cursor&rsquo;s
+                hot-spot has to be at the top left corner of the cursor, so my cursors turned out
+                very simply. But that may change in future. </li>
+            <li>Last but by no means least, I would like to thank the public W3C Audio List. I'm
+                often a bit out of my depth there, but have learned a lot trying to understand what
+                they are doing. Many thanks for your patience! </li>
+        </ul>
+        <br />
+    </div>
+    <script type="text/javascript">        signature("Oktober 2012");</script>
+</body>
+</html>

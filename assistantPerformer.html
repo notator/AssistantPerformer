@@ -1,0 +1,445 @@
+﻿
+<!DOCTYPE html />
+<html
+	lang="en"
+	xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Assistant Performer</title>
+		<link
+			href="http://james-ingram-act-two.de/fontsStyleSheet.css"
+			media="all"
+			rel="stylesheet"
+			type="text/css" />		
+        <link
+			href="http://james-ingram-act-two.de/styleSheet.css"
+			media="all"
+			rel="stylesheet"
+			type="text/css" />
+        <link
+			href="assistantPerformerStyleSheet.css"
+			media="all"
+			rel="stylesheet"
+			type="text/css" />
+
+        <!-- Javascript files are included at the end of the body element -->
+
+	</head>
+	<body
+		style="text-align:center">
+		<div id="centredReferenceDiv" class="centredReference">
+            <p class="header1">Assistant Performer&nbsp;
+                <span style="color: #FF0000; font-size: 13px">(work in progress)</span></p>
+            <hr class="hrHeight1" />
+            <div style="text-align: center">
+               <a  
+			        id="aboutAssistantPerformerLink"
+			        href="http://james-ingram-act-two.de/open-source/assistantPerformer/aboutAssistantPerformer.html">About this version of the Assistant Performer</a>
+    			<div id="options" style="font-family: Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif; 
+                    font-size: 12px;
+                    background-color: #F6F6F6;
+                    border: 1px solid #008000;
+                    margin-top: 10px;
+                    margin-bottom:0px;
+                    margin-left:140;
+                    margin-right:140;
+                    padding: 10;
+                    text-align:center;" >
+                    <div style="font-size: 14px;">
+                        options
+                    </div>
+                    <div class="helpColour ">
+                        MIDI devices will only be recognized if they are connected and switched on before loading this page.
+                    </div>
+                    <div style="margin-top:6px">
+                        <select id="midiInputDeviceSelector"
+					        name="midiInputDeviceSelector"
+                            class="deviceSelector" onchange="JI_NAMESPACE.apControls.doControl('midiInputDeviceSelector')"
+                            disabled="disabled">
+                        </select>
+                        <select id="scoreSelector" name="scoreSelector"
+                            class="deviceSelector" onchange="JI_NAMESPACE.apControls.doControl('scoreSelector')">
+                            <option>choose a score</option>
+                            <option>Study 2c3.1</option>
+                            <option>Study 3 sketch 1</option>
+                        </select>
+                        <select id="midiOutputDeviceSelector"
+					        name="midiOutputDeviceSelector"
+                            class="deviceSelector" onchange="JI_NAMESPACE.apControls.doControl('midiOutputDeviceSelector')">
+                        </select>
+
+                    </div>                        
+                    <div id="performersOptions" class="optionsPanel">
+                        Performer's options:
+                        <div class="helpColour narrowLineHeight">
+                            If the MIDI input device is connected and active, the following incoming information will override the
+                            corresponding values stored in the performer&rsquo;s channel in the score:
+                        </div>
+                        <div style="margin-left: 60px; margin-top: 2px; display: table;">
+                        <div style="display:table-row;">
+                            <div style="display: table-cell;"> 
+                                Track:
+                                <div style="margin-left: 3px">
+                                    <select id="trackSelector" name="trackSelector" style="width:40px;" disabled="disabled">
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="display: table-cell; padding-left:40px;">
+                                NoteOn:
+                                <div style="margin-left: 20px">
+                                    <div>
+                                        <input type="checkbox" name="velocityOptionCheckbox" value="performer"  id="velocityOptionCheckbox"
+                                            checked="checked" class="standardCheckBox14px" disabled="disabled"/> 
+                                        <label id="velocityCheckboxLabel" for="velocityOptionCheckbox" style="vertical-align:middle"> 
+                                                velocity (dynamic)
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <input type="checkbox" name="pitchOptionCheckbox" value="silent"  id="pitchOptionCheckbox"
+                                            checked="checked" class="standardCheckBox14px" disabled="disabled"/> 
+                                        <label id="pitchOptionCheckboxLabel" for="pitchOptionCheckbox" style="vertical-align:middle" >
+                                                pitch
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: table-cell; padding-left:40px;">
+                            Continuous controllers:
+                            <div style="margin-left: 20px">
+                                <div >
+                                    <input type="checkbox" name="expressionOptionCheckbox" value="performer"  id="expressionOptionCheckbox"
+                                        checked="checked" class="standardCheckBox14px" disabled="disabled"/> 
+                                    <label id="expressionOptionCheckboxLabel" for="expressionOptionCheckbox" style="vertical-align:middle"> 
+                                            expression
+                                    </label>
+                                </div>
+                                <div>
+                                    <input type="checkbox" name="modulationWheelOptionCheckbox" value="performer"  id="modulationWheelOptionCheckbox"
+                                        checked="checked" class="standardCheckBox14px" disabled="disabled"/> 
+                                    <label id="modulationWheelOptionCheckboxLabel" for="modulationWheelOptionCheckbox" style="vertical-align:middle"> 
+                                            modulationWheel
+                                    </label>
+                                </div>
+                                <div>
+                                    <input type="checkbox" name="panOptionCheckbox" value="performer"  id="panOptionCheckbox"
+                                            checked="checked" class="standardCheckBox14px" disabled="disabled"/> 
+                                    <label id="panOptionCheckboxLabel" for="panOptionCheckbox" style="vertical-align:middle"> 
+                                            pan
+                                    </label>
+                                </div>
+                                <div>
+                                    <input type="checkbox" name="pitchWheelOptionCheckbox" value="performer"  id="pitchWheelOptionCheckbox"
+                                            checked="checked" class="standardCheckBox14px" disabled="disabled"/> 
+                                    <label id="pitchWheelOptionCheckboxLabel" for="pitchWheelOptionCheckbox" 
+                                        style="vertical-align:middle"> 
+                                            pitchWheel
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                        </div>
+                    </div>      
+                    <div id="assistantsDurationOptions" class="optionsPanel">
+                        Assistant's duration option:
+                        <div id="helpText" class="helpColour">
+                            This option applies while the assistant is playing alone, with or without a live performer.
+                        </div>
+                        <div style="margin-left:20px;">
+                            <div  class="narrowLineHeight" >
+                                <input type="radio" name="durationOptions" value="V1" id="assistantUsesAbsoluteDurationsRadioButton" checked="checked" />
+                                <label id="assistantUsesAbsoluteDurationsRadioButtonLabel" for="assistantUsesAbsoluteDurationsRadioButton">
+                                    Absolute Symbols: (Speed option) The assistant's durations will be those stored<br /> 
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in the score, divided by the following floating point value: <br />
+                                </label>
+                            </div>
+                            <div style="margin-left: 45px; padding-top: 4px;">
+                                <input type="text" id="assistantsSpeedInputText" value="100"                          
+                                    style="margin: 0px 0px 3px 0px; width: 40px; vertical-align: middle; font-weight: bold;">
+                                <label id="speedLabel" for="assistantsSpeedInputText">
+                                    % (must be greater than 0 &mdash; higher values lead to higher speed)
+                                </label>
+                            </div>
+                            <div class="narrowLineHeight">
+                                <input type="radio" name="durationOptions" value="performed" id="assistantUsesRelativeDurationsRadioButton" disabled="disabled"/>
+                                <label id="assistantUsesRelativeDurationsRadioButtonLabel" for="assistantUsesRelativeDurationsRadioButton">
+                                    Relative Symbols: The assistant's moment durations will be those stored in the <br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;score multiplied by the relation between the written and performed durations of<br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the performer's previous moment.
+                                </label> 
+                            </div>
+                        </div>
+                    </div>                     
+                    <input id="startRuntimeButton" type="button" value="Start"
+                        onclick="JI_NAMESPACE.apControls.beginRuntime()"  disabled="disabled"               
+                        style="margin-top:8px; font-size: 14px; width: 100px; height: 24px;"/>    
+                </div>
+
+
+                <div id="controlPanel" style="padding:0px; margin:0px; width:1042px; height:41; position: absolute; top: 540px;">
+
+<svg xmlns="http://www.w3.org/2000/svg" width="170" height="36" style="position: absolute; left: 428px; top: 5px; ">
+    <g id="performanceButtons" transform="translate(0.5, 0.5)">
+        <rect id="performanceButtonsFrame" x="0" y="0" width="169" height="30" stroke="#008000" stroke-width="1" fill="#F5FFF5" />
+        <rect id="performanceButtonsDisabled" x="0" y="0" width="169" height="30" stroke="white" stroke-width="1" fill="white" opacity="0" />
+
+        <g id="goControl" transform="translate(7,5)"
+        onmouseover="JI_NAMESPACE.apControls.showOverRect('overGoRect', 'goDisabled')"
+        onmouseout="JI_NAMESPACE.apControls.hideOverRect('overGoRect')"
+        onmousedown="JI_NAMESPACE.apControls.doControl('goControl')">
+            <rect id="overGoRect" x="-1.5" y="-1.5" width="23" height="23" stroke="#00CE00" stroke-width="2" opacity="0" />
+            <g id="goUnselected" opacity="1">
+                <rect id="Rect22" x="0" y="0" width="20" height="20" stroke="black" stroke-width="1" fill="white" />
+                <rect id="Rect23" x="1.5" y="1.5" width="17" height="17" stroke="none" stroke-width="1" fill="#EEEEEE" />
+                <path d="M 2 19 L 19 19, 19 2" fill="none" stroke-width="1" stroke="#A5A5A5"/>
+
+                <circle id="goButton" cx="10" cy="10" r="5" fill="#00CE00" opacity="1"/>
+            </g>
+            <g id="pauseUnselected" opacity="0">
+                <rect id="Rect24" x="0" y="0" width="20" height="20" stroke="black" stroke-width="1" fill="white" />
+                <rect id="Rect25" x="1.5" y="1.5" width="17" height="17" stroke="none" stroke-width="1" fill="#EEEEEE" />
+                <path d="M 2 19 L 19 19, 19 2" fill="none" stroke-width="1" stroke="#A5A5A5"/>
+                
+                <line x1="7" y1="5" x2="7" y2="15" stroke="#ED1C24" stroke-width="3"/>
+                <line x1="13" y1="5" x2="13" y2="15" stroke="#ED1C24" stroke-width="3"/>
+            </g>
+            <g id="pauseSelected" opacity="0">
+                <rect id="Rect26" x="0" y="0" width="20" height="20" stroke="black" stroke-width="1" fill="#BBBBBB" />
+                <rect id="Rect27" x="2" y="2" width="16.5" height="16.5" stroke="none" stroke-width="1" fill="#EEEEEE" />
+                <path d="M 2 19 L 19 19, 19 2" fill="none" stroke-width="1" stroke="white"/>
+            
+                <line x1="8" y1="6" x2="8" y2="16" stroke="#ED1C24" stroke-width="3"/>
+                <line x1="14" y1="6" x2="14" y2="16" stroke="#ED1C24" stroke-width="3"/>
+            </g>
+
+            <rect id="goDisabled" x="0" y="0" width="20" height="20" stroke="white" stroke-width="1" fill="white" opacity="0" />
+        </g>
+        
+        <g id="stopControl" transform="translate(34,5)"
+        onmouseover="JI_NAMESPACE.apControls.showOverRect('overStopRect', 'stopControlDisabled')"
+        onmouseout="JI_NAMESPACE.apControls.hideOverRect('overStopRect')"
+        onmousedown="JI_NAMESPACE.apControls.doControl('stopControl')">
+            <rect id="overStopRect" x="-1.5" y="-1.5" width="23" height="23" stroke="#00CE00" stroke-width="2" opacity="0"/>
+
+            <g id="stopControlUnselected" opacity="1">
+                <rect id="Rect16" x="0" y="0" width="20" height="20" stroke="black" stroke-width="1" fill="white" />
+                <rect id="Rect17" x="1.5" y="1.5" width="17" height="17" stroke="none" stroke-width="1" fill="#EEEEEE" />
+                <path d="M 2 19 L 19 19, 19 2" fill="none" stroke-width="1" stroke="#A5A5A5"/>
+                <rect id="Rect20" x="5" y="5" width="10" height="10" fill="#ED1C24" />
+            </g>
+
+            <g id="stopControlSelected" opacity="0">
+                <rect id="Rect18" x="0" y="0" width="20" height="20" stroke="black" stroke-width="1" fill="#BBBBBB" />
+                <rect id="Rect19" x="2" y="2" width="16.5" height="16.5" stroke="none" stroke-width="1" fill="#EEEEEE" />
+                <path d="M 2 19 L 19 19, 19 2" fill="none" stroke-width="1" stroke="white"/>
+                <rect id="Rect21" x="6" y="6" width="10" height="10" fill="#ED1C24" />      
+            </g>
+
+            <rect id="stopControlDisabled" x="0" y="0" width="20" height="20" stroke="white" stroke-width="1" fill="white" opacity="0" />
+            </g>
+ 
+        <g id="setStartControl" transform="translate(61,5)"
+        onmouseover="JI_NAMESPACE.apControls.showOverRect('overSetStartRect', 'setStartControlDisabled')"
+        onmouseout="JI_NAMESPACE.apControls.hideOverRect('overSetStartRect')"
+        onmousedown="JI_NAMESPACE.apControls.doControl('setStartControl')">
+            <rect id="overSetStartRect" x="-1.5" y="-1.5" width="23" height="23" stroke="#00CE00" stroke-width="2" opacity="0"/>
+            <g id="setStartControlUnselected" opacity="1">
+                <rect id="setStartRect" x="0" y="0" width="20" height="20" stroke="black" stroke-width="1" fill="white" />
+                <rect id="Rect2" x="1.5" y="1.5" width="17" height="17" stroke="none" stroke-width="1" fill="#EEEEEE" />
+                <path d="M 2 19 L 19 19, 19 2" fill="none" stroke-width="1" stroke="#A5A5A5"/>
+                <line id="setStartButton" x1="10" y1="4" x2="10" y2="16" stroke="#00CE00" stroke-width="3" />
+            </g>
+            <g id="setStartControlSelected" opacity="0">
+                <rect id="Rect3" x="0" y="0" width="20" height="20" stroke="black" stroke-width="1" fill="#BBBBBB" />
+                <rect id="Rect4" x="2" y="2" width="16.5" height="16.5" stroke="none" stroke-width="1" fill="#EEEEEE" />
+                <path d="M 2 19 L 19 19, 19 2" fill="none" stroke-width="1" stroke="white"/>
+                <line id="Line1" x1="11" y1="5" x2="11" y2="17" stroke="#00CE00" stroke-width="3"/>
+            </g>
+            <rect id="setStartControlDisabled" x="0" y="0" width="20" height="20" stroke="white" stroke-width="1" fill="white" opacity="0" />
+
+        </g>
+ 
+        <g id="setEndControl" transform="translate(88,5)"
+        onmouseover="JI_NAMESPACE.apControls.showOverRect('overSetEndRect', 'setEndControlDisabled')"
+        onmouseout="JI_NAMESPACE.apControls.hideOverRect('overSetEndRect')"
+        onmousedown="JI_NAMESPACE.apControls.doControl('setEndControl')">
+            <rect id="overSetEndRect" x="-1.5" y="-1.5" width="23" height="23" stroke="#00CE00" stroke-width="2" opacity="0" />
+            <g id="setEndControlUnselected" opacity="1">
+                <rect id="Rect1" x="0" y="0" width="20" height="20" stroke="black" stroke-width="1" fill="white" />
+                <rect id="Rect5" x="1.5" y="1.5" width="17" height="17" stroke="none" stroke-width="1" fill="#EEEEEE" />
+                <path d="M 2 19 L 19 19, 19 2" fill="none" stroke-width="1" stroke="#A5A5A5"/>
+                <line id="Line2" x1="10" y1="4" x2="10" y2="16" stroke="#ED1C24" stroke-width="3" />
+            </g>
+            <g id="setEndControlSelected" opacity="0">
+                <rect id="Rect6" x="0" y="0" width="20" height="20" stroke="black" stroke-width="1" fill="#BBBBBB" />
+                <rect id="Rect7" x="2" y="2" width="16.5" height="16.5" stroke="none" stroke-width="1" fill="#EEEEEE" />
+                <path d="M 2 19 L 19 19, 19 2" fill="none" stroke-width="1" stroke="white"/>
+                <line id="Line3" x1="11" y1="5" x2="11" y2="17" stroke="#ED1C24" stroke-width="3"/>
+            </g>
+            <rect id="setEndControlDisabled" x="0" y="0" width="20" height="20" stroke="white" stroke-width="1" fill="white" opacity="0" />
+
+        </g>
+
+        <g id="sendStartToBeginningControl" transform="translate(115,5)"
+        onmouseover="JI_NAMESPACE.apControls.showOverRect('overSendStartToBeginningRect', 'sendStartToBeginningControlDisabled')"
+        onmouseout="JI_NAMESPACE.apControls.hideOverRect('overSendStartToBeginningRect')"
+        onmousedown="JI_NAMESPACE.apControls.doControl('sendStartToBeginningControl')"> 
+            <rect id="overSendStartToBeginningRect" x="-1.5" y="-1.5" width="23" height="23" stroke="#00CE00" stroke-width="2" opacity="0" />
+
+            <g id="sendStartToBeginningControlUnselected" opacity="1">
+                <rect id="Rect10" x="0" y="0" width="20" height="20" stroke="black" stroke-width="1" fill="white" />
+                <rect id="Rect11" x="1.5" y="1.5" width="17" height="17" stroke="none" stroke-width="1" fill="#EEEEEE" />
+                <path d="M 2 19 L 19 19, 19 2" fill="none" stroke-width="1" stroke="#A5A5A5"/>
+                <g id="G2"> 
+                    <line x1="3.8" y1="10" x2="14" y2="10" stroke="black" stroke-width="1.2" stroke-linecap="round"/>                
+                    <line x1="4.2" y1="10" x2="7" y2="7" stroke="black" stroke-width="1.1" stroke-linecap="round"/>
+                    <line x1="4.2" y1="10" x2="7" y2="13" stroke="black" stroke-width="1.1" stroke-linecap="round"/>
+                    <line x1="14" y1="4" x2="14" y2="16" stroke="#00CE00" stroke-width="3"/>
+                </g>
+            </g>
+
+            <g id="sendStartToBeginningControlSelected" opacity="0">
+                <rect id="Rect8" x="0" y="0" width="20" height="20" stroke="black" stroke-width="1" fill="#BBBBBB" />
+                <rect id="Rect9" x="2" y="2" width="16.5" height="16.5" stroke="none" stroke-width="1" fill="#EEEEEE" />
+                <path d="M 2 19 L 19 19, 19 2" fill="none" stroke-width="1" stroke="white"/>
+                <g id="sendStartToBeginningButton"> 
+                    <line x1="4.8" y1="11" x2="15" y2="11" stroke="black" stroke-width="1.2" stroke-linecap="round"/>                
+                    <line x1="5.2" y1="11" x2="8" y2="8" stroke="black" stroke-width="1.1" stroke-linecap="round"/>
+                    <line x1="5.2" y1="11" x2="8" y2="14" stroke="black" stroke-width="1.1" stroke-linecap="round"/>
+                    <line x1="15" y1="5" x2="15" y2="17" stroke="#00CE00" stroke-width="3"/>
+                </g>
+            </g>
+
+            <rect id="sendStartToBeginningControlDisabled" x="0" y="0" width="20" height="20" stroke="white" stroke-width="1" fill="white" opacity="0" />
+
+
+        </g>
+
+        <g id="sendStopToEndControl" transform="translate(142,5)"
+        onmouseover="JI_NAMESPACE.apControls.showOverRect('overSendStopToEndRect', 'sendStopToEndControlDisabled')"
+        onmouseout="JI_NAMESPACE.apControls.hideOverRect('overSendStopToEndRect')"
+        onmousedown="JI_NAMESPACE.apControls.doControl('sendStopToEndControl')">
+            <rect id="overSendStopToEndRect" x="-1.5" y="-1.5" width="23" height="23" stroke="#00CE00" stroke-width="2" opacity="0" />
+
+            <g id="sendStopToEndControlUnselected" opacity="1">
+                <rect id="Rect12" x="0" y="0" width="20" height="20" stroke="black" stroke-width="1" fill="white" />
+                <rect id="Rect13" x="1.5" y="1.5" width="17" height="17" stroke="none" stroke-width="1" fill="#EEEEEE" />
+                <path d="M 2 19 L 19 19, 19 2" fill="none" stroke-width="1" stroke="#A5A5A5"/>
+                <g id="sendStopToEndButton"> 
+                    <line x1="6" y1="10" x2="16.2" y2="10" stroke="black" stroke-width="1.2" stroke-linecap="round"/>                
+                    <line x1="15.8" y1="10" x2="13" y2="7" stroke="black" stroke-width="1.1" stroke-linecap="round"/>
+                    <line x1="15.8" y1="10" x2="13" y2="13" stroke="black" stroke-width="1.1" stroke-linecap="round"/>
+                    <line x1="6" y1="4" x2="6" y2="16" stroke="#ED1C24" stroke-width="3"/>
+                </g>
+            </g>
+
+            <g id="sendStopToEndControlSelected" opacity="0">
+                <rect id="Rect14" x="0" y="0" width="20" height="20" stroke="black" stroke-width="1" fill="#BBBBBB" />
+                <rect id="Rect15" x="2" y="2" width="16.5" height="16.5" stroke="none" stroke-width="1" fill="#EEEEEE" />
+                <path d="M 2 19 L 19 19, 19 2" fill="none" stroke-width="1" stroke="white"/>
+                 <g id="G1"> 
+                    <line x1="7" y1="11" x2="17.2" y2="11" stroke="black" stroke-width="1.2" stroke-linecap="round"/>                
+                    <line x1="16.8" y1="11" x2="14" y2="8" stroke="black" stroke-width="1.1" stroke-linecap="round"/>
+                    <line x1="16.8" y1="11" x2="14" y2="14" stroke="black" stroke-width="1.1" stroke-linecap="round"/>
+                    <line x1="7" y1="5" x2="7" y2="17" stroke="#ED1C24" stroke-width="3"/>
+                </g>
+            </g>
+            
+            <rect id="sendStopToEndControlDisabled" x="0" y="0" width="20" height="20" stroke="white" stroke-width="1" fill="white" opacity="0" />
+            
+        </g>
+
+    </g>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="93" height="36" style="position: absolute; left: 715px; top: 5px; ">
+    <g id="livePerformerOnOff" transform="translate(0.5, 0.5)"
+        onmouseover="JI_NAMESPACE.apControls.showOverRect('overLivePerformerOnOffFrame', 'livePerformerOnOffDisabled')"
+        onmouseout="JI_NAMESPACE.apControls.hideOverRect('overLivePerformerOnOffFrame')"
+        onclick="JI_NAMESPACE.apControls.doControl('livePerformerOnOff')" >
+        <g id="livePerformerOn" opacity="1" >
+            <rect x="0" y="0" width="92" height="30" stroke="#008000" stroke-width="1" fill="#F5FFF5" />
+            <text x="19" y="19" font-size="13" font-family="Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif" fill="#ED1C24" >
+                play live
+            </text>
+        </g>
+        <g id="livePerformerOff" opacity="0" >
+            <rect x="0" y="0" width="92" height="30" stroke="#008000" stroke-width="1" fill="#F5FFF5" />
+            <text x="14" y="19" font-size="13" font-family="Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif" fill="black" >
+                play score
+            </text>
+        </g>        
+        <rect id="overLivePerformerOnOffFrame" x="1.5" y="1.5" width="89" height="27" stroke="#00CE00" fill="none" stroke-width="2" opacity="0" />  
+        <rect id="livePerformerOnOffDisabled" x="0" y="0" width="92" height="30" stroke="white" stroke-width="1" fill="white"  opacity="0"/>
+    </g>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="104" height="36" style="position: absolute; left: 925px; top: 5px;">
+    <g id="gotoOptions" transform="translate(0.5, 0.5)"
+        onmouseover="JI_NAMESPACE.apControls.showOverRect('overGotoOptionsFrame', 'gotoOptionsDisabled')"
+        onmouseout="JI_NAMESPACE.apControls.hideOverRect('overGotoOptionsFrame')"
+        onclick="JI_NAMESPACE.apControls.doControl('gotoOptions')">
+        <rect id="gotoOptionsFrame" x="0" y="0" width="103" height="30" stroke="#008000" stroke-width="1" fill="#F5FFF5" />
+        <rect id="overGotoOptionsFrame" x="1.5" y="1.5" width="100" height="27" stroke="#00CE00" stroke-width="2" fill="#F5FFF5" opacity="0" />
+        <text x="16" y="19" font-size="13" font-family="Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif" fill="black">
+            set options
+        </text>
+        <rect id="gotoOptionsDisabled" x="0" y="0" width="103" height="30" stroke="white" stroke-width="1" fill="white" opacity="0.7" />
+    </g>
+</svg>
+                </div>
+                <div
+				    id="svgPages"
+				    style="border: 1px solid #008000; width: 1027px; height:600px; overflow:auto; position: absolute; top: 581px;  padding-top: 0px; margin-top: 0px; left: 0px; line-height: 0px;">
+				   <!--
+                    <embed
+					    src="http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Study%202c3.1/Study 2c3.1 page 1.svg"
+					    content-type="image/svg+xml"
+					    class="svgPage"
+					    width="1010"
+					    height="1237" />
+				    <br />
+				    <embed
+					    src="http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Study%202c3.1/Study 2c3.1 page 2.svg"
+					    content-type="image/svg+xml"
+					    class="svgPage"
+					    width="1010"
+					    height="1237" />
+				    <br />
+				    <embed
+					    src="http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Study%202c3.1/Study 2c3.1 page 3.svg"
+					    content-type="image/svg+xml"
+					    class="svgPage"
+					    width="1010"
+					    height="1237" />
+				    <br />
+                    -->
+			    </div>
+            </div>
+        </div>
+
+    <script src="lib/JazzMIDIBridge.js" type="text/javascript"></script>
+    <script src="lib/MIDIDeviceSelector.js" type="text/javascript"></script>
+
+    <script src="js/jiNamespace.js" type="text/javascript"></script>
+    <script src="js/jiFile.js" type="text/javascript"></script>
+    <script src="js/jiMarkers.js" type="text/javascript"></script>
+    <script src="js/jiPalettes.js" type="text/javascript"></script>
+    <script src="js/jiMIDIMoment.js" type="text/javascript"></script>
+    <script src="js/jiTrack.js" type="text/javascript"></script>
+    <script src="js/jiMIDIChord.js" type="text/javascript"></script>
+    <script src="js/jiSequence.js" type="text/javascript"></script>
+    <script src="js/jiScore.js" type="text/javascript"></script>
+    <script src="js/jiAPTracksControl.js" type="text/javascript"></script>
+    <script src="js/jiAPControls.js" type="text/javascript"></script>
+
+    <!--
+    <script src="js/jiFile.js" type="text/javascript"></script>
+    <script src="js/jiMidi.js" type="text/javascript"></script>
+   
+    <script src="js/jiMarker.js" type="text/javascript"></script>
+    <script src="js/jiMidiControl.js" type="text/javascript"></script>
+    <script src="js/jiStudy%202c3.1threshold50msBase64.js" type="text/javascript"></script>
+    -->
+
+    <script src="js/jiMain.js" type="text/javascript"></script>
+    
+    </body>
+</html>
