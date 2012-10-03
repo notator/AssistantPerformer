@@ -347,7 +347,7 @@ JI_NAMESPACE.markers = (function ()
 
             incrementPosition = function ()
             {
-                console.log("runningMarker: msPos before increment=" + timeObjects[positionIndex].msPosition + ", after increment=" + timeObjects[positionIndex + 1].msPosition);
+                //console.log("runningMarker: msPos before increment=" + timeObjects[positionIndex].msPosition + ", after increment=" + timeObjects[positionIndex + 1].msPosition);
                 positionIndex++;
                 setNextMsPosition(positionIndex);
                 moveLineToAlignmentX(timeObjects[positionIndex].alignmentX);

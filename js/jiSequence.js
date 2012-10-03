@@ -107,13 +107,13 @@ JI_NAMESPACE.sequence = (function ()
         // Ask again. nextMomt may have been set to null in the last statement.
         if (nextMomt === null)
         {
-            console.log("End of span.");
+            //console.log("End of span.");
             // move the cursor back to the startMarker and set the APControls' state to "stopped"
             reportEndOfSpan(); // a system exception is thrown if reportEndOfSpan is null or undefined
         }
         else
         {
-            console.log("next moment.timestamp=" + nextMomt.timestamp);
+            //console.log("next moment.timestamp=" + nextMomt.timestamp);
         }
         return nextMomt; // null is stop, end of span
     },
@@ -123,7 +123,9 @@ JI_NAMESPACE.sequence = (function ()
     // Moments can be empty of MIDIMessages (i.e. be rests), in which case
     // an object is returned having two attributes:
     //     timestamp = moment.timestamp, and 
-    //     isARest = true.
+    //     isEmpty = true.
+    // If a message is the first message in a moment, it is given a report attribute
+    // which forces its timestamp to be reported as the argument to reportTimestamp().
     nextMessage = function ()
     {
         var nextMsg = null;
@@ -140,6 +142,8 @@ JI_NAMESPACE.sequence = (function ()
                 {
                     currentMomentLength = currentMoment.messages.length; // can be 0!
                     messageIndex = 0;
+                    // The first message in the first moment in each chord has a reportTimestamp attribute.
+                    // It was set in the MIDIChord constructor
                 }
             }
             if (currentMoment !== null)
@@ -148,11 +152,12 @@ JI_NAMESPACE.sequence = (function ()
                 {
                     nextMsg = currentMoment.messages[messageIndex++];
                 }
-                else
-                {
+                else 
+                {   // a rest
                     nextMsg = {};
                     nextMsg.timestamp = currentMoment.timestamp;
-                    nextMsg.isARest = true;
+                    nextMsg.isEmpty = true;
+                    nextMsg.reportTimestamp = true; // force this message's timestamp to be reported
                 }
             }
         }
@@ -160,7 +165,7 @@ JI_NAMESPACE.sequence = (function ()
         return nextMsg;
     },
 
-    // tick() function, originally by Chris Wilson
+    // tick() function, based on an idea by Chris Wilson
     // Chris: "with a conformant sendMIDIMessage w/ timestamps, PREQUEUE could be set to a larger number like 200."
     // James: Changes (as per 30th Sept. 2012)
     //     1. use calls to nextMessage() instead of having a flat sequence as in the original function.
@@ -170,23 +175,25 @@ JI_NAMESPACE.sequence = (function ()
     //              domhrtMsOffsetAtStartOfPerformance takes starting later in a sequence into account.
     //     3. Synchronization with the running cursor in the score
     //           a) reportTimestamp callback:
-    //              1. reportTimestamp is an optional callback, set when the performance starts.
+    //              1. reportTimestamp is an optional callback, set when the performance starts. It increments the cursor
+    //                 to the position of the next rest or chord in the score.
     //              2. msg moved outside tick(). The very first msg in the performance is loaded in another function. 
     //              3. currentMomentTimestamp added outside tick(). Initialized when the performance starts.
+    //              4. timestamps which MUST be reported are now cached inside the while{} loop. (This is done by
+    //                 giving the appropriate messages a reportTimestamp attribute: Rests are given this attribute in
+    //                 the nextMessage() function, the first message in the first and last moments in a MIDIChord are
+    //                 given this attribute in the MIDIChord constructor.)
+    //                 All the cached timestamps, except the one which will be reported at the beginning of the next
+    //                 tick call, are then reported when the loop exits. In the worst case, the cursor will advance
+    //                 to the corresponding symbol PREQUEUE milliseconds before the sound is actually heard.
     //           b) need to synchronize with rest symbols. (Try playing a single track having simple notes and rests.)
-    //              If a MIDIMoment contains no messages, nextMessage() returns a msg having timestamp and isARest
-    //              attributes. MIDIMessages having an isARest attribute are not sent to the midiOutputDevice.
-    //
+    //              If a MIDIMoment contains no messages, nextMessage() returns a msg having timestamp, isEmpty and
+    //              reportTimestamp attributes.
+    //              MIDIMessages having an isEmpty attribute are not sent to the midiOutputDevice.
     // Issue:
-    //   This code depends on PREQUEUE being 0. If PREQUEUE were to be increased, exact synchronization with
-    //   the score would deteriorate. There would be no way of knowing exactly when the MIDIMessage is really sent.
-    //   Possible solutions:
-    //   1. Maybe MIDIMessages could have an optional callback, to be called at the actual send time. But that
-    //   would not work for rests. Rests are never actually sent to the MIDI output device.
-    //   Maybe we need a wrapper for MIDIMessages, which would include both the callback and the
-    //   information that this is an empty message.
-    //   2. If MIDI programmers are allowed to set the value of PREQUEUE themselves, then different applications
-    //   can be given an optimal value. What, precisely, are the pros and cons of having larger values... 
+    // This code needs to be tested "with a conformant sendMIDIMessage w/ timestamps" and a higher value for PREQUEUE.
+    // What would the ideal value for PREQUEUE be? It needs to be small enough for time differences between cursor
+    // position and sound to be unnoticeable.
     //
     PREQUEUE = 0,
     maxDeviation, // for console.log, set to 0 when performance starts
@@ -199,27 +206,29 @@ JI_NAMESPACE.sequence = (function ()
 
     tick = function ()
     {
-        var deviation,
+        var deviation, i,
+        nTimestampsToReport, timeStampsToReport = [],
         domhrtRelativeTime = Math.round(window.performance.webkitNow() - domhrtMsOffsetAtStartOfPerformance),
         delay = msg.timestamp - domhrtRelativeTime;
 
-        if (reportTimestamp !== null && msg.timestamp > currentMomentTimestamp)
+        if (msg.reportTimestamp !== undefined && msg.timestamp > currentMomentTimestamp && reportTimestamp !== null)
         {
-            //console.log("sequence.tick()1, calling reportTimestamp(msg.timestamp): currentMomentTimestamp=" +
-            //                                                 currentMomentTimestamp + ", msg.timestamp=" + msg.timestamp);
             currentMomentTimestamp = msg.timestamp;
-            reportTimestamp(msg.timestamp); // updates the cursor position in the score
+            reportTimestamp(currentMomentTimestamp); // update the cursor for the timestamp which
+            // is going to be scheduled for currentMomentTimestamp (i.e. sent immediately, now)
+            console.log("1: timestamp reported, currentMomentTimestamp now=" + currentMomentTimestamp);
         }
 
+        // send all messages that are due between now and PREQUEUE ms later.
+        // delay is a value which compensates for inaccuracies in setTimeout
         while (delay <= PREQUEUE)
-        { // send all messages that are due now.
-
-            // running log
+        {
+            // these values are only used by console.log (See end of file too!)
             deviation = (domhrtRelativeTime - msg.timestamp);
             maxDeviation = (deviation > maxDeviation) ? deviation : maxDeviation;
-            console.log("timestamp: " + msg.timestamp + ", domhrtTime: " + domhrtRelativeTime + ", deviation: " + deviation);
+            //console.log("timestamp: " + msg.timestamp + ", domhrtTime: " + domhrtRelativeTime + ", deviation: " + deviation);
 
-            if (msg.isARest === undefined)
+            if (msg.isEmpty === undefined)
             {
                 // sendMIDIMessage needs msg.timestamp to be absolute DOMHRT time.
                 msg.timestamp += domhrtMsOffsetAtStartOfPerformance;
@@ -229,13 +238,43 @@ JI_NAMESPACE.sequence = (function ()
             }
 
             msg = nextMessage();
+
             if (msg === null)
             {
                 // we're pausing, or have hit the end of the sequence.
                 console.log("Pause, or end of sequence.  maxDeviation is " + maxDeviation + "ms");
                 return;
             }
+            if (msg.reportTimestamp !== undefined && msg.timestamp > currentMomentTimestamp && reportTimestamp !== null)
+            {
+                timeStampsToReport.push(msg.timestamp);
+            }
             delay = msg.timestamp - domhrtRelativeTime;
+        }
+
+        if (timeStampsToReport.length > 0)
+        {
+            // Report all timestamps which need to be reported, but whose messages were scheduled during
+            // the above loop.
+            // Note that timeStampsToReport only contains timestamps if they belong to a rest or the first
+            // message in the first or last moment in a MIDIChord.
+            // Since, when we have a "conformant sendMIDIMessage w/ timestamps", the messages are actually sent
+            // to the output device later, this will lead to the GUI cursor position moving to the respective
+            // position in the GUI before the sound is actually heard.
+            // In the worst case, the cursor will move PREQUEUE milliseconds before the sound is heard. 
+            nTimestampsToReport = timeStampsToReport.length;
+
+            for (i = 0; i < nTimestampsToReport; ++i)
+            {
+                if (timeStampsToReport[i] < msg.timestamp && timeStampsToReport[i] > currentMomentTimestamp)
+                {
+                    currentMomentTimestamp = timeStampsToReport[i];
+                    reportTimestamp(currentMomentTimestamp);  // updates the cursor position in the score
+                    //console.log("After: **** reporting timestamp before its msg is really sent and the sound actually happens ****");
+                    console.log("2: currentMomentTimestamp=" + currentMomentTimestamp + ", next msg.timestamp=" + msg.timestamp);
+                    // note that the cursor only moves if this is a rest or the very first or very last message in a chord.
+                }
+            }
         }
 
         window.setTimeout(tick, delay);  // this will schedule the next tick.

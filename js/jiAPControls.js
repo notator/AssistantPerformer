@@ -230,7 +230,7 @@ JI_NAMESPACE.apControls = (function (document, window)
         // reportEndOfSpan() is called (see above).
         function reportMsPos(msPosition)
         {
-            console.log("jiAPControls: calling score.advanceRunningMarker(msPosition), msPosition=" + msPosition);
+            //console.log("jiAPControls: calling score.advanceRunningMarker(msPosition), msPosition=" + msPosition);
             // If there is a graphic object in the score having msPosition,
             // the running cursor is aligned to that object.
             score.advanceRunningMarker(msPosition);

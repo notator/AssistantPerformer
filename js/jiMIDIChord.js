@@ -691,6 +691,9 @@ JI_NAMESPACE.midiChord = (function ()
             midiMoments = chordMoments;
         }
 
+        midiMoments[0].messages[0].reportTimestamp = true; // used by sequencer
+        midiMoments[midiMoments.length - 1].messages[0].reportTimestamp = true; // used by sequencer
+
         this.addToTrack = addToTrack;
 
         return this;

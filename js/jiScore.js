@@ -535,7 +535,7 @@ JI_NAMESPACE.score = (function (document, window)
                                     voice = {};
                                     voice.timeObjects = getTimeObjects(system, staffChildren[j].childNodes, speed);
                                     staff.voices.push(voice);
-                                    console.log("* voice.timeObjects successfully constructed, staffNumber=" + system.staves.length);
+                                    //console.log("* voice.timeObjects successfully constructed, staffNumber=" + system.staves.length);
                                 }
                             }
                         }
@@ -821,7 +821,6 @@ JI_NAMESPACE.score = (function (document, window)
             }
             // callback for auto scroll
             runningMarkerHeightChanged(runningMarker.getYCoordinates());
-            // else {do nothing at end of score}
         }
         else if (msPosition >= runningMarker.nextMsPosition())
         {
@@ -899,7 +898,7 @@ JI_NAMESPACE.score = (function (document, window)
                             // a rest
                             midiRest = new jiMIDIChord.MIDIRest(timeObject);
                             midiRest.addToTrack(track);
-                            console.log("midiRest added at sysIndex=", +sysIndex + ", staffIndex=", +staffIndex + ", timeObjectIndex=" + timeObjectIndex);
+                            //console.log("midiRest added at sysIndex=", +sysIndex + ", staffIndex=", +staffIndex + ", timeObjectIndex=" + timeObjectIndex);
                         }
                         else
                         {
@@ -914,7 +913,7 @@ JI_NAMESPACE.score = (function (document, window)
                             }
                             midiChord = new jiMIDIChord.MIDIChord(channel, chordDef, timeObject, speed);
                             midiChord.addToTrack(track);
-                            console.log("midiChord added at sysIndex=", +sysIndex + ", staffIndex=", +staffIndex + ", timeObjectIndex=" + timeObjectIndex);
+                            //console.log("midiChord added at sysIndex=", +sysIndex + ", staffIndex=", +staffIndex + ", timeObjectIndex=" + timeObjectIndex);
                         }
                     }
                     ++trackIndex;
