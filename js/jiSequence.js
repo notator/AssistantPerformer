@@ -16,8 +16,7 @@
 *       resume()
 *       stop()
 *       isStopped()
-*       isPaused()
-*  
+*       isPaused()  
 */
 
 JI_NAMESPACE.namespace('JI_NAMESPACE.sequence');
@@ -111,21 +110,21 @@ JI_NAMESPACE.sequence = (function ()
             // move the cursor back to the startMarker and set the APControls' state to "stopped"
             reportEndOfSpan(); // a system exception is thrown if reportEndOfSpan is null or undefined
         }
-        else
-        {
-            //console.log("next moment.timestamp=" + nextMomt.timestamp);
-        }
+
         return nextMomt; // null is stop, end of span
     },
 
     // Returns either the next message in the sequence, 
     // or null if there are no more moments and no more messages.
     // Moments can be empty of MIDIMessages (i.e. be rests), in which case
-    // an object is returned having two attributes:
-    //     timestamp = moment.timestamp, and 
-    //     isEmpty = true.
-    // If a message is the first message in a moment, it is given a report attribute
-    // which forces its timestamp to be reported as the argument to reportTimestamp().
+    // a 'message' is returned having three attributes:
+    //     timestamp = moment.timestamp 
+    //     isEmpty = true
+    //     reportTimestamp = true
+    // Otherwise, the message belongs to a MIDIChord.
+    // Both the first message in the first moment and the first message in the last moment
+    // in each MIDIChord are given a reportTimestamp attribute in the MIDIChord constructor
+    // (see jiMIDIChord.js).
     nextMessage = function ()
     {
         var nextMsg = null;
@@ -142,8 +141,6 @@ JI_NAMESPACE.sequence = (function ()
                 {
                     currentMomentLength = currentMoment.messages.length; // can be 0!
                     messageIndex = 0;
-                    // The first message in the first moment in each chord has a reportTimestamp attribute.
-                    // It was set in the MIDIChord constructor
                 }
             }
             if (currentMoment !== null)
@@ -167,34 +164,23 @@ JI_NAMESPACE.sequence = (function ()
 
     // tick() function, based on an idea by Chris Wilson
     // Chris: "with a conformant sendMIDIMessage w/ timestamps, PREQUEUE could be set to a larger number like 200."
-    // James: Changes (as per 30th Sept. 2012)
-    //     1. use calls to nextMessage() instead of having a flat sequence as in the original function.
-    //     2. two (cosmetic) name changes:
-    //           a) output -> midiOutputDevice.
-    //           b) domhrtTimeAtStartOfPerformance to domhrtMsOffsetAtStartOfPerformance.
-    //              domhrtMsOffsetAtStartOfPerformance takes starting later in a sequence into account.
-    //     3. Synchronization with the running cursor in the score
-    //           a) reportTimestamp callback:
-    //              1. reportTimestamp is an optional callback, set when the performance starts. It increments the cursor
-    //                 to the position of the next rest or chord in the score.
-    //              2. msg moved outside tick(). The very first msg in the performance is loaded in another function. 
-    //              3. currentMomentTimestamp added outside tick(). Initialized when the performance starts.
-    //              4. timestamps which MUST be reported are now cached inside the while{} loop. (This is done by
-    //                 giving the appropriate messages a reportTimestamp attribute: Rests are given this attribute in
-    //                 the nextMessage() function, the first message in the first and last moments in a MIDIChord are
-    //                 given this attribute in the MIDIChord constructor.)
-    //                 All the cached timestamps, except the one which will be reported at the beginning of the next
-    //                 tick call, are then reported when the loop exits. In the worst case, the cursor will advance
-    //                 to the corresponding symbol PREQUEUE milliseconds before the sound is actually heard.
-    //           b) need to synchronize with rest symbols. (Try playing a single track having simple notes and rests.)
-    //              If a MIDIMoment contains no messages, nextMessage() returns a msg having timestamp, isEmpty and
-    //              reportTimestamp attributes.
-    //              MIDIMessages having an isEmpty attribute are not sent to the midiOutputDevice.
-    // Issue:
-    // This code needs to be tested "with a conformant sendMIDIMessage w/ timestamps" and a higher value for PREQUEUE.
-    // What would the ideal value for PREQUEUE be? It needs to be small enough for time differences between cursor
-    // position and sound to be unnoticeable.
-    //
+    // James: (2nd Oct. 2012)
+    // This function has become rather complicated, but it has been tested thoroughly as far as possible without
+    // having "a conformant sendMIDIMessage w/ timestamps", and appears to be correct.
+    // It needs testing again with the conformant sendMIDIMessage and a higher value for PREQUEUE. What would the
+    // ideal value for PREQUEUE be? It needs to be small enough for time differences between cursor position and
+    // sound to be unnoticeable.
+    // Synchronization with the running cursor in the score:
+    // 1. The reportTimestamp is an optional callback, set when the performance starts. It moves the cursor to the
+    //    next rest or chord in the score whose timestamp is the one reproted.
+    // 2. msg is outside tick(). The very first msg in the performance is loaded in another function. 
+    // 3. currentMomentTimestamp is outside tick(). Initialized when the performance starts.
+    // 4. timestamps which MUST be reported are now cached inside the while{} loop. (This is done by giving the
+    //    appropriate messages a reportTimestamp attribute: Rests are given this attribute in the nextMessage()
+    //    function, the first message in the first and last moments in a MIDIChord are given this attribute in the
+    //    MIDIChord constructor.) All the cached timestamps, except the one which will be reported at the beginning
+    //    of the next tick call, are then reported when the loop exits. In the worst case, the cursor will advance
+    //    to the corresponding symbol PREQUEUE milliseconds before the sound is actually heard.
     PREQUEUE = 0,
     maxDeviation, // for console.log, set to 0 when performance starts
     midiOutputDevice, // set when performance starts
@@ -216,7 +202,7 @@ JI_NAMESPACE.sequence = (function ()
             currentMomentTimestamp = msg.timestamp;
             reportTimestamp(currentMomentTimestamp); // update the cursor for the timestamp which
             // is going to be scheduled for currentMomentTimestamp (i.e. sent immediately, now)
-            console.log("1: timestamp reported, currentMomentTimestamp now=" + currentMomentTimestamp);
+            //console.log("1: timestamp reported, currentMomentTimestamp now=" + currentMomentTimestamp);
         }
 
         // send all messages that are due between now and PREQUEUE ms later.
@@ -271,8 +257,7 @@ JI_NAMESPACE.sequence = (function ()
                     currentMomentTimestamp = timeStampsToReport[i];
                     reportTimestamp(currentMomentTimestamp);  // updates the cursor position in the score
                     //console.log("After: **** reporting timestamp before its msg is really sent and the sound actually happens ****");
-                    console.log("2: currentMomentTimestamp=" + currentMomentTimestamp + ", next msg.timestamp=" + msg.timestamp);
-                    // note that the cursor only moves if this is a rest or the very first or very last message in a chord.
+                    //console.log("2: currentMomentTimestamp=" + currentMomentTimestamp + ", next msg.timestamp=" + msg.timestamp);
                 }
             }
         }
@@ -358,8 +343,8 @@ JI_NAMESPACE.sequence = (function ()
     // called (without any error) when the last message in the sequence has been sent.
     //
     // The reportMsPosition argument is a callback function which reports the current
-    // msPosition while performing.
-    // This function can be null or undefined, in which case it is simply ignored.
+    // msPosition back to the GUI while performing.
+    // reportMsPosition can be null or undefined, in which case it is simply ignored.
     // Otherwise, the msPosition it passes back is the number of milliseconds from the
     // start of the score, i.e. the original timestamp set in each MIDIMoment and
     // MIDIMessage in the original sequence.
