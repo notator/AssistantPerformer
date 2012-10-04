@@ -11,7 +11,7 @@ A longer description of this Assistant Performer can be found at
 http://james-ingram-act-two.de/open-source/assistantPerformer/aboutAssistantPerformer.html
 
 
-There is a woring, but incomplete version of this application on the web at
+There is a working, but incomplete version of this application on the web at
 
 http://james-ingram-act-two.de/open-source/publicAssistantPerformer/assistantPerformer.html
 
