@@ -162,7 +162,7 @@ JI_NAMESPACE.sequence = (function ()
         return nextMsg;
     },
 
-    // tick() function, based on an idea by Chris Wilson
+    // tick() function, which began as an idea by Chris Wilson
     // Chris: "with a conformant sendMIDIMessage w/ timestamps, PREQUEUE could be set to a larger number like 200."
     // James: (2nd Oct. 2012)
     // This function has become rather complicated, but it has been tested thoroughly as far as possible without
@@ -170,17 +170,18 @@ JI_NAMESPACE.sequence = (function ()
     // It needs testing again with the conformant sendMIDIMessage and a higher value for PREQUEUE. What would the
     // ideal value for PREQUEUE be? It needs to be small enough for time differences between cursor position and
     // sound to be unnoticeable.
-    // Synchronization with the running cursor in the score:
-    // 1. The reportTimestamp is an optional callback, set when the performance starts. It moves the cursor to the
-    //    next rest or chord in the score whose timestamp is the one reproted.
-    // 2. msg is outside tick(). The very first msg in the performance is loaded in another function. 
-    // 3. currentMomentTimestamp is outside tick(). Initialized when the performance starts.
+    // Synchronizing with the running cursor in the score:
+    // 1. reportTimestamp(timestamp) is an optional callback, set when the performance starts. It moves the cursor
+    //    to the next rest or chord symbol in the score (whose timestamp is the one reported).
+    // 2. msg is outside tick(). The very first msg in the performance is loaded in another function when the
+    //    performance starts. 
+    // 3. currentMomentTimestamp is also outside tick(). Is also initialized when the performance starts.
     // 4. timestamps which MUST be reported are now cached inside the while{} loop. (This is done by giving the
-    //    appropriate messages a reportTimestamp attribute: Rests are given this attribute in the nextMessage()
-    //    function, the first message in the first and last moments in a MIDIChord are given this attribute in the
-    //    MIDIChord constructor.) All the cached timestamps, except the one which will be reported at the beginning
-    //    of the next tick call, are then reported when the loop exits. In the worst case, the cursor will advance
-    //    to the corresponding symbol PREQUEUE milliseconds before the sound is actually heard.
+    //    appropriate messages a reportTimestamp attribute: Rest "messages" are given this attribute in the
+    //    nextMessage() function, the first message in the first and last moments in a MIDIChord are given this
+    //    attribute in the MIDIChord constructor.) All the cached timestamps, except the one which will be reported
+    //    at the beginning of the next tick, are then reported when the loop exits. In the worst case, the cursor
+    //    will advance to the corresponding symbol PREQUEUE milliseconds before the sound is actually heard.
     PREQUEUE = 0,
     maxDeviation, // for console.log, set to 0 when performance starts
     midiOutputDevice, // set when performance starts
@@ -206,7 +207,7 @@ JI_NAMESPACE.sequence = (function ()
         }
 
         // send all messages that are due between now and PREQUEUE ms later.
-        // delay is a value which compensates for inaccuracies in setTimeout
+        // delay is (msg.timestamp - domhrtRelativeTime) -- which compensates for inaccuracies in setTimeout
         while (delay <= PREQUEUE)
         {
             // these values are only used by console.log (See end of file too!)
@@ -247,7 +248,8 @@ JI_NAMESPACE.sequence = (function ()
             // Since, when we have a "conformant sendMIDIMessage w/ timestamps", the messages are actually sent
             // to the output device later, this will lead to the GUI cursor position moving to the respective
             // position in the GUI before the sound is actually heard.
-            // In the worst case, the cursor will move PREQUEUE milliseconds before the sound is heard. 
+            // In the worst case, the cursor will move to its chord or rest PREQUEUE milliseconds before the
+            // sound is heard. 
             nTimestampsToReport = timeStampsToReport.length;
 
             for (i = 0; i < nTimestampsToReport; ++i)

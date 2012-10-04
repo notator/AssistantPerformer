@@ -5,9 +5,12 @@ The project is written in HTML5 and Javascript. Only webkit browsers (Chrome and
 A longer description of the Assistant Performer can be found at
 http://james-ingram-act-two.de/open-source/assistantPerformer/aboutAssistantPerformer.html
 
-The latest version can be tried out at
-http://james-ingram-act-two.de/open-source/assistantPerformer/assistantPerformer.html.
+There is a version of this application on the web at
+http://james-ingram-act-two.de/open-source/publicAssistantPerformer/assistantPerformer.html
+This is the version accessible from my web site. It is stable, and can be used by the general public to try out those parts of the program that have been implemented so far. Feedback from users is always important.
+But note that
+** This version will not usually represent the latest state of the software
+** in this repository. I do my day-to-day testing elsewhere.
 
 James Ingram
-
 October 2012
