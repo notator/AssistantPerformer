@@ -313,19 +313,20 @@ JI_NAMESPACE.score = (function (document, window)
             {
                 systems.pop();
             }
+            while (palettes.length > 0)
+            {
+                palettes.pop();
+            }
         }
 
         function getPalettes()
         {
             var i, pals;
 
-            if (palettes.length === 0)
+            pals = new jiPalettes.Palettes();
+            for (i = 0; i < pals.length; ++i)
             {
-                pals = new jiPalettes.Palettes();
-                for (i = 0; i < pals.length; ++i)
-                {
-                    palettes.push(pals[i]);
-                }
+                palettes.push(pals[i]);
             }
         }
 
