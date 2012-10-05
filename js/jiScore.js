@@ -18,11 +18,13 @@ JI_NAMESPACE.score = (function (document, window)
     "use strict";
     // begin var
     var jiFile = JI_NAMESPACE.file,
-        jiMarkers = JI_NAMESPACE.markers,
-        jiPalettes = JI_NAMESPACE.palettes,
-        jiSequence = JI_NAMESPACE.sequence,
-        jiTrack = JI_NAMESPACE.track,
-        jiMIDIChord = JI_NAMESPACE.midiChord,
+    jiMarkers = JI_NAMESPACE.markers,
+    jiPalettes = JI_NAMESPACE.palettes,
+    jiSequence = JI_NAMESPACE.sequence,
+    jiTrack = JI_NAMESPACE.track,
+    jiMIDIChord = JI_NAMESPACE.midiChord,
+
+    MAX_MIDI_CHANNELS = 16,
 
     // The frames around each svgPage
     svgFrames = [],
@@ -38,6 +40,24 @@ JI_NAMESPACE.score = (function (document, window)
     runningMarkerHeightChanged, // callback, called when runningMarker changes systems
 
     finalBarlineInScore,
+
+    // Sends a noteOff to all notes on all channels on the midi output device.
+    allNotesOff = function (midiOutputDevice)
+    {
+        var noteOffMessage, channelIndex, noteIndex;
+
+        if (midiOutputDevice !== undefined && midiOutputDevice !== null)
+        {
+            for (channelIndex = 0; channelIndex < MAX_MIDI_CHANNELS; ++channelIndex)
+            {
+                for (noteIndex = 0; noteIndex < 128; ++noteIndex)
+                {
+                    noteOffMessage = jiMIDIChord.newNoteOffMessage(channelIndex, noteIndex);
+                    midiOutputDevice.sendMIDIMessage(noteOffMessage);
+                }
+            }
+        }
+    },
 
     hideStartMarkersExcept = function (startMarker)
     {
@@ -858,7 +878,7 @@ JI_NAMESPACE.score = (function (document, window)
         lastSystemTimeObjects = systems[systems.length - 1].staves[0].voices[0].timeObjects;
         finalBarlineInScore = lastSystemTimeObjects[lastSystemTimeObjects.length - 1]; // 'global' object
 
-        if(scoreHasJustBeenSelected)
+        if (scoreHasJustBeenSelected)
         {
             setSystemMarkerParameters(systems);
         }
@@ -1045,17 +1065,6 @@ JI_NAMESPACE.score = (function (document, window)
         return sequence;
     },
 
-    allSoundOff = function (midiOutputDevice)
-    {
-        var allSoundOffMessage;
-
-        if (midiOutputDevice !== undefined && midiOutputDevice !== null)
-        {
-            allSoundOffMessage = jiMIDIChord.newAllSoundOffMessage();
-            midiOutputDevice.sendMIDIMessage(allSoundOffMessage);
-        }
-    },
-
     // an empty score
     Score = function (callback)
     {
@@ -1069,6 +1078,9 @@ JI_NAMESPACE.score = (function (document, window)
         systems = [];
 
         runningMarkerHeightChanged = callback;
+
+        // Sends a noteOff to all notes on all channels on the midi output device.
+        this.allNotesOff = allNotesOff;
 
         // functions called when setting the start or end marker
         this.setStartMarkerClick = setStartMarkerClick;
@@ -1108,9 +1120,6 @@ JI_NAMESPACE.score = (function (document, window)
 
         // Returns the score's content as a midi sequence
         this.getSequence = getSequence;
-
-        // Sends an allSoundOffmessage to the midi output device.
-        this.allSoundOff = allSoundOff;
     },
 
 

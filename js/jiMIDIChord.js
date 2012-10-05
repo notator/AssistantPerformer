@@ -33,9 +33,10 @@ JI_NAMESPACE.midiChord = (function ()
         _JMB = jmb;
     },
 
-    newAllSoundOffMessage = function ()
+    // Used by the score allNotesOff function
+    newNoteOffMessage = function (channelIndex, noteIndex)
     {
-        return _JMB.createMIDIMessage(_JMB.CONTROL_CHANGE, 120, 0, 0, 0); // 120 is MIDI allSoundOff
+        return _JMB.createMIDIMessage(_JMB.NOTE_OFF, noteIndex, 127, channelIndex, 0);
     },
 
     // An array of midiMoments whose msPosition has been set.
@@ -727,7 +728,7 @@ JI_NAMESPACE.midiChord = (function ()
         init: init,
 
         // function which returns a new AllSoundOffMessage 
-        newAllSoundOffMessage: newAllSoundOffMessage,
+        newNoteOffMessage: newNoteOffMessage,
 
         // public MIDIChord constructor
         // A MIDIChord contains a private array of MIDIMoments containing all

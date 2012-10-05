@@ -390,8 +390,14 @@ JI_NAMESPACE.sequence = (function ()
     {
         if (paused === true && currentMoment !== null)
         {
-            domhrtMsOffsetAtStartOfPerformance = window.performance.webkitNow() - currentMoment.timestamp;
             setState("running");
+            domhrtMsOffsetAtStartOfPerformance = window.performance.webkitNow() - currentMoment.timestamp;
+            msg = nextMessage(); // the very first message after the resume
+            if (msg === null)
+            {
+                // This shouldn't be hit, except for an empty initial sequence
+                return;
+            }
             tick();
         }
     },

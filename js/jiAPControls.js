@@ -143,6 +143,14 @@ JI_NAMESPACE.apControls = (function (document, window)
 
         function setStopped()
         {
+            if (sequence !== undefined && !(sequence.isStopped()))
+            {
+                score.moveRunningMarkerToStartMarker();
+                sequence.stop();
+            }
+
+            score.allNotesOff(options.outputDevice);
+
             setMainOptionsState("disabled");
 
             cl.gotoOptionsDisabled.setAttribute("opacity", GLASS);
@@ -183,16 +191,12 @@ JI_NAMESPACE.apControls = (function (document, window)
             /********* end performance buttons *******************/
 
             svgTracksControl.setDisabled(false);
-
-            if (sequence !== undefined && !(sequence.isStopped()))
-            {
-                score.moveRunningMarkerToStartMarker();
-                sequence.stop();
-            }
         }
 
         function setPaused()
         {
+            score.allNotesOff(options.outputDevice);
+
             svgTracksControl.setDisabled(true);
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
@@ -218,8 +222,6 @@ JI_NAMESPACE.apControls = (function (document, window)
         // callback called when a performing sequence has played the last message in the span.
         function reportEndOfSpan()
         {
-            score.allSoundOff(options.outputDevice);
-
             setStopped();
             // The following line is important.
             // Otherwise svgControlsState is 'paused' because of the way the go button works.
