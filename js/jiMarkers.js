@@ -45,21 +45,21 @@ JI_NAMESPACE.markers = (function ()
             ellipse,
             color = '#00BB00', disabledColor = '#AAFFAA',
             sysIndex, timObject,
-            millisecondPosition,
+            millisecondPosition, yCoordinates = {},
 
-            moveTo = function (tObject)
-            {
-                var x = tObject.alignmentX;
+        moveTo = function (tObject)
+        {
+            var x = tObject.alignmentX;
 
-                timObject = tObject;
+            timObject = tObject;
 
-                millisecondPosition = tObject.msPosition;
+            millisecondPosition = tObject.msPosition;
 
-                x *= viewBoxScale;
-                line.setAttribute('x1', x.toString());
-                line.setAttribute('x2', x.toString());
-                ellipse.setAttribute('cx', x.toString());
-            },
+            x *= viewBoxScale;
+            line.setAttribute('x1', x.toString());
+            line.setAttribute('x2', x.toString());
+            ellipse.setAttribute('cx', x.toString());
+        },
 
             msPosition = function ()
             {
@@ -85,6 +85,9 @@ JI_NAMESPACE.markers = (function ()
                 ellipse.setAttribute('ry', (viewBoxScale * ELLIPSE_RADIUS).toString());
                 ellipse.setAttribute('stroke-width', '0');
                 ellipse.setAttribute('fill', color);
+
+                yCoordinates.top = Math.round(parseFloat(topY) / vbScale) + viewBoxOriginY;
+                yCoordinates.bottom = Math.round(parseFloat(bottomY) / vbScale) + viewBoxOriginY;
 
                 sysIndex = systIndex;
                 moveTo(system.staves[0].voices[0].timeObjects[0]);
@@ -126,6 +129,14 @@ JI_NAMESPACE.markers = (function ()
                     line.setAttribute('visibility', 'hidden');
                     ellipse.setAttribute('visibility', 'hidden');
                 }
+            },
+
+            getYCoordinates = function ()
+            {
+                var val = {};
+                val.top = yCoordinates.top;
+                val.bottom = yCoordinates.bottom;
+                return val;
             };
 
         viewBoxOriginY = vbOriginY;
@@ -153,6 +164,7 @@ JI_NAMESPACE.markers = (function ()
         this.moveTo = moveTo;
         this.setVisible = setVisible;
         this.setEnabledColor = setEnabledColor;
+        this.getYCoordinates = getYCoordinates;
 
         return this;
     },

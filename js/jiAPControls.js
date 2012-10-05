@@ -35,6 +35,8 @@ JI_NAMESPACE.apControls = (function (document, window)
     // options set in the top dialog
         options = {},
 
+        scoreHasJustBeenSelected = false,
+
     // If a Midi input device has been set in the device selector, this is where input MIDI messages
     // arrive, and where processing is going to be done. If the device selector's current index is 0,
     // options.livePerformer will be false, and this function is not called.
@@ -564,6 +566,7 @@ JI_NAMESPACE.apControls = (function (document, window)
             switch (scoreSelectorElem.selectedIndex)
             {
                 case 0:
+                    nTracks = 0;
                     break;
                 case 1:
                     nTracks = setStudy2c3_1();
@@ -578,6 +581,8 @@ JI_NAMESPACE.apControls = (function (document, window)
             setPerformersTrackSelector(nTracks);
             svgTracksControl.init(nTracks, options);
             svgPagesDiv.scrollTop = 0;
+
+            scoreHasJustBeenSelected = true;
         }
 
         function goControlClicked()
@@ -724,7 +729,9 @@ JI_NAMESPACE.apControls = (function (document, window)
             if (cl.gotoOptionsDisabled.getAttribute("opacity") !== SMOKE)
             {
                 setSvgControlsState('disabled');
+                score.moveStartMarkerToTop(svgPagesDiv);
                 window.scrollTo(0, 0);
+                scoreHasJustBeenSelected = false;
             }
         }
     },
@@ -850,9 +857,12 @@ JI_NAMESPACE.apControls = (function (document, window)
 
         if (getOptions())
         {
-            score.getContent(options.assistantsSpeed);
-            // score now has svgFrames, palettes and systems.
-            // The markers have also been set to default values.
+            if (scoreHasJustBeenSelected)
+            {
+                score.getEmptyPagesAndSystems(); // everything except the timeObjects (which have to take account of speed)
+            }
+
+            score.getTimeObjects(scoreHasJustBeenSelected, options.assistantsSpeed);
 
             sequence = score.getSequence(options.assistantsSpeed);
 
@@ -860,6 +870,8 @@ JI_NAMESPACE.apControls = (function (document, window)
             // Each track is an array of midiMoments ordered in temporal sequence.
 
             window.scrollTo(0, 630); // 600 is the absolute position of the controlPanel div (!)
+
+            score.moveStartMarkerToTop(svgPagesDiv);
 
             setSvgControlsState('stopped');
         }

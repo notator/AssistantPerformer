@@ -37,6 +37,8 @@ JI_NAMESPACE.score = (function (document, window)
     endMarker,
     runningMarkerHeightChanged, // callback, called when runningMarker changes systems
 
+    finalBarlineInScore,
+
     hideStartMarkersExcept = function (startMarker)
     {
         var i, sMarker;
@@ -267,29 +269,25 @@ JI_NAMESPACE.score = (function (document, window)
         showRunningMarker();
     },
 
-    // Gets the palettes etc. from the file
-    // speed is a floating point number, greater than zero.
-    // msDurations stored in the score are divided by speed.
-    // Rounding errors are corrected, so that all voices in
-    // a system continue to have the same msDuration.
-    getContent = function (speed)
+    // Constructs all pages, complete except for the timeObjects.
+    // Palettes are also loaded.
+    // Each page has a frame and the correct number of empty systems.
+    // Each system has the correct number of empty staves and barlines, it also has
+    // a startMarker, a runningMarker and an endMarker.
+    // Each staff has empty voices, each voice has an empty timeObjects array.
+    // If these objects have graphic parameters, they are set.
+    getEmptyPagesAndSystems = function ()
     {
         var system, embeddedSvgPages, nPages, totalSysNumber, viewBoxOriginY,
             i, j,
             sysNumber, svgPage, svgElem, viewBoxScale, svgChildren, systemID,
-            childID, currentFrame, pageHeight,
-            lastSystemTimeObjects, finalBarline, finalBarlineMsPosition;
+            childID, currentFrame, pageHeight;
 
-        // The returned score must contain only one copy of the contained information !
         function resetContent()
         {
             while (svgFrames.length > 0)
             {
                 svgFrames.pop();
-            }
-            while (palettes.length > 0)
-            {
-                palettes.pop();
             }
             while (systems.length > 0)
             {
@@ -299,20 +297,23 @@ JI_NAMESPACE.score = (function (document, window)
 
         function getPalettes()
         {
-            var i, pals = new jiPalettes.Palettes();
-            for (i = 0; i < pals.length; ++i)
+            var i, pals;
+
+            if (palettes.length === 0)
             {
-                palettes.push(pals[i]);
+                pals = new jiPalettes.Palettes();
+                for (i = 0; i < pals.length; ++i)
+                {
+                    palettes.push(pals[i]);
+                }
             }
         }
 
-        function getSystem(viewBoxOriginY, viewBoxScale, systemNode, speed)
+        function getEmptySystem(viewBoxOriginY, viewBoxScale, systemNode)
         {
             var i, j, systemChildren, systemChildID,
-                markersChildren,
                 staff, staffChildren, staffChildID, stafflineInfo,
-                voice,
-                barlinesChildren;
+                markersChildren, barlinesChildren, voice;
             // returns an info object containing left, right and stafflineYs
             function getStafflineInfo(stafflines)
             {
@@ -334,6 +335,198 @@ JI_NAMESPACE.score = (function (document, window)
                 stafflineInfo.stafflineYs = stafflineYs;
                 return stafflineInfo;
             }
+
+            function getGap(gap, stafflineYs)
+            {
+                var newGap = gap;
+                if (newGap === undefined && stafflineYs.length > 1)
+                {
+                    newGap = stafflineYs[1] - stafflineYs[0];
+                    if (newGap < 0)
+                    {
+                        newGap *= -1;
+                    }
+                }
+                return newGap;
+            }
+
+            function setVoiceCentreYs(staffTopY, staffBottomY, voices)
+            {
+                if (voices.length === 1)
+                {
+                    voices[0].centreY = (staffTopY + staffBottomY) / 2;
+                }
+                else // voices.length === 2
+                {
+                    voices[0].centreY = staffTopY;
+                    voices[1].centreY = staffBottomY;
+                }
+            }
+
+            system = {};
+            system.staves = [];
+            systemChildren = systemNode.childNodes;
+            for (i = 0; i < systemChildren.length; ++i)
+            {
+                if (systemChildren[i].nodeName !== '#text')
+                {
+                    systemChildID = systemChildren[i].getAttribute("id");
+                    if (systemChildID.indexOf('markers') !== -1)
+                    {
+                        markersChildren = systemChildren[i].childNodes;
+                        for (j = 0; j < markersChildren.length; ++j)
+                        {
+                            if (markersChildren[j].nodeName !== '#text')
+                            {
+                                switch (markersChildren[j].getAttribute('id'))
+                                {
+                                    case 'startMarker':
+                                        system.startMarker = new jiMarkers.StartMarker(markersChildren[j], viewBoxOriginY, viewBoxScale);
+                                        break;
+                                    case 'runningMarker':
+                                        system.runningMarker = new jiMarkers.RunningMarker(markersChildren[j], viewBoxOriginY, viewBoxScale);
+                                        break;
+                                    case 'endMarker':
+                                        system.endMarker = new jiMarkers.EndMarker(markersChildren[j], viewBoxOriginY, viewBoxScale);
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                    else if (systemChildID.indexOf('staff') !== -1)
+                    {
+                        staff = {};
+                        staff.voices = [];
+                        system.staves.push(staff);
+
+                        staffChildren = systemChildren[i].childNodes;
+                        for (j = 0; j < staffChildren.length; ++j)
+                        {
+                            if (staffChildren[j].nodeName !== '#text')
+                            {
+                                staffChildID = staffChildren[j].getAttribute('id');
+                                if (staffChildID.indexOf('stafflines') !== -1)
+                                {
+                                    stafflineInfo = getStafflineInfo(staffChildren[j].childNodes);
+                                    system.left = stafflineInfo.left;
+                                    system.right = stafflineInfo.right;
+                                    system.gap = getGap(system.gap, stafflineInfo.stafflineYs);
+
+                                    staff.topLineY = stafflineInfo.stafflineYs[0];
+                                    staff.bottomLineY = stafflineInfo.stafflineYs[stafflineInfo.stafflineYs.length - 1];
+                                }
+                                if (staffChildID.indexOf('voice') !== -1)
+                                {
+                                    voice = {};
+                                    staff.voices.push(voice);
+                                }
+                            }
+                        }
+                        setVoiceCentreYs(staff.topLineY, staff.bottomLineY, staff.voices);
+                    }
+                    else if (systemChildID.indexOf('barlines') !== -1)
+                    {
+                        barlinesChildren = systemChildren[i].childNodes;
+                        for (j = 0; j < barlinesChildren.length; ++j)
+                        {
+                            if (barlinesChildren[j].nodeName !== '#text')
+                            {
+                                system.firstBarlineX = parseFloat(barlinesChildren[j].getAttribute("x1"));
+                                system.firstBarlineX /= viewBoxScale;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            system.topLineY = system.staves[0].topLineY;
+            system.bottomLineY = system.staves[system.staves.length - 1].bottomLineY;
+            if (system.gap === undefined)
+            {
+                system.gap = 4; // default value, when all staves have one line.
+            }
+
+            return system;
+        }
+
+        function getViewBoxScale(svgElem)
+        {
+            var width, viewBox, viewBoxStrings, viewBoxWidth, scale;
+
+            width = parseFloat(svgElem.getAttribute('width'));
+            viewBox = svgElem.getAttribute('viewBox');
+            viewBoxStrings = viewBox.split(' ');
+            viewBoxWidth = parseFloat(viewBoxStrings[2]);
+
+            scale = viewBoxWidth / width;
+            return scale;
+        }
+
+        /*************** end of getEmptyPagesAndSystems function definitions *****************************/
+
+        resetContent();
+
+        getPalettes();
+
+        embeddedSvgPages = document.querySelectorAll(".svgPage");
+        nPages = embeddedSvgPages.length;
+        totalSysNumber = 1;
+        viewBoxOriginY = 0; // absolute coordinates
+        for (i = 0; i < nPages; ++i)
+        {
+            sysNumber = 1;
+            svgPage = jiFile.getSubDocument(embeddedSvgPages[i]);
+
+            svgElem = svgPage.childNodes[1];
+            viewBoxScale = getViewBoxScale(svgElem); // a float >= 1 (currently, usually 8.0)
+            svgChildren = svgElem.childNodes;
+            systemID = "page" + (i + 1).toString() + "_system" + (sysNumber++).toString();
+            for (j = 0; j < svgChildren.length; ++j)
+            {
+                if (svgChildren[j].nodeName !== '#text')
+                {
+                    childID = svgChildren[j].getAttribute("id");
+                    if (childID === "frame")
+                    {
+                        currentFrame = svgChildren[j];
+                        currentFrame.originY = viewBoxOriginY;
+                        svgFrames.push(currentFrame);
+                    }
+                    if (childID === systemID)
+                    {
+                        system = getEmptySystem(viewBoxOriginY, viewBoxScale, svgChildren[j]);
+                        systems.push(system); // systems is global inside this namespace
+
+                        systemID = "page" + (i + 1).toString() + "_system" + (sysNumber++).toString();
+                    }
+                }
+            }
+            pageHeight = parseInt(svgElem.getAttribute('height'));
+            viewBoxOriginY += pageHeight;
+        }
+    },
+
+    // Gets the timeObjects. 
+    // speed is a floating point number, greater than zero.
+    // msDurations stored in the score are divided by speed.
+    // Rounding errors are corrected, so that all voices in
+    // a system continue to have the same msDuration.
+    getTimeObjects = function (scoreHasJustBeenSelected, speed)
+    {
+        var embeddedSvgPages, nPages, totalSysNumber, viewBoxOriginY,
+            i, j,
+            systemIndex, sysNumber, svgPage, svgElem, viewBoxScale, svgChildren, systemID,
+            childID, pageHeight,
+            lastSystemTimeObjects, finalBarline, finalBarlineMsPosition;
+
+        function getSystemTimeObjects(system, viewBoxScale, systemNode, speed)
+        {
+            var i, j, systemChildren, systemChildID,
+                staff, staffChildren, staffChildID,
+                voice,
+                staffIndex = 0,
+                voiceIndex = 0;
 
             // A timeObject is either a chord or a rest.
             // Both chords and rests have alignmentX and msDuration fields.
@@ -451,120 +644,32 @@ JI_NAMESPACE.score = (function (document, window)
                 return timeObjects;
             }
 
-            function getGap(gap, stafflineYs)
-            {
-                var newGap = gap;
-                if (newGap === undefined && stafflineYs.length > 1)
-                {
-                    newGap = stafflineYs[1] - stafflineYs[0];
-                    if (newGap < 0)
-                    {
-                        newGap *= -1;
-                    }
-                }
-                return newGap;
-            }
-
-            function setVoiceCentreYs(staffTopY, staffBottomY, voices)
-            {
-                if (voices.length === 1)
-                {
-                    voices[0].centreY = (staffTopY + staffBottomY) / 2;
-                }
-                else // voices.length === 2
-                {
-                    voices[0].centreY = staffTopY;
-                    voices[1].centreY = staffBottomY;
-                }
-            }
-
-            system = {};
-            system.staves = [];
             systemChildren = systemNode.childNodes;
             for (i = 0; i < systemChildren.length; ++i)
             {
                 if (systemChildren[i].nodeName !== '#text')
                 {
                     systemChildID = systemChildren[i].getAttribute("id");
-                    if (systemChildID.indexOf('markers') !== -1)
+                    if (systemChildID.indexOf('staff') !== -1)
                     {
-                        markersChildren = systemChildren[i].childNodes;
-                        for (j = 0; j < markersChildren.length; ++j)
-                        {
-                            if (markersChildren[j].nodeName !== '#text')
-                            {
-                                switch (markersChildren[j].getAttribute('id'))
-                                {
-                                    case 'startMarker':
-                                        system.startMarker = new jiMarkers.StartMarker(markersChildren[j], viewBoxOriginY, viewBoxScale);
-                                        break;
-                                    case 'runningMarker':
-                                        system.runningMarker = new jiMarkers.RunningMarker(markersChildren[j], viewBoxOriginY, viewBoxScale);
-                                        break;
-                                    case 'endMarker':
-                                        system.endMarker = new jiMarkers.EndMarker(markersChildren[j], viewBoxOriginY, viewBoxScale);
-                                        break;
-                                }
-                            }
-                        }
-                    }
-                    else if (systemChildID.indexOf('staff') !== -1)
-                    {
-                        staff = {};
-                        staff.voices = [];
-                        system.staves.push(staff);
-
+                        staff = system.staves[staffIndex++];
                         staffChildren = systemChildren[i].childNodes;
                         for (j = 0; j < staffChildren.length; ++j)
                         {
                             if (staffChildren[j].nodeName !== '#text')
                             {
                                 staffChildID = staffChildren[j].getAttribute('id');
-                                if (staffChildID.indexOf('stafflines') !== -1)
-                                {
-                                    stafflineInfo = getStafflineInfo(staffChildren[j].childNodes);
-                                    system.left = stafflineInfo.left;
-                                    system.right = stafflineInfo.right;
-                                    system.gap = getGap(system.gap, stafflineInfo.stafflineYs);
-
-                                    staff.topLineY = stafflineInfo.stafflineYs[0];
-                                    staff.bottomLineY = stafflineInfo.stafflineYs[stafflineInfo.stafflineYs.length - 1];
-                                }
                                 if (staffChildID.indexOf('voice') !== -1)
                                 {
-                                    voice = {};
+                                    voice = staff.voices[voiceIndex++];
                                     voice.timeObjects = getTimeObjects(system, staffChildren[j].childNodes, speed);
-                                    staff.voices.push(voice);
-                                    //console.log("* voice.timeObjects successfully constructed, staffNumber=" + system.staves.length);
                                 }
                             }
                         }
-                        setVoiceCentreYs(staff.topLineY, staff.bottomLineY, staff.voices);
-                    }
-                    else if (systemChildID.indexOf('barlines') !== -1)
-                    {
-                        barlinesChildren = systemChildren[i].childNodes;
-                        for (j = 0; j < barlinesChildren.length; ++j)
-                        {
-                            if (barlinesChildren[j].nodeName !== '#text')
-                            {
-                                system.firstBarlineX = parseFloat(barlinesChildren[j].getAttribute("x1"));
-                                system.firstBarlineX /= viewBoxScale;
-                                break;
-                            }
-                        }
+                        voiceIndex = 0;
                     }
                 }
             }
-
-            system.topLineY = system.staves[0].topLineY;
-            system.bottomLineY = system.staves[system.staves.length - 1].bottomLineY;
-            if (system.gap === undefined)
-            {
-                system.gap = 4; // default value, when all staves have one line.
-            }
-
-            return system;
         }
 
         function getViewBoxScale(svgElem)
@@ -693,7 +798,7 @@ JI_NAMESPACE.score = (function (document, window)
             }
         }
 
-        function setMarkerParameters(systems)
+        function setSystemMarkerParameters(systems)
         {
             var i, nSystems = systems.length, system;
             for (i = 0; i < nSystems; ++i)
@@ -703,19 +808,24 @@ JI_NAMESPACE.score = (function (document, window)
                 system.runningMarker.setParameters(system, i);
                 system.endMarker.setParameters(system);
             }
+
+            startMarker = systems[0].startMarker;
+            startMarker.setVisible(true);
+
+            moveRunningMarkerToStartMarker(); // is only visible when playing...
+
+            endMarker = systems[systems.length - 1].endMarker;
+            endMarker.moveTo(finalBarlineInScore);
+            endMarker.setVisible(true);
         }
 
-        /*************** end of init function definitions *****************************/
-
-        // The returned score must contain only one copy of the contained information !
-        resetContent();
-
-        getPalettes();
+        /*************** end of getTimeObjects function definitions *****************************/
 
         embeddedSvgPages = document.querySelectorAll(".svgPage");
         nPages = embeddedSvgPages.length;
         totalSysNumber = 1;
         viewBoxOriginY = 0; // absolute coordinates
+        systemIndex = 0;
         for (i = 0; i < nPages; ++i)
         {
             sysNumber = 1;
@@ -730,41 +840,28 @@ JI_NAMESPACE.score = (function (document, window)
                 if (svgChildren[j].nodeName !== '#text')
                 {
                     childID = svgChildren[j].getAttribute("id");
-                    if (childID === "frame")
-                    {
-                        currentFrame = svgChildren[j];
-                        currentFrame.originY = viewBoxOriginY;
-                        svgFrames.push(currentFrame);
-                    }
                     if (childID === systemID)
                     {
-                        system = getSystem(viewBoxOriginY, viewBoxScale, svgChildren[j], speed);
-                        systems.push(system); // systems is global inside this namespace
-
+                        getSystemTimeObjects(systems[systemIndex], viewBoxScale, svgChildren[j], speed);
+                        systemIndex++;
                         systemID = "page" + (i + 1).toString() + "_system" + (sysNumber++).toString();
                     }
                 }
             }
             pageHeight = parseInt(svgElem.getAttribute('height'));
-            viewBoxOriginY += pageHeight;
+
         }
 
         finalBarlineMsPosition = setMsPositions(systems);
         setSystemMsPositionsAndAddFinalBarlineToEachVoice(systems, finalBarlineMsPosition);
 
-        setMarkerParameters(systems);
-
-        startMarker = systems[0].startMarker;
-        startMarker.setVisible(true);
-
-        moveRunningMarkerToStartMarker(); // is only visible when playing...
-
         lastSystemTimeObjects = systems[systems.length - 1].staves[0].voices[0].timeObjects;
-        finalBarline = lastSystemTimeObjects[lastSystemTimeObjects.length - 1]; // 'global' object
+        finalBarlineInScore = lastSystemTimeObjects[lastSystemTimeObjects.length - 1]; // 'global' object
 
-        endMarker = systems[systems.length - 1].endMarker;
-        endMarker.moveTo(finalBarline);
-        endMarker.setVisible(true);
+        if(scoreHasJustBeenSelected)
+        {
+            setSystemMarkerParameters(systems);
+        }
     },
 
     setEndMarkerClick = function (e)
@@ -801,6 +898,30 @@ JI_NAMESPACE.score = (function (document, window)
     endMarkerMsPosition = function ()
     {
         return endMarker.msPosition();
+    },
+
+    // Called when the start button is clicked in the top options panel,
+    // and when setOptions button is clicked at the top of the score.
+    // If the startMarker is not fully visible in the svgPagesDiv, move
+    // it to the top of the div.
+    moveStartMarkerToTop = function (svgPagesDiv)
+    {
+        var height = Math.round(parseFloat(svgPagesDiv.style.height)),
+        scrollTop = svgPagesDiv.scrollTop, startMarkerYCoordinates;
+
+        startMarkerYCoordinates = startMarker.getYCoordinates();
+
+        if ((startMarkerYCoordinates.top < scrollTop) || (startMarkerYCoordinates.bottom > (scrollTop + height)))
+        {
+            if (startMarker.systemIndex() === 0)
+            {
+                svgPagesDiv.scrollTop = 0;
+            }
+            else
+            {
+                svgPagesDiv.scrollTop = startMarkerYCoordinates.top - 10;
+            }
+        }
     },
 
     // Advances the running marker to the following timeObject (in any channel)
@@ -961,6 +1082,12 @@ JI_NAMESPACE.score = (function (document, window)
         this.startMarkerMsPosition = startMarkerMsPosition;
         this.endMarkerMsPosition = endMarkerMsPosition;
 
+        // Called when the start button is clicked in the top options panel,
+        // and when setOptions button is clicked at the top of the score.
+        // If the startMarker is not fully visible in the svgPagesDiv, move
+        // it to the top of the div.
+        this.moveStartMarkerToTop = moveStartMarkerToTop;
+
         // Recalculates the timeObject lists for the runningMarkers (1 marker per system),
         // using the tracksControl to take into account which tracks are actually performing.
         // When the score is first read, all tracks perform by default.
@@ -974,8 +1101,10 @@ JI_NAMESPACE.score = (function (document, window)
         // The frames in the GUI
         this.svgFrames = svgFrames;
 
-        // used to be called init
-        this.getContent = getContent;
+        this.getEmptyPagesAndSystems = getEmptyPagesAndSystems;
+
+        // loads timeObjects
+        this.getTimeObjects = getTimeObjects;
 
         // Returns the score's content as a midi sequence
         this.getSequence = getSequence;
@@ -991,11 +1120,6 @@ JI_NAMESPACE.score = (function (document, window)
         Score: Score
 
         /***
-        // init() analyses the score currently contained (=displayed) in the html, setting the other objects in this API.
-        // The score consists of single, embedded SVG pages. Each embed has the class "svgPage".
-        init: init,
-
-
         // The svgFrames object is an array containing each page's frame object.
         // There is one frame per page.
         svgFrames: svgFrames,

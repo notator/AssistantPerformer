@@ -32,7 +32,8 @@ JI_NAMESPACE.file = (function ()
             try
             {
                 subdoc = embedded_element.getSVGDocument();
-            } catch (e) { }
+            }
+            catch (e){}
         }
         return subdoc;
     },
