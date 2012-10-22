@@ -334,7 +334,7 @@ JI_NAMESPACE.midiChord = (function ()
         function getEmptySliderMoments(msPosition, msDuration, sliderMilliseconds)
         {
             var midiMoments = [],
-                numberOfMsgs = Math.floor(Number(msDuration) / sliderMilliseconds),
+                numberOfMoments = Math.floor(Number(msDuration) / sliderMilliseconds),
                 eventFloatDuration = 0,
                 msFloatDuration = Number(msDuration),
                 currentIntPosition = Number(msPosition),
@@ -342,16 +342,18 @@ JI_NAMESPACE.midiChord = (function ()
                 midiMoment,
                 i;
 
-            if (numberOfMsgs > 0)
+            if (numberOfMoments === 0)
             {
-                eventFloatDuration = msFloatDuration / numberOfMsgs; // eventDuration is a float
-                for (i = 0; i < numberOfMsgs; i++)
-                {
-                    midiMoment = new MIDIMoment(currentIntPosition);
-                    midiMoments.push(midiMoment);
-                    currentFloatPosition += eventFloatDuration;
-                    currentIntPosition = Math.floor(currentFloatPosition);
-                }
+                numberOfMoments = 1;
+            }
+
+            eventFloatDuration = msFloatDuration / numberOfMoments; // eventDuration is a float
+            for (i = 0; i < numberOfMoments; i++)
+            {
+                midiMoment = new MIDIMoment(currentIntPosition);
+                midiMoments.push(midiMoment);
+                currentFloatPosition += eventFloatDuration;
+                currentIntPosition = Math.floor(currentFloatPosition);
             }
 
             if (midiMoments[midiMoments.length - 1].msPosition >= (msPosition + msDuration))
