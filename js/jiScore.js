@@ -26,6 +26,9 @@ JI_NAMESPACE.score = (function (document, window)
 
     MAX_MIDI_CHANNELS = 16,
 
+    // private variable, used when resetting main performance options
+    _previousSpeed = -1,
+
     // The frames around each svgPage
     svgFrames = [],
 
@@ -533,7 +536,7 @@ JI_NAMESPACE.score = (function (document, window)
     // msDurations stored in the score are divided by speed.
     // Rounding errors are corrected, so that all voices in
     // a system continue to have the same msDuration.
-    getTimeObjects = function (scoreHasJustBeenSelected, speed)
+    getTimeObjects = function (speed)
     {
         var embeddedSvgPages, nPages, totalSysNumber, viewBoxOriginY,
             i, j,
@@ -879,8 +882,9 @@ JI_NAMESPACE.score = (function (document, window)
         lastSystemTimeObjects = systems[systems.length - 1].staves[0].voices[0].timeObjects;
         finalBarlineInScore = lastSystemTimeObjects[lastSystemTimeObjects.length - 1]; // 'global' object
 
-        if (scoreHasJustBeenSelected)
+        if (speed !== _previousSpeed)
         {
+            _previousSpeed = speed;
             setSystemMarkerParameters(systems);
         }
     },

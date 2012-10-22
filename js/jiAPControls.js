@@ -864,7 +864,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                 score.getEmptyPagesAndSystems(); // everything except the timeObjects (which have to take account of speed)
             }
 
-            score.getTimeObjects(scoreHasJustBeenSelected, options.assistantsSpeed);
+            score.getTimeObjects(options.assistantsSpeed);
 
             sequence = score.getSequence(options.assistantsSpeed);
 
