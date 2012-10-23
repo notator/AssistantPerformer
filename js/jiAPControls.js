@@ -270,6 +270,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                     // the running marker is at its correct position:
                     // either at the start marker, or somewhere paused.
                     score.setRunningMarkers(svgTracksControl);
+                    score.moveStartMarkerToTop(svgPagesDiv);
                     sequence.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
                         svgTracksControl, reportEndOfSpan, reportMsPos);
                 }
