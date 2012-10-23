@@ -412,7 +412,7 @@ JI_NAMESPACE.sequence = (function ()
         }
         else
         {
-            throw "Attempt to stop a paused sequence.";
+            throw "Attempt to pause a stopped or paused sequence.";
         }
     },
 
@@ -426,11 +426,11 @@ JI_NAMESPACE.sequence = (function ()
         return paused === true;
     },
 
-    // Can only be called while running
-    // (stopped === false && paused === false)
+    // Can only be called while running or paused
+    // (stopped === false)
     stop = function ()
     {
-        if (stopped === false && paused === false)
+        if (stopped === false)
         {
             setState("stopped");
         }
