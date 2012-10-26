@@ -13,16 +13,16 @@
 
 JI_NAMESPACE.namespace('JI_NAMESPACE.score');
 
-JI_NAMESPACE.score = (function (document, window)
+JI_NAMESPACE.score = (function (document)
 {
     "use strict";
     // begin var
     var jiFile = JI_NAMESPACE.file,
-    jiMarkers = JI_NAMESPACE.markers,
-    jiPalettes = JI_NAMESPACE.palettes,
-    jiSequence = JI_NAMESPACE.sequence,
-    jiTrack = JI_NAMESPACE.track,
-    jiMIDIChord = JI_NAMESPACE.midiChord,
+        jiMarkers = JI_NAMESPACE.markers,
+        jiPalettes = JI_NAMESPACE.palettes,
+        jiSequence = JI_NAMESPACE.sequence,
+        jiTrack = JI_NAMESPACE.track,
+        jiMIDIChord = JI_NAMESPACE.midiChord,
 
     MAX_MIDI_CHANNELS = 16,
 
@@ -1075,7 +1075,7 @@ JI_NAMESPACE.score = (function (document, window)
     {
         if (!(this instanceof Score))
         {
-            return new Score();
+            return new Score(callback);
         }
 
         svgFrames = [];
@@ -1163,4 +1163,4 @@ JI_NAMESPACE.score = (function (document, window)
 
     return publicAPI;
 
-} (document, window));
+} (document));
