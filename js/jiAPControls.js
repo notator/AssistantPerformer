@@ -65,26 +65,64 @@ JI_NAMESPACE.apControls = (function (document, window)
                 scoreIndex = mo.scoreSelector.selectedIndex;
                 outputDeviceIndex = mo.midiOutputDeviceSelector.selectedIndex;
 
-                //mo.midiInputDeviceSelector.disabled = false;
+                mo.midiInputDeviceSelector.disabled = false;
                 mo.scoreSelector.disabled = false;
                 mo.midiOutputDeviceSelector.disabled = false;
-                if (inputDeviceIndex === 0 || scoreIndex === 0)
+
+                if (scoreIndex === 0)
                 {
                     mo.trackSelector.disabled = true;
+                    mo.velocityOptionCheckbox.disabled = true;
+                    mo.pitchOptionCheckbox.disabled = true;
+                    mo.expressionOptionCheckbox.disabled = true;
+                    mo.modulationWheelOptionCheckbox.disabled = true;
+                    mo.panOptionCheckbox.disabled = true;
+                    mo.pitchWheelOptionCheckbox.disabled = true;
+                    mo.assistantUsesAbsoluteDurationsRadioButton.disabled = true;
+                    mo.assistantUsesRelativeDurationsRadioButton.disabled = true;
+                    mo.assistantsSpeedInputText.disabled = true;
                 }
                 else
                 {
                     mo.trackSelector.disabled = false;
+                    mo.velocityOptionCheckbox.disabled = false;
+                    mo.pitchOptionCheckbox.disabled = false;
+                    mo.expressionOptionCheckbox.disabled = false;
+                    mo.modulationWheelOptionCheckbox.disabled = false;
+                    mo.panOptionCheckbox.disabled = false;
+                    mo.pitchWheelOptionCheckbox.disabled = false;
+                    mo.assistantUsesAbsoluteDurationsRadioButton.disabled = false;
+                    mo.assistantUsesRelativeDurationsRadioButton.disabled = false;
+                    mo.assistantsSpeedInputText.disabled = false;
                 }
-                //mo.velocityOptionCheckbox.disabled = false;
-                //mo.pitchOptionCheckbox.disabled = false;
-                //mo.expressionOptionCheckbox.disabled = false;
-                //mo.modulationWheelOptionCheckbox.disabled = false;
-                //mo.panOptionCheckbox.disabled = false;
-                //mo.pitchWheelOptionCheckbox.disabled = false;
-                mo.assistantUsesAbsoluteDurationsRadioButton.disabled = false;
-                mo.assistantsSpeedInputText.disabled = false;
-                //mo.assistantUsesRelativeDurationsRadioButton.disabled = false;
+
+                if (inputDeviceIndex === 0)
+                {
+                    mo.trackSelector.disabled = true;
+                    mo.velocityOptionCheckbox.disabled = true;
+                    mo.pitchOptionCheckbox.disabled = true;
+                    mo.expressionOptionCheckbox.disabled = true;
+                    mo.modulationWheelOptionCheckbox.disabled = true;
+                    mo.panOptionCheckbox.disabled = true;
+                    mo.pitchWheelOptionCheckbox.disabled = true;
+
+                    //mo.assistantUsesAbsoluteDurationsRadioButton.disabled = true;
+                    mo.assistantUsesRelativeDurationsRadioButton.disabled = true;
+
+                    mo.assistantUsesAbsoluteDurationsRadioButton.checked = true;
+                    mo.assistantUsesRelativeDurationsRadioButton.checked = false;
+                    // The speed option can be used with or without a midi input device.
+                }
+
+                if (mo.assistantUsesAbsoluteDurationsRadioButton.checked === false
+                || mo.assistantUsesAbsoluteDurationsRadioButton.disabled === true)
+                {
+                    mo.assistantsSpeedInputText.disabled = true;
+                }
+                else
+                {
+                    mo.assistantsSpeedInputText.disabled = false;
+                }
 
                 // Note that the midi input device does not have to be set in order to
                 // enable the start button.
@@ -670,23 +708,16 @@ JI_NAMESPACE.apControls = (function (document, window)
             }
         }
 
-        /**** controls in options panel ***/
-        // The midi input device does not have to be set in order to
-        // enable the start button. If it is not set, a warning will be given when
-        // the start button is clicked.
-        if (controlID === "midiInputDeviceSelector")
-        {
-            setMainOptionsState("enable"); // enables only the appropriate controls
-        }
-
+        /**** controls in options panel ***/    
         if (controlID === "scoreSelector")
         {
-            // this point is reached only when the selector's value has changed
             setScore();
-            setMainOptionsState("enable"); // enables only the appropriate controls
         }
-
-        if (controlID === "midiOutputDeviceSelector")
+        if (controlID === "midiInputDeviceSelector"
+        || controlID === "scoreSelector"
+        || controlID === "midiOutputDeviceSelector"
+        || controlID === "assistantUsesAbsoluteDurationsRadioButton"
+        || controlID === "assistantUsesRelativeDurationsRadioButton")
         {
             setMainOptionsState("enable"); // enables only the appropriate controls
         }
