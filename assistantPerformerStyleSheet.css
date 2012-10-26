@@ -1,4 +1,36 @@
 ﻿/** style sheet for AssistantPerformer **/
+
+a:link
+{
+    color: #1010C6;
+}
+a:hover
+{
+    color: #0088FF;
+}
+a:active
+{
+}
+a:visited
+{
+    color: #00AA00;
+}
+
+p.header1
+{
+    font-size: 18px;
+    font-weight: normal;
+    margin-top:14px;
+    margin-bottom:14px
+}
+
+hr.hrHeight1
+{
+    border-style: none;
+    height: 1px;
+    background-color: #1010C6;
+}
+
 div.centredReference
 {
         position:relative; 
@@ -21,8 +53,8 @@ div.centredReference
 }
 select.deviceSelector
 {
-    font-size: 9pt; 
     font-family: Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif;
+    font-size: 8pt; 
     width: 220px;
     margin-left: 8px;
     margin-right: 8px; 
