@@ -44,7 +44,8 @@
                     <div style="margin-top:6px">
                         <select id="midiInputDeviceSelector"
 					        name="midiInputDeviceSelector"
-                            class="deviceSelector" onchange="JI_NAMESPACE.apControls.doControl('midiInputDeviceSelector')">
+                            class="deviceSelector" onchange="JI_NAMESPACE.apControls.doControl('midiInputDeviceSelector')"
+                            disabled="disabled">
                         </select>
                         <select id="scoreSelector" name="scoreSelector"
                             class="deviceSelector" onchange="JI_NAMESPACE.apControls.doControl('scoreSelector')">
@@ -136,8 +137,7 @@
                         </div>
                         <div style="margin-left:20px;">
                             <div  class="narrowLineHeight" >
-                                <input type="radio" name="durationOptions" value="V1" id="assistantUsesAbsoluteDurationsRadioButton" checked="checked"
-                                 onchange="JI_NAMESPACE.apControls.doControl('assistantUsesAbsoluteDurationsRadioButton')" />
+                                <input type="radio" name="durationOptions" value="V1" id="assistantUsesAbsoluteDurationsRadioButton" checked="checked" />
                                 <label id="assistantUsesAbsoluteDurationsRadioButtonLabel" for="assistantUsesAbsoluteDurationsRadioButton">
                                     Absolute Symbols: (Speed option) The assistant's durations will be those stored<br /> 
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in the score, divided by the following floating point value: <br />
@@ -151,8 +151,7 @@
                                 </label>
                             </div>
                             <div class="narrowLineHeight">
-                                <input type="radio" name="durationOptions" value="performed" id="assistantUsesRelativeDurationsRadioButton" disabled="disabled"
-                                onchange="JI_NAMESPACE.apControls.doControl('assistantUsesRelativeDurationsRadioButton')"/>
+                                <input type="radio" name="durationOptions" value="performed" id="assistantUsesRelativeDurationsRadioButton" disabled="disabled"/>
                                 <label id="assistantUsesRelativeDurationsRadioButtonLabel" for="assistantUsesRelativeDurationsRadioButton">
                                     Relative Symbols: The assistant's moment durations will be those stored in the <br />
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;score multiplied by the relation between the written and performed durations of<br />
