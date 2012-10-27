@@ -1,6 +1,6 @@
-The aim of this project is to give a single performer maximum control over the performance of a music score displayed in a browser.
+This is a web MIDI application, which aims to give a single performer maximum control over the performance of a music score displayed in a browser.
 
-The project is written in HTML5 and Javascript, uses MIDI input and output devices, and scores stored in an SVG format which has been enhanced to contain MIDI information.
+The project is written in HTML5 and Javascript. It uses MIDI input and output devices, and scores stored in an SVG format which has been enhanced to contain MIDI information.
 
 The Jazz plugin [1] is currently required for MIDI support, but this will change when browsers implement the new WEB MIDI API currently being discussed on the public forum of the W3C Audio Group [2].
 
@@ -10,11 +10,15 @@ A longer description of this Assistant Performer can be found at
 
 http://james-ingram-act-two.de/open-source/assistantPerformer/aboutAssistantPerformer.html
 
-This project is a work-in-progress. The current version can be tried out on the web at
+This project is a work-in-progress, and has two main branches: 'master' and 'dev'.
+
+The code in the 'master' branch defines an appplication which can be tried out publicly at
 
 http://james-ingram-act-two.de/open-source/publicAssistantPerformer/assistantPerformer.html
 
-This repository contains the code for the above application. Day-to-day testing is done elsewhere.
+This 'master' version  is a stable, but incomplete version of the project. Incomplete features are disabled, so that users will not get confused.
+
+The 'dev' branch is where day-to-day development is done. It does not have a public test site.
 
 James Ingram
 
