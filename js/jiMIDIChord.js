@@ -694,8 +694,10 @@ JI_NAMESPACE.midiChord = (function ()
             midiMoments = chordMoments;
         }
 
-        midiMoments[0].messages[0].reportTimestamp = true; // used by sequencer
-        midiMoments[midiMoments.length - 1].messages[0].reportTimestamp = true; // used by sequencer
+        // The timestamp may change when using relative assisted durations,
+        // but the reportedTimestamp must always be the msPosition in the score.
+        midiMoments[0].messages[0].msPositionInScore = midiMoments[0].messages[0].timeStamp; // used by sequencer
+        midiMoments[midiMoments.length - 1].messages[0].msPositionInScore = midiMoments[midiMoments.length - 1].messages[0].timeStamp; // used by sequencer
 
         this.addToTrack = addToTrack;
 
@@ -713,8 +715,9 @@ JI_NAMESPACE.midiChord = (function ()
         }
 
         restMoment = new MIDIMoment(timeObject.msPosition);
+        restMoment.msPositionInScore = this.msPosition;
         midiMoments = [];
-        midiMoments.push(restMoment); // an empty moment
+        midiMoments.push(restMoment); // an empty moment with an msPositionInScore attribute
 
         this.msPosition = timeObject.msPosition;
         this.msDuration = timeObject.msDuration;
@@ -743,7 +746,7 @@ JI_NAMESPACE.midiChord = (function ()
 
         // A MIDIRest is like a MIDIChord which has a single, empty MIDIMoment.
         // MIDIRests are necessary so that running cursors can be moved to their
-        // symbol, when sequences call reportTimestamp(timestamp).
+        // symbol, when sequences call reportMsPositionInScore(msPositionInScore).
         MIDIRest: MIDIRest
     };
     // end var

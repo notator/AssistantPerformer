@@ -29,15 +29,22 @@ window.addEventListener("load", function ()
         var inputs = MIDIAccess.enumerateInputs(),
             outputs = MIDIAccess.enumerateOutputs(),
 
-            // makes a simple connection between the MIDI input and MIDI output,
-            // as selected in the HTML5 selector elements
+            // sets the current devices in apControls.options
             connectDevices = function ()
             {
+                if (apControls !== undefined)
+                {
+                    apControls.setMidiDevices(input, output);
+                }
+
+                /********
+                // ji -- commented out 28.10.12 
                 if (apControls !== undefined && output !== null)
                 {
                     apControls.setMidiOut(output);
                 }
 
+                // the input device is now connected and disconnected dynamically inside jiAssistant.js
                 if (input)
                 {
                     input.addEventListener("midimessage", function (msg)
@@ -50,9 +57,9 @@ window.addEventListener("load", function ()
                         {
                             output.sendMIDIMessage(msg);
                         }
-
                     });
                 }
+                *********/
             };
 
         //create dropdown menu for MIDI inputs
@@ -77,7 +84,7 @@ window.addEventListener("load", function ()
             connectDevices();
         });
 
-        // ji additions
+        // ji addition
         JMB.createMIDIMessage = MIDIAccess.createMIDIMessage;
     });
 

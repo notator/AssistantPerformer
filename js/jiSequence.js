@@ -29,7 +29,7 @@ JI_NAMESPACE.sequence = (function ()
     //jiTrack = JI_NAMESPACE.track,
     tracks = [],
     reportEndOfSpan, // compulsory callback. An exception is thrown if reportEndOfSpan is null or undefined
-    reportTimestamp, // optional callback. Info used for setting the position of the running cursor in the GUI.
+    reportMsPositionInScore, // optional callback. Info used for setting the position of the running cursor in the GUI.
     lastSpanTimestamp,
     lastSequenceTimestamp,
     currentMoment,
@@ -116,14 +116,14 @@ JI_NAMESPACE.sequence = (function ()
 
     // Returns either the next message in the sequence, 
     // or null if there are no more moments and no more messages.
-    // Moments can be empty of MIDIMessages (i.e. be rests), in which case
+    // MidiMoments can be empty of MIDIMessages (i.e. be rests), in which case
     // a 'message' is returned having three attributes:
     //     timestamp = moment.timestamp 
     //     isEmpty = true
-    //     reportTimestamp = true
+    //     msPositionInScore = MidiMoment.msPositionInScore
     // Otherwise, the message belongs to a MIDIChord.
     // Both the first message in the first moment and the first message in the last moment
-    // in each MIDIChord are given a reportTimestamp attribute in the MIDIChord constructor
+    // in each MIDIChord are given a msPositionInScore attribute in the MIDIChord constructor
     // (see jiMIDIChord.js).
     nextMessage = function ()
     {
@@ -154,7 +154,7 @@ JI_NAMESPACE.sequence = (function ()
                     nextMsg = {};
                     nextMsg.timestamp = currentMoment.timestamp;
                     nextMsg.isEmpty = true;
-                    nextMsg.reportTimestamp = true; // force this message's timestamp to be reported
+                    nextMsg.msPositionInScore = currentMoment.msPositionInScore; // force this message's msPositionInScore to be reported
                 }
             }
         }
@@ -162,26 +162,39 @@ JI_NAMESPACE.sequence = (function ()
         return nextMsg;
     },
 
-    // tick() function, which began as an idea by Chris Wilson
-    // Chris: "with a conformant sendMIDIMessage w/ timestamps, PREQUEUE could be set to a larger number like 200."
-    // James: (2nd Oct. 2012)
+    // tick() function -- which began as an idea by Chris Wilson
     // This function has become rather complicated, but it has been tested thoroughly as far as possible without
     // having "a conformant sendMIDIMessage w/ timestamps", and appears to be correct.
     // It needs testing again with the conformant sendMIDIMessage and a higher value for PREQUEUE. What would the
     // ideal value for PREQUEUE be? It needs to be small enough for time differences between cursor position and
     // sound to be unnoticeable.
+    // Email correspondence (End of Oct. 2012):
+    //      James: "...how do I decide how big PREQUEUE should be?"
+    //      Chris: "Well, you're trading off two things:
+    //          - 'precision' of visual display (though keep in mind this is fundamentally limited to the 16.67ms tick
+    //            of the visual refresh rate (for a 60Hz display) - and this also affects how quickly you can respond
+    //            to tempo changes (or stopping/pausing playback).
+    //          - reliance on how accurate the setTimeout/setInterval clock is (for this reason alone, the lookahead
+    //            probably needs to be >5ms).
+    //          So, in short, you'll just have to test on your target systems."
+    //      James: "Yes, that's more or less what I thought. I'll start testing with PREQUEUE at 16.67ms."
+    //
+    // See the conclusion at the end of this comment: "In the worst case, the cursor will advance to the corresponding
+    // symbol PREQUEUE milliseconds before the sound is actually heard."
+    //
     // Synchronizing with the running cursor in the score:
-    // 1. reportTimestamp(timestamp) is an optional callback, set when the performance starts. It moves the cursor
-    //    to the next rest or chord symbol in the score (whose timestamp is the one reported).
+    // 1. reportMsPositionInScore(msPositionInScore) is an optional callback, set when the performance starts.
+    //    It moves the cursor to the next rest or chord symbol in the score (whose msPosition is the one reported).
     // 2. msg is outside tick(). The very first msg in the performance is loaded in another function when the
     //    performance starts. 
     // 3. currentMomentTimestamp is also outside tick(). Is also initialized when the performance starts.
-    // 4. timestamps which MUST be reported are now cached inside the while{} loop. (This is done by giving the
-    //    appropriate messages a reportTimestamp attribute: Rest "messages" are given this attribute in the
-    //    nextMessage() function, the first message in the first and last moments in a MIDIChord are given this
-    //    attribute in the MIDIChord constructor.) All the cached timestamps, except the one which will be reported
-    //    at the beginning of the next tick, are then reported when the loop exits. In the worst case, the cursor
-    //    will advance to the corresponding symbol PREQUEUE milliseconds before the sound is actually heard.
+    // 4. msPositionInScore attributes, which MUST be reported, are now cached inside the while{} loop.
+    //    (Rest "messages" are given this attribute in the nextMessage() function, the first message in the first and
+    //    last moments in a MIDIChord are given this attribute in the MIDIChord constructor.)
+    //    All the cached msPositionInScore attributes, except the one which will be reported at the beginning of the
+    //    next tick, are then reported when the loop exits.
+    //    In the worst case, the cursor will advance to the corresponding symbol PREQUEUE milliseconds before the sound
+    //    is actually heard.
     PREQUEUE = 0,
     maxDeviation, // for console.log, set to 0 when performance starts
     midiOutputDevice, // set when performance starts
@@ -194,14 +207,14 @@ JI_NAMESPACE.sequence = (function ()
     tick = function ()
     {
         var deviation, i,
-        nTimestampsToReport, timeStampsToReport = [],
+        nMsPositionsToReport, msPositionsToReport = [],
         domhrtRelativeTime = Math.round(window.performance.webkitNow() - domhrtMsOffsetAtStartOfPerformance),
         delay = msg.timestamp - domhrtRelativeTime;
 
-        if (msg.reportTimestamp !== undefined && msg.timestamp > currentMomentTimestamp && reportTimestamp !== null)
+        if (msg.msPositionInScore !== undefined && msg.timestamp > currentMomentTimestamp && reportMsPositionInScore !== null)
         {
             currentMomentTimestamp = msg.timestamp;
-            reportTimestamp(currentMomentTimestamp); // update the cursor for the timestamp which
+            reportMsPositionInScore(msg.msPositionInScore); // update the cursor for the timestamp which
             // is going to be scheduled for currentMomentTimestamp (i.e. sent immediately, now)
             //console.log("1: timestamp reported, currentMomentTimestamp now=" + currentMomentTimestamp);
         }
@@ -232,32 +245,32 @@ JI_NAMESPACE.sequence = (function ()
                 console.log("Pause, or end of sequence.  maxDeviation is " + maxDeviation + "ms");
                 return;
             }
-            if (msg.reportTimestamp !== undefined && msg.timestamp > currentMomentTimestamp && reportTimestamp !== null)
+            if (msg.msPositionInScore !== undefined && msg.timestamp > currentMomentTimestamp && reportMsPositionInScore !== null)
             {
-                timeStampsToReport.push(msg.timestamp);
+                msPositionsToReport.push(msg);
             }
             delay = msg.timestamp - domhrtRelativeTime;
         }
 
-        if (timeStampsToReport.length > 0)
+        if (msPositionsToReport.length > 0)
         {
             // Report all timestamps which need to be reported, but whose messages were scheduled during
             // the above loop.
-            // Note that timeStampsToReport only contains timestamps if they belong to a rest or the first
+            // Note that msPositionsToReport only contains timestamps if they belong to a rest or the first
             // message in the first or last moment in a MIDIChord.
             // Since, when we have a "conformant sendMIDIMessage w/ timestamps", the messages are actually sent
             // to the output device later, this will lead to the GUI cursor position moving to the respective
             // position in the GUI before the sound is actually heard.
             // In the worst case, the cursor will move to its chord or rest PREQUEUE milliseconds before the
             // sound is heard. 
-            nTimestampsToReport = timeStampsToReport.length;
+            nMsPositionsToReport = msPositionsToReport.length;
 
-            for (i = 0; i < nTimestampsToReport; ++i)
+            for (i = 0; i < nMsPositionsToReport; ++i)
             {
-                if (timeStampsToReport[i] < msg.timestamp && timeStampsToReport[i] > currentMomentTimestamp)
+                if (msPositionsToReport[i].timestamp < msg.timestamp && msPositionsToReport[i].timestamp > currentMomentTimestamp)
                 {
-                    currentMomentTimestamp = timeStampsToReport[i];
-                    reportTimestamp(currentMomentTimestamp);  // updates the cursor position in the score
+                    currentMomentTimestamp = msPositionsToReport[i].timestamp;
+                    reportMsPositionInScore(msPositionsToReport[i].msPositionInScore);  // updates the cursor position in the score
                     //console.log("After: **** reporting timestamp before its msg is really sent and the sound actually happens ****");
                     //console.log("2: currentMomentTimestamp=" + currentMomentTimestamp + ", next msg.timestamp=" + msg.timestamp);
                 }
@@ -359,11 +372,11 @@ JI_NAMESPACE.sequence = (function ()
             reportEndOfSpan = reportEOS;
             if (reportMsPosition === undefined || reportMsPosition === null)
             {
-                reportTimestamp = null;
+                reportMsPositionInScore = null;
             }
             else
             {
-                reportTimestamp = reportMsPosition;
+                reportMsPositionInScore = reportMsPosition;
             }
 
             setTracks(tracksControl, fromMs, toMs);

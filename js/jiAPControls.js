@@ -1,15 +1,15 @@
 /*
- *  copyright 2012 James Ingram
- *  http://james-ingram-act-two.de/
- *
- *  Code licensed under MIT
- *  https://github.com/notator/assistant-performer/blob/master/License.md
- *
- *  jiAPControls.js
- *  The JI_NAMESPACE.apControls namespace which defines the
- *  Assistant Performer's Graphic User Interface.
- *  
- */
+*  copyright 2012 James Ingram
+*  http://james-ingram-act-two.de/
+*
+*  Code licensed under MIT
+*  https://github.com/notator/assistant-performer/blob/master/License.md
+*
+*  jiAPControls.js
+*  The JI_NAMESPACE.apControls namespace which defines the
+*  Assistant Performer's Graphic User Interface.
+*  
+*/
 
 JI_NAMESPACE.namespace('JI_NAMESPACE.apControls');
 
@@ -37,20 +37,10 @@ JI_NAMESPACE.apControls = (function (document, window)
 
         scoreHasJustBeenSelected = false,
 
-    // If a Midi input device has been set in the device selector, this is where input MIDI messages
-    // arrive, and where processing is going to be done. If the device selector's current index is 0,
-    // options.livePerformer will be false, and this function is not called.
-    handleMidiIn = function (msg)
+    // This is set when the input or output device selectors change.
+    setMidiDevices = function (input, output)
     {
-        if (options.outputDevice)
-        {
-            options.outputDevice.sendMIDIMessage(msg);
-        }
-    },
-
-    // This is set when the output device selector changes.
-    setMidiOut = function (output)
-    {
+        options.inputDevice = input;
         options.outputDevice = output;
     },
 
@@ -280,6 +270,12 @@ JI_NAMESPACE.apControls = (function (document, window)
 
         function setPlaying()
         {
+            var player = sequence;
+            if (options.assistedPerformance == true)
+            {
+                player = assistant;
+            }
+
             svgTracksControl.setDisabled(true);
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
@@ -297,11 +293,11 @@ JI_NAMESPACE.apControls = (function (document, window)
             cl.sendStartToBeginningControlDisabled.setAttribute("opacity", SMOKE);
             cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
 
-            if (sequence !== undefined && (sequence.isStopped() || sequence.isPaused()))
+            if (player !== undefined && (player.isStopped() || player.isPaused()))
             {
-                if (sequence.isPaused())
+                if (player.isPaused())
                 {
-                    sequence.resume();
+                    player.resume();
                 }
                 else
                 {
@@ -309,7 +305,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                     // either at the start marker, or somewhere paused.
                     score.setRunningMarkers(svgTracksControl);
                     score.moveStartMarkerToTop(svgPagesDiv);
-                    sequence.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
+                    player.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
                         svgTracksControl, reportEndOfSpan, reportMsPos);
                 }
             }
@@ -708,7 +704,7 @@ JI_NAMESPACE.apControls = (function (document, window)
             }
         }
 
-        /**** controls in options panel ***/    
+        /**** controls in options panel ***/
         if (controlID === "scoreSelector")
         {
             setScore();
@@ -754,7 +750,7 @@ JI_NAMESPACE.apControls = (function (document, window)
         {
             if (cl.livePerformerOnOffDisabled.getAttribute("opacity") !== SMOKE)
             {
-                options.livePerformer = !(options.livePerformer);
+                options.assistedPerformance = !(options.assistedPerformance);
             }
         }
 
@@ -783,7 +779,7 @@ JI_NAMESPACE.apControls = (function (document, window)
             if (overRectID === 'overLivePerformerOnOffFrame')
             {
                 livePerformerOffLayer = document.getElementById('livePerformerOff');
-                if (options.livePerformer === true)
+                if (options.assistedPerformance === true)
                 {
                     livePerformerOffLayer.setAttribute("opacity", METAL);
                 }
@@ -804,7 +800,7 @@ JI_NAMESPACE.apControls = (function (document, window)
         if (overRectID === 'overLivePerformerOnOffFrame')
         {
             livePerformerOffLayer = document.getElementById('livePerformerOff');
-            if (options.livePerformer === true)
+            if (options.assistedPerformance === true)
             {
                 livePerformerOffLayer.setAttribute("opacity", GLASS);
             }
@@ -864,8 +860,8 @@ JI_NAMESPACE.apControls = (function (document, window)
 
                 options.assistantsSpeed = parseFloat(assistantsSpeedInputText.value) / 100.0;
 
-                // options.livePerformer is kept up to date by the livePerformerOnOffButton.
-                options.livePerformer = (cl.livePerformerOff.getAttribute("opacity") === "0");
+                // options.assistedPerformance is kept up to date by the livePerformerOnOffButton.
+                options.assistedPerformance = (cl.livePerformerOff.getAttribute("opacity") === "0");
 
                 success = true;
             }
@@ -900,6 +896,11 @@ JI_NAMESPACE.apControls = (function (document, window)
 
             sequence = score.getSequence(options.assistantsSpeed);
 
+            if (options.assistedPerformance === true)
+            {
+                assistant = new Assistant(sequence, options, reportEndOfSpan, reportMsPos);
+            }
+
             // The sequence's play() functions can now play its internal tracks
             // Each track is an array of midiMoments ordered in temporal sequence.
 
@@ -916,7 +917,7 @@ JI_NAMESPACE.apControls = (function (document, window)
         init: init,
 
         handleMidiIn: handleMidiIn, // the function at which midi IN messages arrive
-        setMidiOut: setMidiOut,
+        setMidiDevices: setMidiDevices,
 
         doControl: doControl,
         showOverRect: showOverRect,
