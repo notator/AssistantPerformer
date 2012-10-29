@@ -213,11 +213,9 @@ JI_NAMESPACE.assistant = (function (window)
 
                     subsequenceStartNow = now; // used only with the relative durations option
                 }
-                // if options.assistantUsesAbsoluteDurations === true, the durations will already be correct in the subsequence.
-
+                // if options.assistantUsesAbsoluteDurations === true, the durations will already be correct in all subsequences.
                 currentIndex = nextIndex++;
-                nextSubsequence.setAbsoluteTime(now); // add this to Sequence
-                nextSubsequence.playSpan(options.outputDevice, fromMs, toMs, tracksControl, null, null)
+                nextSubsequence.playSpan(options.outputDevice, 0, Infinity, tracksControl, null, null)
             }
 
             msgType = getMessageType(msg);

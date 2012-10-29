@@ -149,7 +149,7 @@ JI_NAMESPACE.sequence = (function ()
                 {
                     nextMsg = currentMoment.messages[messageIndex++];
                 }
-                else 
+                else
                 {   // a rest
                     nextMsg = {};
                     nextMsg.timestamp = currentMoment.timestamp;
@@ -354,17 +354,18 @@ JI_NAMESPACE.sequence = (function ()
     //
     // The reportEOS argument is a compulsory callback function (having no arguments)
     // which is called when the last MIDIMessage in the span or sequence has been sent.
-    // If the span is set to end after the end of the file, this callback is simply
+    // If the span is set to end after the end of the sequence, this callback is simply
     // called (without any error) when the last message in the sequence has been sent.
     //
     // The reportMsPosition argument is a callback function which reports the current
     // msPosition back to the GUI while performing.
     // reportMsPosition can be null or undefined, in which case it is simply ignored.
-    // Otherwise, the msPosition it passes back is the number of milliseconds from the
-    // start of the score, i.e. the original timestamp set in each MIDIMoment and
-    // MIDIMessage in the original sequence.
-    // The Assistant Performer uses this value to identify chord symbols in the score,
-    // and so to synchronize the running cursor.
+    // Otherwise, the msPosition it passes back is the original number of milliseconds
+    // from the start of the score. This value is used to identify chord symbols in the
+    // score, and so to synchronize the running cursor. It is explicitly different from
+    // the timestamp used when sending MidiMessages. The timestamp can change dynamically
+    // during an assisted performance (when using durations which are relative to the
+    // live performer's durations).
     playSpan = function (midiOutDevice, fromMs, toMs, tracksControl, reportEOS, reportMsPosition)
     {
         if (midiOutDevice !== null && midiOutDevice !== undefined)
@@ -458,6 +459,40 @@ JI_NAMESPACE.sequence = (function ()
         tracks.push(newTrack);
     },
 
+    // used in assisted performances having relative durations
+    totalMsDuration = function ()
+    {
+        var nTracks = tracks.length,
+            i,
+            trackMsDuration,
+            msDuration = 0.0;
+
+        for (i = 0; i < nTracks; ++i)
+        {
+            trackMsDuration = tracks[i].midiMoments[tracks[i].midiMoments.length - 1].timestamp;
+            msDuration = (msDuration > trackMsDuration) ? msDuration : trackMsDuration;
+        }
+        return msDuration;
+    },
+
+    // used in assisted performances having relative durations
+    changeSpeed = function (speed)
+    {
+        var nTracks = tracks.length,
+            i, j, track, trackLength, midiMoment;
+
+        for (i = 0; i < nTracks; ++i)
+        {
+            track = tracks[i];
+            trackLength = track.midiMoments.length;
+            for (j = 0; j < trackLength; ++j)
+            {
+                midiMoment = track.midiMoments[j];
+                midiMoment.timestamp *= speed;
+            }
+        }
+    },
+
     // An empty sequence is created. It contains an empty tracks array.
     Sequence = function ()
     {
@@ -471,6 +506,10 @@ JI_NAMESPACE.sequence = (function ()
         setState("stopped");
 
         this.addTrack = addTrack; // addTrack(track)
+
+        // These two functions are used in assisted performances having relative durations
+        this.totalMsDuration = totalMsDuration; // totalMsDuration()
+        this.changeSpeed = changeSpeed; // changeSpeed(speed)
 
         this.playSpan = playSpan; // playSpan(midiOutDevice, fromMs, toMs, tracksControl, reportEndOfSpan, reportMsPosition)
 

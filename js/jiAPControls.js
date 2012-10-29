@@ -20,6 +20,7 @@ JI_NAMESPACE.apControls = (function (document, window)
     // module dependencies (see Javascript Patterns p.98)
     var svgTracksControl = JI_NAMESPACE.apTracksControl,
         jiScore = JI_NAMESPACE.score,
+        jiAssistant = JI_NAMESPACE.assistant,
         score,
         sequence,
         svgControlsState = 'stopped', //svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd'.
@@ -898,7 +899,7 @@ JI_NAMESPACE.apControls = (function (document, window)
 
             if (options.assistedPerformance === true)
             {
-                assistant = new Assistant(sequence, options, reportEndOfSpan, reportMsPos);
+                assistant = new jiAssistant.Assistant(sequence, options, reportEndOfSpan, reportMsPos);
             }
 
             // The sequence's play() functions can now play its internal tracks
