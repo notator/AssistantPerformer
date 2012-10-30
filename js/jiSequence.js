@@ -21,12 +21,12 @@
 
 JI_NAMESPACE.namespace('JI_NAMESPACE.sequence');
 
-JI_NAMESPACE.sequence = (function ()
+JI_NAMESPACE.sequence = (function (window)
 {
     "use strict";
 
     var 
-    //jiTrack = JI_NAMESPACE.track,
+    jiTrack = JI_NAMESPACE.track,
     tracks = [],
     reportEndOfSpan, // compulsory callback. An exception is thrown if reportEndOfSpan is null or undefined
     reportMsPositionInScore, // optional callback. Info used for setting the position of the running cursor in the GUI.
@@ -501,15 +501,168 @@ JI_NAMESPACE.sequence = (function ()
             return new Sequence();
         }
 
+
+        // Returns an array. Each subsequence in the array is a Sequence, beginning (as all Sequences do) at timestamp = 0ms.
+        // A subsequence exists for each chord or rest in the live performer's track.
+        // A midiMoment which starts a chord sequence has a chordStart attribute.
+        // A midiMoment which starts a rest sequence has a restStart attribute.
+        // The restStart and chordStart attributes are first allocated in the MIDIChord and MIDIRest constructors. These
+        // attributes may be transferred in Track.addMIDIMoment(), so restStart midiMoments are not necessarily empty.
+        // Subsequences corresponding to a live performer's chord are given a chordSubsequence attribute (=true).
+        // Subsequences corresponding to a live performer's rest are given a restSubsequence attribute (=true).
+        function getSubsequences(livePerformersTrackIndex)
+        {
+            var subsequences = [], nSubsequences,
+            i, trackIndex, nTracks;
+
+            // The returned subsequences have a temporary timestamp attribute and
+            // either a restSubsequence or a chordSubsequence attribute, 
+            // depending on whether they correspond to a live player's rest or chord.
+            // The timestamp attribute is deleted in fillSubsequences() below.
+            // The subsequences do not yet contain any tracks.
+            function getEmptySubsequences(livePerformersTrack)
+            {
+                var s, emptySubsequences = [],
+                    performersMidiMoments, nPerformersMidiMoments, i,
+                    midiMoment, timestamp;
+
+                performersMidiMoments = livePerformersTrack.moments;
+                nPerformersMidiMoments = performersMidiMoments.length;
+                for (i = 0; i < nPerformersMidiMoments; ++i)
+                {
+                    midiMoment = performersMidiMoments[i];
+                    if (midiMoment.restStart !== undefined)
+                    {
+                        s = new Sequence();
+                        if (midiMoment.messages.length > 0)
+                        {
+                            timestamp = midiMoment.messages[0].timestamp;
+                            console.log("Rest Subsequence: timestamp=" + timestamp.toString() + " (empty)");
+                        }
+                        else
+                        {
+                            timestamp = midiMoment.timestamp;
+                            console.log("Rest Subsequence: timestamp=" + timestamp.toString() + " (not empty)");
+                        }
+                        s.restSubsequence = true;
+                        s.timestamp = timestamp;
+                    }
+                    else
+                    {
+                        s = new Sequence();
+                        s.chordSubsequence = true;
+                        s.timestamp = midiMoment.messages[0].timestamp;
+                        console.log("Chord Subsequence: timestamp=" + s.timestamp.toString());
+                    }
+                    emptySubsequences.push(s);
+                }
+                return emptySubsequences;
+            }
+
+            function fillSubsequences(subsequences, midiMoments)
+            {
+                var track,
+                    midiMoment, midiMomentsIndex = 0, nMidiMoments,
+                    subsequence, subsequencesIndex, nSubsequences,
+                    nextTimestamp;
+
+                function getnextTimestamp(subsequences, subsequencesIndex, nSubsequences)
+                {
+                    var nextTimestamp;
+
+                    if (subsequencesIndex < nSubsequences - 1)
+                    {
+                        nextTimestamp = subsequences[subsequencesIndex + 1].timestamp;
+                    }
+                    else
+                    {
+                        nextTimestamp = Number.MAX_VALUE;
+                    }
+
+                    return nextTimestamp;
+                }
+
+                function position(midiMoment)
+                {
+                    var timestamp;
+                    if (midiMoment.messages.length === 0)
+                    {
+                        // must have a restStart attribute
+                        if (midiMoment.restStart === undefined)
+                        {
+                            throw "midiMoment.restStart must be defined if there are no messages.";
+                        }
+                        timestamp = midiMoment.timestamp;
+                    }
+                    else if (midiMoment.messages.length > 0)
+                    {
+                        // midiMoment can be of any type, including restStart
+                        timestamp = midiMoment.messages[0].timestamp;
+                    }
+                    else
+                    {
+                        throw "Unknown position.";
+                    }
+
+                    return timestamp;
+                }
+
+                function subtractTime(midiMoment, zeroOffsetTime)
+                {
+                    if (midiMoment.messages.length === 0)
+                    {
+                        midiMoment.timestamp -= zeroOffsetTime;
+                    }
+                    else if (midiMoment.messages.length > 0)
+                    {
+                        // midiMoment can be of any type, including restStart
+                        midiMoment.messages[0].timestamp -= zeroOffsetTime; ;
+                    }
+                }
+
+                nSubsequences = subsequences.length - 1;
+                for (subsequencesIndex = 0; subsequencesIndex < nSubsequences; ++subsequencesIndex)
+                {
+                    nextTimestamp = getNextTimestamp(subsequences, subsequencesIndex, nSubsequences);
+                    subsequence = subsequences[subsequencesIndex];
+                    track = new jiTrack.Track();
+                    midiMoment = midiMoments[midiMomentsIndex++];
+                    nMidiMoments = midiMoments.length;
+                    while (midiMomentsIndex < nMidiMoments && position(midiMoment) < nextTimestamp)
+                    {
+                        subtractTime(midiMoment, subsequence.timestamp);
+                        track.addMIDIMoment(midiMoment);
+                        midiMoment = midiMoments[midiMomentsIndex++];
+                    }
+                    subsequence.addTrack(track);
+                }
+            }
+
+            subsequences = getEmptySubsequences(tracks[livePerformersTrackIndex]);
+
+            nTracks = tracks.length;
+            for (trackIndex = 0; trackIndex < nTracks; ++trackIndex)
+            {
+                fillSubsequences(subsequences, tracks[trackIndex].midiMoments);
+            }
+
+            nSubsequences = subsequences.length;
+            for (i = 0; i < nSubsequences; ++i)
+            {
+                delete subsequences[i].timestamp;
+            }
+        }
+
         tracks = [];
 
         setState("stopped");
 
         this.addTrack = addTrack; // addTrack(track)
 
-        // These two functions are used in assisted performances having relative durations
+        // These three functions are used in assisted performances
         this.totalMsDuration = totalMsDuration; // totalMsDuration()
         this.changeSpeed = changeSpeed; // changeSpeed(speed)
+        this.getSubsequences = getSubsequences; // getSubsequences(livePerformersTrackIndex)
 
         this.playSpan = playSpan; // playSpan(midiOutDevice, fromMs, toMs, tracksControl, reportEndOfSpan, reportMsPosition)
 
@@ -530,4 +683,4 @@ JI_NAMESPACE.sequence = (function ()
 
     return publicAPI;
 
-} ());
+} (window));

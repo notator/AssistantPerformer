@@ -820,7 +820,8 @@ JI_NAMESPACE.apControls = (function (document, window)
     {
         function getOptions()
         {
-            var velocityOptionCheckbox = document.getElementById("velocityOptionCheckbox"),
+            var trackSelector = document.getElementById("trackSelector"),
+                velocityOptionCheckbox = document.getElementById("velocityOptionCheckbox"),
                 pitchOptionCheckbox = document.getElementById("pitchOptionCheckbox"),
                 expressionOptionCheckbox = document.getElementById("expressionOptionCheckbox"),
                 modulationWheelOptionCheckbox = document.getElementById("modulationWheelOptionCheckbox"),
@@ -851,6 +852,7 @@ JI_NAMESPACE.apControls = (function (document, window)
             if (checkSpeedInput())
             {
                 // options is a global inside this namespace
+                options.livePerformersTrackIndex = trackSelector.selectedIndex;
                 options.velocity = velocityOptionCheckbox.checked;
                 options.pitch = pitchOptionCheckbox.checked;
                 options.expression = expressionOptionCheckbox.checked;
@@ -899,7 +901,7 @@ JI_NAMESPACE.apControls = (function (document, window)
 
             if (options.assistedPerformance === true)
             {
-                assistant = new jiAssistant.Assistant(sequence, options, reportEndOfSpan, reportMsPos);
+                assistant = new jiAssistant.Assistant(options.livePerformersTrackIndex, sequence, reportEndOfSpan, reportMsPos);
             }
 
             // The sequence's play() functions can now play its internal tracks
