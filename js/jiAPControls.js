@@ -22,6 +22,7 @@ JI_NAMESPACE.apControls = (function (document, window)
         jiScore = JI_NAMESPACE.score,
         jiAssistant = JI_NAMESPACE.assistant,
         score,
+        assistant,
         sequence,
         svgControlsState = 'stopped', //svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd'.
         svgPagesDiv,
@@ -147,30 +148,7 @@ JI_NAMESPACE.apControls = (function (document, window)
         }
     },
 
-    //svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd'.
-    setSvgControlsState = function (svgCtlsState)
-    {
-        function setDisabled()
-        {
-            setMainOptionsState("enable");
-
-            cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
-            cl.livePerformerOnOffDisabled.setAttribute("opacity", SMOKE);
-
-            /********* begin performance buttons *******************/
-            cl.performanceButtonsDisabled.setAttribute("opacity", SMOKE);
-            cl.goDisabled.setAttribute("opacity", SMOKE);
-            cl.stopControlDisabled.setAttribute("opacity", SMOKE);
-            cl.setStartControlDisabled.setAttribute("opacity", SMOKE);
-            cl.setEndControlDisabled.setAttribute("opacity", SMOKE);
-            cl.sendStartToBeginningControlDisabled.setAttribute("opacity", SMOKE);
-            cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
-            /********* end performance buttons *******************/
-
-            svgTracksControl.setDisabled(true);
-        }
-
-        function setStopped()
+        setStopped = function ()
         {
             if (sequence !== undefined && !(sequence.isStopped()))
             {
@@ -220,7 +198,54 @@ JI_NAMESPACE.apControls = (function (document, window)
             /********* end performance buttons *******************/
 
             svgTracksControl.setDisabled(false);
+        },
+
+    // callback called when a performing sequence has played the last message in the span.
+    reportEndOfSpan = function ()
+    {
+        setStopped();
+        // The following line is important.
+        // Otherwise svgControlsState is 'paused' because of the way the go button works.
+        svgControlsState = 'stopped';
+    },
+
+    // optional callback: Called by a performing sequence, and reports
+    // the timestamp (=msPosition) of the MIDIMoment curently being sent.
+    // When all the MidiMessages in the span have been played,
+    // reportEndOfSpan() is called (see above).
+    reportMsPos = function (msPosition)
+    {
+        //console.log("jiAPControls: calling score.advanceRunningMarker(msPosition), msPosition=" + msPosition);
+        // If there is a graphic object in the score having msPosition,
+        // the running cursor is aligned to that object.
+        score.advanceRunningMarker(msPosition);
+    },
+
+
+    //svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd'.
+    setSvgControlsState = function (svgCtlsState)
+    {
+        function setDisabled()
+        {
+            setMainOptionsState("enable");
+
+            cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
+            cl.livePerformerOnOffDisabled.setAttribute("opacity", SMOKE);
+
+            /********* begin performance buttons *******************/
+            cl.performanceButtonsDisabled.setAttribute("opacity", SMOKE);
+            cl.goDisabled.setAttribute("opacity", SMOKE);
+            cl.stopControlDisabled.setAttribute("opacity", SMOKE);
+            cl.setStartControlDisabled.setAttribute("opacity", SMOKE);
+            cl.setEndControlDisabled.setAttribute("opacity", SMOKE);
+            cl.sendStartToBeginningControlDisabled.setAttribute("opacity", SMOKE);
+            cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
+            /********* end performance buttons *******************/
+
+            svgTracksControl.setDisabled(true);
         }
+
+        // setStopped is outer function
 
         function setPaused()
         {
@@ -248,31 +273,10 @@ JI_NAMESPACE.apControls = (function (document, window)
             }
         }
 
-        // callback called when a performing sequence has played the last message in the span.
-        function reportEndOfSpan()
-        {
-            setStopped();
-            // The following line is important.
-            // Otherwise svgControlsState is 'paused' because of the way the go button works.
-            svgControlsState = 'stopped';
-        }
-
-        // optional callback: Called by a performing sequence, and reports
-        // the timestamp (=msPosition) of the MIDIMoment curently being sent.
-        // When all the MidiMessages in the span have been played,
-        // reportEndOfSpan() is called (see above).
-        function reportMsPos(msPosition)
-        {
-            //console.log("jiAPControls: calling score.advanceRunningMarker(msPosition), msPosition=" + msPosition);
-            // If there is a graphic object in the score having msPosition,
-            // the running cursor is aligned to that object.
-            score.advanceRunningMarker(msPosition);
-        }
-
         function setPlaying()
         {
             var player = sequence;
-            if (options.assistedPerformance == true)
+            if (options.assistedPerformance === true)
             {
                 player = assistant;
             }
@@ -617,7 +621,7 @@ JI_NAMESPACE.apControls = (function (document, window)
             }
 
             setPerformersTrackSelector(nTracks);
-            svgTracksControl.init(nTracks, options);
+            svgTracksControl.init(nTracks);
             svgPagesDiv.scrollTop = 0;
 
             scoreHasJustBeenSelected = true;
@@ -625,6 +629,12 @@ JI_NAMESPACE.apControls = (function (document, window)
 
         function goControlClicked()
         {
+            // options.assistedPerformance is kept up to date by the livePerformerOnOffButton.
+            if (options.assistedPerformance)
+            {
+                svgTracksControl.setTrackOn(options.livePerformersTrackIndex);
+            }
+
             if (svgControlsState === 'stopped' || svgControlsState === 'paused')
             {
                 setSvgControlsState('playing');
@@ -919,7 +929,6 @@ JI_NAMESPACE.apControls = (function (document, window)
     {
         init: init,
 
-        handleMidiIn: handleMidiIn, // the function at which midi IN messages arrive
         setMidiDevices: setMidiDevices,
 
         doControl: doControl,

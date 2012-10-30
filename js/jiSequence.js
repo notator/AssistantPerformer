@@ -501,7 +501,6 @@ JI_NAMESPACE.sequence = (function (window)
             return new Sequence();
         }
 
-
         // Returns an array. Each subsequence in the array is a Sequence, beginning (as all Sequences do) at timestamp = 0ms.
         // A subsequence exists for each chord or rest in the live performer's track.
         // A midiMoment which starts a chord sequence has a chordStart attribute.
@@ -566,7 +565,7 @@ JI_NAMESPACE.sequence = (function (window)
                     subsequence, subsequencesIndex, nSubsequences,
                     nextTimestamp;
 
-                function getnextTimestamp(subsequences, subsequencesIndex, nSubsequences)
+                function getNextTimestamp(subsequences, subsequencesIndex, nSubsequences)
                 {
                     var nextTimestamp;
 
@@ -616,7 +615,7 @@ JI_NAMESPACE.sequence = (function (window)
                     else if (midiMoment.messages.length > 0)
                     {
                         // midiMoment can be of any type, including restStart
-                        midiMoment.messages[0].timestamp -= zeroOffsetTime; ;
+                        midiMoment.messages[0].timestamp -= zeroOffsetTime;
                     }
                 }
 

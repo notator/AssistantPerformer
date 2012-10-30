@@ -17,10 +17,10 @@ JI_NAMESPACE.apTracksControl = (function (document, window)
 {
     "use strict";
 
-    var disableLayerIDs = [],
+    var disableLayerIDs = [],  // disableLayerIDs[0] is the disable layer id for the whole tracks control
         trackIsOnStatus = [],
+        trackIsDisabledStatus = [],
         disabled = true,
-        setRunningMarkers, // a callback: score.setRunningMarkers(tracksControl)
 
         trackIsOn = function (trackIndex)
         {
@@ -36,6 +36,7 @@ JI_NAMESPACE.apTracksControl = (function (document, window)
             return isOnStatus;
         },
 
+    // called by user by clicking on screen
     trackOnOff = function (elemID, elemDisabledLayerID, trackIndexStr)
     {
         var elem = document.getElementById(elemID),
@@ -44,7 +45,7 @@ JI_NAMESPACE.apTracksControl = (function (document, window)
 
         disabled = (elemDisabledLayer.getAttribute("opacity") !== "0");
 
-        if (!disabled)
+        if (!disabled && !trackIsDisabledStatus[trackIndex])
         {
             if (trackIsOnStatus[trackIndex])
             {
@@ -61,31 +62,48 @@ JI_NAMESPACE.apTracksControl = (function (document, window)
         }
     },
 
-        setDisabled = function (toDisabled)
+    // In an assisted performance, this function is called (in jiControls.startRuntime) when the Go or playLive/playScore buttons are clicked.
+    setTrackOn = function (trackIndex)
+    {
+        var bulletID = 'track' + (trackIndex + 1).toString() + 'Bullet',
+            disableLayerID = disableLayerIDs[trackIndex + 1];   // disableLayerIDs[0] is the disable layer id for the whole tracks control
+
+        if (!trackIsOnStatus[trackIndex])
         {
-            var nLayers = disableLayerIDs.length,
+            trackOnOff(bulletID, disableLayerID, trackIndex.toString());
+        }
+    },
+
+    // disable/enable the whole tracks control
+    setDisabled = function (toDisabled)
+    {
+        var nLayers = disableLayerIDs.length,
                 elem, i, opacity;
 
-            opacity = toDisabled ? "0.7" : "0";
-            for (i = 0; i < nLayers; ++i)
-            {
-                elem = document.getElementById(disableLayerIDs[i]);
-                elem.setAttribute("opacity", opacity);
-            }
-
-            disabled = toDisabled;
-        },
-
-        svgElem = function (s)
+        opacity = toDisabled ? "0.7" : "0";
+        for (i = 0; i < nLayers; ++i)
         {
-            var div = document.createElementNS('http://www.w3.org/1999/xhtml', 'div'),
+            elem = document.getElementById(disableLayerIDs[i]);
+            elem.setAttribute("opacity", opacity);
+            if (i > 0) // disableLayerIDs[0] is the id of the whole tracks control
+            {
+                trackIsDisabledStatus[i] = toDisabled;
+            }
+        }
+
+        disabled = toDisabled;
+    },
+
+    svgElem = function (s)
+    {
+        var div = document.createElementNS('http://www.w3.org/1999/xhtml', 'div'),
                 frag = document.createDocumentFragment();
 
-            div.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg">' + s + '</svg>';
-            frag.appendChild(div.firstChild.firstChild);
+        div.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg">' + s + '</svg>';
+        frag.appendChild(div.firstChild.firstChild);
 
-            return frag.firstChild;
-        },
+        return frag.firstChild;
+    },
 
     // append the following child nodes to the trackControlsElem
     // <rect id="trackControlsFrame" x="0" y="0" width="' + width + '" height="30" stroke="#008000" stroke-width="1" fill="#F5FFF5" />
@@ -129,12 +147,13 @@ JI_NAMESPACE.apTracksControl = (function (document, window)
                 svgTrackControlElem = svgElem(html);
 
             controlGroupElem.appendChild(svgTrackControlElem);
-            trackIsOnStatus.push(true);
 
+            trackIsOnStatus.push(true);
+            trackIsDisabledStatus.push(false);
             disableLayerIDs.push(disableControlID);
         },
 
-    init = function (nTracks, options)
+    init = function (nTracks)
     {
         var trackControlsSvgElem,
             controlPanel = document.getElementById("controlPanel"),
@@ -177,6 +196,8 @@ JI_NAMESPACE.apTracksControl = (function (document, window)
 
         trackOnOff: trackOnOff,
         setDisabled: setDisabled,
+
+        setTrackOn: setTrackOn,
 
         trackIsOn: trackIsOn
     };
