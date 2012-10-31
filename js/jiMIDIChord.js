@@ -666,7 +666,7 @@ JI_NAMESPACE.midiChord = (function ()
     //
     MIDIChord = function (channel, chordDef, timeObject, speed)
     {
-        var chordMoments, sliderMoments,
+        var chordMoments, sliderMoments, firstMessage, lastMessage,
             JMB = _JMB;
 
         if (!(this instanceof MIDIChord))
@@ -696,8 +696,10 @@ JI_NAMESPACE.midiChord = (function ()
 
         // The timestamp may change when using relative assisted durations,
         // but the reportedTimestamp must always be the msPosition in the score.
-        midiMoments[0].messages[0].msPositionInScore = midiMoments[0].messages[0].timeStamp; // used by sequencer
-        midiMoments[midiMoments.length - 1].messages[0].msPositionInScore = midiMoments[midiMoments.length - 1].messages[0].timeStamp; // used by sequencer
+        firstMessage = midiMoments[0].messages[0];
+        firstMessage.msPositionInScore = firstMessage.timestamp;
+        lastMessage = midiMoments[midiMoments.length - 1];
+        lastMessage.msPositionInScore = lastMessage.timestamp;
 
         midiMoments[0].chordStart = true;
 
@@ -718,7 +720,7 @@ JI_NAMESPACE.midiChord = (function ()
 
         restMoment = new MIDIMoment(timeObject.msPosition);
         // restMoment.timestamp is set in the MIDIMoment constructor
-        restMoment.msPositionInScore = this.msPosition;
+        restMoment.msPositionInScore = timeObject.msPosition;
         restMoment.restStart = true;
         midiMoments = [];
         midiMoments.push(restMoment); // an empty moment with an msPositionInScore attribute

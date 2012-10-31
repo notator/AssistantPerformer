@@ -1041,14 +1041,18 @@ JI_NAMESPACE.score = (function (document)
 
                         if (timeObject.paletteIndex === undefined && timeObject.chordDef === undefined)
                         {
-                            // a rest
-                            midiRest = new jiMIDIChord.MIDIRest(timeObject);
-                            midiRest.addToTrack(track);
-                            //console.log("midiRest added at sysIndex=", +sysIndex + ", staffIndex=", +staffIndex + ", timeObjectIndex=" + timeObjectIndex);
+                            if (timeObjectIndex < (nTimeObjects - 1) || sysIndex === (nSystems - 1))
+                            {
+                                // A rest. A barline on the right end of a staff is ignored, except on the final system.
+                                // The final barline on the final staff is a 'rest'.
+                                midiRest = new jiMIDIChord.MIDIRest(timeObject);
+                                midiRest.addToTrack(track);
+                                //console.log("midiRest added at sysIndex=", +sysIndex + ", staffIndex=", +staffIndex + ", timeObjectIndex=" + timeObjectIndex);
+                            }
                         }
                         else
                         {
-                            // a chord
+                            // A chord
                             if (timeObject.paletteIndex !== undefined)
                             {
                                 chordDef = palettes[timeObject.paletteIndex][timeObject.chordIndex];

@@ -56,10 +56,18 @@ JI_NAMESPACE.track = (function ()
                 lastMoment.addMIDIMoment(midiMoment);
                 if (midiMoment.restStart !== undefined)
                 {
+                    if (midiMoment.chordStart !== undefined)
+                    {
+                        delete midiMoment.chordStart;
+                    }
                     lastMoment.restStart = true;
                 }
                 else if (midiMoment.chordStart !== undefined)
                 {
+                    if (midiMoment.restStart !== undefined)
+                    {
+                        delete midiMoment.restStart;
+                    }
                     lastMoment.chordStart = true;
                 }
             }
