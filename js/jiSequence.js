@@ -154,9 +154,8 @@ JI_NAMESPACE.sequence = (function (window)
             }
         }
 
-        // Returns the earliest moment indexed by the track.currentIndex indices,
-        // or null if track.currentIndex > track.toIndex in all tracks.
-        // Moment.messages.length can be 0 (a rest moment).
+        // Returns the earliest moment indexed by the track.currentIndex indices, or null if
+        // track.currentIndex > track.toIndex in all tracks.
         function nextMoment()
         {
             var i, nTracks = tracks.length,
@@ -207,15 +206,11 @@ JI_NAMESPACE.sequence = (function (window)
 
         // Returns either the next message in the sequence, 
         // or null if there are no more midiMoments and no more messages.
-        // MidiMoments can be empty of MIDIMessages (i.e. be rests), in which case
-        // a 'message' is returned having three attributes:
-        //     timestamp = moment.timestamp 
-        //     isEmpty = true
-        //     msPositionInScore = MidiMoment.msPositionInScore
-        // Otherwise, the message belongs to a MIDIChord.
-        // Both the first message in the first moment and the first message in the last moment
-        // in each MIDIChord are given a msPositionInScore attribute in the MIDIChord constructor
-        // (see jiMIDIChord.js).
+        // A MIDIMoment always has at least one message, since restStart moments now contain either
+        // the final messages from the previous chord, or an 'empty MIDIMessage' (see the MIDIRest
+        // constructor and Track.addMIDIMoment()).
+        // The first message in each restStart or chordStart moment is given a msPositionInScore attribute
+        // in Track.addMIDIMoment().
         function nextMessage()
         {
             var nextMsg = null;
@@ -230,23 +225,13 @@ JI_NAMESPACE.sequence = (function (window)
                     }
                     else
                     {
-                        currentMomentLength = currentMoment.messages.length; // can be 0!
+                        currentMomentLength = currentMoment.messages.length; // should never be 0!
                         messageIndex = 0;
                     }
                 }
                 if (currentMoment !== null)
                 {
-                    if (currentMomentLength > 0)
-                    {
-                        nextMsg = currentMoment.messages[messageIndex++];
-                    }
-                    else
-                    {   // a rest
-                        nextMsg = {};
-                        nextMsg.timestamp = currentMoment.timestamp;
-                        nextMsg.isEmpty = true;
-                        nextMsg.msPositionInScore = currentMoment.msPositionInScore; // force this message's msPositionInScore to be reported
-                    }
+                    nextMsg = currentMoment.messages[messageIndex++];
                 }
             }
 
@@ -289,11 +274,13 @@ JI_NAMESPACE.sequence = (function (window)
         function tick()
         {
             var deviation, i,
-            nMsPositionsToReport, msPositionsToReport = [],
+            nMessagesToReport, messagesToReport = [],
             domhrtRelativeTime = Math.round(window.performance.webkitNow() - domhrtMsOffsetAtStartOfPerformance),
             delay = msg.timestamp - domhrtRelativeTime;
 
-            if (msg.msPositionInScore !== undefined && msg.timestamp > currentMomentTimestamp && reportMsPositionInScore !== null)
+            //if (msg.msPositionInScore !== undefined && msg.timestamp > currentMomentTimestamp && reportMsPositionInScore !== null)
+            if ((currentMoment.restStart !== undefined || currentMoment.chordStart !== undefined) 
+                && msg.timestamp > currentMomentTimestamp && reportMsPositionInScore !== null)
             {
                 currentMomentTimestamp = msg.timestamp;
                 reportMsPositionInScore(msg.msPositionInScore); // update the cursor for the timestamp which
@@ -327,35 +314,31 @@ JI_NAMESPACE.sequence = (function (window)
                     console.log("Pause, or end of sequence.  maxDeviation is " + maxDeviation + "ms");
                     return;
                 }
-                if (msg.msPositionInScore !== undefined && msg.timestamp > currentMomentTimestamp && reportMsPositionInScore !== null)
+                if ((currentMoment.restStart !== undefined || currentMoment.chordStart !== undefined) && reportMsPositionInScore !== null)
                 {
-                    msPositionsToReport.push(msg);
+                    // It does not matter if msPositionInScore or timestamp is checked here, the result is the same.
+                    if (messagesToReport.length === 0 || msg.msPositionInScore > messagesToReport[messagesToReport.length - 1].msPositionInScore)
+                    {
+                        messagesToReport.push(msg);
+                    }
                 }
                 delay = msg.timestamp - domhrtRelativeTime;
             }
 
-            if (msPositionsToReport.length > 0)
+            if (messagesToReport.length > 0)
             {
-                // Report all timestamps which need to be reported, but whose messages were scheduled during
-                // the above loop.
-                // Note that msPositionsToReport only contains timestamps if they belong to a rest or the first
-                // message in the first or last moment in a MIDIChord.
+                // Update currentMomentTimestamp and report each msPositionInScore which needs to be reported.
                 // Since, when we have a "conformant sendMIDIMessage w/ timestamps", the messages are actually sent
                 // to the output device later, this will lead to the GUI cursor position moving to the respective
                 // position in the GUI before the sound is actually heard.
                 // In the worst case, the cursor will move to its chord or rest PREQUEUE milliseconds before the
                 // sound is heard. 
-                nMsPositionsToReport = msPositionsToReport.length;
+                nMessagesToReport = messagesToReport.length;
 
-                for (i = 0; i < nMsPositionsToReport; ++i)
+                for (i = 0; i < nMessagesToReport; ++i)
                 {
-                    if (msPositionsToReport[i].timestamp < msg.timestamp && msPositionsToReport[i].timestamp > currentMomentTimestamp)
-                    {
-                        currentMomentTimestamp = msPositionsToReport[i].timestamp;
-                        reportMsPositionInScore(msPositionsToReport[i].msPositionInScore);  // updates the cursor position in the score
-                        //console.log("After: **** reporting timestamp before its msg is really sent and the sound actually happens ****");
-                        //console.log("2: currentMomentTimestamp=" + currentMomentTimestamp + ", next msg.timestamp=" + msg.timestamp);
-                    }
+                    currentMomentTimestamp = messagesToReport[i].timestamp;
+                    reportMsPositionInScore(messagesToReport[i].msPositionInScore);  // updates the cursor position in the score
                 }
             }
 

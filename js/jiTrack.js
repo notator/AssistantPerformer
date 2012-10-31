@@ -37,43 +37,38 @@ JI_NAMESPACE.track = (function ()
             toIndex,
             currentLastTimestamp = -1,
 
-        // Currently, midiMoments can only be appended to
-        // the end of the track, but that might change. 
+        // A midiMoment can only be appended to the end of the track. 
         addMIDIMoment = function (midiMoment)
         {
-            var lastMoment;
+            var lastMoment, timestamp = midiMoment.timestamp;
 
-            if (midiMoment.timestamp > currentLastTimestamp)
+            if (timestamp > currentLastTimestamp)
             {
-                currentLastTimestamp = midiMoment.timestamp;
-                midiMoments.push(midiMoment);
+                currentLastTimestamp = timestamp;
+                midiMoment.messages[0].msPositionInScore = timestamp;
+                midiMoments.push(midiMoment); // can be a rest, containing one 'empty midiMessage'
             }
-            else if (midiMoment.timestamp === currentLastTimestamp)
+            else if (timestamp === currentLastTimestamp)
             {
-                // Push the new midiMessages on to the end of the last midiMoment.  
-                // currentLastTimestamp does not change.
                 lastMoment = midiMoments[midiMoments.length - 1];
-                lastMoment.addMIDIMoment(midiMoment);
+                lastMoment.messages[0].msPositionInScore = timestamp;
+
                 if (midiMoment.restStart !== undefined)
                 {
-                    if (midiMoment.chordStart !== undefined)
-                    {
-                        delete midiMoment.chordStart;
-                    }
                     lastMoment.restStart = true;
+                    // dont push the rest's 'empty midiMessage'
                 }
                 else if (midiMoment.chordStart !== undefined)
                 {
-                    if (midiMoment.restStart !== undefined)
-                    {
-                        delete midiMoment.restStart;
-                    }
-                    lastMoment.chordStart = true;
+                    lastMoment.chordStart = true;  
+                    // Push the new midiMessages on to the end of the last midiMoment in the same track.  
+                    // currentLastTimestamp does not change.
+                    lastMoment.addMIDIMoment(midiMoment);
                 }
             }
             else
             {
-                throw "Error: currently, midiMoments can only be appended to the ends of tracks.";
+                throw "Error: A midiMoment can only be appended to the end of a track.";
             }
         };
 

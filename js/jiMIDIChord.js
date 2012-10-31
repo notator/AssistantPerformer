@@ -666,7 +666,7 @@ JI_NAMESPACE.midiChord = (function ()
     //
     MIDIChord = function (channel, chordDef, timeObject, speed)
     {
-        var chordMoments, sliderMoments, firstMessage, lastMessage,
+        var chordMoments, sliderMoments,
             JMB = _JMB;
 
         if (!(this instanceof MIDIChord))
@@ -694,13 +694,6 @@ JI_NAMESPACE.midiChord = (function ()
             midiMoments = chordMoments;
         }
 
-        // The timestamp may change when using relative assisted durations,
-        // but the reportedTimestamp must always be the msPosition in the score.
-        firstMessage = midiMoments[0].messages[0];
-        firstMessage.msPositionInScore = firstMessage.timestamp;
-        lastMessage = midiMoments[midiMoments.length - 1];
-        lastMessage.msPositionInScore = lastMessage.timestamp;
-
         midiMoments[0].chordStart = true;
 
         this.addToTrack = addToTrack;
@@ -708,10 +701,21 @@ JI_NAMESPACE.midiChord = (function ()
         return this;
     },
 
-    // a MIDIRest is like a MIDIChord which has a single, empty MIDIMoment 
+    // a MIDIRest is like a MIDIChord having a single MIDIMoment containing a single, empty message. 
     MIDIRest = function (timeObject)
     {
         var restMoment;
+
+        function emptyMessage(msPosition)
+        {
+            var emptyMsg = {};
+
+            emptyMsg.isEmpty = true;
+            emptyMsg.timestamp = msPosition;
+            emptyMsg.msPositionInScore = msPosition;
+
+            return emptyMsg;
+        }
 
         if (!(this instanceof MIDIRest))
         {
@@ -720,8 +724,9 @@ JI_NAMESPACE.midiChord = (function ()
 
         restMoment = new MIDIMoment(timeObject.msPosition);
         // restMoment.timestamp is set in the MIDIMoment constructor
-        restMoment.msPositionInScore = timeObject.msPosition;
         restMoment.restStart = true;
+        restMoment.messages.push(emptyMessage(timeObject.msPosition));
+
         midiMoments = [];
         midiMoments.push(restMoment); // an empty moment with an msPositionInScore attribute
 
