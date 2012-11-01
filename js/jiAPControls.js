@@ -762,6 +762,13 @@ JI_NAMESPACE.apControls = (function (document, window)
             if (cl.livePerformerOnOffDisabled.getAttribute("opacity") !== SMOKE)
             {
                 options.assistedPerformance = !(options.assistedPerformance);
+
+                sequence = score.getSequence(options.assistantsSpeed);
+
+                if (options.assistedPerformance === true)
+                {// this constructor consumes sequence, resetting midiMoment timestamps relative to the start of their subsection.
+                    assistant = new jiAssistant.Assistant(options.livePerformersTrackIndex, sequence, reportEndOfSpan, reportMsPos);
+                }
             }
         }
 
@@ -910,7 +917,7 @@ JI_NAMESPACE.apControls = (function (document, window)
             sequence = score.getSequence(options.assistantsSpeed);
 
             if (options.assistedPerformance === true)
-            {
+            {// this constructor consumes sequence, resetting midiMoment timestamps relative to the start of their subsection.    
                 assistant = new jiAssistant.Assistant(options.livePerformersTrackIndex, sequence, reportEndOfSpan, reportMsPos);
             }
 

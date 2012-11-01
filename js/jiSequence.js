@@ -55,14 +55,14 @@ JI_NAMESPACE.sequence = (function (window)
                 s = new Sequence();
                 s.restSubsequence = true;
                 s.timestamp = midiMoment.messages[0].timestamp;
-                console.log("Rest Subsequence: timestamp=" + s.timestamp.toString());
+                //console.log("Rest Subsequence: timestamp=" + s.timestamp.toString());
             }
             else if (midiMoment.chordStart !== undefined)
             {
                 s = new Sequence();
                 s.chordSubsequence = true;
                 s.timestamp = midiMoment.messages[0].timestamp;
-                console.log("Chord Subsequence: timestamp=" + s.timestamp.toString());
+                //console.log("Chord Subsequence: timestamp=" + s.timestamp.toString());
             }
 
             if (s !== null)
@@ -304,7 +304,7 @@ JI_NAMESPACE.sequence = (function (window)
             delay = msg.timestamp - domhrtRelativeTime;
 
             //if (msg.msPositionInScore !== undefined && msg.timestamp > currentMomentTimestamp && reportMsPositionInScore !== null)
-            if ((currentMoment.restStart !== undefined || currentMoment.chordStart !== undefined)
+            if ((currentMoment != null && (currentMoment.restStart !== undefined || currentMoment.chordStart !== undefined))
                 && msg.timestamp > currentMomentTimestamp && reportMsPositionInScore !== null)
             {
                 currentMomentTimestamp = msg.timestamp;
@@ -339,7 +339,8 @@ JI_NAMESPACE.sequence = (function (window)
                     console.log("Pause, or end of sequence.  maxDeviation is " + maxDeviation + "ms");
                     return;
                 }
-                if ((currentMoment.restStart !== undefined || currentMoment.chordStart !== undefined) && reportMsPositionInScore !== null)
+                if ((currentMoment != null && (currentMoment.restStart !== undefined || currentMoment.chordStart !== undefined))
+                    && reportMsPositionInScore !== null)
                 {
                     // It does not matter if msPositionInScore or timestamp is checked here, the result is the same.
                     if (messagesToReport.length === 0 || msg.msPositionInScore > messagesToReport[messagesToReport.length - 1].msPositionInScore)
