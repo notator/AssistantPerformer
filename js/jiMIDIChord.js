@@ -649,7 +649,14 @@ JI_NAMESPACE.midiChord = (function ()
         {
             // a track is defined in JI_NAMESPACE.track,
             // track.addMIDIMoment throws an exception if there is an error.
-            track.addMIDIMoment(miMoments[i]);
+            if (i === 0)
+            {
+                track.addMIDIMoment(miMoments[i], miMoments[i].messages[0].timestamp);
+            }
+            else
+            {
+                track.addMIDIMoment(miMoments[i], -1);
+            }
         }
     },
 
@@ -712,8 +719,7 @@ JI_NAMESPACE.midiChord = (function ()
 
             emptyMsg.isEmpty = true;
             emptyMsg.timestamp = msPosition;
-            emptyMsg.msPositionInScore = msPosition;
-
+            // The empty message's msPositionInScore attribute would be added in the track.addMIDIMoment() function
             return emptyMsg;
         }
 
@@ -723,12 +729,13 @@ JI_NAMESPACE.midiChord = (function ()
         }
 
         restMoment = new MIDIMoment(timeObject.msPosition);
-        // restMoment.timestamp is set in the MIDIMoment constructor
+        // restMoment.timestamp is set in the MIDIMoment constructor.
+
         restMoment.restStart = true;
         restMoment.messages.push(emptyMessage(timeObject.msPosition));
 
         midiMoments = [];
-        midiMoments.push(restMoment); // an empty moment with an msPositionInScore attribute
+        midiMoments.push(restMoment); // an empty moment. 
 
         this.msPosition = timeObject.msPosition;
         this.msDuration = timeObject.msDuration;

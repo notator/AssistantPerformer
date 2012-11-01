@@ -51,16 +51,7 @@ JI_NAMESPACE.assistant = (function (window)
 
     // makeSubsequences creates the private subsequences array inside the assistant.
     // This function is called when options.assistedPerformance === true and the Start button is clicked in the upper options panel.
-    // See the following comment on Sequence.getSubsequences():
-    // Each subsequence in the array is a Sequence, beginning (as all Sequences do) at timestamp = 0ms.
-    // A subsequence exists for each chord or rest and for the final barline in the live performer's track.
-    // The final barline has a subsequence with a restSubsequence attribute.
-    // A midiMoment which starts a chord sequence has a chordStart attribute.
-    // A midiMoment which starts a rest sequence has a restStart attribute.
-    // The restStart and chordStart attributes are first allocated in the MIDIChord and MIDIRest constructors. These
-    // attributes may be transferred in Track.addMIDIMoment(), so restStart midiMoments are not necessarily empty.
-    // Subsequences corresponding to a live performer's chord are given a chordSubsequence attribute (=true).
-    // Subsequences corresponding to a live performer's rest are given a restSubsequence attribute (=true).
+    // See the comment to Sequence.getSubsequences().
         makeSubsequences = function (livePerformersTrackIndex, mainSequence)
         {
             subsequences = mainSequence.getSubsequences(livePerformersTrackIndex);
