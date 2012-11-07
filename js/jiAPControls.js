@@ -154,6 +154,16 @@ JI_NAMESPACE.apControls = (function (document, window)
             {
                 score.moveRunningMarkerToStartMarker();
                 sequence.stop();
+
+                if (options.assistedPerformance === true)
+                {
+                    // Remove the event listener again when the performance stops. This disconnects the live player while the score is supposed
+                    // to be playing alone...
+                    options.inputDevice.removeEventListener("midimessage", function (msg)
+                    {
+                        assistant.handleMidiIn(msg);
+                    });
+                }
             }
 
             score.allNotesOff(options.outputDevice);
@@ -279,6 +289,12 @@ JI_NAMESPACE.apControls = (function (document, window)
             if (options.assistedPerformance === true)
             {
                 player = assistant;
+                // Remove the event listener again when the performance stops. This disconnects the live player while the score is supposed
+                // to be playing alone...
+                options.inputDevice.addEventListener("midimessage", function (msg)
+                {
+                    assistant.handleMidiIn(msg);
+                });
             }
 
             svgTracksControl.setDisabled(true);
@@ -310,6 +326,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                     // either at the start marker, or somewhere paused.
                     score.setRunningMarkers(svgTracksControl);
                     score.moveStartMarkerToTop(svgPagesDiv);
+
                     player.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
                         svgTracksControl, reportEndOfSpan, reportMsPos);
                 }
@@ -918,7 +935,7 @@ JI_NAMESPACE.apControls = (function (document, window)
 
             if (options.assistedPerformance === true)
             {// this constructor consumes sequence, resetting midiMoment timestamps relative to the start of their subsection.    
-                assistant = new jiAssistant.Assistant(options.livePerformersTrackIndex, sequence, reportEndOfSpan, reportMsPos);
+                assistant = new jiAssistant.Assistant(sequence, options, reportEndOfSpan, reportMsPos);
             }
 
             // The sequence's play() functions can now play its internal tracks

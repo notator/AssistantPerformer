@@ -219,7 +219,8 @@ JI_NAMESPACE.sequence = (function (window)
             }
 
             // Ask again. nextMomt may have been set to null in the last statement.
-            if (nextMomt === null)
+            // reportEndOfSpan is null for assisted performance.
+            if (nextMomt === null && reportEndOfSpan !== null)
             {
                 //console.log("End of span.");
                 // move the cursor back to the startMarker and set the APControls' state to "stopped"
@@ -608,12 +609,6 @@ JI_NAMESPACE.sequence = (function (window)
             for (trackIndex = 0; trackIndex < nTracks; ++trackIndex)
             {
                 fillSubsequences(subsequences, tracks[trackIndex].midiMoments); // 'base' function in outer scope
-            }
-
-            nSubsequences = subsequences.length;
-            for (i = 0; i < nSubsequences; ++i)
-            {
-                delete subsequences[i].timestamp;
             }
 
             return subsequences;

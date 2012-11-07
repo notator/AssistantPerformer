@@ -22,14 +22,18 @@ JI_NAMESPACE.assistant = (function (window)
         jiTrack = JI_NAMESPACE.track,
         jiMIDIChord = JI_NAMESPACE.midiChord,
 
-    // midi message types
+        outputDevice,
+        tracksControl,
+
+    // midi input message types
         UNKNOWN = 0,
-        NOTE_ON = 1,
-        NOTE_OFF = 2,
-        EXPRESSION = 3,
-        MODULATION_WHEEL = 4,
-        PAN = 5,
-        PITCH_WHEEL = 6,
+        ILLEGAL_INDEX = 1,
+        END_OF_SEQUENCE = 2,
+        AFTERTOUCH = 3, // from EWI breath controller or E-MU key pressure
+        MODULATION_WHEEL = 4, // from EWI bite controller or E-MU modulation wheel
+        PITCH_WHEEL = 5, // from EWI pitch bend controllers or E-MU pitch wheel
+        NOTE_ON = 6,
+        NOTE_OFF = 7,
 
         options, // performance options. This is the options object in jiAPControls.
         reportEndOfPerformance, // callback
@@ -134,10 +138,6 @@ JI_NAMESPACE.assistant = (function (window)
             if (stopped === false)
             {
                 setState("stopped");
-                options.inputDevice.removeEventListener("midimessage", function (msg)
-                {
-                    this.handleMidiIn(msg);
-                });
 
                 if (options.assistantUsesAbsoluteDurations === false)
                 {
@@ -167,19 +167,57 @@ JI_NAMESPACE.assistant = (function (window)
             //    options.outputDevice.sendMIDIMessage(msg);
             //}
 
-            var msgType, currentIndex, nextIndex;
+            var inputMsgType;
 
-            // getMessageType returns one of the following constants:
-            //  UNKNOWN = 0, NOTE_ON = 1, NOTE_OFF = 2, EXPRESSION = 3, MODULATION_WHEEL = 4, PAN = 5, PITCH_WHEEL = 6
-            function getMessageType(msg)
+            // getInputMessageType returns one of the following constants:
+            // UNKNOWN = 0, ILLEGAL_INDEX = 1, END_OF_SEQUENCE = 2, AFTERTOUCH = 3, MODULATION_WHEEL = 4, PITCH_WHEEL = 5, NOTE_ON = 6, NOTE_OFF = 7
+            function getInputMessageType(msg)
             {
+                var type = UNKNOWN;
+
+                switch (msg.command)
+                {
+                    case 0xA0:
+                        type = AFTERTOUCH;
+                        break;
+                    case 0xB0:
+                        if (msg.data1 === 1)
+                        {
+                            type = MODULATION_WHEEL;
+                        }
+                        break;
+                    case 0xE0:
+                        type = PITCH_WHEEL;
+                        break;
+                    case 0x90:
+                        type = NOTE_ON;
+                        break;
+                    case 0x80:
+                        type = NOTE_OFF;
+                        break;
+                    default:
+                        type = UNKNOWN;
+                        break;
+                }
+                if (type === UNKNOWN)
+                {
+                    if (nextIndex === endIndex)
+                    {
+                        type = END_OF_SEQUENCE;
+                    }
+                    else if (nextIndex < 0 || nextIndex >= subsequences.length)
+                    {
+                        type = ILLEGAL_INDEX;
+                    }
+                }
+                return type;
             }
 
             function stopCurrentlyPlayingSubsequence()
             {
                 // currentIndex is the index of the currently playing subsequence
                 // (which should be stopped when a noteOn or noteOff arrives).
-                if (currentIndex >= 0 && subsequences[currentIndex].IsStopped() === false)
+                if (currentIndex >= 0 && subsequences[currentIndex].isStopped() === false)
                 {
                     subsequences[currentIndex].stop();
                 }
@@ -202,27 +240,25 @@ JI_NAMESPACE.assistant = (function (window)
                 }
                 // if options.assistantUsesAbsoluteDurations === true, the durations will already be correct in all subsequences.
                 currentIndex = nextIndex++;
-                nextSubsequence.playSpan(options.outputDevice, 0, Number.MAX_VALUE, tracksControl, null, null)
+                nextSubsequence.playSpan(outputDevice, 0, Number.MAX_VALUE, tracksControl, null, reportMsPosition);
             }
 
-            msgType = getMessageType(msg);
+            function handleAftertouch(msg)
+            {
+                console.log("Aftertouch, value:", msg.data2.toString());
+            }
 
-            if ((msgType === EXPRESSION && options.expression === true)
-            || (msgType === MODULATION_WHEEL && options.modulationWheel === true)
-            || (msgType === PAN && options.pan === true)
-            || (msgType === PITCH_WHEEL && options.pitchWheel))
+            function handleModulationWheel(msg)
             {
-                options.outputDevice.sendMIDIMessage(msg);
+                console.log("ModulationWheel, value:", msg.data2.toString());
             }
-            else if (nextIndex < 0 || nextIndex >= subsequences.length)
+
+            function handlePitchWheel(msg)
             {
-                throw ("illegal index");
+                console.log("PitchWheel, value:", msg.data2.toString());
             }
-            else if (nextIndex === endIndex)
-            {
-                stop();
-            }
-            else if (msgType === NOTE_ON)
+
+            function handleNoteOn(msg)
             {
                 stopCurrentlyPlayingSubsequence();
 
@@ -242,49 +278,102 @@ JI_NAMESPACE.assistant = (function (window)
                     handleMidiIn(msg); // recursive call
                 }
             }
-            else if (msgType === NOTE_OFF)
+
+            function handleNoteOff(msg)
             {
                 stopCurrentlyPlayingSubsequence();
                 if (subsequences[nextIndex].restSubsequence !== undefined)
                 {
-                    playNextSubsequence(msg, subsequences[nextIndex], options, speed);
+                    playNextSubsequence(msg, subsequences[nextIndex], options, options.speed);
                     currentIndex = nextIndex++;
                 }
+            }
+
+            inputMsgType = getInputMessageType(msg);
+
+            switch (inputMsgType)
+            {
+                case UNKNOWN:
+                    console.log("Unknown message type.");
+                    break;
+                case AFTERTOUCH: // EWI breath, EMU aftertouch
+                    handleAftertouch(msg);
+                    break;
+                case MODULATION_WHEEL: // EWI bite, EMU modulation wheel
+                    handleModulationWheel(msg);
+                    break;
+                case PITCH_WHEEL: // EWI pitch bend up/down controllers, EMU pitch wheel
+                    handlePitchWheel(msg);
+                    break;
+
+            }
+
+            if (inputMsgType === ILLEGAL_INDEX)
+            {
+                throw ("illegal index");
+            }
+            else if (inputMsgType === END_OF_SEQUENCE)
+            {
+                stop();
+            }
+            else if (inputMsgType === NOTE_ON)
+            {
+                handleNoteOn(msg);
+            }
+            else if (inputMsgType === NOTE_OFF)
+            {
+                handleNoteOff(msg);
             }
         },
 
     // This function is called when options.assistedPerformance === true and the Go button is clicked (in the performance controls).
     // If options.assistedPerformance === false, sequence.playSpan(...) is called instead.
-        playSpan = function (fromMs, toMs)
+        playSpan = function (outDevice, fromMs, toMs, svgTracksControl, reportEndOfSpan, reportMsPos)
         {
+            function getIndex(subsequences, timestamp)
+            {
+                var i = 0,
+                    nSubsequences = subsequences.length,
+                    subsequence = subsequences[0];
+
+                while (i < nSubsequences && subsequence.timestamp < timestamp)
+                {
+                    i++;
+                    subsequence = subsequences[i];
+                }
+                return i;
+            }
+
             setState("running");
-            startIndex = getStartIndex(subsequences, fromMs);
-            endIndex = getEndIndex(subsequences, toMs); // the index of the (unplayed) end chord or rest or endBarline
+            outputDevice = outDevice;
+            tracksControl = svgTracksControl;
+            startIndex = getIndex(subsequences, fromMs);
+            endIndex = getIndex(subsequences, toMs); // the index of the (unplayed) end chord or rest or endBarline
             currentIndex = -1;
             nextIndex = startIndex;
             subsequenceStartNow = -1;
-            // Remove the event listener again when the performance stops. This disconnects the live player while the score is supposed
-            // to be playing alone...
-            options.inputDevice.addEventListener("midimessage", function (msg)
-            {
-                this.handleMidiIn(msg);
-            });
         },
 
     // creats an Assistant, complete with private subsequences
     // called when the Start button is clicked, and options.assistedPerformance === true
-        Assistant = function (livePerformersTrackIndex, sequence, reportEndOfPerformance, reportMsPosition)
+        Assistant = function (sequence, apControlOptions, reportEndOfPerformance, reportMsPosition)
         {
             if (!(this instanceof Assistant))
             {
-                return new Assistant(livePerformersTrackIndex, sequence, reportEndOfPerformance, reportMsPosition);
+                return new Assistant(sequence, apControlOptions, reportEndOfPerformance, reportMsPosition);
+            }
+
+            if (apControlOptions === undefined || apControlOptions.assistedPerformance !== true)
+            {
+                throw ("Error creating Assistant.");
             }
 
             setState("stopped");
 
             mainSequence = sequence;
+            options = apControlOptions;
 
-            makeSubsequences(livePerformersTrackIndex, sequence);
+            makeSubsequences(options.livePerformersTrackIndex, sequence);
 
             // Starts an assisted performance 
             this.playSpan = playSpan;
