@@ -647,16 +647,7 @@ JI_NAMESPACE.midiChord = (function ()
 
         for (i = 0; i < nMoments; ++i)
         {
-            // a track is defined in JI_NAMESPACE.track,
-            // track.addMIDIMoment throws an exception if there is an error.
-            if (i === 0)
-            {
-                track.addMIDIMoment(miMoments[i], miMoments[i].messages[0].timestamp);
-            }
-            else
-            {
-                track.addMIDIMoment(miMoments[i], -1);
-            }
+            track.addMIDIMoment(miMoments[i]);
         }
     },
 

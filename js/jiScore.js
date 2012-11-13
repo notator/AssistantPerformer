@@ -542,7 +542,7 @@ JI_NAMESPACE.score = (function (document)
             i, j,
             systemIndex, sysNumber, svgPage, svgElem, viewBoxScale, svgChildren, systemID,
             childID, pageHeight,
-            lastSystemTimeObjects, finalBarline, finalBarlineMsPosition;
+            lastSystemTimeObjects, finalBarlineMsPosition;
 
         function getSystemTimeObjects(system, viewBoxScale, systemNode, speed)
         {
@@ -982,7 +982,7 @@ JI_NAMESPACE.score = (function (document)
     getSequence = function (speed)
     {
         // systems->staves->voices->timeObjects
-        var sequence = new jiSequence.Sequence(),
+        var sequence = new jiSequence.Sequence(0),
             trackIndex, track,
             tracks = [], // a local array -- tracks can't be indexed in a sequence
             timeObjectIndex, nTimeObjects, timeObject,

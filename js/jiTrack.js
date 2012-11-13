@@ -11,7 +11,7 @@
  *
  *  A Track has the following public interface:
  *       addMIDIMessage(midiMessage);
- *       addMIDIMoment(midiMoment, msPositionInScore) // see JI_NAMESPACE.midiMoment
+ *       addMIDIMoment(midiMoment) // see JI_NAMESPACE.midiMoment
  *       midiMoments // an array of midiMoments
  *       fromIndex // used while performing
  *       currentIndex // used while performing
@@ -25,9 +25,7 @@ JI_NAMESPACE.track = (function ()
 {
     "use strict";
 
-    var 
-    jiMIDIMoment = JI_NAMESPACE.midiMoment,
-
+    var
     // An empty track is created. It contains an empty midiMoments array.
     Track = function ()
     {
@@ -37,19 +35,14 @@ JI_NAMESPACE.track = (function ()
             toIndex,
             currentLastTimestamp = -1,
 
-        // A midiMoment can only be appended to the end of the track.
-        // The msPositionInScore argument is ignored if it is undefined or less than 0.  
-        addMIDIMoment = function (midiMoment, msPositionInScore)
+        // A midiMoment can only be appended to the end of the track. 
+        addMIDIMoment = function (midiMoment)
         {
             var lastMoment, timestamp = midiMoment.timestamp;
 
             if (timestamp > currentLastTimestamp)
             {
                 currentLastTimestamp = timestamp;
-                if (msPositionInScore !== undefined && msPositionInScore >= 0)
-                {
-                    midiMoment.messages[0].msPositionInScore = msPositionInScore;
-                }
                 midiMoments.push(midiMoment); // can be a rest, containing one 'empty midiMessage'
             }
             else if (timestamp === currentLastTimestamp)
@@ -59,13 +52,11 @@ JI_NAMESPACE.track = (function ()
                 if (midiMoment.restStart !== undefined)
                 {
                     lastMoment.restStart = true;
-                    lastMoment.messages[0].msPositionInScore = msPositionInScore;
                     // dont push the rest's 'empty midiMessage'
                 }
                 else if (midiMoment.chordStart !== undefined)
                 {
                     lastMoment.chordStart = true;
-                    lastMoment.messages[0].msPositionInScore = msPositionInScore;
                     // Push the new midiMessages on to the end of the last midiMoment in the same track.  
                     // currentLastTimestamp does not change.
                     lastMoment.addMIDIMoment(midiMoment);

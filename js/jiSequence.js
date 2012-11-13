@@ -10,6 +10,7 @@
 *    Sequence() empty sequence constructor.
 *
 *  A Sequence has the following public interface:
+*       msPositionInScore
 *       addTrack(track)
 *       playSpan(midiOutDevice, fromMs, toMs, tracksControl, reportEndOfSpan, reportMsPosition)
 *       pause()        
@@ -33,115 +34,12 @@ JI_NAMESPACE.sequence = (function (window)
     maxDeviation, // for console.log, set to 0 when performance starts
     midiOutputDevice, // set when performance starts
 
-    // The returned subsequences have a temporary timestamp attribute and
-    // either a restSubsequence or a chordSubsequence attribute, 
-    // depending on whether they correspond to a live player's rest or chord.
-    // The timestamp attribute is deleted in fillSubsequences() below.
-    // The subsequences do not yet contain any tracks.
-    getEmptySubsequences = function (livePerformersTrack)  // 'base' function in outer scope.
-    {
-        var s, emptySubsequences = [],
-            performersMidiMoments, nPerformersMidiMoments, i,
-            midiMoment, timestamp;
-
-        performersMidiMoments = livePerformersTrack.midiMoments;
-        nPerformersMidiMoments = performersMidiMoments.length;
-        for (i = 0; i < nPerformersMidiMoments; ++i)
-        {
-            s = null;
-            midiMoment = performersMidiMoments[i];
-            if (midiMoment.restStart !== undefined)
-            {
-                s = new Sequence();
-                s.restSubsequence = true;
-                s.timestamp = midiMoment.messages[0].timestamp;
-                //console.log("Rest Subsequence: timestamp=" + s.timestamp.toString());
-            }
-            else if (midiMoment.chordStart !== undefined)
-            {
-                s = new Sequence();
-                s.chordSubsequence = true;
-                s.timestamp = midiMoment.messages[0].timestamp;
-                //console.log("Chord Subsequence: timestamp=" + s.timestamp.toString());
-            }
-
-            if (s !== null)
-            {
-                emptySubsequences.push(s);
-            }
-        }
-        return emptySubsequences;
-    },
-
-    fillSubsequences = function (subsequences, midiMoments)  // 'base' function in outer scope.
-    {
-        var track,
-            midiMoment, midiMomentsIndex = 0, 
-            nMidiMoments = midiMoments.length,
-            subsequence, subsequencesIndex, 
-            nSubsequences = subsequences.length, // including the final barline
-            subsequenceTimeStamp, nextTimestamp;
-
-        function getNextTimestamp(subsequences, subsequencesIndex, nSubsequences)
-        {
-            var nextTimestamp, nextIndex = subsequencesIndex + 1;
-
-            if (nextIndex < nSubsequences)
-            {
-                nextTimestamp = subsequences[nextIndex].timestamp;
-            }
-            else
-            {
-                nextTimestamp = Number.MAX_VALUE;
-            }
-
-            return nextTimestamp;
-        }
-
-        function subtractTime(midiMoment, subsequenceTimeStamp)
-        {
-            var i, nMessages = midiMoment.messages.length;
-
-            midiMoment.timestamp -= subsequenceTimeStamp;
-            for (i = 0; i < nMessages; ++i)
-            {
-                // midiMoment can be of any type, including restStart
-                midiMoment.messages[i].timestamp -= subsequenceTimeStamp;
-            }
-        }
-
-        // nSubsequences includes the final barline (a restSubsequence which may contain noteOff messages).
-        for (subsequencesIndex = 0; subsequencesIndex < nSubsequences; ++subsequencesIndex)
-        {
-            subsequence = subsequences[subsequencesIndex];
-            subsequenceTimeStamp = subsequence.timestamp;
-            nextTimestamp = getNextTimestamp(subsequences, subsequencesIndex, nSubsequences);
-            track = new jiTrack.Track();
-            // note that nMidiMoments may be 0 (an empty track)
-            if (nMidiMoments > 0 && midiMomentsIndex < nMidiMoments)
-            {
-                midiMoment = midiMoments[midiMomentsIndex];
-                while (midiMoment.timestamp < nextTimestamp)
-                {
-                    subtractTime(midiMoment, subsequenceTimeStamp);
-                    track.addMIDIMoment(midiMoment, midiMoment.messages[0].msPositionInScore);
-                    ++midiMomentsIndex;
-                    if (midiMomentsIndex === nMidiMoments)
-                    {
-                        break;
-                    }
-                    midiMoment = midiMoments[midiMomentsIndex];
-                }
-            }
-            subsequence.addTrack(track);
-        }
-    },
-
     // An empty sequence is created. It contains an empty tracks array.
-    Sequence = function ()
+    Sequence = function (msPosition)
     {
         var tracks = [],
 
+        msPositionInScore = msPosition,
         lastSpanTimestamp,
         lastSequenceTimestamp,
         currentMoment,
@@ -151,7 +49,7 @@ JI_NAMESPACE.sequence = (function (window)
         paused,
         currentMomentTimestamp, // set when performance starts
         performanceStart, // set to true when performance starts 
-        domhrtMsOffsetAtStartOfPerformance, // set when performance starts
+        domhrtMsOffsetAtStartOfSequence, // set when performance starts
         msg; // the very first message in a performance is loaded elsewhere (when the performance  starts)
         // msg is never null when tick() is called.;
 
@@ -235,8 +133,6 @@ JI_NAMESPACE.sequence = (function (window)
         // A MIDIMoment always has at least one message, since restStart moments now contain either
         // the final messages from the previous chord, or an 'empty MIDIMessage' (see the MIDIRest
         // constructor and Track.addMIDIMoment()).
-        // The first message in each restStart or chordStart moment is given a msPositionInScore attribute
-        // in Track.addMIDIMoment().
         function nextMessage()
         {
             var nextMsg = null;
@@ -290,10 +186,12 @@ JI_NAMESPACE.sequence = (function (window)
         // 2. msg is outside tick(). The very first msg in the performance is loaded in another function when the
         //    performance starts. 
         // 3. currentMomentTimestamp is also outside tick(). Is also initialized when the performance starts.
-        // 4. msPositionInScore attributes, which MUST be reported, are now cached inside the while{} loop.
+        // 4. the msPositionInScore argument to reportMsPositionInScore() is a message's timestamp attribute added to the
+        //    sequence's msPositionInScore attribute. The message.timestamps which MUST be reported, are now cached inside
+        //    the while{} loop.
         //    (Rest "messages" are given this attribute in the nextMessage() function, the first message in the first and
         //    last midiMoments in a MIDIChord are given this attribute in the MIDIChord constructor.)
-        //    All the cached msPositionInScore attributes, except the one which will be reported at the beginning of the
+        //    All the cached timestamp attributes, except the one which will be reported at the beginning of the
         //    next tick, are then reported when the loop exits.
         //    In the worst case, the cursor will advance to the corresponding symbol PREQUEUE milliseconds before the sound
         //    is actually heard.
@@ -301,17 +199,16 @@ JI_NAMESPACE.sequence = (function (window)
         {
             var deviation, i,
             nMessagesToReport, messagesToReport = [],
-            domhrtRelativeTime = Math.round(window.performance.webkitNow() - domhrtMsOffsetAtStartOfPerformance),
+            domhrtRelativeTime = Math.round(window.performance.webkitNow() - domhrtMsOffsetAtStartOfSequence),
             delay = msg.timestamp - domhrtRelativeTime;
 
             //if (msg.msPositionInScore !== undefined && msg.timestamp > currentMomentTimestamp && reportMsPositionInScore !== null)
-            if ((currentMoment != null && (currentMoment.restStart !== undefined || currentMoment.chordStart !== undefined))
+            if ((currentMoment !== null && (currentMoment.restStart !== undefined || currentMoment.chordStart !== undefined))
                 && msg.timestamp > currentMomentTimestamp && reportMsPositionInScore !== null)
             {
                 currentMomentTimestamp = msg.timestamp;
-                reportMsPositionInScore(msg.msPositionInScore); // update the cursor for the timestamp which
+                reportMsPositionInScore(msPositionInScore + currentMomentTimestamp); // update the cursor for the timestamp which
                 // is going to be scheduled for currentMomentTimestamp (i.e. sent immediately, now)
-                //console.log("1: timestamp reported, currentMomentTimestamp now=" + currentMomentTimestamp);
             }
 
             // send all messages that are due between now and PREQUEUE ms later.
@@ -326,10 +223,10 @@ JI_NAMESPACE.sequence = (function (window)
                 if (msg.isEmpty === undefined)
                 {
                     // sendMIDIMessage needs msg.timestamp to be absolute DOMHRT time.
-                    msg.timestamp += domhrtMsOffsetAtStartOfPerformance;
+                    msg.timestamp += domhrtMsOffsetAtStartOfSequence;
                     midiOutputDevice.sendMIDIMessage(msg);
                     // subtract again, otherwise the sequence gets corrupted
-                    msg.timestamp -= domhrtMsOffsetAtStartOfPerformance;
+                    msg.timestamp -= domhrtMsOffsetAtStartOfSequence;
                 }
 
                 msg = nextMessage();
@@ -340,11 +237,10 @@ JI_NAMESPACE.sequence = (function (window)
                     console.log("Pause, or end of sequence.  maxDeviation is " + maxDeviation + "ms");
                     return;
                 }
-                if ((currentMoment != null && (currentMoment.restStart !== undefined || currentMoment.chordStart !== undefined))
+                if ((currentMoment !== null && (currentMoment.restStart !== undefined || currentMoment.chordStart !== undefined))
                     && reportMsPositionInScore !== null)
                 {
-                    // It does not matter if msPositionInScore or timestamp is checked here, the result is the same.
-                    if (messagesToReport.length === 0 || msg.msPositionInScore > messagesToReport[messagesToReport.length - 1].msPositionInScore)
+                    if (messagesToReport.length === 0 || msg.timestamp > messagesToReport[messagesToReport.length - 1].timestamp)
                     {
                         messagesToReport.push(msg);
                     }
@@ -365,7 +261,7 @@ JI_NAMESPACE.sequence = (function (window)
                 for (i = 0; i < nMessagesToReport; ++i)
                 {
                     currentMomentTimestamp = messagesToReport[i].timestamp;
-                    reportMsPositionInScore(messagesToReport[i].msPositionInScore);  // updates the cursor position in the score
+                    reportMsPositionInScore(msPositionInScore + currentMomentTimestamp);  // updates the cursor position in the score
                 }
             }
 
@@ -478,7 +374,7 @@ JI_NAMESPACE.sequence = (function (window)
                 midiOutputDevice = midiOutDevice;
                 currentMomentTimestamp = fromMs;
                 performanceStart = true;
-                domhrtMsOffsetAtStartOfPerformance = window.performance.webkitNow() - fromMs;
+                domhrtMsOffsetAtStartOfSequence = window.performance.webkitNow() - fromMs;
                 msg = nextMessage(); // the very first message
                 if (msg === null)
                 {
@@ -495,7 +391,7 @@ JI_NAMESPACE.sequence = (function (window)
             if (paused === true && currentMoment !== null)
             {
                 setState("running");
-                domhrtMsOffsetAtStartOfPerformance = window.performance.webkitNow() - currentMoment.timestamp;
+                domhrtMsOffsetAtStartOfSequence = window.performance.webkitNow() - currentMoment.timestamp;
                 msg = nextMessage(); // the very first message after the resume
                 if (msg === null)
                 {
@@ -583,7 +479,9 @@ JI_NAMESPACE.sequence = (function (window)
             }
         }
 
-        // Returns an array. Each subsequence in the array is a Sequence, beginning (as all Sequences do) at timestamp = 0ms.
+        // Returns an array. Each subsequence in the array is a Sequence, whose tracks all begin at timestamp = 0ms.
+        // Each subsequence has an msPositionInScore attribute, which is added to each message's timestamp when calling the
+        // reportMsPositionInScore(...) callback.
         // A subsequence exists for each chord or rest and for the final barline in the live performer's track.
         // The final barline has a subsequence with a restSubsequence attribute.
         // A midiMoment which starts a chord sequence has a chordStart attribute (boolean, true).
@@ -591,17 +489,117 @@ JI_NAMESPACE.sequence = (function (window)
         // The restStart and chordStart attributes are first allocated in the MIDIChord and MIDIRest constructors, but they can be moved
         // to the previous moment inside the Track.addMIDIMoment() function if two moments have the same timestamp. This means that in
         // practice, restStart midiMoments usually do not just contain an 'empty MIDImessage', they often contain noteOFF messages from
-        // the final midiMoment of the preceding MIDIChord.
-        // The Track.addMIDIMoment() function also ensures that a msPositionInScore attribute is defined on the first message in a
-        // chordStart or restStart midiMoment. The value of msPositionInScore is the msPosition of the moment in the score.
-        // In non-assisted performances, msPositionInScore is equal to the message's timestamp, but assisted performances use subsequences
-        // whose midiMoments have timestamps relative to the beginning of the subsequence.   
+        // the final midiMoment of the preceding MIDIChord.  
         // Subsequences corresponding to a live performer's chord are given a chordSubsequence attribute (=true).
         // Subsequences corresponding to a live performer's rest are given a restSubsequence attribute (=true).
         function getSubsequences(livePerformersTrackIndex)
         {
-            var subsequences = [], nSubsequences,
-            i, trackIndex, nTracks;
+            var subsequences = [],
+            trackIndex, nTracks;
+
+            // The returned subsequences have a temporary timestamp attribute and
+            // either a restSubsequence or a chordSubsequence attribute, 
+            // depending on whether they correspond to a live player's rest or chord.
+            // The timestamp attribute is deleted in fillSubsequences() below.
+            // The subsequences do not yet contain any tracks.
+            function getEmptySubsequences(livePerformersTrack)  // 'base' function in outer scope.
+            {
+                var s, emptySubsequences = [],
+                    performersMidiMoments, nPerformersMidiMoments, i,
+                    midiMoment;
+
+                performersMidiMoments = livePerformersTrack.midiMoments;
+                nPerformersMidiMoments = performersMidiMoments.length;
+                for (i = 0; i < nPerformersMidiMoments; ++i)
+                {
+                    s = null;
+                    midiMoment = performersMidiMoments[i];
+
+                    if (midiMoment.restStart !== undefined)
+                    {
+                        s = new Sequence(midiMoment.messages[0].timestamp);
+                        s.restSubsequence = true;
+                        //console.log("Rest Subsequence: msPositionInScore=" + s.msPositionInScore.toString());
+                    }
+                    else if (midiMoment.chordStart !== undefined)
+                    {
+                        s = new Sequence(midiMoment.messages[0].timestamp);
+                        s.chordSubsequence = true;
+                        //console.log("Chord Subsequence: msPositionInScore=" + s.msPositionInScore.toString());
+                    }
+
+                    if (s !== null)
+                    {
+                        emptySubsequences.push(s);
+                    }
+                }
+                return emptySubsequences;
+            }
+
+            function fillSubsequences(subsequences, midiMoments)  // 'base' function in outer scope.
+            {
+                var track,
+                    midiMoment, midiMomentsIndex = 0,
+                    nMidiMoments = midiMoments.length,
+                    subsequence, subsequencesIndex,
+                    nSubsequences = subsequences.length, // including the final barline
+                    subsequenceMsPositionInScore, nextSubsequenceMsPositionInScore;
+
+                function getNextSubsequenceMsPositionInScore(subsequences, subsequencesIndex, nSubsequences)
+                {
+                    var nextSubsequenceMsPositionInScore, nextIndex = subsequencesIndex + 1;
+
+                    if (nextIndex < nSubsequences)
+                    {
+                        nextSubsequenceMsPositionInScore = subsequences[nextIndex].msPositionInScore;
+                    }
+                    else
+                    {
+                        nextSubsequenceMsPositionInScore = Number.MAX_VALUE;
+                    }
+
+                    return nextSubsequenceMsPositionInScore;
+                }
+
+                function subtractTime(midiMoment, subsequenceMsPositionInScore)
+                {
+                    var i, nMessages = midiMoment.messages.length;
+
+                    midiMoment.timestamp -= subsequenceMsPositionInScore;
+                    for (i = 0; i < nMessages; ++i)
+                    {
+                        // midiMoment can be of any type, including restStart
+                        midiMoment.messages[i].timestamp -= subsequenceMsPositionInScore;
+                    }
+                }
+
+                // nSubsequences includes the final barline (a restSubsequence which may contain noteOff messages).
+                for (subsequencesIndex = 0; subsequencesIndex < nSubsequences; ++subsequencesIndex)
+                {
+                    subsequence = subsequences[subsequencesIndex];
+                    subsequenceMsPositionInScore = subsequence.msPositionInScore;
+                    nextSubsequenceMsPositionInScore = getNextSubsequenceMsPositionInScore(subsequences, subsequencesIndex, nSubsequences);
+                    track = new jiTrack.Track();
+                    // note that nMidiMoments may be 0 (an empty track)
+                    if (nMidiMoments > 0 && midiMomentsIndex < nMidiMoments)
+                    {
+                        midiMoment = midiMoments[midiMomentsIndex];
+                        while (midiMoment.timestamp < nextSubsequenceMsPositionInScore)
+                        {
+                            subtractTime(midiMoment, subsequenceMsPositionInScore);
+                            track.addMIDIMoment(midiMoment);
+                            ++midiMomentsIndex;
+                            if (midiMomentsIndex === nMidiMoments)
+                            {
+                                break;
+                            }
+                            midiMoment = midiMoments[midiMomentsIndex];
+                        }
+                    }
+                    subsequence.addTrack(track);
+                }
+            }
+
 
             subsequences = getEmptySubsequences(tracks[livePerformersTrackIndex]);
 
@@ -616,12 +614,14 @@ JI_NAMESPACE.sequence = (function (window)
 
         if (!(this instanceof Sequence))
         {
-            return new Sequence();
+            return new Sequence(msPosition);
         }
 
         tracks = [];
 
         setState("stopped");
+
+        this.msPositionInScore = msPosition;
 
         this.addTrack = addTrack; // addTrack(track)
 

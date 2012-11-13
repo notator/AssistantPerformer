@@ -17,12 +17,7 @@ JI_NAMESPACE.assistant = (function (window)
 {
     "use strict";
     // begin var
-    var jiAPControls = JI_NAMESPACE.apControls,
-        jiSequence = JI_NAMESPACE.sequence,
-        jiTrack = JI_NAMESPACE.track,
-        jiMIDIChord = JI_NAMESPACE.midiChord,
-
-        outputDevice,
+    var outputDevice,
         tracksControl,
 
     // midi input message types
@@ -96,8 +91,6 @@ JI_NAMESPACE.assistant = (function (window)
     // Can only be called when paused is true.
         resume = function ()
         {
-            var subsequence = subsequences[currentIndex];
-
             if (paused === true)
             {
                 if (options.assistantUsesAbsoluteDurations === false)
@@ -401,7 +394,7 @@ JI_NAMESPACE.assistant = (function (window)
 
             mainSequence = sequence;
             reportEndOfPerformance = reportEndOfWholePerformance;
-            reportMsPosition = reportMillisecondPosition
+            reportMsPosition = reportMillisecondPosition;
             options = apControlOptions;
 
             makeSubsequences(options.livePerformersTrackIndex, sequence);
