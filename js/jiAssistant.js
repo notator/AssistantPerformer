@@ -356,11 +356,11 @@ JI_NAMESPACE.assistant = (function (window)
 
     // creats an Assistant, complete with private subsequences
     // called when the Start button is clicked, and options.assistedPerformance === true
-        Assistant = function (sequence, apControlOptions, reportEndOfPerformance, reportMsPosition)
+        Assistant = function (sequence, apControlOptions, reportEndOfWholePerformance, reportMillisecondPosition)
         {
             if (!(this instanceof Assistant))
             {
-                return new Assistant(sequence, apControlOptions, reportEndOfPerformance, reportMsPosition);
+                return new Assistant(sequence, apControlOptions, reportEndOfWholePerformance, reportMillisecondPosition);
             }
 
             if (apControlOptions === undefined || apControlOptions.assistedPerformance !== true)
@@ -371,6 +371,8 @@ JI_NAMESPACE.assistant = (function (window)
             setState("stopped");
 
             mainSequence = sequence;
+            reportEndOfPerformance = reportEndOfWholePerformance;
+            reportMsPosition = reportMillisecondPosition
             options = apControlOptions;
 
             makeSubsequences(options.livePerformersTrackIndex, sequence);
