@@ -53,12 +53,16 @@ JI_NAMESPACE.assistant = (function (window)
         stopped = true,
         paused = false,
 
+        currentLivePerformersKeyPitch = -1, // -1 means "no key depressed". This value is set when the live performer sends a noteOn
+        subsequencesLengthMinusOne, // set by makeSubsequences()
+
     // makeSubsequences creates the private subsequences array inside the assistant.
     // This function is called when options.assistedPerformance === true and the Start button is clicked in the upper options panel.
     // See the comment to Sequence.getSubsequences().
         makeSubsequences = function (livePerformersTrackIndex, mainSequence)
         {
             subsequences = mainSequence.getSubsequences(livePerformersTrackIndex);
+            subsequencesLengthMinusOne = subsequences.length - 1;
         },
 
         setState = function (state)
@@ -223,10 +227,15 @@ JI_NAMESPACE.assistant = (function (window)
                 }
             }
 
+            function reportEndOfSubsequence()
+            {
+                currentLivePerformersKeyPitch = -1; // handleNoteOff() does nothing until this value is reset (by handleNoteOn()).
+            }
+
             function playNextSubsequence(msg, nextSubsequence, options)
             {
                 var now = window.performance.webkitNow(), // in the time frame used by sequences
-                    speed = 1.0;
+                    speed = options.speed;
 
                 if (options.assistantUsesAbsoluteDurations === false)
                 {
@@ -239,8 +248,7 @@ JI_NAMESPACE.assistant = (function (window)
                     subsequenceStartNow = now; // used only with the relative durations option
                 }
                 // if options.assistantUsesAbsoluteDurations === true, the durations will already be correct in all subsequences.
-                currentIndex = nextIndex++;
-                nextSubsequence.playSpan(outputDevice, 0, Number.MAX_VALUE, tracksControl, null, reportMsPosition);
+                nextSubsequence.playSpan(outputDevice, 0, Number.MAX_VALUE, tracksControl, reportEndOfSubsequence, reportMsPosition);
             }
 
             function handleAftertouch(msg)
@@ -258,34 +266,55 @@ JI_NAMESPACE.assistant = (function (window)
                 console.log("PitchWheel, value:", msg.data2.toString());
             }
 
-            function handleNoteOn(msg)
+            function handleNoteOff(msg)
             {
-                stopCurrentlyPlayingSubsequence();
+                console.log("NoteOff, pitch:", msg.data1.toString(), " velocity:", msg.data2.toString());
 
-                if (nextIndex === startIndex || subsequences[nextIndex].chordSubsequence !== undefined)
+                if (msg.data1 === currentLivePerformersKeyPitch)
                 {
-                    playNextSubsequence(msg, subsequences[nextIndex], options);
-                    currentIndex = nextIndex++;
-                }
-                else // subsequences[currentIndex] is a performer's rest subsequence
-                {
-                    if (subsequences[currentIndex].restSubsequence === undefined)
+                    stopCurrentlyPlayingSubsequence();
+                    while (nextIndex < subsequencesLengthMinusOne && subsequences[nextIndex].restSubsequence !== undefined)
                     {
-                        throw "Subsequence type error.";
+                        playNextSubsequence(msg, subsequences[nextIndex], options);
+                        currentIndex = nextIndex++;
                     }
-                    stopCurrentlyPlayingSubsequence(); // subsequences[currentIndex].stop();
-                    currentIndex = nextIndex++;
-                    handleMidiIn(msg); // recursive call
+                    if (nextIndex === subsequencesLengthMinusOne) // final barline
+                    {
+                        reportEndOfPerformance();
+                    }
                 }
             }
 
-            function handleNoteOff(msg)
+            function handleNoteOn(msg)
             {
-                stopCurrentlyPlayingSubsequence();
-                if (subsequences[nextIndex].restSubsequence !== undefined)
+                console.log("NoteOn, pitch:", msg.data1.toString(), " velocity:", msg.data2.toString());
+                currentLivePerformersKeyPitch = msg.data1;
+
+                if (msg.data2 > 0)
                 {
-                    playNextSubsequence(msg, subsequences[nextIndex], options, options.speed);
-                    currentIndex = nextIndex++;
+                    stopCurrentlyPlayingSubsequence();
+
+                    if (nextIndex === startIndex || subsequences[nextIndex].chordSubsequence !== undefined)
+                    {
+                        playNextSubsequence(msg, subsequences[nextIndex], options);
+                        currentIndex = nextIndex++;
+                    }
+                    else // subsequences[nextIndex] is a performer's rest subsequence
+                    {
+                        if (subsequences[nextIndex].restSubsequence === undefined)
+                        {
+                            throw "Subsequence type error.";
+                        }
+                        while (nextIndex < subsequencesLengthMinusOne && subsequences[nextIndex].restSubsequence !== undefined)
+                        {
+                            playNextSubsequence(msg, subsequences[nextIndex], options);
+                            currentIndex = nextIndex++;
+                        }
+                    }
+                }
+                else // velocity 0 is "noteOff"
+                {
+                    handleNoteOff(msg);
                 }
             }
 
