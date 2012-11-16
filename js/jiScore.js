@@ -968,7 +968,7 @@ JI_NAMESPACE.score = (function (document)
             // callback for auto scroll
             runningMarkerHeightChanged(runningMarker.getYCoordinates());
         }
-        else if (msPosition >= runningMarker.nextMsPosition())
+        else while (msPosition >= runningMarker.nextMsPosition())
         {
             //console.log("score:advanceRunningMarker: calling runningMarker.incrementPosition(), msPosition=" + msPosition);
             // this function can assume that the runningMarker's currentPosition can simply be incremented
