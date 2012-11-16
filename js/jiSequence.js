@@ -29,7 +29,7 @@ JI_NAMESPACE.sequence = (function (window)
     var // the variables in this (outer) scope are common to all sequences and subsequences  
     jiTrack = JI_NAMESPACE.track,
     reportEndOfSpan, // compulsory callback. An exception is thrown if reportEndOfSpan is null or undefined
-    reportMsPositionInScore, // optional callback. Info used for setting the position of the running cursor in the GUI.
+    reportMsPositionInScore, // compulsory callback. Info used for setting the position of the running cursor in the GUI.
     PREQUEUE = 0, // this needs to be set to a larger value later. See comment on tick() function.
     maxDeviation, // for console.log, set to 0 when performance starts
     midiOutputDevice, // set when performance starts
@@ -115,8 +115,7 @@ JI_NAMESPACE.sequence = (function (window)
             }
 
             // Ask again. nextMomt may have been set to null in the last statement.
-            // reportEndOfSpan is null for assisted performance.
-            if (nextMomt === null && reportEndOfSpan !== null)
+            if (nextMomt === null)
             {
                 //console.log("End of span.");
                 // move the cursor back to the startMarker and set the APControls' state to "stopped"
@@ -159,11 +158,11 @@ JI_NAMESPACE.sequence = (function (window)
         }
 
         // tick() function -- which began as an idea by Chris Wilson
-        // This function has become rather complicated, but it has been tested thoroughly as far as possible without
-        // having "a conformant sendMIDIMessage w/ timestamps", and appears to be correct.
+        // This function has been tested thoroughly as far as possible without having "a conformant sendMIDIMessage
+        // with timestamps", and appears to be correct.
         // It needs testing again with the conformant sendMIDIMessage and a higher value for PREQUEUE. What would the
-        // ideal value for PREQUEUE be? It needs to be small enough for time differences between cursor position and
-        // sound to be unnoticeable.
+        // ideal value for PREQUEUE be? The cursor is only updated once per tick, so PREQUEUE needs to be small enough
+        // for this not to matter.
         // Email correspondence (End of Oct. 2012):
         //      James: "...how do I decide how big PREQUEUE should be?"
         //      Chris: "Well, you're trading off two things:
@@ -175,20 +174,12 @@ JI_NAMESPACE.sequence = (function (window)
         //          So, in short, you'll just have to test on your target systems."
         //      James: "Yes, that's more or less what I thought. I'll start testing with PREQUEUE at 16.67ms."
         //
-        // See the conclusion at the end of this comment: "In the worst case, the cursor will advance to the corresponding
-        // symbol PREQUEUE milliseconds before the sound is actually heard."
-        //
         // Synchronizing with the running cursor in the score:
-        // 1. reportMsPositionInScore(msPositionInScore) is an optional callback, set when the performance starts.
-        //    It moves the cursor to the next rest or chord symbol in the score (whose msPosition is the one reported).
-        // 2. msg is outside tick(). The very first msg in the performance is loaded in another function when the
-        //    performance starts. 
-        // 3. the msPositionInScore argument to reportMsPositionInScore() is a message's msPositionInScore attribute.
-        //    Only the the first message in each track.moment which is the first moment in a score symbol has such an attribute.
-        //    All the cached timestamp attributes, except the one which will be reported at the beginning of the
-        //    next tick, are reported when the loop exits.
-        //    In the worst case, the cursor will advance to the corresponding symbol PREQUEUE milliseconds before the sound
-        //    is actually heard.
+        // 1. msg is outside tick(). The very first msg in the performance is loaded in another function when the
+        //    performance starts.
+        // 2. reportMsPositionInScore(msPositionInScore) is a compulsory callback, set when playSpan() is called.
+        //    It increments the cursor position until it reaches the symbol whose position is msPositionInScore. 
+        //    Only the first message in a track.moment which is the first moment in a score symbol has such an attribute.
         function tick()
         {
             var deviation, msPositionInScoreToReport = -1,
@@ -204,10 +195,10 @@ JI_NAMESPACE.sequence = (function (window)
                 deviation = (domhrtRelativeTime - msg.timestamp);
                 maxDeviation = (deviation > maxDeviation) ? deviation : maxDeviation;
 
-                if (msg.msPositionInScore !== undefined && reported === false && reportMsPositionInScore !== null)
+                if (msg.msPositionInScore !== undefined && reported === false)
                 {
-                    console.log("Reporting msg.msPositionInScore at ", msg.msPositionInScore);
-                    reportMsPositionInScore(msg.msPositionInScore);  // updates the cursor position in the score
+                    //console.log("Reporting msg.msPositionInScore at ", msg.msPositionInScore);
+                    reportMsPositionInScore(msg.msPositionInScore);
                     reported = true;
                 }
 
@@ -311,8 +302,7 @@ JI_NAMESPACE.sequence = (function (window)
         //
         // The reportMsPosition argument is a callback function which reports the current
         // msPosition back to the GUI while performing.
-        // reportMsPosition can be null or undefined, in which case it is simply ignored.
-        // Otherwise, the msPosition it passes back is the original number of milliseconds
+        // The msPosition it passes back is the original number of milliseconds
         // from the start of the score. This value is used to identify chord symbols in the
         // score, and so to synchronize the running cursor. It is explicitly different from
         // the timestamp used when sending MidiMessages. The timestamp can change dynamically
@@ -322,15 +312,17 @@ JI_NAMESPACE.sequence = (function (window)
         {
             if (midiOutDevice !== null && midiOutDevice !== undefined)
             {
+                if (reportEOS === undefined || reportEOS === null)
+                {
+                    throw "The reportEndOfSpan callback must be defined.";
+                }
                 reportEndOfSpan = reportEOS;
+
                 if (reportMsPosition === undefined || reportMsPosition === null)
                 {
-                    reportMsPositionInScore = null;
+                    throw "The reportMsPosition callback must be defined.";
                 }
-                else
-                {
-                    reportMsPositionInScore = reportMsPosition;
-                }
+                reportMsPositionInScore = reportMsPosition;
 
                 setTracks(tracksControl, fromMs, toMs);
                 setLastTimestamps(toMs);
@@ -445,16 +437,16 @@ JI_NAMESPACE.sequence = (function (window)
         }
 
         // Returns an array. Each subsequence in the array is a Sequence, whose tracks all begin at timestamp = 0ms.
-        // Each subsequence has an msPositionInScore attribute, which is added to each message's timestamp when calling the
-        // reportMsPositionInScore(...) callback.
+        // Each subsequence has an msPositionInScore attribute, which is first allocated to empty subsequences, and
+        // then used when filling them.
         // A subsequence exists for each chord or rest and for the final barline in the live performer's track.
         // The final barline has a subsequence with a restSubsequence attribute.
         // A midiMoment which starts a chord sequence has a chordStart attribute (boolean, true).
         // A midiMoment which starts a rest sequence has a restStart attribute (boolean, true).
-        // The restStart and chordStart attributes are first allocated in the MIDIChord and MIDIRest constructors, but they can be moved
-        // to the previous moment inside the Track.addMIDIMoment() function if two moments have the same timestamp. This means that in
-        // practice, restStart midiMoments usually do not just contain an 'empty MIDImessage', they often contain noteOFF messages from
-        // the final midiMoment of the preceding MIDIChord.  
+        // The restStart and chordStart attributes are first allocated in the MIDIChord and MIDIRest constructors, but
+        // if two moments have the same timestamp, they can be moved to the previous moment by the MIDIMoment.mergeMIDIMoment()
+        // In practice, this means that restStart midiMoments usually do not just contain an 'empty MIDImessage', they
+        // often contain noteOFF messages from the final midiMoment of the preceding MIDIChord.  
         // Subsequences corresponding to a live performer's chord are given a chordSubsequence attribute (=true).
         // Subsequences corresponding to a live performer's rest are given a restSubsequence attribute (=true).
         function getSubsequences(livePerformersTrackIndex)
