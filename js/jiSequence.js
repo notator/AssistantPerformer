@@ -39,7 +39,6 @@ JI_NAMESPACE.sequence = (function (window)
     {
         var tracks = [],
 
-        msPositionInScore = msPosition,
         lastSpanTimestamp,
         lastSequenceTimestamp,
         currentMoment,
@@ -184,28 +183,18 @@ JI_NAMESPACE.sequence = (function (window)
         //    It moves the cursor to the next rest or chord symbol in the score (whose msPosition is the one reported).
         // 2. msg is outside tick(). The very first msg in the performance is loaded in another function when the
         //    performance starts. 
-        // 3. the msPositionInScore argument to reportMsPositionInScore() is a message's timestamp attribute added to the
-        //    sequence's msPositionInScore attribute. The message.timestamps which MUST be reported, are now cached inside
-        //    the while{} loop.
-        //    (Rest "messages" are given this attribute in the nextMessage() function, the first message in the first and
-        //    last midiMoments in a MIDIChord are given this attribute in the MIDIChord constructor.)
+        // 3. the msPositionInScore argument to reportMsPositionInScore() is a message's msPositionInScore attribute.
+        //    Only the the first message in each track.moment which is the first moment in a score symbol has such an attribute.
         //    All the cached timestamp attributes, except the one which will be reported at the beginning of the
-        //    next tick, are then reported when the loop exits.
+        //    next tick, are reported when the loop exits.
         //    In the worst case, the cursor will advance to the corresponding symbol PREQUEUE milliseconds before the sound
         //    is actually heard.
         function tick()
         {
-            var deviation, i,
-            nMessagesToReport, msPositionInScoreToReport = -1,
+            var deviation, msPositionInScoreToReport = -1,
             domhrtRelativeTime = Math.round(window.performance.webkitNow() - domhrtMsOffsetAtStartOfSequence),
-            delay = msg.timestamp - domhrtRelativeTime;
-
-            if (msg.msPositionInScore !== undefined && reportMsPositionInScore !== null)
-            {
-                // msPositionInScoreToReport is empty here
-                console.log("1: setting msPositionInScoreToReport to ", msg.msPositionInScore);
-                msPositionInScoreToReport = msg.msPositionInScore;
-            }
+            delay = msg.timestamp - domhrtRelativeTime,
+            reported = false;
 
             // send all messages that are due between now and PREQUEUE ms later.
             // delay is (msg.timestamp - domhrtRelativeTime) -- which compensates for inaccuracies in setTimeout
@@ -214,7 +203,13 @@ JI_NAMESPACE.sequence = (function (window)
                 // these values are only used by console.log (See end of file too!)
                 deviation = (domhrtRelativeTime - msg.timestamp);
                 maxDeviation = (deviation > maxDeviation) ? deviation : maxDeviation;
-                //console.log("timestamp: " + msg.timestamp + ", domhrtTime: " + domhrtRelativeTime + ", deviation: " + deviation);
+
+                if (msg.msPositionInScore !== undefined && reported === false && reportMsPositionInScore !== null)
+                {
+                    console.log("Reporting msg.msPositionInScore at ", msg.msPositionInScore);
+                    reportMsPositionInScore(msg.msPositionInScore);  // updates the cursor position in the score
+                    reported = true;
+                }
 
                 if (msg.isEmpty === undefined)
                 {
@@ -233,24 +228,7 @@ JI_NAMESPACE.sequence = (function (window)
                     console.log("Pause, or end of sequence.  maxDeviation is " + maxDeviation + "ms");
                     return;
                 }
-
-                if (msg.msPositionInScore !== undefined && msPositionInScoreToReport < 0 && reportMsPositionInScore !== null)
-                {
-                    console.log("2: setting msPositionInScoreToReport to ", msg.msPositionInScore);
-                    msPositionInScoreToReport = msg.msPositionInScore;
-                }
                 delay = msg.timestamp - domhrtRelativeTime;
-            }
-
-            if (msPositionInScoreToReport >= 0)
-            {
-                // Since, when we have a "conformant sendMIDIMessage w/ timestamps", the messages are actually sent
-                // to the output device later, this will lead to the GUI cursor position moving to the respective
-                // position in the GUI before the sound is actually heard.
-                // In the worst case, the cursor will move to its chord or rest PREQUEUE milliseconds before the
-                // sound is heard. 
-                console.log("3:reportingMsPosition at msPositionInScoreToReport", msPositionInScoreToReport);
-                reportMsPositionInScore(msPositionInScoreToReport);  // updates the cursor position in the score
             }
 
             window.setTimeout(tick, delay);  // this will schedule the next tick.
@@ -306,7 +284,6 @@ JI_NAMESPACE.sequence = (function (window)
         function setLastTimestamps(toMs)
         {
             var i, nTracks = tracks.length, track,
-            trackMoments, trackLength,
             lastTrackTimestamp;
 
             lastSpanTimestamp = toMs;
@@ -315,10 +292,11 @@ JI_NAMESPACE.sequence = (function (window)
             for (i = 0; i < nTracks; ++i)
             {
                 track = tracks[i];
-                trackMoments = track.midiMoments;
-                trackLength = trackMoments.length;
-                lastTrackTimestamp = trackMoments[trackLength - 1].timestamp;
-                lastSequenceTimestamp = (lastSequenceTimestamp > lastTrackTimestamp) ? lastSequenceTimestamp : lastTrackTimestamp;
+                if (track.midiMoments.length > 0)
+                {
+                    lastTrackTimestamp = track.midiMoments[track.midiMoments.length - 1].timestamp;
+                    lastSequenceTimestamp = (lastSequenceTimestamp > lastTrackTimestamp) ? lastSequenceTimestamp : lastTrackTimestamp;
+                }
             }
         }
 

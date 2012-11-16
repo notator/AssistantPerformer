@@ -268,7 +268,7 @@ JI_NAMESPACE.assistant = (function (window)
                 if (msg.data1 === currentLivePerformersKeyPitch)
                 {
                     stopCurrentlyPlayingSubsequence();
-                    while (nextIndex < subsequencesLengthMinusOne && subsequences[nextIndex].restSubsequence !== undefined)
+                    if (nextIndex < subsequencesLengthMinusOne && subsequences[nextIndex].restSubsequence !== undefined)
                     {
                         playNextSubsequence(msg, subsequences[nextIndex], options);
                         currentIndex = nextIndex++;
@@ -294,18 +294,6 @@ JI_NAMESPACE.assistant = (function (window)
                     {
                         playNextSubsequence(msg, subsequences[nextIndex], options);
                         currentIndex = nextIndex++;
-                    }
-                    else // subsequences[nextIndex] is a performer's rest subsequence
-                    {
-                        if (subsequences[nextIndex].restSubsequence === undefined)
-                        {
-                            throw "Subsequence type error.";
-                        }
-                        while (nextIndex < subsequencesLengthMinusOne && subsequences[nextIndex].restSubsequence !== undefined)
-                        {
-                            playNextSubsequence(msg, subsequences[nextIndex], options);
-                            currentIndex = nextIndex++;
-                        }
                     }
                 }
                 else // velocity 0 is "noteOff"
