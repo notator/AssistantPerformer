@@ -7,7 +7,7 @@
 *
 *  jiSequence.js
 *  The JI_NAMESPACE.sequence namespace which defines the
-*    Sequence() empty sequence constructor.
+*    Sequence(msPositionInScore) empty sequence constructor.
 *
 *  A Sequence has the following public interface:
 *       msPositionInScore
@@ -47,7 +47,6 @@ JI_NAMESPACE.sequence = (function (window)
         currentMomentLength,
         stopped,
         paused,
-        currentMomentTimestamp, // set when performance starts
         performanceStart, // set to true when performance starts 
         domhrtMsOffsetAtStartOfSequence, // set when performance starts
         msg; // the very first message in a performance is loaded elsewhere (when the performance  starts)
@@ -185,8 +184,7 @@ JI_NAMESPACE.sequence = (function (window)
         //    It moves the cursor to the next rest or chord symbol in the score (whose msPosition is the one reported).
         // 2. msg is outside tick(). The very first msg in the performance is loaded in another function when the
         //    performance starts. 
-        // 3. currentMomentTimestamp is also outside tick(). Is also initialized when the performance starts.
-        // 4. the msPositionInScore argument to reportMsPositionInScore() is a message's timestamp attribute added to the
+        // 3. the msPositionInScore argument to reportMsPositionInScore() is a message's timestamp attribute added to the
         //    sequence's msPositionInScore attribute. The message.timestamps which MUST be reported, are now cached inside
         //    the while{} loop.
         //    (Rest "messages" are given this attribute in the nextMessage() function, the first message in the first and
@@ -198,17 +196,15 @@ JI_NAMESPACE.sequence = (function (window)
         function tick()
         {
             var deviation, i,
-            nMessagesToReport, messagesToReport = [],
+            nMessagesToReport, msPositionInScoreToReport = -1,
             domhrtRelativeTime = Math.round(window.performance.webkitNow() - domhrtMsOffsetAtStartOfSequence),
             delay = msg.timestamp - domhrtRelativeTime;
 
-            //if (msg.msPositionInScore !== undefined && msg.timestamp > currentMomentTimestamp && reportMsPositionInScore !== null)
-            if ((currentMoment !== null && (currentMoment.restStart !== undefined || currentMoment.chordStart !== undefined))
-                && msg.timestamp > currentMomentTimestamp && reportMsPositionInScore !== null)
+            if (msg.msPositionInScore !== undefined && reportMsPositionInScore !== null)
             {
-                currentMomentTimestamp = msg.timestamp;
-                reportMsPositionInScore(msPositionInScore + currentMomentTimestamp); // update the cursor for the timestamp which
-                // is going to be scheduled for currentMomentTimestamp (i.e. sent immediately, now)
+                // msPositionInScoreToReport is empty here
+                console.log("1: setting msPositionInScoreToReport to ", msg.msPositionInScore);
+                msPositionInScoreToReport = msg.msPositionInScore;
             }
 
             // send all messages that are due between now and PREQUEUE ms later.
@@ -237,32 +233,24 @@ JI_NAMESPACE.sequence = (function (window)
                     console.log("Pause, or end of sequence.  maxDeviation is " + maxDeviation + "ms");
                     return;
                 }
-                if ((currentMoment !== null && (currentMoment.restStart !== undefined || currentMoment.chordStart !== undefined))
-                    && reportMsPositionInScore !== null)
+
+                if (msg.msPositionInScore !== undefined && msPositionInScoreToReport < 0 && reportMsPositionInScore !== null)
                 {
-                    if (messagesToReport.length === 0 || msg.timestamp > messagesToReport[messagesToReport.length - 1].timestamp)
-                    {
-                        messagesToReport.push(msg);
-                    }
+                    console.log("2: setting msPositionInScoreToReport to ", msg.msPositionInScore);
+                    msPositionInScoreToReport = msg.msPositionInScore;
                 }
                 delay = msg.timestamp - domhrtRelativeTime;
             }
 
-            if (messagesToReport.length > 0)
+            if (msPositionInScoreToReport >= 0)
             {
-                // Update currentMomentTimestamp and report each msPositionInScore which needs to be reported.
                 // Since, when we have a "conformant sendMIDIMessage w/ timestamps", the messages are actually sent
                 // to the output device later, this will lead to the GUI cursor position moving to the respective
                 // position in the GUI before the sound is actually heard.
                 // In the worst case, the cursor will move to its chord or rest PREQUEUE milliseconds before the
                 // sound is heard. 
-                nMessagesToReport = messagesToReport.length;
-
-                for (i = 0; i < nMessagesToReport; ++i)
-                {
-                    currentMomentTimestamp = messagesToReport[i].timestamp;
-                    reportMsPositionInScore(msPositionInScore + currentMomentTimestamp);  // updates the cursor position in the score
-                }
+                console.log("3:reportingMsPosition at msPositionInScoreToReport", msPositionInScoreToReport);
+                reportMsPositionInScore(msPositionInScoreToReport);  // updates the cursor position in the score
             }
 
             window.setTimeout(tick, delay);  // this will schedule the next tick.
@@ -372,7 +360,6 @@ JI_NAMESPACE.sequence = (function (window)
 
                 maxDeviation = 0; // for console.log
                 midiOutputDevice = midiOutDevice;
-                currentMomentTimestamp = fromMs;
                 performanceStart = true;
                 domhrtMsOffsetAtStartOfSequence = window.performance.webkitNow() - fromMs;
                 msg = nextMessage(); // the very first message
@@ -517,13 +504,13 @@ JI_NAMESPACE.sequence = (function (window)
 
                     if (midiMoment.restStart !== undefined)
                     {
-                        s = new Sequence(midiMoment.messages[0].timestamp);
+                        s = new Sequence(midiMoment.messages[0].msPositionInScore);
                         s.restSubsequence = true;
                         //console.log("Rest Subsequence: msPositionInScore=" + s.msPositionInScore.toString());
                     }
                     else if (midiMoment.chordStart !== undefined)
                     {
-                        s = new Sequence(midiMoment.messages[0].timestamp);
+                        s = new Sequence(midiMoment.messages[0].msPositionInScore);
                         s.chordSubsequence = true;
                         //console.log("Chord Subsequence: msPositionInScore=" + s.msPositionInScore.toString());
                     }
@@ -561,18 +548,6 @@ JI_NAMESPACE.sequence = (function (window)
                     return nextSubsequenceMsPositionInScore;
                 }
 
-                function subtractTime(midiMoment, subsequenceMsPositionInScore)
-                {
-                    var i, nMessages = midiMoment.messages.length;
-
-                    midiMoment.timestamp -= subsequenceMsPositionInScore;
-                    for (i = 0; i < nMessages; ++i)
-                    {
-                        // midiMoment can be of any type, including restStart
-                        midiMoment.messages[i].timestamp -= subsequenceMsPositionInScore;
-                    }
-                }
-
                 // nSubsequences includes the final barline (a restSubsequence which may contain noteOff messages).
                 for (subsequencesIndex = 0; subsequencesIndex < nSubsequences; ++subsequencesIndex)
                 {
@@ -586,8 +561,7 @@ JI_NAMESPACE.sequence = (function (window)
                         midiMoment = midiMoments[midiMomentsIndex];
                         while (midiMoment.timestamp < nextSubsequenceMsPositionInScore)
                         {
-                            subtractTime(midiMoment, subsequenceMsPositionInScore);
-                            track.addMIDIMoment(midiMoment);
+                            track.addMIDIMoment(midiMoment, subsequenceMsPositionInScore);
                             ++midiMomentsIndex;
                             if (midiMomentsIndex === nMidiMoments)
                             {

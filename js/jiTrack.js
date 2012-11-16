@@ -11,7 +11,7 @@
  *
  *  A Track has the following public interface:
  *       addMIDIMessage(midiMessage);
- *       addMIDIMoment(midiMoment) // see JI_NAMESPACE.midiMoment
+ *       addMIDIMoment(midiMoment, sequencePositionInScore) // see JI_NAMESPACE.midiMoment
  *       midiMoments // an array of midiMoments
  *       fromIndex // used while performing
  *       currentIndex // used while performing
@@ -25,7 +25,7 @@ JI_NAMESPACE.track = (function ()
 {
     "use strict";
 
-    var
+    var 
     // An empty track is created. It contains an empty midiMoments array.
     Track = function ()
     {
@@ -36,9 +36,23 @@ JI_NAMESPACE.track = (function ()
             currentLastTimestamp = -1,
 
         // A midiMoment can only be appended to the end of the track. 
-        addMIDIMoment = function (midiMoment)
+        addMIDIMoment = function (midiMoment, sequencePositionInScore)
         {
-            var lastMoment, timestamp = midiMoment.timestamp;
+            var lastMoment, timestamp, msPositionInScore = -1, oldMoment;
+
+            function subtractTime(midiMoment, subsequenceMsPositionInScore)
+            {
+                var i, nMessages = midiMoment.messages.length;
+
+                midiMoment.timestamp -= subsequenceMsPositionInScore;
+                for (i = 0; i < nMessages; ++i)
+                {
+                    midiMoment.messages[i].timestamp -= subsequenceMsPositionInScore;
+                }
+            }
+
+            subtractTime(midiMoment, sequencePositionInScore);
+            timestamp = midiMoment.timestamp;
 
             if (timestamp > currentLastTimestamp)
             {
@@ -47,20 +61,8 @@ JI_NAMESPACE.track = (function ()
             }
             else if (timestamp === currentLastTimestamp)
             {
-                lastMoment = midiMoments[midiMoments.length - 1];
-
-                if (midiMoment.restStart !== undefined)
-                {
-                    lastMoment.restStart = true;
-                    // dont push the rest's 'empty midiMessage'
-                }
-                else if (midiMoment.chordStart !== undefined)
-                {
-                    lastMoment.chordStart = true;
-                    // Push the new midiMessages on to the end of the last midiMoment in the same track.  
-                    // currentLastTimestamp does not change.
-                    lastMoment.addMIDIMoment(midiMoment);
-                }
+                oldMoment = midiMoments[midiMoments.length - 1];
+                oldMoment.mergeMIDIMoment(midiMoment);
             }
             else
             {

@@ -187,7 +187,14 @@ JI_NAMESPACE.assistant = (function (window)
                         type = PITCH_WHEEL;
                         break;
                     case 0x90:
-                        type = NOTE_ON;
+                        if (msg.data2 === 0) // velocity 0
+                        {
+                            type = NOTE_OFF;
+                        }
+                        else
+                        {
+                            type = NOTE_ON;
+                        }
                         break;
                     case 0x80:
                         type = NOTE_OFF;
@@ -220,11 +227,6 @@ JI_NAMESPACE.assistant = (function (window)
                 }
             }
 
-            function reportEndOfSubsequence()
-            {
-                currentLivePerformersKeyPitch = -1; // handleNoteOff() does nothing until this value is reset (by handleNoteOn()).
-            }
-
             function playNextSubsequence(msg, nextSubsequence, options)
             {
                 var now = window.performance.webkitNow(), // in the time frame used by sequences
@@ -241,7 +243,7 @@ JI_NAMESPACE.assistant = (function (window)
                     subsequenceStartNow = now; // used only with the relative durations option
                 }
                 // if options.assistantUsesAbsoluteDurations === true, the durations will already be correct in all subsequences.
-                nextSubsequence.playSpan(outputDevice, 0, Number.MAX_VALUE, tracksControl, reportEndOfSubsequence, reportMsPosition);
+                nextSubsequence.playSpan(outputDevice, 0, Number.MAX_VALUE, tracksControl, null, reportMsPosition);
             }
 
             function handleAftertouch(msg)
@@ -275,6 +277,7 @@ JI_NAMESPACE.assistant = (function (window)
                     {
                         reportEndOfPerformance();
                     }
+                    currentLivePerformersKeyPitch = -1;
                 }
             }
 

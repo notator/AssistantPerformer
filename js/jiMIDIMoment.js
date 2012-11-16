@@ -15,7 +15,7 @@
  *        midiMoment.timestamp; // the msPosition in the sequence
  *        midiMoment.messages = messages; // an array of midiMessages (can be empty)
  *        midiMoment.addMIDIMessage(MIDIMessage)
- *        midiMoment.addMIDIMoment(MIDIMoment); // appends another MIDIMoment,
+ *        midiMoment.mergeMIDIMoment(MIDIMoment); // appends another MIDIMoment,
  *                                              // having the same timestamp (=msPosition),
  *                                              // to the end of this MIDIMoment.  
  */
@@ -61,13 +61,38 @@ JI_NAMESPACE.midiMoment = (function ()
             }
         },
 
-        // Adds the moment2.messages to the end of the current messages.
-        // moment2.timestamp must be the same as this.timestamp otherwise
-        // addMIDIMessage will throw an exception. 
-        addMIDIMoment = function (moment2)
+        // Adds the moment2.messages to the end of the current messages, and
+        // sets restStart, chordStart and msPositionInScore where necessary.
+        // Throws an exception if moment2.timestamp !== this.timestamp. 
+        mergeMIDIMoment = function (moment2)
         {
             var i, moment2Messages, moment2MessagesLength;
 
+            if (timestamp !== moment2.timestamp)
+            {
+                throw "Error: attempt to merge moments having different timestamps.";
+            }
+
+            if (moment2.messages[0].msPositionInScore !== undefined)
+            {
+                // moment2 is a restStart or chordStart
+                this.messages[0].msPositionInScore = moment2.messages[0].msPositionInScore;
+
+                if (moment2.restStart !== undefined)
+                {
+                    // don't copy the empty message
+                    moment2.messages = [];
+                    this.restStart = true;
+                }
+                else if (moment2.chordStart !== undefined)
+                {
+                    this.chordStart = true;
+                }
+                else
+                {
+                    throw "Error: moment2 must either have a restStart or a chordStart attribute.";
+                }
+            }
             moment2Messages = moment2.messages;
             moment2MessagesLength = moment2Messages.length;
             for (i = 0; i < moment2MessagesLength; ++i)
@@ -86,7 +111,7 @@ JI_NAMESPACE.midiMoment = (function ()
         this.timestamp = timestamp;
         this.messages = messages;
         this.addMIDIMessage = addMIDIMessage;
-        this.addMIDIMoment = addMIDIMoment;
+        this.mergeMIDIMoment = mergeMIDIMoment;
 
         return this;
     },
