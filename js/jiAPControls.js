@@ -328,8 +328,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                     score.setRunningMarkers(svgTracksControl);
                     score.moveStartMarkerToTop(svgPagesDiv);
 
-                    assistant.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
-                        svgTracksControl, reportEndOfSpan, reportMsPos);
+                    assistant.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(), svgTracksControl);
 
                     cl.pauseUnselected.setAttribute("opacity", GLASS);
                     cl.pauseSelected.setAttribute("opacity", GLASS);
