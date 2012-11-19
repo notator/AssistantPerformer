@@ -21,43 +21,43 @@ window.addEventListener("load", function ()
         jiMIDIChord = JI_NAMESPACE.midiChord,
         selectInput = document.getElementById("midiInputDeviceSelector"),
         selectOutput = document.getElementById("midiOutputDeviceSelector"),
-        input = null,
-        output = null;
+        inputDeviceId = "",
+        outputDeviceId = "";
 
     JMB.init(function (MIDIAccess)
     {
         var inputs = MIDIAccess.enumerateInputs(),
             outputs = MIDIAccess.enumerateOutputs(),
 
-            // sets the current devices in apControls.options
+        // sets the current devices in apControls.options
             connectDevices = function ()
             {
                 if (apControls !== undefined)
                 {
-                    apControls.setMidiDevices(input, output);
+                    apControls.setMidiDevices(MIDIAccess, inputDeviceId, outputDeviceId);
                 }
 
                 /********
                 // ji -- commented out 28.10.12 
                 if (apControls !== undefined && output !== null)
                 {
-                    apControls.setMidiOut(output);
+                apControls.setMidiOut(output);
                 }
 
                 // the input device is now connected and disconnected dynamically inside jiAssistant.js
                 if (input)
                 {
-                    input.addEventListener("midimessage", function (msg)
-                    {
-                        if (apControls !== undefined && apControls.handleMidiIn !== undefined)
-                        {
-                            apControls.handleMidiIn(msg);
-                        }
-                        else if (output)
-                        {
-                            output.sendMIDIMessage(msg);
-                        }
-                    });
+                input.addEventListener("midimessage", function (msg)
+                {
+                if (apControls !== undefined && apControls.handleMidiIn !== undefined)
+                {
+                apControls.handleMidiIn(msg);
+                }
+                else if (output)
+                {
+                output.sendMIDIMessage(msg);
+                }
+                });
                 }
                 *********/
             };
@@ -65,22 +65,14 @@ window.addEventListener("load", function ()
         //create dropdown menu for MIDI inputs
         JMB.createMIDIDeviceSelector(selectInput, inputs, "input", function (deviceId)
         {
-            if (input)
-            {
-                input.close();
-            }
-            input = MIDIAccess.getInput(deviceId);
+            inputDeviceId = deviceId;
             connectDevices();
         });
 
         //create dropdown menu for MIDI outputs
         JMB.createMIDIDeviceSelector(selectOutput, outputs, "output", function (deviceId)
         {
-            if (output)
-            {
-                output.close();
-            }
-            output = MIDIAccess.getOutput(deviceId);
+            outputDeviceId = deviceId;
             connectDevices();
         });
 

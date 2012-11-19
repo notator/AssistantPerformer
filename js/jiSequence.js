@@ -28,11 +28,11 @@ JI_NAMESPACE.sequence = (function (window)
 
     var // the variables in this (outer) scope are common to all sequences and subsequences  
     jiTrack = JI_NAMESPACE.track,
-    reportEndOfSpan, // compulsory callback. An exception is thrown if reportEndOfSpan is null or undefined
-    reportMsPositionInScore, // compulsory callback. Info used for setting the position of the running cursor in the GUI.
     PREQUEUE = 0, // this needs to be set to a larger value later. See comment on tick() function.
     maxDeviation, // for console.log, set to 0 when performance starts
-    midiOutputDevice, // set when performance starts
+    midiOutputDevice, // set in Sequence constructor
+    reportEndOfSpan, // callback. Can be null. Set in Sequence constructor.
+    reportMsPositionInScore, // compulsory callback. Info used for setting the position of the running cursor in the GUI.
 
     // An empty sequence is created. It contains an empty tracks array.
     Sequence = function (msPosition)
@@ -46,7 +46,6 @@ JI_NAMESPACE.sequence = (function (window)
         currentMomentLength,
         stopped,
         paused,
-        performanceStart, // set to true when performance starts 
         domhrtMsOffsetAtStartOfSequence, // set when performance starts
         msg; // the very first message in a performance is loaded elsewhere (when the performance  starts)
         // msg is never null when tick() is called.;
@@ -119,7 +118,10 @@ JI_NAMESPACE.sequence = (function (window)
             {
                 //console.log("End of span.");
                 // move the cursor back to the startMarker and set the APControls' state to "stopped"
-                reportEndOfSpan(); // a system exception is thrown if reportEndOfSpan is null or undefined
+                if (reportEndOfSpan !== null)
+                {
+                    reportEndOfSpan(); // nothing happens if this is a null function
+                }
             }
 
             return nextMomt; // null is stop, end of span
@@ -158,11 +160,9 @@ JI_NAMESPACE.sequence = (function (window)
         }
 
         // tick() function -- which began as an idea by Chris Wilson
-        // This function has been tested thoroughly as far as possible without having "a conformant sendMIDIMessage
-        // with timestamps", and appears to be correct.
+        // This function has been tested as far as possible without having "a conformant sendMIDIMessage with timestamps".
         // It needs testing again with the conformant sendMIDIMessage and a higher value for PREQUEUE. What would the
-        // ideal value for PREQUEUE be? The cursor is only updated once per tick, so PREQUEUE needs to be small enough
-        // for this not to matter.
+        // ideal value for PREQUEUE be? 
         // Email correspondence (End of Oct. 2012):
         //      James: "...how do I decide how big PREQUEUE should be?"
         //      Chris: "Well, you're trading off two things:
@@ -174,21 +174,37 @@ JI_NAMESPACE.sequence = (function (window)
         //          So, in short, you'll just have to test on your target systems."
         //      James: "Yes, that's more or less what I thought. I'll start testing with PREQUEUE at 16.67ms."
         //
+        // 16th Nov. 2012: The cursor can only be updated once per tick, so PREQUEUE needs to be small enough for this not
+        // to matter.
+        //
+        // The following variables are initialised in playSpan() to start playing this sequence:
+        //      msg // the first message in the sequence
+        //      track attributes:
+        //          isPerforming // set by referring to the track control
+        //          fromIndex // the index of the first moment in the track to play
+        //          toIndex // the index of the final moment in the track (which does not play)
+        //          currentIndex // = fromIndex
+        //      lastSpanTimestamp // the toMs argument to playSpan()
+        //      lastSequenceTimestamp // the largest timestamp in any track (i.e. the end of the sequence)
+        //      maxDeviation = 0; // just for console.log
+        //      midiOutputDevice // the midi output device
+        //      reportEndOfSpan // can be null
+        //      reportMsPosition // compulsory
+        //      domhrtMsOffsetAtStartOfSequence // system time offset at start of sequence    
+        //
         // Synchronizing with the running cursor in the score:
-        // 1. msg is outside tick(). The very first msg in the performance is loaded in another function when the
-        //    performance starts.
-        // 2. reportMsPositionInScore(msPositionInScore) is a compulsory callback, set when playSpan() is called.
-        //    It increments the cursor position until it reaches the symbol whose position is msPositionInScore. 
-        //    Only the first message in a track.moment which is the first moment in a score symbol has such an attribute.
+        // reportMsPositionInScore(msPositionInScore) is a compulsory callback, set when playSpan() is called. This function
+        // increments the cursor position on screen until it reaches the symbol whose position is msPositionInScore.
+        // An msPositionInScore attribute exists only on the first message in the first moment in a rest or chord symbol on
+        // each track. Note that the cursor can only be updated once per tick.
         function tick()
         {
-            var deviation, msPositionInScoreToReport = -1,
+            var deviation,
             domhrtRelativeTime = Math.round(window.performance.webkitNow() - domhrtMsOffsetAtStartOfSequence),
-            delay = msg.timestamp - domhrtRelativeTime,
+            delay = msg.timestamp - domhrtRelativeTime, // compensates for inaccuracies in setTimeout
             reported = false;
 
-            // send all messages that are due between now and PREQUEUE ms later.
-            // delay is (msg.timestamp - domhrtRelativeTime) -- which compensates for inaccuracies in setTimeout
+            // send all messages that are due between now and PREQUEUE ms later. 
             while (delay <= PREQUEUE)
             {
                 // these values are only used by console.log (See end of file too!)
@@ -202,7 +218,7 @@ JI_NAMESPACE.sequence = (function (window)
                     reported = true;
                 }
 
-                if (msg.isEmpty === undefined)
+                if (msg.isEmpty === undefined) // the first message in a rest symbol can have an isEmpty attribute 
                 {
                     // sendMIDIMessage needs msg.timestamp to be absolute DOMHRT time.
                     msg.timestamp += domhrtMsOffsetAtStartOfSequence;
@@ -270,9 +286,9 @@ JI_NAMESPACE.sequence = (function (window)
             }
         }
 
-        // Sets lastSpanTimestamp to toMs,
-        //  and lastSequenceTimestamp to the largest timestamp in any track (i.e. the end of the sequence)
-        function setLastTimestamps(toMs)
+        // Sets lastSpanTimestamp and
+        // lastSequenceTimestamp to the largest timestamp in any track (i.e. the end of the sequence)
+        function setLastSequenceTimeStamp(toMs)
         {
             var i, nTracks = tracks.length, track,
             lastTrackTimestamp;
@@ -308,38 +324,35 @@ JI_NAMESPACE.sequence = (function (window)
         // the timestamp used when sending MidiMessages. The timestamp can change dynamically
         // during an assisted performance (when using durations which are relative to the
         // live performer's durations).
-        function playSpan(midiOutDevice, fromMs, toMs, tracksControl, reportEOS, reportMsPosition)
+        function playSpan(midiOutDevice, fromMs, toMs, tracksControl, reportEndOfSequence, reportMsPosition)
         {
-            if (midiOutDevice !== null && midiOutDevice !== undefined)
+            if (midiOutDevice === undefined || midiOutDevice === null)
             {
-                if (reportEOS === undefined || reportEOS === null)
-                {
-                    throw "The reportEndOfSpan callback must be defined.";
-                }
-                reportEndOfSpan = reportEOS;
-
-                if (reportMsPosition === undefined || reportMsPosition === null)
-                {
-                    throw "The reportMsPosition callback must be defined.";
-                }
-                reportMsPositionInScore = reportMsPosition;
-
-                setTracks(tracksControl, fromMs, toMs);
-                setLastTimestamps(toMs);
-                setState("running");
-
-                maxDeviation = 0; // for console.log
-                midiOutputDevice = midiOutDevice;
-                performanceStart = true;
-                domhrtMsOffsetAtStartOfSequence = window.performance.webkitNow() - fromMs;
-                msg = nextMessage(); // the very first message
-                if (msg === null)
-                {
-                    // This shouldn't be hit, except for an empty initial sequence
-                    return;
-                }
-                tick();
+                throw "The midi output device must be defined.";
             }
+
+            if (reportMsPosition === undefined || reportMsPosition === null)
+            {
+                throw "The reportMsPosition callback must be defined.";
+            }
+
+            midiOutputDevice = midiOutDevice;
+            reportEndOfSpan = reportEndOfSequence; // can be null
+            reportMsPositionInScore = reportMsPosition;
+
+            setTracks(tracksControl, fromMs, toMs);
+            setLastSequenceTimeStamp(toMs);
+            setState("running");
+
+            maxDeviation = 0; // for console.log
+            domhrtMsOffsetAtStartOfSequence = window.performance.webkitNow() - fromMs;
+            msg = nextMessage(); // the very first message
+            if (msg === null)
+            {
+                // This shouldn't be hit, except for an empty initial sequence
+                return;
+            }
+            tick();
         }
 
         // Can only be called when paused is true.

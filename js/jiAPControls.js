@@ -21,6 +21,7 @@ JI_NAMESPACE.apControls = (function (document, window)
     var svgTracksControl = JI_NAMESPACE.apTracksControl,
         jiScore = JI_NAMESPACE.score,
         jiAssistant = JI_NAMESPACE.assistant,
+        midiAccess,
         score,
         assistant,
         sequence,
@@ -39,11 +40,40 @@ JI_NAMESPACE.apControls = (function (document, window)
 
         scoreHasJustBeenSelected = false,
 
-    // This is set when the input or output device selectors change.
-    setMidiDevices = function (input, output)
+    // This function is called when the input or output device selectors change.
+    setMidiDevices = function (MIDIAccess, inputDeviceId, outputDeviceId)
     {
-        options.inputDevice = input;
-        options.outputDevice = output;
+        options.inputDeviceId = inputDeviceId;
+        options.outputDeviceId = outputDeviceId;
+        options.getInputDevice = function (handleMidiIn)
+        {
+            if (options.inputDevice !== undefined && options.inputDevice !== null)
+            {
+                options.inputDevice.close();
+                options.inputDevice = null;
+            }
+            if (options.inputDeviceId !== "")
+            {
+                options.inputDevice = MIDIAccess.getInput(options.inputDeviceId);
+                if (handleMidiIn !== null)
+                {
+                    options.inputDevice.addEventListener("midimessage", function (msg)
+                    {
+                        handleMidiIn(msg);
+                    });
+                }
+            }
+        };
+
+        if (options.outputDevice !== undefined && options.outputDevice !== null)
+        {
+            options.outputDevice.close();
+            options.outputDevice = null;
+        }
+        if (outputDeviceId !== "")
+        {
+            options.outputDevice = MIDIAccess.getOutput(outputDeviceId);
+        }
     },
 
     setMainOptionsState = function (mainOptionsState)
@@ -150,20 +180,26 @@ JI_NAMESPACE.apControls = (function (document, window)
 
         setStopped = function ()
         {
-            if (sequence !== undefined && !(sequence.isStopped()))
+            var player = sequence;
+            if (options.assistedPerformance === true)
+            {
+                player = assistant;
+            }
+
+            if (player !== undefined && !(player.isStopped()))
             {
                 score.moveRunningMarkerToStartMarker();
-                sequence.stop();
+                player.stop();
 
-                if (options.assistedPerformance === true)
-                {
-                    // Remove the event listener again when the performance stops. This disconnects the live player while the score is supposed
-                    // to be playing alone...
-                    options.inputDevice.removeEventListener("midimessage", function (msg)
-                    {
-                        assistant.handleMidiIn(msg);
-                    });
-                }
+                //                if (options.assistedPerformance === true)
+                //                {
+                //                    // The event listener is removed when the performance stops, so that the
+                //                    // live player is only connected while the assistant is actually playing.
+                //                    options.inputDevice.removeEventListener("midimessage", function (msg)
+                //                    {
+                //                        assistant.handleMidiIn(msg);
+                //                    });
+                //                }
             }
 
             score.allNotesOff(options.outputDevice);
@@ -211,25 +247,26 @@ JI_NAMESPACE.apControls = (function (document, window)
         },
 
     // callback called when a performing sequence has played the last message in the span.
-    reportEndOfSpan = function ()
-    {
-        setStopped();
-        // The following line is important.
-        // Otherwise svgControlsState is 'paused' because of the way the go button works.
-        svgControlsState = 'stopped';
-    },
+    // or when the assistant stops (either stopped or has played last subsequence).
+        reportEndOfSpan = function ()
+        {
+            setStopped();
+            // The following line is important.
+            // Otherwise svgControlsState is 'paused' because of the way the go button works.
+            svgControlsState = 'stopped';
+        },
 
     // optional callback: Called by a performing sequence, and reports
     // the timestamp (=msPosition) of the MIDIMoment curently being sent.
     // When all the MidiMessages in the span have been played,
     // reportEndOfSpan() is called (see above).
-    reportMsPos = function (msPosition)
-    {
-        //console.log("jiAPControls: calling score.advanceRunningMarker(msPosition), msPosition=" + msPosition);
-        // If there is a graphic object in the score having msPosition,
-        // the running cursor is aligned to that object.
-        score.advanceRunningMarker(msPosition);
-    },
+        reportMsPos = function (msPosition)
+        {
+            //console.log("jiAPControls: calling score.advanceRunningMarker(msPosition), msPosition=" + msPosition);
+            // If there is a graphic object in the score having msPosition,
+            // the running cursor is aligned to that object.
+            score.advanceRunningMarker(msPosition);
+        },
 
 
     //svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd'.
@@ -259,6 +296,16 @@ JI_NAMESPACE.apControls = (function (document, window)
 
         function setPaused()
         {
+            var player = sequence;
+            if (options.assistedPerformance === true)
+            {
+                player = assistant;
+            }
+            if (player !== undefined && !(player.isStopped()) && !(player.isPaused()))
+            {
+                player.pause();
+            }
+
             score.allNotesOff(options.outputDevice);
 
             svgTracksControl.setDisabled(true);
@@ -276,11 +323,6 @@ JI_NAMESPACE.apControls = (function (document, window)
             cl.setEndControlDisabled.setAttribute("opacity", SMOKE);
             cl.sendStartToBeginningControlDisabled.setAttribute("opacity", SMOKE);
             cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
-
-            if (sequence !== undefined && !(sequence.isStopped()) && !(sequence.isPaused()))
-            {
-                sequence.pause();
-            }
         }
 
         function setPlaying()
@@ -289,12 +331,30 @@ JI_NAMESPACE.apControls = (function (document, window)
             if (options.assistedPerformance === true)
             {
                 player = assistant;
-                // Remove the event listener again when the performance stops. This disconnects the live player while the score is supposed
-                // to be playing alone...
-                options.inputDevice.addEventListener("midimessage", function (msg)
+                //                // The event listener is removed again when the performance stops, so that the
+                //                // live player is only connected while the assistant is actually playing.
+                //                options.inputDevice.addEventListener("midimessage", function (msg)
+                //                {
+                //                    assistant.handleMidiIn(msg);
+                //                });
+            }
+
+            if (player !== undefined)
+            {
+                if (player.isPaused())
                 {
-                    assistant.handleMidiIn(msg);
-                });
+                    player.resume();
+                }
+                else if (player.isStopped())
+                {
+                    // the running marker is at its correct position:
+                    // either at the start marker, or somewhere paused.
+                    score.setRunningMarkers(svgTracksControl);
+                    score.moveStartMarkerToTop(svgPagesDiv);
+
+                    player.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
+                        svgTracksControl, reportEndOfSpan, reportMsPos);
+                }
             }
 
             svgTracksControl.setDisabled(true);
@@ -313,24 +373,6 @@ JI_NAMESPACE.apControls = (function (document, window)
             cl.setEndControlDisabled.setAttribute("opacity", SMOKE);
             cl.sendStartToBeginningControlDisabled.setAttribute("opacity", SMOKE);
             cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
-
-            if (player !== undefined && (player.isStopped() || player.isPaused()))
-            {
-                if (player.isPaused())
-                {
-                    player.resume();
-                }
-                else
-                {
-                    // the running marker is at its correct position:
-                    // either at the start marker, or somewhere paused.
-                    score.setRunningMarkers(svgTracksControl);
-                    score.moveStartMarkerToTop(svgPagesDiv);
-
-                    player.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
-                        svgTracksControl, reportEndOfSpan, reportMsPos);
-                }
-            }
         }
 
         function setCursorAndEventListener(svgControlsState)
@@ -784,7 +826,7 @@ JI_NAMESPACE.apControls = (function (document, window)
 
                 if (options.assistedPerformance === true)
                 {// this constructor consumes sequence, resetting midiMoment timestamps relative to the start of their subsection.
-                    assistant = new jiAssistant.Assistant(options.livePerformersTrackIndex, sequence, reportEndOfSpan, reportMsPos);
+                    assistant = new jiAssistant.Assistant(sequence, options, reportEndOfSpan, reportMsPos);
                 }
             }
         }

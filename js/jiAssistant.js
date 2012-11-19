@@ -47,6 +47,7 @@ JI_NAMESPACE.assistant = (function (window)
 
         stopped = true,
         paused = false,
+        midiInHandler,
 
         currentLivePerformersKeyPitch = -1, // -1 means "no key depressed". This value is set when the live performer sends a noteOn
         subsequencesLengthMinusOne, // set by makeSubsequences()
@@ -62,6 +63,15 @@ JI_NAMESPACE.assistant = (function (window)
 
         setState = function (state)
         {
+
+            function closeInputDevice(options)
+            {
+                if(options.inputDevice !== undefined && options.inputDevice !== null)
+                {
+                    options.inputDevice.close();
+                }
+            }
+
             switch (state)
             {
                 case "stopped":
@@ -74,14 +84,17 @@ JI_NAMESPACE.assistant = (function (window)
                     pausedNow = 0.0; // used only with the relative durations option (the time at which the subsequence was paused).
                     stopped = true;
                     paused = false;
+                    closeInputDevice(options);
                     break;
                 case "paused":
                     stopped = false;
                     paused = true;
+                    closeInputDevice(options);
                     break;
                 case "running":
                     stopped = false;
                     paused = false;
+                    options.getInputDevice(midiInHandler);
                     break;
                 default:
                     throw "Unknown sequencer state!";
@@ -158,12 +171,6 @@ JI_NAMESPACE.assistant = (function (window)
     //  nextIndex (= -1 when stopped) the index of the subsequence which will be played when a noteOn msg arrives
         handleMidiIn = function (msg)
         {
-            /* test code */
-            //if (options.outputDevice)
-            //{
-            //    options.outputDevice.sendMIDIMessage(msg);
-            //}
-
             var inputMsgType;
 
             // getInputMessageType returns one of the following constants:
@@ -273,7 +280,7 @@ JI_NAMESPACE.assistant = (function (window)
                         playNextSubsequence(msg, subsequences[nextIndex], options);
                         currentIndex = nextIndex++;
                     }
-                    if (nextIndex === subsequencesLengthMinusOne) // final barline
+                    if (nextIndex === (endIndex)) // final barline
                     {
                         reportEndOfPerformance();
                     }
@@ -300,6 +307,11 @@ JI_NAMESPACE.assistant = (function (window)
                 {
                     handleNoteOff(msg);
                 }
+            }
+
+            if (options.assistedPerformance === false || isStopped())
+            {
+                return;
             }
 
             inputMsgType = getInputMessageType(msg);
@@ -341,15 +353,15 @@ JI_NAMESPACE.assistant = (function (window)
 
     // This function is called when options.assistedPerformance === true and the Go button is clicked (in the performance controls).
     // If options.assistedPerformance === false, sequence.playSpan(...) is called instead.
-        playSpan = function (outDevice, fromMs, toMs, svgTracksControl, reportEndOfSpan, reportMsPos)
+        playSpan = function (outDevice, fromMs, toMs, svgTracksControl, reportEndOfSpan, reportMsPosition)
         {
-            function getIndex(subsequences, timestamp)
+            function getIndex(subsequences, msPositionInScore)
             {
                 var i = 0,
                     nSubsequences = subsequences.length,
                     subsequence = subsequences[0];
 
-                while (i < nSubsequences && subsequence.timestamp < timestamp)
+                while (i < nSubsequences && subsequence.msPositionInScore < msPositionInScore)
                 {
                     i++;
                     subsequence = subsequences[i];
@@ -381,12 +393,14 @@ JI_NAMESPACE.assistant = (function (window)
                 throw ("Error creating Assistant.");
             }
 
+            options = apControlOptions;
+            midiInHandler = handleMidiIn;
+
             setState("stopped");
 
             mainSequence = sequence;
             reportEndOfPerformance = reportEndOfWholePerformance;
             reportMsPosition = reportMillisecondPosition;
-            options = apControlOptions;
 
             makeSubsequences(options.livePerformersTrackIndex, sequence);
 
