@@ -348,18 +348,28 @@
         onmouseout="JI_NAMESPACE.apControls.hideOverRect('overLivePerformerOnOffFrame')"
         onclick="JI_NAMESPACE.apControls.doControl('livePerformerOnOff')" >
         <g id="livePerformerOn" opacity="1" >
-            <rect x="0" y="0" width="92" height="30" stroke="#008000" stroke-width="1" fill="#F5FFF5" />
-            <text x="19" y="19" font-size="13" font-family="Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif" fill="#ED1C24" >
-                play live
+            <rect x="0" y="0" width="46" height="30" stroke="#008000" stroke-width="1" fill="#F5FFF5" />
+            <rect x="1.5" y="1.5" width="43" height="27" stroke="#00CE00" stroke-width="2" fill="#F5FFF5"/>
+            <rect x="46" y="0" width="46" height="30" stroke="#008000" stroke-width="1" fill="#F5FFF5" />
+            <text x="12" y="19" font-size="13" font-family="Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif" fill="black" >
+                live
+            </text>
+            <text x="51.7" y="19" font-size="13" font-family="Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif" fill="#CCCCCC" >
+                score
             </text>
         </g>
         <g id="livePerformerOff" opacity="0" >
-            <rect x="0" y="0" width="92" height="30" stroke="#008000" stroke-width="1" fill="#F5FFF5" />
-            <text x="14" y="19" font-size="13" font-family="Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif" fill="black" >
-                play score
+            <rect x="0" y="0" width="46" height="30" stroke="#008000" stroke-width="1" fill="#F5FFF5" />
+            <rect x="46" y="0" width="46" height="30" stroke="#008000" stroke-width="1" fill="#F5FFF5" />
+            <rect x="47.5" y="1.5" width="43" height="27" stroke="#00CE00" stroke-width="2" fill="#F5FFF5"/>
+            <text x="12" y="19" font-size="13" font-family="Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif" fill="#CCCCCC" >
+                live
+            </text>
+            <text x="51.7" y="19" font-size="13" font-family="Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif" fill="black" >
+                score
             </text>
         </g>        
-        <rect id="overLivePerformerOnOffFrame" x="1.5" y="1.5" width="89" height="27" stroke="#00CE00" fill="none" stroke-width="2" opacity="0" />  
+        <rect id="overLivePerformerOnOffFrame" x="1.5" y="1.5" width="89" height="27" stroke="none" fill="none" stroke-width="2" opacity="0" />  
         <rect id="livePerformerOnOffDisabled" x="0" y="0" width="92" height="30" stroke="white" stroke-width="1" fill="white"  opacity="0"/>
     </g>
 </svg>
