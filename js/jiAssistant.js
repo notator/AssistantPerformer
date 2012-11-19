@@ -141,7 +141,7 @@ JI_NAMESPACE.assistant = (function (window)
             return paused === true;
         },
 
-    // Can only be called while running or paused
+    // Can only be called while running
     // (stopped === false)
         stop = function ()
         {
@@ -275,12 +275,12 @@ JI_NAMESPACE.assistant = (function (window)
                 if (msg.data1 === currentLivePerformersKeyPitch)
                 {
                     stopCurrentlyPlayingSubsequence();
-                    if (nextIndex < subsequencesLengthMinusOne && subsequences[nextIndex].restSubsequence !== undefined)
+                    if (nextIndex < endIndex && subsequences[nextIndex].restSubsequence !== undefined)
                     {
                         playNextSubsequence(msg, subsequences[nextIndex], options);
                         currentIndex = nextIndex++;
                     }
-                    if (nextIndex === (endIndex)) // final barline
+                    if (nextIndex === endIndex) // final barline
                     {
                         reportEndOfPerformance();
                     }

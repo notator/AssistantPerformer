@@ -188,19 +188,10 @@ JI_NAMESPACE.apControls = (function (document, window)
 
             if (player !== undefined && !(player.isStopped()))
             {
-                score.moveRunningMarkerToStartMarker();
                 player.stop();
-
-                //                if (options.assistedPerformance === true)
-                //                {
-                //                    // The event listener is removed when the performance stops, so that the
-                //                    // live player is only connected while the assistant is actually playing.
-                //                    options.inputDevice.removeEventListener("midimessage", function (msg)
-                //                    {
-                //                        assistant.handleMidiIn(msg);
-                //                    });
-                //                }
             }
+
+            score.moveRunningMarkerToStartMarker();
 
             score.allNotesOff(options.outputDevice);
 
@@ -296,14 +287,14 @@ JI_NAMESPACE.apControls = (function (document, window)
 
         function setPaused()
         {
-            var player = sequence;
             if (options.assistedPerformance === true)
             {
-                player = assistant;
+                throw "Error: Assisted performances are never paused.";
             }
-            if (player !== undefined && !(player.isStopped()) && !(player.isPaused()))
+
+            if (sequence !== undefined && !(sequence.isStopped()) && !(sequence.isPaused()))
             {
-                player.pause();
+                sequence.pause();
             }
 
             score.allNotesOff(options.outputDevice);
@@ -328,32 +319,42 @@ JI_NAMESPACE.apControls = (function (document, window)
         function setPlaying()
         {
             var player = sequence;
-            if (options.assistedPerformance === true)
+            if (options.assistedPerformance === true && assistant !== undefined)
             {
-                player = assistant;
-                //                // The event listener is removed again when the performance stops, so that the
-                //                // live player is only connected while the assistant is actually playing.
-                //                options.inputDevice.addEventListener("midimessage", function (msg)
-                //                {
-                //                    assistant.handleMidiIn(msg);
-                //                });
-            }
-
-            if (player !== undefined)
-            {
-                if (player.isPaused())
-                {
-                    player.resume();
-                }
-                else if (player.isStopped())
+                if (assistant.isStopped())
                 {
                     // the running marker is at its correct position:
                     // either at the start marker, or somewhere paused.
                     score.setRunningMarkers(svgTracksControl);
                     score.moveStartMarkerToTop(svgPagesDiv);
 
-                    player.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
+                    assistant.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
                         svgTracksControl, reportEndOfSpan, reportMsPos);
+
+                    cl.pauseUnselected.setAttribute("opacity", GLASS);
+                    cl.pauseSelected.setAttribute("opacity", GLASS);
+                    cl.goDisabled.setAttribute("opacity", SMOKE);
+                }
+            }
+            else if (sequence !== undefined) // play main sequence
+            {
+                if (sequence.isPaused())
+                {
+                    sequence.resume();
+                }
+                else if (sequence.isStopped())
+                {
+                    // the running marker is at its correct position:
+                    // either at the start marker, or somewhere paused.
+                    score.setRunningMarkers(svgTracksControl);
+                    score.moveStartMarkerToTop(svgPagesDiv);
+
+                    sequence.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
+                        svgTracksControl, reportEndOfSpan, reportMsPos);
+
+                    cl.pauseUnselected.setAttribute("opacity", METAL);
+                    cl.pauseSelected.setAttribute("opacity", GLASS);
+                    cl.goDisabled.setAttribute("opacity", GLASS);
                 }
             }
 
@@ -361,10 +362,6 @@ JI_NAMESPACE.apControls = (function (document, window)
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
             cl.livePerformerOnOffDisabled.setAttribute("opacity", SMOKE);
-
-            cl.pauseUnselected.setAttribute("opacity", METAL);
-            cl.pauseSelected.setAttribute("opacity", GLASS);
-            cl.goDisabled.setAttribute("opacity", GLASS);
 
             cl.stopControlSelected.setAttribute("opacity", GLASS);
             cl.stopControlDisabled.setAttribute("opacity", GLASS);
@@ -480,7 +477,10 @@ JI_NAMESPACE.apControls = (function (document, window)
                 setStopped();
                 break;
             case 'paused':
-                setPaused();
+                if (options.assistedPerformance === false)
+                {
+                    setPaused();
+                }
                 break;
             case 'playing':
                 setPlaying();
