@@ -16,11 +16,23 @@ JI_NAMESPACE.sequence = (function (window)
 {
     "use strict";
     var 
+    maxDeviation, // for console.log, set to 0 when performance starts
+    midiOutputDevice, // set in Sequence constructor
+    reportEndOfSpan, // callback. Can be null. Set in Sequence constructor.
+    reportMsPositionInScore, // compulsory callback. Info used for setting the position of the running cursor in the GUI.
+
     currentMoment = null,
     messageIndex = -1,
     currentMomentLength = 0,
     stopped = true,
     paused = false,
+
+    domhrtMsOffsetAtStartOfSequence = 0,
+    msg = null,
+
+    lastSpanTimestamp = -1,
+    lastSequenceTimestamp = -1,
+    tracks = [],
 
     // An empty sequence is created. It contains an empty tracks array.
     Sequence = function (msPosition)
@@ -44,17 +56,6 @@ JI_NAMESPACE.sequence = (function (window)
         Sequence: Sequence
     };
     // end var
-
-    proto.maxDeviation = 0; // for console.log, set to 0 when performance starts
-    proto.midiOutputDevice = null; // set in Sequence constructor
-    proto.reportEndOfSpan = null; // callback. Can be null. Set in Sequence constructor.
-    proto.reportMsPositionInScore = null; // compulsory callback. Info used for setting the position of the running cursor in the GUI.
-    proto.domhrtMsOffsetAtStartOfSequence = 0;
-    proto.msg = null;
-
-    proto.lastSpanTimestamp = -1;
-    proto.lastSequenceTimestamp = -1;
-    proto.tracks = [];
 
     proto.setState = function (state)
     {
@@ -87,7 +88,6 @@ JI_NAMESPACE.sequence = (function (window)
     proto.nextMessage = function ()
     {
         var nextMsg = null,
-            tracks = proto.tracks,
             nTracks = tracks.length,
             track = tracks[0];
 
@@ -267,7 +267,7 @@ JI_NAMESPACE.sequence = (function (window)
     // live performer's durations).
     proto.playSpan = function (midiOutDevice, fromMs, toMs, tracksControl, reportEndOfSequence, reportMsPosition)
     {
-        var tracks = this.tracks; // when invoked from a Sequence, 'this' is the sequence.
+        tracks = this.tracks; // invoked only by a Sequence, 'this' is the sequence.
 
         // Called when initiating a performance, but not when resuming.
         // Sets each track's isPerforming attribute. If the track is performing,
@@ -346,8 +346,6 @@ JI_NAMESPACE.sequence = (function (window)
             throw "The reportMsPosition callback must be defined.";
         }
 
-        proto.tracks = tracks; // for later
-
         midiOutputDevice = midiOutDevice;
         reportEndOfSpan = reportEndOfSequence; // can be null
         reportMsPositionInScore = reportMsPosition;
@@ -358,8 +356,8 @@ JI_NAMESPACE.sequence = (function (window)
 
         maxDeviation = 0; // for console.log
         domhrtMsOffsetAtStartOfSequence = window.performance.webkitNow() - fromMs;
-        proto.msg = proto.nextMessage(); // the very first message
-        if (proto.msg === null)
+        msg = proto.nextMessage(); // the very first message
+        if (msg === null)
         {
             // This shouldn't be hit, except for an empty initial sequence
             return;
@@ -370,12 +368,14 @@ JI_NAMESPACE.sequence = (function (window)
     // Can only be called when paused is true.
     proto.resume = function ()
     {
+        tracks = this.tracks; // invoked only by a Sequence, 'this' is the sequence.
+
         if (paused === true && currentMoment !== null)
         {
             proto.setState("running");
             domhrtMsOffsetAtStartOfSequence = window.performance.webkitNow() - currentMoment.timestamp;
-            proto.msg = proto.nextMessage(); // the very first message after the resume
-            if (proto.msg === null)
+            msg = proto.nextMessage(); // the very first message after the resume
+            if (msg === null)
             {
                 // This shouldn't be hit, except for an empty initial sequence
                 return;
@@ -388,6 +388,8 @@ JI_NAMESPACE.sequence = (function (window)
     // (stopped === false && paused === false)
     proto.pause = function ()
     {
+        tracks = this.tracks; // invoked only by a Sequence, 'this' is the sequence.
+
         if (stopped === false && paused === false)
         {
             proto.setState("paused");
@@ -402,6 +404,8 @@ JI_NAMESPACE.sequence = (function (window)
     // (stopped === false)
     proto.stop = function ()
     {
+        tracks = this.tracks; // invoked only by a Sequence, 'this' is the sequence.
+
         if (stopped === false)
         {
             proto.setState("stopped");
@@ -422,19 +426,20 @@ JI_NAMESPACE.sequence = (function (window)
     };
     proto.addTrack = function (newTrack)
     {
-        this.tracks.push(newTrack);
+        tracks = this.tracks; // invoked only by a Sequence, 'this' is the sequence.
+        tracks.push(newTrack);
     };
     // used in assisted performances having relative durations
     proto.totalMsDuration = function ()
     {
-        var nTracks = proto.tracks.length,
-            i,
-            trackMsDuration,
-            msDuration = 0.0;
+        var nTracks, i, trackMsDuration, msDuration = 0.0;
+
+        tracks = this.tracks; // invoked only by a Sequence, 'this' is the sequence.
+        nTracks = tracks.length;
 
         for (i = 0; i < nTracks; ++i)
         {
-            trackMsDuration = proto.tracks[i].midiMoments[proto.tracks[i].midiMoments.length - 1].timestamp;
+            trackMsDuration = tracks[i].midiMoments[tracks[i].midiMoments.length - 1].timestamp;
             msDuration = (msDuration > trackMsDuration) ? msDuration : trackMsDuration;
         }
         return msDuration;
@@ -443,12 +448,14 @@ JI_NAMESPACE.sequence = (function (window)
     // used in assisted performances having relative durations
     proto.changeSpeed = function (speed)
     {
-        var nTracks = proto.tracks.length,
-            i, j, track, trackLength, midiMoment;
+        var nTracks, i, j, track, trackLength, midiMoment;
+
+        tracks = this.tracks; // invoked only by a Sequence, 'this' is the sequence.
+        nTracks = tracks.length;
 
         for (i = 0; i < nTracks; ++i)
         {
-            track = proto.tracks[i];
+            track = tracks[i];
             trackLength = track.midiMoments.length;
             for (j = 0; j < trackLength; ++j)
             {
@@ -473,8 +480,10 @@ JI_NAMESPACE.sequence = (function (window)
     // Subsequences corresponding to a live performer's rest are given a restSubsequence attribute (=true).
     proto.getSubsequences = function (livePerformersTrackIndex)
     {
-        var subsequences = [], tracks = this.tracks,
-        trackIndex, nTracks;
+        var subsequences = [],
+            tracks = this.tracks, // invoked only by a Sequence, 'this' is the sequence.
+            nTracks = tracks.length,
+            trackIndex;
 
         // The returned subsequences have a temporary timestamp attribute and
         // either a restSubsequence or a chordSubsequence attribute, 
@@ -568,7 +577,6 @@ JI_NAMESPACE.sequence = (function (window)
 
         subsequences = getEmptySubsequences(tracks[livePerformersTrackIndex]);
 
-        nTracks = tracks.length;
         for (trackIndex = 0; trackIndex < nTracks; ++trackIndex)
         {
             fillSubsequences(subsequences, tracks[trackIndex].midiMoments); // 'base' function in outer scope
