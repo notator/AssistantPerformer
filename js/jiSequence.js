@@ -208,8 +208,18 @@ JI_NAMESPACE.sequence = (function (window)
     {
         var deviation, PREQUEUE = 0, // this needs to be set to a larger value later. See comment on tick() function.
         domhrtRelativeTime = Math.round(window.performance.webkitNow() - domhrtMsOffsetAtStartOfSequence),
-        delay = msg.timestamp - domhrtRelativeTime, // compensates for inaccuracies in setTimeout
-        reported = false;
+        reported = false,
+        delay;
+
+        if (msg === null)
+        {
+            console.log("Pause, or end of sequence.  maxDeviation is " + maxDeviation + "ms");
+            return;
+        }
+        else
+        {
+            delay = msg.timestamp - domhrtRelativeTime; // compensates for inaccuracies in setTimeout
+        }
 
         // send all messages that are due between now and PREQUEUE ms later. 
         while (delay <= PREQUEUE)
