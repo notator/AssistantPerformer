@@ -390,8 +390,6 @@ JI_NAMESPACE.palettes = (function (document)
         return palettes;
     },
 
-    // optional initialisation
-
     // public API
     publicAPI =
     {

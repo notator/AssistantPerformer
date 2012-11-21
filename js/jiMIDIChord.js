@@ -54,15 +54,6 @@ JI_NAMESPACE.midiChord = (function ()
 
     // public MIDIChord constructor
     // A MIDIChord contains all the midi messages required for playing an (ornamented) chord.
-    // A MIDIChord has the private members:
-    //    midiChord.timestamp (an integer);
-    //    midiChord.midiMoments;
-    // midiMoments is an ordered array of midiMoments (containing messages for sequential chords and slider events).
-    // A MIDIMoment is a list of logically synchronous MIDI messages.
-    //
-    // And one public function:
-    //      midiChord.addToTrack(track)
-    //
     MIDIChord = function (channel, chordDef, timeObject, speed)
     {
         if (!(this instanceof MIDIChord))
@@ -78,13 +69,16 @@ JI_NAMESPACE.midiChord = (function ()
         this.msPosition = timeObject.msPosition;
         this.msDuration = timeObject.msDuration;
         this.midiMoments = this.getMoments(channel, chordDef, timeObject, speed); // defined in prototype
+        // midiMoments is an ordered array of midiMoments (containing messages for sequential chords and slider events).
+        // A MIDIMoment is a list of logically synchronous MIDI messages.
 
         this.addToTrack = addToTrack; // private function in this namespace, shared by MIDIChord and MIDIRest
 
         return this;
     },
 
-    // a MIDIRest is like a MIDIChord having a single MIDIMoment containing a single, empty message. 
+    // a MIDIRest has the same structure as a MIDIChord, but it
+    // has a single MIDIMoment containing a single, empty message. 
     MIDIRest = function (timeObject)
     {
         if (!(this instanceof MIDIRest))
@@ -125,6 +119,8 @@ JI_NAMESPACE.midiChord = (function ()
     };
     // end var
 
+    // This prototype exposes a single public function:
+    //     getMoments(channel, chordDef, timeObject, speed)
     MIDIChord.prototype = (function ()
     {
         var 
@@ -761,6 +757,8 @@ JI_NAMESPACE.midiChord = (function ()
 
     } ());
 
+    // This prototype exposes a single public function:
+    //     getMoments(timeObject)
     MIDIRest.prototype = (function ()
     {
         var getMoments = function (timeObject)

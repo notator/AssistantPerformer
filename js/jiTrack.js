@@ -8,14 +8,6 @@
  *  jiTrack.js
  *  The JI_NAMESPACE.sequence namespace which defines the
  *    Track() empty sequence constructor.
- *
- *  A Track has the following public interface:
- *       addMIDIMessage(midiMessage);
- *       addMIDIMoment(midiMoment, sequencePositionInScore) // see JI_NAMESPACE.midiMoment
- *       midiMoments // an array of midiMoments
- *       fromIndex // used while performing
- *       currentIndex // used while performing
- *       toIndex // used while performing
  *  
  */
 
@@ -25,20 +17,39 @@ JI_NAMESPACE.track = (function ()
 {
     "use strict";
 
-    var 
+    var  
     // An empty track is created. It contains an empty midiMoments array.
     Track = function ()
     {
-        var midiMoments = [],
-            fromIndex,
-            currentIndex,
-            toIndex,
-            currentLastTimestamp = -1,
+        if (!(this instanceof Track))
+        {
+            return new Track();
+        }
 
+        this.midiMoments = [];
+        this.fromIndex = -1;
+        this.currentIndex = -1;
+        this.toIndex = -1;
+        // defined in prototype:
+        //     addMIDIMoment(midiMoment, sequencePositionInScore)
+    },
+
+    publicTrackAPI =
+    {
+        // creates an empty track
+        Track: Track
+    };
+    // end var
+
+    Track.prototype = (function ()
+    {
+        var 
         // A midiMoment can only be appended to the end of the track. 
         addMIDIMoment = function (midiMoment, sequencePositionInScore)
         {
-            var lastMoment, timestamp, msPositionInScore = -1, oldMoment;
+            var 
+            midiMoments = this.midiMoments,
+            currentLastTimestamp = -1, timestamp, oldMoment;
 
             function subtractTime(midiMoment, subsequenceMsPositionInScore)
             {
@@ -68,27 +79,17 @@ JI_NAMESPACE.track = (function ()
             {
                 throw "Error: A midiMoment can only be appended to the end of a track.";
             }
+        },
+
+        prototypeAPI =
+        {
+            addMIDIMoment: addMIDIMoment
         };
 
-        if (!(this instanceof Track))
-        {
-            return new Track();
-        }
+        return prototypeAPI;
 
-        this.addMIDIMoment = addMIDIMoment;
-        this.midiMoments = midiMoments;
-        this.fromIndex = fromIndex;
-        this.currentIndex = currentIndex;
-        this.toIndex = toIndex;
-    },
+    } ());
 
-    publicAPI =
-    {
-        // creates an empty track
-        Track: Track
-    };
-    // end var
-
-    return publicAPI;
+    return publicTrackAPI;
 
 } ());

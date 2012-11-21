@@ -52,6 +52,9 @@ JI_NAMESPACE.midiMoment = (function ()
     };
     // end var
 
+    // This prototype exposes two public functions:
+    //     addMIDIMessage(midimessage);
+    //     mergeMIDIMoment(moment2);
     MIDIMoment.prototype = (function ()
     {
         var 
