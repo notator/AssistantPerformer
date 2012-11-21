@@ -31,14 +31,38 @@ JI_NAMESPACE.midiMoment = (function ()
     // This is an array of midiMessages, all of which have the same timestamp (=msPosition)
     MIDIMoment = function (msPosition)
     {
-        var timestamp,
-            messages = [],
+        if (!(this instanceof MIDIMoment))
+        {
+            return new MIDIMoment(msPosition);
+        }
 
+        this.timestamp = msPosition;
+        this.messages = [];
+        // defined in prototype:
+        //     addMIDIMessage(midimessage);
+        //     mergeMIDIMoment(moment2);
+
+        return this;
+    },
+
+    publicAPI =
+    {
+        // creates an empty MIDIMoment
+        MIDIMoment: MIDIMoment
+    };
+    // end var
+
+    MIDIMoment.prototype = (function ()
+    {
+        var 
         // Currently, MIDIMessages are only ever appended to
         // the end of the MIDIMoment, but that might change. 
-        addMIDIMessage = function (midiMessage)
+        privateAddMIDIMessage = function (that, midiMessage)
         {
-            var errorText = "";
+            var errorText = "",
+            messages = that.messages, // MIDIMoment.messages
+            timestamp = that.timestamp;
+
             if (midiMessage.timestamp !== undefined && midiMessage.timestamp >= 0)
             {
                 if (midiMessage.timestamp === timestamp)
@@ -61,12 +85,23 @@ JI_NAMESPACE.midiMoment = (function ()
             }
         },
 
+        addMIDIMessage = function (midiMessage)
+        {
+            privateAddMIDIMessage(this, midiMessage);
+        },
+
+        localAddMIDIMessage = function (that, midiMessage)
+        {
+            privateAddMIDIMessage(that, midiMessage);
+        },
+
         // Adds the moment2.messages to the end of the current messages, and
         // sets restStart, chordStart and msPositionInScore where necessary.
         // Throws an exception if moment2.timestamp !== this.timestamp. 
         mergeMIDIMoment = function (moment2)
         {
-            var i, moment2Messages, moment2MessagesLength;
+            var i, moment2Messages, moment2MessagesLength,
+            timestamp = this.timestamp;
 
             if (timestamp !== moment2.timestamp)
             {
@@ -97,31 +132,18 @@ JI_NAMESPACE.midiMoment = (function ()
             moment2MessagesLength = moment2Messages.length;
             for (i = 0; i < moment2MessagesLength; ++i)
             {
-                addMIDIMessage(moment2Messages[i]);
+                localAddMIDIMessage(this, moment2Messages[i]);
             }
+        },
+
+        publicPrototypeAPI =
+        {
+            addMIDIMessage: addMIDIMessage,
+            mergeMIDIMoment: mergeMIDIMoment
         };
 
-        if (!(this instanceof MIDIMoment))
-        {
-            return new MIDIMoment(msPosition);
-        }
-
-        timestamp = msPosition;
-
-        this.timestamp = timestamp;
-        this.messages = messages;
-        this.addMIDIMessage = addMIDIMessage;
-        this.mergeMIDIMoment = mergeMIDIMoment;
-
-        return this;
-    },
-
-    publicAPI =
-    {
-        // creates an empty MIDIMoment
-        MIDIMoment: MIDIMoment
-    };
-    // end var
+        return publicPrototypeAPI;
+    } ());
 
     return publicAPI;
 

@@ -26,6 +26,18 @@ JI_NAMESPACE.sequence = (function (window)
 
         this.tracks = [];
         this.msPositionInScore = msPosition;
+        // defined in the prototype:
+        //      setState(stateString),
+        //      playSpan(midiOutDevice, fromMs, toMs, tracksControl, reportEndOfSequence, reportMsPosition)
+        //      pause(),
+        //      resume(),
+        //      stop(),
+        //      isStopped(),
+        //      isPaused(),
+        //      addTrack(newTrack),
+        //      totalMsDuration(),
+        //      changeSpeed(speed),
+        //      getSubsequences(livePerformersTrackIndex)
 
         this.setState("stopped");
     },

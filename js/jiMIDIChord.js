@@ -94,7 +94,7 @@ JI_NAMESPACE.midiChord = (function ()
 
         this.msPosition = timeObject.msPosition;
         this.msDuration = timeObject.msDuration;
-        this.midiMoments = this.getMoments(timeObject);
+        this.midiMoments = this.getMoments(timeObject); // defined in prototype
 
         this.addToTrack = addToTrack; // private function in this namespace, shared by MIDIChord and MIDIRest
 
