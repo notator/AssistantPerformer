@@ -703,30 +703,7 @@ JI_NAMESPACE.midiChord = (function ()
     // a MIDIRest is like a MIDIChord having a single MIDIMoment containing a single, empty message. 
     MIDIRest = function (timeObject)
     {
-        var restMoment;
-
-        function emptyMessage(msPosition)
-        {
-            var emptyMsg = {};
-
-            emptyMsg.isEmpty = true;
-            emptyMsg.timestamp = msPosition;
-            emptyMsg.msPositionInScore = msPosition;
-            return emptyMsg;
-        }
-
-        if (!(this instanceof MIDIRest))
-        {
-            return new MIDIRest(timeObject);
-        }
-
-        restMoment = new MIDIMoment(timeObject.msPosition);
-        restMoment.restStart = true;
-        restMoment.messages.push(emptyMessage(timeObject.msPosition));
-
-        midiMoments = [];
-        midiMoments.push(restMoment); // an empty moment. 
-
+        this.midiMoments = this.getMoments(timeObject);
         this.msPosition = timeObject.msPosition;
         this.msDuration = timeObject.msDuration;
 
@@ -735,7 +712,7 @@ JI_NAMESPACE.midiChord = (function ()
         return this;
     },
 
-    publicAPI =
+    publicChordRestAPI =
     {
         // initializes the _JMB value local to this namespace
         init: init,
@@ -759,5 +736,45 @@ JI_NAMESPACE.midiChord = (function ()
     };
     // end var
 
-    return publicAPI;
+    MIDIRest.prototype = (function ()
+    {
+        var getMoments = function (timeObject)
+        {
+            var restMoment;
+
+            function emptyMessage(msPosition)
+            {
+                var emptyMsg = {};
+
+                emptyMsg.isEmpty = true;
+                emptyMsg.timestamp = msPosition;
+                emptyMsg.msPositionInScore = msPosition;
+                return emptyMsg;
+            }
+
+            if (!(this instanceof MIDIRest))
+            {
+                return new MIDIRest(timeObject);
+            }
+
+            restMoment = new MIDIMoment(timeObject.msPosition);
+            restMoment.restStart = true;
+            restMoment.messages.push(emptyMessage(timeObject.msPosition));
+
+            midiMoments = [];
+            midiMoments.push(restMoment); // an empty moment.
+
+            return midiMoments;
+        },
+
+        publicRestPrototypeAPI =
+        {
+            getMoments: getMoments
+        };
+
+        return publicRestPrototypeAPI;
+
+    } ());
+
+    return publicChordRestAPI;
 } ());
