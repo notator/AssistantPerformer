@@ -335,7 +335,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                     cl.goDisabled.setAttribute("opacity", SMOKE);
                 }
             }
-            else if (sequence !== undefined) // play main sequence
+            else if (sequence !== undefined) // playing score (main sequence)
             {
                 if (sequence.isPaused())
                 {
@@ -350,11 +350,11 @@ JI_NAMESPACE.apControls = (function (document, window)
 
                     sequence.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
                         svgTracksControl, reportEndOfSpan, reportMsPos);
-
-                    cl.pauseUnselected.setAttribute("opacity", METAL);
-                    cl.pauseSelected.setAttribute("opacity", GLASS);
-                    cl.goDisabled.setAttribute("opacity", GLASS);
                 }
+
+                cl.pauseUnselected.setAttribute("opacity", METAL);
+                cl.pauseSelected.setAttribute("opacity", GLASS);
+                cl.goDisabled.setAttribute("opacity", GLASS);
             }
 
             svgTracksControl.setDisabled(true);
