@@ -43,7 +43,7 @@ JI_NAMESPACE.assistant = (function (window)
         endIndex = -1,
         currentIndex = -1, // the index of the currently playing subsequence (which will be stopped when a noteOn or noteOff arrives).
         nextIndex = -2, // the index of the subsequence which will be played when a noteOn msg arrives (initially != startIndex) 
-        subsequenceStartNow = 0.0, // used only with the relative durations option
+        prevSubsequenceStartNow = 0.0, // used only with the relative durations option
         pausedNow = 0.0, // used only with the relative durations option (the time at which the subsequence was paused).
 
         stopped = true,
@@ -51,7 +51,6 @@ JI_NAMESPACE.assistant = (function (window)
         midiInHandler,
 
         currentLivePerformersKeyPitch = -1, // -1 means "no key depressed". This value is set when the live performer sends a noteOn
-        subsequencesLengthMinusOne, // set by makeSubsequences()
 
     // makeSubsequences creates the private subsequences array inside the assistant.
     // This function is called when options.assistedPerformance === true and the Start button is clicked in the upper options panel.
@@ -59,7 +58,6 @@ JI_NAMESPACE.assistant = (function (window)
         makeSubsequences = function (livePerformersTrackIndex, mainSequence)
         {
             subsequences = mainSequence.getSubsequences(livePerformersTrackIndex);
-            subsequencesLengthMinusOne = subsequences.length - 1;
         },
 
         setState = function (state)
@@ -81,7 +79,7 @@ JI_NAMESPACE.assistant = (function (window)
                     endIndex = -1; // the index of the (unplayed) end chord or rest or endBarline
                     currentIndex = -1;
                     nextIndex = -1;
-                    subsequenceStartNow = 0.0; // used only with the relative durations option
+                    prevSubsequenceStartNow = 0.0; // used only with the relative durations option
                     pausedNow = 0.0; // used only with the relative durations option (the time at which the subsequence was paused).
                     stopped = true;
                     paused = false;
@@ -109,7 +107,7 @@ JI_NAMESPACE.assistant = (function (window)
             {
                 if (options.assistantUsesAbsoluteDurations === false)
                 {
-                    subsequenceStartNow += (window.performance.webkitNow() - pausedNow);
+                    prevSubsequenceStartNow += (window.performance.webkitNow() - pausedNow);
                 }
                 subsequences[currentIndex].resume();
                 setState("running");
@@ -146,14 +144,21 @@ JI_NAMESPACE.assistant = (function (window)
     // (stopped === false)
         stop = function ()
         {
+            var i, nSubsequences = subsequences.length;
+
             if (stopped === false)
             {
                 setState("stopped");
 
                 if (options.assistantUsesAbsoluteDurations === false)
                 {
-                    // reset the subsequences (they have changed speed individually during the performance).
-                    makeSubsequences(mainSequence, options);
+                    // reset the subsequences
+                    // (During the assisted performance, the message.timestamps have changed according
+                    //  to the live performer's speed, but the midiMoment.timestamps have not).
+                    for (i = 0; i < nSubsequences; ++i)
+                    {
+                        subsequences[i].revertMessageTimestamps();
+                    }
                 }
 
                 reportEndOfPerformance();
@@ -241,23 +246,25 @@ JI_NAMESPACE.assistant = (function (window)
                 }
             }
 
-            function playNextSubsequence(msg, nextSubsequence, options)
+            function playSubsequence(msg, subsequence, options)
             {
                 var now = window.performance.webkitNow(), // in the time frame used by sequences
-                    speed = options.speed;
+                    prevSubsequenceScoreMsDuration,
+                    durationFactor;
 
                 if (options.assistantUsesAbsoluteDurations === false)
                 {
                     if (currentIndex > 0)
                     {
-                        speed = (now - subsequenceStartNow) / subsequences[currentIndex - 1].totalMsDuration();
-                        // pausedNow need not be set here. It is set (if at all) in pause().
-                        nextSubsequence.changeSpeed(speed);
+                        prevSubsequenceScoreMsDuration = subsequences[currentIndex].msPositionInScore - subsequences[currentIndex - 1].msPositionInScore;
+                        durationFactor = (now - prevSubsequenceStartNow) / prevSubsequenceScoreMsDuration;
+                        // durations in the subsequence are multiplied by durationFactor
+                        subsequence.changeMessageTimestamps(durationFactor);
                     }
-                    subsequenceStartNow = now; // used only with the relative durations option
+                    prevSubsequenceStartNow = now; // used only with the relative durations option
                 }
                 // if options.assistantUsesAbsoluteDurations === true, the durations will already be correct in all subsequences.
-                nextSubsequence.playSpan(outputDevice, 0, Number.MAX_VALUE, tracksControl, null, reportMsPosition);
+                subsequence.playSpan(outputDevice, 0, Number.MAX_VALUE, tracksControl, null, reportMsPosition);
             }
 
             function handleUnknownMessage(msg)
@@ -301,8 +308,8 @@ JI_NAMESPACE.assistant = (function (window)
                     stopCurrentlyPlayingSubsequence();
                     if (nextIndex < endIndex && subsequences[nextIndex].restSubsequence !== undefined)
                     {
-                        playNextSubsequence(msg, subsequences[nextIndex], options);
                         currentIndex = nextIndex++;
+                        playSubsequence(msg, subsequences[currentIndex], options);
                     }
                     if (nextIndex === endIndex) // final barline
                     {
@@ -323,8 +330,8 @@ JI_NAMESPACE.assistant = (function (window)
 
                     if (nextIndex === startIndex || subsequences[nextIndex].chordSubsequence !== undefined)
                     {
-                        playNextSubsequence(msg, subsequences[nextIndex], options);
                         currentIndex = nextIndex++;
+                        playSubsequence(msg, subsequences[currentIndex], options);
                     }
                 }
                 else // velocity 0 is "noteOff"
@@ -332,11 +339,6 @@ JI_NAMESPACE.assistant = (function (window)
                     handleNoteOff(msg);
                 }
             }
-
-//            if (options.assistedPerformance === false || isStopped())
-//            {
-//                return;
-//            }
 
             inputMsgType = getInputMessageType(msg);
 
@@ -347,7 +349,7 @@ JI_NAMESPACE.assistant = (function (window)
                     break;
                 case CHANNEL_PRESSURE: // EMU "aftertouch"
                     handleChannelPressure(msg);
-                    break; 
+                    break;
                 case AFTERTOUCH: // EWI breath controller
                     handleAftertouch(msg);
                     break;
@@ -403,7 +405,7 @@ JI_NAMESPACE.assistant = (function (window)
             endIndex = getIndex(subsequences, toMs); // the index of the (unplayed) end chord or rest or endBarline
             currentIndex = -1;
             nextIndex = startIndex;
-            subsequenceStartNow = -1;
+            prevSubsequenceStartNow = -1;
         },
 
     // creats an Assistant, complete with private subsequences

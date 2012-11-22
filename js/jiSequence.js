@@ -15,7 +15,7 @@ JI_NAMESPACE.namespace('JI_NAMESPACE.sequence');
 JI_NAMESPACE.sequence = (function (window)
 {
     "use strict";
-    var
+    var 
     // An empty sequence is created. It contains an empty tracks array.
     Sequence = function (msPosition)
     {
@@ -35,8 +35,7 @@ JI_NAMESPACE.sequence = (function (window)
         //      isStopped(),
         //      isPaused(),
         //      addTrack(newTrack),
-        //      totalMsDuration(),
-        //      changeSpeed(speed),
+        //      changeMessageTimestamps(durationFactor),
         //      getSubsequences(livePerformersTrackIndex)
 
         this.setState("stopped");
@@ -230,7 +229,7 @@ JI_NAMESPACE.sequence = (function (window)
                 console.log("Pause, or end of sequence.  maxDeviation is " + maxDeviation + "ms");
                 return;
             }
-            
+
             delay = msg.timestamp - domhrtRelativeTime; // compensates for inaccuracies in setTimeout
 
             // send all messages that are due between now and PREQUEUE ms later. 
@@ -306,8 +305,16 @@ JI_NAMESPACE.sequence = (function (window)
                     trackMoments = track.midiMoments;
                     trackLength = trackMoments.length;
 
-                    track.isPerforming = tracksControl.trackIsOn(i);
-                    if (track.isPerforming)
+                    if (trackLength === 0) // can happen if nothing happens in the track during the subsequence
+                    {
+                        track.isPerforming = false;
+                    }
+                    else
+                    {
+                        track.isPerforming = tracksControl.trackIsOn(i);
+                    }
+
+                    if (track.isPerforming) // trackLength is > 0
                     {
                         for (j = 0; j < trackLength; ++j)
                         {
@@ -454,26 +461,14 @@ JI_NAMESPACE.sequence = (function (window)
             tracks.push(newTrack);
         },
 
-        // used in assisted performances having relative durations
-        totalMsDuration = function ()
+        // Used in assisted performances having relative durations
+        // Message timestamps are multiplied by durationFactor.
+        // MidiMoment timestamps are unchanged, and are used to revert the message timestamps
+        // when the stop button is clicked, or when the performance reaches the end marker.
+        // (See revertTimestamps() below)
+        changeMessageTimestamps = function (durationFactor)
         {
-            var nTracks, i, trackMsDuration, msDuration = 0.0;
-
-            tracks = this.tracks; // invoked only by a Sequence, 'this' is the sequence.
-            nTracks = tracks.length;
-
-            for (i = 0; i < nTracks; ++i)
-            {
-                trackMsDuration = tracks[i].midiMoments[tracks[i].midiMoments.length - 1].timestamp;
-                msDuration = (msDuration > trackMsDuration) ? msDuration : trackMsDuration;
-            }
-            return msDuration;
-        },
-
-        // used in assisted performances having relative durations
-        changeSpeed = function (speed)
-        {
-            var nTracks, i, j, track, trackLength, midiMoment;
+            var nTracks, i, j, k, track, trackLength, midiMoment, messages, nMessages, timestamp;
 
             tracks = this.tracks; // invoked only by a Sequence, 'this' is the sequence.
             nTracks = tracks.length;
@@ -485,7 +480,42 @@ JI_NAMESPACE.sequence = (function (window)
                 for (j = 0; j < trackLength; ++j)
                 {
                     midiMoment = track.midiMoments[j];
-                    midiMoment.timestamp *= speed;
+                    timestamp = midiMoment.timestamp * durationFactor;
+                    messages = midiMoment.messages;
+                    nMessages = messages.length;
+                    for (k = 0; k < nMessages; ++k)
+                    {
+                        messages[k].timestamp = timestamp;
+                    }
+                }
+            }
+        },
+
+        // Used in assisted performances having relative durations
+        // Message timestamps are set to the value of their midiMoment's timestamp.
+        // This function is called when the stop button is clicked, or when the
+        // performance reaches the end marker. (See changeMessageTimestamps() above)
+        revertMessageTimestamps = function ()
+        {
+            var nTracks, i, j, k, track, trackLength, midiMoment, messages, nMessages, timestamp;
+
+            tracks = this.tracks; // invoked only by a Sequence, 'this' is the sequence.
+            nTracks = tracks.length;
+
+            for (i = 0; i < nTracks; ++i)
+            {
+                track = tracks[i];
+                trackLength = track.midiMoments.length;
+                for (j = 0; j < trackLength; ++j)
+                {
+                    midiMoment = track.midiMoments[j];
+                    timestamp = midiMoment.timestamp;
+                    messages = midiMoment.messages;
+                    nMessages = messages.length;
+                    for (k = 0; k < nMessages; ++k)
+                    {
+                        messages[k].timestamp = timestamp;
+                    }
                 }
             }
         },
@@ -620,8 +650,8 @@ JI_NAMESPACE.sequence = (function (window)
             isStopped: isStopped,
             isPaused: isPaused,
             addTrack: addTrack,
-            totalMsDuration: totalMsDuration,
-            changeSpeed: changeSpeed,
+            changeMessageTimestamps: changeMessageTimestamps,
+            revertMessageTimestamps: revertMessageTimestamps,
             getSubsequences: getSubsequences
         };
 
