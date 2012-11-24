@@ -33,46 +33,65 @@ hr.hrHeight1
 
 div.centredReference
 {
-        position:relative; 
-        text-align: left; 
-        top: 0px;
-        left: 0px;
-        width: 1027px;
-        padding-top: 0px; 
-        margin-top: 0px;  
-        margin-left: auto; 
-        margin-right: auto;
+    position:relative; 
+    text-align: left; 
+    top: 0px;
+    left: 0px;
+    width: 1027px;
+    padding-top: 0px; 
+    margin-top: 0px;  
+    margin-left: auto; 
+    margin-right: auto;
 }
 .helpColour
 {
-        color: #8888FF;
+    color: #8888FF;
 }
 .narrowLineHeight
 {
-    line-height: 14px;
+    line-height: 15px;
 }
 select.deviceSelector
 {
     font-family: Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif;
-    font-size: 8pt; 
+    font-size: 11px; 
     width: 220px;
     margin-left: 8px;
     margin-right: 8px; 
+}
+select.midiControlSelector
+{
+    font-family: Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif;
+    font-size: 11px;
+    width: 140px;
+    margin-top: 2.5px;
+    margin-bottom: 1.5px;
+    margin-left: 3px;
+    vertical-align:middle;
 }
 div.optionsPanel
 {
     margin-top: 8px;
     margin-bottom:2px;
-    margin-left:90;
-    margin-right:90;
-    padding-top: 2px;
-    padding-right: 8px;
-    padding-bottom:8px;
-    padding-left: 8px;                
+    margin-left:27;
+    margin-right:27;
+    padding-top: 4px;
+    padding-right: 12px;
+    padding-bottom: 12px;
+    padding-left: 12px;                
     text-align: left;
     line-height: 18px; 
     background-color: #FCFCFC;
     border: 1px solid #008000; 
+}
+div.checkBoxCell
+{
+     display:table-cell;
+     font-size: 9px;
+     text-align: center;
+     line-height: 10px;
+     padding-left: 3px;
+     padding-right: 3px;
 }
 input.standardCheckBox14px
 {

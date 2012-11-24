@@ -31,8 +31,8 @@
                     border: 1px solid #008000;
                     margin-top: 10px;
                     margin-bottom:0px;
-                    margin-left:140;
-                    margin-right:140;
+                    margin-left:125;
+                    margin-right:125;
                     padding: 10;
                     text-align:center;" >
                     <div style="font-size: 14px;">
@@ -60,76 +60,132 @@
                     </div>                        
                     <div id="performersOptions" class="optionsPanel">
                         Performer's options:
-                        <div class="helpColour narrowLineHeight">
-                            If the MIDI input device is connected and active, the following incoming information will override the
-                            corresponding values stored in the performer&rsquo;s channel in the score:
-                        </div>
-                        <div style="margin-left: 60px; margin-top: 2px; display: table;">
+                        <div style="display:table">
                         <div style="display:table-row;">
-                            <div style="display: table-cell;"> 
+                            <div style="display: table-cell;padding-left:25px; padding-right: 25px; text-align:center"> 
                                 Track:
                                 <div style="margin-left: 3px">
                                     <select id="trackSelector" name="trackSelector" style="width:40px;" disabled="disabled">
                                     </select>
                                 </div>
                             </div>
-                            <div style="display: table-cell; padding-left:40px;">
-                                NoteOn:
-                                <div style="margin-left: 20px">
-                                    <div>
-                                        <input type="checkbox" name="velocityOptionCheckbox" value="performer"  id="velocityOptionCheckbox"
-                                            checked="checked" class="standardCheckBox14px" disabled="disabled"/> 
-                                        <label id="velocityCheckboxLabel" for="velocityOptionCheckbox" style="vertical-align:middle"> 
-                                                velocity (dynamic)
-                                        </label>
+                            <div style="display: table-cell;">
+                        <div class="helpColour narrowLineHeight" style="display:table-row;">
+                            <span style="margin-left:20px">Corresponding values in the score will be overidden by the following options:</span>
+                        </div>
+                        <div style="display:table-row;">
+                            <div style="margin-top: 2px; display: table;">
+                                <div style="display:table-row;">
+                                    <div style="display: table-cell; padding-left:20px;">
+                                        <div style="margin-left: 20px; display: table-row;">
+                                                <div style="text-align:right; display:table-cell; padding-right:5px;">
+                                                    NoteOn:
+                                                </div>    
+                                                <div class="checkboxCell" > 
+                                                    solo<br />
+                                                    track
+                                                </div>
+                                        </div>
+                                        <div style="margin-left: 20px; display: table-row;">
+                                            <div style="text-align:right; display:table-cell; padding-right:5px;">
+                                                <label id="velocityCheckboxLabel" for="velocityOptionCheckbox" style="vertical-align:middle"> 
+                                                    velocity (dynamic)</label>
+                                            </div>    
+                                            <div class="checkboxCell" > 
+                                                <input type="checkbox" name="velocityOptionCheckbox" value="performer"  id="velocityOptionCheckbox"
+                                                class="standardCheckBox14px" disabled="disabled"/> 
+                                            </div>
+                                        </div>
+                                        <div style="margin-left: 20px; display: table-row;">
+                                            <div style="text-align:right; display:table-cell; padding-right:5px;">
+                                                    <label id="Label1" for="pitchOptionCheckboxLabel" style="vertical-align:middle"> 
+                                                        pitch (monophonic)</label>
+                                            </div>    
+                                            <div class="checkboxCell" > 
+                                                <input type="checkbox" name="pitchOptionCheckbox" value="silent"  id="pitchOptionCheckbox"
+                                                    class="standardCheckBox14px" disabled="disabled"/>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <input type="checkbox" name="pitchOptionCheckbox" value="silent"  id="pitchOptionCheckbox"
-                                            checked="checked" class="standardCheckBox14px" disabled="disabled"/> 
-                                        <label id="pitchOptionCheckboxLabel" for="pitchOptionCheckbox" style="vertical-align:middle" >
-                                                pitch
-                                        </label>
+                                    <div style="display: table-cell; padding-left:40px;">
+                                        <div style="display:table">
+                                            <div style="display: table-row;">
+                                                <div style="text-align:right; display:table-cell; padding-right:5px;">
+                                                    Continuous controllers:
+                                                </div>    
+                                                <div class="checkboxCell" > 
+                                                    solo<br />
+                                                    track
+                                                </div>
+                                                <div class="checkboxCell" >
+                                                    other<br />
+                                                    tracks
+                                                </div>
+                                                <div style="display:table-cell;">
+                                                    &nbsp;
+                                                </div>
+                                            </div>
+                                            <div style="margin-left: 20px; line-height: 16px; display: table-row; vertical-align:middle">
+                                                <div style="text-align:right;display:table-cell;padding-right:5px;">
+                                                    <label id="aftertouchLabel" for="soloTrackAftertouchCheckbox" style="vertical-align:middle">aftertouch (breath)</label>
+                                                </div>    
+                                                <div class="checkboxCell" > 
+                                                    <input type="checkbox" id="soloTrackAftertouchCheckbox" class="standardCheckBox14px" 
+                                                        onclick="JI_NAMESPACE.apControls.doControl('soloTrackAftertouchCheckbox')" disabled="disabled"/>
+                                                </div>
+                                                <div class="checkboxCell" >
+                                                    <input type="checkbox" id="otherTracksAftertouchCheckbox" class="standardCheckBox14px"
+                                                        onclick="JI_NAMESPACE.apControls.doControl('otherTracksAftertouchCheckbox')"  disabled="disabled"/>
+                                                </div>
+                                                <div style="display:table-cell;">
+                                                    <select id="aftertouchMIDIControlSelector" class="midiControlSelector" disabled="disabled" 
+                                                        onchange="JI_NAMESPACE.apControls.doControl('aftertouchMIDIControlSelector')"></select>
+                                                </div>
+                                            </div>
+                                            <div style="margin-left: 20px; line-height: 16px; display: table-row; vertical-align:middle">
+                                                <div style="text-align:right;display:table-cell;padding-right:5px;">
+                                                    <label id="pitchWheelLabel" for="soloTrackPitchWheelCheckbox" style="vertical-align:middle">pitch wheel (pitch bend)</label>
+                                                </div>    
+                                                <div class="checkboxCell" > 
+                                                    <input type="checkbox" id="soloTrackPitchWheelCheckbox" class="standardCheckBox14px"
+                                                        onclick="JI_NAMESPACE.apControls.doControl('soloTrackPitchWheelCheckbox')" disabled="disabled"/>
+                                                </div>
+                                                <div class="checkboxCell" >
+                                                    <input type="checkbox" id="otherTracksPitchWheelCheckbox" class="standardCheckBox14px"
+                                                        onclick="JI_NAMESPACE.apControls.doControl('otherTracksPitchWheelCheckbox')" disabled="disabled"/>
+                                                </div>
+                                                <div style="display:table-cell;">
+                                                    <select id="pitchWheelMIDIControlSelector" class="midiControlSelector" disabled="disabled"
+                                                        onchange="JI_NAMESPACE.apControls.doControl('pitchWheelMIDIControlSelector')"></select>
+                                                </div>
+                                            </div>
+                                            <div style="margin-left: 20px; line-height: 16px; display: table-row; vertical-align:middle">
+                                                <div style="text-align:right;display:table-cell;padding-right:5px;">
+                                                    <label id="modWheelLabel" for="soloTrackModWheelCheckbox" style="vertical-align:middle">mod wheel (bite)</label>
+                                                </div>    
+                                                <div class="checkboxCell" > 
+                                                    <input type="checkbox" id="soloTrackModWheelCheckbox" class="standardCheckBox14px"
+                                                        onclick="JI_NAMESPACE.apControls.doControl('soloTrackModWheelCheckbox')" disabled="disabled"/>
+                                                </div>
+                                                <div class="checkboxCell" >
+                                                    <input type="checkbox" id="otherTracksModWheelCheckbox" class="standardCheckBox14px"
+                                                        onclick="JI_NAMESPACE.apControls.doControl('otherTracksModWheelCheckbox')"disabled="disabled"/>
+                                                </div>
+                                                <div style="display:table-cell;">
+                                                    <select id="modWheelMIDIControlSelector" class="midiControlSelector" disabled="disabled"
+                                                        onchange="JI_NAMESPACE.apControls.doControl('modWheelMIDIControlSelector')"></select>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div style="display: table-cell; padding-left:40px;">
-                            Continuous controllers:
-                            <div style="margin-left: 20px">
-                                <div >
-                                    <input type="checkbox" name="expressionOptionCheckbox" value="performer"  id="expressionOptionCheckbox"
-                                        checked="checked" class="standardCheckBox14px" disabled="disabled"/> 
-                                    <label id="expressionOptionCheckboxLabel" for="expressionOptionCheckbox" style="vertical-align:middle"> 
-                                            expression
-                                    </label>
-                                </div>
-                                <div>
-                                    <input type="checkbox" name="modulationWheelOptionCheckbox" value="performer"  id="modulationWheelOptionCheckbox"
-                                        checked="checked" class="standardCheckBox14px" disabled="disabled"/> 
-                                    <label id="modulationWheelOptionCheckboxLabel" for="modulationWheelOptionCheckbox" style="vertical-align:middle"> 
-                                            modulationWheel
-                                    </label>
-                                </div>
-                                <div>
-                                    <input type="checkbox" name="panOptionCheckbox" value="performer"  id="panOptionCheckbox"
-                                            checked="checked" class="standardCheckBox14px" disabled="disabled"/> 
-                                    <label id="panOptionCheckboxLabel" for="panOptionCheckbox" style="vertical-align:middle"> 
-                                            pan
-                                    </label>
-                                </div>
-                                <div>
-                                    <input type="checkbox" name="pitchWheelOptionCheckbox" value="performer"  id="pitchWheelOptionCheckbox"
-                                            checked="checked" class="standardCheckBox14px" disabled="disabled"/> 
-                                    <label id="pitchWheelOptionCheckboxLabel" for="pitchWheelOptionCheckbox" 
-                                        style="vertical-align:middle"> 
-                                            pitchWheel
-                                    </label>
-                                </div>
-                            </div>
+                             </div>
+                        </div>
                         </div>
                         </div>
                         </div>
                     </div>      
-                    <div id="assistantsDurationOptions" class="optionsPanel">
+                    <div id="assistantsDurationOptions" class="optionsPanel" style="margin-left:110px; margin-right:110px; margin-top:10px">
                         Assistant's duration option:
                         <div id="helpText" class="helpColour">
                             This option applies while the assistant is playing alone, with or without a live performer.
@@ -165,9 +221,9 @@
                         onclick="JI_NAMESPACE.apControls.beginRuntime()"  disabled="disabled"               
                         style="margin-top:8px; font-size: 14px; width: 100px; height: 24px;"/>    
                 </div>
+                </div>
 
-
-                <div id="controlPanel" style="padding:0px; margin:0px; width:1042px; height:41; position: absolute; top: 540px;">
+    <div id="controlPanel" style="padding:0px; margin:0px; width:1042px; height:41; position: absolute; top: 540px;">
 
 <svg xmlns="http://www.w3.org/2000/svg" width="170" height="36" style="position: absolute; left: 428px; top: 5px; ">
     <g id="performanceButtons" transform="translate(0.5, 0.5)">
@@ -415,7 +471,6 @@
                     -->
 			    </div>
             </div>
-        </div>
 
     <script src="lib/JazzMIDIBridge.js" type="text/javascript"></script>
     <script src="lib/MIDIDeviceSelector.js" type="text/javascript"></script>

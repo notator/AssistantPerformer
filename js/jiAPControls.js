@@ -80,6 +80,70 @@ JI_NAMESPACE.apControls = (function (document, window)
     {
         var inputDeviceIndex, scoreIndex, outputDeviceIndex;
 
+        function disableSelector(selector)
+        {
+            if (selector.disabled === false)
+            {
+                selector.disabled = true;
+                while (selector.options !== undefined && selector.options.length > 0)
+                {
+                    selector.remove(0);
+                }
+            }
+        }
+
+        function enableSelector(selector, defaultString)
+        {
+            var options, i, nOptions;
+            function populate(selector)
+            {
+                var 
+                options =
+                [
+                    { name: "aftertouch", ctlNr: -1 },
+                    { name: "channel pressure", ctlNr: -2 },
+                    { name: "pitch wheel", ctlNr: -3 },
+                    { name: "modulation (1)", ctlNr: 1 },
+                    { name: "volume (7)", ctlNr: 7 },
+                    { name: "pan (10)", ctlNr: 10 },
+                    { name: "expression (11)", ctlNr: 11 },
+                    { name: "timbre (71)", ctlNr: 71 },
+                    { name: "brightness (74)", ctlNr: 74 },
+                    { name: "effects (91)", ctlNr: 91 },
+                    { name: "tremolo (92)", ctlNr: 92 },
+                    { name: "chorus (93)", ctlNr: 93 },
+                    { name: "celeste (94)", ctlNr: 94 },
+                    { name: "phaser (95)", ctlNr: 95 }
+                ],
+                i, nOptions = options.length,
+                    element, textNode;
+
+                for (i = 0; i < nOptions; ++i)
+                {
+                    element = document.createElement("option");
+                    textNode = document.createTextNode(options[i].name);
+                    element.appendChild(textNode);
+                    selector.add(element, null);
+                }
+            }
+
+            if (selector.disabled)
+            {
+                selector.disabled = false;
+                populate(selector);
+                options = selector.options;
+                nOptions = options.length;
+                for (i = 0; i < nOptions; ++i)
+                {
+                    if (options[i].childNodes[0].nodeValue === defaultString)
+                    {
+                        selector.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+        }
+
         switch (mainOptionsState)
         {
             case "enable":
@@ -96,37 +160,83 @@ JI_NAMESPACE.apControls = (function (document, window)
                     mo.trackSelector.disabled = true;
                     mo.velocityOptionCheckbox.disabled = true;
                     mo.pitchOptionCheckbox.disabled = true;
-                    mo.expressionOptionCheckbox.disabled = true;
-                    mo.modulationWheelOptionCheckbox.disabled = true;
-                    mo.panOptionCheckbox.disabled = true;
-                    mo.pitchWheelOptionCheckbox.disabled = true;
+
+                    mo.soloTrackAftertouchCheckbox.disabled = true;
+                    mo.otherTracksAftertouchCheckbox.disabled = true;
+                    mo.aftertouchMIDIControlSelector.disabled = true;
+
+                    mo.soloTrackModWheelCheckbox.disabled = true;
+                    mo.otherTracksModWheelCheckbox.disabled = true;
+                    mo.modWheelMIDIControlSelector.disabled = true;
+
+                    mo.soloTrackPitchWheelCheckbox.disabled = true;
+                    mo.otherTracksPitchWheelCheckbox.disabled = true;
+                    mo.pitchWheelMIDIControlSelector.disabled = true;
+
                     mo.assistantUsesAbsoluteDurationsRadioButton.disabled = true;
                     mo.assistantUsesRelativeDurationsRadioButton.disabled = true;
                     mo.assistantsSpeedInputText.disabled = true;
                 }
-                else
+                else if (inputDeviceIndex !== 0)
                 {
                     mo.trackSelector.disabled = false;
                     mo.velocityOptionCheckbox.disabled = false;
                     mo.pitchOptionCheckbox.disabled = false;
-                    mo.expressionOptionCheckbox.disabled = false;
-                    mo.modulationWheelOptionCheckbox.disabled = false;
-                    mo.panOptionCheckbox.disabled = false;
-                    mo.pitchWheelOptionCheckbox.disabled = false;
+
+                    mo.soloTrackAftertouchCheckbox.disabled = false;
+                    mo.otherTracksAftertouchCheckbox.disabled = false;
+                    if (mo.soloTrackAftertouchCheckbox.checked || mo.otherTracksAftertouchCheckbox.checked)
+                    {
+                        enableSelector(mo.aftertouchMIDIControlSelector, "expression (11)");
+                    }
+                    else
+                    {
+                        disableSelector(mo.aftertouchMIDIControlSelector);
+                    }
+
+                    mo.soloTrackPitchWheelCheckbox.disabled = false;
+                    mo.otherTracksPitchWheelCheckbox.disabled = false;
+                    if (mo.soloTrackPitchWheelCheckbox.checked || mo.otherTracksPitchWheelCheckbox.checked)
+                    {
+                        enableSelector(mo.pitchWheelMIDIControlSelector, "pitch wheel");
+                    }
+                    else
+                    {
+                        disableSelector(mo.pitchWheelMIDIControlSelector);
+                    }
+
+                    mo.soloTrackModWheelCheckbox.disabled = false;
+                    mo.otherTracksModWheelCheckbox.disabled = false;
+                    if (mo.soloTrackModWheelCheckbox.checked || mo.otherTracksModWheelCheckbox.checked)
+                    {
+                        enableSelector(mo.modWheelMIDIControlSelector, "modulation (1)");
+                    }
+                    else
+                    {
+                        disableSelector(mo.modWheelMIDIControlSelector);
+                    }
+
                     mo.assistantUsesAbsoluteDurationsRadioButton.disabled = false;
                     mo.assistantUsesRelativeDurationsRadioButton.disabled = false;
                     mo.assistantsSpeedInputText.disabled = false;
                 }
-
-                if (inputDeviceIndex === 0)
+                else // inputDevice === 0
                 {
                     mo.trackSelector.disabled = true;
                     mo.velocityOptionCheckbox.disabled = true;
                     mo.pitchOptionCheckbox.disabled = true;
-                    mo.expressionOptionCheckbox.disabled = true;
-                    mo.modulationWheelOptionCheckbox.disabled = true;
-                    mo.panOptionCheckbox.disabled = true;
-                    mo.pitchWheelOptionCheckbox.disabled = true;
+
+                    mo.soloTrackAftertouchCheckbox.disabled = true;
+                    mo.otherTracksAftertouchCheckbox.disabled = true;
+                    mo.aftertouchMIDIControlSelector.disabled = true;
+
+                    mo.soloTrackModWheelCheckbox.disabled = true;
+                    mo.otherTracksModWheelCheckbox.disabled = true;
+                    mo.modWheelMIDIControlSelector.disabled = true;
+
+                    mo.soloTrackPitchWheelCheckbox.disabled = true;
+                    mo.otherTracksPitchWheelCheckbox.disabled = true;
+                    mo.pitchWheelMIDIControlSelector.disabled = true;
 
                     //mo.assistantUsesAbsoluteDurationsRadioButton.disabled = true;
                     mo.assistantUsesRelativeDurationsRadioButton.disabled = true;
@@ -164,10 +274,19 @@ JI_NAMESPACE.apControls = (function (document, window)
                 mo.midiOutputDeviceSelector.disabled = true;
                 mo.velocityOptionCheckbox.disabled = true;
                 mo.pitchOptionCheckbox.disabled = true;
-                mo.expressionOptionCheckbox.disabled = true;
-                mo.modulationWheelOptionCheckbox.disabled = true;
-                mo.panOptionCheckbox.disabled = true;
-                mo.pitchWheelOptionCheckbox.disabled = true;
+
+                mo.soloTrackAftertouchCheckbox.disabled = true;
+                mo.otherTracksAftertouchCheckbox.disabled = true;
+                mo.aftertouchMIDIControlSelector.disabled = true;
+
+                mo.soloTrackModWheelCheckbox.disabled = true;
+                mo.otherTracksModWheelCheckbox.disabled = true;
+                mo.modWheelMIDIControlSelector.disabled = true;
+
+                mo.soloTrackPitchWheelCheckbox.disabled = true;
+                mo.otherTracksPitchWheelCheckbox.disabled = true;
+                mo.pitchWheelMIDIControlSelector.disabled = true;
+
                 mo.assistantUsesAbsoluteDurationsRadioButton.disabled = true;
                 mo.assistantsSpeedInputText.disabled = true;
                 mo.assistantUsesRelativeDurationsRadioButton.disabled = true;
@@ -501,12 +620,22 @@ JI_NAMESPACE.apControls = (function (document, window)
             mo.scoreSelector = document.getElementById("scoreSelector");
             mo.midiOutputDeviceSelector = document.getElementById("midiOutputDeviceSelector");
             mo.trackSelector = document.getElementById("trackSelector");
+
             mo.velocityOptionCheckbox = document.getElementById("velocityOptionCheckbox");
             mo.pitchOptionCheckbox = document.getElementById("pitchOptionCheckbox");
-            mo.expressionOptionCheckbox = document.getElementById("expressionOptionCheckbox");
-            mo.modulationWheelOptionCheckbox = document.getElementById("modulationWheelOptionCheckbox");
-            mo.panOptionCheckbox = document.getElementById("panOptionCheckbox");
-            mo.pitchWheelOptionCheckbox = document.getElementById("pitchWheelOptionCheckbox");
+
+            mo.soloTrackAftertouchCheckbox = document.getElementById("soloTrackAftertouchCheckbox");
+            mo.otherTracksAftertouchCheckbox = document.getElementById("otherTracksAftertouchCheckbox");
+            mo.aftertouchMIDIControlSelector = document.getElementById("aftertouchMIDIControlSelector");
+
+            mo.soloTrackModWheelCheckbox = document.getElementById("soloTrackModWheelCheckbox");
+            mo.otherTracksModWheelCheckbox = document.getElementById("otherTracksModWheelCheckbox");
+            mo.modWheelMIDIControlSelector = document.getElementById("modWheelMIDIControlSelector");
+
+            mo.soloTrackPitchWheelCheckbox = document.getElementById("soloTrackPitchWheelCheckbox");
+            mo.otherTracksPitchWheelCheckbox = document.getElementById("otherTracksPitchWheelCheckbox");
+            mo.pitchWheelMIDIControlSelector = document.getElementById("pitchWheelMIDIControlSelector");
+
             mo.assistantUsesAbsoluteDurationsRadioButton = document.getElementById("assistantUsesAbsoluteDurationsRadioButton");
             mo.assistantsSpeedInputText = document.getElementById("assistantsSpeedInputText");
             mo.assistantUsesRelativeDurationsRadioButton = document.getElementById("assistantUsesRelativeDurationsRadioButton");
@@ -774,17 +903,24 @@ JI_NAMESPACE.apControls = (function (document, window)
         }
 
         /**** controls in options panel ***/
-        if (controlID === "scoreSelector")
-        {
-            setScore();
-        }
         if (controlID === "midiInputDeviceSelector"
         || controlID === "scoreSelector"
         || controlID === "midiOutputDeviceSelector"
+        || controlID === "soloTrackAftertouchCheckbox"
+        || controlID === "otherTracksAftertouchCheckbox"
+        || controlID === "soloTrackModWheelCheckbox"
+        || controlID === "otherTracksModWheelCheckbox"
+        || controlID === "soloTrackPitchWheelCheckbox"
+        || controlID === "otherTracksPitchWheelCheckbox"
         || controlID === "assistantUsesAbsoluteDurationsRadioButton"
         || controlID === "assistantUsesRelativeDurationsRadioButton")
         {
             setMainOptionsState("enable"); // enables only the appropriate controls
+        }
+
+        if (controlID === "scoreSelector")
+        {
+            setScore();
         }
 
         /*** SVG controls ***/
@@ -895,20 +1031,11 @@ JI_NAMESPACE.apControls = (function (document, window)
     {
         function getOptions()
         {
-            var trackSelector = document.getElementById("trackSelector"),
-                velocityOptionCheckbox = document.getElementById("velocityOptionCheckbox"),
-                pitchOptionCheckbox = document.getElementById("pitchOptionCheckbox"),
-                expressionOptionCheckbox = document.getElementById("expressionOptionCheckbox"),
-                modulationWheelOptionCheckbox = document.getElementById("modulationWheelOptionCheckbox"),
-                panOptionCheckbox = document.getElementById("panOptionCheckbox"),
-                pitchWheelOptionCheckbox = document.getElementById("pitchWheelOptionCheckbox"),
-                assistantUsesAbsoluteDurationsRadioButton = document.getElementById("assistantUsesAbsoluteDurationsRadioButton"),
-                assistantsSpeedInputText = document.getElementById("assistantsSpeedInputText"),
-                success;
+            var success;
 
             function checkSpeedInput()
             {
-                var inputText = document.getElementById("assistantsSpeedInputText"),
+                var inputText = mo.assistantsSpeedInputText,
                 speed = parseFloat(inputText.value), success;
 
                 if (isNaN(speed) || speed <= 0)
@@ -927,16 +1054,25 @@ JI_NAMESPACE.apControls = (function (document, window)
             if (checkSpeedInput())
             {
                 // options is a global inside this namespace
-                options.livePerformersTrackIndex = trackSelector.selectedIndex;
-                options.velocity = velocityOptionCheckbox.checked;
-                options.pitch = pitchOptionCheckbox.checked;
-                options.expression = expressionOptionCheckbox.checked;
-                options.modulationWheel = modulationWheelOptionCheckbox.checked;
-                options.pan = panOptionCheckbox.checked;
-                options.pitchWheel = pitchWheelOptionCheckbox.checked;
-                options.assistantUsesAbsoluteDurations = assistantUsesAbsoluteDurationsRadioButton.checked;
+                options.livePerformersTrackIndex = mo.trackSelector.selectedIndex;
+                options.velocity = mo.velocityOptionCheckbox.checked;
+                options.pitch = mo.pitchOptionCheckbox.checked;
 
-                options.assistantsSpeed = parseFloat(assistantsSpeedInputText.value) / 100.0;
+                options.soloAftertouch = mo.soloTrackAftertouchCheckbox.checked;
+                options.otherTracksAftertouch = mo.otherTracksAftertouchCheckbox.checked;
+                options.aftertouchControlIndex = mo.aftertouchMIDIControlSelector.selectedIndex;
+
+                options.soloPitchWheel = mo.soloTrackPitchWheelCheckbox.checked;
+                options.otherTracksPitchWheel = mo.otherTracksPitchWheelCheckbox.checked;
+                options.pitchWheelControlIndex = mo.pitchWheelMIDIControlSelector.selectedIndex;
+
+                options.soloModWheel = mo.soloTrackModWheelCheckbox.checked;
+                options.otherTracksModWheel = mo.otherTracksModWheelCheckbox.checked;
+                options.modWheelControlIndex = mo.modWheelMIDIControlSelector.selectedIndex;
+
+                options.assistantUsesAbsoluteDurations = mo.assistantUsesAbsoluteDurationsRadioButton.checked;
+
+                options.assistantsSpeed = parseFloat(mo.assistantsSpeedInputText.value) / 100.0;
 
                 // options.assistedPerformance is kept up to date by the livePerformerOnOffButton.
                 options.assistedPerformance = (cl.livePerformerOff.getAttribute("opacity") === "0");

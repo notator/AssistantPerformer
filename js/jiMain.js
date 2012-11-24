@@ -24,6 +24,7 @@ window.addEventListener("load", function ()
         inputDeviceId = "",
         outputDeviceId = "";
 
+
     JMB.init(function (MIDIAccess)
     {
         var inputs = MIDIAccess.enumerateInputs(),
