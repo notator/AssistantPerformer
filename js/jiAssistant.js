@@ -19,6 +19,22 @@ JI_NAMESPACE.assistant = (function (window)
     // begin var
     var outputDevice,
         tracksControl,
+    // MCD contains the following constant fields used for creating midi messages
+    // {
+    //     createMIDIMessage: MIDIAccess.createMIDIMessage,
+    //     // MIDI commands
+    //     NOTE_OFF: 0x80,
+    //     NOTE_ON: 0x90,
+    //     CONTROL_CHANGE: 0xB0,
+    //     PROGRAM_CHANGE: 0xC0,
+    //     CHANNEL_PRESSURE: 0xD0,
+    //     PITCH_BEND: 0xE0,
+    //     // MIDI controls
+    //     PAN_CONTROL: 10,
+    //     MODWHEEL_CONTROL: 1,
+    //     EXPRESSION_CONTROL: 11
+    // }
+        MCD,
 
     // midi input message types
         UNKNOWN = 0,
@@ -51,6 +67,11 @@ JI_NAMESPACE.assistant = (function (window)
         midiInHandler,
 
         currentLivePerformersKeyPitch = -1, // -1 means "no key depressed". This value is set when the live performer sends a noteOn
+
+        init = function (messageCreationData)
+        {
+            MCD = messageCreationData;
+        },
 
     // makeSubsequences creates the private subsequences array inside the assistant.
     // This function is called when options.assistedPerformance === true and the Start button is clicked in the upper options panel.
@@ -177,7 +198,8 @@ JI_NAMESPACE.assistant = (function (window)
     //  nextIndex (= -1 when stopped) the index of the subsequence which will be played when a noteOn msg arrives
         handleMidiIn = function (msg)
         {
-            var inputMsgType;
+            var inputMsgType,
+                mcd = MCD;
 
             // getInputMessageType returns one of the following constants:
             // UNKNOWN = 0, ILLEGAL_INDEX = 1, END_OF_SEQUENCE = 2, CHANNEL_PRESSURE = 3, AFTERTOUCH = 4,
@@ -267,36 +289,131 @@ JI_NAMESPACE.assistant = (function (window)
                 subsequence.playSpan(outputDevice, 0, Number.MAX_VALUE, tracksControl, null, reportMsPosition);
             }
 
+            // The value of an ordinary midiControl is passed in data2 (data1 is not used)
+            // Pitch wheel uses data2 (data1 is not used)
+            // Channel pressure uses data1 (data2 is not used)
+            function newControlMessage(mcd, controlData, channel, value)
+            {
+                // mcd contains message creation utilities ( see Main() )
+
+                // controlData is one of these options (see jiAPControls.js):
+                // { name: "channel pressure", statusHighNibble: 0xD0 },
+                // { name: "pitch wheel", statusHighNibble: 0xE0 },
+                // { name: "modulation (1)", midiControl: 1 },
+                // { name: "volume (7)", midiControl: 7 },
+                // { name: "pan (10)", midiControl: 10 },
+                // { name: "expression (11)", midiControl: 11 },
+                // { name: "timbre (71)", midiControl: 71 },
+                // { name: "brightness (74)", midiControl: 74 },
+                // { name: "effects (91)", midiControl: 91 },
+                // { name: "tremolo (92)", midiControl: 92 },
+                // { name: "chorus (93)", midiControl: 93 },
+                // { name: "celeste (94)", midiControl: 94 },
+                // { name: "phaser (95)", midiControl: 95 }
+
+                var message;
+
+                if (controlData.midiControl !== undefined)
+                {
+                    // e.g. (MCD.CONTROL_CHANGE, MCD.PAN_CONTROL, value, channel, midiMoment.timestamp);
+                    message = mcd.createMIDIMessage(mcd.CONTROL_CHANGE, controlData.midiControl, value, channel, 0);
+                }
+                else if (controlData.statusHighNibble !== undefined)
+                {
+                    if (controlData.statusHighNibble === mcd.PITCH_BEND)
+                    {
+                        // e.g. (MCD.PITCH_BEND, 0, value, channel, midiMoment.timestamp)
+                        message = mcd.createMIDIMessage(controlData.statusHighNibble, 0, value, channel, 0);
+                    }
+                    else if (controlData.statusHighNibble === mcd.CHANNEL_PRESSURE)
+                    {
+                        message = mcd.createMIDIMessage(controlData.statusHighNibble, value, 0, channel, 0);
+                    }
+                    else
+                    {
+                        throw "Illegal controlData.";
+                    }
+                }
+                else
+                {
+                    throw "Illegal controlData.";
+                }
+
+                return message;
+            }
+
             function handleUnknownMessage(msg)
             {
                 console.log("Unknown midi message, command:" + msg.command.toString() + ", data1:" + msg.data1.toString() + ", data2:" + msg.data2.toString());
             }
 
-            function handlePressure(type, value)
+            function handlePressure(mcd, value)
             {
-                console.log(type + ", value:", value.toString());
+                console.log("handlePressure(), value:", value.toString());
             }
 
-            function handleChannelPressure(msg)
+            function handleChannelPressure(mcd, msg)
             {
                 // N.B. msg.data1
-                handlePressure("Channel Pressure", msg.data1);
+                console.log("Channel Pressure, value:", msg.data1.toString());
+                handlePressure(mcd, msg.data1);
             }
 
-            function handleAftertouch(msg)
+            function handleAftertouch(mcd, msg)
             {
                 // N.B. msg.data2
-                handlePressure("Aftertouch", msg.data2);
+                console.log("Aftertouch, value:", msg.data2.toString());
+                handlePressure(mcd, msg.data2);
             }
 
-            function handleModulationWheel(msg)
+            function handleModulationWheel(mcd, msg)
             {
                 console.log("ModulationWheel, value:", msg.data2.toString());
             }
 
-            function handlePitchWheel(msg)
+            function handlePitchWheel(mcd, msg)
             {
+                var controlData = options.pitchBendSubstituteControlData,
+                    controlMessages = [], nControlMessages, i,
+                    tracks = mainSequence.tracks, nTracks = tracks.length;
+
                 console.log("PitchWheel, value:", msg.data2.toString());
+
+                // N.B. The value of a PitchWheel message is in msg.data2.
+                if (options.usesPitchBendSolo && options.usesPitchBendOtherTracks)
+                {
+                    for (i = 0; i < nTracks; ++i)
+                    {
+                        if (tracksControl.trackIsOn(i))
+                        {
+                            controlMessages.push(newControlMessage(mcd, controlData, i, msg.data2));
+                        }
+                    }
+                }
+                else if (options.usesPitchBendSolo)
+                {
+                    controlMessages.push(newControlMessage(mcd, controlData, options.livePerformersTrackIndex, msg.data2));
+                }
+                else if (options.usesPitchBendOtherTracks)
+                {
+                    for (i = 0; i < nTracks; ++i)
+                    {
+                        if (tracksControl.trackIsOn(i) && i !== options.livePerformersTrackIndex)
+                        {
+                            controlMessages.push(newControlMessage(mcd, controlData, i, msg.data2));
+                        }
+                    }
+                }
+                else
+                {
+                    throw "Either options.usesPitchBendSolo or options.usesPitchBendOtherTracks must be set here.";
+                }
+
+                nControlMessages = controlMessages.length;
+                for (i = 0; i < nControlMessages; ++i)
+                {
+                    outputDevice.sendMIDIMessage(controlMessages[i]);
+                }
             }
 
             function handleNoteOff(msg)
@@ -319,7 +436,7 @@ JI_NAMESPACE.assistant = (function (window)
                 }
             }
 
-            function handleNoteOn(msg)
+            function handleNoteOn(mcd, msg)
             {
                 console.log("NoteOn, pitch:", msg.data1.toString(), " velocity:", msg.data2.toString());
                 currentLivePerformersKeyPitch = msg.data1;
@@ -344,39 +461,44 @@ JI_NAMESPACE.assistant = (function (window)
 
             switch (inputMsgType)
             {
+                case CHANNEL_PRESSURE: // EMU "aftertouch"
+                    if (options.pressureSubstituteControlData !== undefined)
+                    {
+                        handleChannelPressure(mcd, msg);
+                    }
+                    break;
+                case AFTERTOUCH: // EWI breath controller
+                    if (options.pressureSubstituteControlData !== undefined)
+                    {
+                        handleAftertouch(mcd, msg);
+                    }
+                    break;
+                case MODULATION_WHEEL: // EWI bite, EMU modulation wheel
+                    if (options.modSubstituteControlData !== undefined)
+                    {
+                        handleModulationWheel(mcd, msg);
+                    }
+                    break;
+                case PITCH_WHEEL: // EWI pitch bend up/down controllers, EMU pitch wheel
+                    if (options.pitchBendSubstituteControlData !== undefined)
+                    {
+                        handlePitchWheel(mcd, msg);
+                    }
+                    break;
+                case NOTE_ON:
+                    handleNoteOn(mcd, msg);
+                    break;
+                case NOTE_OFF:
+                    handleNoteOff(msg);
+                    break;
+                case END_OF_SEQUENCE:
+                    stop();
+                    break;
                 case UNKNOWN:
                     handleUnknownMessage(msg);
                     break;
-                case CHANNEL_PRESSURE: // EMU "aftertouch"
-                    handleChannelPressure(msg);
-                    break;
-                case AFTERTOUCH: // EWI breath controller
-                    handleAftertouch(msg);
-                    break;
-                case MODULATION_WHEEL: // EWI bite, EMU modulation wheel
-                    handleModulationWheel(msg);
-                    break;
-                case PITCH_WHEEL: // EWI pitch bend up/down controllers, EMU pitch wheel
-                    handlePitchWheel(msg);
-                    break;
-
-            }
-
-            if (inputMsgType === ILLEGAL_INDEX)
-            {
-                throw ("illegal index");
-            }
-            else if (inputMsgType === END_OF_SEQUENCE)
-            {
-                stop();
-            }
-            else if (inputMsgType === NOTE_ON)
-            {
-                handleNoteOn(msg);
-            }
-            else if (inputMsgType === NOTE_OFF)
-            {
-                handleNoteOff(msg);
+                case ILLEGAL_INDEX:
+                    throw ("illegal index");
             }
         },
 
@@ -451,6 +573,7 @@ JI_NAMESPACE.assistant = (function (window)
 
         publicAPI =
         {
+            init: init,
             // empty Assistant constructor
             Assistant: Assistant
         };

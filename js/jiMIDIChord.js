@@ -8,7 +8,7 @@
  *  jiMIDIChord.js
  *  This module uses JazzMidiBridge to create MIDIMessages.
  *  Its public interface contains:
- *      init(JMB) // saves a pointer to JazzMidiBridge in this namespace
+ *      init(messageCreationData) // saves (a pointer to) the messageCreationData object in this namespace
  *      newAllSoundOffMessage() // returns a new AllSoundOffMessage
  *      MIDIChord(channel, chordDef, timeObject, speed) // MIDIChord constructor
  *      MIDIRest(timeObject) // MIDIRest constructor
@@ -26,17 +26,32 @@ JI_NAMESPACE.midiChord = (function ()
     midiMoments,
     // The rate (milliseconds) at which slider messages are sent.
     SLIDER_MILLISECONDS = 10,
-    _JMB,
 
-    init = function (jmb)
+    // MCD contains the following constant fields used for creating midi messages
+    // {
+    //     createMIDIMessage: MIDIAccess.createMIDIMessage,
+    //     // MIDI commands
+    //     NOTE_OFF: 0x80,
+    //     NOTE_ON: 0x90,
+    //     CONTROL_CHANGE: 0xB0,
+    //     PROGRAM_CHANGE: 0xC0,
+    //     CHANNEL_PRESSURE: 0xD0,
+    //     PITCH_BEND: 0xE0,
+    //     // MIDI controls
+    //     PAN_CONTROL: 10,
+    //     MODWHEEL_CONTROL: 1,
+    //     EXPRESSION_CONTROL: 11
+    // }
+    MCD,
+    init = function (messageCreationData)
     {
-        _JMB = jmb;
+        MCD = messageCreationData;
     },
 
     // Used by the score allNotesOff function
     newNoteOffMessage = function (channelIndex, noteIndex)
     {
-        return _JMB.createMIDIMessage(_JMB.NOTE_OFF, noteIndex, 127, channelIndex, 0);
+        return MCD.createMIDIMessage(MCD.NOTE_OFF, noteIndex, 127, channelIndex, 0);
     },
 
     // Used by both MIDIRests and MIDIChords.
@@ -97,7 +112,7 @@ JI_NAMESPACE.midiChord = (function ()
 
     publicChordRestAPI =
     {
-        // initializes the _JMB value local to this namespace
+        // initializes the MCD value local to this namespace
         init: init,
 
         // function which returns a new AllSoundOffMessage 
@@ -127,7 +142,7 @@ JI_NAMESPACE.midiChord = (function ()
         // An array of midiMoments whose msPosition has been set.
         // The midiMoments contain all the non-slider components of the chordDef.
         // The msPosition of the first MIDIMoment is set to the value in the msPosition argument.
-        getChordMoments = function (JMB, channel, chordDef, timeObject, speed)
+        getChordMoments = function (MCD, channel, chordDef, timeObject, speed)
         {
             var i, j,
                 len = chordDef.basicChordsArray.length,
@@ -196,7 +211,7 @@ JI_NAMESPACE.midiChord = (function ()
 
             // Chord Bank, Patch, Volume and PitchwheelDeviation messages
             // Returns undefined if there are no attributes
-            function attributesMoment(JMB, channel, chordDef, msPosition)
+            function attributesMoment(MCD, channel, chordDef, msPosition)
             {
                 var attrMoment,
                     msg,
@@ -206,14 +221,14 @@ JI_NAMESPACE.midiChord = (function ()
                 /// pitch wheel so that it can be set by the subsequent DataEntry messages.
                 /// A DataEntryFine message is not set, because it is not needed and has no effect anyway.
                 /// However, RegisteredParameterFine MUST be set, otherwise the messages as a whole have no effect!
-                function setPitchwheelDeviation(JMB, attrMoment, deviation, channel)
+                function setPitchwheelDeviation(MCD, attrMoment, deviation, channel)
                 {
                     var msg;
-                    msg = JMB.createMIDIMessage(JMB.CONTROL_CHANGE, 101, 0, channel, attrMoment.timestamp); // 101 is RegisteredParameter coarse
+                    msg = MCD.createMIDIMessage(MCD.CONTROL_CHANGE, 101, 0, channel, attrMoment.timestamp); // 101 is RegisteredParameter coarse
                     attrMoment.addMIDIMessage(msg);
-                    msg = JMB.createMIDIMessage(JMB.CONTROL_CHANGE, 100, 0, channel, attrMoment.timestamp); // 100 is RegisteredParameter fine
+                    msg = MCD.createMIDIMessage(MCD.CONTROL_CHANGE, 100, 0, channel, attrMoment.timestamp); // 100 is RegisteredParameter fine
                     attrMoment.addMIDIMessage(msg);
-                    msg = JMB.createMIDIMessage(JMB.CONTROL_CHANGE, 6, deviation, channel, attrMoment.timestamp); // 6 is Data Entry coarse
+                    msg = MCD.createMIDIMessage(MCD.CONTROL_CHANGE, 6, deviation, channel, attrMoment.timestamp); // 6 is Data Entry coarse
                     attrMoment.addMIDIMessage(msg);
                 }
 
@@ -226,22 +241,22 @@ JI_NAMESPACE.midiChord = (function ()
                     // the hasChordOff attribute is dealt with later.
                     if (attributes.bank !== undefined)
                     {
-                        msg = JMB.createMIDIMessage(JMB.CONTROL_CHANGE, 0, attributes.bank, channel, attrMoment.timestamp); // 0 is bank control
+                        msg = MCD.createMIDIMessage(MCD.CONTROL_CHANGE, 0, attributes.bank, channel, attrMoment.timestamp); // 0 is bank control
                         attrMoment.addMIDIMessage(msg);
                     }
                     if (attributes.patch !== undefined)
                     {
-                        msg = JMB.createMIDIMessage(JMB.PROGRAM_CHANGE, attributes.patch, 0, channel, attrMoment.timestamp);
+                        msg = MCD.createMIDIMessage(MCD.PROGRAM_CHANGE, attributes.patch, 0, channel, attrMoment.timestamp);
                         attrMoment.addMIDIMessage(msg);
                     }
                     if (attributes.volume !== undefined)
                     {
-                        msg = JMB.createMIDIMessage(JMB.CONTROL_CHANGE, 7, attributes.volume, channel, attrMoment.timestamp); // 7 is volume control
+                        msg = MCD.createMIDIMessage(MCD.CONTROL_CHANGE, 7, attributes.volume, channel, attrMoment.timestamp); // 7 is volume control
                         attrMoment.addMIDIMessage(msg);
                     }
                     if (attributes.pitchWheelDeviation !== undefined)
                     {
-                        setPitchwheelDeviation(JMB, attrMoment, attributes.pitchWheelDeviation, channel);
+                        setPitchwheelDeviation(MCD, attrMoment, attributes.pitchWheelDeviation, channel);
                     }
                 }
 
@@ -249,7 +264,7 @@ JI_NAMESPACE.midiChord = (function ()
             }
 
             // BasicChord Bank, Patch and ChordOn messages
-            function basicChordOnMoment(JMB, channel, basicChordDef, msPosition)
+            function basicChordOnMoment(MCD, channel, basicChordDef, msPosition)
             {
                 var midiNotes = basicChordDef.notes,
                     midiVelocities = basicChordDef.velocities,
@@ -260,28 +275,28 @@ JI_NAMESPACE.midiChord = (function ()
 
                 if (basicChordDef.bank !== undefined) // default is dont send a bank change
                 {
-                    midiMessage = JMB.createMIDIMessage(JMB.CONTROL_CHANGE, basicChordDef.bank, 0, channel, bcoMoment.timestamp);
+                    midiMessage = MCD.createMIDIMessage(MCD.CONTROL_CHANGE, basicChordDef.bank, 0, channel, bcoMoment.timestamp);
                     bcoMoment.addMIDIMessage(midiMessage);
 
-                    midiMessage = JMB.createMIDIMessage(JMB.PROGRAM_CHANGE, basicChordDef.patch, 0, channel, bcoMoment.timestamp);
+                    midiMessage = MCD.createMIDIMessage(MCD.PROGRAM_CHANGE, basicChordDef.patch, 0, channel, bcoMoment.timestamp);
                     bcoMoment.addMIDIMessage(midiMessage);
                 }
                 else if (basicChordDef.patch !== undefined) // default is dont send a patch change
                 {
-                    midiMessage = JMB.createMIDIMessage(JMB.PROGRAM_CHANGE, basicChordDef.patch, 0, channel, bcoMoment.timestamp);
+                    midiMessage = MCD.createMIDIMessage(MCD.PROGRAM_CHANGE, basicChordDef.patch, 0, channel, bcoMoment.timestamp);
                     bcoMoment.addMIDIMessage(midiMessage);
                 }
 
                 for (i = 0; i < len; ++i)
                 {
-                    midiMessage = JMB.createMIDIMessage(JMB.NOTE_ON, midiNotes[i], midiVelocities[i], channel, bcoMoment.timestamp);
+                    midiMessage = MCD.createMIDIMessage(MCD.NOTE_ON, midiNotes[i], midiVelocities[i], channel, bcoMoment.timestamp);
                     bcoMoment.addMIDIMessage(midiMessage);
                 }
 
                 return bcoMoment;
             }
 
-            function basicChordOffMoment(JMB, channel, basicChordDef, msPosition)
+            function basicChordOffMoment(MCD, channel, basicChordDef, msPosition)
             {
                 var notes = basicChordDef.notes,
                     len = notes.length,
@@ -292,7 +307,7 @@ JI_NAMESPACE.midiChord = (function ()
 
                 for (i = 0; i < len; ++i)
                 {
-                    midiMessage = JMB.createMIDIMessage(JMB.NOTE_OFF, notes[i], volume, channel, bcoffMoment.timestamp);
+                    midiMessage = MCD.createMIDIMessage(MCD.NOTE_OFF, notes[i], volume, channel, bcoffMoment.timestamp);
                     bcoffMoment.addMIDIMessage(midiMessage);
                 }
 
@@ -301,7 +316,7 @@ JI_NAMESPACE.midiChord = (function ()
 
             // noteOffs contains all the noteNumbers that need to be sent a noteOff,
             // noteOffs contains duplicates. Avoid creating duplicate noteOffs in this function.
-            function chordOffMoment(JMB, channel, noteOffs, msPosition)
+            function chordOffMoment(MCD, channel, noteOffs, msPosition)
             {
                 var uniqueNoteNumbers = [], nnIndex, noteNumber,
                     volume = 127,
@@ -327,7 +342,7 @@ JI_NAMESPACE.midiChord = (function ()
                 for (nnIndex = 0; nnIndex < uniqueNoteNumbers.length; ++nnIndex)
                 {
                     noteNumber = uniqueNoteNumbers[nnIndex];
-                    midiMessage = JMB.createMIDIMessage(JMB.NOTE_OFF, noteNumber.valueOf(), volume, channel, cOffMoment.timestamp);
+                    midiMessage = MCD.createMIDIMessage(MCD.NOTE_OFF, noteNumber.valueOf(), volume, channel, cOffMoment.timestamp);
                     cOffMoment.addMIDIMessage(midiMessage);
                 }
 
@@ -335,7 +350,7 @@ JI_NAMESPACE.midiChord = (function ()
             }
 
             // initial AttributesMoment
-            currentMoment = attributesMoment(JMB, channel, chordDef, msPos);
+            currentMoment = attributesMoment(MCD, channel, chordDef, msPos);
             if (currentMoment !== undefined)
             {
                 chordMoments.push(currentMoment);
@@ -363,7 +378,7 @@ JI_NAMESPACE.midiChord = (function ()
                     }
                 }
 
-                midiMoment = basicChordOnMoment(JMB, channel, basicChordDef, msPos);
+                midiMoment = basicChordOnMoment(MCD, channel, basicChordDef, msPos);
 
                 if (currentMoment !== undefined && currentMoment.timestamp === midiMoment.timestamp)
                 {
@@ -387,7 +402,7 @@ JI_NAMESPACE.midiChord = (function ()
                 if (basicChordDef.hasChordOff === undefined || basicChordDef.hasChordOff === true)
                 {
                     // chordOff always comes after chordOn
-                    currentMoment = basicChordOffMoment(JMB, channel, basicChordDef, msPos);
+                    currentMoment = basicChordOffMoment(MCD, channel, basicChordDef, msPos);
                     chordMoments.push(currentMoment);
                 }
             }
@@ -396,7 +411,7 @@ JI_NAMESPACE.midiChord = (function ()
             // (Contains a noteOFF for each note that has been sent a noteON during the BasicChordMoments.)
             if (chordDef.attributes.hasChordOff === undefined || chordDef.attributes.hasChordOff === true)
             {
-                midiMoment = chordOffMoment(JMB, channel, allNoteOffs, msPos);
+                midiMoment = chordOffMoment(MCD, channel, allNoteOffs, msPos);
                 currentMoment.mergeMIDIMoment(midiMoment);
             }
 
@@ -412,7 +427,7 @@ JI_NAMESPACE.midiChord = (function ()
         // can either be 1 (i.e. none of the sliders' values changes during this MIDIChord)
         // or a value calculated from SLIDER_MILLISECONDS and msDuration. In the latter case, the
         // msPosition of the final sliderMoment is less than (msPosition + msDuration).
-        getSliderMoments = function (JMB, channel, sliders, msPosition, msDuration, sliderMilliseconds)
+        getSliderMoments = function (MCD, channel, sliders, msPosition, msDuration, sliderMilliseconds)
         {
             var i, sliderMoments, sliderMomentsLength, nonEmptySliderMoments;
 
@@ -449,7 +464,7 @@ JI_NAMESPACE.midiChord = (function ()
                 return midiMoments;
             }
 
-            function setSlider(JMB, channel, sliderMoments, typeString, originalValuesArray)
+            function setSlider(MCD, channel, sliderMoments, typeString, originalValuesArray)
             {
                 var numberOfFinalValues, finalValuesArray;
 
@@ -551,16 +566,13 @@ JI_NAMESPACE.midiChord = (function ()
                     return finalValuesArray;
                 }
                 // repeating slider values are not added to the sliderMoments
-                function addSliderValues(JMB, channel, sliderMoments, typeString, finalValuesArray)
+                function addSliderValues(MCD, channel, sliderMoments, typeString, finalValuesArray)
                 {
                     var len = finalValuesArray.length,
                         midiMoment,
                         value,
                         previousValue = -1,
                         midiMessage,
-                        PAN = 10,
-                        MOD_WHEEL = 1,
-                        EXPRESSION = 11,
                         i;
 
                     if (sliderMoments.length !== finalValuesArray.length)
@@ -577,19 +589,19 @@ JI_NAMESPACE.midiChord = (function ()
                             switch (typeString)
                             {
                                 case "pitchWheel":
-                                    midiMessage = JMB.createMIDIMessage(JMB.PITCH_BEND, 0, value, channel, midiMoment.timestamp);
+                                    midiMessage = MCD.createMIDIMessage(MCD.PITCH_BEND, 0, value, channel, midiMoment.timestamp);
                                     midiMoment.addMIDIMessage(midiMessage);
                                     break;
                                 case "pan":
-                                    midiMessage = JMB.createMIDIMessage(JMB.CONTROL_CHANGE, PAN, value, channel, midiMoment.timestamp);
+                                    midiMessage = MCD.createMIDIMessage(MCD.CONTROL_CHANGE, MCD.PAN_CONTROL, value, channel, midiMoment.timestamp);
                                     midiMoment.addMIDIMessage(midiMessage);
                                     break;
                                 case "modulationWheel":
-                                    midiMessage = JMB.createMIDIMessage(JMB.CONTROL_CHANGE, MOD_WHEEL, value, channel, midiMoment.timestamp);
+                                    midiMessage = MCD.createMIDIMessage(MCD.CONTROL_CHANGE, MCD.MODWHEEL_CONTROL, value, channel, midiMoment.timestamp);
                                     midiMoment.addMIDIMessage(midiMessage);
                                     break;
                                 case "expression":
-                                    midiMessage = JMB.createMIDIMessage(JMB.CONTROL_CHANGE, EXPRESSION, value, channel, midiMoment.timestamp);
+                                    midiMessage = MCD.createMIDIMessage(MCD.CONTROL_CHANGE, MCD.EXPRESSION_CONTROL, value, channel, midiMoment.timestamp);
                                     midiMoment.addMIDIMessage(midiMessage);
                                     break;
                             }
@@ -600,7 +612,7 @@ JI_NAMESPACE.midiChord = (function ()
                 numberOfFinalValues = sliderMoments.length;
                 finalValuesArray = getFinalValuesArray(numberOfFinalValues, originalValuesArray);
                 // repeating slider values are not added to the sliderMoments
-                addSliderValues(JMB, channel, sliderMoments, typeString, finalValuesArray);
+                addSliderValues(MCD, channel, sliderMoments, typeString, finalValuesArray);
             }
 
             // sliderMoments is an array of timed midiMoments. The events are initially empty.
@@ -611,19 +623,19 @@ JI_NAMESPACE.midiChord = (function ()
             // the final argument in the following 4 calls is always either undefined or an array of integers [0..127]
             if (sliders.pitchWheel)
             {
-                setSlider(JMB, channel, sliderMoments, "pitchWheel", sliders.pitchWheel);
+                setSlider(MCD, channel, sliderMoments, "pitchWheel", sliders.pitchWheel);
             }
             if (sliders.pan)
             {
-                setSlider(JMB, channel, sliderMoments, "pan", sliders.pan);
+                setSlider(MCD, channel, sliderMoments, "pan", sliders.pan);
             }
             if (sliders.modulationWheel)
             {
-                setSlider(JMB, channel, sliderMoments, "modulationWheel", sliders.modulationWheel);
+                setSlider(MCD, channel, sliderMoments, "modulationWheel", sliders.modulationWheel);
             }
             if (sliders.expressionSlider)
             {
-                setSlider(JMB, channel, sliderMoments, "expression", sliders.expressionSlider);
+                setSlider(MCD, channel, sliderMoments, "expression", sliders.expressionSlider);
             }
 
             sliderMomentsLength = sliderMoments.length;
@@ -727,14 +739,13 @@ JI_NAMESPACE.midiChord = (function ()
 
         getMoments = function (channel, chordDef, timeObject, speed)
         {
-            var chordMoments, sliderMoments,
-            JMB = _JMB;
+            var chordMoments, sliderMoments;
 
-            chordMoments = getChordMoments(JMB, channel, chordDef, timeObject, speed);
+            chordMoments = getChordMoments(MCD, channel, chordDef, timeObject, speed);
 
             if (chordDef.sliders !== undefined)
             {
-                sliderMoments = getSliderMoments(JMB, channel, chordDef.sliders, this.msPosition, this.msDuration, SLIDER_MILLISECONDS);
+                sliderMoments = getSliderMoments(MCD, channel, chordDef.sliders, this.msPosition, this.msDuration, SLIDER_MILLISECONDS);
                 midiMoments = getCombinedMIDIMoments(chordMoments, sliderMoments);
             }
             else

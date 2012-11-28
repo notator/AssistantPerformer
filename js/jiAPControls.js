@@ -35,6 +35,24 @@ JI_NAMESPACE.apControls = (function (document, window)
         SMOKE = "0.7", // control layer is smoky (semi-transparent)
         GLASS = "0", // control layer is completely transparent
 
+    // options set in the pop-up menues in the main options dialog
+        controlOptions =
+        [
+            { name: "channel pressure", statusHighNibble: 0xD0 },
+            { name: "pitch wheel", statusHighNibble: 0xE0 },
+            { name: "modulation (1)", midiControl: 1 },
+            { name: "volume (7)", midiControl: 7 },
+            { name: "pan (10)", midiControl: 10 },
+            { name: "expression (11)", midiControl: 11 },
+            { name: "timbre (71)", midiControl: 71 },
+            { name: "brightness (74)", midiControl: 74 },
+            { name: "effects (91)", midiControl: 91 },
+            { name: "tremolo (92)", midiControl: 92 },
+            { name: "chorus (93)", midiControl: 93 },
+            { name: "celeste (94)", midiControl: 94 },
+            { name: "phaser (95)", midiControl: 95 }
+        ],
+
     // options set in the top dialog
         options = {},
 
@@ -98,30 +116,13 @@ JI_NAMESPACE.apControls = (function (document, window)
             function populate(selector)
             {
                 var 
-                options =
-                [
-                    { name: "aftertouch", ctlNr: -1 },
-                    { name: "channel pressure", ctlNr: -2 },
-                    { name: "pitch wheel", ctlNr: -3 },
-                    { name: "modulation (1)", ctlNr: 1 },
-                    { name: "volume (7)", ctlNr: 7 },
-                    { name: "pan (10)", ctlNr: 10 },
-                    { name: "expression (11)", ctlNr: 11 },
-                    { name: "timbre (71)", ctlNr: 71 },
-                    { name: "brightness (74)", ctlNr: 74 },
-                    { name: "effects (91)", ctlNr: 91 },
-                    { name: "tremolo (92)", ctlNr: 92 },
-                    { name: "chorus (93)", ctlNr: 93 },
-                    { name: "celeste (94)", ctlNr: 94 },
-                    { name: "phaser (95)", ctlNr: 95 }
-                ],
-                i, nOptions = options.length,
+                i, nOptions = controlOptions.length,
                     element, textNode;
 
                 for (i = 0; i < nOptions; ++i)
                 {
                     element = document.createElement("option");
-                    textNode = document.createTextNode(options[i].name);
+                    textNode = document.createTextNode(controlOptions[i].name);
                     element.appendChild(textNode);
                     selector.add(element, null);
                 }
@@ -130,15 +131,18 @@ JI_NAMESPACE.apControls = (function (document, window)
             if (selector.disabled)
             {
                 selector.disabled = false;
-                populate(selector);
-                options = selector.options;
-                nOptions = options.length;
-                for (i = 0; i < nOptions; ++i)
+                if (selector.selectedIndex < 0)
                 {
-                    if (options[i].childNodes[0].nodeValue === defaultString)
+                    populate(selector);
+                    options = selector.options;
+                    nOptions = options.length;
+                    for (i = 0; i < nOptions; ++i)
                     {
-                        selector.selectedIndex = i;
-                        break;
+                        if (options[i].childNodes[0].nodeValue === defaultString)
+                        {
+                            selector.selectedIndex = i;
+                            break;
+                        }
                     }
                 }
             }
@@ -161,17 +165,17 @@ JI_NAMESPACE.apControls = (function (document, window)
                     mo.velocityOptionCheckbox.disabled = true;
                     mo.pitchOptionCheckbox.disabled = true;
 
-                    mo.soloTrackAftertouchCheckbox.disabled = true;
-                    mo.otherTracksAftertouchCheckbox.disabled = true;
-                    mo.aftertouchMIDIControlSelector.disabled = true;
+                    mo.usesPressureSoloCheckbox.disabled = true;
+                    mo.usesPressureOtherTracksCheckbox.disabled = true;
+                    mo.pressureSubstituteControlDataSelector.disabled = true;
 
-                    mo.soloTrackModWheelCheckbox.disabled = true;
-                    mo.otherTracksModWheelCheckbox.disabled = true;
-                    mo.modWheelMIDIControlSelector.disabled = true;
+                    mo.usesModSoloCheckbox.disabled = true;
+                    mo.usesModOtherTracksCheckbox.disabled = true;
+                    mo.modSustituteControlSelector.disabled = true;
 
-                    mo.soloTrackPitchWheelCheckbox.disabled = true;
-                    mo.otherTracksPitchWheelCheckbox.disabled = true;
-                    mo.pitchWheelMIDIControlSelector.disabled = true;
+                    mo.usesPitchBendSoloCheckbox.disabled = true;
+                    mo.usesPitchBendOtherTracksCheckbox.disabled = true;
+                    mo.pitchBendSubstituteControlDataSelector.disabled = true;
 
                     mo.assistantUsesAbsoluteDurationsRadioButton.disabled = true;
                     mo.assistantUsesRelativeDurationsRadioButton.disabled = true;
@@ -183,37 +187,37 @@ JI_NAMESPACE.apControls = (function (document, window)
                     mo.velocityOptionCheckbox.disabled = false;
                     mo.pitchOptionCheckbox.disabled = false;
 
-                    mo.soloTrackAftertouchCheckbox.disabled = false;
-                    mo.otherTracksAftertouchCheckbox.disabled = false;
-                    if (mo.soloTrackAftertouchCheckbox.checked || mo.otherTracksAftertouchCheckbox.checked)
+                    mo.usesPressureSoloCheckbox.disabled = false;
+                    mo.usesPressureOtherTracksCheckbox.disabled = false;
+                    if (mo.usesPressureSoloCheckbox.checked || mo.usesPressureOtherTracksCheckbox.checked)
                     {
-                        enableSelector(mo.aftertouchMIDIControlSelector, "expression (11)");
+                        enableSelector(mo.pressureSubstituteControlDataSelector, "channel pressure");
                     }
                     else
                     {
-                        disableSelector(mo.aftertouchMIDIControlSelector);
+                        disableSelector(mo.pressureSubstituteControlDataSelector);
                     }
 
-                    mo.soloTrackPitchWheelCheckbox.disabled = false;
-                    mo.otherTracksPitchWheelCheckbox.disabled = false;
-                    if (mo.soloTrackPitchWheelCheckbox.checked || mo.otherTracksPitchWheelCheckbox.checked)
+                    mo.usesPitchBendSoloCheckbox.disabled = false;
+                    mo.usesPitchBendOtherTracksCheckbox.disabled = false;
+                    if (mo.usesPitchBendSoloCheckbox.checked || mo.usesPitchBendOtherTracksCheckbox.checked)
                     {
-                        enableSelector(mo.pitchWheelMIDIControlSelector, "pitch wheel");
+                        enableSelector(mo.pitchBendSubstituteControlDataSelector, "pitch wheel");
                     }
                     else
                     {
-                        disableSelector(mo.pitchWheelMIDIControlSelector);
+                        disableSelector(mo.pitchBendSubstituteControlDataSelector);
                     }
 
-                    mo.soloTrackModWheelCheckbox.disabled = false;
-                    mo.otherTracksModWheelCheckbox.disabled = false;
-                    if (mo.soloTrackModWheelCheckbox.checked || mo.otherTracksModWheelCheckbox.checked)
+                    mo.usesModSoloCheckbox.disabled = false;
+                    mo.usesModOtherTracksCheckbox.disabled = false;
+                    if (mo.usesModSoloCheckbox.checked || mo.usesModOtherTracksCheckbox.checked)
                     {
-                        enableSelector(mo.modWheelMIDIControlSelector, "modulation (1)");
+                        enableSelector(mo.modSustituteControlSelector, "modulation (1)");
                     }
                     else
                     {
-                        disableSelector(mo.modWheelMIDIControlSelector);
+                        disableSelector(mo.modSustituteControlSelector);
                     }
 
                     mo.assistantUsesAbsoluteDurationsRadioButton.disabled = false;
@@ -226,17 +230,17 @@ JI_NAMESPACE.apControls = (function (document, window)
                     mo.velocityOptionCheckbox.disabled = true;
                     mo.pitchOptionCheckbox.disabled = true;
 
-                    mo.soloTrackAftertouchCheckbox.disabled = true;
-                    mo.otherTracksAftertouchCheckbox.disabled = true;
-                    mo.aftertouchMIDIControlSelector.disabled = true;
+                    mo.usesPressureSoloCheckbox.disabled = true;
+                    mo.usesPressureOtherTracksCheckbox.disabled = true;
+                    mo.pressureSubstituteControlDataSelector.disabled = true;
 
-                    mo.soloTrackModWheelCheckbox.disabled = true;
-                    mo.otherTracksModWheelCheckbox.disabled = true;
-                    mo.modWheelMIDIControlSelector.disabled = true;
+                    mo.usesModSoloCheckbox.disabled = true;
+                    mo.usesModOtherTracksCheckbox.disabled = true;
+                    mo.modSustituteControlSelector.disabled = true;
 
-                    mo.soloTrackPitchWheelCheckbox.disabled = true;
-                    mo.otherTracksPitchWheelCheckbox.disabled = true;
-                    mo.pitchWheelMIDIControlSelector.disabled = true;
+                    mo.usesPitchBendSoloCheckbox.disabled = true;
+                    mo.usesPitchBendOtherTracksCheckbox.disabled = true;
+                    mo.pitchBendSubstituteControlDataSelector.disabled = true;
 
                     //mo.assistantUsesAbsoluteDurationsRadioButton.disabled = true;
                     mo.assistantUsesRelativeDurationsRadioButton.disabled = true;
@@ -275,17 +279,17 @@ JI_NAMESPACE.apControls = (function (document, window)
                 mo.velocityOptionCheckbox.disabled = true;
                 mo.pitchOptionCheckbox.disabled = true;
 
-                mo.soloTrackAftertouchCheckbox.disabled = true;
-                mo.otherTracksAftertouchCheckbox.disabled = true;
-                mo.aftertouchMIDIControlSelector.disabled = true;
+                mo.usesPressureSoloCheckbox.disabled = true;
+                mo.usesPressureOtherTracksCheckbox.disabled = true;
+                mo.pressureSubstituteControlDataSelector.disabled = true;
 
-                mo.soloTrackModWheelCheckbox.disabled = true;
-                mo.otherTracksModWheelCheckbox.disabled = true;
-                mo.modWheelMIDIControlSelector.disabled = true;
+                mo.usesModSoloCheckbox.disabled = true;
+                mo.usesModOtherTracksCheckbox.disabled = true;
+                mo.modSustituteControlSelector.disabled = true;
 
-                mo.soloTrackPitchWheelCheckbox.disabled = true;
-                mo.otherTracksPitchWheelCheckbox.disabled = true;
-                mo.pitchWheelMIDIControlSelector.disabled = true;
+                mo.usesPitchBendSoloCheckbox.disabled = true;
+                mo.usesPitchBendOtherTracksCheckbox.disabled = true;
+                mo.pitchBendSubstituteControlDataSelector.disabled = true;
 
                 mo.assistantUsesAbsoluteDurationsRadioButton.disabled = true;
                 mo.assistantsSpeedInputText.disabled = true;
@@ -624,17 +628,17 @@ JI_NAMESPACE.apControls = (function (document, window)
             mo.velocityOptionCheckbox = document.getElementById("velocityOptionCheckbox");
             mo.pitchOptionCheckbox = document.getElementById("pitchOptionCheckbox");
 
-            mo.soloTrackAftertouchCheckbox = document.getElementById("soloTrackAftertouchCheckbox");
-            mo.otherTracksAftertouchCheckbox = document.getElementById("otherTracksAftertouchCheckbox");
-            mo.aftertouchMIDIControlSelector = document.getElementById("aftertouchMIDIControlSelector");
+            mo.usesPressureSoloCheckbox = document.getElementById("usesPressureSoloCheckbox");
+            mo.usesPressureOtherTracksCheckbox = document.getElementById("usesPressureOtherTracksCheckbox");
+            mo.pressureSubstituteControlDataSelector = document.getElementById("pressureSubstituteControlDataSelector");
 
-            mo.soloTrackModWheelCheckbox = document.getElementById("soloTrackModWheelCheckbox");
-            mo.otherTracksModWheelCheckbox = document.getElementById("otherTracksModWheelCheckbox");
-            mo.modWheelMIDIControlSelector = document.getElementById("modWheelMIDIControlSelector");
+            mo.usesModSoloCheckbox = document.getElementById("usesModSoloCheckbox");
+            mo.usesModOtherTracksCheckbox = document.getElementById("usesModOtherTracksCheckbox");
+            mo.modSustituteControlSelector = document.getElementById("modSustituteControlSelector");
 
-            mo.soloTrackPitchWheelCheckbox = document.getElementById("soloTrackPitchWheelCheckbox");
-            mo.otherTracksPitchWheelCheckbox = document.getElementById("otherTracksPitchWheelCheckbox");
-            mo.pitchWheelMIDIControlSelector = document.getElementById("pitchWheelMIDIControlSelector");
+            mo.usesPitchBendSoloCheckbox = document.getElementById("usesPitchBendSoloCheckbox");
+            mo.usesPitchBendOtherTracksCheckbox = document.getElementById("usesPitchBendOtherTracksCheckbox");
+            mo.pitchBendSubstituteControlDataSelector = document.getElementById("pitchBendSubstituteControlDataSelector");
 
             mo.assistantUsesAbsoluteDurationsRadioButton = document.getElementById("assistantUsesAbsoluteDurationsRadioButton");
             mo.assistantsSpeedInputText = document.getElementById("assistantsSpeedInputText");
@@ -906,12 +910,12 @@ JI_NAMESPACE.apControls = (function (document, window)
         if (controlID === "midiInputDeviceSelector"
         || controlID === "scoreSelector"
         || controlID === "midiOutputDeviceSelector"
-        || controlID === "soloTrackAftertouchCheckbox"
-        || controlID === "otherTracksAftertouchCheckbox"
-        || controlID === "soloTrackModWheelCheckbox"
-        || controlID === "otherTracksModWheelCheckbox"
-        || controlID === "soloTrackPitchWheelCheckbox"
-        || controlID === "otherTracksPitchWheelCheckbox"
+        || controlID === "usesPressureSoloCheckbox"
+        || controlID === "usesPressureOtherTracksCheckbox"
+        || controlID === "usesModSoloCheckbox"
+        || controlID === "usesModOtherTracksCheckbox"
+        || controlID === "usesPitchBendSoloCheckbox"
+        || controlID === "usesPitchBendOtherTracksCheckbox"
         || controlID === "assistantUsesAbsoluteDurationsRadioButton"
         || controlID === "assistantUsesRelativeDurationsRadioButton")
         {
@@ -1058,17 +1062,32 @@ JI_NAMESPACE.apControls = (function (document, window)
                 options.velocity = mo.velocityOptionCheckbox.checked;
                 options.pitch = mo.pitchOptionCheckbox.checked;
 
-                options.soloAftertouch = mo.soloTrackAftertouchCheckbox.checked;
-                options.otherTracksAftertouch = mo.otherTracksAftertouchCheckbox.checked;
-                options.aftertouchControlIndex = mo.aftertouchMIDIControlSelector.selectedIndex;
+                // EWI: breath control (=aftertouch)
+                // E-MU keyboard: key pressure (=channel pressure)
+                options.usesPressureSolo = mo.usesPressureSoloCheckbox.checked;
+                options.usesPressureOtherTracks = mo.usesPressureOtherTracksCheckbox.checked;
+                if (options.usesPressureSolo || options.usesPressureOtherTracks)
+                {
+                    options.pressureSubstituteControlData = controlOptions[mo.pressureSubstituteControlDataSelector.selectedIndex];
+                }
 
-                options.soloPitchWheel = mo.soloTrackPitchWheelCheckbox.checked;
-                options.otherTracksPitchWheel = mo.otherTracksPitchWheelCheckbox.checked;
-                options.pitchWheelControlIndex = mo.pitchWheelMIDIControlSelector.selectedIndex;
+                // EWI: pitch-bend controls (=pitch-bend)
+                // E-MU keyboard: pitch wheel (=pitch-bend)
+                options.usesPitchBendSolo = mo.usesPitchBendSoloCheckbox.checked;
+                options.usesPitchBendOtherTracks = mo.usesPitchBendOtherTracksCheckbox.checked;
+                if (options.usesPitchBendSolo || options.usesPitchBendOtherTracks)
+                {
+                    options.pitchBendSubstituteControlData = controlOptions[mo.pitchBendSubstituteControlDataSelector.selectedIndex];
+                }
 
-                options.soloModWheel = mo.soloTrackModWheelCheckbox.checked;
-                options.otherTracksModWheel = mo.otherTracksModWheelCheckbox.checked;
-                options.modWheelControlIndex = mo.modWheelMIDIControlSelector.selectedIndex;
+                // EWI: bite control (=modulation)
+                // E-MU keyboard: modulation wheel (=modulation)
+                options.usesModSolo = mo.usesModSoloCheckbox.checked;
+                options.usesModOtherTracks = mo.usesModOtherTracksCheckbox.checked;
+                if (options.usesModSolo || options.usesModOtherTracks)
+                {
+                    options.modSubstituteControlData = controlOptions[mo.modSustituteControlSelector.selectedIndex];
+                }
 
                 options.assistantUsesAbsoluteDurations = mo.assistantUsesAbsoluteDurationsRadioButton.checked;
 
@@ -1111,7 +1130,8 @@ JI_NAMESPACE.apControls = (function (document, window)
             sequence = score.getSequence(options.assistantsSpeed);
 
             if (options.assistedPerformance === true)
-            {// this constructor consumes sequence, resetting midiMoment timestamps relative to the start of their subsection.    
+            {
+                // this constructor consumes sequence, resetting midiMoment timestamps relative to the start of their subsection.    
                 assistant = new jiAssistant.Assistant(sequence, options, reportEndOfSpan, reportMsPos);
             }
 
