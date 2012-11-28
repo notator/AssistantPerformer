@@ -268,7 +268,7 @@ JI_NAMESPACE.assistant = (function (window)
                 }
             }
 
-            function playSubsequence(msg, subsequence, options)
+            function playSubsequence(subsequence, options)
             {
                 var now = window.performance.webkitNow(), // in the time frame used by sequences
                     prevSubsequenceScoreMsDuration,
@@ -289,44 +289,47 @@ JI_NAMESPACE.assistant = (function (window)
                 subsequence.playSpan(outputDevice, 0, Number.MAX_VALUE, tracksControl, null, reportMsPosition);
             }
 
-            // The value of an ordinary midiControl is passed in data2 (data1 is not used)
-            // Pitch wheel uses data2 (data1 is not used)
-            // Channel pressure uses data1 (data2 is not used)
+            function handleUnknownMessage(msg)
+            {
+                console.log("Unknown midi message, command:" + msg.command.toString() + ", data1:" + msg.data1.toString() + ", data2:" + msg.data2.toString());
+            }
+
+            // mcd contains message creation utilities ( see Main() )
+            // controlData is one of the following objects (see jiAPControls.js):
+            // { name: "channel pressure", statusHighNibble: 0xD0 },
+            // { name: "pitch wheel", statusHighNibble: 0xE0 },
+            // { name: "modulation (1)", midiControl: 1 },
+            // { name: "volume (7)", midiControl: 7 },
+            // { name: "pan (10)", midiControl: 10 },
+            // { name: "expression (11)", midiControl: 11 },
+            // { name: "timbre (71)", midiControl: 71 },
+            // { name: "brightness (74)", midiControl: 74 },
+            // { name: "effects (91)", midiControl: 91 },
+            // { name: "tremolo (92)", midiControl: 92 },
+            // { name: "chorus (93)", midiControl: 93 },
+            // { name: "celeste (94)", midiControl: 94 },
+            // { name: "phaser (95)", midiControl: 95 }
+            // channel is the new message's channel
+            // value is the new message's value
             function newControlMessage(mcd, controlData, channel, value)
             {
-                // mcd contains message creation utilities ( see Main() )
-
-                // controlData is one of these options (see jiAPControls.js):
-                // { name: "channel pressure", statusHighNibble: 0xD0 },
-                // { name: "pitch wheel", statusHighNibble: 0xE0 },
-                // { name: "modulation (1)", midiControl: 1 },
-                // { name: "volume (7)", midiControl: 7 },
-                // { name: "pan (10)", midiControl: 10 },
-                // { name: "expression (11)", midiControl: 11 },
-                // { name: "timbre (71)", midiControl: 71 },
-                // { name: "brightness (74)", midiControl: 74 },
-                // { name: "effects (91)", midiControl: 91 },
-                // { name: "tremolo (92)", midiControl: 92 },
-                // { name: "chorus (93)", midiControl: 93 },
-                // { name: "celeste (94)", midiControl: 94 },
-                // { name: "phaser (95)", midiControl: 95 }
-
                 var message;
 
                 if (controlData.midiControl !== undefined)
                 {
-                    // e.g. (MCD.CONTROL_CHANGE, MCD.PAN_CONTROL, value, channel, midiMoment.timestamp);
+                    // a normal control
                     message = mcd.createMIDIMessage(mcd.CONTROL_CHANGE, controlData.midiControl, value, channel, 0);
                 }
                 else if (controlData.statusHighNibble !== undefined)
                 {
+                    // pitch-bend or channel pressure
                     if (controlData.statusHighNibble === mcd.PITCH_BEND)
                     {
-                        // e.g. (MCD.PITCH_BEND, 0, value, channel, midiMoment.timestamp)
                         message = mcd.createMIDIMessage(controlData.statusHighNibble, 0, value, channel, 0);
                     }
                     else if (controlData.statusHighNibble === mcd.CHANNEL_PRESSURE)
                     {
+                        // ACHTUNG: The value goes to data1. Does this message work? Does Jazz send the right number of bytes?
                         message = mcd.createMIDIMessage(controlData.statusHighNibble, value, 0, channel, 0);
                     }
                     else
@@ -342,71 +345,38 @@ JI_NAMESPACE.assistant = (function (window)
                 return message;
             }
 
-            function handleUnknownMessage(msg)
+            function handleController(mcd, controlData, value, usesSoloTrack, usesOtherTracks)
             {
-                console.log("Unknown midi message, command:" + msg.command.toString() + ", data1:" + msg.data1.toString() + ", data2:" + msg.data2.toString());
-            }
-
-            function handlePressure(mcd, value)
-            {
-                console.log("handlePressure(), value:", value.toString());
-            }
-
-            function handleChannelPressure(mcd, msg)
-            {
-                // N.B. msg.data1
-                console.log("Channel Pressure, value:", msg.data1.toString());
-                handlePressure(mcd, msg.data1);
-            }
-
-            function handleAftertouch(mcd, msg)
-            {
-                // N.B. msg.data2
-                console.log("Aftertouch, value:", msg.data2.toString());
-                handlePressure(mcd, msg.data2);
-            }
-
-            function handleModulationWheel(mcd, msg)
-            {
-                console.log("ModulationWheel, value:", msg.data2.toString());
-            }
-
-            function handlePitchWheel(mcd, msg)
-            {
-                var controlData = options.pitchBendSubstituteControlData,
-                    controlMessages = [], nControlMessages, i,
+                var controlMessages = [], nControlMessages, i,
                     tracks = mainSequence.tracks, nTracks = tracks.length;
 
-                console.log("PitchWheel, value:", msg.data2.toString());
-
-                // N.B. The value of a PitchWheel message is in msg.data2.
-                if (options.usesPitchBendSolo && options.usesPitchBendOtherTracks)
+                if (usesSoloTrack && usesOtherTracks)
                 {
                     for (i = 0; i < nTracks; ++i)
                     {
                         if (tracksControl.trackIsOn(i))
                         {
-                            controlMessages.push(newControlMessage(mcd, controlData, i, msg.data2));
+                            controlMessages.push(newControlMessage(mcd, controlData, i, value));
                         }
                     }
                 }
-                else if (options.usesPitchBendSolo)
+                else if (usesSoloTrack)
                 {
-                    controlMessages.push(newControlMessage(mcd, controlData, options.livePerformersTrackIndex, msg.data2));
+                    controlMessages.push(newControlMessage(mcd, controlData, options.livePerformersTrackIndex, value));
                 }
-                else if (options.usesPitchBendOtherTracks)
+                else if (usesOtherTracks)
                 {
                     for (i = 0; i < nTracks; ++i)
                     {
                         if (tracksControl.trackIsOn(i) && i !== options.livePerformersTrackIndex)
                         {
-                            controlMessages.push(newControlMessage(mcd, controlData, i, msg.data2));
+                            controlMessages.push(newControlMessage(mcd, controlData, i, value));
                         }
                     }
                 }
                 else
                 {
-                    throw "Either options.usesPitchBendSolo or options.usesPitchBendOtherTracks must be set here.";
+                    throw "Either usesSoloTrack or usesOtherTracks must be set here.";
                 }
 
                 nControlMessages = controlMessages.length;
@@ -418,7 +388,7 @@ JI_NAMESPACE.assistant = (function (window)
 
             function handleNoteOff(msg)
             {
-                console.log("NoteOff, pitch:", msg.data1.toString(), " velocity:", msg.data2.toString());
+                //console.log("NoteOff, pitch:", msg.data1.toString(), " velocity:", msg.data2.toString());
 
                 if (msg.data1 === currentLivePerformersKeyPitch)
                 {
@@ -426,7 +396,7 @@ JI_NAMESPACE.assistant = (function (window)
                     if (nextIndex < endIndex && subsequences[nextIndex].restSubsequence !== undefined)
                     {
                         currentIndex = nextIndex++;
-                        playSubsequence(msg, subsequences[currentIndex], options);
+                        playSubsequence(subsequences[currentIndex], options);
                     }
                     if (nextIndex === endIndex) // final barline
                     {
@@ -448,7 +418,7 @@ JI_NAMESPACE.assistant = (function (window)
                     if (nextIndex === startIndex || subsequences[nextIndex].chordSubsequence !== undefined)
                     {
                         currentIndex = nextIndex++;
-                        playSubsequence(msg, subsequences[currentIndex], options);
+                        playSubsequence(subsequences[currentIndex], options);
                     }
                 }
                 else // velocity 0 is "noteOff"
@@ -462,27 +432,35 @@ JI_NAMESPACE.assistant = (function (window)
             switch (inputMsgType)
             {
                 case CHANNEL_PRESSURE: // EMU "aftertouch"
-                    if (options.pressureSubstituteControlData !== undefined)
+                    //console.log("Channel (=key) Pressure, value:", msg.data1.toString());
+                    if (options.pressureSubstituteControlData !== null)
                     {
-                        handleChannelPressure(mcd, msg);
+                        handleController(mcd, options.pressureSubstituteControlData, msg.data1, // ACHTUNG! data1 is correct!
+                                                    options.usesPressureSolo, options.usesPressureOtherTracks);
                     }
                     break;
                 case AFTERTOUCH: // EWI breath controller
-                    if (options.pressureSubstituteControlData !== undefined)
+                    //console.log("Aftertouch, value:", msg.data2.toString());
+                    if (options.pressureSubstituteControlData !== null)
                     {
-                        handleAftertouch(mcd, msg);
+                        handleController(mcd, options.pressureSubstituteControlData, msg.data2,
+                                                    options.usesPressureSolo, options.usesPressureOtherTracks);
                     }
                     break;
                 case MODULATION_WHEEL: // EWI bite, EMU modulation wheel
-                    if (options.modSubstituteControlData !== undefined)
+                    //console.log("Modulation Wheel, value:", msg.data2.toString());
+                    if (options.modSubstituteControlData !== null)
                     {
-                        handleModulationWheel(mcd, msg);
+                        handleController(mcd, options.modSubstituteControlData, msg.data2,
+                                                    options.usesModSolo, options.usesModOtherTracks);
                     }
                     break;
                 case PITCH_WHEEL: // EWI pitch bend up/down controllers, EMU pitch wheel
-                    if (options.pitchBendSubstituteControlData !== undefined)
+                    //console.log("Pitch Wheel, value:", msg.data2.toString());
+                    if (options.pitchBendSubstituteControlData !== null)
                     {
-                        handlePitchWheel(mcd, msg);
+                        handleController(mcd, options.pitchBendSubstituteControlData, msg.data2,
+                                                    options.usesPitchBendSolo, options.usesPitchBendOtherTracks);
                     }
                     break;
                 case NOTE_ON:

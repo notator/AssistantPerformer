@@ -1066,6 +1066,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                 // E-MU keyboard: key pressure (=channel pressure)
                 options.usesPressureSolo = mo.usesPressureSoloCheckbox.checked;
                 options.usesPressureOtherTracks = mo.usesPressureOtherTracksCheckbox.checked;
+                options.pressureSubstituteControlData = null;
                 if (options.usesPressureSolo || options.usesPressureOtherTracks)
                 {
                     options.pressureSubstituteControlData = controlOptions[mo.pressureSubstituteControlDataSelector.selectedIndex];
@@ -1075,6 +1076,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                 // E-MU keyboard: pitch wheel (=pitch-bend)
                 options.usesPitchBendSolo = mo.usesPitchBendSoloCheckbox.checked;
                 options.usesPitchBendOtherTracks = mo.usesPitchBendOtherTracksCheckbox.checked;
+                options.pitchBendSubstituteControlData = null;
                 if (options.usesPitchBendSolo || options.usesPitchBendOtherTracks)
                 {
                     options.pitchBendSubstituteControlData = controlOptions[mo.pitchBendSubstituteControlDataSelector.selectedIndex];
@@ -1084,6 +1086,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                 // E-MU keyboard: modulation wheel (=modulation)
                 options.usesModSolo = mo.usesModSoloCheckbox.checked;
                 options.usesModOtherTracks = mo.usesModOtherTracksCheckbox.checked;
+                options.modSubstituteControlData = null;
                 if (options.usesModSolo || options.usesModOtherTracks)
                 {
                     options.modSubstituteControlData = controlOptions[mo.modSustituteControlSelector.selectedIndex];
