@@ -62,56 +62,68 @@
                         Performer's options:
                         <div style="display:table">
                         <div style="display:table-row;">
-                            <div style="display: table-cell;padding-left:25px; padding-right: 25px; text-align:center"> 
+                            <div style="display: table-cell; padding-left:25px; text-align:center"> 
                                 Track:
                                 <div style="margin-left: 3px">
                                     <select id="trackSelector" name="trackSelector" style="width:40px;" disabled="disabled">
                                     </select>
                                 </div>
                             </div>
-                            <div style="display: table-cell;">
+                            <div style="display: table-cell; padding-left:35px;">
                                 <div class="helpColour">
-                                        Replace these values in the score:
+                                        Override the score using:
                                 </div>
-                                <div style="padding-left: 18px">
+                                <div style="padding-left: 20px">
                                     <div style="display: table-row;">
-                                        <div style="display:table-cell; text-align:right; padding-right:5px;">
+                                        <div style="display:table-cell; text-align:right; padding-right:3px;">
                                             NoteOn:
                                         </div>    
                                         <div class="checkboxCell" > 
                                             solo<br />
                                             track
                                         </div>
-                                    </div>
-                                    <div style="margin-left: 20px; display: table-row;">
-                                        <div style="text-align:right; display:table-cell; padding-right:5px;">
-                                            <label id="velocityCheckboxLabel" for="velocityOptionCheckbox" style="vertical-align:middle"> 
-                                                velocity (dynamic)</label>
-                                        </div>    
-                                        <div class="checkboxCell" > 
-                                            <input type="checkbox" name="velocityOptionCheckbox" value="performer"  id="velocityOptionCheckbox"
-                                            class="standardCheckBox14px" disabled="disabled"/> 
+                                        <div class="checkboxCell" >
+                                            other<br />
+                                            tracks
                                         </div>
                                     </div>
                                     <div style="margin-left: 20px; display: table-row;">
                                         <div style="text-align:right; display:table-cell; padding-right:5px;">
-                                                <label id="Label1" for="pitchOptionCheckboxLabel" style="vertical-align:middle"> 
-                                                    pitch (monophonic)</label>
+                                            <label id="pitchCheckboxLabel" for="soloPitchOptionCheckbox" style="vertical-align:middle"> 
+                                                pitch</label>
                                         </div>    
                                         <div class="checkboxCell" > 
-                                            <input type="checkbox" name="pitchOptionCheckbox" value="silent"  id="pitchOptionCheckbox"
+                                            <input type="checkbox" name="soloPitchOptionCheckbox" value="silent"  id="soloPitchOptionCheckbox"
+                                                class="standardCheckBox14px" disabled="disabled"/>
+                                        </div>
+                                       <div class="checkboxCell" > 
+                                            <input type="checkbox" name="otherTracksPitchOptionCheckbox" value="silent"  id="otherTracksPitchOptionCheckbox"
+                                                class="standardCheckBox14px" disabled="disabled"/>
+                                        </div>
+                                    </div>
+                                    <div style="margin-left: 20px; display: table-row;">
+                                        <div style="text-align:right; display:table-cell; padding-right:5px;">
+                                            <label id="velocityCheckboxLabel" for="soloVelocityOptionCheckbox" style="vertical-align:middle"> 
+                                                velocity</label>
+                                        </div>    
+                                        <div class="checkboxCell" > 
+                                            <input type="checkbox" name="soloVelocityOptionCheckbox" value="performer"  id="soloVelocityOptionCheckbox"
+                                            class="standardCheckBox14px" disabled="disabled"/> 
+                                        </div>
+                                        <div class="checkboxCell" > 
+                                            <input type="checkbox" name="otherTracksVelocityOptionCheckbox" value="silent"  id="otherTracksVelocityOptionCheckbox"
                                                 class="standardCheckBox14px" disabled="disabled"/>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div style="display: table-cell; padding-left:20px;">
+                            <div style="display: table-cell; padding-left:40px;">
                                 <div class="helpColour">
-                                    These will be added to the controller information in the score:
+                                    Add live controller information to the information in the score:
                                 </div>
                                 <div style="display:table">
                                     <div style="display: table-row;">
-                                        <div style="text-align:right; display:table-cell; padding-right:5px;">
+                                        <div style="text-align:right; display:table-cell; padding-right:3px;">
                                             Continuous controllers:
                                         </div>    
                                         <div class="checkboxCell" > 

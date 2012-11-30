@@ -406,24 +406,34 @@ JI_NAMESPACE.assistant = (function (window)
                 }
             }
 
-            function handleNoteOn(mcd, msg)
+            function handleNoteOn(mcd, inputMsg, overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity)
             {
-                console.log("NoteOn, pitch:", msg.data1.toString(), " velocity:", msg.data2.toString());
-                currentLivePerformersKeyPitch = msg.data1;
+                var subsequence;
 
-                if (msg.data2 > 0)
+                console.log("NoteOn, pitch:", inputMsg.data1.toString(), " velocity:", inputMsg.data2.toString());
+
+                currentLivePerformersKeyPitch = inputMsg.data1;
+
+                if (inputMsg.data2 > 0)
                 {
                     stopCurrentlyPlayingSubsequence();
 
                     if (nextIndex === startIndex || subsequences[nextIndex].chordSubsequence !== undefined)
                     {
                         currentIndex = nextIndex++;
-                        playSubsequence(subsequences[currentIndex], options);
+                        subsequence = subsequences[currentIndex];
+                        if (overrideSoloPitch || overrideOtherTracksPitch || overrideSoloVelocity || overrideOtherTracksVelocity)
+                        {
+                            subsequence.overridePitchAndOrVelocity(mcd.NOTE_ON, options.livePerformersTrackIndex,
+                                inputMsg.data1, inputMsg.data2,
+                                overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity);
+                        }
+                        playSubsequence(subsequence, options);
                     }
                 }
                 else // velocity 0 is "noteOff"
                 {
-                    handleNoteOff(msg);
+                    handleNoteOff(inputMsg);
                 }
             }
 
@@ -464,7 +474,9 @@ JI_NAMESPACE.assistant = (function (window)
                     }
                     break;
                 case NOTE_ON:
-                    handleNoteOn(mcd, msg);
+                    handleNoteOn(mcd, msg,
+                        options.overrideSoloPitch, options.overrideOtherTracksPitch,
+                        options.overrideSoloVelocity, options.overrideOtherTracksVelocity);
                     break;
                 case NOTE_OFF:
                     handleNoteOff(msg);

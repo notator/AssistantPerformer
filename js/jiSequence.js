@@ -640,6 +640,92 @@ JI_NAMESPACE.sequence = (function (window)
             return subsequences;
         },
 
+        // Shifts the pitches in the whole performer's track up or down so that the lowest pitch in the first noteOn moment is newPitch.
+        // Similarly with velocity.
+        overridePitchAndOrVelocity = function (NOTE_ON_COMMAND, soloTrackIndex, newPitch, newVelocity,
+            overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity)
+        {
+            var track = this.tracks[soloTrackIndex], message, lowestNoteOnMsg, pitchDelta, velocityDelta;
+
+            // Returns the lowest NoteOn message in the first midiMoment in the track to contain a NoteOnMessage.
+            // Returns null if there is no such message.
+            function findLowestNoteOnMsg(NOTE_ON_COMMAND, track)
+            {
+                var i, j, message, midiMoment, nMessages, nMoments = track.midiMoments.length, lowestNoteOnMessage = null;
+
+                for (i = 0; i < nMoments; ++i)
+                {
+                    midiMoment = track.midiMoments[i];
+                    nMessages = midiMoment.messages.length;
+                    for (j = 0; j < nMessages; ++j)
+                    {
+                        message = midiMoment.messages[j];
+                        if ((message.command === NOTE_ON_COMMAND)
+                        && (lowestNoteOnMessage === null || message.data1 < lowestNoteOnMessage.data1))
+                        {
+                            lowestNoteOnMessage = message;
+                        }
+                    }
+                    if (lowestNoteOnMessage !== null)
+                    {
+                        break;
+                    }
+                }
+                return lowestNoteOnMessage;
+            }
+
+            function midiValue(value)
+            {
+                var result = (value >= 0) ? value : 0;
+                result = (value <= 127) ? value : 127;
+                return result;
+            }
+
+            function adjustTracks(tracks, NOTE_ON_COMMAND, soloTrackIndex, pitchDelta, velocityDelta,
+                overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity)
+            {
+                var nTracks = tracks.length, i, j, k, nMoments, midiMoment, nMessages;
+
+                for (i = 0; i < nTracks; ++i)
+                {
+                    if ((i === soloTrackIndex && (overrideSoloPitch || overrideSoloVelocity))
+                    || (i !== soloTrackIndex && (overrideOtherTracksPitch || overrideOtherTracksVelocity)))
+                    {
+                        track = tracks[i];
+                        nMoments = track.midiMoments.length;
+
+                        for (j = 0; j < nMoments; ++j)
+                        {
+                            midiMoment = track.midiMoments[j];
+                            nMessages = midiMoment.messages.length;
+                            for (k = 0; k < nMessages; ++k)
+                            {
+                                message = midiMoment.messages[k];
+                                if (message.command === NOTE_ON_COMMAND)
+                                {
+                                    message.data1 = midiValue(message.data1 + pitchDelta);
+                                    message.data2 = midiValue(message.data2 + velocityDelta);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            lowestNoteOnMsg = findLowestNoteOnMsg(NOTE_ON_COMMAND, track);
+            if (lowestNoteOnMsg !== null)
+            {
+                pitchDelta = (overrideSoloPitch || overrideOtherTracksPitch) ? (newPitch - lowestNoteOnMsg.data1) : 0;
+                velocityDelta = (overrideSoloVelocity || overrideOtherTracksVelocity) ? (newVelocity - lowestNoteOnMsg.data2) : 0;
+
+                if (pitchDelta !== 0 || velocityDelta !== 0)
+                {
+                    adjustTracks(this.tracks, NOTE_ON_COMMAND, soloTrackIndex, pitchDelta, velocityDelta,
+                        overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity);
+                }
+            }
+        },
+
         publicPrototypeAPI =
         {
             setState: setState,
@@ -652,7 +738,8 @@ JI_NAMESPACE.sequence = (function (window)
             addTrack: addTrack,
             changeMessageTimestamps: changeMessageTimestamps,
             revertMessageTimestamps: revertMessageTimestamps,
-            getSubsequences: getSubsequences
+            getSubsequences: getSubsequences,
+            overridePitchAndOrVelocity: overridePitchAndOrVelocity
         };
 
         return publicPrototypeAPI;

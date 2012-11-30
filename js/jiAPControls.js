@@ -162,8 +162,11 @@ JI_NAMESPACE.apControls = (function (document, window)
                 if (scoreIndex === 0)
                 {
                     mo.trackSelector.disabled = true;
-                    mo.velocityOptionCheckbox.disabled = true;
-                    mo.pitchOptionCheckbox.disabled = true;
+
+                    mo.soloVelocityOptionCheckbox.disabled = true;
+                    mo.otherTracksVelocityOptionCheckbox.disabled = true;
+                    mo.soloPitchOptionCheckbox.disabled = true;
+                    mo.otherTracksPitchOptionCheckbox.disabled = true;
 
                     mo.usesPressureSoloCheckbox.disabled = true;
                     mo.usesPressureOtherTracksCheckbox.disabled = true;
@@ -184,8 +187,11 @@ JI_NAMESPACE.apControls = (function (document, window)
                 else if (inputDeviceIndex !== 0)
                 {
                     mo.trackSelector.disabled = false;
-                    mo.velocityOptionCheckbox.disabled = false;
-                    mo.pitchOptionCheckbox.disabled = false;
+
+                    mo.soloVelocityOptionCheckbox.disabled = false;
+                    mo.otherTracksVelocityOptionCheckbox.disabled = false;
+                    mo.soloPitchOptionCheckbox.disabled = false;
+                    mo.otherTracksPitchOptionCheckbox.disabled = false;
 
                     mo.usesPressureSoloCheckbox.disabled = false;
                     mo.usesPressureOtherTracksCheckbox.disabled = false;
@@ -227,8 +233,11 @@ JI_NAMESPACE.apControls = (function (document, window)
                 else // inputDevice === 0
                 {
                     mo.trackSelector.disabled = true;
-                    mo.velocityOptionCheckbox.disabled = true;
-                    mo.pitchOptionCheckbox.disabled = true;
+
+                    mo.soloVelocityOptionCheckbox.disabled = true;
+                    mo.otherTracksVelocityOptionCheckbox.disabled = true;
+                    mo.soloPitchOptionCheckbox.disabled = true;
+                    mo.otherTracksPitchOptionCheckbox.disabled = true;
 
                     mo.usesPressureSoloCheckbox.disabled = true;
                     mo.usesPressureOtherTracksCheckbox.disabled = true;
@@ -276,8 +285,11 @@ JI_NAMESPACE.apControls = (function (document, window)
                 mo.midiInputDeviceSelector.disabled = true;
                 mo.scoreSelector.disabled = true;
                 mo.midiOutputDeviceSelector.disabled = true;
-                mo.velocityOptionCheckbox.disabled = true;
-                mo.pitchOptionCheckbox.disabled = true;
+
+                mo.soloVelocityOptionCheckbox.disabled = true;
+                mo.otherTracksVelocityOptionCheckbox.disabled = true;
+                mo.soloPitchOptionCheckbox.disabled = true;
+                mo.otherTracksPitchOptionCheckbox.disabled = true;
 
                 mo.usesPressureSoloCheckbox.disabled = true;
                 mo.usesPressureOtherTracksCheckbox.disabled = true;
@@ -625,8 +637,10 @@ JI_NAMESPACE.apControls = (function (document, window)
             mo.midiOutputDeviceSelector = document.getElementById("midiOutputDeviceSelector");
             mo.trackSelector = document.getElementById("trackSelector");
 
-            mo.velocityOptionCheckbox = document.getElementById("velocityOptionCheckbox");
-            mo.pitchOptionCheckbox = document.getElementById("pitchOptionCheckbox");
+            mo.soloVelocityOptionCheckbox = document.getElementById("soloVelocityOptionCheckbox");
+            mo.otherTracksVelocityOptionCheckbox = document.getElementById("otherTracksVelocityOptionCheckbox");
+            mo.soloPitchOptionCheckbox = document.getElementById("soloPitchOptionCheckbox");
+            mo.otherTracksPitchOptionCheckbox = document.getElementById("otherTracksPitchOptionCheckbox");
 
             mo.usesPressureSoloCheckbox = document.getElementById("usesPressureSoloCheckbox");
             mo.usesPressureOtherTracksCheckbox = document.getElementById("usesPressureOtherTracksCheckbox");
@@ -1059,8 +1073,11 @@ JI_NAMESPACE.apControls = (function (document, window)
             {
                 // options is a global inside this namespace
                 options.livePerformersTrackIndex = mo.trackSelector.selectedIndex;
-                options.velocity = mo.velocityOptionCheckbox.checked;
-                options.pitch = mo.pitchOptionCheckbox.checked;
+
+                options.overrideSoloVelocity = mo.soloVelocityOptionCheckbox.checked;
+                options.overrideOtherTracksVelocity = mo.otherTracksVelocityOptionCheckbox.checked;
+                options.overrideSoloPitch = mo.soloPitchOptionCheckbox.checked;
+                options.overrideOtherTracksPitch = mo.otherTracksPitchOptionCheckbox.checked;
 
                 // EWI: breath control (=aftertouch)
                 // E-MU keyboard: key pressure (=channel pressure)
