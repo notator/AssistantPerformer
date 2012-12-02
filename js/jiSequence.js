@@ -523,7 +523,7 @@ JI_NAMESPACE.sequence = (function (window)
         // Returns an array. Each subsequence in the array is a Sequence, whose tracks all begin at timestamp = 0ms.
         // Each subsequence has an msPositionInScore attribute, which is first allocated to empty subsequences, and
         // then used when filling them.
-        // A subsequence exists for each chord or rest and for the final barline in the live performer's track.
+        // A subsequence is first created for each chord or rest and for the final barline in the live performer's track.
         // The final barline has a subsequence with a restSubsequence attribute.
         // A midiMoment which starts a chord sequence has a chordStart attribute (boolean, true).
         // A midiMoment which starts a rest sequence has a restStart attribute (boolean, true).
@@ -533,6 +533,9 @@ JI_NAMESPACE.sequence = (function (window)
         // often contain noteOFF messages from the final midiMoment of the preceding MIDIChord.  
         // Subsequences corresponding to a live performer's chord are given a chordSubsequence attribute (=true).
         // Subsequences corresponding to a live performer's rest are given a restSubsequence attribute (=true).
+        // Consecutive restSubsequences are merged: When performing, consecutive rests in the performer's track are treated
+        // as one. The live performer only starts the first one (with a noteOff). Following rests play automatically until
+        // the next chord (chordSubsequence) in the performer's track.
         getSubsequences = function (livePerformersTrackIndex)
         {
             var subsequences = [],
@@ -630,12 +633,67 @@ JI_NAMESPACE.sequence = (function (window)
                 }
             }
 
+            // When performing, consecutive rests in the performer's track are treated as one.
+            // The live performer only starts the first one (with a noteOff). Following rests
+            // play automatically until the next chord in the performer's track.
+            function mergeRestSubsequences(subsequences)
+            {
+                var i, nSubsequences = subsequences.length,
+                newSubsequences = [], lastNewS,
+                nTracks = tracks.length,
+                subS, timeDelta, t, newTrack, oldTrack, nMoments,
+                iMom, newMoment, nMessages, messages, iMsg;
+
+                newSubsequences.push(subsequences[0]);
+
+                for (i = 1; i < nSubsequences; ++i)
+                {
+                    lastNewS = newSubsequences[newSubsequences.length - 1];
+                    if (lastNewS.restSubsequence !== undefined && subsequences[i].restSubsequence !== undefined)
+                    {
+                        subS = subsequences[i];
+                        timeDelta = subS.msPositionInScore - lastNewS.msPositionInScore;
+                        // append subS to lastnewS
+                        for (t = 0; t < nTracks; ++t)
+                        {
+                            newTrack = lastNewS.tracks[t];
+                            oldTrack = subS.tracks[t];
+                            nMoments = oldTrack.midiMoments.length;
+                            for (iMom = 0; iMom < nMoments; ++iMom)
+                            {
+                                newMoment = oldTrack.midiMoments[iMom];
+
+                                newMoment.timestamp += timeDelta;
+                                nMessages = newMoment.messages.length;
+                                messages = newMoment.messages;
+                                if (messages[0].isEmpty === undefined)
+                                {
+                                    for (iMsg = 0; iMsg < nMessages; ++iMsg)
+                                    {
+                                        messages[iMsg].timestamp += timeDelta;
+                                    }
+                                    newTrack.midiMoments.push(newMoment);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        newSubsequences.push(subsequences[i]);
+                    }
+                }
+
+                return newSubsequences;
+            }
+
             subsequences = getEmptySubsequences(tracks[livePerformersTrackIndex]);
 
             for (trackIndex = 0; trackIndex < nTracks; ++trackIndex)
             {
                 fillSubsequences(subsequences, tracks[trackIndex].midiMoments); // 'base' function in outer scope
             }
+
+            subsequences = mergeRestSubsequences(subsequences);
 
             return subsequences;
         },
