@@ -1162,13 +1162,11 @@ JI_NAMESPACE.apControls = (function (document, window)
 
             score.moveStartMarkerToTop(svgPagesDiv);
 
+            setSvgControlsState('stopped');
+
             if (options.assistedPerformance === true && assistant !== undefined)
             {
                 setSvgControlsState('playing');
-            }
-            else
-            {
-                setSvgControlsState('stopped');
             }
         }
     },
