@@ -882,11 +882,14 @@ JI_NAMESPACE.score = (function (document)
         lastSystemTimeObjects = systems[systems.length - 1].staves[0].voices[0].timeObjects;
         finalBarlineInScore = lastSystemTimeObjects[lastSystemTimeObjects.length - 1]; // 'global' object
 
-        if (speed !== _previousSpeed)
-        {
-            _previousSpeed = speed;
-            setSystemMarkerParameters(systems);
-        }
+//        if (speed !== _previousSpeed)
+//        {
+//            _previousSpeed = speed;
+//            setSystemMarkerParameters(systems);
+//        }
+
+        _previousSpeed = speed;
+        setSystemMarkerParameters(systems);
     },
 
     setEndMarkerClick = function (e)

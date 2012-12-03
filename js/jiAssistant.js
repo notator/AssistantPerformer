@@ -268,16 +268,6 @@ JI_NAMESPACE.assistant = (function (window)
                 }
             }
 
-//            function stopCurrentlyPlayingSubsequence()
-//            {
-//                // currentIndex is the index of the currently playing subsequence
-//                // (which should be stopped when a noteOn or noteOff arrives).
-//                if (currentIndex >= 0 && subsequences[currentIndex].isStopped() === false)
-//                {
-//                    subsequences[currentIndex].stop();
-//                }
-//            }
-
             function playSubsequence(subsequence, options)
             {
                 var now = window.performance.webkitNow(), // in the time frame used by sequences
@@ -403,7 +393,7 @@ JI_NAMESPACE.assistant = (function (window)
                 if (msg.data1 === currentLivePerformersKeyPitch)
                 {
                     silentlyCompleteCurrentlyPlayingSubsequence();
-                    //stopCurrentlyPlayingSubsequence();
+
                     if (nextIndex < endIndex && subsequences[nextIndex].restSubsequence !== undefined)
                     {
                         currentIndex = nextIndex++;
@@ -428,7 +418,6 @@ JI_NAMESPACE.assistant = (function (window)
                 if (inputMsg.data2 > 0)
                 {
                     silentlyCompleteCurrentlyPlayingSubsequence();
-                    //stopCurrentlyPlayingSubsequence();
 
                     if (nextIndex === startIndex || subsequences[nextIndex].chordSubsequence !== undefined)
                     {
