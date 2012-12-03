@@ -784,6 +784,28 @@ JI_NAMESPACE.sequence = (function (window)
             }
         },
 
+        finishSilently = function ()
+        {
+            var message, i = 0, msg = {},
+                NOTEON_COMMAND = 0x90;
+
+            message = nextMessage();
+            while (message !== null)
+            {
+                if (!((message.command === NOTEON_COMMAND && message.data2 > 0) || message.isEmpty !== undefined))
+                {
+                    msg.status = message.status;
+                    msg.data1 = message.data1;
+                    msg.data2 = message.data2;
+                    msg.timestamp = 0;
+                    midiOutputDevice.sendMIDIMessage(msg);
+                    ++i;
+                }
+                message = nextMessage();
+            }
+            console.log("sequence finished silently: " + i.toString() + " messages sent.");
+        },
+
         publicPrototypeAPI =
         {
             setState: setState,
@@ -797,7 +819,8 @@ JI_NAMESPACE.sequence = (function (window)
             changeMessageTimestamps: changeMessageTimestamps,
             revertMessageTimestamps: revertMessageTimestamps,
             getSubsequences: getSubsequences,
-            overridePitchAndOrVelocity: overridePitchAndOrVelocity
+            overridePitchAndOrVelocity: overridePitchAndOrVelocity,
+            finishSilently: finishSilently
         };
 
         return publicPrototypeAPI;

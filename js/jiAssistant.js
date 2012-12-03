@@ -258,15 +258,25 @@ JI_NAMESPACE.assistant = (function (window)
                 return type;
             }
 
-            function stopCurrentlyPlayingSubsequence()
+            function silentlyCompleteCurrentlyPlayingSubsequence()
             {
                 // currentIndex is the index of the currently playing subsequence
-                // (which should be stopped when a noteOn or noteOff arrives).
+                // (which should be silently completed when a noteOn arrives).
                 if (currentIndex >= 0 && subsequences[currentIndex].isStopped() === false)
                 {
-                    subsequences[currentIndex].stop();
+                    subsequences[currentIndex].finishSilently();
                 }
             }
+
+//            function stopCurrentlyPlayingSubsequence()
+//            {
+//                // currentIndex is the index of the currently playing subsequence
+//                // (which should be stopped when a noteOn or noteOff arrives).
+//                if (currentIndex >= 0 && subsequences[currentIndex].isStopped() === false)
+//                {
+//                    subsequences[currentIndex].stop();
+//                }
+//            }
 
             function playSubsequence(subsequence, options)
             {
@@ -392,7 +402,8 @@ JI_NAMESPACE.assistant = (function (window)
 
                 if (msg.data1 === currentLivePerformersKeyPitch)
                 {
-                    stopCurrentlyPlayingSubsequence();
+                    silentlyCompleteCurrentlyPlayingSubsequence();
+                    //stopCurrentlyPlayingSubsequence();
                     if (nextIndex < endIndex && subsequences[nextIndex].restSubsequence !== undefined)
                     {
                         currentIndex = nextIndex++;
@@ -416,7 +427,8 @@ JI_NAMESPACE.assistant = (function (window)
 
                 if (inputMsg.data2 > 0)
                 {
-                    stopCurrentlyPlayingSubsequence();
+                    silentlyCompleteCurrentlyPlayingSubsequence();
+                    //stopCurrentlyPlayingSubsequence();
 
                     if (nextIndex === startIndex || subsequences[nextIndex].chordSubsequence !== undefined)
                     {
