@@ -180,6 +180,10 @@ JI_NAMESPACE.apTracksControl = (function (document, window)
 
         addFrames(groupElem, nTracks);
 
+        trackIsOnStatus = [];
+        trackIsDisabledStatus = [];
+        disableLayerIDs = [];
+
         for (i = 0; i < nTracks; ++i)
         {
             addTrackControl(groupElem, i);

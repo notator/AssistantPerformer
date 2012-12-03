@@ -561,7 +561,6 @@ JI_NAMESPACE.assistant = (function (window)
             this.isPaused = isPaused; // isPaused()
         },
 
-
         publicAPI =
         {
             init: init,
