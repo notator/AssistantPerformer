@@ -1151,12 +1151,10 @@ JI_NAMESPACE.apControls = (function (document, window)
 
             if (options.assistedPerformance === true)
             {
-                // this constructor consumes sequence, resetting midiMoment timestamps relative to the start of their subsection.    
+                // This constructor resets midiMoment timestamps relative to the start of their subsequence.
+                // The sequence therefore needs to be reloaded when the options (performer's track index) change.    
                 assistant = new jiAssistant.Assistant(sequence, options, reportEndOfSpan, reportMsPos);
             }
-
-            // The sequence's play() functions can now play its internal tracks
-            // Each track is an array of midiMoments ordered in temporal sequence.
 
             window.scrollTo(0, 630); // 600 is the absolute position of the controlPanel div (!)
 

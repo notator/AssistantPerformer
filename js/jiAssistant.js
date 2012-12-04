@@ -51,14 +51,20 @@ JI_NAMESPACE.assistant = (function (window)
         reportEndOfPerformance, // callback
         reportMsPosition, // callback
 
-        mainSequence, // the sequence from which the sequences are made
-        subsequences, // an array of subsequence. Each subsequence is a Sequence.
+        // An array of subsequence. Each subsequence is a Sequence.
+        // There is one subsequence for each chord or rest symbol in the live performer's track, whereby
+        // consecutive rests have one subsequence.
+        allSubsequences,
 
-    // these variables are initialized by playSpan() and used by handleMidiIn() 
-        startIndex = -1,
+        // The array of subsequence actually performed (from fromMs to toMs). Constructed in playSpan() from allSubsequences.
+        // The first subsequence in span may be the second part of a subsequence which has been split at fromMs.
+        // The last subsequence in span may be the first part of a subsequence which has been split at toMs.
+        span, 
+
+        // these variables are initialized by playSpan() and used by handleMidiIn() 
         endIndex = -1,
         currentIndex = -1, // the index of the currently playing subsequence (which will be stopped when a noteOn or noteOff arrives).
-        nextIndex = -2, // the index of the subsequence which will be played when a noteOn msg arrives (initially != startIndex) 
+        nextIndex = 0, // the index of the subsequence which will be played when a noteOn msg arrives 
         prevSubsequenceStartNow = 0.0, // used only with the relative durations option
         pausedNow = 0.0, // used only with the relative durations option (the time at which the subsequence was paused).
 
@@ -71,14 +77,6 @@ JI_NAMESPACE.assistant = (function (window)
         init = function (messageCreationData)
         {
             MCD = messageCreationData;
-        },
-
-    // makeSubsequences creates the private subsequences array inside the assistant.
-    // This function is called when options.assistedPerformance === true and the Start button is clicked in the upper options panel.
-    // See the comment to Sequence.getSubsequences().
-        makeSubsequences = function (livePerformersTrackIndex, mainSequence)
-        {
-            subsequences = mainSequence.getSubsequences(livePerformersTrackIndex);
         },
 
         setState = function (state)
@@ -96,10 +94,9 @@ JI_NAMESPACE.assistant = (function (window)
             {
                 case "stopped":
                     // these variables are also set in playSpan() when the state is first set to "running"
-                    startIndex = -1;
-                    endIndex = -1; // the index of the (unplayed) end chord or rest or endBarline
+                    endIndex = (span === undefined) ? -1 : (span.length - 1); // the index of the (unplayed) end chord or rest or endBarline
                     currentIndex = -1;
-                    nextIndex = -1;
+                    nextIndex = 0;
                     prevSubsequenceStartNow = 0.0; // used only with the relative durations option
                     pausedNow = 0.0; // used only with the relative durations option (the time at which the subsequence was paused).
                     stopped = true;
@@ -130,7 +127,7 @@ JI_NAMESPACE.assistant = (function (window)
                 {
                     prevSubsequenceStartNow += (window.performance.webkitNow() - pausedNow);
                 }
-                subsequences[currentIndex].resume();
+                span[currentIndex].resume();
                 setState("running");
             }
         },
@@ -142,7 +139,7 @@ JI_NAMESPACE.assistant = (function (window)
             if (stopped === false && paused === false)
             {
                 pausedNow = window.performance.webkitNow();
-                subsequences[currentIndex].pause();
+                span[currentIndex].pause();
                 setState("paused");
             }
             else
@@ -161,11 +158,11 @@ JI_NAMESPACE.assistant = (function (window)
             return paused === true;
         },
 
-    // Can only be called while running
-    // (stopped === false)
+        // Can only be called while running
+        // (stopped === false)
         stop = function ()
         {
-            var i, nSubsequences = subsequences.length;
+            var i, nSubsequences = span.length;
 
             if (stopped === false)
             {
@@ -173,12 +170,12 @@ JI_NAMESPACE.assistant = (function (window)
 
                 if (options.assistantUsesAbsoluteDurations === false)
                 {
-                    // reset the subsequences
+                    // reset the span
                     // (During the assisted performance, the message.timestamps have changed according
                     //  to the live performer's speed, but the midiMoment.timestamps have not).
                     for (i = 0; i < nSubsequences; ++i)
                     {
-                        subsequences[i].revertMessageTimestamps();
+                        span[i].revertMessageTimestamps();
                     }
                 }
 
@@ -192,10 +189,9 @@ JI_NAMESPACE.assistant = (function (window)
 
     // If options.assistedPerformance === true, this is where input MIDI messages arrive, and where processing is going to be done.
     // Uses 
-    //  startIndex (= -1 when stopped),
-    //  endIndex  (= -1 when stopped),
+    //  endIndex  (= spam.length -1 when stopped),
     //  currentIndex (= -1 when stopped) the index of the currently playing subsequence (which should be stopped when a noteOn or noteOff arrives).
-    //  nextIndex (= -1 when stopped) the index of the subsequence which will be played when a noteOn msg arrives
+    //  nextIndex (= 0 when stopped) the index of the subsequence which will be played when a noteOn msg arrives
         handleMidiIn = function (msg)
         {
             var inputMsgType,
@@ -250,7 +246,7 @@ JI_NAMESPACE.assistant = (function (window)
                     {
                         type = END_OF_SEQUENCE;
                     }
-                    else if (nextIndex < 0 || nextIndex >= subsequences.length)
+                    else if (nextIndex < 0 || nextIndex >= span.length)
                     {
                         type = ILLEGAL_INDEX;
                     }
@@ -262,9 +258,9 @@ JI_NAMESPACE.assistant = (function (window)
             {
                 // currentIndex is the index of the currently playing subsequence
                 // (which should be silently completed when a noteOn arrives).
-                if (currentIndex >= 0 && subsequences[currentIndex].isStopped() === false)
+                if (currentIndex >= 0 && span[currentIndex].isStopped() === false)
                 {
-                    subsequences[currentIndex].finishSilently();
+                    span[currentIndex].finishSilently();
                 }
             }
 
@@ -278,7 +274,7 @@ JI_NAMESPACE.assistant = (function (window)
                 {
                     if (currentIndex > 0)
                     {
-                        prevSubsequenceScoreMsDuration = subsequences[currentIndex].msPositionInScore - subsequences[currentIndex - 1].msPositionInScore;
+                        prevSubsequenceScoreMsDuration = span[currentIndex].msPositionInScore - span[currentIndex - 1].msPositionInScore;
                         durationFactor = (now - prevSubsequenceStartNow) / prevSubsequenceScoreMsDuration;
                         // durations in the subsequence are multiplied by durationFactor
                         subsequence.changeMessageTimestamps(durationFactor);
@@ -348,7 +344,7 @@ JI_NAMESPACE.assistant = (function (window)
             function handleController(mcd, controlData, value, usesSoloTrack, usesOtherTracks)
             {
                 var controlMessages = [], nControlMessages, i,
-                    tracks = mainSequence.tracks, nTracks = tracks.length;
+                    nTracks = allSubsequences[0].tracks.length;
 
                 if (usesSoloTrack && usesOtherTracks)
                 {
@@ -394,10 +390,10 @@ JI_NAMESPACE.assistant = (function (window)
                 {
                     silentlyCompleteCurrentlyPlayingSubsequence();
 
-                    if (nextIndex < endIndex && subsequences[nextIndex].restSubsequence !== undefined)
+                    if (nextIndex < endIndex && span[nextIndex].restSubsequence !== undefined)
                     {
                         currentIndex = nextIndex++;
-                        playSubsequence(subsequences[currentIndex], options);
+                        playSubsequence(span[currentIndex], options);
                     }
                     if (nextIndex === endIndex) // final barline
                     {
@@ -419,10 +415,10 @@ JI_NAMESPACE.assistant = (function (window)
                 {
                     silentlyCompleteCurrentlyPlayingSubsequence();
 
-                    if (nextIndex === startIndex || subsequences[nextIndex].chordSubsequence !== undefined)
+                    if (nextIndex === 0 || span[nextIndex].chordSubsequence !== undefined)
                     {
                         currentIndex = nextIndex++;
-                        subsequence = subsequences[currentIndex];
+                        subsequence = span[currentIndex];
                         if (overrideSoloPitch || overrideOtherTracksPitch || overrideSoloVelocity || overrideOtherTracksVelocity)
                         {
                             subsequence.overridePitchAndOrVelocity(mcd.NOTE_ON, options.livePerformersTrackIndex,
@@ -493,36 +489,72 @@ JI_NAMESPACE.assistant = (function (window)
             }
         },
 
-    // This function is called when options.assistedPerformance === true and the Go button is clicked (in the performance controls).
-    // If options.assistedPerformance === false, sequence.playSpan(...) is called instead.
+        // This function is called when options.assistedPerformance === true and the Go button is clicked (in the performance controls).
+        // If options.assistedPerformance === false, the main sequence.playSpan(...) is called instead.
+        // The assistant's allSubsequences array contains the whole piece as an array of sequence, with one sequence per performer's
+        // rest or chord, whereby consecutive rests in the performer's track have been merged.
+        // This function first constructs a span, which is the section of the allSubsequences array between fromMs and toMs.
+        // Creating the span does *not* change the data in allSubsequences. The start and end markers can therefore be moved between
+        // performances
         playSpan = function (outDevice, fromMs, toMs, svgTracksControl)
         {
-            function getIndex(subsequences, msPositionInScore)
+            function getSpan(allSubsequences, fromMs, toMs)
             {
-                var i = 0,
-                    nSubsequences = subsequences.length,
-                    subsequence = subsequences[0];
+                var nSubsequences = allSubsequences.length,
+                    i = nSubsequences - 1,
+                    subsequence = null,
+                    span = [];
 
-                while (i < nSubsequences && subsequence.msPositionInScore < msPositionInScore)
+                if (i > 0)
                 {
-                    i++;
-                    subsequence = subsequences[i];
+                    subsequence = allSubsequences[i];
+                    while (i > 0 && subsequence.msPositionInScore > fromMs)
+                    {
+                        --i;
+                        subsequence = allSubsequences[i];
+                    }
                 }
-                return i;
+
+                // subsequence.msPositionInScore <= fromMs
+                if (subsequence.restSubsequence !== undefined && subsequence.msPositionInScore < fromMs)
+                {
+                    subsequence = subsequence.afterSplit(fromMs); // afterSplit() returns a new restSubsequence starting at fromMs
+                }
+
+                span.push(subsequence); // the first subsequence
+
+                while (i < (nSubsequences - 1) && subsequence.msPositionInScore < toMs)
+                {
+                    ++i;
+                    subsequence = allSubsequences[i];
+                    span.push(subsequence);
+                }
+
+                // subsequence.msPositionInScore >= toMs
+                if (subsequence.msPositionInScore > toMs)
+                {
+                    span.pop();
+                    subsequence = span.pop();
+                    subsequence = subsequence.beforeSplit(toMs); // beforeSplit() returns a clone of the subsequence upto toMs
+                    span.push(subsequence);
+                }
+
+                return span;
             }
 
             setState("running");
             outputDevice = outDevice;
             tracksControl = svgTracksControl;
-            startIndex = getIndex(subsequences, fromMs);
-            endIndex = getIndex(subsequences, toMs); // the index of the (unplayed) end chord or rest or endBarline
+            span = getSpan(allSubsequences, fromMs, toMs);
+             
+            endIndex = span.length - 1;
             currentIndex = -1;
-            nextIndex = startIndex;
+            nextIndex = 0;
             prevSubsequenceStartNow = -1;
         },
 
-    // creats an Assistant, complete with private subsequences
-    // called when the Start button is clicked, and options.assistedPerformance === true
+        // creats an Assistant, complete with private subsequences
+        // called when the Start button is clicked, and options.assistedPerformance === true
         Assistant = function (sequence, apControlOptions, reportEndOfWholePerformance, reportMillisecondPosition)
         {
             if (!(this instanceof Assistant))
@@ -540,11 +572,10 @@ JI_NAMESPACE.assistant = (function (window)
 
             setState("stopped");
 
-            mainSequence = sequence;
             reportEndOfPerformance = reportEndOfWholePerformance;
             reportMsPosition = reportMillisecondPosition;
 
-            makeSubsequences(options.livePerformersTrackIndex, sequence);
+            allSubsequences = sequence.getSubsequences(options.livePerformersTrackIndex);
 
             // Starts an assisted performance 
             this.playSpan = playSpan;

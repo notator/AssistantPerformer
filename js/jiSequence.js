@@ -36,7 +36,9 @@ JI_NAMESPACE.sequence = (function (window)
         //      isPaused(),
         //      addTrack(newTrack),
         //      changeMessageTimestamps(durationFactor),
-        //      getSubsequences(livePerformersTrackIndex)
+        //      getSubsequences(livePerformersTrackIndex),
+        //      beforeSplit,
+        //      afterSplit
 
         this.setState("stopped");
     },
@@ -698,6 +700,134 @@ JI_NAMESPACE.sequence = (function (window)
             return subsequences;
         },
 
+        // returns a sequence equal to this one upto (including) toMs.
+        // the timestamps are relative to the start of the returned subsequence (i.e. not changed)
+        beforeSplit = function (toMs)
+        {
+            var returnSeq = new Sequence(this.msPositionInScore),
+                tracks = this.tracks, t, nTracks = tracks.length, track,
+                newTrack, nMoments, moment, iMom;
+
+            for (t = 0; t < nTracks; ++t)
+            {
+                newTrack = {};
+                newTrack.midiMoments = [];
+                track = tracks[t];
+                nMoments = track.midiMoments.length;
+                for (iMom = 0; iMom < nMoments; ++iMom)
+                {
+                    moment = track.midiMoments[iMom];
+                    if (moment.timestamp > toMs)
+                    {
+                        break;
+                    }
+                    newTrack.midiMoments.push(moment);
+                }
+                returnSeq.addTrack(newTrack);
+            }
+
+            return returnSeq;
+        },
+
+        // Returns a new restSubsequence which starts at fromMs
+        // The timestamps are relative to the start of the subsequence.
+        afterSplit = function (fromMs)
+        {
+            var returnSeq = new Sequence(fromMs),
+                tracks = this.tracks, t, nTracks = tracks.length, track,
+                newTrack, nMoments, moment, newMoment, message, messages,
+                iMom, nMessages, iMsg, newMsg, momentI;
+
+            function indexOfLastMomentBeforeFromMs(midiMoments, timestamp)
+            {
+                var nMoments = midiMoments.length, i, r;
+                for (i = nMoments - 1; i >= 0; --i)
+                {
+                    if (midiMoments[i].timestamp <= timestamp)
+                    {
+                        r = i;
+                        break;
+                    }
+                }
+                return r;
+            }
+
+            if (this.msPositionInScore >= fromMs || this.restSubsequence === undefined)
+            {
+                throw "Error: this must be a restSequence which begins before the split point.";
+            }
+
+            returnSeq.restSubsequence = true;
+            returnSeq.msPositionInScore = fromMs;
+
+            for (t = 0; t < nTracks; ++t)
+            {
+                newTrack = {};
+                newTrack.midiMoments = [];
+                track = tracks[t];
+                nMoments = track.midiMoments.length;
+
+                momentI = indexOfLastMomentBeforeFromMs(track.midiMoments, fromMs - this.msPositionInScore);
+                if (track.midiMoments[momentI].restStart !== undefined)
+                {
+                    newMoment = {};
+                    newMoment.restStart = true;
+                    newMoment.timestamp = 0;
+                    newMoment.messages = [];
+                    newMsg = {};
+                    newMsg.timestamp = 0;
+                    newMsg.msPositionInScore = this.msPositionInScore;
+                    newMsg.isEmpty = true;
+                    newMoment.messages.push(newMsg);
+                    newTrack.midiMoments.push(newMoment);
+                }
+
+                if (track.midiMoments[momentI].timestamp + this.msPositionInScore < fromMs)
+                {
+                    ++momentI;
+                }
+                for (iMom = momentI; iMom < nMoments; ++iMom)
+                {
+                    moment = track.midiMoments[iMom];
+                    messages = moment.messages;
+                    nMessages = moment.messages.length;
+
+                    newMoment = {};
+                    if (moment.restStart !== undefined)
+                    {
+                        newMoment.restStart = true;
+                    }
+                    else if (moment.chordStart !== undefined)
+                    {
+                        newMoment.chordStart = true;
+                    }
+                    newMoment.timestamp = moment.timestamp + this.msPositionInScore - fromMs;
+                    newMoment.messages = [];
+
+                    for (iMsg = 0; iMsg < nMessages; ++iMsg)
+                    {
+                        message = messages[iMsg];
+                        newMsg = {};
+                        newMsg.status = message.status;
+                        newMsg.data1 = message.data1;
+                        newMsg.data2 = message.data2;
+                        newMsg.command = message.command;
+                        newMsg.timestamp = newMoment.timestamp;
+                        if (message.msPositionInScore !== undefined)
+                        {
+                            newMsg.msPositionInScore = message.msPositionInScore;
+                        }
+                        newMoment.messages.push(newMsg);
+                    }
+                    newTrack.midiMoments.push(newMoment);
+                }
+                returnSeq.addTrack(newTrack);
+            }
+
+            return returnSeq;
+
+        },
+
         // Shifts the pitches in the whole performer's track up or down so that the lowest pitch in the first noteOn moment is newPitch.
         // Similarly with velocity.
         overridePitchAndOrVelocity = function (NOTE_ON_COMMAND, soloTrackIndex, newPitch, newVelocity,
@@ -819,6 +949,8 @@ JI_NAMESPACE.sequence = (function (window)
             changeMessageTimestamps: changeMessageTimestamps,
             revertMessageTimestamps: revertMessageTimestamps,
             getSubsequences: getSubsequences,
+            beforeSplit: beforeSplit,
+            afterSplit: afterSplit,
             overridePitchAndOrVelocity: overridePitchAndOrVelocity,
             finishSilently: finishSilently
         };
