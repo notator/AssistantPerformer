@@ -7,7 +7,7 @@
  *
  *  jiScore.js
  *  The JI_NAMESPACE.score namespace which defines the
- *    Score() constructor.
+ *    Score(callback) constructor.
  *  
  */
 
@@ -882,11 +882,11 @@ JI_NAMESPACE.score = (function (document)
         lastSystemTimeObjects = systems[systems.length - 1].staves[0].voices[0].timeObjects;
         finalBarlineInScore = lastSystemTimeObjects[lastSystemTimeObjects.length - 1]; // 'global' object
 
-//        if (speed !== _previousSpeed)
-//        {
-//            _previousSpeed = speed;
-//            setSystemMarkerParameters(systems);
-//        }
+        //        if (speed !== _previousSpeed)
+        //        {
+        //            _previousSpeed = speed;
+        //            setSystemMarkerParameters(systems);
+        //        }
 
         _previousSpeed = speed;
         setSystemMarkerParameters(systems);
@@ -971,11 +971,14 @@ JI_NAMESPACE.score = (function (document)
             // callback for auto scroll
             runningMarkerHeightChanged(runningMarker.getYCoordinates());
         }
-        else while (msPosition >= runningMarker.nextMsPosition())
+        else
         {
-            //console.log("score:advanceRunningMarker: calling runningMarker.incrementPosition(), msPosition=" + msPosition);
-            // this function can assume that the runningMarker's currentPosition can simply be incremented
-            runningMarker.incrementPosition();
+            while (msPosition >= runningMarker.nextMsPosition())
+            {
+                //console.log("score:advanceRunningMarker: calling runningMarker.incrementPosition(), msPosition=" + msPosition);
+                // this function can assume that the runningMarker's currentPosition can simply be incremented
+                runningMarker.incrementPosition();
+            }
         }
     },
 

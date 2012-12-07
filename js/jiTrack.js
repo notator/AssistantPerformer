@@ -17,7 +17,7 @@ JI_NAMESPACE.track = (function ()
 {
     "use strict";
 
-    var  
+    var 
     // An empty track is created. It contains an empty midiMoments array.
     Track = function ()
     {
@@ -30,6 +30,8 @@ JI_NAMESPACE.track = (function ()
         this.fromIndex = -1;
         this.currentIndex = -1;
         this.toIndex = -1;
+        this.currentLastTimestamp = -1;
+
         // defined in prototype:
         //     addMIDIMoment(midiMoment, sequencePositionInScore)
     },
@@ -43,13 +45,15 @@ JI_NAMESPACE.track = (function ()
 
     Track.prototype = (function ()
     {
-        var 
-        // A midiMoment can only be appended to the end of the track. 
-        addMIDIMoment = function (midiMoment, sequencePositionInScore)
+        var
+        // A midiMoment can only be appended to the end of the track.
+        // The midiMoment's timestamp is currently relative to the piece,
+        // but is changed here to be relative to its subsequence 
+        addMIDIMoment = function (midiMoment, subsequenceMsPositionInScore)
         {
             var 
             midiMoments = this.midiMoments,
-            currentLastTimestamp = -1, timestamp, oldMoment;
+            timestamp, oldMoment;
 
             function subtractTime(midiMoment, subsequenceMsPositionInScore)
             {
@@ -62,15 +66,15 @@ JI_NAMESPACE.track = (function ()
                 }
             }
 
-            subtractTime(midiMoment, sequencePositionInScore);
+            subtractTime(midiMoment, subsequenceMsPositionInScore);
             timestamp = midiMoment.timestamp;
 
-            if (timestamp > currentLastTimestamp)
+            if (timestamp > this.currentLastTimestamp)
             {
-                currentLastTimestamp = timestamp;
+                this.currentLastTimestamp = timestamp;
                 midiMoments.push(midiMoment); // can be a rest, containing one 'empty midiMessage'
             }
-            else if (timestamp === currentLastTimestamp)
+            else if (timestamp === this.currentLastTimestamp)
             {
                 oldMoment = midiMoments[midiMoments.length - 1];
                 oldMoment.mergeMIDIMoment(midiMoment);

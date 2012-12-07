@@ -51,17 +51,17 @@ JI_NAMESPACE.assistant = (function (window)
         reportEndOfPerformance, // callback
         reportMsPosition, // callback
 
-        // An array of subsequence. Each subsequence is a Sequence.
-        // There is one subsequence for each chord or rest symbol in the live performer's track, whereby
-        // consecutive rests have one subsequence.
+    // An array of subsequence. Each subsequence is a Sequence.
+    // There is one subsequence for each chord or rest symbol in the live performer's track, whereby
+    // consecutive rests have one subsequence.
         allSubsequences,
 
-        // The array of subsequence actually performed (from fromMs to toMs). Constructed in playSpan() from allSubsequences.
-        // The first subsequence in span may be the second part of a subsequence which has been split at fromMs.
-        // The last subsequence in span may be the first part of a subsequence which has been split at toMs.
-        span, 
+    // The array of subsequence actually performed (from fromMs to toMs). Constructed in playSpan() from allSubsequences.
+    // The first subsequence in span may be the second part of a subsequence which has been split at fromMs.
+    // The last subsequence in span may be the first part of a subsequence which has been split at toMs.
+        span,
 
-        // these variables are initialized by playSpan() and used by handleMidiIn() 
+    // these variables are initialized by playSpan() and used by handleMidiIn() 
         endIndex = -1,
         currentIndex = -1, // the index of the currently playing subsequence (which will be stopped when a noteOn or noteOff arrives).
         nextIndex = 0, // the index of the subsequence which will be played when a noteOn msg arrives 
@@ -158,8 +158,8 @@ JI_NAMESPACE.assistant = (function (window)
             return paused === true;
         },
 
-        // Can only be called while running
-        // (stopped === false)
+    // Can only be called while running
+    // (stopped === false)
         stop = function ()
         {
             var i, nSubsequences = span.length;
@@ -240,17 +240,15 @@ JI_NAMESPACE.assistant = (function (window)
                         type = UNKNOWN;
                         break;
                 }
-                if (type === UNKNOWN)
-                {
-                    if (nextIndex === endIndex)
-                    {
-                        type = END_OF_SEQUENCE;
-                    }
-                    else if (nextIndex < 0 || nextIndex >= span.length)
-                    {
-                        type = ILLEGAL_INDEX;
-                    }
-                }
+                //                if (nextIndex === endIndex)
+                //                {
+                //                    type = END_OF_SEQUENCE;
+                //                }
+                //                else if (nextIndex < 0 || nextIndex >= span.length)
+                //                {
+                //                    type = ILLEGAL_INDEX;
+                //                }
+
                 return type;
             }
 
@@ -258,9 +256,21 @@ JI_NAMESPACE.assistant = (function (window)
             {
                 // currentIndex is the index of the currently playing subsequence
                 // (which should be silently completed when a noteOn arrives).
-                if (currentIndex >= 0 && span[currentIndex].isStopped() === false)
+                if (currentIndex >= 0 && currentIndex < span.length)
                 {
                     span[currentIndex].finishSilently();
+                }
+            }
+
+            function reportEndOfSubsequence()
+            {
+                if (currentIndex === endIndex)
+                {
+                    if (currentLivePerformersKeyPitch === -1) // key is up
+                    {
+                        stop();
+                    }
+                    // else wait for noteOff event (see handleNoteOff below).
                 }
             }
 
@@ -282,7 +292,7 @@ JI_NAMESPACE.assistant = (function (window)
                     prevSubsequenceStartNow = now; // used only with the relative durations option
                 }
                 // if options.assistantUsesAbsoluteDurations === true, the durations will already be correct in all subsequences.
-                subsequence.playSpan(outputDevice, 0, Number.MAX_VALUE, tracksControl, null, reportMsPosition);
+                subsequence.playSpan(outputDevice, 0, Number.MAX_VALUE, tracksControl, reportEndOfSubsequence, reportMsPosition);
             }
 
             function handleUnknownMessage(msg)
@@ -390,15 +400,16 @@ JI_NAMESPACE.assistant = (function (window)
                 {
                     silentlyCompleteCurrentlyPlayingSubsequence();
 
-                    if (nextIndex < endIndex && span[nextIndex].restSubsequence !== undefined)
+                    if (currentIndex === endIndex) // see reportEndOfSpan() above 
+                    {
+                        stop();
+                    }
+                    else if(!(currentIndex === 0 && span[0].restSubsequence !== undefined)) // do nothing if the first subsequence was a rest
                     {
                         currentIndex = nextIndex++;
                         playSubsequence(span[currentIndex], options);
                     }
-                    if (nextIndex === endIndex) // final barline
-                    {
-                        reportEndOfPerformance();
-                    }
+
                     currentLivePerformersKeyPitch = -1;
                 }
             }
@@ -489,20 +500,21 @@ JI_NAMESPACE.assistant = (function (window)
             }
         },
 
-        // This function is called when options.assistedPerformance === true and the Go button is clicked (in the performance controls).
-        // If options.assistedPerformance === false, the main sequence.playSpan(...) is called instead.
-        // The assistant's allSubsequences array contains the whole piece as an array of sequence, with one sequence per performer's
-        // rest or chord, whereby consecutive rests in the performer's track have been merged.
-        // This function first constructs a span, which is the section of the allSubsequences array between fromMs and toMs.
-        // Creating the span does *not* change the data in allSubsequences. The start and end markers can therefore be moved between
-        // performances
+    // This function is called when options.assistedPerformance === true and the Go button is clicked (in the performance controls).
+    // If options.assistedPerformance === false, the main sequence.playSpan(...) is called instead.
+    // The assistant's allSubsequences array contains the whole piece as an array of sequence, with one sequence per performer's
+    // rest or chord, whereby consecutive rests in the performer's track have been merged.
+    // This function first constructs a span, which is the section of the allSubsequences array between fromMs and toMs.
+    // Creating the span does *not* change the data in allSubsequences. The start and end markers can therefore be moved between
+    // performances
         playSpan = function (outDevice, fromMs, toMs, svgTracksControl)
         {
             function getSpan(allSubsequences, fromMs, toMs)
             {
                 var nSubsequences = allSubsequences.length,
                     i = nSubsequences - 1,
-                    subsequence = null,
+                    maxIndex = i, lastSubsequence,
+                    subsequence = null, finalBarline,
                     span = [];
 
                 if (i > 0)
@@ -523,21 +535,30 @@ JI_NAMESPACE.assistant = (function (window)
 
                 span.push(subsequence); // the first subsequence
 
-                while (i < (nSubsequences - 1) && subsequence.msPositionInScore < toMs)
+                while (i < maxIndex)
                 {
                     ++i;
                     subsequence = allSubsequences[i];
+                    if (subsequence.msPositionInScore >= toMs)
+                    {
+                        break;
+                    }
                     span.push(subsequence);
                 }
 
-                // subsequence.msPositionInScore >= toMs
-                if (subsequence.msPositionInScore > toMs)
+                lastSubsequence = span.pop();
+
+                // lastSubsequence.msPositionInScore < toMs
+                if (lastSubsequence.restSubsequence !== undefined)
                 {
-                    span.pop();
-                    subsequence = span.pop();
-                    subsequence = subsequence.beforeSplit(toMs); // beforeSplit() returns a clone of the subsequence upto toMs
-                    span.push(subsequence);
+                    // beforeSplit() returns a new subsequence which is
+                    // a copy of the beginning of lastSubsequence up to (but not including) toMs,
+                    // to which a "finalBarline" moment has been added.
+                    lastSubsequence = lastSubsequence.beforeSplit(toMs);
                 }
+
+                //finalBarline = finalBarlineSubsequence(lastSubsequence.tracks.length, toMs);
+                span.push(lastSubsequence);
 
                 return span;
             }
@@ -546,15 +567,15 @@ JI_NAMESPACE.assistant = (function (window)
             outputDevice = outDevice;
             tracksControl = svgTracksControl;
             span = getSpan(allSubsequences, fromMs, toMs);
-             
+
             endIndex = span.length - 1;
             currentIndex = -1;
             nextIndex = 0;
             prevSubsequenceStartNow = -1;
         },
 
-        // creats an Assistant, complete with private subsequences
-        // called when the Start button is clicked, and options.assistedPerformance === true
+    // creats an Assistant, complete with private subsequences
+    // called when the Start button is clicked, and options.assistedPerformance === true
         Assistant = function (sequence, apControlOptions, reportEndOfWholePerformance, reportMillisecondPosition)
         {
             if (!(this instanceof Assistant))

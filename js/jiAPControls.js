@@ -372,9 +372,9 @@ JI_NAMESPACE.apControls = (function (document, window)
             svgTracksControl.setDisabled(false);
         },
 
-    // callback called when a performing sequence has played the last message in the span.
-    // or when the assistant stops (either stopped or has played last subsequence).
-        reportEndOfSpan = function ()
+        // callback called when a performing sequence is stopped or has played its last message,
+        // or when the assistant is stopped or has played its last subsequence.
+        reportEndOfPerformance = function ()
         {
             setStopped();
             // The following line is important.
@@ -385,7 +385,7 @@ JI_NAMESPACE.apControls = (function (document, window)
     // optional callback: Called by a performing sequence, and reports
     // the timestamp (=msPosition) of the MIDIMoment curently being sent.
     // When all the MidiMessages in the span have been played,
-    // reportEndOfSpan() is called (see above).
+    // reportEndOfPerformance() is called (see above).
         reportMsPos = function (msPosition)
         {
             //console.log("jiAPControls: calling score.advanceRunningMarker(msPosition), msPosition=" + msPosition);
@@ -484,7 +484,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                     score.moveStartMarkerToTop(svgPagesDiv);
 
                     sequence.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
-                        svgTracksControl, reportEndOfSpan, reportMsPos);
+                        svgTracksControl, reportEndOfPerformance, reportMsPos);
                 }
 
                 cl.pauseUnselected.setAttribute("opacity", METAL);
@@ -979,7 +979,7 @@ JI_NAMESPACE.apControls = (function (document, window)
 
                 if (options.assistedPerformance === true)
                 {// this constructor consumes sequence, resetting midiMoment timestamps relative to the start of their subsection.
-                    assistant = new jiAssistant.Assistant(sequence, options, reportEndOfSpan, reportMsPos);
+                    assistant = new jiAssistant.Assistant(sequence, options, reportEndOfPerformance, reportMsPos);
                 }
             }
         }
@@ -1153,7 +1153,7 @@ JI_NAMESPACE.apControls = (function (document, window)
             {
                 // This constructor resets midiMoment timestamps relative to the start of their subsequence.
                 // The sequence therefore needs to be reloaded when the options (performer's track index) change.    
-                assistant = new jiAssistant.Assistant(sequence, options, reportEndOfSpan, reportMsPos);
+                assistant = new jiAssistant.Assistant(sequence, options, reportEndOfPerformance, reportMsPos);
             }
 
             window.scrollTo(0, 630); // 600 is the absolute position of the controlPanel div (!)

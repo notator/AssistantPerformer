@@ -19,6 +19,7 @@ window.addEventListener("load", function ()
 
     var apControls = JI_NAMESPACE.apControls,
         jiAssistant = JI_NAMESPACE.assistant,
+        jiSequence = JI_NAMESPACE.sequence,
         jiMIDIChord = JI_NAMESPACE.midiChord,
         selectInput = document.getElementById("midiInputDeviceSelector"),
         selectOutput = document.getElementById("midiOutputDeviceSelector"),
@@ -98,6 +99,7 @@ window.addEventListener("load", function ()
 
     apControls.init();
     jiAssistant.init(messageCreationData);
+    jiSequence.init(messageCreationData);
     jiMIDIChord.init(messageCreationData);
 
 }, false);
