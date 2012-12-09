@@ -523,7 +523,7 @@ JI_NAMESPACE.sequence = (function (window)
         // Returns an array. Each subsequence in the array is a Sequence, whose tracks all begin at timestamp = 0ms.
         // Each subsequence has an msPositionInScore attribute, which is first allocated to empty subsequences, and
         // then used when filling them.
-        // A subsequence is first created for each chord or rest and for the final barline in the live performer's track.
+        // A subsequence is first created for each chord or rest symbol and for the final barline in the live performer's track.
         // The final barline has a subsequence with a restSubsequence attribute.
         // A midiMoment which starts a chord sequence has a chordStart attribute (boolean, true).
         // A midiMoment which starts a rest sequence has a restStart attribute (boolean, true).

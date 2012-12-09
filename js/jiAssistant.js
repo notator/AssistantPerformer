@@ -252,49 +252,6 @@ JI_NAMESPACE.assistant = (function (window)
                 return type;
             }
 
-            function silentlyCompleteCurrentlyPlayingSubsequence()
-            {
-                // currentIndex is the index of the currently playing subsequence
-                // (which should be silently completed when a noteOn arrives).
-                if (currentIndex >= 0 && currentIndex < span.length)
-                {
-                    span[currentIndex].finishSilently();
-                }
-            }
-
-            function reportEndOfSubsequence()
-            {
-                if (currentIndex === endIndex)
-                {
-                    if (currentLivePerformersKeyPitch === -1) // key is up
-                    {
-                        stop();
-                    }
-                    // else wait for noteOff event (see handleNoteOff below).
-                }
-            }
-
-            function playSubsequence(subsequence, options)
-            {
-                var now = window.performance.webkitNow(), // in the time frame used by sequences
-                    prevSubsequenceScoreMsDuration,
-                    durationFactor;
-
-                if (options.assistantUsesAbsoluteDurations === false)
-                {
-                    if (currentIndex > 0)
-                    {
-                        prevSubsequenceScoreMsDuration = span[currentIndex].msPositionInScore - span[currentIndex - 1].msPositionInScore;
-                        durationFactor = (now - prevSubsequenceStartNow) / prevSubsequenceScoreMsDuration;
-                        // durations in the subsequence are multiplied by durationFactor
-                        subsequence.changeMessageTimestamps(durationFactor);
-                    }
-                    prevSubsequenceStartNow = now; // used only with the relative durations option
-                }
-                // if options.assistantUsesAbsoluteDurations === true, the durations will already be correct in all subsequences.
-                subsequence.playSpan(outputDevice, 0, Number.MAX_VALUE, tracksControl, reportEndOfSubsequence, reportMsPosition);
-            }
-
             function handleUnknownMessage(msg)
             {
                 console.log("Unknown midi message, command:" + msg.command.toString() + ", data1:" + msg.data1.toString() + ", data2:" + msg.data2.toString());
@@ -392,6 +349,58 @@ JI_NAMESPACE.assistant = (function (window)
                 }
             }
 
+            function silentlyCompleteCurrentlyPlayingSubsequence()
+            {
+                // currentIndex is the index of the currently playing subsequence
+                // (which should be silently completed when a noteOn arrives).
+                if (currentIndex >= 0 && currentIndex < span.length)
+                {
+                    span[currentIndex].finishSilently();
+                }
+            }
+
+            function reportEndOfSubsequence()
+            {
+                if (currentLivePerformersKeyPitch === -1) // key is up
+                {
+                    if (currentIndex === endIndex)
+                    {
+                        stop();
+                    }
+                    else if (span[nextIndex].chordSubsequence !== undefined)
+                    {
+                        reportMsPosition(span[nextIndex].msPositionInScore);
+                    }
+                }
+                else if (nextIndex <= endIndex && span[nextIndex].restSubsequence !== undefined)
+                {
+                    reportMsPosition(span[nextIndex].msPositionInScore);
+                }
+                // else wait for noteOff event (see handleNoteOff below).
+            }
+
+            function playSubsequence(subsequence, options)
+            {
+                var now = window.performance.webkitNow(), // in the time frame used by sequences
+                    prevSubsequenceScoreMsDuration,
+                    durationFactor;
+
+                if (options.assistantUsesAbsoluteDurations === false)
+                {
+                    if (currentIndex > 0)
+                    {
+                        prevSubsequenceScoreMsDuration = span[currentIndex].msPositionInScore - span[currentIndex - 1].msPositionInScore;
+                        durationFactor = (now - prevSubsequenceStartNow) / prevSubsequenceScoreMsDuration;
+                        // durations in the subsequence are multiplied by durationFactor
+                        subsequence.changeMessageTimestamps(durationFactor);
+                    }
+                    prevSubsequenceStartNow = now; // used only with the relative durations option
+                }
+
+                // if options.assistantUsesAbsoluteDurations === true, the durations will already be correct in all subsequences.
+                subsequence.playSpan(outputDevice, 0, Number.MAX_VALUE, tracksControl, reportEndOfSubsequence, reportMsPosition);
+            }
+            
             function handleNoteOff(msg)
             {
                 //console.log("NoteOff, pitch:", msg.data1.toString(), " velocity:", msg.data2.toString());
@@ -404,10 +413,14 @@ JI_NAMESPACE.assistant = (function (window)
                     {
                         stop();
                     }
-                    else if(!(currentIndex === 0 && span[0].restSubsequence !== undefined)) // do nothing if the first subsequence was a rest
+                    else if (span[nextIndex].restSubsequence !== undefined) // only play the next subequence if it is a restSubsequence
                     {
                         currentIndex = nextIndex++;
                         playSubsequence(span[currentIndex], options);
+                    }
+                    else if(nextIndex <= endIndex)
+                    {
+                        reportMsPosition(span[nextIndex].msPositionInScore);
                     }
 
                     currentLivePerformersKeyPitch = -1;
@@ -426,7 +439,7 @@ JI_NAMESPACE.assistant = (function (window)
                 {
                     silentlyCompleteCurrentlyPlayingSubsequence();
 
-                    if (nextIndex === 0 || span[nextIndex].chordSubsequence !== undefined)
+                    if (nextIndex === 0 || (nextIndex <= endIndex && span[nextIndex].chordSubsequence !== undefined))
                     {
                         currentIndex = nextIndex++;
                         subsequence = span[currentIndex];
@@ -514,7 +527,7 @@ JI_NAMESPACE.assistant = (function (window)
                 var nSubsequences = allSubsequences.length,
                     i = nSubsequences - 1,
                     maxIndex = i, lastSubsequence,
-                    subsequence = null, finalBarline,
+                    subsequence = null,
                     span = [];
 
                 if (i > 0)
