@@ -792,59 +792,59 @@ JI_NAMESPACE.sequence = (function (window)
                 track = tracks[t];
                 nMoments = track.midiMoments.length;
 
-                momentI = indexOfLastMomentBeforeFromMs(track.midiMoments, fromMs - this.msPositionInScore);
-                if (track.midiMoments[momentI].restStart !== undefined)
-                {
-                    newMoment = {};
-                    newMoment.restStart = true;
-                    newMoment.timestamp = 0;
-                    newMoment.messages = [];
-                    //(command, data1, data2, channel, timestamp)
-                    newMsg = MCD.createMIDIMessage(0, 0, 0, t, 0); // newMsg.timestamp = 0;
-                    newMsg.msPositionInScore = this.msPositionInScore;
-                    newMsg.isEmpty = true;
-                    newMoment.messages.push(newMsg);
-                    newTrack.midiMoments.push(newMoment);
-                }
+                newMoment = {};
+                newMoment.restStart = true;
+                newMoment.timestamp = 0;
+                newMoment.messages = [];
+                //(command, data1, data2, channel, timestamp)
+                newMsg = MCD.createMIDIMessage(0, 0, 0, t, 0); // newMsg.timestamp = 0;
+                newMsg.msPositionInScore = this.msPositionInScore;
+                newMsg.isEmpty = true;
+                newMoment.messages.push(newMsg);
+                newTrack.midiMoments.push(newMoment);
 
-                if (track.midiMoments[momentI].timestamp + this.msPositionInScore < fromMs)
+                if (nMoments > 0)
                 {
-                    ++momentI;
-                }
-                for (iMom = momentI; iMom < nMoments; ++iMom)
-                {
-                    moment = track.midiMoments[iMom];
-                    messages = moment.messages;
-                    nMessages = moment.messages.length;
-
-                    newMoment = {};
-                    if (moment.restStart !== undefined)
+                    momentI = indexOfLastMomentBeforeFromMs(track.midiMoments, fromMs - this.msPositionInScore);
+                    if (track.midiMoments[momentI].timestamp + this.msPositionInScore < fromMs)
                     {
-                        newMoment.restStart = true;
+                        ++momentI;
                     }
-                    else if (moment.chordStart !== undefined)
+                    for (iMom = momentI; iMom < nMoments; ++iMom)
                     {
-                        newMoment.chordStart = true;
-                    }
-                    newMoment.timestamp = moment.timestamp + this.msPositionInScore - fromMs;
-                    newMoment.messages = [];
+                        moment = track.midiMoments[iMom];
+                        messages = moment.messages;
+                        nMessages = moment.messages.length;
 
-                    for (iMsg = 0; iMsg < nMessages; ++iMsg)
-                    {
-                        message = messages[iMsg];
-                        //createMIDIMessage(command, data1, data2, channel, timestamp)
-                        newMsg = MCD.createMIDIMessage(message.command, message.data1, message.data2, message.channel, newMoment.timestamp);
-                        if (message.msPositionInScore !== undefined)
+                        newMoment = {};
+                        if (moment.restStart !== undefined)
                         {
-                            newMsg.msPositionInScore = message.msPositionInScore;
+                            newMoment.restStart = true;
                         }
-                        if (message.isEmpty !== undefined)
+                        else if (moment.chordStart !== undefined)
                         {
-                            newMsg.isEmpty = true;
+                            newMoment.chordStart = true;
                         }
-                        newMoment.messages.push(newMsg);
+                        newMoment.timestamp = moment.timestamp + this.msPositionInScore - fromMs;
+                        newMoment.messages = [];
+
+                        for (iMsg = 0; iMsg < nMessages; ++iMsg)
+                        {
+                            message = messages[iMsg];
+                            //createMIDIMessage(command, data1, data2, channel, timestamp)
+                            newMsg = MCD.createMIDIMessage(message.command, message.data1, message.data2, message.channel, newMoment.timestamp);
+                            if (message.msPositionInScore !== undefined)
+                            {
+                                newMsg.msPositionInScore = message.msPositionInScore;
+                            }
+                            if (message.isEmpty !== undefined)
+                            {
+                                newMsg.isEmpty = true;
+                            }
+                            newMoment.messages.push(newMsg);
+                        }
+                        newTrack.midiMoments.push(newMoment);
                     }
-                    newTrack.midiMoments.push(newMoment);
                 }
                 returnSeq.addTrack(newTrack);
             }
