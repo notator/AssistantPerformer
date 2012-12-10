@@ -32,10 +32,18 @@ JI_NAMESPACE.score = (function (document)
     // The frames around each svgPage
     svgFrames = [],
 
+    viewBoxScale,
+
     palettes = [],
 
     // See comments in the publicAPI definition at the bottom of this file.
     systems = [], // an array of all the systems
+
+    // Set to null in getEmptyPagesAndSystems() -- for a non-assisted performance
+    // Set to the assistant's subsequences when preparing an assisted performance.
+    // The assistant's subsequences are consulted when setting the positions of the start and end markers.
+    assistantsSubsequences = null,
+    livePerformersTrackIndex = -1,
 
     startMarker,
     runningMarker,
@@ -225,6 +233,63 @@ JI_NAMESPACE.score = (function (document)
             return timeObject;
         }
 
+        // returns the first argument if it lies within a soloists rest,
+        // otherwise the timeObject for the following rest in the soloists part.
+        function findNextRestTimeObjectInVoice(timeObject, system, voiceIndex)
+        {
+            var i, nTimeObjects, returnTimeObject = null, timeObjects = null, inChord, x;
+
+            function findSoloistsTimeObjects(system, voiceIndex)
+            {
+                var i, nStaves = system.staves.length, j, nVoices, vIndex = 0, timeObjects = null;
+                for (i = 0; i < nStaves; ++i)
+                {
+                    nVoices = system.staves[i].voices.length;
+                    for (j = 0; j < nVoices; ++j)
+                    {
+                        if (vIndex === voiceIndex)
+                        {
+                            timeObjects = system.staves[i].voices[j].timeObjects;
+                            break;
+                        }
+                        ++vIndex;
+                    }
+                    if (timeObjects !== null)
+                    {
+                        break;
+                    }
+                }
+                return timeObjects;
+            }
+
+            timeObjects = findSoloistsTimeObjects(system, voiceIndex);
+
+            nTimeObjects = timeObjects.length;
+            inChord = (timeObjects[0].chordDef !== undefined);
+            x = timeObject.alignmentX;
+            for (i = 1; i < nTimeObjects; ++i)
+            {
+                if (inChord && timeObjects[i - 1].alignmentX <= x && timeObjects[i].alignmentX > x)
+                {
+                    returnTimeObject = timeObjects[i];
+                    break;
+                }
+                if (timeObjects[i - 1].alignmentX > x)
+                {
+                    break;
+                }
+                inChord = (timeObjects[i].chordDef !== undefined);
+            }
+
+            if (returnTimeObject === null)
+            {   // The existing timeObject is within a soloist's rest, so can be used
+                // as the position of the end marker.
+                returnTimeObject = timeObject;
+            }
+
+            return returnTimeObject;
+        }
+
         systemIndex = findSystemIndex(x, y);
         if (systemIndex !== undefined)
         {
@@ -232,6 +297,23 @@ JI_NAMESPACE.score = (function (document)
             staffIndex = findStaffIndex(y, system.staves);
             voiceIndex = findVoiceIndex(y, system.staves[staffIndex].voices);
             timeObject = findTimeObject(x, system.staves[staffIndex].voices[voiceIndex].timeObjects);
+
+            // timeObject is now the next chord or rest to the right of the click in any voice.
+
+            if (livePerformersTrackIndex >= 0)
+            {
+                if (state === "settingEnd")
+                {
+                    // if the timeObject happens during a chord in the livePerformersTrack, move it to the following rest.
+                    timeObject = findNextRestTimeObjectInVoice(timeObject, system, livePerformersTrackIndex);
+                }
+                else // state === "settingStart"
+                {   // replace this clause with the correct code for state==="settingStart" later.
+                    staffIndex = findStaffIndex(y, system.staves);
+                    voiceIndex = findVoiceIndex(y, system.staves[staffIndex].voices);
+                    timeObject = findTimeObject(x, system.staves[staffIndex].voices[voiceIndex].timeObjects);
+                }
+            }
 
             switch (state)
             {
@@ -303,7 +385,7 @@ JI_NAMESPACE.score = (function (document)
     {
         var system, embeddedSvgPages, nPages, totalSysNumber, viewBoxOriginY,
             i, j,
-            sysNumber, svgPage, svgElem, viewBoxScale, svgChildren, systemID,
+            sysNumber, svgPage, svgElem, svgChildren, systemID,
             childID, currentFrame, pageHeight;
 
         function resetContent()
@@ -489,6 +571,12 @@ JI_NAMESPACE.score = (function (document)
 
         /*************** end of getEmptyPagesAndSystems function definitions *****************************/
 
+        // Initially there is no assistant (a non-assisted performance).
+        // These value are changed when/if the assistant has been constructed.
+        // They are consulted when setting the positions of start and end markers.
+        assistantsSubsequences = null;
+        livePerformersTrackIndex = -1;
+
         resetContent();
 
         getPalettes();
@@ -529,6 +617,16 @@ JI_NAMESPACE.score = (function (document)
             pageHeight = parseInt(svgElem.getAttribute('height'));
             viewBoxOriginY += pageHeight;
         }
+    },
+
+    // Initially there is no assistant (a non-assisted performance): livePerformersTrackIndex is -1, and
+    // assistantsSubsequences is null.
+    // This function is called when/if the assistant has been constructed, complete with its subsequences.
+    // The score consults the assistantsData when setting the positions of start and end markers.
+    getAssistantsData = function (soloistsTrackIndex, subsequences)
+    {
+        livePerformersTrackIndex = soloistsTrackIndex;
+        assistantsSubsequences = subsequences;
     },
 
     // Gets the timeObjects. 
@@ -1129,6 +1227,7 @@ JI_NAMESPACE.score = (function (document)
         this.svgFrames = svgFrames;
 
         this.getEmptyPagesAndSystems = getEmptyPagesAndSystems;
+        this.getAssistantsData = getAssistantsData;
 
         // loads timeObjects
         this.getTimeObjects = getTimeObjects;

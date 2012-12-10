@@ -372,8 +372,8 @@ JI_NAMESPACE.apControls = (function (document, window)
             svgTracksControl.setDisabled(false);
         },
 
-        // callback called when a performing sequence is stopped or has played its last message,
-        // or when the assistant is stopped or has played its last subsequence.
+    // callback called when a performing sequence is stopped or has played its last message,
+    // or when the assistant is stopped or has played its last subsequence.
         reportEndOfPerformance = function ()
         {
             setStopped();
@@ -1154,6 +1154,9 @@ JI_NAMESPACE.apControls = (function (document, window)
                 // This constructor resets midiMoment timestamps relative to the start of their subsequence.
                 // The sequence therefore needs to be reloaded when the options (performer's track index) change.    
                 assistant = new jiAssistant.Assistant(sequence, options, reportEndOfPerformance, reportMsPos);
+
+                // The assistant's subsequences are consulted (not changed) while setting start and end markers.
+                score.getAssistantsData(options.livePerformersTrackIndex, assistant.subsequences);
             }
 
             window.scrollTo(0, 630); // 600 is the absolute position of the controlPanel div (!)

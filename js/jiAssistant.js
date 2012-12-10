@@ -400,7 +400,7 @@ JI_NAMESPACE.assistant = (function (window)
                 // if options.assistantUsesAbsoluteDurations === true, the durations will already be correct in all subsequences.
                 subsequence.playSpan(outputDevice, 0, Number.MAX_VALUE, tracksControl, reportEndOfSubsequence, reportMsPosition);
             }
-            
+
             function handleNoteOff(msg)
             {
                 //console.log("NoteOff, pitch:", msg.data1.toString(), " velocity:", msg.data2.toString());
@@ -418,7 +418,7 @@ JI_NAMESPACE.assistant = (function (window)
                         currentIndex = nextIndex++;
                         playSubsequence(span[currentIndex], options);
                     }
-                    else if(nextIndex <= endIndex)
+                    else if (nextIndex <= endIndex)
                     {
                         reportMsPosition(span[nextIndex].msPositionInScore);
                     }
@@ -624,6 +624,8 @@ JI_NAMESPACE.assistant = (function (window)
 
             this.isStopped = isStopped; // isStopped()
             this.isPaused = isPaused; // isPaused()
+
+            this.subsequences = allSubsequences; // consulted by score when setting start and end marker positions.
         },
 
         publicAPI =
