@@ -407,6 +407,8 @@ JI_NAMESPACE.assistant = (function (window)
 
                 if (msg.data1 === currentLivePerformersKeyPitch)
                 {
+                    currentLivePerformersKeyPitch = -1;
+
                     silentlyCompleteCurrentlyPlayingSubsequence();
 
                     if (currentIndex === endIndex) // see reportEndOfSpan() above 
@@ -422,8 +424,6 @@ JI_NAMESPACE.assistant = (function (window)
                     {
                         reportMsPosition(span[nextIndex].msPositionInScore);
                     }
-
-                    currentLivePerformersKeyPitch = -1;
                 }
             }
 

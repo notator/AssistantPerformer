@@ -111,7 +111,7 @@ JI_NAMESPACE.score = (function (document)
             x = e.pageX,
             y = e.pageY + frame.originY,
             systemIndex, system,
-            staffIndex, voiceIndex, timeObject;
+            staffIndex, voiceIndex, timeObject, trackIndex;
 
         // x and y now use the <body> element as their frame of reference.
         // this is the same frame of reference as in the systems.
@@ -233,11 +233,12 @@ JI_NAMESPACE.score = (function (document)
             return timeObject;
         }
 
-        // returns the first argument if it lies within a soloists rest,
-        // otherwise the timeObject for the following rest in the soloists part.
+        // If the timeObject argument has the same alignmentX as a soloist's chord or rest, or lies
+        // within a soloist's rest, it is returned unchanged. Otherwise the timeObject for the following
+        // chord or rest in the soloists part is returned.
         function findNextRestTimeObjectInVoice(timeObject, system, voiceIndex)
         {
-            var i, nTimeObjects, returnTimeObject = null, timeObjects = null, inChord, x;
+            var i, nTimeObjects, returnTimeObject = null, timeObjects = null, x;
 
             function findSoloistsTimeObjects(system, voiceIndex)
             {
@@ -264,30 +265,61 @@ JI_NAMESPACE.score = (function (document)
 
             timeObjects = findSoloistsTimeObjects(system, voiceIndex);
 
-            nTimeObjects = timeObjects.length;
-            inChord = (timeObjects[0].chordDef !== undefined);
             x = timeObject.alignmentX;
-            for (i = 1; i < nTimeObjects; ++i)
+            nTimeObjects = timeObjects.length;
+            for (i = 0; i < nTimeObjects; ++i)
             {
-                if (inChord && timeObjects[i - 1].alignmentX <= x && timeObjects[i].alignmentX > x)
+                if (timeObjects[i].alignmentX === x)
                 {
-                    returnTimeObject = timeObjects[i];
+                    // In all tracks, the last timeObject in timeObjects is the final barline (a rest with zero duration),
+                    // so we arrive here when timeObject is the final barline, and i < (nTimeObjects - 1) below.
+                    returnTimeObject = timeObject;
                     break;
                 }
-                if (timeObjects[i - 1].alignmentX > x)
+                // i is always less than (nTimeObjects - 1) here
+                if (timeObjects[i].alignmentX < x && timeObjects[i + 1].alignmentX > x)
+                {
+                    if (timeObjects[i].chordDef !== undefined)
+                    {
+                        returnTimeObject = timeObjects[i + 1];
+                    }
+                    else
+                    {
+                        returnTimeObject = timeObject;
+                    }
+                    break;
+                }
+                if (timeObjects[i].alignmentX > x)
                 {
                     break;
                 }
-                inChord = (timeObjects[i].chordDef !== undefined);
-            }
-
-            if (returnTimeObject === null)
-            {   // The existing timeObject is within a soloist's rest, so can be used
-                // as the position of the end marker.
-                returnTimeObject = timeObject;
             }
 
             return returnTimeObject;
+        }
+
+        function findTrackIndex(system, staffIndex, voiceIndex)
+        {
+            var i, nStaves = system.staves.length,
+            j, nVoices, trackIndex = -1;
+
+            for (i = 0; i < nStaves; ++i)
+            {
+                nVoices = system.staves[i].voices.length;
+                for (j = 0; j < nVoices; ++j)
+                {
+                    ++trackIndex;
+                    if (i === staffIndex && j === voiceIndex)
+                    {
+                        break;
+                    }
+                }
+                if (i === staffIndex)
+                {
+                    break;
+                }
+            }
+            return trackIndex;
         }
 
         systemIndex = findSystemIndex(x, y);
@@ -297,10 +329,11 @@ JI_NAMESPACE.score = (function (document)
             staffIndex = findStaffIndex(y, system.staves);
             voiceIndex = findVoiceIndex(y, system.staves[staffIndex].voices);
             timeObject = findTimeObject(x, system.staves[staffIndex].voices[voiceIndex].timeObjects);
+            trackIndex = findTrackIndex(system, staffIndex, voiceIndex);
 
             // timeObject is now the next chord or rest to the right of the click in any voice.
 
-            if (livePerformersTrackIndex >= 0)
+            if (livePerformersTrackIndex >= 0 && livePerformersTrackIndex !== trackIndex)
             {
                 if (state === "settingEnd")
                 {

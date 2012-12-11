@@ -64,6 +64,7 @@ JI_NAMESPACE.sequence = (function (window)
 
         lastSpanTimestamp = -1,
         lastSequenceTimestamp = -1,
+        thisIsLastMoment = false,
         tracks = [],
 
         setState = function (state)
@@ -72,6 +73,7 @@ JI_NAMESPACE.sequence = (function (window)
             {
                 case "stopped":
                     currentMoment = null;
+                    thisIsLastMoment = false;
                     messageIndex = -1;
                     currentMomentLength = 0;
                     stopped = true;
@@ -129,12 +131,19 @@ JI_NAMESPACE.sequence = (function (window)
                 {
                     // Only perform the last moment in the span if it is the last moment in the sequence.
                     if (nextMomt.timestamp === lastSpanTimestamp && nextMomt.timestamp < lastSequenceTimestamp)
+                    // or NEW if (nextMomt.timestamp === lastSpanTimestamp || nextMomt.timestamp === lastSequenceTimestamp)
                     {
-                        nextMomt = null; // dont perform it, but call reportEndOfSequence() (below) and then stop
+                        // Do not perform the last moment in a span or sequence,
+                        // but call reportEndOfSequence() (below) and then stop.
+                        nextMomt = null;
                     }
                     else
                     {
                         tracks[nextMomentTrackIndex].currentIndex++;
+                        if (nextMomt.timestamp === lastSequenceTimestamp)
+                        {
+                            thisIsLastMoment = true;
+                        }
                     }
                 }
 
@@ -143,10 +152,7 @@ JI_NAMESPACE.sequence = (function (window)
                 {
                     //console.log("End of span.");
                     // move the cursor back to the startMarker and set the APControls' state to "stopped"
-                    if (reportEndOfSequence !== null)
-                    {
-                        reportEndOfSequence(); // nothing happens if this is a null function
-                    }
+                    reportEndOfSequence(); // nothing happens if this is a null function
                 }
 
                 return nextMomt; // null is stop, end of span
@@ -228,7 +234,7 @@ JI_NAMESPACE.sequence = (function (window)
             }
 
             delay = msg.timestamp - domhrtRelativeTime; // compensates for inaccuracies in setTimeout
-            console.log("tick: delay = " + delay);
+            //console.log("tick: delay = " + delay);
             // send all messages that are due between now and PREQUEUE ms later. 
             while (delay <= PREQUEUE)
             {
@@ -236,7 +242,7 @@ JI_NAMESPACE.sequence = (function (window)
                 deviation = (domhrtRelativeTime - msg.timestamp);
                 maxDeviation = (deviation > maxDeviation) ? deviation : maxDeviation;
 
-                if (msg.msPositionInScore !== undefined && reported === false)
+                if (msg.msPositionInScore !== undefined && reported === false && !thisIsLastMoment)
                 {
                     console.log("Reporting msg.msPositionInScore at ", msg.msPositionInScore);
                     reportMsPositionInScore(msg.msPositionInScore);
@@ -250,7 +256,7 @@ JI_NAMESPACE.sequence = (function (window)
                     midiOutputDevice.sendMIDIMessage(msg);
                     // subtract again, otherwise the sequence gets corrupted
                     msg.timestamp -= domhrtMsOffsetAtStartOfSequence;
-                    console.log("sent message at timestamp = " + msg.timestamp + ", domhrtMsOffsetAtStartOfSequence=" + domhrtMsOffsetAtStartOfSequence + ", now=" + window.performance.webkitNow() + ", delay=" + delay);
+                    //console.log("sent message at timestamp = " + msg.timestamp + ", domhrtMsOffsetAtStartOfSequence=" + domhrtMsOffsetAtStartOfSequence + ", now=" + window.performance.webkitNow() + ", delay=" + delay);
                 }
 
                 msg = nextMessage();
@@ -258,7 +264,7 @@ JI_NAMESPACE.sequence = (function (window)
                 if (msg === null)
                 {
                     // we're pausing, or have hit the end of the sequence.
-                    console.log("Pause, or end of sequence.  maxDeviation is " + maxDeviation + "ms");
+                    //console.log("Pause, or end of sequence.  maxDeviation is " + maxDeviation + "ms");
                     return;
                 }
                 delay = msg.timestamp - domhrtRelativeTime;
@@ -383,7 +389,7 @@ JI_NAMESPACE.sequence = (function (window)
 
             domhrtMsOffsetAtStartOfSequence = window.performance.webkitNow() - fromMs;
 
-            console.log("window.performance.webkitNow() set to " + window.performance.webkitNow());
+            //console.log("window.performance.webkitNow() set to " + window.performance.webkitNow());
 
             msg = nextMessage(); // the very first message
             if (msg === null)
@@ -787,15 +793,12 @@ JI_NAMESPACE.sequence = (function (window)
 
             for (t = 0; t < nTracks; ++t)
             {
-                newTrack = {};
-                newTrack.midiMoments = [];
+                newTrack = new JI_NAMESPACE.track.Track();
                 track = tracks[t];
                 nMoments = track.midiMoments.length;
 
-                newMoment = {};
+                newMoment = new JI_NAMESPACE.midiMoment.MIDIMoment(0);
                 newMoment.restStart = true;
-                newMoment.timestamp = 0;
-                newMoment.messages = [];
                 //(command, data1, data2, channel, timestamp)
                 newMsg = MCD.createMIDIMessage(0, 0, 0, t, 0); // newMsg.timestamp = 0;
                 newMsg.msPositionInScore = this.msPositionInScore;
@@ -816,7 +819,7 @@ JI_NAMESPACE.sequence = (function (window)
                         messages = moment.messages;
                         nMessages = moment.messages.length;
 
-                        newMoment = {};
+                        newMoment = new JI_NAMESPACE.midiMoment.MIDIMoment(moment.timestamp + this.msPositionInScore - fromMs);
                         if (moment.restStart !== undefined)
                         {
                             newMoment.restStart = true;
@@ -825,8 +828,6 @@ JI_NAMESPACE.sequence = (function (window)
                         {
                             newMoment.chordStart = true;
                         }
-                        newMoment.timestamp = moment.timestamp + this.msPositionInScore - fromMs;
-                        newMoment.messages = [];
 
                         for (iMsg = 0; iMsg < nMessages; ++iMsg)
                         {
@@ -958,7 +959,7 @@ JI_NAMESPACE.sequence = (function (window)
                 }
                 message = nextMessage();
             }
-            console.log("sequence finished silently: " + i.toString() + " messages sent.");
+            //console.log("sequence finished silently: " + i.toString() + " messages sent.");
         },
 
         publicPrototypeAPI =
