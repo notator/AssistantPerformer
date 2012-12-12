@@ -460,7 +460,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                 {
                     // the running marker is at its correct position:
                     // either at the start marker, or somewhere paused.
-                    score.setRunningMarkers(svgTracksControl);
+                    score.setRunningMarkers();
                     score.moveStartMarkerToTop(svgPagesDiv);
 
                     assistant.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(), svgTracksControl);
@@ -480,7 +480,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                 {
                     // the running marker is at its correct position:
                     // either at the start marker, or somewhere paused.
-                    score.setRunningMarkers(svgTracksControl);
+                    score.setRunningMarkers();
                     score.moveStartMarkerToTop(svgPagesDiv);
 
                     sequence.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
@@ -975,7 +975,7 @@ JI_NAMESPACE.apControls = (function (document, window)
             {
                 options.assistedPerformance = !(options.assistedPerformance);
 
-                sequence = score.getSequence(options.assistantsSpeed);
+                sequence = score.createSequence(options.assistantsSpeed);
 
                 if (options.assistedPerformance === true)
                 {// this constructor consumes sequence, resetting midiMoment timestamps relative to the start of their subsection.
@@ -1147,7 +1147,10 @@ JI_NAMESPACE.apControls = (function (document, window)
 
             score.getTimeObjects(options.assistantsSpeed);
 
-            sequence = score.getSequence(options.assistantsSpeed);
+            sequence = score.createSequence(options.assistantsSpeed);
+ 
+            // trackIsOn is a callback which returns the on/off status of its trackIndex argument
+            score.getTracksControl(svgTracksControl.trackIsOn);
 
             if (options.assistedPerformance === true)
             {

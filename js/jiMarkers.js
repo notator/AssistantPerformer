@@ -375,12 +375,13 @@ JI_NAMESPACE.markers = (function ()
 
         // The timeObjects array contains one timeObject per msPosition in the system.
         // It is ordered according to each timeObject msPosition.
-        // If tracksControl is null, all tracks perform by default.
-        setTimeObjects = function (system, tracksControl)
+        // trackIsOn is a callback which returns the on/of status of its trackIndex argument.
+        // If trackIsOn is null, then all tracks are on by default.
+        setTimeObjects = function (system, trackIsOn)
         {
             var timeObject;
 
-            function findFollowingTimeObject(system, msPosition, tracksControl)
+            function findFollowingTimeObject(system, msPosition, trackIsOn)
             {
                 var nextTimeObject, staff, voice, i, j, k,
                         voiceTimeObjects = [],
@@ -391,7 +392,7 @@ JI_NAMESPACE.markers = (function ()
                     staff = system.staves[i];
                     for (j = 0; j < staff.voices.length; ++j)
                     {
-                        if (tracksControl === null || tracksControl.trackIsOn(trackIndex))
+                        if (trackIsOn === null || trackIsOn(trackIndex))
                         {
                             voice = staff.voices[j];
                             for (k = 0; k < voice.timeObjects.length; ++k)
@@ -427,7 +428,7 @@ JI_NAMESPACE.markers = (function ()
             timeObject.msPosition = -1;
             while (timeObject.msPosition < system.endMsPosition)
             {
-                timeObject = findFollowingTimeObject(system, timeObject.msPosition, tracksControl);
+                timeObject = findFollowingTimeObject(system, timeObject.msPosition, trackIsOn);
                 timeObjects.push(timeObject);
             }
         },

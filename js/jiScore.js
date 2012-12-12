@@ -44,6 +44,9 @@ JI_NAMESPACE.score = (function (document)
     // It is used when setting the position of the end marker in assisted performances.
     livePerformersTrackIndex = -1,
 
+    // callback: trackIsOn(trackIndex) returns a boolean which is the yes/no playing status of the track
+    trackIsOn = null,
+
     startMarker,
     runningMarker,
     endMarker,
@@ -393,14 +396,14 @@ JI_NAMESPACE.score = (function (document)
     },
 
     // Called when the go button is clicked.
-    setRunningMarkers = function (tracksControl)
+    setRunningMarkers = function ()
     {
         var sysIndex, nSystems = systems.length, system;
 
         for (sysIndex = 0; sysIndex < nSystems; ++sysIndex)
         {
             system = systems[sysIndex];
-            system.runningMarker.setTimeObjects(system, tracksControl);
+            system.runningMarker.setTimeObjects(system, trackIsOn);
         }
         moveRunningMarkerToStartMarker();
         showRunningMarker();
@@ -1111,7 +1114,7 @@ JI_NAMESPACE.score = (function (document)
     // In a completed Sequence, the tracks array contains one track per channel (ordered by channel).
     // Each track is an array of midiMoments ordered in time (see jiTrack.js && jiMIDIMoment.js).
     // Note that Sequences do not contain rests!
-    getSequence = function (speed)
+    createSequence = function (speed)
     {
         // systems->staves->voices->timeObjects
         var sequence = new jiSequence.Sequence(0),
@@ -1206,6 +1209,12 @@ JI_NAMESPACE.score = (function (document)
         return sequence;
     },
 
+    getTracksControl = function (trackIsOnCallback)
+    {
+        // trackIsOn(trackIndex) returns a boolean which is the yes/no playing status of the track
+        trackIsOn = trackIsOnCallback;
+    },
+
     // an empty score
     Score = function (callback)
     {
@@ -1242,7 +1251,7 @@ JI_NAMESPACE.score = (function (document)
         this.moveStartMarkerToTop = moveStartMarkerToTop;
 
         // Recalculates the timeObject lists for the runningMarkers (1 marker per system),
-        // using the tracksControl to take into account which tracks are actually performing.
+        // using trackIsOn (tracksControl.trackIsOn) to take into account which tracks are actually performing.
         // When the score is first read, all tracks perform by default.
         this.setRunningMarkers = setRunningMarkers;
         // Advances the running marker to the following timeObject (in any channel)
@@ -1261,7 +1270,9 @@ JI_NAMESPACE.score = (function (document)
         this.getTimeObjects = getTimeObjects;
 
         // Returns the score's content as a midi sequence
-        this.getSequence = getSequence;
+        this.createSequence = createSequence;
+        // Loads the trackIsOn callback.
+        this.getTracksControl = getTracksControl;
     },
 
 
