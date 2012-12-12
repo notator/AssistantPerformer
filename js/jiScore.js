@@ -39,10 +39,9 @@ JI_NAMESPACE.score = (function (document)
     // See comments in the publicAPI definition at the bottom of this file.
     systems = [], // an array of all the systems
 
-    // Set to null in getEmptyPagesAndSystems() -- for a non-assisted performance
-    // Set to the assistant's subsequences when preparing an assisted performance.
-    // The assistant's subsequences are consulted when setting the positions of the start and end markers.
-    assistantsSubsequences = null,
+    // Initially there is no assistant (a non-assisted performance).
+    // This value is changed when/if the assistant has been constructed.
+    // It is used when setting the position of the end marker in assisted performances.
     livePerformersTrackIndex = -1,
 
     startMarker,
@@ -605,9 +604,7 @@ JI_NAMESPACE.score = (function (document)
         /*************** end of getEmptyPagesAndSystems function definitions *****************************/
 
         // Initially there is no assistant (a non-assisted performance).
-        // These value are changed when/if the assistant has been constructed.
-        // They are consulted when setting the positions of start and end markers.
-        assistantsSubsequences = null;
+        // This value is changed when/if the assistant has been constructed.
         livePerformersTrackIndex = -1;
 
         resetContent();
@@ -652,14 +649,12 @@ JI_NAMESPACE.score = (function (document)
         }
     },
 
-    // Initially there is no assistant (a non-assisted performance): livePerformersTrackIndex is -1, and
-    // assistantsSubsequences is null.
-    // This function is called when/if the assistant has been constructed, complete with its subsequences.
-    // The score consults the assistantsData when setting the positions of start and end markers.
-    getAssistantsData = function (soloistsTrackIndex, subsequences)
+    // Initially there is no assistant (a non-assisted performance), and livePerformersTrackIndex is -1.
+    // This function is called when/if the assistant has been constructed.
+    // The score uses the livePerformersTrackIndex when setting the position of end markers.
+    getLivePerformersTrackIndex = function (soloistsTrackIndex)
     {
         livePerformersTrackIndex = soloistsTrackIndex;
-        assistantsSubsequences = subsequences;
     },
 
     // Gets the timeObjects. 
@@ -1260,7 +1255,7 @@ JI_NAMESPACE.score = (function (document)
         this.svgFrames = svgFrames;
 
         this.getEmptyPagesAndSystems = getEmptyPagesAndSystems;
-        this.getAssistantsData = getAssistantsData;
+        this.getLivePerformersTrackIndex = getLivePerformersTrackIndex;
 
         // loads timeObjects
         this.getTimeObjects = getTimeObjects;

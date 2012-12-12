@@ -1156,7 +1156,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                 assistant = new jiAssistant.Assistant(sequence, options, reportEndOfPerformance, reportMsPos);
 
                 // The assistant's subsequences are consulted (not changed) while setting start and end markers.
-                score.getAssistantsData(options.livePerformersTrackIndex, assistant.subsequences);
+                score.getLivePerformersTrackIndex(options.livePerformersTrackIndex);
             }
 
             window.scrollTo(0, 630); // 600 is the absolute position of the controlPanel div (!)
