@@ -8,9 +8,13 @@
  *  jiMain.js
  *  The main entry point when using the JazzMidiBridge plugin.
  *  Sets up the MIDI input and output device selectors in the Assistant Performer's GUI,
- *  and initialises the JI_NAMESPACE.midiChord namespace with a pointer to JMB, allowing
- *  MIDIMessages to be constructed there.
- *  
+ *  and calls initialisation functions for the following namespaces:
+ *      JI_NAMESPACE.apControls.init();
+ *      JI_NAMESPACE.assistant.init(messageCreationData);
+ *      JI_NAMESPACE.sequence.init(messageCreationData);
+ *      JI_NAMESPACE.midiChord.init(messageCreationData);
+ *  messageCreationData is an object containing data which enables MIDIMessages to be
+ *  created inside the namespaces.
  */
 
 window.addEventListener("load", function ()
@@ -30,40 +34,16 @@ window.addEventListener("load", function ()
     JMB.init(function (MIDIAccess)
     {
         var inputs = MIDIAccess.enumerateInputs(),
-            outputs = MIDIAccess.enumerateOutputs(),
+            outputs = MIDIAccess.enumerateOutputs();
 
         // sets the current devices in apControls.options
-            connectDevices = function ()
+        function connectDevices()
+        {
+            if (apControls !== undefined)
             {
-                if (apControls !== undefined)
-                {
-                    apControls.setMidiDevices(MIDIAccess, inputDeviceId, outputDeviceId);
-                }
-
-                /********
-                // ji -- commented out 28.10.12 
-                if (apControls !== undefined && output !== null)
-                {
-                apControls.setMidiOut(output);
-                }
-
-                // the input device is now connected and disconnected dynamically inside jiAssistant.js
-                if (input)
-                {
-                input.addEventListener("midimessage", function (msg)
-                {
-                if (apControls !== undefined && apControls.handleMidiIn !== undefined)
-                {
-                apControls.handleMidiIn(msg);
-                }
-                else if (output)
-                {
-                output.sendMIDIMessage(msg);
-                }
-                });
-                }
-                *********/
-            };
+                apControls.setMidiDevices(MIDIAccess, inputDeviceId, outputDeviceId);
+            }
+        };
 
         //create dropdown menu for MIDI inputs
         JMB.createMIDIDeviceSelector(selectInput, inputs, "input", function (deviceId)

@@ -803,13 +803,19 @@ JI_NAMESPACE.sequence = (function (window)
                 newMsg = MCD.createMIDIMessage(0, 0, 0, t, 0); // newMsg.timestamp = 0;
                 newMsg.msPositionInScore = this.msPositionInScore;
                 newMsg.isEmpty = true;
-                newMoment.messages.push(newMsg);
-                newTrack.midiMoments.push(newMoment);
+                newMoment.addMIDIMessage(newMsg);
+                newTrack.addMIDIMoment(newMoment, 0);
 
                 if (nMoments > 0)
                 {
                     momentI = indexOfLastMomentBeforeFromMs(track.midiMoments, fromMs - this.msPositionInScore);
-                    if (track.midiMoments[momentI].timestamp + this.msPositionInScore < fromMs)
+                    if (momentI === undefined)
+                    {
+                        // track.midiMoments[0].timestamp was greater than (fromMs - this.msPositionInScore)
+                        // i.e. copy *all* the subsequent messages to the new track.
+                        momentI = 0;
+                    }
+                    else if (track.midiMoments[momentI].timestamp + this.msPositionInScore < fromMs)
                     {
                         ++momentI;
                     }
@@ -842,9 +848,9 @@ JI_NAMESPACE.sequence = (function (window)
                             {
                                 newMsg.isEmpty = true;
                             }
-                            newMoment.messages.push(newMsg);
+                            newMoment.addMIDIMessage(newMsg);
                         }
-                        newTrack.midiMoments.push(newMoment);
+                        newTrack.addMIDIMoment(newMoment, 0);
                     }
                 }
                 returnSeq.addTrack(newTrack);
