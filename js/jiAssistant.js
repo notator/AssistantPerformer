@@ -93,7 +93,7 @@ JI_NAMESPACE.assistant = (function (window)
             switch (state)
             {
                 case "stopped":
-                    if (currentIndex >= 0)
+                    if (currentIndex >= 0 && span[currentIndex].isStopped() === false)
                     {
                         span[currentIndex].stop();
                     }
