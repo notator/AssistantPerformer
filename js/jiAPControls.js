@@ -376,14 +376,10 @@ JI_NAMESPACE.apControls = (function (document, window)
         reportEndOfPerformance = function ()
         {
             setStopped();
-            // The following line is important.
-            // Otherwise svgControlsState is 'paused' because of the way the go button works.
-            svgControlsState = 'stopped';
         },
 
-    // optional callback: Called by a performing sequence, and reports
-    // the timestamp (=msPosition) of the MIDIMoment curently being sent.
-    // When all the MidiMessages in the span have been played,
+    // callback called by a performing sequence. Reports the timestamp (=msPosition) of the
+    // MIDIMoment curently being sent. When all the MidiMessages in the span have been played,
     // reportEndOfPerformance() is called (see above).
         reportMsPos = function (msPosition)
         {

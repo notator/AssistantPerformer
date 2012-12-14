@@ -93,6 +93,10 @@ JI_NAMESPACE.assistant = (function (window)
             switch (state)
             {
                 case "stopped":
+                    if (currentIndex >= 0)
+                    {
+                        span[currentIndex].stop();
+                    }
                     // these variables are also set in playSpan() when the state is first set to "running"
                     endIndex = (span === undefined) ? -1 : (span.length - 1); // the index of the (unplayed) end chord or rest or endBarline
                     currentIndex = -1;
