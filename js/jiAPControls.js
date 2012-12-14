@@ -21,7 +21,6 @@ JI_NAMESPACE.apControls = (function (document, window)
     var svgTracksControl = JI_NAMESPACE.apTracksControl,
         jiScore = JI_NAMESPACE.score,
         jiAssistant = JI_NAMESPACE.assistant,
-        midiAccess,
         score,
         assistant,
         sequence,
@@ -453,7 +452,6 @@ JI_NAMESPACE.apControls = (function (document, window)
 
         function setPlaying()
         {
-            var player = sequence;
             if (options.assistedPerformance === true && assistant !== undefined)
             {
                 if (assistant.isStopped())
@@ -1148,9 +1146,12 @@ JI_NAMESPACE.apControls = (function (document, window)
             score.getTimeObjects(options.assistantsSpeed);
 
             sequence = score.createSequence(options.assistantsSpeed);
- 
-            // trackIsOn is a callback which returns the on/off status of its trackIndex argument
-            score.getTracksControl(svgTracksControl.trackIsOn);
+
+            // svgTracksControl.trackIsOn(trackIndex) returns a boolean which is the on/off status of its trackIndex argument
+            score.getTrackIsOnCallback(svgTracksControl.trackIsOn);
+            // score.performingTracksHaveChanged() is called whenever the performing tracks change.
+            // It is used to update the position of the start marker, which should always start on a chord.
+            svgTracksControl.getPerformingTracksHaveChangedCallback(score.performingTracksHaveChanged);
 
             if (options.assistedPerformance === true)
             {
@@ -1158,7 +1159,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                 // The sequence therefore needs to be reloaded when the options (performer's track index) change.    
                 assistant = new jiAssistant.Assistant(sequence, options, reportEndOfPerformance, reportMsPos);
 
-                // The assistant's subsequences are consulted (not changed) while setting start and end markers.
+                // The livePerformersTrackIndex is consulted while setting the end marker.
                 score.getLivePerformersTrackIndex(options.livePerformersTrackIndex);
             }
 

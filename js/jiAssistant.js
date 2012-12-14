@@ -125,7 +125,7 @@ JI_NAMESPACE.assistant = (function (window)
             {
                 if (options.assistantUsesAbsoluteDurations === false)
                 {
-                    prevSubsequenceStartNow += (window.performance.webkitNow() - pausedNow);
+                    prevSubsequenceStartNow += (window.performance.now() - pausedNow);
                 }
                 span[currentIndex].resume();
                 setState("running");
@@ -138,7 +138,7 @@ JI_NAMESPACE.assistant = (function (window)
         {
             if (stopped === false && paused === false)
             {
-                pausedNow = window.performance.webkitNow();
+                pausedNow = window.performance.now();
                 span[currentIndex].pause();
                 setState("paused");
             }
@@ -381,7 +381,7 @@ JI_NAMESPACE.assistant = (function (window)
 
             function playSubsequence(subsequence, options)
             {
-                var now = window.performance.webkitNow(), // in the time frame used by sequences
+                var now = window.performance.now(), // in the time frame used by sequences
                     prevSubsequenceScoreMsDuration,
                     durationFactor;
 

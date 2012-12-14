@@ -13,7 +13,7 @@
 
 JI_NAMESPACE.namespace('JI_NAMESPACE.apTracksControl');
 
-JI_NAMESPACE.apTracksControl = (function (document, window)
+JI_NAMESPACE.apTracksControl = (function (document)
 {
     "use strict";
 
@@ -21,6 +21,7 @@ JI_NAMESPACE.apTracksControl = (function (document, window)
         trackIsOnStatus = [],
         trackIsDisabledStatus = [],
         disabled = true,
+        performingTracksHaveChanged = null,
 
         trackIsOn = function (trackIndex)
         {
@@ -59,6 +60,13 @@ JI_NAMESPACE.apTracksControl = (function (document, window)
                 elem.style.fill = "#AAAAAA";
                 trackIsOnStatus[trackIndex] = true;
             }
+        }
+
+        // Calling this callback, which is defined in Score, tells the score that it may
+        // have to update the position of the start marker (which always starts on a chord).
+        if (performingTracksHaveChanged !== null)
+        {
+            performingTracksHaveChanged();
         }
     },
 
@@ -194,6 +202,11 @@ JI_NAMESPACE.apTracksControl = (function (document, window)
         controlPanel.insertBefore(trackControlsSvgElem, firstControlPanelChild);
     },
 
+    getPerformingTracksHaveChangedCallback = function (callback)
+    {
+        performingTracksHaveChanged = callback;
+    },
+
     publicAPI =
     {
         init: init,
@@ -203,10 +216,12 @@ JI_NAMESPACE.apTracksControl = (function (document, window)
 
         setTrackOn: setTrackOn,
 
-        trackIsOn: trackIsOn
+        trackIsOn: trackIsOn,
+
+        getPerformingTracksHaveChangedCallback: getPerformingTracksHaveChangedCallback
     };
     // end var
 
     return publicAPI;
 
-} (document, window));
+} (document));

@@ -223,7 +223,7 @@ JI_NAMESPACE.sequence = (function (window)
         tick = function ()
         {
             var deviation, PREQUEUE = 0, // this needs to be set to a larger value later. See comment on tick() function.
-            domhrtRelativeTime = Math.round(window.performance.webkitNow() - domhrtMsOffsetAtStartOfSequence),
+            domhrtRelativeTime = Math.round(window.performance.now() - domhrtMsOffsetAtStartOfSequence),
             reported = false,
             delay;
 
@@ -256,7 +256,7 @@ JI_NAMESPACE.sequence = (function (window)
                     midiOutputDevice.sendMIDIMessage(msg);
                     // subtract again, otherwise the sequence gets corrupted
                     msg.timestamp -= domhrtMsOffsetAtStartOfSequence;
-                    //console.log("sent message at timestamp = " + msg.timestamp + ", domhrtMsOffsetAtStartOfSequence=" + domhrtMsOffsetAtStartOfSequence + ", now=" + window.performance.webkitNow() + ", delay=" + delay);
+                    //console.log("sent message at timestamp = " + msg.timestamp + ", domhrtMsOffsetAtStartOfSequence=" + domhrtMsOffsetAtStartOfSequence + ", now=" + window.performance.now() + ", delay=" + delay);
                 }
 
                 msg = nextMessage();
@@ -387,9 +387,9 @@ JI_NAMESPACE.sequence = (function (window)
 
             maxDeviation = 0; // for console.log
 
-            domhrtMsOffsetAtStartOfSequence = window.performance.webkitNow() - fromMs;
+            domhrtMsOffsetAtStartOfSequence = window.performance.now() - fromMs;
 
-            //console.log("window.performance.webkitNow() set to " + window.performance.webkitNow());
+            //console.log("window.performance.now() set to " + window.performance.now());
 
             msg = nextMessage(); // the very first message
             if (msg === null)
@@ -408,7 +408,7 @@ JI_NAMESPACE.sequence = (function (window)
             if (paused === true && currentMoment !== null)
             {
                 setState("running");
-                domhrtMsOffsetAtStartOfSequence = window.performance.webkitNow() - currentMoment.timestamp;
+                domhrtMsOffsetAtStartOfSequence = window.performance.now() - currentMoment.timestamp;
                 msg = nextMessage(); // the very first message after the resume
                 if (msg === null)
                 {

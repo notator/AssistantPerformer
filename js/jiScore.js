@@ -106,6 +106,174 @@ JI_NAMESPACE.score = (function (document)
         }
     },
 
+    getTimeObjectsArray = function (system)
+    {
+        var i, nStaves = system.staves.length, j, nVoices, timeObjects, timeObjectsArray = [];
+
+        for (i = 0; i < nStaves; ++i)
+        {
+            nVoices = system.staves[i].voices.length;
+            for (j = 0; j < nVoices; ++j)
+            {
+                timeObjects = system.staves[i].voices[j].timeObjects;
+                timeObjectsArray.push(timeObjects);
+            }
+        }
+        return timeObjectsArray;
+    },
+
+    // Algorithm:
+    // clickedX = timeObject.alignmentX.
+    // If timeObject is in a performing track:
+    // { If it is a chord, return it, 
+    //      else if the following object is a chord, return that
+    //      else if the following object is the final barline, return the last chord in the track 
+    // }
+    // Otherwise do the same for performing tracks successively above.
+    // If that does not work, try the tracks successively below.
+        findStartMarkerTimeObject = function (timeObject, clickedTrackIndex, system, trackIsOn)
+        {
+            var nTracks, returnedTimeObject, t, diff, timeObjectsArray;
+
+            // Returns the chord timeObject at alignmentX, or the following object in the track (if it is a chord), or null.
+            // If the timeObject following alignmentX is the final barline, the last chord in the track is returned.
+            function nextChordTimeObject(timeObjects, alignmentX)
+            {
+                var i, nTimeObjects = timeObjects.length,
+                returnTimeObject = null, tObject, lastChordTimeObject;
+
+                for (i = 0; i < nTimeObjects; ++i)
+                {
+                    tObject = timeObjects[i];
+                    if (tObject.chordDef !== undefined)
+                    {
+                        lastChordTimeObject = tObject;
+                    }
+                    if (i === (nTimeObjects - 1))
+                    {
+                        returnTimeObject = lastChordTimeObject;
+                        break;
+                    }
+                    if (tObject.alignmentX >= alignmentX && tObject.chordDef !== undefined)
+                    {
+                        returnTimeObject = tObject;
+                        break;
+                    }
+                    if (tObject.alignmentX > alignmentX)
+                    {
+                        break;
+                    }
+                }
+                return returnTimeObject;
+            }
+
+            timeObjectsArray = getTimeObjectsArray(system);
+            nTracks = timeObjectsArray.length;
+            returnedTimeObject = null;
+            t = clickedTrackIndex;
+            diff = 1;
+            while (returnedTimeObject === null)
+            {
+                if (trackIsOn(t))
+                {
+                    returnedTimeObject = nextChordTimeObject(timeObjectsArray[t], timeObject.alignmentX);
+                }
+                t -= diff;
+                if (t < 0)
+                {
+                    t = clickedTrackIndex + 1;
+                    diff = -1;
+                }
+                if (t === timeObjectsArray.length)
+                {
+                    throw "Error: there must be at least one chord on the system!";
+                }
+            }
+
+            return returnedTimeObject;
+        },
+
+    // This function is called by the svgTracksControl when a track is turned on or off.
+    // If necessary, move the start marker to a chord.
+    performingTracksHaveChanged = function ()
+    {
+        var system = systems[startMarker.systemIndex()],
+        timeObject = startMarker.timeObject(),
+        timeObjectsArray = getTimeObjectsArray(system),
+        timeObjectTrackIndex;
+
+        function findTrackIndex(timeObjectsArray, timeObject)
+        {
+            var i, nTracks = timeObjectsArray.length, j, nTimeObjects, returnIndex = -1;
+            for (i = 0; i < nTracks; ++i)
+            {
+                nTimeObjects = timeObjectsArray[i].length;
+                for (j = 0; j < nTimeObjects; ++j)
+                {
+                    if (timeObject === timeObjectsArray[i][j])
+                    {
+                        returnIndex = i;
+                        break;
+                    }
+                }
+                if (returnIndex >= 0)
+                {
+                    break;
+                }
+            }
+            if (returnIndex === -1)
+            {
+                throw "Error: timeObject not found in system.";
+            }
+            return returnIndex;
+        }
+
+        function thereIsNoPerformingChordOnTheStartBarline(timeObjectsArray, alignmentX, trackIsOn)
+        {
+            var i, nTracks = timeObjectsArray.length, j, nTimeObjects, returnIndex = -1,
+                timeObjectFound = false;
+
+            for (i = 0; i < nTracks; ++i)
+            {
+                if (trackIsOn(i))
+                {
+                    nTimeObjects = timeObjectsArray[i].length;
+                    for (j = 0; j < nTimeObjects; ++j)
+                    {
+                        if (alignmentX === timeObjectsArray[i][j].alignmentX)
+                        {
+                            timeObjectFound = true;
+                            break;
+                        }
+                        else if (alignmentX < timeObjectsArray[i][j].alignmentX)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return (!timeObjectFound);
+        }
+
+        if (thereIsNoPerformingChordOnTheStartBarline(timeObjectsArray, timeObject.alignmentX, trackIsOn))
+        {
+            timeObjectTrackIndex = findTrackIndex(timeObjectsArray, timeObject);
+            timeObject = findStartMarkerTimeObject(timeObject, timeObjectTrackIndex, system, trackIsOn);
+
+            if (timeObject.msPosition < endMarker.msPosition())
+            {
+                startMarker.moveTo(timeObject);
+            }
+        }
+    },
+
+    getTrackIsOnCallback = function (trackIsOnCallback)
+    {
+        // trackIsOn(trackIndex) returns a boolean which is the yes/no playing status of the track
+        trackIsOn = trackIsOnCallback;
+    },
+
     // this function is called only when state is 'settingStart' or 'settingEnd'.
     svgPageClicked = function (e, state)
     {
@@ -113,7 +281,7 @@ JI_NAMESPACE.score = (function (document)
             x = e.pageX,
             y = e.pageY + frame.originY,
             systemIndex, system,
-            staffIndex, voiceIndex, timeObject, trackIndex;
+            staffIndex, voiceIndex, timeObject, clickedTrackIndex;
 
         // x and y now use the <body> element as their frame of reference.
         // this is the same frame of reference as in the systems.
@@ -238,7 +406,7 @@ JI_NAMESPACE.score = (function (document)
         // If the timeObject argument has the same alignmentX as a soloist's chord or rest, or lies
         // within a soloist's rest, it is returned unchanged. Otherwise the timeObject for the following
         // chord or rest in the soloists part is returned.
-        function findNextRestTimeObjectInVoice(timeObject, system, voiceIndex)
+        function findEndMarkerTimeObject(timeObject, system, voiceIndex)
         {
             var i, nTimeObjects, returnTimeObject = null, timeObjects = null, x;
 
@@ -300,17 +468,17 @@ JI_NAMESPACE.score = (function (document)
             return returnTimeObject;
         }
 
-        function findTrackIndex(system, staffIndex, voiceIndex)
+        function findClickedTrackIndex(system, staffIndex, voiceIndex)
         {
             var i, nStaves = system.staves.length,
-            j, nVoices, trackIndex = -1;
+            j, nVoices, clickedTrackIndex = -1;
 
             for (i = 0; i < nStaves; ++i)
             {
                 nVoices = system.staves[i].voices.length;
                 for (j = 0; j < nVoices; ++j)
                 {
-                    ++trackIndex;
+                    ++clickedTrackIndex;
                     if (i === staffIndex && j === voiceIndex)
                     {
                         break;
@@ -321,7 +489,7 @@ JI_NAMESPACE.score = (function (document)
                     break;
                 }
             }
-            return trackIndex;
+            return clickedTrackIndex;
         }
 
         systemIndex = findSystemIndex(x, y);
@@ -331,23 +499,24 @@ JI_NAMESPACE.score = (function (document)
             staffIndex = findStaffIndex(y, system.staves);
             voiceIndex = findVoiceIndex(y, system.staves[staffIndex].voices);
             timeObject = findTimeObject(x, system.staves[staffIndex].voices[voiceIndex].timeObjects);
-            trackIndex = findTrackIndex(system, staffIndex, voiceIndex);
+            clickedTrackIndex = findClickedTrackIndex(system, staffIndex, voiceIndex);
 
-            // timeObject is now the next chord or rest to the right of the click in any voice.
+            // timeObject is now the next object to the right of the click in the clicked voice.
+            // The object can be a chord or rest or the final barline on the voice. 
 
-            if (livePerformersTrackIndex >= 0 && livePerformersTrackIndex !== trackIndex)
+            if (state === "settingEnd")
             {
-                if (state === "settingEnd")
+                if (livePerformersTrackIndex >= 0 && livePerformersTrackIndex !== clickedTrackIndex)
                 {
-                    // if the timeObject happens during a chord in the livePerformersTrack, move it to the following rest.
-                    timeObject = findNextRestTimeObjectInVoice(timeObject, system, livePerformersTrackIndex);
+                    // Algorithm comment: see the function itself.
+                    timeObject = findEndMarkerTimeObject(timeObject, system, livePerformersTrackIndex);
                 }
-                else // state === "settingStart"
-                {   // replace this clause with the correct code for state==="settingStart" later.
-                    staffIndex = findStaffIndex(y, system.staves);
-                    voiceIndex = findVoiceIndex(y, system.staves[staffIndex].voices);
-                    timeObject = findTimeObject(x, system.staves[staffIndex].voices[voiceIndex].timeObjects);
-                }
+                // else do nothing
+            }
+            else if (state === "settingStart")
+            {
+                // Algorithm comment: see the function itself.
+                timeObject = findStartMarkerTimeObject(timeObject, clickedTrackIndex, system, trackIsOn);
             }
 
             switch (state)
@@ -1209,12 +1378,6 @@ JI_NAMESPACE.score = (function (document)
         return sequence;
     },
 
-    getTracksControl = function (trackIsOnCallback)
-    {
-        // trackIsOn(trackIndex) returns a boolean which is the yes/no playing status of the track
-        trackIsOn = trackIsOnCallback;
-    },
-
     // an empty score
     Score = function (callback)
     {
@@ -1272,7 +1435,9 @@ JI_NAMESPACE.score = (function (document)
         // Returns the score's content as a midi sequence
         this.createSequence = createSequence;
         // Loads the trackIsOn callback.
-        this.getTracksControl = getTracksControl;
+        this.getTrackIsOnCallback = getTrackIsOnCallback;
+        // called by the svgTracksControl when the selected tracks change
+        this.performingTracksHaveChanged = performingTracksHaveChanged;
     },
 
 

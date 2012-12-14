@@ -31,6 +31,11 @@ window.addEventListener("load", function ()
         outputDeviceId = "",
         messageCreationData; // utilities for creating MIDI messages
 
+    // Make sure we support the performance timing api. (Chris Wilson's code for this.)
+    window.performance = window.performance || window.mozPerformance || window.msPerformance || window.webkitPerformance || {};
+    if (!window.performance.now)
+        window.performance.now = window.performance.webkitNow;
+
     JMB.init(function (MIDIAccess)
     {
         var inputs = MIDIAccess.enumerateInputs(),
