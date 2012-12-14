@@ -230,7 +230,7 @@ JI_NAMESPACE.score = (function (document)
 
         function thereIsNoPerformingChordOnTheStartBarline(timeObjectsArray, alignmentX, trackIsOn)
         {
-            var i, nTracks = timeObjectsArray.length, j, nTimeObjects, returnIndex = -1,
+            var i, nTracks = timeObjectsArray.length, j, nTimeObjects,
                 timeObjectFound = false;
 
             for (i = 0; i < nTracks; ++i)
@@ -255,6 +255,80 @@ JI_NAMESPACE.score = (function (document)
 
             return (!timeObjectFound);
         }
+
+        // Staves can have either one or two voices (=tracks). The tracks are 0-indexed channels from top
+        // to bottom of the system.
+        // If a staff has one track (=voice) and is disabled, its three middle stafflines are coloured red.
+        // If a staff has two tracks:
+        //      if the top track is disabled, the staff's top two stafflines are coloured red.
+        //      if the bottom track is disabled, the staff's bottom two stafflines are coloured red. 
+        function setView(trackIsOn)
+        {
+            var i, nSystems = systems.length, j, nStaves = systems[0].staves.length,
+                k, staff, track, m, nLines,
+                BLACK_COLOUR = "#000000",
+                DISABLED_COLOUR = "#FF9999";
+
+            function setStafflinesToBlack(staff)
+            {
+                var i, nLines = staff.svgStafflines.length;
+
+                for (i = 0; i < nLines; ++i)
+                {
+                    staff.svgStafflines[i].style.stroke = BLACK_COLOUR;
+                }
+            }
+
+            for (i = 0; i < nSystems; ++i)
+            {
+                track = 0;
+                for (j = 0; j < nStaves; ++j)
+                {
+                    staff = systems[i].staves[j];
+                    setStafflinesToBlack(staff);
+                    if (staff.voices.length === 1)
+                    {
+                        if (!trackIsOn(track))
+                        {
+                            nLines = staff.svgStafflines.length;
+                            for (m = 0; m < nLines; ++m) // could be any number of lines
+                            {
+                                staff.svgStafflines[m].style.stroke = DISABLED_COLOUR;
+                            }
+                        }
+                        ++track;
+                    }
+                    else if (staff.voices.length !== 2 || staff.svgStafflines.length !== 5)
+                    {
+                        throw "Error: staff cannot have more than two voices! Two voice staves must have five lines.";
+                    }
+                    else // the staff has two voices
+                    {
+                        for (k = 0; k < 2; ++k)
+                        {
+                            if (k === 0 && !trackIsOn(track))
+                            {
+                                staff.svgStafflines[0].style.stroke = DISABLED_COLOUR;
+                                staff.svgStafflines[1].style.stroke = DISABLED_COLOUR;
+                                //                                staff.svgStafflines[0].setAttribute("stroke", DISABLED_COLOUR);
+                                //                                staff.svgStafflines[1].setAttribute("stroke", DISABLED_COLOUR);
+                            }
+                            ++track;
+                            if (k === 0 && !trackIsOn(track))
+                            {
+                                staff.svgStafflines[3].style.stroke = DISABLED_COLOUR;
+                                staff.svgStafflines[4].style.stroke = DISABLED_COLOUR;
+                                //                                staff.svgStafflines[3].setAttribute("stroke", DISABLED_COLOUR);
+                                //                                staff.svgStafflines[4].setAttribute("stroke", DISABLED_COLOUR);
+                            }
+                            ++track;
+                        }
+                    }
+                }
+            }
+        }
+
+        setView(trackIsOn); // marks the disabled tracks
 
         if (thereIsNoPerformingChordOnTheStartBarline(timeObjectsArray, timeObject.alignmentX, trackIsOn))
         {
@@ -624,25 +698,32 @@ JI_NAMESPACE.score = (function (document)
             var i, j, systemChildren, systemChildID,
                 staff, staffChildren, staffChildID, stafflineInfo,
                 markersChildren, barlinesChildren, voice;
+
             // returns an info object containing left, right and stafflineYs
             function getStafflineInfo(stafflines)
             {
-                var i, stafflineInfo = {}, stafflineYs = [], left, right, stafflineY;
+                var i, stafflineInfo = {}, stafflineYs = [], left, right, stafflineY,
+                svgStaffline, svgStafflines = [];
+
                 for (i = 0; i < stafflines.length; ++i)
                 {
                     if (stafflines[i].nodeName !== '#text')
                     {
-                        stafflineY = parseFloat(stafflines[i].getAttribute('y1'));
+                        svgStaffline = stafflines[i];
+                        svgStafflines.push(svgStaffline);
+                        stafflineY = parseFloat(svgStaffline.getAttribute('y1'));
                         stafflineYs.push((stafflineY / viewBoxScale) + viewBoxOriginY);
-                        left = parseFloat(stafflines[i].getAttribute('x1'));
+                        left = parseFloat(svgStaffline.getAttribute('x1'));
                         left /= viewBoxScale;
-                        right = parseFloat(stafflines[i].getAttribute('x2'));
+                        right = parseFloat(svgStaffline.getAttribute('x2'));
                         right /= viewBoxScale;
                     }
                 }
                 stafflineInfo.left = left;
                 stafflineInfo.right = right;
                 stafflineInfo.stafflineYs = stafflineYs;
+                stafflineInfo.svgStafflines = svgStafflines;
+
                 return stafflineInfo;
             }
 
@@ -724,6 +805,7 @@ JI_NAMESPACE.score = (function (document)
 
                                     staff.topLineY = stafflineInfo.stafflineYs[0];
                                     staff.bottomLineY = stafflineInfo.stafflineYs[stafflineInfo.stafflineYs.length - 1];
+                                    staff.svgStafflines = stafflineInfo.svgStafflines; // top down
                                 }
                                 if (staffChildID.indexOf('voice') !== -1)
                                 {

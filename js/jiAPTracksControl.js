@@ -42,7 +42,11 @@ JI_NAMESPACE.apTracksControl = (function (document)
     {
         var elem = document.getElementById(elemID),
                 elemDisabledLayer = document.getElementById(elemDisabledLayerID),
-                trackIndex = parseInt(trackIndexStr);
+                trackIndex = parseInt(trackIndexStr),
+                ENABLED_STROKECOLOR = "#000000",
+                ENABLED_FILLCOLOR = "#AAAAAA",
+                DISABLED_STROKECOLOR = "#FF3333",
+                DISABLED_FILLCOLOR = "#FFEEEE";
 
         disabled = (elemDisabledLayer.getAttribute("opacity") !== "0");
 
@@ -50,14 +54,14 @@ JI_NAMESPACE.apTracksControl = (function (document)
         {
             if (trackIsOnStatus[trackIndex])
             {
-                //elem.setAttribute("fill", "white");
-                elem.style.fill = "#FFFFFF";
+                elem.style.stroke = DISABLED_STROKECOLOR;
+                elem.style.fill = DISABLED_FILLCOLOR;
                 trackIsOnStatus[trackIndex] = false;
             }
             else
             {
-                //elem.setAttribute("fill", "#AAAAAA");
-                elem.style.fill = "#AAAAAA";
+                elem.style.stroke = ENABLED_STROKECOLOR;
+                elem.style.fill = ENABLED_FILLCOLOR;
                 trackIsOnStatus[trackIndex] = true;
             }
         }

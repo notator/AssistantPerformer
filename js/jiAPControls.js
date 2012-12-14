@@ -376,6 +376,8 @@ JI_NAMESPACE.apControls = (function (document, window)
         reportEndOfPerformance = function ()
         {
             setStopped();
+            // the following line is important, because the stop button is also the pause button.
+            svgControlsState = "stopped";
         },
 
     // callback called by a performing sequence. Reports the timestamp (=msPosition) of the
