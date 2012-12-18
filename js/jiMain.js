@@ -29,7 +29,7 @@ window.addEventListener("load", function ()
         selectOutput = document.getElementById("midiOutputDeviceSelector"),
         inputDeviceId = "",
         outputDeviceId = "",
-        messageCreationData; // utilities for creating MIDI messages
+        messageCreationData; // function and data for creating MIDI messages
 
     // Make sure we support the performance timing api. (Chris Wilson's code for this.)
     window.performance = window.performance || window.mozPerformance || window.msPerformance || window.webkitPerformance || {};
