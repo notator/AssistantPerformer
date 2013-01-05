@@ -18,7 +18,16 @@
 		style="text-align:center; font-family: Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif;  ">
 		<div id="centredReferenceDiv" class="centredReference">
             <p class="header1">Assistant Performer&nbsp;
-                <span style="color: #FF0000; font-size: 13px">(work in progress)</span></p>
+                <span style="color: #FF0000; font-size: 13px">(work in progress)</span>
+                <input 
+                    id="loadMIDIFileButton" 
+                    style="margin-right: 20px; margin-left: 20px; font-size: 10px; vertical-align: baseline;" 
+                    type="button" value="load MIDI File"
+                    onclick="JI_NAMESPACE.midiFile.load('temp midi/FOUR.MID')" />
+                <input id="downloadMIDIFileButton" 
+                    style="margin-right: 20px; margin-left: 20px; font-size: 10px; vertical-align: baseline;" 
+                    type="button" value="download MIDI File"
+                    onclick="JI_NAMESPACE.midiFile.download()" /></p>
             <hr class="hrHeight1" />
             <div style="text-align: center">
                <a  
@@ -487,6 +496,7 @@
 
     <script src="js/jiNamespace.js" type="text/javascript"></script>
     <script src="js/jiFile.js" type="text/javascript"></script>
+    <script src="js/jiMIDIFile.js" type="text/javascript"></script>
     <script src="js/jiMarkers.js" type="text/javascript"></script>
     <script src="js/jiPalettes.js" type="text/javascript"></script>
     <script src="js/jiMIDIMoment.js" type="text/javascript"></script>
