@@ -36,6 +36,8 @@ window.addEventListener("load", function ()
     if (!window.performance.now)
         window.performance.now = window.performance.webkitNow;
 
+    window.URL = window.URL || window.webkitURL;
+
     JMB.init(function (MIDIAccess)
     {
         var inputs = MIDIAccess.enumerateInputs(),

@@ -21,6 +21,7 @@ JI_NAMESPACE.apControls = (function (document, window)
     var svgTracksControl = JI_NAMESPACE.apTracksControl,
         jiScore = JI_NAMESPACE.score,
         jiAssistant = JI_NAMESPACE.assistant,
+        jiMIDIFile = JI_NAMESPACE.midiFile,
         score,
         assistant,
         sequence,
@@ -375,8 +376,11 @@ JI_NAMESPACE.apControls = (function (document, window)
 
     // callback called when a performing sequence is stopped or has played its last message,
     // or when the assistant is stopped or has played its last subsequence.
-        reportEndOfPerformance = function ()
+        reportEndOfPerformance = function (midiTracksData)
         {
+            var scoreName = mo.scoreSelector.options[mo.scoreSelector.selectedIndex].text;
+            jiMIDIFile.createSaveMIDIFileButton(scoreName, midiTracksData);
+
             setStopped();
             // the following line is important, because the stop button is also the pause button.
             svgControlsState = "stopped";
@@ -452,6 +456,8 @@ JI_NAMESPACE.apControls = (function (document, window)
 
         function setPlaying()
         {
+            jiMIDIFile.deleteSaveMIDIFileButton();
+
             if (options.assistedPerformance === true && assistant !== undefined)
             {
                 if (assistant.isStopped())
@@ -460,6 +466,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                     // either at the start marker, or somewhere paused.
                     score.setRunningMarkers();
                     score.moveStartMarkerToTop(svgPagesDiv);
+                    
 
                     assistant.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(), svgTracksControl);
 
@@ -713,7 +720,7 @@ JI_NAMESPACE.apControls = (function (document, window)
         }
 
         score = new jiScore.Score(runningMarkerHeightChanged); // an empty score, with callback function
-        
+
 
         setSvgPagesDivHeight();
 
@@ -834,10 +841,10 @@ JI_NAMESPACE.apControls = (function (document, window)
         function goControlClicked()
         {
             // options.assistedPerformance is kept up to date by the livePerformerOnOffButton.
-//            if (options.assistedPerformance)
-//            {
-//                svgTracksControl.setTrackOn(options.livePerformersTrackIndex);
-//            }
+            //            if (options.assistedPerformance)
+            //            {
+            //                svgTracksControl.setTrackOn(options.livePerformersTrackIndex);
+            //            }
 
             if (svgControlsState === 'stopped' || svgControlsState === 'paused')
             {

@@ -65,6 +65,7 @@ JI_NAMESPACE.sequence = (function (window)
         lastSpanTimestamp = -1,
         lastSequenceTimestamp = -1,
         thisIsLastMoment = false,
+        recordedMidiTracksData = [],
         tracks = [],
 
         setState = function (state)
@@ -152,7 +153,7 @@ JI_NAMESPACE.sequence = (function (window)
                 {
                     //console.log("End of span.");
                     // move the cursor back to the startMarker and set the APControls' state to "stopped"
-                    reportEndOfSequence(); // nothing happens if this is a null function
+                    reportEndOfSequence(recordedMidiTracksData); // nothing happens if this is a null function
                 }
 
                 return nextMomt; // null is stop, end of span
@@ -251,6 +252,8 @@ JI_NAMESPACE.sequence = (function (window)
 
                 if (msg.isEmpty === undefined) // the first message in a rest symbol can have an isEmpty attribute 
                 {
+                    recordedMidiTracksData[msg.channel].push(msg);
+
                     // sendMIDIMessage needs msg.timestamp to be absolute DOMHRT time.
                     msg.timestamp += domhrtMsOffsetAtStartOfSequence;
                     midiOutputDevice.sendMIDIMessage(msg);
@@ -290,7 +293,7 @@ JI_NAMESPACE.sequence = (function (window)
         // live performer's durations).
         playSpan = function (midiOutDevice, fromMs, toMs, tracksControl, reportEndOfSeq, reportMsPosition)
         {
-            tracks = this.tracks; // invoked only by a Sequence, 'this' is the sequence.
+            var i, nTracks = this.tracks.length;
 
             // Called when initiating a performance, but not when resuming.
             // Sets each track's isPerforming attribute. If the track is performing,
@@ -365,6 +368,14 @@ JI_NAMESPACE.sequence = (function (window)
                         lastSequenceTimestamp = (lastSequenceTimestamp > lastTrackTimestamp) ? lastSequenceTimestamp : lastTrackTimestamp;
                     }
                 }
+            }
+
+            recordedMidiTracksData = [];
+            tracks = this.tracks; // invoked only by a Sequence, 'this' is the sequence.
+
+            for (i = 0; i < nTracks; ++i)
+            {
+                recordedMidiTracksData.push([]);
             }
 
             if (midiOutDevice === undefined || midiOutDevice === null)

@@ -47,8 +47,9 @@ JI_NAMESPACE.assistant = (function (window)
         NOTE_ON = 7,
         NOTE_OFF = 8,
 
-        options, // performance options. This is the options object in jiAPControls.
+        options, // performance options. This is the options object in jiAPControls. 
         reportEndOfPerformance, // callback
+        completeMidiTracksData, // argument for reportEndOfPerformance
         reportMsPosition, // callback
 
     // An array of subsequence. Each subsequence is a Sequence.
@@ -183,7 +184,7 @@ JI_NAMESPACE.assistant = (function (window)
                     }
                 }
 
-                reportEndOfPerformance();
+                reportEndOfPerformance(completeMidiTracksData);
             }
             else
             {
@@ -363,8 +364,18 @@ JI_NAMESPACE.assistant = (function (window)
                 }
             }
 
-            function reportEndOfSubsequence()
+            function reportEndOfSubsequence(midiTracksData)
             {
+                var i,
+                nTracks = completeMidiTracksData.length;
+                for (i = 0; i < nTracks; ++i)
+                {
+                    if (midiTracksData[i].length > 0)
+                    {
+                        completeMidiTracksData[i] = completeMidiTracksData[i].concat(midiTracksData[i]);
+                    }
+                }
+
                 if (currentLivePerformersKeyPitch === -1) // key is up
                 {
                     if (currentIndex === endIndex)
@@ -595,6 +606,8 @@ JI_NAMESPACE.assistant = (function (window)
     // called when the Start button is clicked, and options.assistedPerformance === true
         Assistant = function (sequence, apControlOptions, reportEndOfWholePerformance, reportMillisecondPosition)
         {
+            var i, nTracks;
+
             if (!(this instanceof Assistant))
             {
                 return new Assistant(sequence, apControlOptions, reportEndOfWholePerformance, reportMillisecondPosition);
@@ -610,10 +623,17 @@ JI_NAMESPACE.assistant = (function (window)
 
             setState("stopped");
 
-            reportEndOfPerformance = reportEndOfWholePerformance;
+            reportEndOfPerformance = reportEndOfWholePerformance; // returns completeMidiTracksData;
+            completeMidiTracksData = [];
             reportMsPosition = reportMillisecondPosition;
 
             allSubsequences = sequence.getSubsequences(options.livePerformersTrackIndex);
+
+            nTracks = allSubsequences[0].tracks.length;
+            for (i = 0; i < nTracks; ++i)
+            {
+                completeMidiTracksData.push([]);
+            }
 
             // Starts an assisted performance 
             this.playSpan = playSpan;

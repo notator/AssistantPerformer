@@ -154,7 +154,7 @@ JI_NAMESPACE.score = (function (document)
                         returnTimeObject = lastChordTimeObject;
                         break;
                     }
-                    if (tObject.alignmentX >= alignmentX && tObject.chordDef !== undefined)
+                    if (tObject.alignmentX >= alignmentX && tObject.chordIndex !== undefined)
                     {
                         returnTimeObject = tObject;
                         break;

@@ -21,29 +21,20 @@
                 <span style="color: #FF0000; font-size: 13px">(work in progress)</span>
                 <input 
                     id="loadMIDIFileButton" 
-                    style="margin-right: 20px; margin-left: 20px; font-size: 10px; vertical-align: baseline;" 
-                    type="button" value="load MIDI File"
+                    style="margin-right: 20px; margin-left: 20px; font-size: 12px; vertical-align: baseline;" 
+                    type="button" value="load MIDI test file"
                     onclick="JI_NAMESPACE.midiFile.load('temp midi/FOUR.MID')" />
-                <input id="downloadMIDIFileButton" 
-                    style="margin-right: 20px; margin-left: 20px; font-size: 10px; vertical-align: baseline;" 
-                    type="button" value="download MIDI File"
-                    onclick="JI_NAMESPACE.midiFile.download()" /></p>
+                <input id="createSaveButtonButton" 
+                    style="margin-right: 20px; margin-left: 20px; font-size: 12px; vertical-align: baseline;" 
+                    type="button" value="create Save Button"
+                    onclick="JI_NAMESPACE.midiFile.createSaveButton()" /></p>
             <hr class="hrHeight1" />
             <div style="text-align: center">
                <a  
 			        id="aboutAssistantPerformerLink"
                     style="font-size: 13px;"
 			        href="http://james-ingram-act-two.de/open-source/publicAssistantPerformer/aboutAssistantPerformer.html">About this version of the Assistant Performer</a>
-    			<div id="options"
-                    style="font-size: 12px;
-                    background-color: #F6F6F6;
-                    border: 1px solid #008000;
-                    margin-top: 10px;
-                    margin-bottom:0px;
-                    margin-left:125;
-                    margin-right:125;
-                    padding: 10;
-                    text-align:center;" >
+    			<div id="options" class="options">
                     <div style="font-size: 14px;">
                         options
                     </div>
@@ -243,8 +234,7 @@
                 </div>
 
     <div id="controlPanel" style="padding:0px; margin:0px; width:1042px; height:41; position: absolute; top: 540px;">
-
-<svg xmlns="http://www.w3.org/2000/svg" width="170" height="36" style="position: absolute; left: 428px; top: 5px; ">
+        <svg xmlns="http://www.w3.org/2000/svg" width="170" height="36" style="position: absolute; left: 428px; top: 5px; ">
     <g id="performanceButtons" transform="translate(0.5, 0.5)">
         <rect id="performanceButtonsFrame" x="0" y="0" width="169" height="30" stroke="#008000" stroke-width="1" fill="#F5FFF5" />
         <rect id="performanceButtonsDisabled" x="0" y="0" width="169" height="30" stroke="white" stroke-width="1" fill="white" opacity="0" />
@@ -416,8 +406,21 @@
         </g>
 
     </g>
-</svg>
-<svg xmlns="http://www.w3.org/2000/svg" width="93" height="36" style="position: absolute; left: 715px; top: 5px; ">
+</svg> 
+         <!--  
+              <div id="downloadLinkDiv"             
+            style="position: absolute; width: 54px; height: 29px; top: 5px; left: 682px;
+            font-family:Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif; font-size: 13px;
+            border: 1px solid #1010C6; background-color: #F6F6F6; text-align: center;">
+            <div style="top: 6px; position: relative;">save</div>
+        </div>
+        -->
+        <div id="downloadLinkDiv" 
+            style="position: absolute; top: 5px; left: 681px;">
+        </div>
+
+       
+        <svg xmlns="http://www.w3.org/2000/svg" width="93" height="36" style="position: absolute; left: 820px; top: 5px; ">
     <g id="livePerformerOnOff" transform="translate(0.5, 0.5)"
         onmouseover="JI_NAMESPACE.apControls.showOverRect('overLivePerformerOnOffFrame', 'livePerformerOnOffDisabled')"
         onmouseout="JI_NAMESPACE.apControls.hideOverRect('overLivePerformerOnOffFrame')"
@@ -448,7 +451,8 @@
         <rect id="livePerformerOnOffDisabled" x="0" y="0" width="92" height="30" stroke="white" stroke-width="1" fill="white"  opacity="0"/>
     </g>
 </svg>
-<svg xmlns="http://www.w3.org/2000/svg" width="104" height="36" style="position: absolute; left: 925px; top: 5px;">
+
+        <svg xmlns="http://www.w3.org/2000/svg" width="104" height="36" style="position: absolute; left: 925px; top: 5px;">
     <g id="gotoOptions" transform="translate(0.5, 0.5)"
         onmouseover="JI_NAMESPACE.apControls.showOverRect('overGotoOptionsFrame', 'gotoOptionsDisabled')"
         onmouseout="JI_NAMESPACE.apControls.hideOverRect('overGotoOptionsFrame')"
@@ -461,8 +465,8 @@
         <rect id="gotoOptionsDisabled" x="0" y="0" width="103" height="30" stroke="white" stroke-width="1" fill="white" opacity="0.7" />
     </g>
 </svg>
-                </div>
-                <div
+    </div>
+    <div
 				    id="svgPages"
 				    style="border: 1px solid #008000; width: 1027px; height:600px; overflow:auto; position: absolute; top: 581px;  padding-top: 0px; margin-top: 0px; left: 0px; line-height: 0px;">
 				   <!--
@@ -489,14 +493,13 @@
 				    <br />
                     -->
 			    </div>
-            </div>
+</div>
 
     <script src="lib/JazzMIDIBridge.js" type="text/javascript"></script>
     <script src="lib/MIDIDeviceSelector.js" type="text/javascript"></script>
 
     <script src="js/jiNamespace.js" type="text/javascript"></script>
     <script src="js/jiFile.js" type="text/javascript"></script>
-    <script src="js/jiMIDIFile.js" type="text/javascript"></script>
     <script src="js/jiMarkers.js" type="text/javascript"></script>
     <script src="js/jiPalettes.js" type="text/javascript"></script>
     <script src="js/jiMIDIMoment.js" type="text/javascript"></script>
@@ -506,6 +509,7 @@
     <script src="js/jiAssistant.js" type="text/javascript"></script>
     <script src="js/jiScore.js" type="text/javascript"></script>
     <script src="js/jiAPTracksControl.js" type="text/javascript"></script>
+    <script src="js/jiMIDIFile.js" type="text/javascript"></script>
     <script src="js/jiAPControls.js" type="text/javascript"></script>
 
     <!--
