@@ -366,15 +366,24 @@ JI_NAMESPACE.assistant = (function (window)
 
             function reportEndOfSubsequence(midiTracksData)
             {
-                var i,
-                nTracks = completeMidiTracksData.length;
-                for (i = 0; i < nTracks; ++i)
+                function collectMidiTracksData(completeMidiTracksData, midiTracksData)
                 {
-                    if (midiTracksData[i].length > 0)
+                    var i, j, nMessages, newMessages, allTrackMessages,
+                    nTracks = completeMidiTracksData.length;
+
+                    for (i = 0; i < nTracks; ++i)
                     {
-                        completeMidiTracksData[i] = completeMidiTracksData[i].concat(midiTracksData[i]);
+                        allTrackMessages = completeMidiTracksData[i];
+                        newMessages = midiTracksData[i];
+                        nMessages = newMessages.length;
+                        for (j = 0; j < nMessages; ++j)
+                        {
+                            allTrackMessages.push(newMessages[j]);
+                        }
                     }
                 }
+
+                collectMidiTracksData(completeMidiTracksData, midiTracksData);
 
                 if (currentLivePerformersKeyPitch === -1) // key is up
                 {
