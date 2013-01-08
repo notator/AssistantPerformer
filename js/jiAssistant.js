@@ -65,7 +65,9 @@ JI_NAMESPACE.assistant = (function (window)
     // these variables are initialized by playSpan() and used by handleMidiIn() 
         endIndex = -1,
         currentIndex = -1, // the index of the currently playing subsequence (which will be stopped when a noteOn or noteOff arrives).
-        nextIndex = 0, // the index of the subsequence which will be played when a noteOn msg arrives 
+        nextIndex = 0, // the index of the subsequence which will be played when a noteOn msg arrives
+        performanceStartNow, // set when the first subsequence starts, used to rectify timestamps when subsequences stop 
+        subsequenceStartNow, // set when a subsequence starts, used to rectify timestamps when it stops, and in the relative durations option 
         prevSubsequenceStartNow = 0.0, // used only with the relative durations option
         pausedNow = 0.0, // used only with the relative durations option (the time at which the subsequence was paused).
 
@@ -130,7 +132,8 @@ JI_NAMESPACE.assistant = (function (window)
             {
                 if (options.assistantUsesAbsoluteDurations === false)
                 {
-                    prevSubsequenceStartNow += (window.performance.now() - pausedNow);
+                    subsequenceStartNow = window.performance.now();
+                    prevSubsequenceStartNow += (subsequenceStartNow - pausedNow);
                 }
                 span[currentIndex].resume();
                 setState("running");
@@ -368,8 +371,9 @@ JI_NAMESPACE.assistant = (function (window)
             {
                 function collectMidiTracksData(completeMidiTracksData, midiTracksData)
                 {
-                    var i, j, nMessages, newMessages, allTrackMessages,
-                    nTracks = completeMidiTracksData.length;
+                    var i, j, nMessages, newMessages, allTrackMessages, msg,
+                    nTracks = completeMidiTracksData.length,
+                    sequenceStartTimeRePerformanceStart = subsequenceStartNow - performanceStartNow;
 
                     for (i = 0; i < nTracks; ++i)
                     {
@@ -378,7 +382,9 @@ JI_NAMESPACE.assistant = (function (window)
                         nMessages = newMessages.length;
                         for (j = 0; j < nMessages; ++j)
                         {
-                            allTrackMessages.push(newMessages[j]);
+                            msg = newMessages[j];
+                            msg.timestamp += sequenceStartTimeRePerformanceStart;
+                            allTrackMessages.push(msg);
                         }
                     }
                 }
@@ -405,9 +411,10 @@ JI_NAMESPACE.assistant = (function (window)
 
             function playSubsequence(subsequence, options)
             {
-                var now = window.performance.now(), // in the time frame used by sequences
-                    prevSubsequenceScoreMsDuration,
+                var prevSubsequenceScoreMsDuration,
                     durationFactor;
+
+                subsequenceStartNow = window.performance.now(); // in the time frame used by sequences
 
                 if (options.assistantUsesAbsoluteDurations === false)
                 {
@@ -462,6 +469,11 @@ JI_NAMESPACE.assistant = (function (window)
                 if (inputMsg.data2 > 0)
                 {
                     silentlyCompleteCurrentlyPlayingSubsequence();
+
+                    if (nextIndex === 0)
+                    {
+                        performanceStartNow = window.performance.now();
+                    }
 
                     if (nextIndex === 0 || (nextIndex <= endIndex && span[nextIndex].chordSubsequence !== undefined))
                     {
