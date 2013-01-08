@@ -19,7 +19,8 @@ JI_NAMESPACE.midiFile = (function (document, window)
 {
     "use strict";
 
-    var 
+    var
+    // deletes the 'save' button created by createSaveMIDIFileButton() 
     deleteSaveMIDIFileButton = function ()
     {
         var 
@@ -39,6 +40,7 @@ JI_NAMESPACE.midiFile = (function (document, window)
         }
     },
 
+    // Returns true if the MIDI command only uses status and data1 fields, otherwise false
     isTwoByteCommand = function (command)
     {
         var returnValue = false,
@@ -53,40 +55,42 @@ JI_NAMESPACE.midiFile = (function (document, window)
         return returnValue;
     },
 
-    variableLengthValueLength = function (timeOffset)
+    // Returns the number of bytes used by the MIDI 'variable length value' corresponding 
+    // to the argument value.
+    variableLengthValueLength = function (value)
     {
         var length;
 
-        if (timeOffset < 0)
+        if (value < 0)
         {
-            throw "Error: timeOffset may not be negative.";
+            throw "Error: value may not be negative.";
         }
-        else if (timeOffset < 128) // 7 bits, 8th bit is 2^7 == 128
+        else if (value < 128) // 7 bits, 8th bit is 2^7 == 128
         {
             length = 1;
         }
-        else if (timeOffset < 16384) // 14 bits, 15th bit is 2^14 == 16384
+        else if (value < 16384) // 14 bits, 15th bit is 2^14 == 16384
         {
             length = 2;
         }
-        else if (timeOffset < 2097152) // 21 bits, 22nd bit is 2^21 == 2097152
+        else if (value < 2097152) // 21 bits, 22nd bit is 2^21 == 2097152
         {
             length = 3;
         }
-        else if (timeOffset < 268435456) // 28 bits, 29th bit is 2^28 == 268435456
+        else if (value < 268435456) // 28 bits, 29th bit is 2^28 == 268435456
         {
             length = 4;
         }
         else
         {
-            throw "Error: timeOffset out of range";
+            throw "Error: value out of range";
         }
 
         return length;
     },
 
-    // returns a Uint8Array of the correct length, containing the
-    // argument value as a MIDI 'Variable Length Value'.
+    // Returns a Uint8Array of the correct length, containing the
+    // argument value as a MIDI 'variable length value'.
     getVariableLengthValue = function (value)
     {
         var 
@@ -127,6 +131,8 @@ JI_NAMESPACE.midiFile = (function (document, window)
         return returnValue;
     },
 
+    // Returns the length of the track's data, in bytes.
+    // midiMessages contains the sequence of messages for a single track.
     getTrackDataLength = function (midiMessages)
     {
         var 
@@ -154,7 +160,7 @@ JI_NAMESPACE.midiFile = (function (document, window)
         return dataLength;
     },
 
-    // returns a Uint8Array containing track data
+    // Returns a Uint8Array containing the track's data bytes
     getTrackData = function (trackMessages)
     {
         var i, nMessages = trackMessages.length, msg,
@@ -196,7 +202,7 @@ JI_NAMESPACE.midiFile = (function (document, window)
         return trackData;
     },
 
-    // returns a Uint8Array containing a track header
+    // Returns a Uint8Array containing a track header
     getTrackHeader = function (dataLength)
     {
         var 
@@ -213,7 +219,7 @@ JI_NAMESPACE.midiFile = (function (document, window)
         return trackHeader;
     },
 
-    // returns a Uint8Array containing the MIDI header chunk
+    // Returns a Uint8Array containing the MIDI header chunk
     getMIDIHeaderChunk = function (nTracks)
     {
         var 
@@ -237,6 +243,7 @@ JI_NAMESPACE.midiFile = (function (document, window)
         return midiHeaderChunk;
     },
 
+    // Returns a UintArray containing a track chunk (track header + data)
     getTrackChunk = function (trackMessages)
     {
         var i, trackData, trackHeader, trackChunk;
@@ -250,10 +257,8 @@ JI_NAMESPACE.midiFile = (function (document, window)
         return trackChunk;
     },
 
-    // This function returns an ArrayBuffer containing the MIDI file as byte data.
+    // Returns an ArrayBuffer containing the complete standard MIDI file.
     // midiTracksMessages is an array of arrays. Each contained array contains the midiMessages for one track.
-    // The AssistantPerformer uses one track per channel, and vice versa.
-    // Each midiMessage has its timestamp set to the value it had in the performance (re the start of the performance).
     midiTracksDataToArrayBuffer = function (nTracks, midiTracksMessages)
     {
         var i, trackChunk, trackChunks = [], trackChunksLength = 0,
@@ -292,6 +297,8 @@ JI_NAMESPACE.midiFile = (function (document, window)
         return midiFileArrayBuffer;
     },
 
+    // Returns true if any of the tracks contain data, otherwise false.
+    // Used to prevent the creation of a 'save' button when there is nothing to save.
     hasData = function (nTracks, midiTracksData)
     {
         var i, has = false;
@@ -306,7 +313,8 @@ JI_NAMESPACE.midiFile = (function (document, window)
         return has;
     },
 
-    getDownloadName = function (scoreName)
+    // Returns the name of the file to be downloaded
+    getMIDIFileName = function (scoreName)
     {
         var 
         d = new Date(),
@@ -318,12 +326,24 @@ JI_NAMESPACE.midiFile = (function (document, window)
         return downloadName;
     },
 
-
-    // Creates a link with which the user can createSaveButton a recording of the performance as a MIDI file.
-    // The link is deleted when the file has been downloaded or when a new performance is started.
-    // The scoreName is the name of the score (as selected in the main score selector).
-    // midiTracksData contains ordinary javascript arrays of numbers, containing the byte values for the MIDI file.
-    // midiTracksData is returned by the sequencer when it calls reportEndOfPerformance(). 
+    // Creates a button which, when clicked, downloads a standard MIDI file recording
+    // of the performance which has just ended.
+    // The performance may have ended by reaching the stop marker, or by the user clicking
+    // the 'stop' button. The 'save' button (and its associated recording) are deleted either
+    // when it is clicked (the file is downloaded) or when a new performance is started.
+    // Arguments:
+    // scoreName is the name of the score (as selected in the main score selector).
+    //     The name of the downloaded file is:
+    //         scoreName + '.' + the current date (format:year-month-day) + '.mid'.
+    // midiTracksData contains a javascript arrays of arrays.
+    //     Each inner Array contains the sequence of timestamped midi messages for a single
+    //     track. Each midi message object has the following fields:
+    //         status (= command + channel)
+    //         command
+    //         channel
+    //         data1
+    //         data2
+    //         timestamp (milliseconds since the start of the performance)      
     createSaveMIDIFileButton = function (scoreName, midiTracksData)
     {
         var 
@@ -336,7 +356,7 @@ JI_NAMESPACE.midiFile = (function (document, window)
         if (hasData(nTracks, midiTracksData))
         {
             downloadLinkDiv = document.getElementById("downloadLinkDiv"); // the empty Element which will contain the link
-            downloadName = getDownloadName(scoreName);
+            downloadName = getMIDIFileName(scoreName);
 
             midiArray = midiTracksDataToArrayBuffer(nTracks, midiTracksData);
             blob = new Blob([midiArray], { type: 'audio/midi' });
@@ -369,7 +389,6 @@ JI_NAMESPACE.midiFile = (function (document, window)
         }
     },
 
-    // public API
     publicAPI =
     {
         createSaveMIDIFileButton: createSaveMIDIFileButton,
