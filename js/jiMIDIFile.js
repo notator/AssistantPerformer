@@ -250,8 +250,8 @@ JI_NAMESPACE.midiFile = (function (document, window)
         return trackChunk;
     },
 
-    // This function returns a Uint8Array containing the MIDI file as byte data.
-    // midiTracksMessages is an array of arrays containing the midiMessages for each track.
+    // This function returns an ArrayBuffer containing the MIDI file as byte data.
+    // midiTracksMessages is an array of arrays. Each contained array contains the midiMessages for one track.
     // The AssistantPerformer uses one track per channel, and vice versa.
     // Each midiMessage has its timestamp set to the value it had in the performance (re the start of the performance).
     midiTracksDataToArrayBuffer = function (nTracks, midiTracksMessages)
