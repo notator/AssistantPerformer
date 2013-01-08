@@ -434,8 +434,6 @@ JI_NAMESPACE.sequence = (function (window)
         // (stopped === false && paused === false)
         pause = function ()
         {
-            tracks = this.tracks; // invoked only by a Sequence, 'this' is the sequence.
-
             if (stopped === false && paused === false)
             {
                 setState("paused");
@@ -450,11 +448,10 @@ JI_NAMESPACE.sequence = (function (window)
         // (stopped === false)
         stop = function ()
         {
-            tracks = this.tracks; // invoked only by a Sequence, 'this' is the sequence.
-
             if (stopped === false)
             {
                 setState("stopped");
+                reportEndOfSequence(recordedMidiTracksData);
             }
             else
             {
