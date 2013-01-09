@@ -19,7 +19,7 @@ JI_NAMESPACE.midiFile = (function (document, window)
 {
     "use strict";
 
-    var
+    var 
     // deletes the 'save' button created by createSaveMIDIFileButton() 
     deleteSaveMIDIFileButton = function ()
     {
@@ -314,13 +314,28 @@ JI_NAMESPACE.midiFile = (function (document, window)
     },
 
     // Returns the name of the file to be downloaded
+    // The date part of the name is formatted as
+    //     year-month-day, with month and day always having two characters
+    // so that downloaded files will list in order of creation time.
     getMIDIFileName = function (scoreName)
     {
         var 
         d = new Date(),
-        dayOfTheMonth = d.getDate(),
-        month = d.getMonth() + 1,
-        year = d.getFullYear(),
+        dayOfTheMonth = (d.getDate()).toString(),
+        month = (d.getMonth() + 1).toString(),
+        year = (d.getFullYear()).toString(),
+        downloadName;
+
+        if (month.length === 1)
+        {
+            month = "0".concat(month);
+        }
+
+        if (dayOfTheMonth.length === 1)
+        {
+            dayOfTheMonth = "0".concat(dayOfTheMonth);
+        }
+
         downloadName = scoreName.concat('_', year, '-', month, '-', dayOfTheMonth, '.mid'); // .mid is added in case scoreName contains a '.'.
 
         return downloadName;
@@ -334,7 +349,8 @@ JI_NAMESPACE.midiFile = (function (document, window)
     // Arguments:
     // scoreName is the name of the score (as selected in the main score selector).
     //     The name of the downloaded file is:
-    //         scoreName + '.' + the current date (format:year-month-day) + '.mid'.
+    //         scoreName + '_' + the current date (format:year-month-day) + '.mid'.
+    //         (e.g. "Study 2c3.1_2013-01-08.mid")
     // midiTracksData contains a javascript arrays of arrays.
     //     Each inner Array contains the sequence of timestamped midi messages for a single
     //     track. Each midi message object has the following fields:
