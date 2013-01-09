@@ -22,6 +22,7 @@ JI_NAMESPACE.apControls = (function (document, window)
         jiScore = JI_NAMESPACE.score,
         jiAssistant = JI_NAMESPACE.assistant,
         jiMIDIFile = JI_NAMESPACE.midiFile,
+        midiAccess,
         score,
         assistant,
         sequence,
@@ -59,10 +60,14 @@ JI_NAMESPACE.apControls = (function (document, window)
         scoreHasJustBeenSelected = false,
 
     // This function is called when the input or output device selectors change.
-    setMidiDevices = function (MIDIAccess, inputDeviceId, outputDeviceId)
+    setMidiDevices = function (midiAccess)
     {
-        options.inputDeviceId = inputDeviceId;
-        options.outputDeviceId = outputDeviceId;
+        var 
+        inSelector = document.getElementById("midiInputDeviceSelector"),
+        outSelector = document.getElementById("midiOutputDeviceSelector");
+
+        options.inputDeviceId = inSelector.selectedIndex - 1;
+        options.outputDeviceId = outSelector.selectedIndex - 1;
         options.getInputDevice = function (handleMidiIn)
         {
             if (options.inputDevice !== undefined && options.inputDevice !== null)
@@ -70,9 +75,9 @@ JI_NAMESPACE.apControls = (function (document, window)
                 options.inputDevice.close();
                 options.inputDevice = null;
             }
-            if (options.inputDeviceId !== "")
+            if (options.inputDeviceId !== -1)
             {
-                options.inputDevice = MIDIAccess.getInput(options.inputDeviceId);
+                options.inputDevice = midiAccess.getInput(options.inputDeviceId);
                 if (handleMidiIn !== null)
                 {
                     options.inputDevice.addEventListener("midimessage", function (msg)
@@ -88,9 +93,9 @@ JI_NAMESPACE.apControls = (function (document, window)
             options.outputDevice.close();
             options.outputDevice = null;
         }
-        if (outputDeviceId !== "")
+        if (options.outputDeviceId !== -1)
         {
-            options.outputDevice = MIDIAccess.getOutput(outputDeviceId);
+            options.outputDevice = midiAccess.getOutput(options.outputDeviceId);
         }
     },
 
@@ -466,7 +471,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                     // either at the start marker, or somewhere paused.
                     score.setRunningMarkers();
                     score.moveStartMarkerToTop(svgPagesDiv);
-                    
+
 
                     assistant.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(), svgTracksControl);
 
@@ -602,7 +607,6 @@ JI_NAMESPACE.apControls = (function (document, window)
             setCursorAndEventListener('settingEnd');
         }
 
-        //alert("setting controls svgControlsState: " + svgControlsState);
         svgControlsState = svgCtlsState;
 
         setCursorAndEventListener('default');
@@ -633,7 +637,7 @@ JI_NAMESPACE.apControls = (function (document, window)
         }
     },
 
-    init = function ()
+    init = function (mAccess)
     {
         function getMainOptionElements()
         {
@@ -663,6 +667,39 @@ JI_NAMESPACE.apControls = (function (document, window)
             mo.assistantsSpeedInputText = document.getElementById("assistantsSpeedInputText");
             mo.assistantUsesRelativeDurationsRadioButton = document.getElementById("assistantUsesRelativeDurationsRadioButton");
             mo.startRuntimeButton = document.getElementById("startRuntimeButton");
+        }
+
+        // sets the options in the device selectors' menus
+        function setMIDIDeviceSelectors(midiAccess)
+        {
+            var 
+            i, nItems, option,
+            is = mo.midiInputDeviceSelector, // = document.getElementById("midiInputDeviceSelector")
+            os = mo.midiOutputDeviceSelector, // = document.getElementById("midiOutputDeviceSelector")
+            inputs = midiAccess.enumerateInputs(),
+            outputs = midiAccess.enumerateOutputs();
+
+            option = document.createElement("option");
+            option.text = "choose a MIDI input device";
+            is.add(option, null);
+            nItems = inputs.length;
+            for (i = 0; i < nItems; ++i)
+            {
+                option = document.createElement("option");
+                option.text = inputs[i].deviceName;
+                is.add(option, null);
+            }
+
+            option = document.createElement("option");
+            option.text = "choose a MIDI output device";
+            os.add(option, null);
+            nItems = outputs.length;
+            for (i = 0; i < nItems; ++i)
+            {
+                option = document.createElement("option");
+                option.text = outputs[i].deviceName;
+                os.add(option, null);
+            }
         }
 
         function getControlLayers(document)
@@ -719,12 +756,15 @@ JI_NAMESPACE.apControls = (function (document, window)
             svgPagesDiv.style.height = window.innerHeight - 43;
         }
 
-        score = new jiScore.Score(runningMarkerHeightChanged); // an empty score, with callback function
-
-
-        setSvgPagesDivHeight();
+        midiAccess = mAccess;
 
         getMainOptionElements();
+
+        setMIDIDeviceSelectors(midiAccess);
+
+        score = new jiScore.Score(runningMarkerHeightChanged); // an empty score, with callback function
+
+        setSvgPagesDivHeight();
 
         getControlLayers(document);
 
@@ -840,12 +880,6 @@ JI_NAMESPACE.apControls = (function (document, window)
 
         function goControlClicked()
         {
-            // options.assistedPerformance is kept up to date by the livePerformerOnOffButton.
-            //            if (options.assistedPerformance)
-            //            {
-            //                svgTracksControl.setTrackOn(options.livePerformersTrackIndex);
-            //            }
-
             if (svgControlsState === 'stopped' || svgControlsState === 'paused')
             {
                 setSvgControlsState('playing');
@@ -944,6 +978,7 @@ JI_NAMESPACE.apControls = (function (document, window)
 
         if (controlID === "midiInputDeviceSelector")
         {
+            setMidiDevices(midiAccess);
             svgTracksControl.setTracksControlState(mo.midiInputDeviceSelector.selectedIndex > 0, mo.trackSelector.selectedIndex);
         }
 
@@ -951,6 +986,11 @@ JI_NAMESPACE.apControls = (function (document, window)
         {
             setScore();
             svgTracksControl.setTracksControlState(mo.trackSelector.selectedIndex >= 0, mo.trackSelector.selectedIndex);
+        }
+
+        if (controlID === "midiOutputDeviceSelector")
+        {
+            setMidiDevices(midiAccess);
         }
 
         if (controlID === "trackSelector")
@@ -1014,6 +1054,8 @@ JI_NAMESPACE.apControls = (function (document, window)
 
         if (controlID === "gotoOptions")
         {
+            jiMIDIFile.deleteSaveMIDIFileButton();
+
             if (cl.gotoOptionsDisabled.getAttribute("opacity") !== SMOKE)
             {
                 setSvgControlsState('disabled');
@@ -1214,8 +1256,6 @@ JI_NAMESPACE.apControls = (function (document, window)
     publicAPI =
     {
         init: init,
-
-        setMidiDevices: setMidiDevices,
 
         doControl: doControl,
         showOverRect: showOverRect,
