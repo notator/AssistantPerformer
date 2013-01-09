@@ -40,6 +40,35 @@ JI_NAMESPACE.midiFile = (function (document, window)
         }
     },
 
+    setZeroStartTime = function (midiTracksData)
+    {
+        var 
+        i, nTracks = midiTracksData.length,
+        j, nMessages, messages,
+        startTime = Number.MAX_VALUE;
+
+        for (i = 0; i < nTracks; ++i)
+        {
+            if (midiTracksData[i].length > 0)
+            {
+                startTime = startTime < midiTracksData[i][0].timestamp ? startTime : midiTracksData[i][0].timestamp;
+            }
+        }
+
+        if (startTime > 0)
+        {
+            for (i = 0; i < nTracks; ++i)
+            {
+                messages = midiTracksData[i];
+                nMessages = messages.length;
+                for (j = 0; j < nMessages; ++j)
+                {
+                    messages[j].timestamp -= startTime;
+                }
+            }
+        }
+    },
+
     // Returns true if the MIDI command only uses status and data1 fields, otherwise false
     isTwoByteCommand = function (command)
     {
@@ -373,6 +402,8 @@ JI_NAMESPACE.midiFile = (function (document, window)
         {
             downloadLinkDiv = document.getElementById("downloadLinkDiv"); // the empty Element which will contain the link
             downloadName = getMIDIFileName(scoreName);
+
+            setZeroStartTime(midiTracksData);
 
             midiArray = midiTracksDataToArrayBuffer(nTracks, midiTracksData);
             blob = new Blob([midiArray], { type: 'audio/midi' });
