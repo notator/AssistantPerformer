@@ -62,7 +62,7 @@ JI_NAMESPACE.sequence = (function (window)
 
         msg = null,
 
-        lastSpanTimestamp = -1,
+        endMarkerTimestamp = -1,
         lastSequenceTimestamp = -1,
         thisIsLastMoment = false,
         recordedMidiTracksData = [],
@@ -131,11 +131,10 @@ JI_NAMESPACE.sequence = (function (window)
                 if (nextMomt !== null)
                 {
                     // Only perform the last moment in the span if it is the last moment in the sequence.
-                    if (nextMomt.timestamp === lastSpanTimestamp && nextMomt.timestamp < lastSequenceTimestamp)
-                    // or NEW if (nextMomt.timestamp === lastSpanTimestamp || nextMomt.timestamp === lastSequenceTimestamp)
+                    if (nextMomt.timestamp === endMarkerTimestamp && nextMomt.timestamp < lastSequenceTimestamp)
+                    // or NEW if (nextMomt.timestamp === endMarkerTimestamp || nextMomt.timestamp === lastSequenceTimestamp)
                     {
-                        // Do not perform the last moment in a span or sequence,
-                        // but call reportEndOfSequence() (below) and then stop.
+                        // Do not perform the last moment in a span or sequence, but call stop() (below).
                         nextMomt = null;
                     }
                     else
@@ -151,9 +150,7 @@ JI_NAMESPACE.sequence = (function (window)
                 // Ask again. nextMomt may have been set to null in the last statement.
                 if (nextMomt === null)
                 {
-                    //console.log("End of span.");
-                    // move the cursor back to the startMarker and set the APControls' state to "stopped"
-                    reportEndOfSequence(recordedMidiTracksData); // nothing happens if this is a null function
+                    stop();
                 }
 
                 return nextMomt; // null is stop, end of span
@@ -164,11 +161,7 @@ JI_NAMESPACE.sequence = (function (window)
                 if (currentMoment === null || messageIndex >= currentMomentLength)
                 {
                     currentMoment = nextMoment();
-                    if (currentMoment === null)
-                    {
-                        setState("stopped");
-                    }
-                    else
+                    if (currentMoment !== null) // if null, then the performance has stopped
                     {
                         currentMomentLength = currentMoment.messages.length; // should never be 0!
                         messageIndex = 0;
@@ -208,7 +201,7 @@ JI_NAMESPACE.sequence = (function (window)
         //          fromIndex // the index of the first moment in the track to play
         //          toIndex // the index of the final moment in the track (which does not play)
         //          currentIndex // = fromIndex
-        //      lastSpanTimestamp // the toMs argument to playSpan()
+        //      endMarkerTimestamp // the toMs argument to playSpan()
         //      lastSequenceTimestamp // the largest timestamp in any track (i.e. the end of the sequence)
         //      maxDeviation = 0; // just for console.log
         //      midiOutputDevice // the midi output device
@@ -348,7 +341,7 @@ JI_NAMESPACE.sequence = (function (window)
                 }
             }
 
-            // Sets lastSpanTimestamp and
+            // Sets endMarkerTimestamp and
             // lastSequenceTimestamp to the largest timestamp in any track (i.e. the end of the sequence)
             // Invoked from sequence
             function setLastSequenceTimeStamp(toMs)
@@ -356,7 +349,7 @@ JI_NAMESPACE.sequence = (function (window)
                 var i, nTracks = tracks.length, track,
                 lastTrackTimestamp;
 
-                lastSpanTimestamp = toMs;
+                endMarkerTimestamp = toMs;
                 lastSequenceTimestamp = -1;
 
                 for (i = 0; i < nTracks; ++i)
@@ -444,18 +437,13 @@ JI_NAMESPACE.sequence = (function (window)
             }
         },
 
-        // Can only be called while running or paused
-        // (stopped === false)
+        // does nothing if the sequence is already stopped
         stop = function ()
         {
             if (stopped === false)
             {
                 setState("stopped");
-                reportEndOfSequence(recordedMidiTracksData);
-            }
-            else
-            {
-                throw "Attempt to stop a stopped sequence.";
+                reportEndOfSequence(recordedMidiTracksData, endMarkerTimestamp); // endMarkerTimestamp is the toMs argument to playSpan()
             }
         },
 

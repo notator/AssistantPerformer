@@ -6,11 +6,14 @@
  *  https://github.com/notator/assistant-performer/blob/master/License.md
  *
  *  jiMIDIFile.js
- *  The JI_NAMESPACE.midiFile namespace containing two functions
- *      load(midiFileURI)   // loads the midi file into an ordinary javascript array of numbers.
- *                          // The array is at the base level in this namespace.
- *      
- *      createSaveButton()          // downloads the array (set by load()) as a MIDI file. 
+ *  The JI_NAMESPACE.midiFile namespace which exposes two public functions
+ *
+ *    // Create a button which, when clicked, downloads a standard MIDI file recording
+ *    // of the performance which has just ended. (See further comment on the function itself)
+ *    createSaveMIDIFileButton(scoreName, midiTracksData, endMarkerTimestamp) 
+ *
+ *    // delete the 'save' button created by createSaveMIDIFileButton()
+ *    deleteSaveMIDIFileButton() 
  */
 
 JI_NAMESPACE.namespace('JI_NAMESPACE.midiFile');
@@ -40,33 +43,25 @@ JI_NAMESPACE.midiFile = (function (document, window)
         }
     },
 
-    setZeroStartTime = function (midiTracksData)
+    getEarliestTimestamp = function (nTracks, midiTracksData)
     {
         var 
-        i, nTracks = midiTracksData.length,
-        j, nMessages, messages,
-        startTime = Number.MAX_VALUE;
+        i, earliestTimestamp = Number.MAX_VALUE;
 
         for (i = 0; i < nTracks; ++i)
         {
             if (midiTracksData[i].length > 0)
             {
-                startTime = startTime < midiTracksData[i][0].timestamp ? startTime : midiTracksData[i][0].timestamp;
+                earliestTimestamp = earliestTimestamp < midiTracksData[i][0].timestamp ? earliestTimestamp : midiTracksData[i][0].timestamp;
             }
         }
 
-        if (startTime > 0)
+        if (earliestTimestamp === Number.MAX_VALUE)
         {
-            for (i = 0; i < nTracks; ++i)
-            {
-                messages = midiTracksData[i];
-                nMessages = messages.length;
-                for (j = 0; j < nMessages; ++j)
-                {
-                    messages[j].timestamp -= startTime;
-                }
-            }
+            throw "Error: At least one track must contain a timed message!";
         }
+
+        return earliestTimestamp;
     },
 
     // Returns true if the MIDI command only uses status and data1 fields, otherwise false
@@ -162,17 +157,19 @@ JI_NAMESPACE.midiFile = (function (document, window)
 
     // Returns the length of the track's data, in bytes.
     // midiMessages contains the sequence of messages for a single track.
-    getTrackDataLength = function (midiMessages)
+    getTrackDataLength = function (startOfTrackTimeOffset, trackMessages, endOfTrackTimestamp)
     {
         var 
-        i, nMessages = midiMessages.length, msg,
-        dataLength = 0, currentTime = 0, timeOffset;
+        i, msg, timeOffset,
+        nMessages = trackMessages.length,
+        dataLength = 0,
+        previousTimestamp = startOfTrackTimeOffset;
 
         for (i = 0; i < nMessages; ++i)
         {
-            msg = midiMessages[i];
-            timeOffset = msg.timestamp - currentTime;
-            currentTime = msg.timestamp;
+            msg = trackMessages[i];
+            timeOffset = msg.timestamp - previousTimestamp;
+            previousTimestamp = msg.timestamp;
 
             dataLength += variableLengthValueLength(timeOffset);
             if (isTwoByteCommand(msg.command))
@@ -184,27 +181,35 @@ JI_NAMESPACE.midiFile = (function (document, window)
                 dataLength += 3;
             }
         }
-        dataLength += 4; // end of track event: 0x00, 0xFF, 0x2F, 0x00
+
+        timeOffset = endOfTrackTimestamp - previousTimestamp;
+        dataLength += variableLengthValueLength(timeOffset);
+        dataLength += 3; // all sound off ( Bx 78 00 )
+        dataLength += 4; // time + all controllers off ( 00 Bx 79 00 ) 
+        dataLength += 4; // time + end of track event  ( 00 FF 2F 00 )
 
         return dataLength;
     },
 
     // Returns a Uint8Array containing the track's data bytes
-    getTrackData = function (trackMessages)
+    getTrackData = function (startOfTrackTimeOffset, trackMessages, endOfTrackTimestamp)
     {
         var i, nMessages = trackMessages.length, msg,
-        dataLength = getTrackDataLength(trackMessages),
+        dataLength = getTrackDataLength(startOfTrackTimeOffset, trackMessages, endOfTrackTimestamp),
         buffer = new ArrayBuffer(dataLength),
         trackData = new Uint8Array(buffer),
-        currentTime = 0, timeOffset,
+        previousTimestamp = startOfTrackTimeOffset, timeOffset,
         variableLengthTime, j, variableLengthTimeLength,
-        dv = new DataView(buffer), offset = 0;
+        dv = new DataView(buffer), offset = 0, controlChange;
 
         for (i = 0; i < nMessages; ++i)
         {
+            // The msg belongs to the sequence.
+            // Its timestamp is relative to the start of the score, so don't change it!
+            // If msg.timestamp is corrupted, repeat performances will go wrong.
             msg = trackMessages[i];
-            timeOffset = msg.timestamp - currentTime;
-            currentTime = msg.timestamp;
+            timeOffset = msg.timestamp - previousTimestamp;
+            previousTimestamp = msg.timestamp;
 
             variableLengthTime = getVariableLengthValue(timeOffset);
             variableLengthTimeLength = variableLengthTime.length;
@@ -226,7 +231,36 @@ JI_NAMESPACE.midiFile = (function (document, window)
             }
         }
 
-        dv.setUint32(offset, 0xFF2F00); // end of track event
+        // end of track events ******************************
+        //
+        // If the allSoundOff and allControllersOff messages
+        // are not included, Windows Media Player will not play
+        // the last chord in the track. Probably a safety measure!
+        // Quicktime is also playing the last chord now! 
+
+        timeOffset = endOfTrackTimestamp - previousTimestamp;
+        variableLengthTime = getVariableLengthValue(timeOffset);
+        variableLengthTimeLength = variableLengthTime.length;
+        for (j = 0; j < variableLengthTimeLength; ++j)
+        {
+            dv.setUint8(offset++, variableLengthTime[j]);
+        }
+
+        controlChange = 0xB0 + trackMessages[0].channel;
+
+        dv.setUint8(offset++, controlChange); // all sound off
+        dv.setUint8(offset++, 0x78); // all sound off
+        dv.setUint8(offset++, 0x00); // all sound off
+
+        dv.setUint8(offset++, 0x00); // all controllers off (time byte)
+        dv.setUint8(offset++, controlChange); // all controllers off
+        dv.setUint8(offset++, 0x79); // all controllers off
+        dv.setUint8(offset++, 0x00); // all controllers off
+
+        dv.setUint8(offset++, 0x00); // end of track event (time byte)
+        dv.setUint8(offset++, 0xFF); // end of track event
+        dv.setUint8(offset++, 0x2F); // end of track event
+        dv.setUint8(offset++, 0x00); // end of track event
 
         return trackData;
     },
@@ -273,11 +307,12 @@ JI_NAMESPACE.midiFile = (function (document, window)
     },
 
     // Returns a UintArray containing a track chunk (track header + data)
-    getTrackChunk = function (trackMessages)
+    getTrackChunk = function (earliestTimestamp, trackMessages, endMarkerTimestamp)
     {
         var i, trackData, trackHeader, trackChunk;
-
-        trackData = getTrackData(trackMessages); // trackData includes EndOfTrack event
+        // earliestTimestamp - 200 and endMarkerTimestamp + 300 
+        // so that the start and end of playback are not quite so abrupt.
+        trackData = getTrackData(earliestTimestamp - 200, trackMessages, endMarkerTimestamp + 300);
         trackHeader = getTrackHeader(trackData.length);
         trackChunk = new Uint8Array(trackHeader.length + trackData.length);
         trackChunk.set(trackHeader, 0);
@@ -287,8 +322,7 @@ JI_NAMESPACE.midiFile = (function (document, window)
     },
 
     // Returns an ArrayBuffer containing the complete standard MIDI file.
-    // midiTracksMessages is an array of arrays. Each contained array contains the midiMessages for one track.
-    midiTracksDataToArrayBuffer = function (nTracks, midiTracksMessages)
+    midiTracksDataToArrayBuffer = function (earliestTimestamp, nTracks, midiTracksMessages, endMarkerTimestamp)
     {
         var i, trackChunk, trackChunks = [], trackChunksLength = 0,
         nPerformingTracks,
@@ -300,12 +334,10 @@ JI_NAMESPACE.midiFile = (function (document, window)
         {
             if (midiTracksMessages[i].length > 0)
             {
-                trackChunk = getTrackChunk(midiTracksMessages[i]);
+                trackChunk = getTrackChunk(earliestTimestamp, midiTracksMessages[i], endMarkerTimestamp);
                 trackChunksLength += trackChunk.length;
                 trackChunks.push(trackChunk);
             }
-            // Empty the midiTracksMessages when it has been used (so that it can be re-used).
-            midiTracksMessages[i] = [];
         }
 
         nPerformingTracks = trackChunks.length;
@@ -373,29 +405,35 @@ JI_NAMESPACE.midiFile = (function (document, window)
     // Creates a button which, when clicked, downloads a standard MIDI file recording
     // of the performance which has just ended.
     // The performance may have ended by reaching the stop marker, or by the user clicking
-    // the 'stop' button. The 'save' button (and its associated recording) are deleted either
-    // when it is clicked (the file is downloaded) or when a new performance is started.
+    // the 'stop' button.
+    // The 'save' button (and its associated recording) are deleted
+    //    either when it is clicked (and the file has been downloaded)
+    //    or when a new performance is started
+    //    or when the user clicks the 'set options' button
     // Arguments:
     // scoreName is the name of the score (as selected in the main score selector).
     //     The name of the downloaded file is:
     //         scoreName + '_' + the current date (format:year-month-day) + '.mid'.
     //         (e.g. "Study 2c3.1_2013-01-08.mid")
-    // midiTracksData contains a javascript arrays of arrays.
-    //     Each inner Array contains the sequence of timestamped midi messages for a single
-    //     track. Each midi message object has the following fields:
+    // midiTracksData contains a javascript array of arrays.
+    //     Each inner array contains the sequence of timestamped midi messages for a single track.
+    //     Each midi message object has the following fields:
     //         status (= command + channel)
     //         command
     //         channel
     //         data1
     //         data2
-    //         timestamp (milliseconds since the start of the performance)      
-    createSaveMIDIFileButton = function (scoreName, midiTracksData)
+    //         timestamp (milliseconds since the start of the performance)
+    //     These midi messages belong to the sequence which returns them. They are not changed
+    //     by this function, or by clicking the 'save' button.      
+    createSaveMIDIFileButton = function (scoreName, midiTracksData, endMarkerTimestamp)
     {
         var 
         midiArray,
         blob,
         downloadName,
         downloadLinkDiv, a,
+        earliestTimestamp,
         nTracks = midiTracksData.length;
 
         if (hasData(nTracks, midiTracksData))
@@ -403,9 +441,9 @@ JI_NAMESPACE.midiFile = (function (document, window)
             downloadLinkDiv = document.getElementById("downloadLinkDiv"); // the empty Element which will contain the link
             downloadName = getMIDIFileName(scoreName);
 
-            setZeroStartTime(midiTracksData);
+            earliestTimestamp = getEarliestTimestamp(nTracks, midiTracksData);
 
-            midiArray = midiTracksDataToArrayBuffer(nTracks, midiTracksData);
+            midiArray = midiTracksDataToArrayBuffer(earliestTimestamp, nTracks, midiTracksData, endMarkerTimestamp);
             blob = new Blob([midiArray], { type: 'audio/midi' });
 
             a = document.createElement('a');
