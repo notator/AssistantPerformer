@@ -93,6 +93,46 @@ JI_NAMESPACE.sequence = (function (window)
             }
         },
 
+        // Can only be called while running
+        // (stopped === false && paused === false)
+        pause = function ()
+        {
+            if (stopped === false && paused === false)
+            {
+                setState("paused");
+            }
+            else
+            {
+                throw "Attempt to pause a stopped or paused sequence.";
+            }
+        },
+
+        // does nothing if the sequence is already stopped
+        stop = function ()
+        {
+            if (stopped === false)
+            {
+                setState("stopped");
+                reportEndOfSequence(recordedMidiTracksData, endMarkerTimestamp, false); // endMarkerTimestamp is the toMs argument to playSpan()
+            }
+        },
+
+        isStopped = function ()
+        {
+            return stopped === true;
+        },
+
+        isPaused = function ()
+        {
+            return paused === true;
+        },
+
+        addTrack = function (newTrack)
+        {
+            tracks = this.tracks; // invoked only by a Sequence, 'this' is the sequence.
+            tracks.push(newTrack);
+        },
+
         // Returns either the next message in the sequence, 
         // or null if there are no more midiMoments and no more messages.
         // A MIDIMoment always has at least one message, since restStart moments now contain either
@@ -175,7 +215,7 @@ JI_NAMESPACE.sequence = (function (window)
 
             return nextMsg;
         },
-
+        
         // tick() function -- which began as an idea by Chris Wilson
         // This function has been tested as far as possible without having "a conformant sendMIDIMessage with timestamps".
         // It needs testing again with the conformant sendMIDIMessage and a higher value for PREQUEUE. What would the
@@ -217,7 +257,7 @@ JI_NAMESPACE.sequence = (function (window)
         tick = function ()
         {
             var deviation, PREQUEUE = 0, // this needs to be set to a larger value later. See comment on tick() function.
-            domhrtRelativeTime = Math.round(window.performance.now() - domhrtMsOffsetAtStartOfSequence),
+            domhrtRelativeTime = window.performance.now().toFixed(0) - domhrtMsOffsetAtStartOfSequence,
             reported = false,
             delay;
 
@@ -252,7 +292,7 @@ JI_NAMESPACE.sequence = (function (window)
                     midiOutputDevice.sendMIDIMessage(msg);
                     // subtract again, otherwise the sequence gets corrupted
                     msg.timestamp -= domhrtMsOffsetAtStartOfSequence;
-                    //console.log("sent message at timestamp = " + msg.timestamp + ", domhrtMsOffsetAtStartOfSequence=" + domhrtMsOffsetAtStartOfSequence + ", now=" + window.performance.now() + ", delay=" + delay);
+                    //console.log("sent message at timestamp = " + msg.timestamp + ", domhrtMsOffsetAtStartOfSequence=" + domhrtMsOffsetAtStartOfSequence + ", now=" + window.performance.now().toFixed(0) + ", delay=" + delay);
                 }
 
                 msg = nextMessage();
@@ -267,6 +307,25 @@ JI_NAMESPACE.sequence = (function (window)
             }
 
             window.setTimeout(tick, delay);  // this will schedule the next tick.
+        },
+
+        // Can only be called when paused is true.
+        resume = function ()
+        {
+            tracks = this.tracks; // invoked only by a Sequence, 'this' is the sequence.
+
+            if (paused === true && currentMoment !== null)
+            {
+                setState("running");
+                domhrtMsOffsetAtStartOfSequence = window.performance.now().toFixed(0) - currentMoment.timestamp;
+                msg = nextMessage(); // the very first message after the resume
+                if (msg === null)
+                {
+                    // This shouldn't be hit, except for an empty initial sequence
+                    return;
+                }
+                tick();
+            }
         },
 
         // playSpan();
@@ -391,9 +450,7 @@ JI_NAMESPACE.sequence = (function (window)
 
             maxDeviation = 0; // for console.log
 
-            domhrtMsOffsetAtStartOfSequence = window.performance.now() - fromMs;
-
-            //console.log("window.performance.now() set to " + window.performance.now());
+            domhrtMsOffsetAtStartOfSequence = window.performance.now().toFixed(0) - fromMs;
 
             msg = nextMessage(); // the very first message
             if (msg === null)
@@ -402,65 +459,6 @@ JI_NAMESPACE.sequence = (function (window)
                 return;
             }
             tick();
-        },
-
-        // Can only be called when paused is true.
-        resume = function ()
-        {
-            tracks = this.tracks; // invoked only by a Sequence, 'this' is the sequence.
-
-            if (paused === true && currentMoment !== null)
-            {
-                setState("running");
-                domhrtMsOffsetAtStartOfSequence = window.performance.now() - currentMoment.timestamp;
-                msg = nextMessage(); // the very first message after the resume
-                if (msg === null)
-                {
-                    // This shouldn't be hit, except for an empty initial sequence
-                    return;
-                }
-                tick();
-            }
-        },
-
-        // Can only be called while running
-        // (stopped === false && paused === false)
-        pause = function ()
-        {
-            if (stopped === false && paused === false)
-            {
-                setState("paused");
-            }
-            else
-            {
-                throw "Attempt to pause a stopped or paused sequence.";
-            }
-        },
-
-        // does nothing if the sequence is already stopped
-        stop = function ()
-        {
-            if (stopped === false)
-            {
-                setState("stopped");
-                reportEndOfSequence(recordedMidiTracksData, endMarkerTimestamp); // endMarkerTimestamp is the toMs argument to playSpan()
-            }
-        },
-
-        isStopped = function ()
-        {
-            return stopped === true;
-        },
-
-        isPaused = function ()
-        {
-            return paused === true;
-        },
-
-        addTrack = function (newTrack)
-        {
-            tracks = this.tracks; // invoked only by a Sequence, 'this' is the sequence.
-            tracks.push(newTrack);
         },
 
         // Used in assisted performances having relative durations
@@ -944,23 +942,24 @@ JI_NAMESPACE.sequence = (function (window)
 
         finishSilently = function ()
         {
-            var message, i = 0, msg = {},
-                NOTEON_COMMAND = 0x90;
+            var
+            silentMsg,
+            NOTEON_COMMAND = 0x90,
+            i = 0,
+            msg = nextMessage(),  
+            now = window.performance.now().toFixed(0);
 
-            message = nextMessage();
-            while (message !== null)
+            while (msg !== null)
             {
-                if (!((message.command === NOTEON_COMMAND && message.data2 > 0) || message.isEmpty !== undefined))
+                if (!((msg.command === NOTEON_COMMAND && msg.data2 > 0) || msg.isEmpty !== undefined))
                 {
-                    msg.status = message.status;
-                    msg.data1 = message.data1;
-                    msg.data2 = message.data2;
-                    msg.timestamp = 0;
-                    midiOutputDevice.sendMIDIMessage(msg);
+                    silentMsg = MCD.createMIDIMessage(msg.command, msg.data1, msg.data2, msg.channel, now);
+                    midiOutputDevice.sendMIDIMessage(silentMsg);
                     ++i;
                 }
-                message = nextMessage();
+                msg = nextMessage();
             }
+            stop();
             //console.log("sequence finished silently: " + i.toString() + " messages sent.");
         },
 

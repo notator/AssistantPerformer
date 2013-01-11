@@ -75,7 +75,7 @@ JI_NAMESPACE.assistant = (function (window)
     paused = false,
     midiInHandler,
 
-    currentLivePerformersKeyPitch = -1, // -1 means "no key depressed". This value is set when the live performer sends a noteOn
+    currentLivePerformersKeyPitch = -1, // -1 means "no key depressed". This value is set when the live performer sends a noteO
 
     init = function (messageCreationData)
     {
@@ -132,7 +132,7 @@ JI_NAMESPACE.assistant = (function (window)
         {
             if (options.assistantUsesAbsoluteDurations === false)
             {
-                subsequenceStartNow = window.performance.now();
+                subsequenceStartNow = window.performance.now().toFixed(0);
                 prevSubsequenceStartNow += (subsequenceStartNow - pausedNow);
             }
             span[currentIndex].resume();
@@ -146,7 +146,7 @@ JI_NAMESPACE.assistant = (function (window)
     {
         if (stopped === false && paused === false)
         {
-            pausedNow = window.performance.now();
+            pausedNow = window.performance.now().toFixed(0);
             span[currentIndex].pause();
             setState("paused");
         }
@@ -168,7 +168,7 @@ JI_NAMESPACE.assistant = (function (window)
 
     stop = function ()
     {
-        var i, nSubsequences;
+        var i, nSubsequences, nTracks, endOfPerformanceTimestamp;
 
         if (stopped === false)
         {
@@ -187,7 +187,9 @@ JI_NAMESPACE.assistant = (function (window)
                 }
             }
 
-            reportEndOfPerformance(completeMidiTracksData);
+            endOfPerformanceTimestamp = window.performance.now().toFixed(0) - performanceStartNow;
+
+            reportEndOfPerformance(completeMidiTracksData, endOfPerformanceTimestamp, true);
         }
     },
 
@@ -254,11 +256,6 @@ JI_NAMESPACE.assistant = (function (window)
             //                }
 
             return type;
-        }
-
-        function handleUnknownMessage(msg)
-        {
-            console.log("Unknown midi message, command:" + msg.command.toString() + ", data1:" + msg.data1.toString() + ", data2:" + msg.data2.toString());
         }
 
         // mcd contains message creation utilities ( see Main() )
@@ -363,24 +360,45 @@ JI_NAMESPACE.assistant = (function (window)
             }
         }
 
+        // Pushes clones of the recorded messages, with corrected timestamps, into the completeMidiTracksData.
+        // The clones are deleted in stop() after calling reportEndOfPerformance().
+        // Subsequence calls this function with two more arguments, but those arguments are deliberately ignored here.
         function reportEndOfSubsequence(midiTracksData)
         {
             function collectMidiTracksData(completeMidiTracksData, midiTracksData)
             {
-                var i, j, nMessages, newMessages, allTrackMessages, msg,
+                var i, j, nMessages, newMessages, allTrackMessages, msg, msgClone,
                 nTracks = completeMidiTracksData.length,
-                sequenceStartTimeRePerformanceStart = subsequenceStartNow - performanceStartNow;
+                sequenceStartTimeRePerformanceStart = subsequenceStartNow - performanceStartNow,
+                previousTimestamp = 0,
+                mcd = MCD; // local pointer -- could be quicker
 
                 for (i = 0; i < nTracks; ++i)
                 {
                     allTrackMessages = completeMidiTracksData[i];
+                    if (allTrackMessages.length === 0)
+                    {
+                        previousTimestamp = 0;
+                    }
+                    else
+                    {
+                        previousTimestamp = allTrackMessages[allTrackMessages.length - 1].timestamp;
+                    }
+
                     newMessages = midiTracksData[i];
                     nMessages = newMessages.length;
                     for (j = 0; j < nMessages; ++j)
                     {
                         msg = newMessages[j];
-                        msg.timestamp += sequenceStartTimeRePerformanceStart;
-                        allTrackMessages.push(msg);
+                        msgClone = mcd.createMIDIMessage(msg.command, msg.data1, msg.data2, msg.channel, msg.timestamp);
+                        msgClone.timestamp += sequenceStartTimeRePerformanceStart;
+                        if (msgClone.timestamp < previousTimestamp)
+                        {
+                            // This can happen in extreme situations with a very fast live performer.
+                            msgClone.timestamp = previousTimestamp;
+                        }
+                        allTrackMessages.push(msgClone);
+                        previousTimestamp = msgClone.timestamp;
                     }
                 }
             }
@@ -410,18 +428,16 @@ JI_NAMESPACE.assistant = (function (window)
             var prevSubsequenceScoreMsDuration,
                 durationFactor;
 
-            subsequenceStartNow = window.performance.now(); // in the time frame used by sequences
-
             if (options.assistantUsesAbsoluteDurations === false)
             {
                 if (currentIndex > 0)
                 {
                     prevSubsequenceScoreMsDuration = span[currentIndex].msPositionInScore - span[currentIndex - 1].msPositionInScore;
-                    durationFactor = (now - prevSubsequenceStartNow) / prevSubsequenceScoreMsDuration;
+                    durationFactor = (subsequenceStartNow - prevSubsequenceStartNow) / prevSubsequenceScoreMsDuration;
                     // durations in the subsequence are multiplied by durationFactor
                     subsequence.changeMessageTimestamps(durationFactor);
                 }
-                prevSubsequenceStartNow = now; // used only with the relative durations option
+                prevSubsequenceStartNow = subsequenceStartNow; // used only with the relative durations option
             }
 
             // if options.assistantUsesAbsoluteDurations === true, the durations will already be correct in all subsequences.
@@ -442,9 +458,10 @@ JI_NAMESPACE.assistant = (function (window)
                 {
                     stop();
                 }
-                else if (span[nextIndex].restSubsequence !== undefined) // only play the next subequence if it is a restSubsequence
+                else if (span[nextIndex].restSubsequence !== undefined) // only play the next subsequence if it is a restSubsequence
                 {
                     currentIndex = nextIndex++;
+                    subsequenceStartNow = window.performance.now().toFixed(0);
                     playSubsequence(span[currentIndex], options);
                 }
                 else if (nextIndex <= endIndex)
@@ -458,7 +475,9 @@ JI_NAMESPACE.assistant = (function (window)
         {
             var subsequence;
 
-            console.log("NoteOn, pitch:", inputMsg.data1.toString(), " velocity:", inputMsg.data2.toString());
+            //console.log("NoteOn, pitch:", inputMsg.data1.toString(), " velocity:", inputMsg.data2.toString());
+
+            subsequenceStartNow = window.performance.now().toFixed(0);
 
             currentLivePerformersKeyPitch = inputMsg.data1;
 
@@ -468,7 +487,12 @@ JI_NAMESPACE.assistant = (function (window)
 
                 if (nextIndex === 0)
                 {
-                    performanceStartNow = window.performance.now();
+                    performanceStartNow = window.performance.now().toFixed(0);
+                    subsequenceStartNow = performanceStartNow;
+                }
+                else
+                {
+                    subsequenceStartNow = window.performance.now().toFixed(0);
                 }
 
                 if (nextIndex === 0 || (nextIndex <= endIndex && span[nextIndex].chordSubsequence !== undefined))
@@ -538,10 +562,10 @@ JI_NAMESPACE.assistant = (function (window)
                 stop();
                 break;
             case UNKNOWN:
-                handleUnknownMessage(msg);
+                throw "Error: Unknown MIDI message " + msg.toString();
                 break;
             case ILLEGAL_INDEX:
-                throw ("illegal index");
+                throw "illegal index";
         }
     },
 

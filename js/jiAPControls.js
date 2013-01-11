@@ -379,10 +379,21 @@ JI_NAMESPACE.apControls = (function (document, window)
 
     // callback called when a performing sequence is stopped or has played its last message,
     // or when the assistant is stopped or has played its last subsequence.
-        reportEndOfPerformance = function (midiTracksData, endMarkerTimestamp)
+        reportEndOfPerformance = function (midiTracksData, endMarkerTimestamp, doResetTracksData)
         {
-            var scoreName = mo.scoreSelector.options[mo.scoreSelector.selectedIndex].text;
+            var
+            i, nTracks = midiTracksData.length,
+            scoreName = mo.scoreSelector.options[mo.scoreSelector.selectedIndex].text;
+
             jiMIDIFile.createSaveMIDIFileButton(scoreName, midiTracksData, endMarkerTimestamp);
+
+            if (doResetTracksData)
+            {
+                for (i = 0; i < nTracks; ++i)
+                {
+                    midiTracksData[i] = [];
+                }
+            }
 
             setStopped();
             // the following line is important, because the stop button is also the pause button.
