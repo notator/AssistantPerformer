@@ -62,7 +62,7 @@ JI_NAMESPACE.assistant = (function (window)
     // The last subsequence in span may be the first part of a subsequence which has been split at toMs.
     span,
 
-    // these variables are initialized by playSpan() and used by handleMidiIn() 
+    // these variables are initialized by playSpan() and used by handleMIDIInputEvent() 
     endIndex = -1,
     currentIndex = -1, // the index of the currently playing subsequence (which will be stopped when a noteOn or noteOff arrives).
     nextIndex = 0, // the index of the subsequence which will be played when a noteOn msg arrives
@@ -73,13 +73,15 @@ JI_NAMESPACE.assistant = (function (window)
 
     stopped = true,
     paused = false,
-    midiInHandler,
+    midiInputEventHandler, // set in Assistant constructor, passed to options.getInputDevice(midiInputEventHandler) when state is set to running
+    sendMIDIMessage, // callback. sendMIDIMessage(outputDevice, midiMessage)
 
     currentLivePerformersKeyPitch = -1, // -1 means "no key depressed". This value is set when the live performer sends a noteO
 
-    init = function (messageCreationData)
+    init = function (messageCreationData, sendMessageCallback)
     {
         MCD = messageCreationData;
+        sendMIDIMessage = sendMessageCallback;
     },
 
     setState = function (state)
@@ -87,10 +89,10 @@ JI_NAMESPACE.assistant = (function (window)
 
         function closeInputDevice(options)
         {
-            if (options.inputDevice !== undefined && options.inputDevice !== null)
-            {
-                options.inputDevice.close();
-            }
+            // if (options.inputDevice !== undefined && options.inputDevice !== null)
+            // {
+            //     options.inputDevice.close();
+            // }
         }
 
         switch (state)
@@ -118,7 +120,7 @@ JI_NAMESPACE.assistant = (function (window)
             case "running":
                 stopped = false;
                 paused = false;
-                options.getInputDevice(midiInHandler);
+                options.getInputDevice(midiInputEventHandler);
                 break;
             default:
                 throw "Unknown sequencer state!";
@@ -132,7 +134,7 @@ JI_NAMESPACE.assistant = (function (window)
         {
             if (options.assistantUsesAbsoluteDurations === false)
             {
-                subsequenceStartNow = window.performance.now().toFixed(0);
+                subsequenceStartNow = window.performance.now();
                 prevSubsequenceStartNow += (subsequenceStartNow - pausedNow);
             }
             span[currentIndex].resume();
@@ -146,7 +148,8 @@ JI_NAMESPACE.assistant = (function (window)
     {
         if (stopped === false && paused === false)
         {
-            pausedNow = window.performance.now().toFixed(0);
+            pausedNow = window.performance.now();
+
             span[currentIndex].pause();
             setState("paused");
         }
@@ -168,7 +171,7 @@ JI_NAMESPACE.assistant = (function (window)
 
     stop = function ()
     {
-        var i, nSubsequences, nTracks, endOfPerformanceTimestamp;
+        var i, nSubsequences, endOfPerformanceTimestamp;
 
         if (stopped === false)
         {
@@ -187,7 +190,7 @@ JI_NAMESPACE.assistant = (function (window)
                 }
             }
 
-            endOfPerformanceTimestamp = window.performance.now().toFixed(0) - performanceStartNow;
+            endOfPerformanceTimestamp = window.performance.now() - performanceStartNow;
 
             reportEndOfPerformance(completeMidiTracksData, endOfPerformanceTimestamp, true);
         }
@@ -195,42 +198,67 @@ JI_NAMESPACE.assistant = (function (window)
 
     // If options.assistedPerformance === true, this is where input MIDI messages arrive, and where processing is going to be done.
     // Uses 
-    //  endIndex  (= spam.length -1 when stopped),
+    //  endIndex  (= span.length -1 when stopped),
     //  currentIndex (= -1 when stopped) the index of the currently playing subsequence (which should be stopped when a noteOn or noteOff arrives).
     //  nextIndex (= 0 when stopped) the index of the subsequence which will be played when a noteOn msg arrives
-    handleMidiIn = function (msg)
+    handleMIDIInputEvent = function (inputEvent)
     {
-        var inputMsgType,
+        var inputEventType, command, cmd,
             mcd = MCD;
 
-        // getInputMessageType returns one of the following constants:
+        function inputCommand(inputEvent)
+        {
+            return (inputEvent.data[0] & 0xF0) >> 8;
+        }
+
+        function inputChannel(inputEvent)
+        {
+            return (inputEvent.data[0] & 0xF);
+        }
+
+        function inputData1(inputEvent)
+        {
+            return inputEvent.data[1];
+        }
+
+        function inputData2(inputEvent)
+        {
+            return inputEvent.data[2];
+        }
+
+        function inputTimestamp(inputEvent)
+        {
+            return inputEvent.receivedTime;
+        }
+
+        function inputEventToString(inputEvent)
+        {
+            var 
+            command = inputCommand(inputEvent),
+            channel = inputChannel(inputEvent),
+            data1 = inputData1(inputEvent),
+            data2 = inputData2(inputEvent),
+            timestamp = inputTimestamp(inputEvent);
+
+            return "Input event: command:".concat(command).concat(", channel:").concat(channel).concat(", data1:").concat(data1).concat(", data2:").concat(data2).concat(", timestamp:").concat(timestamp);
+        }
+
+        // getInputEventType returns one of the following constants:
         // UNKNOWN = 0, ILLEGAL_INDEX = 1, END_OF_SEQUENCE = 2, CHANNEL_PRESSURE = 3, AFTERTOUCH = 4,
         // MODULATION_WHEEL = 5, PITCH_WHEEL = 6, NOTE_ON = 7, NOTE_OFF = 8
-        function getInputMessageType(msg)
+        function getInputEventType(inputEvent)
         {
-            var type = UNKNOWN;
+            var 
+            command = inputCommand(inputEvent),
+            type = UNKNOWN;
 
-            switch (msg.command)
+            switch (command)
             {
-                case 0xD0:
-                    // This type is generated by my E-MU keyboard when "Aftertouch" is switched on.
-                    type = CHANNEL_PRESSURE;
-                    break;
-                case 0xA0:
-                    // generated by EWI controller
-                    type = AFTERTOUCH;
-                    break;
-                case 0xB0:
-                    if (msg.data1 === 1)
-                    {
-                        type = MODULATION_WHEEL;
-                    }
-                    break;
-                case 0xE0:
-                    type = PITCH_WHEEL;
+                case 0x80:
+                    type = NOTE_OFF;
                     break;
                 case 0x90:
-                    if (msg.data2 === 0) // velocity 0
+                    if (inputData2(inputEvent) === 0) // velocity 0
                     {
                         type = NOTE_OFF;
                     }
@@ -239,21 +267,27 @@ JI_NAMESPACE.assistant = (function (window)
                         type = NOTE_ON;
                     }
                     break;
-                case 0x80:
-                    type = NOTE_OFF;
+                case 0xA0:
+                    // generated by EWI controller
+                    type = AFTERTOUCH;
+                    break;
+                case 0xB0:
+                    if (inputData1(inputEvent) === 1)
+                    {
+                        type = MODULATION_WHEEL;
+                    }
+                    break;
+                case 0xD0:
+                    // This type is generated by my E-MU keyboard when "Aftertouch" is switched on.
+                    type = CHANNEL_PRESSURE;
+                    break;
+                case 0xE0:
+                    type = PITCH_WHEEL;
                     break;
                 default:
                     type = UNKNOWN;
                     break;
             }
-            //                if (nextIndex === endIndex)
-            //                {
-            //                    type = END_OF_SEQUENCE;
-            //                }
-            //                else if (nextIndex < 0 || nextIndex >= span.length)
-            //                {
-            //                    type = ILLEGAL_INDEX;
-            //                }
 
             return type;
         }
@@ -312,7 +346,8 @@ JI_NAMESPACE.assistant = (function (window)
         function handleController(mcd, controlData, value, usesSoloTrack, usesOtherTracks)
         {
             var controlMessages = [], nControlMessages, i,
-                nTracks = allSubsequences[0].tracks.length;
+                nTracks = allSubsequences[0].tracks.length,
+                send = sendMIDIMessage;
 
             if (usesSoloTrack && usesOtherTracks)
             {
@@ -346,7 +381,7 @@ JI_NAMESPACE.assistant = (function (window)
             nControlMessages = controlMessages.length;
             for (i = 0; i < nControlMessages; ++i)
             {
-                outputDevice.sendMIDIMessage(controlMessages[i]);
+                send(outputDevice, controlMessages[i]);
             }
         }
 
@@ -396,6 +431,7 @@ JI_NAMESPACE.assistant = (function (window)
                         {
                             // This can happen in extreme situations with a very fast live performer.
                             msgClone.timestamp = previousTimestamp;
+                            console.log("Negative timestamp corrected.");
                         }
                         allTrackMessages.push(msgClone);
                         previousTimestamp = msgClone.timestamp;
@@ -444,11 +480,11 @@ JI_NAMESPACE.assistant = (function (window)
             subsequence.playSpan(outputDevice, 0, Number.MAX_VALUE, tracksControl, reportEndOfSubsequence, reportMsPosition);
         }
 
-        function handleNoteOff(msg)
+        function handleNoteOff(inputEvent)
         {
-            //console.log("NoteOff, pitch:", msg.data1.toString(), " velocity:", msg.data2.toString());
+            //console.log("NoteOff, pitch:", inputData1(inputEvent).toString(), " velocity:", inputEvent.data2.toString());
 
-            if (msg.data1 === currentLivePerformersKeyPitch)
+            if (inputData1(inputEvent) === currentLivePerformersKeyPitch)
             {
                 currentLivePerformersKeyPitch = -1;
 
@@ -461,7 +497,7 @@ JI_NAMESPACE.assistant = (function (window)
                 else if (span[nextIndex].restSubsequence !== undefined) // only play the next subsequence if it is a restSubsequence
                 {
                     currentIndex = nextIndex++;
-                    subsequenceStartNow = window.performance.now().toFixed(0);
+                    subsequenceStartNow = inputEvent.receivedTime;
                     playSubsequence(span[currentIndex], options);
                 }
                 else if (nextIndex <= endIndex)
@@ -471,28 +507,28 @@ JI_NAMESPACE.assistant = (function (window)
             }
         }
 
-        function handleNoteOn(mcd, inputMsg, overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity)
+        function handleNoteOn(mcd, inputEvent, overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity)
         {
             var subsequence;
 
-            //console.log("NoteOn, pitch:", inputMsg.data1.toString(), " velocity:", inputMsg.data2.toString());
+            //console.log("NoteOn, pitch:", inputData1(inputEvent).toString(), " velocity:", inputData2(inputEvent).toString());
 
-            subsequenceStartNow = window.performance.now().toFixed(0);
+            subsequenceStartNow = inputTimestamp(inputEvent);
 
-            currentLivePerformersKeyPitch = inputMsg.data1;
+            currentLivePerformersKeyPitch = inputData1(inputEvent);
 
-            if (inputMsg.data2 > 0)
+            if (inputData2(inputEvent) > 0)
             {
                 silentlyCompleteCurrentlyPlayingSubsequence();
 
                 if (nextIndex === 0)
                 {
-                    performanceStartNow = window.performance.now().toFixed(0);
+                    performanceStartNow = inputTimestamp(inputEvent);
                     subsequenceStartNow = performanceStartNow;
                 }
                 else
                 {
-                    subsequenceStartNow = window.performance.now().toFixed(0);
+                    subsequenceStartNow = inputTimestamp(inputEvent);
                 }
 
                 if (nextIndex === 0 || (nextIndex <= endIndex && span[nextIndex].chordSubsequence !== undefined))
@@ -502,7 +538,7 @@ JI_NAMESPACE.assistant = (function (window)
                     if (overrideSoloPitch || overrideOtherTracksPitch || overrideSoloVelocity || overrideOtherTracksVelocity)
                     {
                         subsequence.overridePitchAndOrVelocity(mcd.NOTE_ON, options.livePerformersTrackIndex,
-                            inputMsg.data1, inputMsg.data2,
+                            inputData1(inputEvent), inputData2(inputEvent),
                             overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity);
                     }
                     playSubsequence(subsequence, options);
@@ -510,60 +546,78 @@ JI_NAMESPACE.assistant = (function (window)
             }
             else // velocity 0 is "noteOff"
             {
-                handleNoteOff(inputMsg);
+                handleNoteOff(inputEvent);
             }
         }
 
-        inputMsgType = getInputMessageType(msg);
+        inputEventType = getInputEventType(inputEvent);
 
-        switch (inputMsgType)
+        switch (inputEventType)
         {
             case CHANNEL_PRESSURE: // EMU "aftertouch"
-                //console.log("Channel (=key) Pressure, value:", msg.data1.toString());
+                console.log("Channel (=key) Pressure, value:", inputData1(inputEvent).toString());
                 if (options.pressureSubstituteControlData !== null)
                 {
-                    handleController(mcd, options.pressureSubstituteControlData, msg.data1, // ACHTUNG! data1 is correct!
+                    handleController(mcd, options.pressureSubstituteControlData, inputData1(inputEvent), // ACHTUNG! data1 is correct!
                                                 options.usesPressureSolo, options.usesPressureOtherTracks);
                 }
                 break;
             case AFTERTOUCH: // EWI breath controller
-                //console.log("Aftertouch, value:", msg.data2.toString());
+                console.log("Aftertouch, value:", inputData2(inputEvent).toString());
                 if (options.pressureSubstituteControlData !== null)
                 {
-                    handleController(mcd, options.pressureSubstituteControlData, msg.data2,
+                    handleController(mcd, options.pressureSubstituteControlData, inputData2(inputEvent),
                                                 options.usesPressureSolo, options.usesPressureOtherTracks);
                 }
                 break;
             case MODULATION_WHEEL: // EWI bite, EMU modulation wheel
-                //console.log("Modulation Wheel, value:", msg.data2.toString());
+                console.log("Modulation Wheel, value:", inputData2(inputEvent).toString());
                 if (options.modSubstituteControlData !== null)
                 {
-                    handleController(mcd, options.modSubstituteControlData, msg.data2,
+                    handleController(mcd, options.modSubstituteControlData, inputData2(inputEvent),
                                                 options.usesModSolo, options.usesModOtherTracks);
                 }
                 break;
             case PITCH_WHEEL: // EWI pitch bend up/down controllers, EMU pitch wheel
-                //console.log("Pitch Wheel, value:", msg.data2.toString());
+                console.log("Pitch Wheel, value:", inputData2(inputEvent).toString());
                 if (options.pitchBendSubstituteControlData !== null)
                 {
-                    handleController(mcd, options.pitchBendSubstituteControlData, msg.data2,
+                    handleController(mcd, options.pitchBendSubstituteControlData, inputData2(inputEvent),
                                                 options.usesPitchBendSolo, options.usesPitchBendOtherTracks);
                 }
                 break;
             case NOTE_ON:
-                handleNoteOn(mcd, msg,
+                handleNoteOn(mcd, inputEvent,
                     options.overrideSoloPitch, options.overrideOtherTracksPitch,
                     options.overrideSoloVelocity, options.overrideOtherTracksVelocity);
                 break;
             case NOTE_OFF:
-                handleNoteOff(msg);
+                handleNoteOff(inputEvent);
                 break;
             case END_OF_SEQUENCE:
                 stop();
                 break;
             case UNKNOWN:
-                throw "Error: Unknown MIDI message " + msg.toString();
-                break;
+                // This might be program change (0xC0 = 192) or system exclusive (0xF0 = 240),
+                // neither of which I'm currently expecting in the input.
+                command = inputCommand(inputEvent);
+                cmd = null;
+                if (command === 0xC0)
+                {
+                    cmd = "PROGRAM CHANGE";
+                }
+                else
+                {
+                    cmd = "SYSTEM EXCLUSIVE";
+                }
+                if (cmd !== null)
+                {
+                    throw "Unexpected " + cmd + " command in input";
+                }
+                else
+                {
+                    throw "Error: Unexpected controller message ".concat(inputEventToString(inputEvent));
+                }
             case ILLEGAL_INDEX:
                 throw "illegal index";
         }
@@ -660,7 +714,7 @@ JI_NAMESPACE.assistant = (function (window)
         }
 
         options = apControlOptions;
-        midiInHandler = handleMidiIn;
+        midiInputEventHandler = handleMIDIInputEvent;
 
         setState("stopped");
 
@@ -679,9 +733,6 @@ JI_NAMESPACE.assistant = (function (window)
         // Starts an assisted performance 
         this.playSpan = playSpan;
 
-        // Receives and handles incoming midi messages
-        this.handleMidiIn = handleMidiIn;
-
         // these are called by the performance controls
         this.pause = pause; // pause()        
         this.resume = resume; // resume()
@@ -696,6 +747,7 @@ JI_NAMESPACE.assistant = (function (window)
     publicAPI =
     {
         init: init,
+
         // empty Assistant constructor
         Assistant: Assistant
     };

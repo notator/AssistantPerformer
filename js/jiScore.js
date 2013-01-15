@@ -54,10 +54,19 @@ JI_NAMESPACE.score = (function (document)
 
     finalBarlineInScore,
 
+    sendMIDIMessage, // callback. sendMIDIMessage(outputDevice, midiMessage)
+
+    init = function (messageSenderCallback)
+    {
+        sendMIDIMessage = messageSenderCallback;
+    },
+
     // Sends a noteOff to all notes on all channels on the midi output device.
     allNotesOff = function (midiOutputDevice)
     {
-        var noteOffMessage, channelIndex, noteIndex;
+        var 
+        noteOffMessage, channelIndex, noteIndex,
+        send = sendMIDIMessage;
 
         if (midiOutputDevice !== undefined && midiOutputDevice !== null)
         {
@@ -66,7 +75,7 @@ JI_NAMESPACE.score = (function (document)
                 for (noteIndex = 0; noteIndex < 128; ++noteIndex)
                 {
                     noteOffMessage = jiMIDIChord.newNoteOffMessage(channelIndex, noteIndex);
-                    midiOutputDevice.sendMIDIMessage(noteOffMessage);
+                    send(midiOutputDevice, noteOffMessage);
                 }
             }
         }
@@ -1628,8 +1637,12 @@ JI_NAMESPACE.score = (function (document)
 
     publicAPI =
     {
+        // currently just initialises the sendMIDIMessage callback in this namespace
+        init: init,
+
         // empty score constructor (access to GUI functions)
         Score: Score
+
     };
     // end var
 

@@ -23,11 +23,12 @@ window.addEventListener("load", function ()
 {
     "use strict";
 
-    var
-    midiAccess, 
+    var 
+    midiAccess,
     jiAPControls = JI_NAMESPACE.apControls,
     jiAssistant = JI_NAMESPACE.assistant,
     jiSequence = JI_NAMESPACE.sequence,
+    jiScore = JI_NAMESPACE.score,
     jiMIDIChord = JI_NAMESPACE.midiChord,
 
     // Ensure that the relevant window interfaces are set correctly.
@@ -83,11 +84,11 @@ window.addEventListener("load", function ()
     {
         var message = {
             command: command,
-            status: parseInt(command) + (parseInt(channel) || 0),
             channel: channel || 0,
             data1: data1,
             data2: data2,
-            timestamp: timestamp || 0
+            timestamp: timestamp || 0,
+            status: parseInt(command) + (parseInt(channel) || 0)
         };
 
         message.toString = function ()
@@ -96,6 +97,16 @@ window.addEventListener("load", function ()
         };
 
         return message;
+    },
+
+    // sends a 3-byte midiMessage (defined as above)
+    sendMIDIMessage = function (outputDevice, midiMessage)
+    {
+        var data = new Uint8Array(3);
+        data[0] = midiMessage.status;
+        data[1] = midiMessage.data1;
+        data[2] = midiMessage.data2;
+        outputDevice.send(data, midiMessage.timestamp);
     },
 
     // Constant object containing a function and data constants for creating MIDI messages
@@ -118,23 +129,99 @@ window.addEventListener("load", function ()
         EXPRESSION_CONTROL: 11
     },
 
-    // Just sets midiAccess (to the midiAccess argument)
-    JMBInitFunction = function (MIDIAccess)
+    checkAPI = function (objectName, attributeName)
     {
-        midiAccess = MIDIAccess;
+        var okay = true;
+        switch (objectName)
+        {
+            case "MIDIAccess":
+                switch (attributeName)
+                {
+                    case "enumerateInputs":
+                        break;
+                    case "enumerateOutputs":
+                        break;
+                    case "getInput":
+                        break;
+                    case "getOutput":
+                        break;
+                    default:
+                        okay = false;
+                }
+                break;
+            case "MIDIPort":
+                switch (attributeName)
+                {
+                    case "id":
+                        break;
+                    case "manufacturer":
+                        break;
+                    case "name":
+                        break;
+                    case "type":
+                        break;
+                    case "version":
+                        break;
+                    default:
+                        okay = false;
+                }
+                break;
+            case "MIDIInput":
+                switch (attributeName)
+                {
+                    case "onmessage":
+                        break;
+                    default:
+                        okay = false;
+                }
+                break;
+            case "MIDIOutput":
+                switch (attributeName)
+                {
+                    case "send":
+                        break;
+                    default:
+                        okay = false;
+                }
+                break;
+            case "MIDIEvent":
+                switch (attributeName)
+                {
+                    case "timestamp":
+                        break; 
+                    case "data":
+                        break;
+                    default:
+                        okay = false;
+                }
+                break;
+        }
+        if (!okay)
+        {
+            throw "API Error: the name " + objectName + "." + attributeName + " has changed.";
+        }
+    },
+
+    onSuccessCallback = function (midi)
+    {
+        midiAccess = midi;
+    },
+
+    onErrorCallback = function (error)
+    {
+        throw "Error: Unable to set midiAccess. Error code:".concat(error.code);
     };
 
     setWindow();
 
-    // When the Web MIDI API is implemented:
-    // 1. delete the JMBInitFunction (above).
-    // 2. replace the following line by the corresponding code for getting midiAccess.
-    // 3. uninstall the Jazz plugin.
-    JMB.init(JMBInitFunction); // now just sets midiAccess
+    navigator.requestMIDIAccess(onSuccessCallback, onErrorCallback);
+
+    midiAccess.checkAPI = checkAPI;
 
     jiAPControls.init(midiAccess); // sets the contents of the device selector menus
-    jiAssistant.init(MESSAGE_CREATION_DATA);
-    jiSequence.init(MESSAGE_CREATION_DATA);
+    jiAssistant.init(MESSAGE_CREATION_DATA, sendMIDIMessage);
+    jiSequence.init(MESSAGE_CREATION_DATA, sendMIDIMessage);
+    jiScore.init(sendMIDIMessage);
     jiMIDIChord.init(MESSAGE_CREATION_DATA);
 }, false);
 

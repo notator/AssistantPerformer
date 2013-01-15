@@ -17,10 +17,12 @@ JI_NAMESPACE.sequence = (function (window)
     "use strict";
     var 
     MCD, // midi message creation data
+    sendMIDIMessage, // callback. sendMIDIMessage(outputDevice, midiMessage)
 
-    init = function (mcd)
+    init = function (mcd, sendMessageCallback)
     {
         MCD = mcd;
+        sendMIDIMessage = sendMessageCallback;
     },
 
     // An empty sequence is created. It contains an empty tracks array.
@@ -215,7 +217,7 @@ JI_NAMESPACE.sequence = (function (window)
 
             return nextMsg;
         },
-        
+
         // tick() function -- which began as an idea by Chris Wilson
         // This function has been tested as far as possible without having "a conformant sendMIDIMessage with timestamps".
         // It needs testing again with the conformant sendMIDIMessage and a higher value for PREQUEUE. What would the
@@ -257,7 +259,7 @@ JI_NAMESPACE.sequence = (function (window)
         tick = function ()
         {
             var deviation, PREQUEUE = 0, // this needs to be set to a larger value later. See comment on tick() function.
-            domhrtRelativeTime = window.performance.now().toFixed(0) - domhrtMsOffsetAtStartOfSequence,
+            domhrtRelativeTime = window.performance.now() - domhrtMsOffsetAtStartOfSequence,
             reported = false,
             delay;
 
@@ -289,10 +291,9 @@ JI_NAMESPACE.sequence = (function (window)
 
                     // sendMIDIMessage needs msg.timestamp to be absolute DOMHRT time.
                     msg.timestamp += domhrtMsOffsetAtStartOfSequence;
-                    midiOutputDevice.sendMIDIMessage(msg);
+                    sendMIDIMessage(midiOutputDevice, msg);
                     // subtract again, otherwise the sequence gets corrupted
                     msg.timestamp -= domhrtMsOffsetAtStartOfSequence;
-                    //console.log("sent message at timestamp = " + msg.timestamp + ", domhrtMsOffsetAtStartOfSequence=" + domhrtMsOffsetAtStartOfSequence + ", now=" + window.performance.now().toFixed(0) + ", delay=" + delay);
                 }
 
                 msg = nextMessage();
@@ -317,7 +318,7 @@ JI_NAMESPACE.sequence = (function (window)
             if (paused === true && currentMoment !== null)
             {
                 setState("running");
-                domhrtMsOffsetAtStartOfSequence = window.performance.now().toFixed(0) - currentMoment.timestamp;
+                domhrtMsOffsetAtStartOfSequence = window.performance.now() - currentMoment.timestamp;
                 msg = nextMessage(); // the very first message after the resume
                 if (msg === null)
                 {
@@ -450,7 +451,7 @@ JI_NAMESPACE.sequence = (function (window)
 
             maxDeviation = 0; // for console.log
 
-            domhrtMsOffsetAtStartOfSequence = window.performance.now().toFixed(0) - fromMs;
+            domhrtMsOffsetAtStartOfSequence = window.performance.now() - fromMs;
 
             msg = nextMessage(); // the very first message
             if (msg === null)
@@ -942,19 +943,20 @@ JI_NAMESPACE.sequence = (function (window)
 
         finishSilently = function ()
         {
-            var
+            var 
             silentMsg,
             NOTEON_COMMAND = 0x90,
             i = 0,
-            msg = nextMessage(),  
-            now = window.performance.now().toFixed(0);
+            send = sendMIDIMessage,
+            msg = nextMessage(),
+            now = window.performance.now();
 
             while (msg !== null)
             {
                 if (!((msg.command === NOTEON_COMMAND && msg.data2 > 0) || msg.isEmpty !== undefined))
                 {
                     silentMsg = MCD.createMIDIMessage(msg.command, msg.data1, msg.data2, msg.channel, now);
-                    midiOutputDevice.sendMIDIMessage(silentMsg);
+                    send(midiOutputDevice, silentMsg);
                     ++i;
                 }
                 msg = nextMessage();

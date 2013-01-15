@@ -68,31 +68,30 @@ JI_NAMESPACE.apControls = (function (document, window)
 
         options.inputDeviceId = inSelector.selectedIndex - 1;
         options.outputDeviceId = outSelector.selectedIndex - 1;
-        options.getInputDevice = function (handleMidiIn)
+        options.getInputDevice = function (midiInputEventHandler)
         {
             if (options.inputDevice !== undefined && options.inputDevice !== null)
             {
-                options.inputDevice.close();
-                options.inputDevice = null;
+                //                options.inputDevice.close();
+                //                options.inputDevice = null;
             }
             if (options.inputDeviceId !== -1)
             {
                 options.inputDevice = midiAccess.getInput(options.inputDeviceId);
-                if (handleMidiIn !== null)
+                if (midiInputEventHandler !== null)
                 {
-                    options.inputDevice.addEventListener("midimessage", function (msg)
-                    {
-                        handleMidiIn(msg);
-                    });
+                    // 14.01.2013: W3C says there is simply an onmessage field in InputDevice
+                    options.inputDevice.onmessage = midiInputEventHandler;
                 }
             }
         };
 
         if (options.outputDevice !== undefined && options.outputDevice !== null)
         {
-            options.outputDevice.close();
-            options.outputDevice = null;
+            //            options.outputDevice.close();
+            //            options.outputDevice = null;
         }
+
         if (options.outputDeviceId !== -1)
         {
             options.outputDevice = midiAccess.getOutput(options.outputDeviceId);
@@ -381,7 +380,7 @@ JI_NAMESPACE.apControls = (function (document, window)
     // or when the assistant is stopped or has played its last subsequence.
         reportEndOfPerformance = function (midiTracksData, endMarkerTimestamp, doResetTracksData)
         {
-            var
+            var 
             i, nTracks = midiTracksData.length,
             scoreName = mo.scoreSelector.options[mo.scoreSelector.selectedIndex].text;
 
@@ -685,8 +684,8 @@ JI_NAMESPACE.apControls = (function (document, window)
             i, nItems, option,
             is = mo.midiInputDeviceSelector, // = document.getElementById("midiInputDeviceSelector")
             os = mo.midiOutputDeviceSelector, // = document.getElementById("midiOutputDeviceSelector")
-            inputs = midiAccess.enumerateInputs(),
-            outputs = midiAccess.enumerateOutputs();
+            inputs = midiAccess.getInputs(),
+            outputs = midiAccess.getOutputs();
 
             option = document.createElement("option");
             option.text = "choose a MIDI input device";
@@ -695,7 +694,7 @@ JI_NAMESPACE.apControls = (function (document, window)
             for (i = 0; i < nItems; ++i)
             {
                 option = document.createElement("option");
-                option.text = inputs[i].deviceName;
+                option.text = inputs[i].name;
                 is.add(option, null);
             }
 
@@ -706,7 +705,7 @@ JI_NAMESPACE.apControls = (function (document, window)
             for (i = 0; i < nItems; ++i)
             {
                 option = document.createElement("option");
-                option.text = outputs[i].deviceName;
+                option.text = outputs[i].name;
                 os.add(option, null);
             }
         }
