@@ -15,15 +15,9 @@ JI_NAMESPACE.namespace('JI_NAMESPACE.sequence');
 JI_NAMESPACE.sequence = (function (window)
 {
     "use strict";
-    var 
-    MCD, // midi message creation data
-    sendMIDIMessage, // callback. sendMIDIMessage(outputDevice, midiMessage)
-
-    init = function (mcd, sendMessageCallback)
-    {
-        MCD = mcd;
-        sendMIDIMessage = sendMessageCallback;
-    },
+    var
+    MIDIEvent = JI_NAMESPACE.midiEvent.MIDIEvent,
+    CMD = JI_NAMESPACE.midiEvent.COMMAND,
 
     // An empty sequence is created. It contains an empty tracks array.
     Sequence = function (msPosition)
@@ -40,7 +34,6 @@ JI_NAMESPACE.sequence = (function (window)
 
     publicSequenceAPI =
     {
-        init: init,
         // creates an empty sequence
         Sequence: Sequence
     };
@@ -219,8 +212,8 @@ JI_NAMESPACE.sequence = (function (window)
         },
 
         // tick() function -- which began as an idea by Chris Wilson
-        // This function has been tested as far as possible without having "a conformant sendMIDIMessage with timestamps".
-        // It needs testing again with the conformant sendMIDIMessage and a higher value for PREQUEUE. What would the
+        // This function has been tested as far as possible without having "a conformant MIDIEvent.send() with timestamps".
+        // It needs testing again with the conformant MIDIEvent.send() and a higher value for PREQUEUE. What would the
         // ideal value for PREQUEUE be? 
         // Email correspondence (End of Oct. 2012):
         //      James: "...how do I decide how big PREQUEUE should be?"
@@ -289,9 +282,9 @@ JI_NAMESPACE.sequence = (function (window)
                 {
                     recordedMidiTracksData[msg.channel].push(msg);
 
-                    // sendMIDIMessage needs msg.timestamp to be absolute DOMHRT time.
+                    // msg.timestamp needs to be absolute DOMHRT time when msg.send() is called.
                     msg.timestamp += domhrtMsOffsetAtStartOfSequence;
-                    sendMIDIMessage(midiOutputDevice, msg);
+                    msg.send(midiOutputDevice);
                     // subtract again, otherwise the sequence gets corrupted
                     msg.timestamp -= domhrtMsOffsetAtStartOfSequence;
                 }
@@ -705,8 +698,8 @@ JI_NAMESPACE.sequence = (function (window)
 
             finalBarlineMoment = new JI_NAMESPACE.midiMoment.MIDIMoment(timestamp);
             finalBarlineMoment.restStart = true;
-            //createMIDIMessage(command, data1, data2, channel, timestamp)
-            restMsg = MCD.createMIDIMessage(0, 0, 0, i, timestamp);
+            // this message will never be sent, because it is given an isEmpty attribute
+            restMsg = new MIDIEvent(CMD.NOTE_OFF + i, 0, 0, timestamp); 
             restMsg.msPositionInScore = sequenceMsPositionInScore + timestamp;
             restMsg.isEmpty = true;
 
@@ -794,8 +787,8 @@ JI_NAMESPACE.sequence = (function (window)
 
                 newMoment = new JI_NAMESPACE.midiMoment.MIDIMoment(0);
                 newMoment.restStart = true;
-                //(command, data1, data2, channel, timestamp)
-                newMsg = MCD.createMIDIMessage(0, 0, 0, t, 0); // newMsg.timestamp = 0;
+                // this message will never be sent, because it is given an isEmpty attribute
+                newMsg = new MIDIEvent(CMD.NOTE_OFF + t, 0, 0, 0); // newMsg.timestamp = 0;
                 newMsg.msPositionInScore = this.msPositionInScore;
                 newMsg.isEmpty = true;
                 newMoment.addMIDIMessage(newMsg);
@@ -833,8 +826,8 @@ JI_NAMESPACE.sequence = (function (window)
                         for (iMsg = 0; iMsg < nMessages; ++iMsg)
                         {
                             message = messages[iMsg];
-                            //createMIDIMessage(command, data1, data2, channel, timestamp)
-                            newMsg = MCD.createMIDIMessage(message.command, message.data1, message.data2, message.channel, newMoment.timestamp);
+                            // MIDIEvent(command+channel, data1, data2, timestamp)
+                            newMsg = new MIDIEvent(message.command + message.channel, message.data1, message.data2, newMoment.timestamp);
                             if (message.msPositionInScore !== undefined)
                             {
                                 newMsg.msPositionInScore = message.msPositionInScore;
@@ -947,7 +940,6 @@ JI_NAMESPACE.sequence = (function (window)
             silentMsg,
             NOTEON_COMMAND = 0x90,
             i = 0,
-            send = sendMIDIMessage,
             msg = nextMessage(),
             now = window.performance.now();
 
@@ -955,8 +947,8 @@ JI_NAMESPACE.sequence = (function (window)
             {
                 if (!((msg.command === NOTEON_COMMAND && msg.data2 > 0) || msg.isEmpty !== undefined))
                 {
-                    silentMsg = MCD.createMIDIMessage(msg.command, msg.data1, msg.data2, msg.channel, now);
-                    send(midiOutputDevice, silentMsg);
+                    silentMsg = new MIDIEvent(msg.command + msg.channel, msg.data1, msg.data2, now);
+                    silentMsg.send(midiOutputDevice);
                     ++i;
                 }
                 msg = nextMessage();

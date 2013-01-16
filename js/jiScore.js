@@ -16,13 +16,16 @@ JI_NAMESPACE.namespace('JI_NAMESPACE.score');
 JI_NAMESPACE.score = (function (document)
 {
     "use strict";
-    // begin var
-    var jiFile = JI_NAMESPACE.file,
-        jiMarkers = JI_NAMESPACE.markers,
-        jiPalettes = JI_NAMESPACE.palettes,
-        jiSequence = JI_NAMESPACE.sequence,
-        jiTrack = JI_NAMESPACE.track,
-        jiMIDIChord = JI_NAMESPACE.midiChord,
+
+    var 
+    jiFile = JI_NAMESPACE.file,
+    jiMarkers = JI_NAMESPACE.markers,
+    jiPalettes = JI_NAMESPACE.palettes,
+    jiSequence = JI_NAMESPACE.sequence,
+    jiTrack = JI_NAMESPACE.track,
+    jiMIDIChord = JI_NAMESPACE.midiChord,
+    MIDIEvent = JI_NAMESPACE.midiEvent.MIDIEvent,
+    CMD = JI_NAMESPACE.midiEvent.COMMAND,
 
     MAX_MIDI_CHANNELS = 16,
 
@@ -54,19 +57,11 @@ JI_NAMESPACE.score = (function (document)
 
     finalBarlineInScore,
 
-    sendMIDIMessage, // callback. sendMIDIMessage(outputDevice, midiMessage)
-
-    init = function (messageSenderCallback)
-    {
-        sendMIDIMessage = messageSenderCallback;
-    },
-
     // Sends a noteOff to all notes on all channels on the midi output device.
     allNotesOff = function (midiOutputDevice)
     {
         var 
-        noteOffMessage, channelIndex, noteIndex,
-        send = sendMIDIMessage;
+        noteOffMessage, channelIndex, noteIndex;
 
         if (midiOutputDevice !== undefined && midiOutputDevice !== null)
         {
@@ -74,8 +69,8 @@ JI_NAMESPACE.score = (function (document)
             {
                 for (noteIndex = 0; noteIndex < 128; ++noteIndex)
                 {
-                    noteOffMessage = jiMIDIChord.newNoteOffMessage(channelIndex, noteIndex);
-                    send(midiOutputDevice, noteOffMessage);
+                    noteOffMessage = new MIDIEvent(CMD.NOTE_OFF + channelIndex, noteIndex, 127, 0 );
+                    noteOffMessage.send(midiOutputDevice);
                 }
             }
         }
@@ -1637,9 +1632,6 @@ JI_NAMESPACE.score = (function (document)
 
     publicAPI =
     {
-        // currently just initialises the sendMIDIMessage callback in this namespace
-        init: init,
-
         // empty score constructor (access to GUI functions)
         Score: Score
 

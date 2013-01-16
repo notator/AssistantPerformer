@@ -17,26 +17,14 @@ JI_NAMESPACE.assistant = (function (window)
     "use strict";
     // begin var
     var 
+    MIDIEvent = JI_NAMESPACE.midiEvent.MIDIEvent,
+    CMD = JI_NAMESPACE.midiEvent.COMMAND,
+    to14Bit = JI_NAMESPACE.midiEvent.to14Bit,
+
     outputDevice,
     tracksControl,
-    // MCD contains the following constant fields used for creating midi messages
-    // {
-    //     createMIDIMessage: MIDIAccess.createMIDIMessage,
-    //     // MIDI commands
-    //     NOTE_OFF: 0x80,
-    //     NOTE_ON: 0x90,
-    //     CONTROL_CHANGE: 0xB0,
-    //     PROGRAM_CHANGE: 0xC0,
-    //     CHANNEL_PRESSURE: 0xD0,
-    //     PITCH_BEND: 0xE0,
-    //     // MIDI controls
-    //     PAN_CONTROL: 10,
-    //     MODWHEEL_CONTROL: 1,
-    //     EXPRESSION_CONTROL: 11
-    // }
-    MCD,
 
-    // midi input message types
+    // Assistant's midi input message types
     UNKNOWN = 0,
     ILLEGAL_INDEX = 1,
     END_OF_SEQUENCE = 2,
@@ -74,15 +62,8 @@ JI_NAMESPACE.assistant = (function (window)
     stopped = true,
     paused = false,
     midiInputEventHandler, // set in Assistant constructor, passed to options.getInputDevice(midiInputEventHandler) when state is set to running
-    sendMIDIMessage, // callback. sendMIDIMessage(outputDevice, midiMessage)
 
     currentLivePerformersKeyPitch = -1, // -1 means "no key depressed". This value is set when the live performer sends a noteO
-
-    init = function (messageCreationData, sendMessageCallback)
-    {
-        MCD = messageCreationData;
-        sendMIDIMessage = sendMessageCallback;
-    },
 
     setState = function (state)
     {
@@ -203,8 +184,7 @@ JI_NAMESPACE.assistant = (function (window)
     //  nextIndex (= 0 when stopped) the index of the subsequence which will be played when a noteOn msg arrives
     handleMIDIInputEvent = function (inputEvent)
     {
-        var inputEventType, command, cmd,
-            mcd = MCD;
+        var inputEventType, command, cmd;
 
         function inputCommand(inputEvent)
         {
@@ -292,43 +272,28 @@ JI_NAMESPACE.assistant = (function (window)
             return type;
         }
 
-        // mcd contains message creation utilities ( see Main() )
-        // controlData is one of the following objects (see jiAPControls.js):
-        // { name: "channel pressure", statusHighNibble: 0xD0 },
-        // { name: "pitch wheel", statusHighNibble: 0xE0 },
-        // { name: "modulation (1)", midiControl: 1 },
-        // { name: "volume (7)", midiControl: 7 },
-        // { name: "pan (10)", midiControl: 10 },
-        // { name: "expression (11)", midiControl: 11 },
-        // { name: "timbre (71)", midiControl: 71 },
-        // { name: "brightness (74)", midiControl: 74 },
-        // { name: "effects (91)", midiControl: 91 },
-        // { name: "tremolo (92)", midiControl: 92 },
-        // { name: "chorus (93)", midiControl: 93 },
-        // { name: "celeste (94)", midiControl: 94 },
-        // { name: "phaser (95)", midiControl: 95 }
         // channel is the new message's channel
         // value is the new message's value
-        function newControlMessage(mcd, controlData, channel, value)
+        function newControlMessage(controlData, channel, value)
         {
-            var message;
+            var message, d;
 
             if (controlData.midiControl !== undefined)
             {
                 // a normal control
-                message = mcd.createMIDIMessage(mcd.CONTROL_CHANGE, controlData.midiControl, value, channel, 0);
+                message = new MIDIEvent(CMD.CONTROL_CHANGE + channel, controlData.midiControl, value, 0);
             }
             else if (controlData.statusHighNibble !== undefined)
             {
                 // pitch-bend or channel pressure
-                if (controlData.statusHighNibble === mcd.PITCH_BEND)
+                if (controlData.statusHighNibble === CMD.PITCH_WHEEL)
                 {
-                    message = mcd.createMIDIMessage(controlData.statusHighNibble, 0, value, channel, 0);
+                    d = to14Bit(value);
+                    message = new MIDIEvent(CMD.PITCH_WHEEL + channel, d.data1, d.data2, 0);
                 }
-                else if (controlData.statusHighNibble === mcd.CHANNEL_PRESSURE)
+                else if (controlData.statusHighNibble === CMD.CHANNEL_AFTERTOUCH)
                 {
-                    // ACHTUNG: The value goes to data1. Does this message work? Does Jazz send the right number of bytes?
-                    message = mcd.createMIDIMessage(controlData.statusHighNibble, value, 0, channel, 0);
+                    message = new MIDIEvent(CMD.CHANNEL_AFTERTOUCH + channel, value, 0, 0);
                 }
                 else
                 {
@@ -343,11 +308,10 @@ JI_NAMESPACE.assistant = (function (window)
             return message;
         }
 
-        function handleController(mcd, controlData, value, usesSoloTrack, usesOtherTracks)
+        function handleController(controlData, value, usesSoloTrack, usesOtherTracks)
         {
             var controlMessages = [], nControlMessages, i,
-                nTracks = allSubsequences[0].tracks.length,
-                send = sendMIDIMessage;
+                nTracks = allSubsequences[0].tracks.length;
 
             if (usesSoloTrack && usesOtherTracks)
             {
@@ -355,13 +319,13 @@ JI_NAMESPACE.assistant = (function (window)
                 {
                     if (tracksControl.trackIsOn(i))
                     {
-                        controlMessages.push(newControlMessage(mcd, controlData, i, value));
+                        controlMessages.push(newControlMessage(controlData, i, value));
                     }
                 }
             }
             else if (usesSoloTrack)
             {
-                controlMessages.push(newControlMessage(mcd, controlData, options.livePerformersTrackIndex, value));
+                controlMessages.push(newControlMessage(controlData, options.livePerformersTrackIndex, value));
             }
             else if (usesOtherTracks)
             {
@@ -369,7 +333,7 @@ JI_NAMESPACE.assistant = (function (window)
                 {
                     if (tracksControl.trackIsOn(i) && i !== options.livePerformersTrackIndex)
                     {
-                        controlMessages.push(newControlMessage(mcd, controlData, i, value));
+                        controlMessages.push(newControlMessage(controlData, i, value));
                     }
                 }
             }
@@ -381,7 +345,7 @@ JI_NAMESPACE.assistant = (function (window)
             nControlMessages = controlMessages.length;
             for (i = 0; i < nControlMessages; ++i)
             {
-                send(outputDevice, controlMessages[i]);
+                controlMessages[i].send(outputDevice);
             }
         }
 
@@ -405,8 +369,7 @@ JI_NAMESPACE.assistant = (function (window)
                 var i, j, nMessages, newMessages, allTrackMessages, msg, msgClone,
                 nTracks = completeMidiTracksData.length,
                 sequenceStartTimeRePerformanceStart = subsequenceStartNow - performanceStartNow,
-                previousTimestamp = 0,
-                mcd = MCD; // local pointer -- could be quicker
+                previousTimestamp = 0;
 
                 for (i = 0; i < nTracks; ++i)
                 {
@@ -425,7 +388,7 @@ JI_NAMESPACE.assistant = (function (window)
                     for (j = 0; j < nMessages; ++j)
                     {
                         msg = newMessages[j];
-                        msgClone = mcd.createMIDIMessage(msg.command, msg.data1, msg.data2, msg.channel, msg.timestamp);
+                        msgClone = msg.clone();
                         msgClone.timestamp += sequenceStartTimeRePerformanceStart;
                         if (msgClone.timestamp < previousTimestamp)
                         {
@@ -507,7 +470,7 @@ JI_NAMESPACE.assistant = (function (window)
             }
         }
 
-        function handleNoteOn(mcd, inputEvent, overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity)
+        function handleNoteOn(inputEvent, overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity)
         {
             var subsequence;
 
@@ -537,7 +500,7 @@ JI_NAMESPACE.assistant = (function (window)
                     subsequence = span[currentIndex];
                     if (overrideSoloPitch || overrideOtherTracksPitch || overrideSoloVelocity || overrideOtherTracksVelocity)
                     {
-                        subsequence.overridePitchAndOrVelocity(mcd.NOTE_ON, options.livePerformersTrackIndex,
+                        subsequence.overridePitchAndOrVelocity(CMD.NOTE_ON, options.livePerformersTrackIndex,
                             inputData1(inputEvent), inputData2(inputEvent),
                             overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity);
                     }
@@ -558,7 +521,7 @@ JI_NAMESPACE.assistant = (function (window)
                 console.log("Channel (=key) Pressure, value:", inputData1(inputEvent).toString());
                 if (options.pressureSubstituteControlData !== null)
                 {
-                    handleController(mcd, options.pressureSubstituteControlData, inputData1(inputEvent), // ACHTUNG! data1 is correct!
+                    handleController(options.pressureSubstituteControlData, inputData1(inputEvent), // ACHTUNG! data1 is correct!
                                                 options.usesPressureSolo, options.usesPressureOtherTracks);
                 }
                 break;
@@ -566,7 +529,7 @@ JI_NAMESPACE.assistant = (function (window)
                 console.log("Aftertouch, value:", inputData2(inputEvent).toString());
                 if (options.pressureSubstituteControlData !== null)
                 {
-                    handleController(mcd, options.pressureSubstituteControlData, inputData2(inputEvent),
+                    handleController(options.pressureSubstituteControlData, inputData2(inputEvent),
                                                 options.usesPressureSolo, options.usesPressureOtherTracks);
                 }
                 break;
@@ -574,7 +537,7 @@ JI_NAMESPACE.assistant = (function (window)
                 console.log("Modulation Wheel, value:", inputData2(inputEvent).toString());
                 if (options.modSubstituteControlData !== null)
                 {
-                    handleController(mcd, options.modSubstituteControlData, inputData2(inputEvent),
+                    handleController(options.modSubstituteControlData, inputData2(inputEvent),
                                                 options.usesModSolo, options.usesModOtherTracks);
                 }
                 break;
@@ -582,12 +545,12 @@ JI_NAMESPACE.assistant = (function (window)
                 console.log("Pitch Wheel, value:", inputData2(inputEvent).toString());
                 if (options.pitchBendSubstituteControlData !== null)
                 {
-                    handleController(mcd, options.pitchBendSubstituteControlData, inputData2(inputEvent),
+                    handleController(options.pitchBendSubstituteControlData, inputData2(inputEvent),
                                                 options.usesPitchBendSolo, options.usesPitchBendOtherTracks);
                 }
                 break;
             case NOTE_ON:
-                handleNoteOn(mcd, inputEvent,
+                handleNoteOn(inputEvent,
                     options.overrideSoloPitch, options.overrideOtherTracksPitch,
                     options.overrideSoloVelocity, options.overrideOtherTracksVelocity);
                 break;
@@ -746,8 +709,6 @@ JI_NAMESPACE.assistant = (function (window)
 
     publicAPI =
     {
-        init: init,
-
         // empty Assistant constructor
         Assistant: Assistant
     };
