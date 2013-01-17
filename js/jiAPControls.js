@@ -18,10 +18,10 @@ JI_NAMESPACE.apControls = (function (document, window)
     "use strict";
 
     // module dependencies (see Javascript Patterns p.98)
-    var svgTracksControl = JI_NAMESPACE.apTracksControl,
-        jiScore = JI_NAMESPACE.score,
-        jiAssistant = JI_NAMESPACE.assistant,
-        jiMIDIFile = JI_NAMESPACE.midiFile,
+    var tracksControl = JI_NAMESPACE.apTracksControl,
+        Score = JI_NAMESPACE.score.Score,
+        Assistant = JI_NAMESPACE.assistant.Assistant,
+        nsSTS = JI_NAMESPACE.sequenceToSMF,
         midiAccess,
         score,
         assistant,
@@ -373,7 +373,7 @@ JI_NAMESPACE.apControls = (function (document, window)
             cl.sendStopToEndControlDisabled.setAttribute("opacity", GLASS);
             /********* end performance buttons *******************/
 
-            svgTracksControl.setDisabled(false);
+            tracksControl.setDisabled(false);
         },
 
     // callback called when a performing sequence is stopped or has played its last message,
@@ -384,7 +384,7 @@ JI_NAMESPACE.apControls = (function (document, window)
             i, nTracks = midiTracksData.length,
             scoreName = mo.scoreSelector.options[mo.scoreSelector.selectedIndex].text;
 
-            jiMIDIFile.createSaveMIDIFileButton(scoreName, midiTracksData, endMarkerTimestamp);
+            nsSTS.createSaveMIDIFileButton(scoreName, midiTracksData, endMarkerTimestamp);
 
             if (doResetTracksData)
             {
@@ -431,7 +431,7 @@ JI_NAMESPACE.apControls = (function (document, window)
             cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
             /********* end performance buttons *******************/
 
-            svgTracksControl.setDisabled(true);
+            tracksControl.setDisabled(true);
         }
 
         // setStopped is outer function
@@ -450,7 +450,7 @@ JI_NAMESPACE.apControls = (function (document, window)
 
             score.allNotesOff(options.outputDevice);
 
-            svgTracksControl.setDisabled(true);
+            tracksControl.setDisabled(true);
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
             cl.livePerformerOnOffDisabled.setAttribute("opacity", SMOKE);
@@ -469,7 +469,7 @@ JI_NAMESPACE.apControls = (function (document, window)
 
         function setPlaying()
         {
-            jiMIDIFile.deleteSaveMIDIFileButton();
+            nsSTS.deleteSaveMIDIFileButton();
 
             if (options.assistedPerformance === true && assistant !== undefined)
             {
@@ -481,7 +481,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                     score.moveStartMarkerToTop(svgPagesDiv);
 
 
-                    assistant.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(), svgTracksControl);
+                    assistant.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(), tracksControl);
 
                     cl.pauseUnselected.setAttribute("opacity", GLASS);
                     cl.pauseSelected.setAttribute("opacity", GLASS);
@@ -502,7 +502,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                     score.moveStartMarkerToTop(svgPagesDiv);
 
                     sequence.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
-                        svgTracksControl, reportEndOfPerformance, reportMsPos);
+                        tracksControl, reportEndOfPerformance, reportMsPos);
                 }
 
                 cl.pauseUnselected.setAttribute("opacity", METAL);
@@ -510,7 +510,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                 cl.goDisabled.setAttribute("opacity", GLASS);
             }
 
-            svgTracksControl.setDisabled(true);
+            tracksControl.setDisabled(true);
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
             cl.livePerformerOnOffDisabled.setAttribute("opacity", SMOKE);
@@ -571,7 +571,7 @@ JI_NAMESPACE.apControls = (function (document, window)
 
             // svgFrames[i].style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setStartCursor.cur'), auto";
 
-            svgTracksControl.setDisabled(true);
+            tracksControl.setDisabled(true);
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
             cl.livePerformerOnOffDisabled.setAttribute("opacity", SMOKE);
@@ -597,7 +597,7 @@ JI_NAMESPACE.apControls = (function (document, window)
 
             // svgFrames[i].style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setStartCursor.cur'), auto";
 
-            svgTracksControl.setDisabled(true);
+            tracksControl.setDisabled(true);
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
             cl.livePerformerOnOffDisabled.setAttribute("opacity", SMOKE);
@@ -770,7 +770,7 @@ JI_NAMESPACE.apControls = (function (document, window)
 
         setMIDIDeviceSelectors(midiAccess);
 
-        score = new jiScore.Score(runningMarkerHeightChanged); // an empty score, with callback function
+        score = new Score(runningMarkerHeightChanged); // an empty score, with callback function
 
         setSvgPagesDivHeight();
 
@@ -785,7 +785,7 @@ JI_NAMESPACE.apControls = (function (document, window)
     {
         // This function sets the html content of the "svgPages" div, and initializes
         // both the performer's track selector (in the main options dialog) and
-        // the performance svgTracksControl (in the SVG controls at the top of the score).
+        // the performance tracksControl (in the SVG controls at the top of the score).
         // The score is actually analysed when the Start button is clicked.
         function setScore()
         {
@@ -880,7 +880,7 @@ JI_NAMESPACE.apControls = (function (document, window)
             }
 
             setPerformersTrackSelector(nTracks);
-            svgTracksControl.init(nTracks);
+            tracksControl.init(nTracks);
             svgPagesDiv.scrollTop = 0;
 
             scoreHasJustBeenSelected = true;
@@ -987,13 +987,13 @@ JI_NAMESPACE.apControls = (function (document, window)
         if (controlID === "midiInputDeviceSelector")
         {
             setMidiDevices(midiAccess);
-            svgTracksControl.setTracksControlState(mo.midiInputDeviceSelector.selectedIndex > 0, mo.trackSelector.selectedIndex);
+            tracksControl.setTracksControlState(mo.midiInputDeviceSelector.selectedIndex > 0, mo.trackSelector.selectedIndex);
         }
 
         if (controlID === "scoreSelector")
         {
             setScore();
-            svgTracksControl.setTracksControlState(mo.trackSelector.selectedIndex >= 0, mo.trackSelector.selectedIndex);
+            tracksControl.setTracksControlState(mo.trackSelector.selectedIndex >= 0, mo.trackSelector.selectedIndex);
         }
 
         if (controlID === "midiOutputDeviceSelector")
@@ -1003,7 +1003,7 @@ JI_NAMESPACE.apControls = (function (document, window)
 
         if (controlID === "trackSelector")
         {
-            svgTracksControl.setTracksControlState(mo.trackSelector.selectedIndex >= 0, mo.trackSelector.selectedIndex);
+            tracksControl.setTracksControlState(mo.trackSelector.selectedIndex >= 0, mo.trackSelector.selectedIndex);
         }
 
         /*** SVG controls ***/
@@ -1042,27 +1042,27 @@ JI_NAMESPACE.apControls = (function (document, window)
 
                 if (options.assistedPerformance)
                 {
-                    svgTracksControl.setTracksControlState(true, options.livePerformersTrackIndex);
-                    svgTracksControl.refreshDisplay();
+                    tracksControl.setTracksControlState(true, options.livePerformersTrackIndex);
+                    tracksControl.refreshDisplay();
                 }
                 else
                 {
-                    svgTracksControl.setTracksControlState(false, options.livePerformersTrackIndex);
-                    svgTracksControl.refreshDisplay();
+                    tracksControl.setTracksControlState(false, options.livePerformersTrackIndex);
+                    tracksControl.refreshDisplay();
                 }
 
                 sequence = score.createSequence(options.assistantsSpeed);
 
                 if (options.assistedPerformance === true)
                 {// this constructor consumes sequence, resetting midiMoment timestamps relative to the start of their subsection.
-                    assistant = new jiAssistant.Assistant(sequence, options, reportEndOfPerformance, reportMsPos);
+                    assistant = new Assistant(sequence, options, reportEndOfPerformance, reportMsPos);
                 }
             }
         }
 
         if (controlID === "gotoOptions")
         {
-            jiMIDIFile.deleteSaveMIDIFileButton();
+            nsSTS.deleteSaveMIDIFileButton();
 
             if (cl.gotoOptionsDisabled.getAttribute("opacity") !== SMOKE)
             {
@@ -1227,25 +1227,25 @@ JI_NAMESPACE.apControls = (function (document, window)
 
             sequence = score.createSequence(options.assistantsSpeed);
 
-            // The svgTracksControl is in charge of refreshing the entire display, including both itself and the score.
+            // The tracksControl is in charge of refreshing the entire display, including both itself and the score.
             // TracksControl.refreshDisplay() calls score.refreshDisplay(isAssistedPerformance, livePerformersTrackIndex)
             // to tell the score to repaint itself. The score may also update the position of the start marker (which
             // always starts on a chord) if a track becomes disabled.
-            svgTracksControl.getUpdateDisplayCallback(score.refreshDisplay);
+            tracksControl.getUpdateDisplayCallback(score.refreshDisplay);
 
-            // svgTracksControl.trackIsOn(trackIndex) returns a boolean which is the on/off status of its trackIndex argument
-            score.getTrackIsOnCallback(svgTracksControl.trackIsOn);
+            // tracksControl.trackIsOn(trackIndex) returns a boolean which is the on/off status of its trackIndex argument
+            score.getTrackIsOnCallback(tracksControl.trackIsOn);
 
-            svgTracksControl.setTracksControlState(options.assistedPerformance, options.livePerformersTrackIndex);
-            svgTracksControl.setAllTracksOn();
+            tracksControl.setTracksControlState(options.assistedPerformance, options.livePerformersTrackIndex);
+            tracksControl.setAllTracksOn();
 
-            svgTracksControl.refreshDisplay(); // refreshes itself and the score
+            tracksControl.refreshDisplay(); // refreshes itself and the score
 
             if (options.assistedPerformance === true)
             {
                 // This constructor resets midiMoment timestamps relative to the start of their subsequence.
                 // The sequence therefore needs to be reloaded when the options (performer's track index) change.    
-                assistant = new jiAssistant.Assistant(sequence, options, reportEndOfPerformance, reportMsPos);
+                assistant = new Assistant(sequence, options, reportEndOfPerformance, reportMsPos);
             }
 
             window.scrollTo(0, 630); // 600 is the absolute position of the controlPanel div (!)
