@@ -40,17 +40,17 @@
                     <div style="margin-top:6px">
                         <select id="midiInputDeviceSelector"
 					        name="midiInputDeviceSelector"
-                            class="deviceSelector" onchange="JI_NAMESPACE.apControls.doControl('midiInputDeviceSelector')">
+                            class="deviceSelector" onchange="WEB_MIDI_LIB.apControls.doControl('midiInputDeviceSelector')">
                         </select>
                         <select id="scoreSelector" name="scoreSelector"
-                            class="deviceSelector" onchange="JI_NAMESPACE.apControls.doControl('scoreSelector')">
+                            class="deviceSelector" onchange="WEB_MIDI_LIB.apControls.doControl('scoreSelector')">
                             <option>choose a score</option>
                             <option>Study 2c3.1</option>
                             <option>Study 3 sketch 1</option>
                         </select>
                         <select id="midiOutputDeviceSelector"
 					        name="midiOutputDeviceSelector"
-                            class="deviceSelector" onchange="JI_NAMESPACE.apControls.doControl('midiOutputDeviceSelector')">
+                            class="deviceSelector" onchange="WEB_MIDI_LIB.apControls.doControl('midiOutputDeviceSelector')">
                         </select>
 
                     </div>                        
@@ -62,7 +62,7 @@
                                 Track:
                                 <div style="margin-left: 3px">
                                     <select id="trackSelector" name="trackSelector" style="width:40px;"
-                                    onchange="JI_NAMESPACE.apControls.doControl('trackSelector')" disabled="disabled">
+                                    onchange="WEB_MIDI_LIB.apControls.doControl('trackSelector')" disabled="disabled">
                                     </select>
                                 </div>
                             </div>
@@ -141,15 +141,15 @@
                                         </div>    
                                         <div class="checkboxCell" > 
                                             <input type="checkbox" id="usesPressureSoloCheckbox" class="standardCheckBox14px" 
-                                                onclick="JI_NAMESPACE.apControls.doControl('usesPressureSoloCheckbox')" disabled="disabled"/>
+                                                onclick="WEB_MIDI_LIB.apControls.doControl('usesPressureSoloCheckbox')" disabled="disabled"/>
                                         </div>
                                         <div class="checkboxCell" >
                                             <input type="checkbox" id="usesPressureOtherTracksCheckbox" class="standardCheckBox14px"
-                                                onclick="JI_NAMESPACE.apControls.doControl('usesPressureOtherTracksCheckbox')"  disabled="disabled"/>
+                                                onclick="WEB_MIDI_LIB.apControls.doControl('usesPressureOtherTracksCheckbox')"  disabled="disabled"/>
                                         </div>
                                         <div style="display:table-cell;">
                                             <select id="pressureSubstituteControlDataSelector" class="midiControlSelector" disabled="disabled" 
-                                                onchange="JI_NAMESPACE.apControls.doControl('pressureSubstituteControlDataSelector')"></select>
+                                                onchange="WEB_MIDI_LIB.apControls.doControl('pressureSubstituteControlDataSelector')"></select>
                                         </div>
                                     </div>
                                     <div style="margin-left: 20px; line-height: 16px; display: table-row; vertical-align:middle">
@@ -158,15 +158,15 @@
                                         </div>    
                                         <div class="checkboxCell" > 
                                             <input type="checkbox" id="usesPitchBendSoloCheckbox" class="standardCheckBox14px"
-                                                onclick="JI_NAMESPACE.apControls.doControl('usesPitchBendSoloCheckbox')" disabled="disabled"/>
+                                                onclick="WEB_MIDI_LIB.apControls.doControl('usesPitchBendSoloCheckbox')" disabled="disabled"/>
                                         </div>
                                         <div class="checkboxCell" >
                                             <input type="checkbox" id="usesPitchBendOtherTracksCheckbox" class="standardCheckBox14px"
-                                                onclick="JI_NAMESPACE.apControls.doControl('usesPitchBendOtherTracksCheckbox')" disabled="disabled"/>
+                                                onclick="WEB_MIDI_LIB.apControls.doControl('usesPitchBendOtherTracksCheckbox')" disabled="disabled"/>
                                         </div>
                                         <div style="display:table-cell;">
                                             <select id="pitchBendSubstituteControlDataSelector" class="midiControlSelector" disabled="disabled"
-                                                onchange="JI_NAMESPACE.apControls.doControl('pitchBendSubstituteControlDataSelector')"></select>
+                                                onchange="WEB_MIDI_LIB.apControls.doControl('pitchBendSubstituteControlDataSelector')"></select>
                                         </div>
                                     </div>
                                     <div style="margin-left: 20px; line-height: 16px; display: table-row; vertical-align:middle">
@@ -175,15 +175,15 @@
                                         </div>    
                                         <div class="checkboxCell" > 
                                             <input type="checkbox" id="usesModSoloCheckbox" class="standardCheckBox14px"
-                                                onclick="JI_NAMESPACE.apControls.doControl('usesModSoloCheckbox')" disabled="disabled"/>
+                                                onclick="WEB_MIDI_LIB.apControls.doControl('usesModSoloCheckbox')" disabled="disabled"/>
                                         </div>
                                         <div class="checkboxCell" >
                                             <input type="checkbox" id="usesModOtherTracksCheckbox" class="standardCheckBox14px"
-                                                onclick="JI_NAMESPACE.apControls.doControl('usesModOtherTracksCheckbox')"disabled="disabled"/>
+                                                onclick="WEB_MIDI_LIB.apControls.doControl('usesModOtherTracksCheckbox')"disabled="disabled"/>
                                         </div>
                                         <div style="display:table-cell;">
                                             <select id="modSustituteControlSelector" class="midiControlSelector" disabled="disabled"
-                                                onchange="JI_NAMESPACE.apControls.doControl('modSustituteControlSelector')"></select>
+                                                onchange="WEB_MIDI_LIB.apControls.doControl('modSustituteControlSelector')"></select>
                                         </div>
                                     </div>
                                 </div>
@@ -199,7 +199,7 @@
                         <div style="margin-left:20px;">
                             <div  class="narrowLineHeight" >
                                 <input type="radio" name="durationOptions" value="V1" id="assistantUsesAbsoluteDurationsRadioButton" checked="checked"
-                                 onchange="JI_NAMESPACE.apControls.doControl('assistantUsesAbsoluteDurationsRadioButton')" />
+                                 onchange="WEB_MIDI_LIB.apControls.doControl('assistantUsesAbsoluteDurationsRadioButton')" />
                                 <label id="assistantUsesAbsoluteDurationsRadioButtonLabel" for="assistantUsesAbsoluteDurationsRadioButton">
                                     Absolute Symbols: (Speed option) The assistant's durations will be those stored<br /> 
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in the score, divided by the following floating point value: <br />
@@ -214,7 +214,7 @@
                             </div>
                             <div class="narrowLineHeight">
                                 <input type="radio" name="durationOptions" value="performed" id="assistantUsesRelativeDurationsRadioButton" disabled="disabled"
-                                onchange="JI_NAMESPACE.apControls.doControl('assistantUsesRelativeDurationsRadioButton')"/>
+                                onchange="WEB_MIDI_LIB.apControls.doControl('assistantUsesRelativeDurationsRadioButton')"/>
                                 <label id="assistantUsesRelativeDurationsRadioButtonLabel" for="assistantUsesRelativeDurationsRadioButton">
                                     Relative Symbols: The assistant's moment durations will be those stored in the <br />
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;score multiplied by the relation between the written and performed durations of<br />
@@ -224,7 +224,7 @@
                         </div>
                     </div>                     
                     <input id="startRuntimeButton" type="button" value="Start"
-                        onclick="JI_NAMESPACE.apControls.beginRuntime()"  disabled="disabled"               
+                        onclick="WEB_MIDI_LIB.apControls.beginRuntime()"  disabled="disabled"               
                         style="margin-top:8px; font-size: 14px; width: 100px; height: 24px;"/>    
                 </div>
                 </div>
@@ -236,9 +236,9 @@
         <rect id="performanceButtonsDisabled" x="0" y="0" width="169" height="30" stroke="white" stroke-width="1" fill="white" opacity="0" />
 
         <g id="goControl" transform="translate(7,5)"
-        onmouseover="JI_NAMESPACE.apControls.showOverRect('overGoRect', 'goDisabled')"
-        onmouseout="JI_NAMESPACE.apControls.hideOverRect('overGoRect')"
-        onmousedown="JI_NAMESPACE.apControls.doControl('goControl')">
+        onmouseover="WEB_MIDI_LIB.apControls.showOverRect('overGoRect', 'goDisabled')"
+        onmouseout="WEB_MIDI_LIB.apControls.hideOverRect('overGoRect')"
+        onmousedown="WEB_MIDI_LIB.apControls.doControl('goControl')">
             <rect id="overGoRect" x="-1.5" y="-1.5" width="23" height="23" stroke="#00CE00" stroke-width="2" opacity="0" />
             <g id="goUnselected" opacity="1">
                 <rect id="Rect22" x="0" y="0" width="20" height="20" stroke="black" stroke-width="1" fill="white" />
@@ -268,9 +268,9 @@
         </g>
         
         <g id="stopControl" transform="translate(34,5)"
-        onmouseover="JI_NAMESPACE.apControls.showOverRect('overStopRect', 'stopControlDisabled')"
-        onmouseout="JI_NAMESPACE.apControls.hideOverRect('overStopRect')"
-        onmousedown="JI_NAMESPACE.apControls.doControl('stopControl')">
+        onmouseover="WEB_MIDI_LIB.apControls.showOverRect('overStopRect', 'stopControlDisabled')"
+        onmouseout="WEB_MIDI_LIB.apControls.hideOverRect('overStopRect')"
+        onmousedown="WEB_MIDI_LIB.apControls.doControl('stopControl')">
             <rect id="overStopRect" x="-1.5" y="-1.5" width="23" height="23" stroke="#00CE00" stroke-width="2" opacity="0"/>
 
             <g id="stopControlUnselected" opacity="1">
@@ -291,9 +291,9 @@
             </g>
  
         <g id="setStartControl" transform="translate(61,5)"
-        onmouseover="JI_NAMESPACE.apControls.showOverRect('overSetStartRect', 'setStartControlDisabled')"
-        onmouseout="JI_NAMESPACE.apControls.hideOverRect('overSetStartRect')"
-        onmousedown="JI_NAMESPACE.apControls.doControl('setStartControl')">
+        onmouseover="WEB_MIDI_LIB.apControls.showOverRect('overSetStartRect', 'setStartControlDisabled')"
+        onmouseout="WEB_MIDI_LIB.apControls.hideOverRect('overSetStartRect')"
+        onmousedown="WEB_MIDI_LIB.apControls.doControl('setStartControl')">
             <rect id="overSetStartRect" x="-1.5" y="-1.5" width="23" height="23" stroke="#00CE00" stroke-width="2" opacity="0"/>
             <g id="setStartControlUnselected" opacity="1">
                 <rect id="setStartRect" x="0" y="0" width="20" height="20" stroke="black" stroke-width="1" fill="white" />
@@ -312,9 +312,9 @@
         </g>
  
         <g id="setEndControl" transform="translate(88,5)"
-        onmouseover="JI_NAMESPACE.apControls.showOverRect('overSetEndRect', 'setEndControlDisabled')"
-        onmouseout="JI_NAMESPACE.apControls.hideOverRect('overSetEndRect')"
-        onmousedown="JI_NAMESPACE.apControls.doControl('setEndControl')">
+        onmouseover="WEB_MIDI_LIB.apControls.showOverRect('overSetEndRect', 'setEndControlDisabled')"
+        onmouseout="WEB_MIDI_LIB.apControls.hideOverRect('overSetEndRect')"
+        onmousedown="WEB_MIDI_LIB.apControls.doControl('setEndControl')">
             <rect id="overSetEndRect" x="-1.5" y="-1.5" width="23" height="23" stroke="#00CE00" stroke-width="2" opacity="0" />
             <g id="setEndControlUnselected" opacity="1">
                 <rect id="Rect1" x="0" y="0" width="20" height="20" stroke="black" stroke-width="1" fill="white" />
@@ -333,9 +333,9 @@
         </g>
 
         <g id="sendStartToBeginningControl" transform="translate(115,5)"
-        onmouseover="JI_NAMESPACE.apControls.showOverRect('overSendStartToBeginningRect', 'sendStartToBeginningControlDisabled')"
-        onmouseout="JI_NAMESPACE.apControls.hideOverRect('overSendStartToBeginningRect')"
-        onmousedown="JI_NAMESPACE.apControls.doControl('sendStartToBeginningControl')"> 
+        onmouseover="WEB_MIDI_LIB.apControls.showOverRect('overSendStartToBeginningRect', 'sendStartToBeginningControlDisabled')"
+        onmouseout="WEB_MIDI_LIB.apControls.hideOverRect('overSendStartToBeginningRect')"
+        onmousedown="WEB_MIDI_LIB.apControls.doControl('sendStartToBeginningControl')"> 
             <rect id="overSendStartToBeginningRect" x="-1.5" y="-1.5" width="23" height="23" stroke="#00CE00" stroke-width="2" opacity="0" />
 
             <g id="sendStartToBeginningControlUnselected" opacity="1">
@@ -368,9 +368,9 @@
         </g>
 
         <g id="sendStopToEndControl" transform="translate(142,5)"
-        onmouseover="JI_NAMESPACE.apControls.showOverRect('overSendStopToEndRect', 'sendStopToEndControlDisabled')"
-        onmouseout="JI_NAMESPACE.apControls.hideOverRect('overSendStopToEndRect')"
-        onmousedown="JI_NAMESPACE.apControls.doControl('sendStopToEndControl')">
+        onmouseover="WEB_MIDI_LIB.apControls.showOverRect('overSendStopToEndRect', 'sendStopToEndControlDisabled')"
+        onmouseout="WEB_MIDI_LIB.apControls.hideOverRect('overSendStopToEndRect')"
+        onmousedown="WEB_MIDI_LIB.apControls.doControl('sendStopToEndControl')">
             <rect id="overSendStopToEndRect" x="-1.5" y="-1.5" width="23" height="23" stroke="#00CE00" stroke-width="2" opacity="0" />
 
             <g id="sendStopToEndControlUnselected" opacity="1">
@@ -418,9 +418,9 @@
        
         <svg xmlns="http://www.w3.org/2000/svg" width="93" height="36" style="position: absolute; left: 820px; top: 5px; ">
     <g id="livePerformerOnOff" transform="translate(0.5, 0.5)"
-        onmouseover="JI_NAMESPACE.apControls.showOverRect('overLivePerformerOnOffFrame', 'livePerformerOnOffDisabled')"
-        onmouseout="JI_NAMESPACE.apControls.hideOverRect('overLivePerformerOnOffFrame')"
-        onclick="JI_NAMESPACE.apControls.doControl('livePerformerOnOff')" >
+        onmouseover="WEB_MIDI_LIB.apControls.showOverRect('overLivePerformerOnOffFrame', 'livePerformerOnOffDisabled')"
+        onmouseout="WEB_MIDI_LIB.apControls.hideOverRect('overLivePerformerOnOffFrame')"
+        onclick="WEB_MIDI_LIB.apControls.doControl('livePerformerOnOff')" >
         <g id="livePerformerOn" opacity="1" >
             <rect x="0" y="0" width="46" height="30" stroke="#008000" stroke-width="1" fill="#F5FFF5" />
             <rect x="1.5" y="1.5" width="43" height="27" stroke="#00CE00" stroke-width="2" fill="#F5FFF5"/>
@@ -450,9 +450,9 @@
 
         <svg xmlns="http://www.w3.org/2000/svg" width="104" height="36" style="position: absolute; left: 925px; top: 5px;">
     <g id="gotoOptions" transform="translate(0.5, 0.5)"
-        onmouseover="JI_NAMESPACE.apControls.showOverRect('overGotoOptionsFrame', 'gotoOptionsDisabled')"
-        onmouseout="JI_NAMESPACE.apControls.hideOverRect('overGotoOptionsFrame')"
-        onclick="JI_NAMESPACE.apControls.doControl('gotoOptions')">
+        onmouseover="WEB_MIDI_LIB.apControls.showOverRect('overGotoOptionsFrame', 'gotoOptionsDisabled')"
+        onmouseout="WEB_MIDI_LIB.apControls.hideOverRect('overGotoOptionsFrame')"
+        onclick="WEB_MIDI_LIB.apControls.doControl('gotoOptions')">
         <rect id="gotoOptionsFrame" x="0" y="0" width="103" height="30" stroke="#008000" stroke-width="1" fill="#F5FFF5" />
         <rect id="overGotoOptionsFrame" x="1.5" y="1.5" width="100" height="27" stroke="#00CE00" stroke-width="2" fill="#F5FFF5" opacity="0" />
         <text x="16" y="19" font-size="13" font-family="Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif" fill="black">
@@ -492,18 +492,21 @@
 </div>
 
 
-    <script src="lib/jiNamespace.js" type="text/javascript"></script>
-    <script src="lib/jiJazzWebMIDI.js" type="text/javascript"></script>
-    <script src="lib/jiMIDIEvent.js" type="text/javascript"></script>
-    <script src="lib/jiSequence.js" type="text/javascript"></script>
-    <script src="lib/jiSMFToSequence.js" type="text/javascript"></script>
-    <script src="lib/jiSequenceToSMF.js" type="text/javascript"></script>
+    <script src="lib/Namespace.js" type="text/javascript"></script>
 
+    <script src="lib/jiJazzWebMIDI.js" type="text/javascript"></script>
+    
+    <script src="lib/Event.js" type="text/javascript"></script>
+    <script src="lib/Moment.js" type="text/javascript"></script>
+    <script src="lib/Track.js" type="text/javascript"></script>
+    <script src="lib/Sequence.js" type="text/javascript"></script>
+    <script src="lib/SMFToSequence.js" type="text/javascript"></script>
+    <script src="lib/SequenceToSMF.js" type="text/javascript"></script>
+
+    <script src="js/jiNamespace.js" type="text/javascript"></script>
     <script src="js/jiFile.js" type="text/javascript"></script>
     <script src="js/jiMarkers.js" type="text/javascript"></script>
     <script src="js/jiPalettes.js" type="text/javascript"></script>
-    <script src="js/jiMIDIMoment.js" type="text/javascript"></script>
-    <script src="js/jiTrack.js" type="text/javascript"></script>
     <script src="js/jiMIDIChord.js" type="text/javascript"></script>
     <script src="js/jiAssistant.js" type="text/javascript"></script>
     <script src="js/jiScore.js" type="text/javascript"></script>

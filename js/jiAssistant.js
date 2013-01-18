@@ -16,9 +16,10 @@ JI_NAMESPACE.assistant = (function (window)
 {
     "use strict";
     // begin var
-    var 
+    var
     MIDIEvent = JI_NAMESPACE.midiEvent.MIDIEvent,
     CMD = JI_NAMESPACE.midiEvent.COMMAND,
+    getEvent = JI_NAMESPACE.midiEvent.getEvent, 
     to14Bit = JI_NAMESPACE.midiEvent.to14Bit,
 
     outputDevice,
@@ -182,9 +183,9 @@ JI_NAMESPACE.assistant = (function (window)
     //  endIndex  (= span.length -1 when stopped),
     //  currentIndex (= -1 when stopped) the index of the currently playing subsequence (which should be stopped when a noteOn or noteOff arrives).
     //  nextIndex (= 0 when stopped) the index of the subsequence which will be played when a noteOn msg arrives
-    handleMIDIInputEvent = function (inputEvent)
+    handleMIDIInputEvent = function (data)
     {
-        var inputEventType, command, cmd;
+        var inputEvent, inputEventType, command, cmd;
 
         function inputCommand(inputEvent)
         {
@@ -226,10 +227,9 @@ JI_NAMESPACE.assistant = (function (window)
         // getInputEventType returns one of the following constants:
         // UNKNOWN = 0, ILLEGAL_INDEX = 1, END_OF_SEQUENCE = 2, CHANNEL_PRESSURE = 3, AFTERTOUCH = 4,
         // MODULATION_WHEEL = 5, PITCH_WHEEL = 6, NOTE_ON = 7, NOTE_OFF = 8
-        function getInputEventType(inputEvent)
+        function getInputEventType(command)
         {
             var 
-            command = inputCommand(inputEvent),
             type = UNKNOWN;
 
             switch (command)
@@ -513,7 +513,9 @@ JI_NAMESPACE.assistant = (function (window)
             }
         }
 
-        inputEventType = getInputEventType(inputEvent);
+        inputEvent = getEvent(data);
+
+        inputEventType = getInputEventType(data[0] &0xF0);
 
         switch (inputEventType)
         {

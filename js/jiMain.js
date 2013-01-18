@@ -23,111 +23,22 @@ window.addEventListener("load", function (window, navigator)
 {
     "use strict";
 
-    var 
+    var
     midiAccess,
-    jiAPControls = JI_NAMESPACE.apControls,
-
-    // Ensure that the relevant window interfaces are set correctly.
-    // Currently this just affects window.performance, window.performance.now and window.URL
-    setWindow = function ()
-    {
-        window.performance = window.performance || window.mozPerformance || window.msPerformance || window.webkitPerformance || {};
-        if (!window.performance.now)
-        {
-            window.performance.now = window.performance.webkitNow;
-        }
-
-        window.URL = window.URL || window.webkitURL;
-    },
-
-    checkAPI = function (objectName, attributeName)
-    {
-        var okay = true;
-        switch (objectName)
-        {
-            case "MIDIAccess":
-                switch (attributeName)
-                {
-                    case "enumerateInputs":
-                        break;
-                    case "enumerateOutputs":
-                        break;
-                    case "getInput":
-                        break;
-                    case "getOutput":
-                        break;
-                    default:
-                        okay = false;
-                }
-                break;
-            case "MIDIPort":
-                switch (attributeName)
-                {
-                    case "id":
-                        break;
-                    case "manufacturer":
-                        break;
-                    case "name":
-                        break;
-                    case "type":
-                        break;
-                    case "version":
-                        break;
-                    default:
-                        okay = false;
-                }
-                break;
-            case "MIDIInput":
-                switch (attributeName)
-                {
-                    case "onmessage":
-                        break;
-                    default:
-                        okay = false;
-                }
-                break;
-            case "MIDIOutput":
-                switch (attributeName)
-                {
-                    case "send":
-                        break;
-                    default:
-                        okay = false;
-                }
-                break;
-            case "MIDIEvent":
-                switch (attributeName)
-                {
-                    case "timestamp":
-                        break;
-                    case "data":
-                        break;
-                    default:
-                        okay = false;
-                }
-                break;
-        }
-        if (!okay)
-        {
-            throw "API Error: the name " + objectName + "." + attributeName + " has changed.";
-        }
-    },
-
+    jiJazzWebMIDIInit = JI_NAMESPACE.jazzWebMIDI.init, // delete this line when browsers implement the Web MIDI API
+    jiAPControls = JI_NAMESPACE.apControls.init,
     onSuccessCallback = function (midi)
     {
         midiAccess = midi;
     },
-
     onErrorCallback = function (error)
     {
         throw "Error: Unable to set midiAccess. Error code:".concat(error.code);
     };
 
-    setWindow();
+    jiJazzWebMIDIInit(window); // delete this line when browsers implement the Web MIDI API
 
     navigator.requestMIDIAccess(onSuccessCallback, onErrorCallback);
-
-    midiAccess.checkAPI = checkAPI;
 
     jiAPControls.init(midiAccess); // sets the contents of the device selector menus
 
