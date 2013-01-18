@@ -1,0 +1,19 @@
+﻿
+Questions for the W3C:
+
+1. Should Ports support opening and closing? (JazzMIDIBridge does, with an isOpen attribute,
+   but I think Jazz 1.2 is doing this transparently so as to ensure that ports are not
+   opened twice.
+
+2. In JazzWebMIDI, complying with the current spec, MIDIOutput has a function which can be
+   called like this:
+		outputDevice.send(midiEvent.data, domhrtTimestamp);
+   Jazz's MidiOutLong() does not take a timestamp argument, so it is always ignored. Jazz sends
+   the data immediately. Jazz does however support SysEx events, so this would also work:
+        outputDevice.send(sysExEvent.data, domhrtTimestamp);
+
+4. The current spec says (section 7.3.1):
+   "Running status is not allowed in the data, as underlying systems may not support it."
+   But some systems MAY support it, so why do we have to rule it out?
+   Do some MIDI devices fail to ignore these messages if they can't understand them?
+   My MIDIEvent class can contain 1-byte data, and Jazz supports this too...
