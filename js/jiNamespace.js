@@ -29,7 +29,7 @@ JI_NAMESPACE.namespace = function (ns_string)
     for (i = 0; i < parts.length; ++i)
     {
         // create a property if it does not exist
-        if (typeof parent[parts[i]] === "undefined")
+        if (parent[parts[i]] === undefined)
         {
             parent[parts[i]] = {};
             parent = parent[parts[i]];

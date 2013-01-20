@@ -16,7 +16,7 @@
  *      JI_NAMESPACE.midiChord.init(MESSAGE_CREATION_DATA);
  *
  *  MESSAGE_CREATION_DATA is a constant object containing a function and constant
- *  data which enables MIDIMessage objects to be created inside the namespaces.
+ *  data which enables Event objects to be created inside the namespaces.
  */
 
 window.addEventListener("load", function (window, navigator)

@@ -165,7 +165,7 @@ JI_NAMESPACE.assistant = (function (window)
             {
                 // reset the span
                 // (During the assisted performance, the message.timestamps have changed according
-                //  to the live performer's speed, but the midiMoment.timestamps have not).
+                //  to the live performer's speed, but the moment.timestamps have not).
                 for (i = 0; i < nSubsequences; ++i)
                 {
                     span[i].revertMessageTimestamps();
@@ -178,7 +178,7 @@ JI_NAMESPACE.assistant = (function (window)
         }
     },
 
-    // If options.assistedPerformance === true, this is where input MIDI messages arrive, and where processing is going to be done.
+    // If options.assistedPerformance === true, this is where input MIDI events arrive, and where processing is going to be done.
     // Uses 
     //  endIndex  (= span.length -1 when stopped),
     //  currentIndex (= -1 when stopped) the index of the currently playing subsequence (which should be stopped when a noteOn or noteOff arrives).
@@ -359,7 +359,7 @@ JI_NAMESPACE.assistant = (function (window)
             }
         }
 
-        // Pushes clones of the recorded messages, with corrected timestamps, into the completeMidiTracksData.
+        // Pushes clones of the recorded events, with corrected timestamps, into the completeMidiTracksData.
         // The clones are deleted in stop() after calling reportEndOfPerformance().
         // Subsequence calls this function with two more arguments, but those arguments are deliberately ignored here.
         function reportEndOfSubsequence(midiTracksData)
@@ -440,7 +440,7 @@ JI_NAMESPACE.assistant = (function (window)
             }
 
             // if options.assistantUsesAbsoluteDurations === true, the durations will already be correct in all subsequences.
-            subsequence.playSpan(outputDevice, 0, Number.MAX_VALUE, tracksControl, reportEndOfSubsequence, reportMsPosition);
+            subsequence.playSpan(outputDevice, 0, Number.MAX_VALUE, tracksControl.trackIsOn, reportEndOfSubsequence, reportMsPosition);
         }
 
         function handleNoteOff(inputEvent)
@@ -500,7 +500,7 @@ JI_NAMESPACE.assistant = (function (window)
                     subsequence = span[currentIndex];
                     if (overrideSoloPitch || overrideOtherTracksPitch || overrideSoloVelocity || overrideOtherTracksVelocity)
                     {
-                        subsequence.overridePitchAndOrVelocity(CMD.NOTE_ON, options.livePerformersTrackIndex,
+                        subsequence.overridePitchAndOrVelocity(options.livePerformersTrackIndex,
                             inputData1(inputEvent), inputData2(inputEvent),
                             overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity);
                     }

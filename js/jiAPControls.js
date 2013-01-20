@@ -384,7 +384,8 @@ JI_NAMESPACE.apControls = (function (document, window)
             i, nTracks = midiTracksData.length,
             scoreName = mo.scoreSelector.options[mo.scoreSelector.selectedIndex].text;
 
-            nsSTS.createSaveMIDIFileButton(scoreName, midiTracksData, endMarkerTimestamp);
+            nsSTS.createSaveMIDIFileButton(scoreName, midiTracksData, endMarkerTimestamp,
+                "images/saveMouseOver.png", "images/saveMouseOut.png", 56, 31);
 
             if (doResetTracksData)
             {
@@ -400,7 +401,7 @@ JI_NAMESPACE.apControls = (function (document, window)
         },
 
     // callback called by a performing sequence. Reports the timestamp (=msPosition) of the
-    // MIDIMoment curently being sent. When all the MidiMessages in the span have been played,
+    // Moment curently being sent. When all the MidiMessages in the span have been played,
     // reportEndOfPerformance() is called (see above).
         reportMsPos = function (msPosition)
         {
@@ -481,7 +482,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                     score.moveStartMarkerToTop(svgPagesDiv);
 
 
-                    assistant.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(), tracksControl);
+                    assistant.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(), tracksControl.trackIsOn);
 
                     cl.pauseUnselected.setAttribute("opacity", GLASS);
                     cl.pauseSelected.setAttribute("opacity", GLASS);
@@ -502,7 +503,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                     score.moveStartMarkerToTop(svgPagesDiv);
 
                     sequence.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
-                        tracksControl, reportEndOfPerformance, reportMsPos);
+                        tracksControl.trackIsOn, reportEndOfPerformance, reportMsPos);
                 }
 
                 cl.pauseUnselected.setAttribute("opacity", METAL);
@@ -1054,7 +1055,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                 sequence = score.createSequence(options.assistantsSpeed);
 
                 if (options.assistedPerformance === true)
-                {// this constructor consumes sequence, resetting midiMoment timestamps relative to the start of their subsection.
+                {// this constructor consumes sequence, resetting moment timestamps relative to the start of their subsection.
                     assistant = new Assistant(sequence, options, reportEndOfPerformance, reportMsPos);
                 }
             }
@@ -1243,7 +1244,7 @@ JI_NAMESPACE.apControls = (function (document, window)
 
             if (options.assistedPerformance === true)
             {
-                // This constructor resets midiMoment timestamps relative to the start of their subsequence.
+                // This constructor resets moment timestamps relative to the start of their subsequence.
                 // The sequence therefore needs to be reloaded when the options (performer's track index) change.    
                 assistant = new Assistant(sequence, options, reportEndOfPerformance, reportMsPos);
             }

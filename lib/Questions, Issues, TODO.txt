@@ -2,7 +2,7 @@
 Questions for the W3C:
 
 1. Should Ports support opening and closing? (JazzMIDIBridge does, with an isOpen attribute,
-   but I think Jazz 1.2 is doing this transparently so as to ensure that ports are not
+   but I think Jazz 1.2 is doing this automatically so as to ensure that ports are not
    opened twice.
 
 2. In JazzWebMIDI, complying with the current spec, MIDIOutput has a function which can be
@@ -15,5 +15,20 @@ Questions for the W3C:
 4. The current spec says (section 7.3.1):
    "Running status is not allowed in the data, as underlying systems may not support it."
    But some systems MAY support it, so why do we have to rule it out?
-   Do some MIDI devices fail to ignore these messages if they can't understand them?
-   My MIDIEvent class can contain 1-byte data, and Jazz supports this too...
+   Do some MIDI devices fail to ignore these events if they can't understand them?
+   My Event class can contain 1-byte data, and Jazz supports this too...
+
+TODO:
+a) Write SMFToSequence(StandardMIDIFile) in StandardMIDIFile.js
+b) Documentation: Write some simple examples. For example, how to stop and start playing an smf
+
+
+Checking library files:
+Namespace.js         done linted
+jiJazzWebMIDI.js     done linted
+Event.js             done linted
+Moment.js            done linted
+Track.js             done linted
+Sequence.js          done linted
+StandardMIDIFile.js
+
