@@ -18,6 +18,8 @@ Questions for the W3C:
    Do some MIDI devices fail to ignore these events if they can't understand them?
    My Event class can contain 1-byte data, and Jazz supports this too...
 
+5. If an event is sent with timestamp 0, does that mean "send immendiately"?
+
 TODO:
 a) Write SMFToSequence(StandardMIDIFile) in StandardMIDIFile.js
 b) Documentation: Write some simple examples. For example, how to load and save an smf

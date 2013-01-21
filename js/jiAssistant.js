@@ -16,11 +16,11 @@ JI_NAMESPACE.assistant = (function (window)
 {
     "use strict";
     // begin var
-    var 
-    MIDIEvent = JI_NAMESPACE.midiEvent.MIDIEvent,
-    CMD = JI_NAMESPACE.midiEvent.COMMAND,
-    getEvent = JI_NAMESPACE.midiEvent.getEvent,
-    to14Bit = JI_NAMESPACE.midiEvent.to14Bit,
+    var
+    MIDIEvent = JI_WEB_MIDI_API.event.Event,
+    CMD = JI_WEB_MIDI_API.event.COMMAND,
+    getEvent = JI_WEB_MIDI_API.event.getEvent,
+    to14Bit = JI_WEB_MIDI_API.event.to14Bit,
 
     outputDevice,
     trackIsOnArray,
@@ -38,7 +38,7 @@ JI_NAMESPACE.assistant = (function (window)
 
     options, // performance options. This is the options object in jiAPControls. 
     reportEndOfPerformance, // callback
-    completeMidiTracksData, // argument for reportEndOfPerformance
+    recordedSequence, // argument for reportEndOfPerformance
     reportMsPosition, // callback
 
     // An array of subsequence. Each subsequence is a Sequence.
@@ -174,7 +174,7 @@ JI_NAMESPACE.assistant = (function (window)
 
             endOfPerformanceTimestamp = window.performance.now() - performanceStartNow;
 
-            reportEndOfPerformance(completeMidiTracksData, endOfPerformanceTimestamp, true);
+            reportEndOfPerformance(recordedSequence, true);
         }
     },
 
@@ -359,21 +359,21 @@ JI_NAMESPACE.assistant = (function (window)
             }
         }
 
-        // Pushes clones of the recorded events, with corrected timestamps, into the completeMidiTracksData.
+        // Pushes clones of the recorded events, with corrected timestamps, into the midiTracksData.
         // The clones are deleted in stop() after calling reportEndOfPerformance().
         // Subsequence calls this function with two more arguments, but those arguments are deliberately ignored here.
         function reportEndOfSubsequence(midiTracksData)
         {
-            function collectMidiTracksData(completeMidiTracksData, midiTracksData)
+            function collectMidiTracksData(recordedSequence, midiTracksData)
             {
                 var i, j, nMessages, newMessages, allTrackMessages, msg, msgClone,
-                nTracks = completeMidiTracksData.length,
+                nTracks = recordedSequence.length,
                 sequenceStartTimeRePerformanceStart = subsequenceStartNow - performanceStartNow,
                 previousTimestamp = 0;
 
                 for (i = 0; i < nTracks; ++i)
                 {
-                    allTrackMessages = completeMidiTracksData[i];
+                    allTrackMessages = recordedSequence[i];
                     if (allTrackMessages.length === 0)
                     {
                         previousTimestamp = 0;
@@ -402,7 +402,7 @@ JI_NAMESPACE.assistant = (function (window)
                 }
             }
 
-            collectMidiTracksData(completeMidiTracksData, midiTracksData);
+            collectMidiTracksData(recordedSequence, midiTracksData);
 
             if (currentLivePerformersKeyPitch === -1) // key is up
             {
@@ -684,8 +684,8 @@ JI_NAMESPACE.assistant = (function (window)
 
         setState("stopped");
 
-        reportEndOfPerformance = reportEndOfWholePerformance; // returns completeMidiTracksData;
-        completeMidiTracksData = [];
+        reportEndOfPerformance = reportEndOfWholePerformance; // returns recordedSequence;
+        recordedSequence = [];
         reportMsPosition = reportMillisecondPosition;
 
         allSubsequences = sequence.getSubsequences(options.livePerformersTrackIndex);
@@ -693,7 +693,7 @@ JI_NAMESPACE.assistant = (function (window)
         nTracks = allSubsequences[0].tracks.length;
         for (i = 0; i < nTracks; ++i)
         {
-            completeMidiTracksData.push([]);
+            recordedSequence.push([]);
         }
 
         // Starts an assisted performance 

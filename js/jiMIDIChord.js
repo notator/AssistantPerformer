@@ -21,11 +21,11 @@ JI_NAMESPACE.midiChord = (function ()
     "use strict";
     // begin var
     var
-    Event = WEB_MIDI_LIB.event.Event,
-    CMD = WEB_MIDI_LIB.event.COMMAND,
-    CTL = WEB_MIDI_LIB.event.CONTROL,
-    to14Bit = WEB_MIDI_LIB.event.to14Bit,
-    Moment = WEB_MIDI_LIB.moment.Moment, // constructor
+    Event = JI_WEB_MIDI_API.event.Event,
+    CMD = JI_WEB_MIDI_API.event.COMMAND,
+    CTL = JI_WEB_MIDI_API.event.CONTROL,
+    to14Bit = JI_WEB_MIDI_API.event.to14Bit,
+    Moment = JI_WEB_MIDI_API.moment.Moment, // constructor
 
     moments,
     // The rate (milliseconds) at which slider events are sent.
@@ -561,9 +561,9 @@ JI_NAMESPACE.midiChord = (function ()
                             {
                                 case "pitchWheel":
                                     // to14Bit is only used for CMD.PITCH_WHEEL:
-                                    d = to14Bit(value);
-                                    event = new Event(CMD.PITCH_WHEEL + channel, d.data1, d.data2, moment.timestamp);
-                                    moment.addEvent(event);
+//                                    d = to14Bit(value);
+//                                    event = new Event(CMD.PITCH_WHEEL + channel, d.data1, d.data2, moment.timestamp);
+//                                    moment.addEvent(event);
                                     break;
                                 case "pan":
                                     event = new Event(CMD.CONTROL_CHANGE + channel, CTL.PAN, value, moment.timestamp);

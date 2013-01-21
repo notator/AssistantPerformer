@@ -18,14 +18,15 @@ JI_NAMESPACE.score = (function (document)
     "use strict";
 
     var 
+    CMD = JI_WEB_MIDI_API.event.COMMAND,
+    Event = JI_WEB_MIDI_API.event.Event,
+    Track = JI_WEB_MIDI_API.track.Track,
+    Sequence = JI_WEB_MIDI_API.sequence.Sequence,
+
     jiFile = JI_NAMESPACE.file,
     jiMarkers = JI_NAMESPACE.markers,
     jiPalettes = JI_NAMESPACE.palettes,
-    jiSequence = JI_NAMESPACE.sequence,
-    jiTrack = JI_NAMESPACE.track,
     jiMIDIChord = JI_NAMESPACE.midiChord,
-    MIDIEvent = JI_NAMESPACE.midiEvent.MIDIEvent,
-    CMD = JI_NAMESPACE.midiEvent.COMMAND,
 
     MAX_MIDI_CHANNELS = 16,
 
@@ -62,7 +63,8 @@ JI_NAMESPACE.score = (function (document)
     allNotesOff = function (midiOutputDevice)
     {
         var 
-        noteOffMessage, channelIndex, noteIndex;
+        noteOffMessage, channelIndex, noteIndex,
+        now = window.performance.now();
 
         if (midiOutputDevice !== undefined && midiOutputDevice !== null)
         {
@@ -70,8 +72,8 @@ JI_NAMESPACE.score = (function (document)
             {
                 for (noteIndex = 0; noteIndex < 128; ++noteIndex)
                 {
-                    noteOffMessage = new MIDIEvent(CMD.NOTE_OFF + channelIndex, noteIndex, 127, 0 );
-                    noteOffMessage.send(midiOutputDevice);
+                    noteOffMessage = new Event(CMD.NOTE_OFF + channelIndex, noteIndex, 127, now);
+                    midiOutputDevice.send(noteOffMessage.data, now);
                 }
             }
         }
@@ -1477,9 +1479,8 @@ JI_NAMESPACE.score = (function (document)
     createSequence = function (speed)
     {
         // systems->staves->voices->timeObjects
-        var sequence = new jiSequence.Sequence(0),
-            trackIndex, track,
-            tracks = [], // a local array -- tracks can't be indexed in a sequence
+        var sequence = new Sequence(0),
+            trackIndex, track, tracks,
             timeObjectIndex, nTimeObjects, timeObject,
             voiceIndex, nVoices, voice,
             staffIndex, nStaves, staff,
@@ -1506,13 +1507,13 @@ JI_NAMESPACE.score = (function (document)
             nTracks = numberOfTracks(systems[0]);
             for (trackIndex = 0; trackIndex < nTracks; ++trackIndex)
             {
-                track = new jiTrack.Track();
-                sequence.addTrack(track);
-                tracks.push(track);
+                track = new Track();
+                sequence.tracks.push(track);
             }
         }
 
         addEmptyTracks(sequence);
+        tracks = sequence.tracks;
 
         nStaves = systems[0].staves.length;
 

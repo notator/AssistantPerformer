@@ -59,7 +59,7 @@ JI_NAMESPACE.apTracksControl = (function (document)
         var i, readOnlyArray = [];
         for (i = 0; i < trackIsOnStatus.length; ++i)
         {
-            readOnlyArray.push(trackIsOn[i]);
+            readOnlyArray.push(trackIsOn(i));
         }
         return readOnlyArray;
     },

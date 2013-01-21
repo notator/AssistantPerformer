@@ -87,7 +87,7 @@
  *  JI_WEB_MIDI_API.standardMIDIFile -- defined in lib/StandardMIDIFile.js
  *  Conversion Functions:
  *      Convert an in-memory Sequence to a Standard MIDI File:
- *          smf = SequenceToSMF(sequence)
+ *          smf = sequenceToSMF(sequence)
  *      Convert a Standard MIDI File to an in-memory Sequence:
  *          sequence = smfToSequence(standardMIDIFile)       
  */

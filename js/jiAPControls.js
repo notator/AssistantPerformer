@@ -18,23 +18,26 @@ JI_NAMESPACE.apControls = (function (document, window)
     "use strict";
 
     // module dependencies (see Javascript Patterns p.98)
-    var tracksControl = JI_NAMESPACE.apTracksControl,
-        Score = JI_NAMESPACE.score.Score,
-        Assistant = JI_NAMESPACE.assistant.Assistant,
-        nsSTS = JI_NAMESPACE.sequenceToSMF,
-        midiAccess,
-        score,
-        assistant,
-        sequence,
-        svgControlsState = 'stopped', //svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd'.
-        svgPagesDiv,
-        mo = {}, // main option panel elements
-        cl = {}, // control layers
+    var 
+    nsSTS = JI_WEB_MIDI_API.standardMIDIFile.sequenceToSMF,
+
+    tracksControl = JI_NAMESPACE.apTracksControl,
+    Score = JI_NAMESPACE.score.Score,
+    Assistant = JI_NAMESPACE.assistant.Assistant,
+
+    midiAccess,
+    score,
+    assistant,
+    sequence,
+    svgControlsState = 'stopped', //svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd'.
+    svgPagesDiv,
+    mo = {}, // main option panel elements
+    cl = {}, // control layers
 
     // constants for control layer opacity values
-        METAL = "1", // control layer is completely opaque
-        SMOKE = "0.7", // control layer is smoky (semi-transparent)
-        GLASS = "0", // control layer is completely transparent
+    METAL = "1", // control layer is completely opaque
+    SMOKE = "0.7", // control layer is smoky (semi-transparent)
+    GLASS = "0", // control layer is completely transparent
 
     // options set in the pop-up menues in the main options dialog
         controlOptions =
@@ -58,6 +61,129 @@ JI_NAMESPACE.apControls = (function (document, window)
         options = {},
 
         scoreHasJustBeenSelected = false,
+
+    // deletes the 'save' button created by createSaveMIDIFileButton() 
+    deleteSaveMIDIFileButton = function ()
+    {
+        var 
+        downloadLinkDiv,
+        downloadLink = document.getElementById("downloadLink");
+
+        if (downloadLink)
+        {
+            downloadLinkDiv = document.getElementById("downloadLinkDiv");
+            downloadLinkDiv.innerHTML = '';
+
+            // Need a small delay for the revokeObjectURL to work properly.
+            setTimeout(function ()
+            {
+                window.URL.revokeObjectURL(downloadLink.href); // window.URL is set in jiMain.js
+            }, 1500);
+        }
+    },
+
+    // Returns true if any of the tracks contain data, otherwise false.
+    // Used to prevent the creation of a 'save' button when there is nothing to save.
+    hasData = function (nTracks, tracks)
+    {
+        var i, has = false;
+        for (i = 0; i < nTracks; ++i)
+        {
+            if (tracks[i].length > 0)
+            {
+                has = true;
+                break;
+            }
+        }
+        return has;
+    },
+
+    // Returns the name of the file to be downloaded
+    // The date part of the name is formatted as
+    //     year-month-day, with month and day always having two characters
+    // so that downloaded files will list in order of creation time.
+    getMIDIFileName = function (scoreName)
+    {
+        var 
+        d = new Date(),
+        dayOfTheMonth = (d.getDate()).toString(),
+        month = (d.getMonth() + 1).toString(),
+        year = (d.getFullYear()).toString(),
+        downloadName;
+
+        if (month.length === 1)
+        {
+            month = "0".concat(month);
+        }
+
+        if (dayOfTheMonth.length === 1)
+        {
+            dayOfTheMonth = "0".concat(dayOfTheMonth);
+        }
+
+        downloadName = scoreName.concat('_', year, '-', month, '-', dayOfTheMonth, '.mid'); // .mid is added in case scoreName contains a '.'.
+
+        return downloadName;
+    },
+
+    // Creates a button which, when clicked, downloads a standard MIDI file recording
+    // of the sequence which has just stopped playing.
+    // The performance may have ended by reaching the stop marker, or by the user clicking
+    // the 'stop' button.
+    // The 'save' button (and its associated recording) are deleted
+    //    either when it is clicked (and the file has been downloaded)
+    //    or when a new performance is started
+    //    or when the user clicks the 'set options' button
+    // Arguments:
+    // scoreName is the name of the score (as selected in the main score selector).
+    //     The name of the downloaded file is:
+    //         scoreName + '_' + the current date (format:year-month-day) + '.mid'.
+    //         (e.g. "Study 2c3.1_2013-01-08.mid")
+    // recordedSequence is a JI_WEB_MIDI_API.sequence.Sequence object.      
+    createSaveMIDIFileButton = function (scoreName, recordedSequence)
+    {
+        var 
+        standardMIDIFile,
+        downloadName,
+        downloadLinkDiv, a,
+        earliestTimestamp,
+        nTracks = recordedSequence.tracks.length;
+
+        if (hasData(nTracks, recordedSequence.tracks))
+        {
+            downloadLinkDiv = document.getElementById("downloadLinkDiv"); // the empty Element which will contain the link
+            downloadName = getMIDIFileName(scoreName);
+
+            standardMIDIFile = JI_WEB_MIDI_API.standardMIDIFile.sequenceToSMF(recordedSequence);
+
+            a = document.createElement('a');
+            a.id = "downloadLink";
+            a.download = downloadName;
+            a.href = window.URL.createObjectURL(standardMIDIFile); // window.URL is set in jiMain.js
+            a.innerHTML = '<img id="saveImg" border="0" src="images/saveMouseOut.png" alt="saveMouseOutImage" width="56" height="31">';
+
+            a.onmouseover = function (e)
+            {
+                var img = document.getElementById("saveImg");
+                img.src = "images/saveMouseOver.png";
+                a.style.cursor = 'default';
+            };
+
+            a.onmouseout = function (e)
+            {
+                var img = document.getElementById("saveImg");
+                img.src = "images/saveMouseOut.png";
+            };
+
+            a.onclick = function (e)
+            {
+                deleteSaveMIDIFileButton();
+            };
+
+            downloadLinkDiv.appendChild(a);
+        }
+    },
+
 
     // This function is called when the input or output device selectors change.
     setMidiDevices = function (midiAccess)
@@ -378,20 +504,19 @@ JI_NAMESPACE.apControls = (function (document, window)
 
     // callback called when a performing sequence is stopped or has played its last message,
     // or when the assistant is stopped or has played its last subsequence.
-        reportEndOfPerformance = function (midiTracksData, endMarkerTimestamp, doResetTracksData)
+        reportEndOfPerformance = function (recordedSequence, doResetTracksData)
         {
-            var 
-            i, nTracks = midiTracksData.length,
+            var
+            i, nTracks = recordedSequence.tracks.length,
             scoreName = mo.scoreSelector.options[mo.scoreSelector.selectedIndex].text;
 
-            nsSTS.createSaveMIDIFileButton(scoreName, midiTracksData, endMarkerTimestamp,
-                "images/saveMouseOver.png", "images/saveMouseOut.png", 56, 31);
+            createSaveMIDIFileButton(scoreName, recordedSequence);
 
             if (doResetTracksData)
             {
                 for (i = 0; i < nTracks; ++i)
                 {
-                    midiTracksData[i] = [];
+                    recordedSequence.tracks[i] = [];
                 }
             }
 
@@ -470,7 +595,7 @@ JI_NAMESPACE.apControls = (function (document, window)
 
         function setPlaying()
         {
-            nsSTS.deleteSaveMIDIFileButton();
+            deleteSaveMIDIFileButton();
 
             if (options.assistedPerformance === true && assistant !== undefined)
             {
@@ -685,8 +810,8 @@ JI_NAMESPACE.apControls = (function (document, window)
             i, nItems, option,
             is = mo.midiInputDeviceSelector, // = document.getElementById("midiInputDeviceSelector")
             os = mo.midiOutputDeviceSelector, // = document.getElementById("midiOutputDeviceSelector")
-            inputs = midiAccess.getInputs(),
-            outputs = midiAccess.getOutputs();
+            inputs = midiAccess.enumerateInputs(),
+            outputs = midiAccess.enumerateOutputs();
 
             option = document.createElement("option");
             option.text = "choose a MIDI input device";

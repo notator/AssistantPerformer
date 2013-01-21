@@ -6,17 +6,14 @@
  *  https://github.com/notator/assistant-performer/blob/master/License.md
  *
  *  jiMain.js
- *  1. Ensures that the relevant window interfaces are set correctly.
+ *  1. calls JI_WEB_MIDI_API.jazzWebMIDI.init(window) to ensure that the relevant
+ *     window interfaces are set correctly. This call, the file jiWebMIDIAPI.js
+ *     and the Jazz plugin can be deleted when browsers implement the Web MIDI API
+ *     natively.
  *  2. Retrieves the midiAccess object, currently using the Jazz plugin v1.2
  *     http://jazz-soft.net/
- *  3. Calls the following namespace initialisation functions:
- *      JI_NAMESPACE.jiAPControls.init(midiAccess);
- *      JI_NAMESPACE.assistant.init(MESSAGE_CREATION_DATA);
- *      JI_NAMESPACE.sequence.init(MESSAGE_CREATION_DATA);
- *      JI_NAMESPACE.midiChord.init(MESSAGE_CREATION_DATA);
- *
- *  MESSAGE_CREATION_DATA is a constant object containing a function and constant
- *  data which enables Event objects to be created inside the namespaces.
+ *  3. Calls JI_NAMESPACE.jiAPControls.init(midiAccess) to set the contents of the
+ *     device selector menus;
  */
 
 window.addEventListener("load", function (window, navigator)
@@ -25,8 +22,6 @@ window.addEventListener("load", function (window, navigator)
 
     var
     midiAccess,
-    jiJazzWebMIDIInit = JI_NAMESPACE.jazzWebMIDI.init, // delete this line when browsers implement the Web MIDI API
-    jiAPControls = JI_NAMESPACE.apControls.init,
     onSuccessCallback = function (midi)
     {
         midiAccess = midi;
@@ -36,11 +31,11 @@ window.addEventListener("load", function (window, navigator)
         throw "Error: Unable to set midiAccess. Error code:".concat(error.code);
     };
 
-    jiJazzWebMIDIInit(window); // delete this line when browsers implement the Web MIDI API
+    JI_WEB_MIDI_API.jazzWebMIDI.init(window); // delete this line when browsers implement the Web MIDI API
 
-    navigator.requestMIDIAccess(onSuccessCallback, onErrorCallback);
+    window.navigator.requestMIDIAccess(onSuccessCallback, onErrorCallback);
 
-    jiAPControls.init(midiAccess); // sets the contents of the device selector menus
+    JI_NAMESPACE.apControls.init(midiAccess); // sets the contents of the device selector menus
 
 }, false);
 
