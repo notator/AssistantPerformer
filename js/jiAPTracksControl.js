@@ -35,18 +35,33 @@ JI_NAMESPACE.apTracksControl = (function (document)
     livePerformersTrackIndex = -1,
     isAssistedPerformance = false,
 
+    // Returns the (read only) boolean state of the track at trackIndex.
+    // This function is used while setting options.
     trackIsOn = function (trackIndex)
     {
         var isOnStatus;
         if (trackIndex < trackIsOnStatus.length)
         {
-            isOnStatus = (trackIsOnStatus[trackIndex] === true);
+            isOnStatus = trackIsOnStatus[trackIndex];
         }
         else
         {
             throw "illegal track index";
         }
         return isOnStatus;
+    },
+
+    // Returns an array containing the on/off status of each track.
+    // The tracks' status cannot be set by changing values in the returned array.
+    // This array is passed as an argument to the playSpan functions.
+    getTrackIsOnArray = function ()
+    {
+        var i, readOnlyArray = [];
+        for (i = 0; i < trackIsOnStatus.length; ++i)
+        {
+            readOnlyArray.push(trackIsOn[i]);
+        }
+        return readOnlyArray;
     },
 
     refreshDisplay = function ()
@@ -307,7 +322,14 @@ JI_NAMESPACE.apTracksControl = (function (document)
         setTracksControlState: setTracksControlState,
         refreshDisplay: refreshDisplay,
 
+        // Function which returns the (read only) boolean state of the track at trackIndex.
+        // This function is used while setting options.
         trackIsOn: trackIsOn,
+
+        // Function which returns an array containing the on/off status of each track.
+        // The tracks' status cannot be set by changing values in the returned array.
+        // The array is passed as an argument to the playSpan functions.
+        getTrackIsOnArray : getTrackIsOnArray,
 
         getUpdateDisplayCallback: getUpdateDisplayCallback
     };

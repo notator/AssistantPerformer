@@ -16,14 +16,14 @@ JI_NAMESPACE.assistant = (function (window)
 {
     "use strict";
     // begin var
-    var
+    var 
     MIDIEvent = JI_NAMESPACE.midiEvent.MIDIEvent,
     CMD = JI_NAMESPACE.midiEvent.COMMAND,
-    getEvent = JI_NAMESPACE.midiEvent.getEvent, 
+    getEvent = JI_NAMESPACE.midiEvent.getEvent,
     to14Bit = JI_NAMESPACE.midiEvent.to14Bit,
 
     outputDevice,
-    tracksControl,
+    trackIsOnArray,
 
     // Assistant's midi input message types
     UNKNOWN = 0,
@@ -317,7 +317,7 @@ JI_NAMESPACE.assistant = (function (window)
             {
                 for (i = 0; i < nTracks; ++i)
                 {
-                    if (tracksControl.trackIsOn(i))
+                    if (trackIsOnArray[i])
                     {
                         controlMessages.push(newControlMessage(controlData, i, value));
                     }
@@ -331,7 +331,7 @@ JI_NAMESPACE.assistant = (function (window)
             {
                 for (i = 0; i < nTracks; ++i)
                 {
-                    if (tracksControl.trackIsOn(i) && i !== options.livePerformersTrackIndex)
+                    if (trackIsOnArray[i] && i !== options.livePerformersTrackIndex)
                     {
                         controlMessages.push(newControlMessage(controlData, i, value));
                     }
@@ -440,7 +440,7 @@ JI_NAMESPACE.assistant = (function (window)
             }
 
             // if options.assistantUsesAbsoluteDurations === true, the durations will already be correct in all subsequences.
-            subsequence.playSpan(outputDevice, 0, Number.MAX_VALUE, tracksControl.trackIsOn, reportEndOfSubsequence, reportMsPosition);
+            subsequence.playSpan(outputDevice, 0, Number.MAX_VALUE, trackIsOnArray, reportEndOfSubsequence, reportMsPosition);
         }
 
         function handleNoteOff(inputEvent)
@@ -515,7 +515,7 @@ JI_NAMESPACE.assistant = (function (window)
 
         inputEvent = getEvent(data);
 
-        inputEventType = getInputEventType(data[0] &0xF0);
+        inputEventType = getInputEventType(data[0] & 0xF0);
 
         switch (inputEventType)
         {
@@ -595,7 +595,7 @@ JI_NAMESPACE.assistant = (function (window)
     // This function first constructs a span, which is the section of the allSubsequences array between fromMs and toMs.
     // Creating the span does *not* change the data in allSubsequences. The start and end markers can therefore be moved between
     // performances
-    playSpan = function (outDevice, fromMs, toMs, svgTracksControl)
+    playSpan = function (outDevice, fromMs, toMs, argTrackIsOnArray)
     {
         function getSpan(allSubsequences, fromMs, toMs)
         {
@@ -653,7 +653,8 @@ JI_NAMESPACE.assistant = (function (window)
 
         setState("running");
         outputDevice = outDevice;
-        tracksControl = svgTracksControl;
+        // trackIsOnArray is read only
+        trackIsOnArray = argTrackIsOnArray;
         span = getSpan(allSubsequences, fromMs, toMs);
 
         endIndex = span.length - 1;

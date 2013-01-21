@@ -48,6 +48,7 @@ JI_NAMESPACE.score = (function (document)
     livePerformersTrackIndex = -1,
 
     // callback: trackIsOn(trackIndex) returns a boolean which is the yes/no playing status of the track
+    // This callback is used at Score construction time.
     trackIsOn = null,
 
     startMarker,
@@ -456,6 +457,7 @@ JI_NAMESPACE.score = (function (document)
     {
         // trackIsOn(trackIndex) returns a boolean which is the yes/no playing status of the track
         trackIsOn = trackIsOnCallback;
+
     },
 
     // this function is called only when state is 'settingStart' or 'settingEnd'.
@@ -1625,6 +1627,7 @@ JI_NAMESPACE.score = (function (document)
 
         // Loads the trackIsOn callback.
         this.getTrackIsOnCallback = getTrackIsOnCallback;
+
         // The svgTracksControl controls the display, and should be the only module to
         // call this function [score.refreshDisplay(isAssistedPerformance, livePerformersTrackIndex)]
         this.refreshDisplay = refreshDisplay;

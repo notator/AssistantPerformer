@@ -482,7 +482,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                     score.moveStartMarkerToTop(svgPagesDiv);
 
 
-                    assistant.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(), tracksControl.trackIsOn);
+                    assistant.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(), tracksControl.getTrackIsOnArray());
 
                     cl.pauseUnselected.setAttribute("opacity", GLASS);
                     cl.pauseSelected.setAttribute("opacity", GLASS);
@@ -503,7 +503,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                     score.moveStartMarkerToTop(svgPagesDiv);
 
                     sequence.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
-                        tracksControl.trackIsOn, reportEndOfPerformance, reportMsPos);
+                        tracksControl.getTrackIsOnArray(), reportEndOfPerformance, reportMsPos);
                 }
 
                 cl.pauseUnselected.setAttribute("opacity", METAL);
