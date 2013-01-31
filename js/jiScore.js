@@ -11,6 +11,8 @@
 *  
 */
 
+/*jslint bitwise: false, nomen: true, plusplus: true, white: true */
+
 JI_NAMESPACE.namespace('JI_NAMESPACE.score');
 
 JI_NAMESPACE.score = (function (document)
@@ -18,10 +20,10 @@ JI_NAMESPACE.score = (function (document)
     "use strict";
 
     var 
-    CMD = JI_WEB_MIDI_API.event.COMMAND,
-    Event = JI_WEB_MIDI_API.event.Event,
-    Track = JI_WEB_MIDI_API.track.Track,
-    Sequence = JI_WEB_MIDI_API.sequence.Sequence,
+    CMD = MIDI_API.event.COMMAND,
+    Event = MIDI_API.event.Event,
+    Track = MIDI_API.track.Track,
+    Sequence = MIDI_API.sequence.Sequence,
 
     jiFile = JI_NAMESPACE.file,
     jiMarkers = JI_NAMESPACE.markers,
@@ -1023,7 +1025,7 @@ JI_NAMESPACE.score = (function (document)
                     }
                 }
             }
-            pageHeight = parseInt(svgElem.getAttribute('height'));
+            pageHeight = parseInt(svgElem.getAttribute('height'), 10);
             viewBoxOriginY += pageHeight;
         }
     },
@@ -1120,10 +1122,10 @@ JI_NAMESPACE.score = (function (document)
                                                 // chordAddressString is of the form '#palette3_chord9'
                                                 subStrings = chordAddressString.split('_');
                                                 subStrings[0] = subStrings[0].substr(8);
-                                                timeObject.paletteIndex = parseInt(subStrings[0]) - 1;
+                                                timeObject.paletteIndex = parseInt(subStrings[0], 10) - 1;
 
                                                 subStrings[1] = subStrings[1].substr(5);
-                                                timeObject.chordIndex = parseInt(subStrings[1]) - 1;
+                                                timeObject.chordIndex = parseInt(subStrings[1], 10) - 1;
                                                 break;
                                             }
                                             else if (midiChildren[k].nodeName === 'score:basicChords')
@@ -1369,7 +1371,7 @@ JI_NAMESPACE.score = (function (document)
                     }
                 }
             }
-            pageHeight = parseInt(svgElem.getAttribute('height'));
+            pageHeight = parseInt(svgElem.getAttribute('height'), 10);
 
         }
 

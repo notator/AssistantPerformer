@@ -12,6 +12,8 @@
  *  
  */
 
+/*jslint bitwise: false, nomen: false, plusplus: true, white: true */
+
 JI_NAMESPACE.namespace('JI_NAMESPACE.file');
 
 JI_NAMESPACE.file = (function ()

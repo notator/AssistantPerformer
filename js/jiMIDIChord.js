@@ -14,6 +14,8 @@
  *  
  */
 
+/*jslint bitwise: false, nomen: false, plusplus: true, white: true */
+
 JI_NAMESPACE.namespace('JI_NAMESPACE.midiChord');
 
 JI_NAMESPACE.midiChord = (function ()
@@ -21,11 +23,11 @@ JI_NAMESPACE.midiChord = (function ()
     "use strict";
     // begin var
     var
-    Event = JI_WEB_MIDI_API.event.Event,
-    CMD = JI_WEB_MIDI_API.event.COMMAND,
-    CTL = JI_WEB_MIDI_API.event.CONTROL,
-    to14Bit = JI_WEB_MIDI_API.event.to14Bit,
-    Moment = JI_WEB_MIDI_API.moment.Moment, // constructor
+    Event = MIDI_API.event.Event,
+    CMD = MIDI_API.event.COMMAND,
+    CTL = MIDI_API.event.CONTROL,
+    to14Bit = MIDI_API.event.to14Bit,
+    Moment = MIDI_API.moment.Moment, // constructor
 
     moments,
     // The rate (milliseconds) at which slider events are sent.

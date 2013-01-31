@@ -25,12 +25,25 @@ a) Write SMFToSequence(StandardMIDIFile) in StandardMIDIFile.js
 b) Documentation: Write some simple examples. For example, how to load and save an smf
 
 
-Checking library files:
-Namespace.js         done linted
-jiJazzWebMIDI.js     done linted
-Event.js             done linted
-Moment.js            done linted
-Track.js             done linted
-Sequence.js          done linted
-StandardMIDIFile.js
+Checking (31.1.2013)
+AP files:
+	jiAPControls.js			done, linted
+	jiAPTracksControl.js	done, linted
+	jiAssistant.js			done, linted
+	jiFile.js				done, linted
+	jiMain.js				done, linted
+	jiMarkers.js			done, linted
+	jiMIDIChord.js			done, linted // to14Bit(): pitchwheel control is currently commented out (31.1.2013)
+	jiNamespace.js			done, linted
+	jiPalettes.js			done, linted
+	jiScore.js				done, linted
+
+Library files:
+	Namespace.js			done, linted         
+	JazzWebMIDIAPI.js		done, linted     
+	Event.js				done, linted             
+	Moment.js				done, linted            
+	Track.js				done, linted            
+	Sequence.js				done, linted          
+	StandardMIDIFile.js		done, linted
 

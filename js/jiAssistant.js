@@ -10,6 +10,8 @@
 *    Assistant() constructor. 
 */
 
+/*jslint bitwise: true, nomen: false, plusplus: true, white: true */
+
 JI_NAMESPACE.namespace('JI_NAMESPACE.assistant');
 
 JI_NAMESPACE.assistant = (function (window)
@@ -17,10 +19,10 @@ JI_NAMESPACE.assistant = (function (window)
     "use strict";
     // begin var
     var
-    MIDIEvent = JI_WEB_MIDI_API.event.Event,
-    CMD = JI_WEB_MIDI_API.event.COMMAND,
-    getEvent = JI_WEB_MIDI_API.event.getEvent,
-    to14Bit = JI_WEB_MIDI_API.event.to14Bit,
+    MIDIEvent = MIDI_API.event.Event,
+    CMD = MIDI_API.event.COMMAND,
+    getEvent = MIDI_API.event.getEvent,
+    to14Bit = MIDI_API.event.to14Bit,
 
     outputDevice,
     trackIsOnArray,
@@ -62,94 +64,10 @@ JI_NAMESPACE.assistant = (function (window)
 
     stopped = true,
     paused = false,
-    midiInputEventHandler, // set in Assistant constructor, passed to options.getInputDevice(midiInputEventHandler) when state is set to running
 
     currentLivePerformersKeyPitch = -1, // -1 means "no key depressed". This value is set when the live performer sends a noteO
 
-    setState = function (state)
-    {
-
-        function closeInputDevice(options)
-        {
-            // if (options.inputDevice !== undefined && options.inputDevice !== null)
-            // {
-            //     options.inputDevice.close();
-            // }
-        }
-
-        switch (state)
-        {
-            case "stopped":
-                if (currentIndex >= 0 && span[currentIndex].isStopped() === false)
-                {
-                    span[currentIndex].stop();
-                }
-                // these variables are also set in playSpan() when the state is first set to "running"
-                endIndex = (span === undefined) ? -1 : (span.length - 1); // the index of the (unplayed) end chord or rest or endBarline
-                currentIndex = -1;
-                nextIndex = 0;
-                prevSubsequenceStartNow = 0.0; // used only with the relative durations option
-                pausedNow = 0.0; // used only with the relative durations option (the time at which the subsequence was paused).
-                stopped = true;
-                paused = false;
-                closeInputDevice(options);
-                break;
-            case "paused":
-                stopped = false;
-                paused = true;
-                closeInputDevice(options);
-                break;
-            case "running":
-                stopped = false;
-                paused = false;
-                options.getInputDevice(midiInputEventHandler);
-                break;
-            default:
-                throw "Unknown sequencer state!";
-        }
-    },
-
-    // Can only be called when paused is true.
-    resume = function ()
-    {
-        if (paused === true)
-        {
-            if (options.assistantUsesAbsoluteDurations === false)
-            {
-                subsequenceStartNow = window.performance.now();
-                prevSubsequenceStartNow += (subsequenceStartNow - pausedNow);
-            }
-            span[currentIndex].resume();
-            setState("running");
-        }
-    },
-
-    // Can only be called while running
-    // (stopped === false && paused === false)
-    pause = function ()
-    {
-        if (stopped === false && paused === false)
-        {
-            pausedNow = window.performance.now();
-
-            span[currentIndex].pause();
-            setState("paused");
-        }
-        else
-        {
-            throw "Attempt to pause a stopped or paused sequence.";
-        }
-    },
-
-    isStopped = function ()
-    {
-        return stopped === true;
-    },
-
-    isPaused = function ()
-    {
-        return paused === true;
-    },
+    forwardSetState, // forward declaration, set to setState later.
 
     stop = function ()
     {
@@ -159,7 +77,7 @@ JI_NAMESPACE.assistant = (function (window)
         {
             nSubsequences = span.length;
 
-            setState("stopped");
+            forwardSetState("stopped");
 
             if (options.assistantUsesAbsoluteDurations === false)
             {
@@ -214,7 +132,7 @@ JI_NAMESPACE.assistant = (function (window)
 
         function inputEventToString(inputEvent)
         {
-            var 
+            var
             command = inputCommand(inputEvent),
             channel = inputChannel(inputEvent),
             data1 = inputData1(inputEvent),
@@ -229,7 +147,7 @@ JI_NAMESPACE.assistant = (function (window)
         // MODULATION_WHEEL = 5, PITCH_WHEEL = 6, NOTE_ON = 7, NOTE_OFF = 8
         function getInputEventType(command)
         {
-            var 
+            var
             type = UNKNOWN;
 
             switch (command)
@@ -588,6 +506,91 @@ JI_NAMESPACE.assistant = (function (window)
         }
     },
 
+    setState = function (state)
+    {
+
+        function closeInputDevice(options)
+        {
+             if (options.inputDevice !== undefined && options.inputDevice !== null)
+             {
+                 options.inputDevice.close();
+             }
+        }
+
+        switch (state)
+        {
+            case "stopped":
+                if (currentIndex >= 0 && span[currentIndex].isStopped() === false)
+                {
+                    span[currentIndex].stop();
+                }
+                // these variables are also set in playSpan() when the state is first set to "running"
+                endIndex = (span === undefined) ? -1 : (span.length - 1); // the index of the (unplayed) end chord or rest or endBarline
+                currentIndex = -1;
+                nextIndex = 0;
+                prevSubsequenceStartNow = 0.0; // used only with the relative durations option
+                pausedNow = 0.0; // used only with the relative durations option (the time at which the subsequence was paused).
+                stopped = true;
+                paused = false;
+                closeInputDevice(options);
+                break;
+            case "paused":
+                stopped = false;
+                paused = true;
+                closeInputDevice(options);
+                break;
+            case "running":
+                stopped = false;
+                paused = false;
+                options.getInputDevice(handleMIDIInputEvent);
+                break;
+            default:
+                throw "Unknown sequencer state!";
+        }
+    },
+
+    // Can only be called when paused is true.
+    resume = function ()
+    {
+        if (paused === true)
+        {
+            if (options.assistantUsesAbsoluteDurations === false)
+            {
+                subsequenceStartNow = window.performance.now();
+                prevSubsequenceStartNow += (subsequenceStartNow - pausedNow);
+            }
+            span[currentIndex].resume();
+            setState("running");
+        }
+    },
+
+    // Can only be called while running
+    // (stopped === false && paused === false)
+    pause = function ()
+    {
+        if (stopped === false && paused === false)
+        {
+            pausedNow = window.performance.now();
+
+            span[currentIndex].pause();
+            setState("paused");
+        }
+        else
+        {
+            throw "Attempt to pause a stopped or paused sequence.";
+        }
+    },
+
+    isStopped = function ()
+    {
+        return stopped === true;
+    },
+
+    isPaused = function ()
+    {
+        return paused === true;
+    },
+
     // This function is called when options.assistedPerformance === true and the Go button is clicked (in the performance controls).
     // If options.assistedPerformance === false, the main sequence.playSpan(...) is called instead.
     // The assistant's allSubsequences array contains the whole piece as an array of sequence, with one sequence per performer's
@@ -680,7 +683,6 @@ JI_NAMESPACE.assistant = (function (window)
         }
 
         options = apControlOptions;
-        midiInputEventHandler = handleMIDIInputEvent;
 
         setState("stopped");
 
@@ -717,6 +719,8 @@ JI_NAMESPACE.assistant = (function (window)
     };
     // end var
 
+    forwardSetState = setState;
+
     return publicAPI;
 
-} (window));
+}(window));

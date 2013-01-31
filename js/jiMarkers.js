@@ -14,6 +14,8 @@
  *  
  */
 
+/*jslint bitwise: false, nomen: false, plusplus: true, white: true */
+
 JI_NAMESPACE.namespace('JI_NAMESPACE.markers');
 
 JI_NAMESPACE.markers = (function ()

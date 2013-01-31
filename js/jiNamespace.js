@@ -11,6 +11,8 @@
  *  
  */
 
+/*jslint bitwise: false, nomen: false, plusplus: true, white: true */
+
 var JI_NAMESPACE = JI_NAMESPACE || {};
 
 JI_NAMESPACE.namespace = function (ns_string)

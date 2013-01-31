@@ -6,7 +6,7 @@
  *  https://github.com/notator/assistant-performer/blob/master/License.md
  *
  *  jiMain.js
- *  1. calls JI_WEB_MIDI_API.jazzWebMIDI.init(window) to ensure that the relevant
+ *  1. calls MIDI_API.jazzWebMIDIAPI.init(window) to ensure that the relevant
  *     window interfaces are set correctly. This call, the file jiWebMIDIAPI.js
  *     and the Jazz plugin can be deleted when browsers implement the Web MIDI API
  *     natively.
@@ -16,7 +16,9 @@
  *     device selector menus;
  */
 
-window.addEventListener("load", function (window, navigator)
+/*jslint bitwise: false, nomen: false, plusplus: true, white: true */
+
+window.addEventListener("load", function (window)
 {
     "use strict";
 
@@ -31,7 +33,7 @@ window.addEventListener("load", function (window, navigator)
         throw "Error: Unable to set midiAccess. Error code:".concat(error.code);
     };
 
-    JI_WEB_MIDI_API.jazzWebMIDI.init(window); // delete this line when browsers implement the Web MIDI API
+    MIDI_API.jazzWebMIDIAPI.init(window); // delete this line when browsers implement the Web MIDI API
 
     window.navigator.requestMIDIAccess(onSuccessCallback, onErrorCallback);
 

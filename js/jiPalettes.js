@@ -16,6 +16,8 @@
  *  
  */
 
+/*jslint bitwise: false, nomen: false, plusplus: true, white: true */
+
 JI_NAMESPACE.namespace('JI_NAMESPACE.palettes');
 
 JI_NAMESPACE.palettes = (function (document)
@@ -31,7 +33,7 @@ JI_NAMESPACE.palettes = (function (document)
     {
         var str = id;
         str = id.replace("palette", "");
-        return parseInt(str);
+        return parseInt(str, 10);
     },
 
     // The argument is a string containing a list of integers separated by single spaces
@@ -45,7 +47,7 @@ JI_NAMESPACE.palettes = (function (document)
 
         for (i = 0; i < len; ++i)
         {
-            numArray.push(parseInt(stringArray[i]));
+            numArray.push(parseInt(stringArray[i], 10));
         }
         return numArray;
     },
@@ -70,13 +72,13 @@ JI_NAMESPACE.palettes = (function (document)
                     attributes.id = a.nodeValue; // a string
                     break;
                 case "bank":
-                    attributes.bank = parseInt(a.nodeValue);
+                    attributes.bank = parseInt(a.nodeValue, 10);
                     break;
                 case "patch":
-                    attributes.patch = parseInt(a.nodeValue);
+                    attributes.patch = parseInt(a.nodeValue, 10);
                     break;
                 case "volume":
-                    attributes.volume = parseInt(a.nodeValue);
+                    attributes.volume = parseInt(a.nodeValue, 10);
                     break;
                 case "hasChordOff":
                     if (a.nodeValue === "0")
@@ -86,10 +88,10 @@ JI_NAMESPACE.palettes = (function (document)
                     // if hasChordOff is undefined, it is true
                     break;
                 case "pitchWheelDeviation":
-                    attributes.pitchWheelDeviation = parseInt(a.nodeValue);
+                    attributes.pitchWheelDeviation = parseInt(a.nodeValue, 10);
                     break;
                 case "minBasicChordMsDuration":
-                    attributes.minBasicChordMsDuration = parseInt(a.nodeValue);
+                    attributes.minBasicChordMsDuration = parseInt(a.nodeValue, 10);
                     break;
                 default:
                     throw (">>>>>>>>>> Illegal midiChord attribute  <<<<<<<<<<");
@@ -130,13 +132,13 @@ JI_NAMESPACE.palettes = (function (document)
                 switch (attr.name)
                 {
                     case "msDuration":
-                        basicChord.msDuration = parseInt(attr.nodeValue);
+                        basicChord.msDuration = parseInt(attr.nodeValue, 10);
                         break;
                     case "bank":
-                        basicChord.bank = parseInt(attr.nodeValue);
+                        basicChord.bank = parseInt(attr.nodeValue, 10);
                         break;
                     case "patch":
-                        basicChord.patch = parseInt(attr.nodeValue);
+                        basicChord.patch = parseInt(attr.nodeValue, 10);
                         break;
                     case "hasChordOff":
                         if (attr.nodeValue === "0")
@@ -254,7 +256,7 @@ JI_NAMESPACE.palettes = (function (document)
                     attributes.id = attr.nodeValue; // a string
                     break;
                 case "msDuration":
-                    attributes.msDuration = parseInt(attr.nodeValue);
+                    attributes.msDuration = parseInt(attr.nodeValue, 10);
                     break;
                 default:
                     throw (">>>>>>>>>> Illegal midiChord attribute  <<<<<<<<<<");

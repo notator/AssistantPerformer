@@ -11,6 +11,8 @@
 *  
 */
 
+/*jslint bitwise: false, nomen: false, plusplus: true, white: true */
+
 JI_NAMESPACE.namespace('JI_NAMESPACE.apControls');
 
 JI_NAMESPACE.apControls = (function (document, window)
@@ -19,7 +21,7 @@ JI_NAMESPACE.apControls = (function (document, window)
 
     // module dependencies (see Javascript Patterns p.98)
     var 
-    nsSTS = JI_WEB_MIDI_API.standardMIDIFile.sequenceToSMF,
+    nsSTS = MIDI_API.standardMIDIFile.sequenceToSMF,
 
     tracksControl = JI_NAMESPACE.apTracksControl,
     Score = JI_NAMESPACE.score.Score,
@@ -75,7 +77,7 @@ JI_NAMESPACE.apControls = (function (document, window)
             downloadLinkDiv.innerHTML = '';
 
             // Need a small delay for the revokeObjectURL to work properly.
-            setTimeout(function ()
+            window.setTimeout(function ()
             {
                 window.URL.revokeObjectURL(downloadLink.href); // window.URL is set in jiMain.js
             }, 1500);
@@ -139,14 +141,13 @@ JI_NAMESPACE.apControls = (function (document, window)
     //     The name of the downloaded file is:
     //         scoreName + '_' + the current date (format:year-month-day) + '.mid'.
     //         (e.g. "Study 2c3.1_2013-01-08.mid")
-    // recordedSequence is a JI_WEB_MIDI_API.sequence.Sequence object.      
+    // recordedSequence is a MIDI_API.sequence.Sequence object.      
     createSaveMIDIFileButton = function (scoreName, recordedSequence)
     {
         var 
         standardMIDIFile,
         downloadName,
         downloadLinkDiv, a,
-        earliestTimestamp,
         nTracks = recordedSequence.tracks.length;
 
         if (hasData(nTracks, recordedSequence.tracks))
@@ -154,7 +155,7 @@ JI_NAMESPACE.apControls = (function (document, window)
             downloadLinkDiv = document.getElementById("downloadLinkDiv"); // the empty Element which will contain the link
             downloadName = getMIDIFileName(scoreName);
 
-            standardMIDIFile = JI_WEB_MIDI_API.standardMIDIFile.sequenceToSMF(recordedSequence);
+            standardMIDIFile = MIDI_API.standardMIDIFile.sequenceToSMF(recordedSequence);
 
             a = document.createElement('a');
             a.id = "downloadLink";
@@ -198,24 +199,34 @@ JI_NAMESPACE.apControls = (function (document, window)
         {
             if (options.inputDevice !== undefined && options.inputDevice !== null)
             {
-                //                options.inputDevice.close();
-                //                options.inputDevice = null;
+                options.inputDevice.close();
+                options.inputDevice = null;
             }
             if (options.inputDeviceId !== -1)
             {
                 options.inputDevice = midiAccess.getInput(options.inputDeviceId);
                 if (midiInputEventHandler !== null)
                 {
-                    // 14.01.2013: W3C says there is simply an onmessage field in InputDevice
-                    options.inputDevice.onmessage = midiInputEventHandler;
+                    //// 14.01.2013: W3C says there is simply an onmessage field in InputDevice
+                    //options.inputDevice.onmessage = midiInputEventHandler;
+
+                    //options.inputDevice.addEventListener("midimessage", function (msg)
+                    //{
+                    //    midiInputEventHandler(msg);
+                    //});
+
+                    options.inputDevice.addEventListener("message", function (msg)
+                    {
+                        midiInputEventHandler(msg);
+                    });
                 }
             }
         };
 
         if (options.outputDevice !== undefined && options.outputDevice !== null)
         {
-            //            options.outputDevice.close();
-            //            options.outputDevice = null;
+            options.outputDevice.close();
+            options.outputDevice = null;
         }
 
         if (options.outputDeviceId !== -1)
@@ -1029,7 +1040,7 @@ JI_NAMESPACE.apControls = (function (document, window)
         function toggleBack(selected)
         {
             selected.setAttribute("opacity", "1");
-            setTimeout(function ()
+            window.setTimeout(function ()
             {
                 selected.setAttribute("opacity", "0");
             }, 200);

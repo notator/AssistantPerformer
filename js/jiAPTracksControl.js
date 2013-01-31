@@ -11,6 +11,8 @@
 *  
 */
 
+/*jslint bitwise: false, nomen: false, plusplus: true, white: true */
+
 JI_NAMESPACE.namespace('JI_NAMESPACE.apTracksControl');
 
 JI_NAMESPACE.apTracksControl = (function (document)
@@ -80,7 +82,7 @@ JI_NAMESPACE.apTracksControl = (function (document)
     {
         var elem = document.getElementById(elemID),
                 elemDisabledLayer = document.getElementById(elemDisabledLayerID),
-                trackIndex = parseInt(trackIndexStr);
+                trackIndex = parseInt(trackIndexStr, 10);
 
         disabled = (elemDisabledLayer.getAttribute("opacity") !== "0");
 
@@ -234,7 +236,7 @@ JI_NAMESPACE.apTracksControl = (function (document)
 
     addTrackControl = function (controlGroupElem, trackIndexStr)
     {
-        var trackIndex = parseInt(trackIndexStr),
+        var trackIndex = parseInt(trackIndexStr, 10),
             trackNumber = (trackIndex + 1).toString(),
             controlID = "track" + trackNumber + "Control",
             translateX = ((trackIndex * 16) + 6).toString(),
