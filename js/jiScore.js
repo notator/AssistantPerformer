@@ -20,7 +20,7 @@ JI_NAMESPACE.score = (function (document)
     "use strict";
 
     var 
-    CMD = MIDI_API.event.COMMAND,
+    CMD = MIDI_API.constants.COMMAND,
     Event = MIDI_API.event.Event,
     Track = MIDI_API.track.Track,
     Sequence = MIDI_API.sequence.Sequence,

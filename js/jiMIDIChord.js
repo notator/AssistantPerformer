@@ -23,9 +23,9 @@ JI_NAMESPACE.midiChord = (function ()
     "use strict";
     // begin var
     var
+    CMD = MIDI_API.constants.COMMAND,
+    CTL = MIDI_API.constants.CONTROL,
     Event = MIDI_API.event.Event,
-    CMD = MIDI_API.event.COMMAND,
-    CTL = MIDI_API.event.CONTROL,
     to14Bit = MIDI_API.event.to14Bit,
     Moment = MIDI_API.moment.Moment, // constructor
 

@@ -21,8 +21,6 @@ JI_NAMESPACE.apControls = (function (document, window)
 
     // module dependencies (see Javascript Patterns p.98)
     var 
-    nsSTS = MIDI_API.standardMIDIFile.sequenceToSMF,
-
     tracksControl = JI_NAMESPACE.apTracksControl,
     Score = JI_NAMESPACE.score.Score,
     Assistant = JI_NAMESPACE.assistant.Assistant,
@@ -84,14 +82,14 @@ JI_NAMESPACE.apControls = (function (document, window)
         }
     },
 
-    // Returns true if any of the tracks contain data, otherwise false.
+    // Returns true if any of the tracks contain moments, otherwise false.
     // Used to prevent the creation of a 'save' button when there is nothing to save.
     hasData = function (nTracks, tracks)
     {
         var i, has = false;
         for (i = 0; i < nTracks; ++i)
         {
-            if (tracks[i].length > 0)
+            if (tracks[i].moments.length > 0)
             {
                 has = true;
                 break;
@@ -142,7 +140,7 @@ JI_NAMESPACE.apControls = (function (document, window)
     //         scoreName + '_' + the current date (format:year-month-day) + '.mid'.
     //         (e.g. "Study 2c3.1_2013-01-08.mid")
     // recordedSequence is a MIDI_API.sequence.Sequence object.      
-    createSaveMIDIFileButton = function (scoreName, recordedSequence)
+    createSaveMIDIFileButton = function (scoreName, recordedSequence, endMarkerTimestamp)
     {
         var 
         standardMIDIFile,
@@ -155,7 +153,7 @@ JI_NAMESPACE.apControls = (function (document, window)
             downloadLinkDiv = document.getElementById("downloadLinkDiv"); // the empty Element which will contain the link
             downloadName = getMIDIFileName(scoreName);
 
-            standardMIDIFile = MIDI_API.standardMIDIFile.sequenceToSMF(recordedSequence);
+            standardMIDIFile = MIDI_API.standardMIDIFile.sequenceToSMF(recordedSequence, endMarkerTimestamp);
 
             a = document.createElement('a');
             a.id = "downloadLink";
@@ -515,13 +513,13 @@ JI_NAMESPACE.apControls = (function (document, window)
 
     // callback called when a performing sequence is stopped or has played its last message,
     // or when the assistant is stopped or has played its last subsequence.
-        reportEndOfPerformance = function (recordedSequence, doResetTracksData)
+        reportEndOfPerformance = function (recordedSequence, performanceMsDuration, doResetTracksData)
         {
             var
             i, nTracks = recordedSequence.tracks.length,
             scoreName = mo.scoreSelector.options[mo.scoreSelector.selectedIndex].text;
 
-            createSaveMIDIFileButton(scoreName, recordedSequence);
+            createSaveMIDIFileButton(scoreName, recordedSequence, performanceMsDuration);
 
             if (doResetTracksData)
             {
@@ -1199,7 +1197,7 @@ JI_NAMESPACE.apControls = (function (document, window)
 
         if (controlID === "gotoOptions")
         {
-            nsSTS.deleteSaveMIDIFileButton();
+            deleteSaveMIDIFileButton();
 
             if (cl.gotoOptionsDisabled.getAttribute("opacity") !== SMOKE)
             {

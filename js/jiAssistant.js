@@ -19,8 +19,8 @@ JI_NAMESPACE.assistant = (function (window)
     "use strict";
     // begin var
     var
+    CMD = MIDI_API.constants.COMMAND,
     MIDIEvent = MIDI_API.event.Event,
-    CMD = MIDI_API.event.COMMAND,
     getEvent = MIDI_API.event.getEvent,
     to14Bit = MIDI_API.event.to14Bit,
 
@@ -71,7 +71,7 @@ JI_NAMESPACE.assistant = (function (window)
 
     stop = function ()
     {
-        var i, nSubsequences, endOfPerformanceTimestamp;
+        var i, nSubsequences, sequenceMsDuration;
 
         if (stopped === false)
         {
@@ -90,9 +90,9 @@ JI_NAMESPACE.assistant = (function (window)
                 }
             }
 
-            endOfPerformanceTimestamp = window.performance.now() - performanceStartNow;
+            sequenceMsDuration = window.performance.now() - performanceStartNow;
 
-            reportEndOfPerformance(recordedSequence, true);
+            reportEndOfPerformance(recordedSequence, sequenceMsDuration, true);
         }
     },
 
