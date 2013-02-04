@@ -546,7 +546,30 @@ JI_NAMESPACE.midiChord = (function ()
                         value,
                         previousValue = -1,
                         event,
-                        i, d;
+                        i, d, pitchWheelValue;
+
+                    // Argument value is in range 0..128 
+                    // According to the docs,
+                    //     the minimum PITCH_WHEEL value is 0
+                    //     the maximum PITCH_WHEEL value is 16383 (0x3FFF)
+                    //     centre value (0 deviation) is at 8192 (0x2000)
+                    function getPitchWheelValue(value)
+                    {
+                        var pitchWheelValue;
+
+                        if (value < 0 || value > 128)
+                        {
+                            throw "Error: value out of range.";
+                        }
+
+                        // value:0 -> pitchWheelValue:0
+                        // value:64 -> pitchWheelValue:8192 
+                        // value:128 -> pitchWheelValue:16383
+                        pitchWheelValue = 8192 - ((64 - value) * 128);
+                        pitchWheelValue = (pitchWheelValue === 16384) ? 16383 : pitchWheelValue;
+
+                        return pitchWheelValue;
+                    }
 
                     if (sliderMoments.length !== finalValuesArray.length)
                     {
@@ -562,10 +585,11 @@ JI_NAMESPACE.midiChord = (function ()
                             switch (typeString)
                             {
                                 case "pitchWheel":
+                                    pitchWheelValue = getPitchWheelValue(value);
                                     // to14Bit is only used for CMD.PITCH_WHEEL:
-//                                    d = to14Bit(value);
-//                                    event = new Event(CMD.PITCH_WHEEL + channel, d.data1, d.data2, moment.timestamp);
-//                                    moment.addEvent(event);
+                                    d = to14Bit(pitchWheelValue);
+                                    event = new Event(CMD.PITCH_WHEEL + channel, d.data1, d.data2, moment.timestamp);
+                                    moment.addEvent(event);
                                     break;
                                 case "pan":
                                     event = new Event(CMD.CONTROL_CHANGE + channel, CTL.PAN, value, moment.timestamp);
@@ -729,7 +753,8 @@ JI_NAMESPACE.midiChord = (function ()
             }
 
             moments[0].chordStart = true;
-            moments[0].events[0].msPositionInScore = moments[0].events[0].timestamp;
+            //moments[0].events[0].msPositionInScore = moments[0].events[0].timestamp;
+            Object.defineProperty(moments[0].events[0], "msPositionInScore", { value: moments[0].events[0].timestamp, writable: false });
 
             return moments;
         },
@@ -757,7 +782,9 @@ JI_NAMESPACE.midiChord = (function ()
 
                 emptyMsg.isEmpty = true;
                 emptyMsg.timestamp = msPosition;
-                emptyMsg.msPositionInScore = msPosition;
+                //emptyMsg.msPositionInScore = msPosition;
+                Object.defineProperty(emptyMsg, "msPositionInScore", { value: msPosition, writable: false });
+
                 return emptyMsg;
             }
 
