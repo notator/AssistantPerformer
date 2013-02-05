@@ -19,7 +19,6 @@ JI_NAMESPACE.apControls = (function (document, window)
 {
     "use strict";
 
-    // module dependencies (see Javascript Patterns p.98)
     var 
     tracksControl = JI_NAMESPACE.apTracksControl,
     Score = JI_NAMESPACE.score.Score,
@@ -40,27 +39,27 @@ JI_NAMESPACE.apControls = (function (document, window)
     GLASS = "0", // control layer is completely transparent
 
     // options set in the pop-up menues in the main options dialog
-        controlOptions =
-        [
-            { name: "channel pressure", statusHighNibble: 0xD0 },
-            { name: "pitch wheel", statusHighNibble: 0xE0 },
-            { name: "modulation (1)", midiControl: 1 },
-            { name: "volume (7)", midiControl: 7 },
-            { name: "pan (10)", midiControl: 10 },
-            { name: "expression (11)", midiControl: 11 },
-            { name: "timbre (71)", midiControl: 71 },
-            { name: "brightness (74)", midiControl: 74 },
-            { name: "effects (91)", midiControl: 91 },
-            { name: "tremolo (92)", midiControl: 92 },
-            { name: "chorus (93)", midiControl: 93 },
-            { name: "celeste (94)", midiControl: 94 },
-            { name: "phaser (95)", midiControl: 95 }
-        ],
+    controlOptions =
+    [
+        { name: "channel pressure", statusHighNibble: 0xD0 },
+        { name: "pitch wheel", statusHighNibble: 0xE0 },
+        { name: "modulation (1)", midiControl: 1 },
+        { name: "volume (7)", midiControl: 7 },
+        { name: "pan (10)", midiControl: 10 },
+        { name: "expression (11)", midiControl: 11 },
+        { name: "timbre (71)", midiControl: 71 },
+        { name: "brightness (74)", midiControl: 74 },
+        { name: "effects (91)", midiControl: 91 },
+        { name: "tremolo (92)", midiControl: 92 },
+        { name: "chorus (93)", midiControl: 93 },
+        { name: "celeste (94)", midiControl: 94 },
+        { name: "phaser (95)", midiControl: 95 }
+    ],
 
     // options set in the top dialog
-        options = {},
+    options = {},
 
-        scoreHasJustBeenSelected = false,
+    scoreHasJustBeenSelected = false,
 
     // deletes the 'save' button created by createSaveMIDIFileButton() 
     deleteSaveMIDIFileButton = function ()
@@ -185,7 +184,6 @@ JI_NAMESPACE.apControls = (function (document, window)
             downloadLinkDiv.appendChild(a);
         }
     },
-
 
     // This function is called when the input or output device selectors change.
     setMidiDevices = function (midiAccess)
@@ -457,97 +455,96 @@ JI_NAMESPACE.apControls = (function (document, window)
         }
     },
 
-        setStopped = function ()
+    setStopped = function ()
+    {
+        if (options.assistedPerformance === true)
         {
-            if (options.assistedPerformance === true)
-            {
-                assistant.stop();
-            }
-            else
-            {
-                sequence.stop();
-            }
+            assistant.stop();
+        }
+        else
+        {
+            sequence.stop();
+        }
 
-            score.moveRunningMarkerToStartMarker();
+        score.moveRunningMarkerToStartMarker();
 
-            score.allNotesOff(options.outputDevice);
+        score.allNotesOff(options.outputDevice);
 
-            setMainOptionsState("disabled");
+        setMainOptionsState("disabled");
 
-            cl.gotoOptionsDisabled.setAttribute("opacity", GLASS);
+        cl.gotoOptionsDisabled.setAttribute("opacity", GLASS);
 
-            if (document.getElementById("midiInputDeviceSelector").selectedIndex === 0)
-            {
-                cl.livePerformerOnOffDisabled.setAttribute("opacity", SMOKE);
-            }
-            else
-            {
-                cl.livePerformerOnOffDisabled.setAttribute("opacity", GLASS);
-            }
+        if (document.getElementById("midiInputDeviceSelector").selectedIndex === 0)
+        {
+            cl.livePerformerOnOffDisabled.setAttribute("opacity", SMOKE);
+        }
+        else
+        {
+            cl.livePerformerOnOffDisabled.setAttribute("opacity", GLASS);
+        }
 
-            /********* begin performance buttons *******************/
-            cl.performanceButtonsDisabled.setAttribute("opacity", GLASS);
-            // cl.goUnselected.setAttribute("opacity", METAL); -- never changes
-            cl.pauseUnselected.setAttribute("opacity", GLASS);
-            cl.pauseSelected.setAttribute("opacity", GLASS);
-            cl.goDisabled.setAttribute("opacity", GLASS);
+        /********* begin performance buttons *******************/
+        cl.performanceButtonsDisabled.setAttribute("opacity", GLASS);
+        // cl.goUnselected.setAttribute("opacity", METAL); -- never changes
+        cl.pauseUnselected.setAttribute("opacity", GLASS);
+        cl.pauseSelected.setAttribute("opacity", GLASS);
+        cl.goDisabled.setAttribute("opacity", GLASS);
 
-            cl.stopControlDisabled.setAttribute("opacity", SMOKE);
+        cl.stopControlDisabled.setAttribute("opacity", SMOKE);
 
-            //cl.setStartControlUnselected("opacity", METAL); -- never changes
-            cl.setStartControlSelected.setAttribute("opacity", GLASS);
-            cl.setStartControlDisabled.setAttribute("opacity", GLASS);
+        //cl.setStartControlUnselected("opacity", METAL); -- never changes
+        cl.setStartControlSelected.setAttribute("opacity", GLASS);
+        cl.setStartControlDisabled.setAttribute("opacity", GLASS);
 
-            //cl.setEndControlUnselected("opacity", METAL); -- never changes
-            cl.setEndControlSelected.setAttribute("opacity", GLASS);
-            cl.setEndControlDisabled.setAttribute("opacity", GLASS);
+        //cl.setEndControlUnselected("opacity", METAL); -- never changes
+        cl.setEndControlSelected.setAttribute("opacity", GLASS);
+        cl.setEndControlDisabled.setAttribute("opacity", GLASS);
 
-            // cl.sendStartToBeginningControlUnselected.setAttribute("opacity", METAL); -- never changes
-            cl.sendStartToBeginningControlSelected.setAttribute("opacity", GLASS);
-            cl.sendStartToBeginningControlDisabled.setAttribute("opacity", GLASS);
+        // cl.sendStartToBeginningControlUnselected.setAttribute("opacity", METAL); -- never changes
+        cl.sendStartToBeginningControlSelected.setAttribute("opacity", GLASS);
+        cl.sendStartToBeginningControlDisabled.setAttribute("opacity", GLASS);
 
-            // cl.sendStopToEndControlUnselected.setAttribute("opacity", METAL); -- never changes
-            cl.sendStopToEndControlSelected.setAttribute("opacity", GLASS);
-            cl.sendStopToEndControlDisabled.setAttribute("opacity", GLASS);
-            /********* end performance buttons *******************/
+        // cl.sendStopToEndControlUnselected.setAttribute("opacity", METAL); -- never changes
+        cl.sendStopToEndControlSelected.setAttribute("opacity", GLASS);
+        cl.sendStopToEndControlDisabled.setAttribute("opacity", GLASS);
+        /********* end performance buttons *******************/
 
-            tracksControl.setDisabled(false);
-        },
+        tracksControl.setDisabled(false);
+    },
 
     // callback called when a performing sequence is stopped or has played its last message,
     // or when the assistant is stopped or has played its last subsequence.
-        reportEndOfPerformance = function (recordedSequence, performanceMsDuration, doResetTracksData)
+    reportEndOfPerformance = function (recordedSequence, performanceMsDuration, doResetTracksData)
+    {
+        var
+        i, nTracks = recordedSequence.tracks.length,
+        scoreName = mo.scoreSelector.options[mo.scoreSelector.selectedIndex].text;
+
+        createSaveMIDIFileButton(scoreName, recordedSequence, performanceMsDuration);
+
+        if (doResetTracksData)
         {
-            var
-            i, nTracks = recordedSequence.tracks.length,
-            scoreName = mo.scoreSelector.options[mo.scoreSelector.selectedIndex].text;
-
-            createSaveMIDIFileButton(scoreName, recordedSequence, performanceMsDuration);
-
-            if (doResetTracksData)
+            for (i = 0; i < nTracks; ++i)
             {
-                for (i = 0; i < nTracks; ++i)
-                {
-                    recordedSequence.tracks[i] = [];
-                }
+                recordedSequence.tracks[i] = [];
             }
+        }
 
-            setStopped();
-            // the following line is important, because the stop button is also the pause button.
-            svgControlsState = "stopped";
-        },
+        setStopped();
+        // the following line is important, because the stop button is also the pause button.
+        svgControlsState = "stopped";
+    },
 
     // callback called by a performing sequence. Reports the timestamp (=msPosition) of the
     // Moment curently being sent. When all the MidiMessages in the span have been played,
     // reportEndOfPerformance() is called (see above).
-        reportMsPos = function (msPosition)
-        {
-            //console.log("jiAPControls: calling score.advanceRunningMarker(msPosition), msPosition=" + msPosition);
-            // If there is a graphic object in the score having msPosition,
-            // the running cursor is aligned to that object.
-            score.advanceRunningMarker(msPosition);
-        },
-
+    reportMsPos = function (msPosition)
+    {
+        //console.log("jiAPControls: calling score.advanceRunningMarker(msPosition), msPosition=" + msPosition);
+        // If there is a graphic object in the score having msPosition,
+        // the running cursor is aligned to that object.
+        score.advanceRunningMarker(msPosition);
+    },
 
     //svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd'.
     setSvgControlsState = function (svgCtlsState)
@@ -783,6 +780,7 @@ JI_NAMESPACE.apControls = (function (document, window)
         }
     },
 
+    // S ets up the pop-up menues for scores and MIDI input and output devices.
     init = function (mAccess)
     {
         function getMainOptionElements()
@@ -919,6 +917,7 @@ JI_NAMESPACE.apControls = (function (document, window)
         window.scrollTo(0, 0);
     },
 
+    // called when the user clicks a control in the GUI
     doControl = function (controlID)
     {
         // This function sets the html content of the "svgPages" div, and initializes
@@ -1212,6 +1211,7 @@ JI_NAMESPACE.apControls = (function (document, window)
         }
     },
 
+    // functions for adjusting the appearance of the options dialog
     showOverRect = function (overRectID, disabledID)
     {
         var overRectElem = document.getElementById(overRectID),
@@ -1236,7 +1236,6 @@ JI_NAMESPACE.apControls = (function (document, window)
             }
         }
     },
-
     hideOverRect = function (overRectID)
     {
         var overRect = document.getElementById(overRectID),
