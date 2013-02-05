@@ -1328,8 +1328,11 @@ JI_NAMESPACE.score = (function (document)
             {
                 system = systems[i];
                 system.startMarker.setParameters(system, i);
+                system.startMarker.setVisible(false);
                 system.runningMarker.setParameters(system, i);
+                system.runningMarker.setVisible(false);
                 system.endMarker.setParameters(system);
+                system.endMarker.setVisible(false);
             }
 
             startMarker = systems[0].startMarker;
