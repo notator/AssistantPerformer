@@ -42,7 +42,7 @@ JI_NAMESPACE.midiChord = (function ()
 
         for (i = 0; i < nMoments; ++i)
         {
-            track.addMoment(miMoments[i], 0); // the main sequence at msPosition = 0
+            track.addMoment(miMoments[i]); // the main sequence at msPosition = 0
         }
     },
 

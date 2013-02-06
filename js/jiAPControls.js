@@ -24,6 +24,10 @@ JI_NAMESPACE.apControls = (function (document, window)
     Score = JI_NAMESPACE.score.Score,
     Assistant = JI_NAMESPACE.assistant.Assistant,
 
+    Track = MIDI_API.track.Track,
+    Sequence = MIDI_API.sequence.Sequence,
+    sequenceToSMF = MIDI_API.standardMIDIFile.sequenceToSMF,
+
     midiAccess,
     score,
     assistant,
@@ -155,7 +159,7 @@ JI_NAMESPACE.apControls = (function (document, window)
             downloadLinkDiv = document.getElementById("downloadLinkDiv"); // the empty Element which will contain the link
             downloadName = getMIDIFileName(scoreName);
 
-            standardMIDIFile = MIDI_API.standardMIDIFile.sequenceToSMF(sequence, sequenceMsDuration);
+            standardMIDIFile = sequenceToSMF(sequence, sequenceMsDuration);
 
             a = document.createElement('a');
             a.id = "downloadLink";
@@ -514,21 +518,106 @@ JI_NAMESPACE.apControls = (function (document, window)
 
     // callback called when a performing sequence is stopped or has played its last message,
     // or when the assistant is stopped or has played its last subsequence.
-    reportEndOfPerformance = function (recordedSequence, performanceMsDuration, doResetTracksData)
+    reportEndOfPerformance = function (recordedSequence, performanceMsDuration)
     {
         var
-        i, nTracks = recordedSequence.tracks.length,
         scoreName = mo.scoreSelector.options[mo.scoreSelector.selectedIndex].text;
 
-        createSaveMIDIFileButton(scoreName, recordedSequence, performanceMsDuration);
-
-        if (doResetTracksData)
+        // Event timestamps are shifted so as to be relative to the beginning of the
+        // recording.
+        // Returns false if the recordedSequence was empty, otherwise true.
+        function zeroEventTimestampsOrigin(recordedSequence)
         {
+            var i, nTracks = sequence.tracks.length, track,
+                j, nMoments, moment,
+                k, nEvents,
+                offset, success = true;
+
+            // Returns the earliest event.timestamp in the recordedSequence.
+            function findOffset(recordedSequence)
+            {
+                var
+                i, nTracks = recordedSequence.tracks.length, track, nMoments,
+                timestamp,
+                offset = Number.MAX_VALUE;
+
+                for (i = 0; i < nTracks; ++i)
+                {
+                    track = recordedSequence.tracks[i];
+                    nMoments = track.moments.length;
+                    if (nMoments > 0 && track.moments[0].events.length > 0)
+                    {
+                        timestamp = track.moments[0].events[0].timestamp;
+                        offset = (offset < timestamp) ? offset : timestamp;
+                    }
+                }
+
+                return offset;
+            }
+
+            offset = findOffset(recordedSequence);
+
+            if (offset === Number.MAX_VALUE)
+            {
+                success = false;
+            }
+            else
+            {
+                for (i = 0; i < nTracks; ++i)
+                {
+                    track = recordedSequence.tracks[i];
+                    nMoments = track.moments.length;
+                    for (j = 0; j < nMoments; ++j)
+                    {
+                        moment = track.moments[j];
+                        nEvents = moment.events.length;
+                        for (k = 0; k < nEvents; ++k)
+                        {
+                            moment.events[k].timestamp -= offset;
+                        }
+                    }
+                }
+            }
+            return success;
+        }
+
+        // Event objects are shared by the recording and the original sequence.
+        // This function resets all event timestamps to the values they had when
+        // the original sequence was created from the score. The values are
+        // maintained in the moment.timestamps in the sequence.
+        function resetEventTimestamps(sequence)
+        {
+            var i, nTracks = sequence.tracks.length, track,
+                j, nMoments, moment,
+                k, nEvents;
+
             for (i = 0; i < nTracks; ++i)
             {
-                recordedSequence.tracks[i] = [];
+                track = sequence.tracks[i];
+                nMoments = track.moments.length;
+                for (j = 0; j < nMoments; ++j)
+                {
+                    moment = track.moments[j];
+                    nEvents = moment.events.length;
+                    for (k = 0; k < nEvents; ++k)
+                    {
+                        moment.events[k].timestamp = moment.timestamp;
+                    }
+                }
             }
         }
+
+        if (recordedSequence !== undefined && recordedSequence !== null)
+        {
+            if (zeroEventTimestampsOrigin(recordedSequence))  // false if the recorded sequence is empty
+            {
+                createSaveMIDIFileButton(scoreName, recordedSequence, performanceMsDuration);
+            }
+        }
+
+        // Strictly speaking this does not need to be done for a non-assisted performance
+        // that starts at the beginning of a score, but in all other cases it does.
+        resetEventTimestamps(sequence);
 
         setStopped();
         // the following line is important, because the stop button is also the pause button.
@@ -604,6 +693,16 @@ JI_NAMESPACE.apControls = (function (document, window)
 
         function setPlaying()
         {
+            var
+            trackIsOnArray = tracksControl.getTrackIsOnArray(),
+            i, nTracks = trackIsOnArray.length,
+            recordingSequence = new Sequence(0);
+
+            for (i = 0; i < nTracks; ++i)
+            {
+                recordingSequence.tracks.push(new Track());
+            }
+
             deleteSaveMIDIFileButton();
 
             if (options.assistedPerformance === true && assistant !== undefined)
@@ -615,8 +714,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                     score.setRunningMarkers();
                     score.moveStartMarkerToTop(svgPagesDiv);
 
-
-                    assistant.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(), tracksControl.getTrackIsOnArray());
+                    assistant.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(), trackIsOnArray, recordingSequence);
 
                     cl.pauseUnselected.setAttribute("opacity", GLASS);
                     cl.pauseSelected.setAttribute("opacity", GLASS);
@@ -637,7 +735,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                     score.moveStartMarkerToTop(svgPagesDiv);
 
                     sequence.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
-                        tracksControl.getTrackIsOnArray(), reportEndOfPerformance, reportMsPos);
+                        trackIsOnArray, recordingSequence, reportEndOfPerformance, reportMsPos);
                 }
 
                 cl.pauseUnselected.setAttribute("opacity", METAL);
