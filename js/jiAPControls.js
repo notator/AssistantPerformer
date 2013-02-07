@@ -584,7 +584,7 @@ JI_NAMESPACE.apControls = (function (document, window)
         // Event objects are shared by the recording and the original sequence.
         // This function resets all event timestamps to the values they had when
         // the original sequence was created from the score. The values are
-        // maintained in the moment.timestamps in the sequence.
+        // maintained in the moment.msPositionInScore values in the sequence.
         function resetEventTimestamps(sequence)
         {
             var i, nTracks = sequence.tracks.length, track,
@@ -601,7 +601,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                     nEvents = moment.events.length;
                     for (k = 0; k < nEvents; ++k)
                     {
-                        moment.events[k].timestamp = moment.timestamp;
+                        moment.events[k].timestamp = moment.msPositionInScore;
                     }
                 }
             }
@@ -615,8 +615,6 @@ JI_NAMESPACE.apControls = (function (document, window)
             }
         }
 
-        // Strictly speaking this does not need to be done for a non-assisted performance
-        // that starts at the beginning of a score, but in all other cases it does.
         resetEventTimestamps(sequence);
 
         setStopped();
@@ -624,15 +622,15 @@ JI_NAMESPACE.apControls = (function (document, window)
         svgControlsState = "stopped";
     },
 
-    // callback called by a performing sequence. Reports the timestamp (=msPosition) of the
-    // Moment curently being sent. When all the MidiMessages in the span have been played,
+    // callback called by a performing sequence. Reports the msPositionInScore of the
+    // Moment curently being sent. When all the events in the span have been played,
     // reportEndOfPerformance() is called (see above).
-    reportMsPos = function (msPosition)
+    reportMsPos = function (msPositionInScore)
     {
-        //console.log("jiAPControls: calling score.advanceRunningMarker(msPosition), msPosition=" + msPosition);
-        // If there is a graphic object in the score having msPosition,
+        //console.log("jiAPControls: calling score.advanceRunningMarker(msPosition), msPositionInScore=" + msPositionInScore);
+        // If there is a graphic object in the score having msPositionInScore,
         // the running cursor is aligned to that object.
-        score.advanceRunningMarker(msPosition);
+        score.advanceRunningMarker(msPositionInScore);
     },
 
     //svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd'.
@@ -696,7 +694,7 @@ JI_NAMESPACE.apControls = (function (document, window)
             var
             trackIsOnArray = tracksControl.getTrackIsOnArray(),
             i, nTracks = trackIsOnArray.length,
-            recordingSequence = new Sequence(0);
+            recordingSequence = new Sequence(score.startMarkerMsPosition());
 
             for (i = 0; i < nTracks; ++i)
             {

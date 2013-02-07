@@ -107,15 +107,16 @@ JI_NAMESPACE.midiChord = (function ()
     };
     // end var
 
-    // This prototype exposes a single public function:
-    //     getMoments(channel, chordDef, timeObject, speed)
-    MIDIChord.prototype = (function ()
+    MIDIChord.prototype.getMoments = function(channel, chordDef, timeObject, speed)
     {
         var 
+        chordMoments,
+        sliderMoments;
+
         // An array of moments whose msPosition has been set.
         // The moments contain all the non-slider components of the chordDef.
         // The msPosition of the first Moment is set to the value in the msPosition argument.
-        getChordMoments = function (channel, chordDef, timeObject, speed)
+        function getChordMoments(channel, chordDef, timeObject, speed)
         {
             var i, j,
                 len = chordDef.basicChordsArray.length,
@@ -197,11 +198,11 @@ JI_NAMESPACE.midiChord = (function ()
                 function setPitchwheelDeviation(attrMoment, deviation, channel)
                 {
                     var msg;
-                    msg = new Event(CMD.CONTROL_CHANGE + channel, CTL.REGISTERED_PARAMETER_COARSE, 0, attrMoment.timestamp);
+                    msg = new Event(CMD.CONTROL_CHANGE + channel, CTL.REGISTERED_PARAMETER_COARSE, 0, attrMoment.msPositionInScore);
                     attrMoment.addEvent(msg);
-                    msg = new Event(CMD.CONTROL_CHANGE + channel, CTL.REGISTERED_PARAMETER_FINE, 0, attrMoment.timestamp);
+                    msg = new Event(CMD.CONTROL_CHANGE + channel, CTL.REGISTERED_PARAMETER_FINE, 0, attrMoment.msPositionInScore);
                     attrMoment.addEvent(msg);
-                    msg = new Event(CMD.CONTROL_CHANGE + channel, CTL.DATA_ENTRY_COARSE, deviation, attrMoment.timestamp);
+                    msg = new Event(CMD.CONTROL_CHANGE + channel, CTL.DATA_ENTRY_COARSE, deviation, attrMoment.msPositionInScore);
                     attrMoment.addEvent(msg);
                 }
 
@@ -214,17 +215,17 @@ JI_NAMESPACE.midiChord = (function ()
                     // the hasChordOff attribute is dealt with later.
                     if (attributes.bank !== undefined)
                     {
-                        msg = new Event(CMD.CONTROL_CHANGE + channel, 0, attributes.bank, attrMoment.timestamp); // 0 is bank control
+                        msg = new Event(CMD.CONTROL_CHANGE + channel, 0, attributes.bank, attrMoment.msPositionInScore); // 0 is bank control
                         attrMoment.addEvent(msg);
                     }
                     if (attributes.patch !== undefined)
                     {
-                        msg = new Event(CMD.PROGRAM_CHANGE + channel, attributes.patch, 0, attrMoment.timestamp);
+                        msg = new Event(CMD.PROGRAM_CHANGE + channel, attributes.patch, 0, attrMoment.msPositionInScore);
                         attrMoment.addEvent(msg);
                     }
                     if (attributes.volume !== undefined)
                     {
-                        msg = new Event(CMD.CONTROL_CHANGE + channel, 7, attributes.volume, attrMoment.timestamp); // 7 is volume control
+                        msg = new Event(CMD.CONTROL_CHANGE + channel, 7, attributes.volume, attrMoment.msPositionInScore); // 7 is volume control
                         attrMoment.addEvent(msg);
                     }
                     if (attributes.pitchWheelDeviation !== undefined)
@@ -248,21 +249,21 @@ JI_NAMESPACE.midiChord = (function ()
 
                 if (basicChordDef.bank !== undefined) // default is dont send a bank change
                 {
-                    event = new Event(CMD.CONTROL_CHANGE + channel, basicChordDef.bank, 0, bcoMoment.timestamp);
+                    event = new Event(CMD.CONTROL_CHANGE + channel, basicChordDef.bank, 0, bcoMoment.msPositionInScore);
                     bcoMoment.addEvent(event);
 
-                    event = new Event(CMD.PROGRAM_CHANGE + channel, basicChordDef.patch, 0, bcoMoment.timestamp);
+                    event = new Event(CMD.PROGRAM_CHANGE + channel, basicChordDef.patch, 0, bcoMoment.msPositionInScore);
                     bcoMoment.addEvent(event);
                 }
                 else if (basicChordDef.patch !== undefined) // default is dont send a patch change
                 {
-                    event = new Event(CMD.PROGRAM_CHANGE + channel, basicChordDef.patch, 0, bcoMoment.timestamp);
+                    event = new Event(CMD.PROGRAM_CHANGE + channel, basicChordDef.patch, 0, bcoMoment.msPositionInScore);
                     bcoMoment.addEvent(event);
                 }
 
                 for (i = 0; i < len; ++i)
                 {
-                    event = new Event(CMD.NOTE_ON + channel, midiNotes[i], midiVelocities[i], bcoMoment.timestamp);
+                    event = new Event(CMD.NOTE_ON + channel, midiNotes[i], midiVelocities[i], bcoMoment.msPositionInScore);
                     bcoMoment.addEvent(event);
                 }
 
@@ -280,7 +281,7 @@ JI_NAMESPACE.midiChord = (function ()
 
                 for (i = 0; i < len; ++i)
                 {
-                    event = new Event(CMD.NOTE_OFF + channel, notes[i], volume, bcoffMoment.timestamp);
+                    event = new Event(CMD.NOTE_OFF + channel, notes[i], volume, bcoffMoment.msPositionInScore);
                     bcoffMoment.addEvent(event);
                 }
 
@@ -315,7 +316,7 @@ JI_NAMESPACE.midiChord = (function ()
                 for (nnIndex = 0; nnIndex < uniqueNoteNumbers.length; ++nnIndex)
                 {
                     noteNumber = uniqueNoteNumbers[nnIndex];
-                    event = new Event(CMD.NOTE_OFF + channel, noteNumber.valueOf(), volume, cOffMoment.timestamp);
+                    event = new Event(CMD.NOTE_OFF + channel, noteNumber.valueOf(), volume, cOffMoment.msPositionInScore);
                     cOffMoment.addEvent(event);
                 }
 
@@ -353,7 +354,7 @@ JI_NAMESPACE.midiChord = (function ()
 
                 moment = basicChordOnMoment(channel, basicChordDef, msPos);
 
-                if (currentMoment !== undefined && currentMoment.timestamp === moment.timestamp)
+                if (currentMoment !== undefined && currentMoment.msPositionInScore === moment.msPositionInScore)
                 {
                     currentMoment.mergeMoment(moment);
                 }
@@ -389,7 +390,7 @@ JI_NAMESPACE.midiChord = (function ()
             }
 
             return chordMoments;
-        },
+        }
 
         // An array of moments whose msPosition has been set.
         // Each moment contains slider events for each of the defined sliders.
@@ -400,7 +401,7 @@ JI_NAMESPACE.midiChord = (function ()
         // can either be 1 (i.e. none of the sliders' values changes during this MIDIChord)
         // or a value calculated from SLIDER_MILLISECONDS and msDuration. In the latter case, the
         // msPosition of the final sliderMoment is less than (msPosition + msDuration).
-        getSliderMoments = function (channel, sliders, msPosition, msDuration, sliderMilliseconds)
+        function getSliderMoments(channel, sliders, msPosition, msDuration, sliderMilliseconds)
         {
             var i, sliderMoments, sliderMomentsLength, nonEmptySliderMoments;
 
@@ -588,19 +589,19 @@ JI_NAMESPACE.midiChord = (function ()
                                     pitchWheelValue = getPitchWheelValue(value);
                                     // to14Bit is only used for CMD.PITCH_WHEEL:
                                     d = to14Bit(pitchWheelValue);
-                                    event = new Event(CMD.PITCH_WHEEL + channel, d.data1, d.data2, moment.timestamp);
+                                    event = new Event(CMD.PITCH_WHEEL + channel, d.data1, d.data2, moment.msPositionInScore);
                                     moment.addEvent(event);
                                     break;
                                 case "pan":
-                                    event = new Event(CMD.CONTROL_CHANGE + channel, CTL.PAN, value, moment.timestamp);
+                                    event = new Event(CMD.CONTROL_CHANGE + channel, CTL.PAN, value, moment.msPositionInScore);
                                     moment.addEvent(event);
                                     break;
                                 case "modulationWheel":
-                                    event = new Event(CMD.CONTROL_CHANGE + channel, CTL.MODWHEEL, value, moment.timestamp);
+                                    event = new Event(CMD.CONTROL_CHANGE + channel, CTL.MODWHEEL, value, moment.msPositionInScore);
                                     moment.addEvent(event);
                                     break;
                                 case "expression":
-                                    event = new Event(CMD.CONTROL_CHANGE + channel, CTL.EXPRESSION, value, moment.timestamp);
+                                    event = new Event(CMD.CONTROL_CHANGE + channel, CTL.EXPRESSION, value, moment.msPositionInScore);
                                     moment.addEvent(event);
                                     break;
                             }
@@ -647,12 +648,12 @@ JI_NAMESPACE.midiChord = (function ()
                 }
             }
             return nonEmptySliderMoments;
-        },
+        }
 
         // returns  a single, ordered array of moments
-        // If chordMoment.timestamp === sliderMoment.timestamp,
+        // If chordMoment.msPositionInScore === sliderMoment.msPositionInScore,
         // they are unified with the slider events being sent first.
-        getCombinedMoments = function (chordMoments, sliderMoments)
+        function getCombinedMoments(chordMoments, sliderMoments)
         {
             var momentsArray = [],
                 currentMsPosition = -1,
@@ -663,13 +664,13 @@ JI_NAMESPACE.midiChord = (function ()
             {
                 function appendMoment(moment)
                 {
-                    if (moment.timestamp > currentMsPosition)
+                    if (moment.msPositionInScore > currentMsPosition)
                     {
-                        currentMsPosition = moment.timestamp;
+                        currentMsPosition = moment.msPositionInScore;
                         momentsArray.push(moment);
                         currentMoment = moment;
                     }
-                    else if (moment.timestamp === currentMsPosition)
+                    else if (moment.msPositionInScore === currentMsPosition)
                     {
                         currentMoment.mergeMoment(moment);
                     }
@@ -688,7 +689,7 @@ JI_NAMESPACE.midiChord = (function ()
                     {
                         if (sliderMoment)
                         {
-                            if (sliderMoment.timestamp <= chordMoment.timestamp)
+                            if (sliderMoment.msPositionInScore <= chordMoment.msPositionInScore)
                             {
                                 appendMoment(sliderMoment);
                                 sliderMoment = sliderMoments[sliderMomentIndex++];
@@ -734,83 +735,40 @@ JI_NAMESPACE.midiChord = (function ()
             }
 
             return momentsArray;
-        },
+        }
 
-        getMoments = function (channel, chordDef, timeObject, speed)
+        chordMoments = getChordMoments(channel, chordDef, timeObject, speed);
+
+        if (chordDef.sliders !== undefined)
         {
-            var chordMoments, sliderMoments;
-
-            chordMoments = getChordMoments(channel, chordDef, timeObject, speed);
-
-            if (chordDef.sliders !== undefined)
-            {
-                sliderMoments = getSliderMoments(channel, chordDef.sliders, this.msPosition, this.msDuration, SLIDER_MILLISECONDS);
-                moments = getCombinedMoments(chordMoments, sliderMoments);
-            }
-            else
-            {
-                moments = chordMoments;
-            }
-
-            moments[0].chordStart = true;
-            //moments[0].events[0].msPositionInScore = moments[0].events[0].timestamp;
-            Object.defineProperty(moments[0].events[0], "msPositionInScore", { value: moments[0].events[0].timestamp, writable: false });
-
-            return moments;
-        },
-
-        publicChordPrototypeAPI =
+            sliderMoments = getSliderMoments(channel, chordDef.sliders, this.msPosition, this.msDuration, SLIDER_MILLISECONDS);
+            moments = getCombinedMoments(chordMoments, sliderMoments);
+        }
+        else
         {
-            getMoments: getMoments
-        };
+            moments = chordMoments;
+        }
 
-        return publicChordPrototypeAPI;
+        Object.defineProperty(moments[0], "chordStart", { value: true, writable: false });
+    };
 
-    } ());
-
-    // This prototype exposes a single public function:
-    //     getMoments(timeObject)
-    MIDIRest.prototype = (function ()
+    MIDIRest.prototype.getMoments = function (timeObject)
     {
-        var getMoments = function (timeObject)
-        {
-            var restMoment;
+        var restMoment, restEvent = {};
 
-            function emptyMessage(msPosition)
-            {
-                var emptyMsg = {};
+        restMoment = new Moment(timeObject.msPosition);
+        Object.defineProperty(restMoment, "restStart", { value: true, writable: false });
 
-                emptyMsg.isEmpty = true;
-                emptyMsg.timestamp = msPosition;
-                //emptyMsg.msPositionInScore = msPosition;
-                Object.defineProperty(emptyMsg, "msPositionInScore", { value: msPosition, writable: false });
+        restEvent.timestamp = timeObject.msPosition;
+        Object.defineProperty(restEvent, "isEmpty", { value: true, writable: false });
 
-                return emptyMsg;
-            }
+        restMoment.events.push(restEvent);
 
-            if (!(this instanceof MIDIRest))
-            {
-                return new MIDIRest(timeObject);
-            }
+        moments = [];
+        moments.push(restMoment); // an empty moment.
 
-            restMoment = new Moment(timeObject.msPosition);
-            restMoment.restStart = true;
-            restMoment.events.push(emptyMessage(timeObject.msPosition));
-
-            moments = [];
-            moments.push(restMoment); // an empty moment.
-
-            return moments;
-        },
-
-        publicRestPrototypeAPI =
-        {
-            getMoments: getMoments
-        };
-
-        return publicRestPrototypeAPI;
-
-    } ());
+        return moments;
+    };
 
     return publicChordRestAPI;
 } ());

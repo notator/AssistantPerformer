@@ -49,9 +49,9 @@ JI_NAMESPACE.assistant = (function (window)
     // consecutive rests have one subsequence.
     allSubsequences,
 
-    // The array of subsequence actually performed (from fromMs to toMs). Constructed in playSpan() from allSubsequences.
-    // The first subsequence in span may be the second part of a subsequence which has been split at fromMs.
-    // The last subsequence in span may be the first part of a subsequence which has been split at toMs.
+    // The array of subsequence actually performed (from fromMsPositionInScore to toMsPositionInScore). Constructed in playSpan() from allSubsequences.
+    // The first subsequence in span may be the second part of a subsequence which has been split at fromMsPositionInScore.
+    // The last subsequence in span may be the first part of a subsequence which has been split at toMsPositionInScore.
     span,
 
     // these variables are initialized by playSpan() and used by handleMIDIInputEvent() 
@@ -74,15 +74,15 @@ JI_NAMESPACE.assistant = (function (window)
     {
         var i, nSubsequences, sequenceMsDuration;
 
-        // Event timestamps are set to the value of their moment's timestamp.
+        // Event timestamps are set to the value of their moment's msPositioninScore.
         // If the assistant is using relative durations, this function is called
         // when the stop button is clicked, or when the performance reaches the
         // end marker. (See changeEventTimestamps() below)
         function revertEventTimestamps (subsequence)
         {
             var
-            nTracks = subsequence.tracks.length,
-            i, j, k, track, trackLength, moment, events, nEvents, timestamp;
+            nTracks = subsequence.tracks.length, moment,
+            i, j, k, track, trackLength, events, nEvents, timestamp;
 
             for (i = 0; i < nTracks; ++i)
             {
@@ -91,7 +91,7 @@ JI_NAMESPACE.assistant = (function (window)
                 for (j = 0; j < trackLength; ++j)
                 {
                     moment = track.moments[j];
-                    timestamp = moment.timestamp;
+                    timestamp = moment.msPositionInScore;
                     events = moment.events;
                     nEvents = events.length;
                     for (k = 0; k < nEvents; ++k)
@@ -332,15 +332,16 @@ JI_NAMESPACE.assistant = (function (window)
             var prevSubsequenceScoreMsDuration,
                 durationFactor;
 
-            // Event timestamps are multiplied by durationFactor.
-            // timestamps on the containiing MidiMoment are unchanged, and are used to revert
-            // the event timestamps when the stop button is clicked, or when the performance
-            // reaches the end marker. (See revertTimestamps() below)
+            // Event timestamps are adjusted for the durationFactor.
+            // The msPositionInScore of each event's containing moment is unchanged, and is
+            // used to revert the event timestamps when the performance ends.
+            // (See revertTimestamps() below)
             function changeEventTimestamps (subsequence, durationFactor)
             {
                 var
-                nTracks = subsequence.tracks.length,
-                i, j, k, track, trackLength, moment, events, nEvents, timestamp;
+                newSubsequenceMsPosition = subsequence.msPositionInScore * durationFactor,
+                nTracks = subsequence.tracks.length, moment,
+                i, j, k, track, trackLength, events, nEvents, timestamp;
 
                 for (i = 0; i < nTracks; ++i)
                 {
@@ -349,7 +350,7 @@ JI_NAMESPACE.assistant = (function (window)
                     for (j = 0; j < trackLength; ++j)
                     {
                         moment = track.moments[j];
-                        timestamp = moment.timestamp * durationFactor;
+                        timestamp = newSubsequenceMsPosition + (moment.msPositionInScore * durationFactor);
                         events = moment.events;
                         nEvents = events.length;
                         for (k = 0; k < nEvents; ++k)
@@ -695,194 +696,114 @@ JI_NAMESPACE.assistant = (function (window)
     // If options.assistedPerformance === false, the main sequence.playSpan(...) is called instead.
     // The assistant's allSubsequences array contains the whole piece as an array of sequence, with one sequence per performer's
     // rest or chord, whereby consecutive rests in the performer's track have been merged.
-    // This function first constructs a span, which is the section of the allSubsequences array between fromMs and toMs.
+    // This function first constructs a span, which is the section of the allSubsequences array between fromMsPositionInScore and toMsPositionInScore.
     // Creating the span does *not* change the data in allSubsequences. The start and end markers can therefore be moved between
     // performances
-    playSpan = function (outDevice, fromMs, toMs, argTrackIsOnArray, recordingSeq)
+    playSpan = function (outDevice, fromMsPositionInScore, toMsPositionInScore, argTrackIsOnArray, recordingSeq)
     {
-        function getSpan(allSubsequences, fromMs, toMs)
+        function getSpan(allSubsequences, fromMsPositionInScore, toMsPositionInScore)
         {
             var nSubsequences = allSubsequences.length,
                 i = nSubsequences - 1,
                 maxIndex = i, lastSubsequence,
                 subsequence = null,
-                span = [];
+                span = []; // an array of sequences
 
-            // Returns a new restSequence equal to the one upto (but not including) toMs,
+            // returns the portion of subsequence before toMsPositionInScore
             // to which a "finalBarline" moment has been added.
-            // The timestamps are relative to the start of the sequence (i.e. not changed)
-            function beforeSplit(sequence, toMs)
+            function newRestSequenceBeforeMsPos(sequence, toMsPositionInScore)
             {
                 var
-                nTracks = sequence.tracks.length,
-                returnSeq = new Sequence(sequence.msPositionInScore),
-                t, track, newTrack, nMoments, momentToAppend, iMom, limit;
+                i, newTrack, oldTrack, nTracks = subsequence.tracks.length,
+                j, nMoments, timestamp, restSequence;
 
-                function appendFinalBarlineMoment (track, sequenceMsPositionInScore, timestamp)
+                function appendFinalBarlineMoment(track, msPositionInScore, timestamp)
                 {
-                    var i, finalBarlineMoment, restEvt;
+                    var finalBarlineMoment, restEvt = {};
 
-                    finalBarlineMoment = new MIDI_API.moment.Moment(timestamp);
-                    finalBarlineMoment.restStart = true;
-                    // the event will never be sent, because it is given an isEmpty attribute
-                    restEvt = new Event(CMD.NOTE_OFF + i, 0, 0, timestamp);
-                    //restEvt.msPositionInScore = sequenceMsPositionInScore + timestamp;
-                    Object.defineProperty(restEvt, "msPositionInScore", { value: sequenceMsPositionInScore + timestamp, writable: false });
-                    restEvt.isEmpty = true;
+                    finalBarlineMoment = new MIDI_API.moment.Moment(msPositionInScore);
+                    Object.defineProperty(finalBarlineMoment, "restStart", { value: true, writable: false });
+                    restEvt.timestamp = timestamp;
+                    Object.defineProperty(restEvt, "isEmpty", { value: true, writable: false });
 
                     finalBarlineMoment.addEvent(restEvt);
 
                     track.addMoment(finalBarlineMoment);
                 }
 
-                if (sequence.restSubsequence === undefined)
-                {
-                    throw "Error: this must be a restSequence.";
-                }
+                restSequence = new Sequence(sequence.msPositionInScore);
+                Object.defineProperty(restSequence, "restSubsequence", { value: true, writable: false });
 
-                returnSeq.restSubsequence = true;
-                limit = toMs - sequence.msPositionInScore;
-
-                for (t = 0; t < nTracks; ++t)
+                for (i = 0; i < nTracks; ++i)
                 {
                     newTrack = new MIDI_API.track.Track();
-                    track = sequence.tracks[t];
-                    nMoments = track.moments.length;
-                    for (iMom = 0; iMom < nMoments; ++iMom)
+                    oldTrack = subsequence.tracks[i];
+                    nMoments = oldTrack.moments.length;
+                    for (j = 0; j < nMoments; ++j)
                     {
-                        momentToAppend = track.moments[iMom];
-                        if (momentToAppend.timestamp >= limit)
+                        if (oldTrack.moments[j].msPositionInScore >= toMsPositionInScore)
                         {
+                            timestamp = oldTrack.moments[j].events[0].timestamp;
                             break;
                         }
-
-                        newTrack.addMoment(momentToAppend);
+                        newTrack.moments.push(oldTrack.moments[j]);
                     }
 
-                    appendFinalBarlineMoment(newTrack, sequence.msPositionInScore, limit);
+                    appendFinalBarlineMoment(newTrack, toMsPositionInScore, timestamp);
 
-                    returnSeq.tracks.push(newTrack);
+                    restSequence.tracks.push(newTrack);
                 }
-                return returnSeq;
+                return restSequence;
             }
 
-            // Returns a new restSubsequence which starts at fromMs
-            // The timestamps in the restSubsequence are relative to its start.
-            function afterSplit (sequence, fromMs)
+            // returns the portion of subsequence beginning at fromMsPositionInScore
+            // as a new rest subsequence.
+            function newRestSequenceAfterMsPos(subsequence, fromMsPositionInScore)
             {
                 var
-                returnSeq = new Sequence(fromMs),
-                t, nTracks = sequence.tracks.length, track,
-                newTrack, nMoments, moment, newMoment, event, events,
-                iMom, nEvents, iEvt, newEvt, momentI;
+                i, newTrack, oldTrack, nTracks = subsequence.tracks.length,
+                j, nMoments, k, restSequence;
 
-                function indexOfLastMomentBeforeFromMs(moments, timestamp)
+                restSequence = new Sequence(fromMsPositionInScore);
+                Object.defineProperty(restSequence, "restSubsequence", { value: true, writable: false });
+
+                for (i = 0; i < nTracks; ++i)
                 {
-                    var nMoments = moments.length, i, r;
-                    for (i = nMoments - 1; i >= 0; --i)
+                    newTrack = new MIDI_API.track.Track();
+                    oldTrack = subsequence.tracks[i];
+                    nMoments = oldTrack.moments.length;
+                    for (j = 0; j < nMoments; ++j)
                     {
-                        if (moments[i].timestamp <= timestamp)
+                        if (oldTrack.moments[j].msPositionInScore >= fromMsPositionInScore)
                         {
-                            r = i;
+                            k = j;
                             break;
                         }
                     }
-                    return r;
-                }
-
-                if (sequence.msPositionInScore >= fromMs || sequence.restSubsequence === undefined)
-                {
-                    throw "Error: this must be a restSequence which begins before the split point.";
-                }
-
-                returnSeq.restSubsequence = true;
-                //returnSeq.msPositionInScore = fromMs;
-
-                for (t = 0; t < nTracks; ++t)
-                {
-                    newTrack = new MIDI_API.track.Track();
-                    track = sequence.tracks[t];
-                    nMoments = track.moments.length;
-
-                    newMoment = new MIDI_API.moment.Moment(0);
-                    newMoment.restStart = true;
-                    // this event will never be sent, because it is given an isEmpty attribute
-                    newEvt = new Event(CMD.NOTE_OFF + t, 0, 0, 0); // newEvt.timestamp = 0;
-                    //newEvt.msPositionInScore = sequence.msPositionInScore;
-                    Object.defineProperty(newEvt, "msPositionInScore", { value: sequence.msPositionInScore, writable: false });
-                    newEvt.isEmpty = true;
-                    newMoment.addEvent(newEvt);
-                    newTrack.addMoment(newMoment);
-
-                    if (nMoments > 0)
+                    for (j = k; j < nMoments; ++j)
                     {
-                        momentI = indexOfLastMomentBeforeFromMs(track.moments, fromMs - sequence.msPositionInScore);
-                        if (momentI === undefined)
-                        {
-                            // track.moments[0].timestamp was greater than (fromMs - sequence.msPositionInScore)
-                            // i.e. copy *all* the subsequent events to the new track.
-                            momentI = 0;
-                        }
-                        else if (track.moments[momentI].timestamp + sequence.msPositionInScore < fromMs)
-                        {
-                            ++momentI;
-                        }
-                        for (iMom = momentI; iMom < nMoments; ++iMom)
-                        {
-                            moment = track.moments[iMom];
-                            events = moment.events;
-                            nEvents = moment.events.length;
-
-                            newMoment = new MIDI_API.moment.Moment(moment.timestamp + sequence.msPositionInScore - fromMs);
-                            if (moment.restStart !== undefined)
-                            {
-                                newMoment.restStart = true;
-                            }
-                            else if (moment.chordStart !== undefined)
-                            {
-                                newMoment.chordStart = true;
-                            }
-
-                            for (iEvt = 0; iEvt < nEvents; ++iEvt)
-                            {
-                                event = events[iEvt];
-                                // Event(command+channel, data1, data2, timestamp)
-                                newEvt = new Event(event.data[0], event.data[1], event.data[2], newMoment.timestamp);
-                                if (event.msPositionInScore !== undefined)
-                                {
-                                    //newEvt.msPositionInScore = event.msPositionInScore;
-                                    Object.defineProperty(newEvt, "msPositionInScore", { value: event.msPositionInScore, writable: false });
-                                }
-                                if (event.isEmpty !== undefined)
-                                {
-                                    newEvt.isEmpty = true;
-                                }
-                                newMoment.addEvent(newEvt);
-                            }
-                            newTrack.addMoment(newMoment);
-                        }
+                        newTrack.moments.push(oldTrack.moments[j]);
                     }
-                    returnSeq.tracks.push(newTrack);
+                    restSequence.tracks.push(newTrack);
                 }
-
-                return returnSeq;
-
+                return restSequence;
             }
+
 
             if (i > 0)
             {
                 subsequence = allSubsequences[i];
-                while (i > 0 && subsequence.msPositionInScore > fromMs)
+                while (i > 0 && subsequence.msPositionInScore > fromMsPositionInScore)
                 {
                     --i;
                     subsequence = allSubsequences[i];
                 }
             }
 
-            // subsequence.msPositionInScore <= fromMs
-            if (subsequence.restSubsequence !== undefined && subsequence.msPositionInScore < fromMs)
+            // subsequence.msPositionInScore <= fromMsPositionInScore
+            if (subsequence.restSubsequence !== undefined && subsequence.msPositionInScore < fromMsPositionInScore)
             {
-                subsequence = afterSplit(subsequence, fromMs); // afterSplit() returns a new restSubsequence starting at fromMs
+                subsequence = newRestSequenceAfterMsPos(subsequence, fromMsPositionInScore); // returns a new restSubsequence starting at fromMsPositionInScore
             }
 
             span.push(subsequence); // the first subsequence
@@ -891,7 +812,7 @@ JI_NAMESPACE.assistant = (function (window)
             {
                 ++i;
                 subsequence = allSubsequences[i];
-                if (subsequence.msPositionInScore >= toMs)
+                if (subsequence.msPositionInScore >= toMsPositionInScore)
                 {
                     break;
                 }
@@ -900,16 +821,16 @@ JI_NAMESPACE.assistant = (function (window)
 
             lastSubsequence = span.pop();
 
-            // lastSubsequence.msPositionInScore < toMs
+            // lastSubsequence.msPositionInScore < toMsPositionInScore
             if (lastSubsequence.restSubsequence !== undefined)
             {
-                // beforeSplit() returns a new subsequence which is
-                // a copy of the beginning of lastSubsequence up to (but not including) toMs,
+                // newRestSequenceBeforeMsPos() returns a new subsequence which is
+                // a copy of the beginning of lastSubsequence up to (but not including) toMsPositionInScore,
                 // to which a "finalBarline" moment has been added.
-                lastSubsequence = beforeSplit(lastSubsequence, toMs);
+                lastSubsequence = newRestSequenceBeforeMsPos(lastSubsequence, toMsPositionInScore);
             }
 
-            //finalBarline = finalBarlineSubsequence(lastSubsequence.tracks.length, toMs);
+            //finalBarline = finalBarlineSubsequence(lastSubsequence.tracks.length, toMsPositionInScore);
             span.push(lastSubsequence);
 
             return span;
@@ -919,7 +840,7 @@ JI_NAMESPACE.assistant = (function (window)
         outputDevice = outDevice;
         // trackIsOnArray is read only
         trackIsOnArray = argTrackIsOnArray;
-        span = getSpan(allSubsequences, fromMs, toMs);
+        span = getSpan(allSubsequences, fromMsPositionInScore, toMsPositionInScore);
         recordingSequence = recordingSeq;
 
         endIndex = span.length - 1;
@@ -928,17 +849,9 @@ JI_NAMESPACE.assistant = (function (window)
         prevSubsequenceStartNow = -1;
     },
 
-    // Returns an array of Sequence. Each subsequence in the array is a Sequence, whose tracks all begin at timestamp = 0ms.
-    // Each subsequence has an msPositionInScore attribute, which is first allocated to empty subsequences, and
-    // then used when filling them.
-    // A subsequence is first created for each chord or rest symbol and for the final barline in the live performer's track.
-    // The final barline has a subsequence with a restSubsequence attribute.
-    // A moment which starts a chord sequence has a chordStart attribute (boolean, true).
-    // A moment which starts a rest sequence has a restStart attribute (boolean, true).
-    // The restStart and chordStart attributes are first allocated in the MIDIChord and MIDIRest constructors, but
-    // if two moments have the same timestamp, they can be moved to the previous moment by the Moment.mergeMoment()
-    // In practice, that means that restStart moments usually do not just contain an 'empty MIDIevent', they
-    // often contain noteOFF events from the final moment of the preceding MIDIChord.  
+    // Returns an array of Sequence.
+    // Each subsequence in the array contains moments from the global sequence.
+    // A subsequence is first created for each chord or rest symbol and for the final barline in the live performer's track. 
     // Subsequences corresponding to a live performer's chord are given a chordSubsequence attribute (=true).
     // Subsequences corresponding to a live performer's rest are given a restSubsequence attribute (=true).
     // Consecutive restSubsequences are merged: When performing, consecutive rests in the performer's track are treated
@@ -951,10 +864,9 @@ JI_NAMESPACE.assistant = (function (window)
         nTracks = sequence.tracks.length,
         trackIndex;
 
-        // The returned subsequences have a temporary timestamp attribute and
+        // The returned empty subsequences have an msPositionInScore attribute and
         // either a restSubsequence or a chordSubsequence attribute, 
         // depending on whether they correspond to a live player's rest or chord.
-        // The timestamp attribute is deleted in fillSubsequences() below.
         // The subsequences do not yet contain any tracks.
         function getEmptySubsequences(livePerformersTrack)  // 'base' function in outer scope.
         {
@@ -971,14 +883,14 @@ JI_NAMESPACE.assistant = (function (window)
 
                 if (moment.restStart !== undefined)
                 {
-                    s = new Sequence(moment.events[0].msPositionInScore);
-                    s.restSubsequence = true;
+                    s = new Sequence(moment.msPositionInScore);
+                    Object.defineProperty(s, "restSubsequence", { value: true, writable: false });
                     //console.log("Rest Subsequence: msPositionInScore=" + s.msPositionInScore.toString());
                 }
                 else if (moment.chordStart !== undefined)
                 {
-                    s = new Sequence(moment.events[0].msPositionInScore);
-                    s.chordSubsequence = true;
+                    s = new Sequence(moment.msPositionInScore);
+                    Object.defineProperty(s, "chordSubsequence", { value: true, writable: false });
                     //console.log("Chord Subsequence: msPositionInScore=" + s.msPositionInScore.toString());
                 }
 
@@ -1026,7 +938,7 @@ JI_NAMESPACE.assistant = (function (window)
                 if (nMidiMoments > 0 && momentsIndex < nMidiMoments)
                 {
                     moment = moments[momentsIndex];
-                    while (moment.timestamp < nextSubsequenceMsPositionInScore)
+                    while (moment.msPositionInScore < nextSubsequenceMsPositionInScore)
                     {
                         track.addMoment(moment);
                         ++momentsIndex;
