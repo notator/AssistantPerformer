@@ -581,32 +581,6 @@ JI_NAMESPACE.apControls = (function (document, window)
             return success;
         }
 
-        // Event objects are shared by the recording and the original sequence.
-        // This function resets all event timestamps to the values they had when
-        // the original sequence was created from the score. The values are
-        // maintained in the moment.msPositionInScore values in the sequence.
-        function resetEventTimestamps(sequence)
-        {
-            var i, nTracks = sequence.tracks.length, track,
-                j, nMoments, moment,
-                k, nEvents;
-
-            for (i = 0; i < nTracks; ++i)
-            {
-                track = sequence.tracks[i];
-                nMoments = track.moments.length;
-                for (j = 0; j < nMoments; ++j)
-                {
-                    moment = track.moments[j];
-                    nEvents = moment.events.length;
-                    for (k = 0; k < nEvents; ++k)
-                    {
-                        moment.events[k].timestamp = moment.msPositionInScore;
-                    }
-                }
-            }
-        }
-
         if (recordedSequence !== undefined && recordedSequence !== null)
         {
             if (zeroEventTimestampsOrigin(recordedSequence))  // false if the recorded sequence is empty
@@ -615,7 +589,14 @@ JI_NAMESPACE.apControls = (function (document, window)
             }
         }
 
-        resetEventTimestamps(sequence);
+        if (assistant !== undefined)
+        {
+            assistant.revertEventTimestamps();
+        }
+        else
+        {
+            sequence.revertEventTimestamps();
+        }
 
         setStopped();
         // the following line is important, because the stop button is also the pause button.
@@ -712,7 +693,8 @@ JI_NAMESPACE.apControls = (function (document, window)
                     score.setRunningMarkers();
                     score.moveStartMarkerToTop(svgPagesDiv);
 
-                    assistant.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(), trackIsOnArray, recordingSequence);
+                    assistant.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
+                        trackIsOnArray, recordingSequence);
 
                     cl.pauseUnselected.setAttribute("opacity", GLASS);
                     cl.pauseSelected.setAttribute("opacity", GLASS);
