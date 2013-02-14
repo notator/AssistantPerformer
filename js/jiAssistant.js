@@ -78,7 +78,7 @@ JI_NAMESPACE.assistant = (function (window)
         // If the assistant is using relative durations, this function is called
         // when the stop button is clicked, or when the performance reaches the
         // end marker. (See changeEventTimestamps() below)
-        function revertEventTimestamps (subsequence)
+        function revertTimestamps (subsequence)
         {
             var
             nTracks = subsequence.tracks.length, moment,
@@ -115,7 +115,7 @@ JI_NAMESPACE.assistant = (function (window)
                 //  to the live performer's speed, but the moment.timestamps have not).
                 for (i = 0; i < nSubsequences; ++i)
                 {
-                    revertEventTimestamps(span[i]);
+                    revertTimestamps(span[i]);
                 }
             }
 
@@ -723,10 +723,7 @@ JI_NAMESPACE.assistant = (function (window)
 
                     finalBarlineMoment = new MIDI_API.moment.Moment(msPositionInScore);
                     Object.defineProperty(finalBarlineMoment, "restStart", { value: true, writable: false });
-                    restEvt.timestamp = timestamp;
-                    Object.defineProperty(restEvt, "isEmpty", { value: true, writable: false });
-
-                    finalBarlineMoment.addEvent(restEvt);
+                    finalBarlineMoment.timestamp = timestamp;
 
                     track.addMoment(finalBarlineMoment);
                 }
@@ -1017,16 +1014,14 @@ JI_NAMESPACE.assistant = (function (window)
         return subsequences;
     },
 
-    // This function resets all event timestamps in all subsequences to the values
-    // they had when the original subsequences were created from the score.
-    // The values are maintained in the moment.msPositionInScore values in each  sequence.
-    revertEventTimestamps = function ()
+    // This function resets all moment timestamps to UNDEFINED_TIMESTAMP.
+    revertTimestamps = function ()
     {
         var i, nSubsequences = allSubsequences.length;
 
         for (i = 0; i < nSubsequences; ++i)
         {
-            allSubsequences[i].revertEventTimestamps();
+            allSubsequences[i].revertTimestamps();
         }
     },
 
@@ -1065,7 +1060,7 @@ JI_NAMESPACE.assistant = (function (window)
         this.isPaused = isPaused; // isPaused()
 
         this.subsequences = allSubsequences; // consulted by score when setting start and end marker positions.
-        this.revertEventTimestamps = revertEventTimestamps;
+        this.revertTimestamps = revertTimestamps;
     },
 
     publicAPI =

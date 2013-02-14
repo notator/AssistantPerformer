@@ -591,11 +591,11 @@ JI_NAMESPACE.apControls = (function (document, window)
 
         if (assistant !== undefined)
         {
-            assistant.revertEventTimestamps();
+            assistant.revertTimestamps();
         }
         else
         {
-            sequence.revertEventTimestamps();
+            sequence.revertTimestamps();
         }
 
         setStopped();

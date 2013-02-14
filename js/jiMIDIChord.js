@@ -752,17 +752,14 @@ JI_NAMESPACE.midiChord = (function ()
         Object.defineProperty(moments[0], "chordStart", { value: true, writable: false });
     };
 
+    // returns an array containing a single moment having a "restStart" attribute.
+    // The moment's messages array is empty.
     MIDIRest.prototype.getMoments = function (timeObject)
     {
-        var restMoment, restEvent = {};
+        var restMoment;
 
         restMoment = new Moment(timeObject.msPosition);
         Object.defineProperty(restMoment, "restStart", { value: true, writable: false });
-
-        restEvent.timestamp = timeObject.msPosition;
-        Object.defineProperty(restEvent, "isEmpty", { value: true, writable: false });
-
-        restMoment.events.push(restEvent);
 
         moments = [];
         moments.push(restMoment); // an empty moment.
