@@ -585,12 +585,13 @@ JI_NAMESPACE.apControls = (function (document, window)
         function revertTimestamps(recordedSequence)
         {
             var i, nTracks = recordedSequence.tracks.length, track,
-                j, moment;
+                j, nMoments, moment;
 
             for (i = 0; i < nTracks; ++i)
             {
                 track = recordedSequence.tracks[i];
-                for (j = track.fromIndex; j <= track.toIndex; ++j)
+                nMoments = track.moments.length;
+                for (j = 0; j < nMoments; ++j)
                 {
                     moment = track.moments[j];
                     moment.timestamp = UNDEFINED_TIMESTAMP;
@@ -864,7 +865,7 @@ JI_NAMESPACE.apControls = (function (document, window)
         }
     },
 
-    // S ets up the pop-up menues for scores and MIDI input and output devices.
+    // Sets up the pop-up menues for scores and MIDI input and output devices.
     init = function (mAccess)
     {
         function getMainOptionElements()

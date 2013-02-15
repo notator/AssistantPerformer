@@ -6,7 +6,7 @@
  *  https://github.com/notator/assistant-performer/blob/master/License.md
  *
  *  jiMIDIChord.js
- *  This module uses JazzMidiBridge to create Events.
+ *  This module uses JazzMidiBridge to create Messages.
  *  Its public interface contains:
  *      newAllSoundOffMessage() // returns a new AllSoundOffMessage
  *      MIDIChord(channel, chordDef, timeObject, speed) // MIDIChord constructor
@@ -25,12 +25,12 @@ JI_NAMESPACE.midiChord = (function ()
     var
     CMD = MIDI_API.constants.COMMAND,
     CTL = MIDI_API.constants.CONTROL,
-    Event = MIDI_API.event.Event,
-    to14Bit = MIDI_API.event.to14Bit,
+    Message = MIDI_API.message.Message,
+    to14Bit = MIDI_API.message.to14Bit,
     Moment = MIDI_API.moment.Moment, // constructor
 
     moments,
-    // The rate (milliseconds) at which slider events are sent.
+    // The rate (milliseconds) at which slider messages are sent.
     SLIDER_MILLISECONDS = 10,
 
     // Used by both MIDIRests and MIDIChords.
@@ -47,7 +47,7 @@ JI_NAMESPACE.midiChord = (function ()
     },
 
     // public MIDIChord constructor
-    // A MIDIChord contains all the midi events required for playing an (ornamented) chord.
+    // A MIDIChord contains all the midi messages required for playing an (ornamented) chord.
     MIDIChord = function (channel, chordDef, timeObject, speed)
     {
         if (!(this instanceof MIDIChord))
@@ -63,8 +63,8 @@ JI_NAMESPACE.midiChord = (function ()
         this.msPosition = timeObject.msPosition;
         this.msDuration = timeObject.msDuration;
         this.moments = this.getMoments(channel, chordDef, timeObject, speed); // defined in prototype
-        // moments is an ordered array of moments (containing events for sequential chords and slider events).
-        // A Moment is a list of logically synchronous MIDI events.
+        // moments is an ordered array of moments (containing messages for sequential chords and slider messages).
+        // A Moment is a list of logically synchronous MIDI messages.
 
         this.addToTrack = addToTrack; // private function in this namespace, shared by MIDIChord and MIDIRest
 
@@ -93,8 +93,8 @@ JI_NAMESPACE.midiChord = (function ()
     {
         // public MIDIChord constructor
         // A MIDIChord contains a private array of Moments containing all
-        // the midi events required for playing an (ornamented) chord.
-        // A Moment is a collection of logically synchronous MIDI events.
+        // the midi messages required for playing an (ornamented) chord.
+        // A Moment is a collection of logically synchronous MIDI messages.
         // A MIDIChord has one public function:
         //    midiChord.addToTrack(track)
         // which moves the midiChord's Moments onto the track
@@ -183,7 +183,7 @@ JI_NAMESPACE.midiChord = (function ()
                 return msDurations;
             }
 
-            // Chord Bank, Patch, Volume and PitchwheelDeviation events
+            // Chord Bank, Patch, Volume and PitchwheelDeviation messages
             // Returns undefined if there are no attributes
             function attributesMoment(channel, chordDef, msPosition)
             {
@@ -192,18 +192,18 @@ JI_NAMESPACE.midiChord = (function ()
                     attributes;
 
                 /// Sets both RegisteredParameter controls to 0 (zero). This is standard MIDI for selecting the
-                /// pitch wheel so that it can be set by the subsequent DataEntry events.
+                /// pitch wheel so that it can be set by the subsequent DataEntry messages.
                 /// A DataEntryFine message is not set, because it is not needed and has no effect anyway.
-                /// However, RegisteredParameterFine MUST be set, otherwise the events as a whole have no effect!
+                /// However, RegisteredParameterFine MUST be set, otherwise the messages as a whole have no effect!
                 function setPitchwheelDeviation(attrMoment, deviation, channel)
                 {
                     var msg;
-                    msg = new Event(CMD.CONTROL_CHANGE + channel, CTL.REGISTERED_PARAMETER_COARSE, 0, attrMoment.msPositionInScore);
-                    attrMoment.addEvent(msg);
-                    msg = new Event(CMD.CONTROL_CHANGE + channel, CTL.REGISTERED_PARAMETER_FINE, 0, attrMoment.msPositionInScore);
-                    attrMoment.addEvent(msg);
-                    msg = new Event(CMD.CONTROL_CHANGE + channel, CTL.DATA_ENTRY_COARSE, deviation, attrMoment.msPositionInScore);
-                    attrMoment.addEvent(msg);
+                    msg = new Message(CMD.CONTROL_CHANGE + channel, CTL.REGISTERED_PARAMETER_COARSE, 0, attrMoment.msPositionInScore);
+                    attrMoment.messages.push(msg);
+                    msg = new Message(CMD.CONTROL_CHANGE + channel, CTL.REGISTERED_PARAMETER_FINE, 0, attrMoment.msPositionInScore);
+                    attrMoment.messages.push(msg);
+                    msg = new Message(CMD.CONTROL_CHANGE + channel, CTL.DATA_ENTRY_COARSE, deviation, attrMoment.msPositionInScore);
+                    attrMoment.messages.push(msg);
                 }
 
                 if (chordDef.attributes !== undefined)
@@ -211,22 +211,22 @@ JI_NAMESPACE.midiChord = (function ()
                     attributes = chordDef.attributes;
                     attrMoment = new Moment(msPosition);
 
-                    // the id, and minBasicChordMsDuration attributes are not midi events
+                    // the id, and minBasicChordMsDuration attributes are not midi messages
                     // the hasChordOff attribute is dealt with later.
                     if (attributes.bank !== undefined)
                     {
-                        msg = new Event(CMD.CONTROL_CHANGE + channel, 0, attributes.bank, attrMoment.msPositionInScore); // 0 is bank control
-                        attrMoment.addEvent(msg);
+                        msg = new Message(CMD.CONTROL_CHANGE + channel, 0, attributes.bank, attrMoment.msPositionInScore); // 0 is bank control
+                        attrMoment.messages.push(msg);
                     }
                     if (attributes.patch !== undefined)
                     {
-                        msg = new Event(CMD.PROGRAM_CHANGE + channel, attributes.patch, 0, attrMoment.msPositionInScore);
-                        attrMoment.addEvent(msg);
+                        msg = new Message(CMD.PROGRAM_CHANGE + channel, attributes.patch, 0, attrMoment.msPositionInScore);
+                        attrMoment.messages.push(msg);
                     }
                     if (attributes.volume !== undefined)
                     {
-                        msg = new Event(CMD.CONTROL_CHANGE + channel, 7, attributes.volume, attrMoment.msPositionInScore); // 7 is volume control
-                        attrMoment.addEvent(msg);
+                        msg = new Message(CMD.CONTROL_CHANGE + channel, 7, attributes.volume, attrMoment.msPositionInScore); // 7 is volume control
+                        attrMoment.messages.push(msg);
                     }
                     if (attributes.pitchWheelDeviation !== undefined)
                     {
@@ -237,34 +237,34 @@ JI_NAMESPACE.midiChord = (function ()
                 return attrMoment;
             }
 
-            // BasicChord Bank, Patch and ChordOn events
+            // BasicChord Bank, Patch and ChordOn messages
             function basicChordOnMoment(channel, basicChordDef, msPosition)
             {
                 var midiNotes = basicChordDef.notes,
                     midiVelocities = basicChordDef.velocities,
                     len = midiNotes.length,
-                    event,
+                    message,
                     bcoMoment = new Moment(msPosition),
                     i;
 
                 if (basicChordDef.bank !== undefined) // default is dont send a bank change
                 {
-                    event = new Event(CMD.CONTROL_CHANGE + channel, basicChordDef.bank, 0, bcoMoment.msPositionInScore);
-                    bcoMoment.addEvent(event);
+                    message = new Message(CMD.CONTROL_CHANGE + channel, basicChordDef.bank, 0, bcoMoment.msPositionInScore);
+                    bcoMoment.messages.push(message);
 
-                    event = new Event(CMD.PROGRAM_CHANGE + channel, basicChordDef.patch, 0, bcoMoment.msPositionInScore);
-                    bcoMoment.addEvent(event);
+                    message = new Message(CMD.PROGRAM_CHANGE + channel, basicChordDef.patch, 0, bcoMoment.msPositionInScore);
+                    bcoMoment.messages.push(message);
                 }
                 else if (basicChordDef.patch !== undefined) // default is dont send a patch change
                 {
-                    event = new Event(CMD.PROGRAM_CHANGE + channel, basicChordDef.patch, 0, bcoMoment.msPositionInScore);
-                    bcoMoment.addEvent(event);
+                    message = new Message(CMD.PROGRAM_CHANGE + channel, basicChordDef.patch, 0, bcoMoment.msPositionInScore);
+                    bcoMoment.messages.push(message);
                 }
 
                 for (i = 0; i < len; ++i)
                 {
-                    event = new Event(CMD.NOTE_ON + channel, midiNotes[i], midiVelocities[i], bcoMoment.msPositionInScore);
-                    bcoMoment.addEvent(event);
+                    message = new Message(CMD.NOTE_ON + channel, midiNotes[i], midiVelocities[i], bcoMoment.msPositionInScore);
+                    bcoMoment.messages.push(message);
                 }
 
                 return bcoMoment;
@@ -276,13 +276,13 @@ JI_NAMESPACE.midiChord = (function ()
                     len = notes.length,
                     volume = 100,
                     bcoffMoment = new Moment(msPosition),
-                    event,
+                    message,
                     i;
 
                 for (i = 0; i < len; ++i)
                 {
-                    event = new Event(CMD.NOTE_OFF + channel, notes[i], volume, bcoffMoment.msPositionInScore);
-                    bcoffMoment.addEvent(event);
+                    message = new Message(CMD.NOTE_OFF + channel, notes[i], volume, bcoffMoment.msPositionInScore);
+                    bcoffMoment.messages.push(message);
                 }
 
                 return bcoffMoment;
@@ -295,7 +295,7 @@ JI_NAMESPACE.midiChord = (function ()
                 var uniqueNoteNumbers = [], nnIndex, noteNumber,
                     volume = 127,
                     cOffMoment = new Moment(msPosition),
-                    event;
+                    message;
 
                 function getUniqueNoteNumbers(noteOffs)
                 {
@@ -316,8 +316,8 @@ JI_NAMESPACE.midiChord = (function ()
                 for (nnIndex = 0; nnIndex < uniqueNoteNumbers.length; ++nnIndex)
                 {
                     noteNumber = uniqueNoteNumbers[nnIndex];
-                    event = new Event(CMD.NOTE_OFF + channel, noteNumber.valueOf(), volume, cOffMoment.msPositionInScore);
-                    cOffMoment.addEvent(event);
+                    message = new Message(CMD.NOTE_OFF + channel, noteNumber.valueOf(), volume, cOffMoment.msPositionInScore);
+                    cOffMoment.messages.push(message);
                 }
 
                 return cOffMoment;
@@ -393,10 +393,10 @@ JI_NAMESPACE.midiChord = (function ()
         }
 
         // An array of moments whose msPosition has been set.
-        // Each moment contains slider events for each of the defined sliders.
+        // Each moment contains slider messages for each of the defined sliders.
         // These moments always happen at a rate defined by sliderMilliseconds.
         // 50ms is the default, but other values are possible.
-        // None of the returned sliderMoments has 0 events.
+        // None of the returned sliderMoments has 0 messages.
         // This function is only called if sliders are defined, so the length of the returned array
         // can either be 1 (i.e. none of the sliders' values changes during this MIDIChord)
         // or a value calculated from SLIDER_MILLISECONDS and msDuration. In the latter case, the
@@ -409,7 +409,7 @@ JI_NAMESPACE.midiChord = (function ()
             {
                 var moments = [],
                     numberOfMoments = Math.floor(Number(msDuration) / sliderMilliseconds),
-                    eventFloatDuration = 0,
+                    momentFloatDuration = 0,
                     msFloatDuration = Number(msDuration),
                     currentIntPosition = Number(msPosition),
                     currentFloatPosition = Number(currentIntPosition),
@@ -421,12 +421,12 @@ JI_NAMESPACE.midiChord = (function ()
                     numberOfMoments = 1;
                 }
 
-                eventFloatDuration = msFloatDuration / numberOfMoments; // eventDuration is a float
+                momentFloatDuration = msFloatDuration / numberOfMoments; // momentFloatDuration is a float
                 for (i = 0; i < numberOfMoments; i++)
                 {
                     moment = new Moment(currentIntPosition);
                     moments.push(moment);
-                    currentFloatPosition += eventFloatDuration;
+                    currentFloatPosition += momentFloatDuration;
                     currentIntPosition = Math.floor(currentFloatPosition);
                 }
 
@@ -546,7 +546,7 @@ JI_NAMESPACE.midiChord = (function ()
                         moment,
                         value,
                         previousValue = -1,
-                        event,
+                        message,
                         i, d, pitchWheelValue;
 
                     // Argument value is in range 0..128 
@@ -580,7 +580,7 @@ JI_NAMESPACE.midiChord = (function ()
                     {
                         moment = sliderMoments[i];
                         value = finalValuesArray[i];
-                        if (value !== previousValue) // repeating events are not sent
+                        if (value !== previousValue) // repeating messages are not sent
                         {
                             previousValue = value;
                             switch (typeString)
@@ -589,22 +589,19 @@ JI_NAMESPACE.midiChord = (function ()
                                     pitchWheelValue = getPitchWheelValue(value);
                                     // to14Bit is only used for CMD.PITCH_WHEEL:
                                     d = to14Bit(pitchWheelValue);
-                                    event = new Event(CMD.PITCH_WHEEL + channel, d.data1, d.data2, moment.msPositionInScore);
-                                    moment.addEvent(event);
+                                    message = new Message(CMD.PITCH_WHEEL + channel, d.data1, d.data2, moment.msPositionInScore);
                                     break;
                                 case "pan":
-                                    event = new Event(CMD.CONTROL_CHANGE + channel, CTL.PAN, value, moment.msPositionInScore);
-                                    moment.addEvent(event);
+                                    message = new Message(CMD.CONTROL_CHANGE + channel, CTL.PAN, value, moment.msPositionInScore);
                                     break;
                                 case "modulationWheel":
-                                    event = new Event(CMD.CONTROL_CHANGE + channel, CTL.MODWHEEL, value, moment.msPositionInScore);
-                                    moment.addEvent(event);
+                                    message = new Message(CMD.CONTROL_CHANGE + channel, CTL.MODWHEEL, value, moment.msPositionInScore);
                                     break;
                                 case "expression":
-                                    event = new Event(CMD.CONTROL_CHANGE + channel, CTL.EXPRESSION, value, moment.msPositionInScore);
-                                    moment.addEvent(event);
+                                    message = new Message(CMD.CONTROL_CHANGE + channel, CTL.EXPRESSION, value, moment.msPositionInScore);
                                     break;
                             }
+                            moment.messages.push(message);
                         }
                     }
                 }
@@ -615,7 +612,7 @@ JI_NAMESPACE.midiChord = (function ()
                 addSliderValues(channel, sliderMoments, typeString, finalValuesArray);
             }
 
-            // sliderMoments is an array of timed moments. The events are initially empty.
+            // sliderMoments is an array of timed moments. The messages are initially empty.
             // By default, the moments are at a rate of (ca.) 50ms (ca. 20 per second).
             // The total duration of the slidersQueue is equal to msDuration.
             sliderMoments = getEmptySliderMoments(msPosition, msDuration, sliderMilliseconds);
@@ -642,7 +639,7 @@ JI_NAMESPACE.midiChord = (function ()
             nonEmptySliderMoments = [];
             for (i = 0; i < sliderMoments.length; ++i)
             {
-                if (sliderMoments[i].events.length > 0)
+                if (sliderMoments[i].messages.length > 0)
                 {
                     nonEmptySliderMoments.push(sliderMoments[i]);
                 }
@@ -652,7 +649,7 @@ JI_NAMESPACE.midiChord = (function ()
 
         // returns  a single, ordered array of moments
         // If chordMoment.msPositionInScore === sliderMoment.msPositionInScore,
-        // they are unified with the slider events being sent first.
+        // they are unified with the slider messages being sent first.
         function getCombinedMoments(chordMoments, sliderMoments)
         {
             var momentsArray = [],

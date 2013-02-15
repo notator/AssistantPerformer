@@ -21,7 +21,7 @@ JI_NAMESPACE.score = (function (document)
 
     var 
     CMD = MIDI_API.constants.COMMAND,
-    Event = MIDI_API.event.Event,
+    Message = MIDI_API.message.Message,
     Track = MIDI_API.track.Track,
     Sequence = MIDI_API.sequence.Sequence,
 
@@ -74,7 +74,7 @@ JI_NAMESPACE.score = (function (document)
             {
                 for (noteIndex = 0; noteIndex < 128; ++noteIndex)
                 {
-                    noteOffMessage = new Event(CMD.NOTE_OFF + channelIndex, noteIndex, 127, now);
+                    noteOffMessage = new Message(CMD.NOTE_OFF + channelIndex, noteIndex, 127, now);
                     midiOutputDevice.send(noteOffMessage.data, now);
                 }
             }
