@@ -1479,8 +1479,7 @@ JI_NAMESPACE.score = (function (document)
     },
 
     // In a completed Sequence, the tracks array contains one track per channel (ordered by channel).
-    // Each track is an array of moments ordered in time (see jiTrack.js && jiMoment.js).
-    // Note that Sequences do not contain rests!
+    // Each track is an array of moments ordered in time (see jiTrack.js and jiMoment.js).
     createSequence = function (speed)
     {
         // systems->staves->voices->timeObjects

@@ -19,11 +19,12 @@ JI_NAMESPACE.apControls = (function (document, window)
 {
     "use strict";
 
-    var 
+    var
     tracksControl = JI_NAMESPACE.apTracksControl,
     Score = JI_NAMESPACE.score.Score,
     Assistant = JI_NAMESPACE.assistant.Assistant,
 
+    UNDEFINED_TIMESTAMP = MIDI_API.constants.ASSISTANT_PERFORMER.UNDEFINED_TIMESTAMP,
     Track = MIDI_API.track.Track,
     Sequence = MIDI_API.sequence.Sequence,
     sequenceToSMF = MIDI_API.standardMIDIFile.sequenceToSMF,
@@ -523,32 +524,35 @@ JI_NAMESPACE.apControls = (function (document, window)
         var
         scoreName = mo.scoreSelector.options[mo.scoreSelector.selectedIndex].text;
 
-        // Event timestamps are shifted so as to be relative to the beginning of the
+        // Moment timestamps are shifted so as to be relative to the beginning of the
         // recording.
         // Returns false if the recordedSequence was empty, otherwise true.
-        function zeroEventTimestampsOrigin(recordedSequence)
+        function setTimestampsRelativeToSequence(recordedSequence)
         {
             var i, nTracks = sequence.tracks.length, track,
                 j, nMoments, moment,
-                k, nEvents,
                 offset, success = true;
 
-            // Returns the earliest event.timestamp in the recordedSequence.
+            // Returns the earliest moment.timestamp in the recordedSequence.
+            // Returns Number.MAX_VALUE if recordedSequence is undefined, null or has no moments.
             function findOffset(recordedSequence)
             {
                 var
-                i, nTracks = recordedSequence.tracks.length, track, nMoments,
+                i, nTracks, track,
                 timestamp,
                 offset = Number.MAX_VALUE;
 
-                for (i = 0; i < nTracks; ++i)
+                if (recordedSequence !== undefined && recordedSequence !== null)
                 {
-                    track = recordedSequence.tracks[i];
-                    nMoments = track.moments.length;
-                    if (nMoments > 0 && track.moments[0].events.length > 0)
+                    nTracks = recordedSequence.tracks.length;
+                    for (i = 0; i < nTracks; ++i)
                     {
-                        timestamp = track.moments[0].events[0].timestamp;
-                        offset = (offset < timestamp) ? offset : timestamp;
+                        track = recordedSequence.tracks[i];
+                        if (track.moments.length > 0)
+                        {
+                            timestamp = track.moments[0].timestamp;
+                            offset = (offset < timestamp) ? offset : timestamp;
+                        }
                     }
                 }
 
@@ -570,32 +574,34 @@ JI_NAMESPACE.apControls = (function (document, window)
                     for (j = 0; j < nMoments; ++j)
                     {
                         moment = track.moments[j];
-                        nEvents = moment.events.length;
-                        for (k = 0; k < nEvents; ++k)
-                        {
-                            moment.events[k].timestamp -= offset;
-                        }
+                        moment.timestamp -= offset;
                     }
                 }
             }
             return success;
         }
 
-        if (recordedSequence !== undefined && recordedSequence !== null)
+        // Reset all moment timestamps in the recordedSequence to UNDEFINED_TIMESTAMP.
+        function revertTimestamps(recordedSequence)
         {
-            if (zeroEventTimestampsOrigin(recordedSequence))  // false if the recorded sequence is empty
+            var i, nTracks = recordedSequence.tracks.length, track,
+                j, moment;
+
+            for (i = 0; i < nTracks; ++i)
             {
-                createSaveMIDIFileButton(scoreName, recordedSequence, performanceMsDuration);
+                track = recordedSequence.tracks[i];
+                for (j = track.fromIndex; j <= track.toIndex; ++j)
+                {
+                    moment = track.moments[j];
+                    moment.timestamp = UNDEFINED_TIMESTAMP;
+                }
             }
         }
 
-        if (assistant !== undefined)
+        if (setTimestampsRelativeToSequence(recordedSequence))  // false if the recorded sequence is undefined, null or has no moments
         {
-            assistant.revertTimestamps();
-        }
-        else
-        {
-            sequence.revertTimestamps();
+            createSaveMIDIFileButton(scoreName, recordedSequence, performanceMsDuration);
+            revertTimestamps(recordedSequence);
         }
 
         setStopped();
