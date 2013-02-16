@@ -20,15 +20,15 @@ JI_NAMESPACE.assistant = (function (window)
     // begin var
     var
     CMD = MIDI_API.constants.COMMAND,
-    Event = MIDI_API.event.Event,
-    getEvent = MIDI_API.event.getEvent,
-    to14Bit = MIDI_API.event.to14Bit,
+    Message = MIDI_API.message.Message,
+    getMessage = MIDI_API.message.getMessage,
+    to14Bit = MIDI_API.message.to14Bit,
     Sequence = MIDI_API.sequence.Sequence,
 
     outputDevice,
     trackIsOnArray,
 
-    // Assistant's midi input event types
+    // Assistant's midi input message types
     UNKNOWN = 0,
     ILLEGAL_INDEX = 1,
     END_OF_SEQUENCE = 2,
@@ -58,7 +58,7 @@ JI_NAMESPACE.assistant = (function (window)
     endIndex = -1,
     currentIndex = -1, // the index of the currently playing subsequence (which will be stopped when a noteOn or noteOff arrives).
     nextIndex = 0, // the index of the subsequence which will be played when a noteOn evt arrives
-    performanceStartNow, // set when the first subsequence starts, used to rectify timestamps when subsequences stop 
+    performanceStartNow, // set when the first subsequence starts, used to set the reported duration of the performance 
     subsequenceStartNow, // set when a subsequence starts, used to rectify timestamps when it stops, and in the relative durations option 
     prevSubsequenceStartNow = 0.0, // used only with the relative durations option
     pausedNow = 0.0, // used only with the relative durations option (the time at which the subsequence was paused).
@@ -74,15 +74,15 @@ JI_NAMESPACE.assistant = (function (window)
     {
         var i, nSubsequences, sequenceMsDuration;
 
-        // Event timestamps are set to the value of their moment's msPositioninScore.
+        // Message timestamps are set to the value of their moment's msPositioninScore.
         // If the assistant is using relative durations, this function is called
         // when the stop button is clicked, or when the performance reaches the
-        // end marker. (See changeEventTimestamps() below)
+        // end marker. (See changeMessageTimestamps() below)
         function revertTimestamps (subsequence)
         {
             var
             nTracks = subsequence.tracks.length, moment,
-            i, j, k, track, trackLength, events, nEvents, timestamp;
+            i, j, k, track, trackLength, messages, nMessages, timestamp;
 
             for (i = 0; i < nTracks; ++i)
             {
@@ -92,11 +92,11 @@ JI_NAMESPACE.assistant = (function (window)
                 {
                     moment = track.moments[j];
                     timestamp = moment.msPositionInScore;
-                    events = moment.events;
-                    nEvents = events.length;
-                    for (k = 0; k < nEvents; ++k)
+                    messages = moment.messages;
+                    nMessages = messages.length;
+                    for (k = 0; k < nMessages; ++k)
                     {
-                        events[k].timestamp = timestamp;
+                        messages[k].timestamp = timestamp;
                     }
                 }
             }
@@ -111,7 +111,7 @@ JI_NAMESPACE.assistant = (function (window)
             if (options.assistantUsesAbsoluteDurations === false)
             {
                 // reset the span
-                // (During the assisted performance, the event.timestamps have changed according
+                // (During the assisted performance, the message.timestamps have changed according
                 //  to the live performer's speed, but the moment.timestamps have not).
                 for (i = 0; i < nSubsequences; ++i)
                 {
@@ -125,11 +125,11 @@ JI_NAMESPACE.assistant = (function (window)
         }
     },
 
-    // If options.assistedPerformance === true, this is where input MIDI events arrive, and where processing is going to be done.
+    // If options.assistedPerformance === true, this is where input MIDI messages arrive, and where processing is going to be done.
     // Uses 
     //  endIndex  (= span.length -1 when stopped),
     //  currentIndex (= -1 when stopped) the index of the currently playing subsequence (which should be stopped when a noteOn or noteOff arrives).
-    //  nextIndex (= 0 when stopped) the index of the subsequence which will be played when a noteOn event arrives
+    //  nextIndex (= 0 when stopped) the index of the subsequence which will be played when a noteOn message arrives
     handleMIDIInputEvent = function (data)
     {
         var inputEvent, inputEventType, command, cmd;
@@ -168,7 +168,7 @@ JI_NAMESPACE.assistant = (function (window)
             data2 = inputData2(inputEvent),
             timestamp = inputTimestamp(inputEvent);
 
-            return "Input event: command:".concat(command).concat(", channel:").concat(channel).concat(", data1:").concat(data1).concat(", data2:").concat(data2).concat(", timestamp:").concat(timestamp);
+            return "Input message: command:".concat(command).concat(", channel:").concat(channel).concat(", data1:").concat(data1).concat(", data2:").concat(data2).concat(", timestamp:").concat(timestamp);
         }
 
         // getInputEventType returns one of the following constants:
@@ -219,16 +219,16 @@ JI_NAMESPACE.assistant = (function (window)
             return type;
         }
 
-        // channel is the new event's channel
-        // value is the new event's value
+        // channel is the new message's channel
+        // value is the new message's value
         function newControlMessage(controlData, channel, value)
         {
-            var event, d;
+            var message, d;
 
             if (controlData.midiControl !== undefined)
             {
                 // a normal control
-                event = new Event(CMD.CONTROL_CHANGE + channel, controlData.midiControl, value, 0);
+                message = new Message(CMD.CONTROL_CHANGE + channel, controlData.midiControl, value, 0);
             }
             else if (controlData.statusHighNibble !== undefined)
             {
@@ -236,11 +236,11 @@ JI_NAMESPACE.assistant = (function (window)
                 if (controlData.statusHighNibble === CMD.PITCH_WHEEL)
                 {
                     d = to14Bit(value);
-                    event = new Event(CMD.PITCH_WHEEL + channel, d.data1, d.data2, 0);
+                    message = new Message(CMD.PITCH_WHEEL + channel, d.data1, d.data2, 0);
                 }
                 else if (controlData.statusHighNibble === CMD.CHANNEL_AFTERTOUCH)
                 {
-                    event = new Event(CMD.CHANNEL_AFTERTOUCH + channel, value, 0, 0);
+                    message = new Message(CMD.CHANNEL_AFTERTOUCH + channel, value, 0, 0);
                 }
                 else
                 {
@@ -252,7 +252,7 @@ JI_NAMESPACE.assistant = (function (window)
                 throw "Illegal controlData.";
             }
 
-            return event;
+            return message;
         }
 
         function handleController(controlData, value, usesSoloTrack, usesOtherTracks)
@@ -324,7 +324,7 @@ JI_NAMESPACE.assistant = (function (window)
             {
                 reportMsPosition(span[nextIndex].msPositionInScore);
             }
-            // else wait for noteOff event (see handleNoteOff below).
+            // else wait for noteOff message (see handleNoteOff below).
         }
 
         function playSubsequence(subsequence, options)
@@ -332,16 +332,16 @@ JI_NAMESPACE.assistant = (function (window)
             var prevSubsequenceScoreMsDuration,
                 durationFactor;
 
-            // Event timestamps are adjusted for the durationFactor.
-            // The msPositionInScore of each event's containing moment is unchanged, and is
-            // used to revert the event timestamps when the performance ends.
+            // Message timestamps are adjusted for the durationFactor.
+            // The msPositionInScore of each message's containing moment is unchanged, and is
+            // used to revert the message timestamps when the performance ends.
             // (See revertTimestamps() below)
             function changeEventTimestamps (subsequence, durationFactor)
             {
                 var
                 newSubsequenceMsPosition = subsequence.msPositionInScore * durationFactor,
                 nTracks = subsequence.tracks.length, moment,
-                i, j, k, track, trackLength, events, nEvents, timestamp;
+                i, j, k, track, trackLength, messages, nEvents, timestamp;
 
                 for (i = 0; i < nTracks; ++i)
                 {
@@ -351,11 +351,11 @@ JI_NAMESPACE.assistant = (function (window)
                     {
                         moment = track.moments[j];
                         timestamp = newSubsequenceMsPosition + (moment.msPositionInScore * durationFactor);
-                        events = moment.events;
-                        nEvents = events.length;
+                        messages = moment.messages;
+                        nEvents = messages.length;
                         for (k = 0; k < nEvents; ++k)
                         {
-                            events[k].timestamp = timestamp;
+                            messages[k].timestamp = timestamp;
                         }
                     }
                 }
@@ -415,25 +415,25 @@ JI_NAMESPACE.assistant = (function (window)
             {
                 var
                 NOTE_ON_CMD = CMD.NOTE_ON,
-                track = subsequence.tracks[soloTrackIndex], event, lowestNoteOnEvt, pitchDelta, velocityDelta;
+                track = subsequence.tracks[soloTrackIndex], message, lowestNoteOnEvt, pitchDelta, velocityDelta;
 
-                // Returns the lowest NoteOn event in the first moment in the track to contain a NoteOnMessage.
-                // Returns null if there is no such event.
+                // Returns the lowest NoteOn message in the first moment in the track to contain a NoteOnMessage.
+                // Returns null if there is no such message.
                 function findLowestNoteOnEvt(NOTE_ON_CMD, track)
                 {
-                    var i, j, event, moment, nEvents, nMoments = track.moments.length, lowestNoteOnMessage = null;
+                    var i, j, message, moment, nEvents, nMoments = track.moments.length, lowestNoteOnMessage = null;
 
                     for (i = 0; i < nMoments; ++i)
                     {
                         moment = track.moments[i];
-                        nEvents = moment.events.length;
+                        nEvents = moment.messages.length;
                         for (j = 0; j < nEvents; ++j)
                         {
-                            event = moment.events[j];
-                            if ((event.command() === NOTE_ON_CMD)
-                            && (lowestNoteOnMessage === null || event.data[1] < lowestNoteOnMessage.data1))
+                            message = moment.messages[j];
+                            if ((message.command() === NOTE_ON_CMD)
+                            && (lowestNoteOnMessage === null || message.data[1] < lowestNoteOnMessage.data1))
                             {
-                                lowestNoteOnMessage = event;
+                                lowestNoteOnMessage = message;
                             }
                         }
                         if (lowestNoteOnMessage !== null)
@@ -467,14 +467,14 @@ JI_NAMESPACE.assistant = (function (window)
                             for (j = 0; j < nMoments; ++j)
                             {
                                 moment = track.moments[j];
-                                nEvents = moment.events.length;
+                                nEvents = moment.messages.length;
                                 for (k = 0; k < nEvents; ++k)
                                 {
-                                    event = moment.events[k];
-                                    if (event.command() === NOTE_ON_CMD)
+                                    message = moment.messages[k];
+                                    if (message.command() === NOTE_ON_CMD)
                                     {
-                                        event.data[1] = midiValue(event.data[1] + pitchDelta);
-                                        event.data[2] = midiValue(event.data[2] + velocityDelta);
+                                        message.data[1] = midiValue(message.data[1] + pitchDelta);
+                                        message.data[2] = midiValue(message.data[2] + velocityDelta);
                                     }
                                 }
                             }
@@ -600,7 +600,7 @@ JI_NAMESPACE.assistant = (function (window)
                 }
                 else
                 {
-                    throw "Error: Unexpected controller event ".concat(inputEventToString(inputEvent));
+                    throw "Error: Unexpected controller message ".concat(inputEventToString(inputEvent));
                 }
             case ILLEGAL_INDEX:
                 throw "illegal index";
@@ -609,7 +609,6 @@ JI_NAMESPACE.assistant = (function (window)
 
     setState = function (state)
     {
-
         function closeInputDevice(options)
         {
              if (options.inputDevice !== undefined && options.inputDevice !== null)
@@ -728,27 +727,25 @@ JI_NAMESPACE.assistant = (function (window)
                     track.addMoment(finalBarlineMoment);
                 }
 
-                restSequence = new Sequence(sequence.msPositionInScore);
+                restSequence = new Sequence(nTracks);
                 Object.defineProperty(restSequence, "restSubsequence", { value: true, writable: false });
 
                 for (i = 0; i < nTracks; ++i)
                 {
-                    newTrack = new MIDI_API.track.Track();
+                    newTrack = restSequence.tracks[i];
                     oldTrack = subsequence.tracks[i];
                     nMoments = oldTrack.moments.length;
                     for (j = 0; j < nMoments; ++j)
                     {
                         if (oldTrack.moments[j].msPositionInScore >= toMsPositionInScore)
                         {
-                            timestamp = oldTrack.moments[j].events[0].timestamp;
+                            timestamp = oldTrack.moments[j].messages[0].timestamp;
                             break;
                         }
                         newTrack.moments.push(oldTrack.moments[j]);
                     }
 
                     appendFinalBarlineMoment(newTrack, toMsPositionInScore, timestamp);
-
-                    restSequence.tracks.push(newTrack);
                 }
                 return restSequence;
             }
@@ -761,12 +758,12 @@ JI_NAMESPACE.assistant = (function (window)
                 i, newTrack, oldTrack, nTracks = subsequence.tracks.length,
                 j, nMoments, k, restSequence;
 
-                restSequence = new Sequence(fromMsPositionInScore);
+                restSequence = new Sequence(nTracks);
                 Object.defineProperty(restSequence, "restSubsequence", { value: true, writable: false });
 
                 for (i = 0; i < nTracks; ++i)
                 {
-                    newTrack = new MIDI_API.track.Track();
+                    newTrack = restSequence.tracks[i];
                     oldTrack = subsequence.tracks[i];
                     nMoments = oldTrack.moments.length;
                     for (j = 0; j < nMoments; ++j)
@@ -781,7 +778,6 @@ JI_NAMESPACE.assistant = (function (window)
                     {
                         newTrack.moments.push(oldTrack.moments[j]);
                     }
-                    restSequence.tracks.push(newTrack);
                 }
                 return restSequence;
             }
@@ -846,189 +842,177 @@ JI_NAMESPACE.assistant = (function (window)
         prevSubsequenceStartNow = -1;
     },
 
-    // Returns an array of Sequence.
-    // Each subsequence in the array contains moments from the global sequence.
-    // A subsequence is first created for each chord or rest symbol and for the final barline in the live performer's track. 
-    // Subsequences corresponding to a live performer's chord are given a chordSubsequence attribute (=true).
-    // Subsequences corresponding to a live performer's rest are given a restSubsequence attribute (=true).
-    // Consecutive restSubsequences are merged: When performing, consecutive rests in the performer's track are treated
-    // as one. The live performer only starts the first one (with a noteOff). Following rests play automatically until
-    // the next chord (chordSubsequence) in the performer's track.
-    getSubsequences = function (sequence, livePerformersTrackIndex)
-    {
-        var
-        subsequences = [],
-        nTracks = sequence.tracks.length,
-        trackIndex;
-
-        // The returned empty subsequences have an msPositionInScore attribute and
-        // either a restSubsequence or a chordSubsequence attribute, 
-        // depending on whether they correspond to a live player's rest or chord.
-        // The subsequences do not yet contain any tracks.
-        function getEmptySubsequences(livePerformersTrack)  // 'base' function in outer scope.
-        {
-            var s, emptySubsequences = [],
-                performersMidiMoments, nPerformersMidiMoments, i,
-                moment;
-
-            performersMidiMoments = livePerformersTrack.moments;
-            nPerformersMidiMoments = performersMidiMoments.length;
-            for (i = 0; i < nPerformersMidiMoments; ++i)
-            {
-                s = null;
-                moment = performersMidiMoments[i];
-
-                if (moment.restStart !== undefined)
-                {
-                    s = new Sequence(moment.msPositionInScore);
-                    Object.defineProperty(s, "restSubsequence", { value: true, writable: false });
-                    //console.log("Rest Subsequence: msPositionInScore=" + s.msPositionInScore.toString());
-                }
-                else if (moment.chordStart !== undefined)
-                {
-                    s = new Sequence(moment.msPositionInScore);
-                    Object.defineProperty(s, "chordSubsequence", { value: true, writable: false });
-                    //console.log("Chord Subsequence: msPositionInScore=" + s.msPositionInScore.toString());
-                }
-
-                if (s !== null)
-                {
-                    emptySubsequences.push(s);
-                }
-            }
-            return emptySubsequences;
-        }
-
-        function fillSubsequences(subsequences, moments)  // 'base' function in outer scope.
-        {
-            var track,
-                moment, momentsIndex = 0,
-                nMidiMoments = moments.length,
-                subsequence, subsequencesIndex,
-                nSubsequences = subsequences.length, // including the final barline
-                subsequenceMsPositionInScore, nextSubsequenceMsPositionInScore;
-
-            function getNextSubsequenceMsPositionInScore(subsequences, subsequencesIndex, nSubsequences)
-            {
-                var nextSubsequenceMsPositionInScore, nextIndex = subsequencesIndex + 1;
-
-                if (nextIndex < nSubsequences)
-                {
-                    nextSubsequenceMsPositionInScore = subsequences[nextIndex].msPositionInScore;
-                }
-                else
-                {
-                    nextSubsequenceMsPositionInScore = Number.MAX_VALUE;
-                }
-
-                return nextSubsequenceMsPositionInScore;
-            }
-
-            function setEventTimestampsRelativeToSubsequence(events, subsequenceMsPositionInScore)
-            {
-                var i, nEvents = events.length;
-
-                for (i = 0; i < nEvents; ++i)
-                {
-                    events[i].timestamp -= subsequenceMsPositionInScore;
-                }
-            }
-
-            // nSubsequences includes the final barline (a restSubsequence which may contain noteOff events).
-            for (subsequencesIndex = 0; subsequencesIndex < nSubsequences; ++subsequencesIndex)
-            {
-                subsequence = subsequences[subsequencesIndex];
-                subsequenceMsPositionInScore = subsequence.msPositionInScore;
-                nextSubsequenceMsPositionInScore = getNextSubsequenceMsPositionInScore(subsequences, subsequencesIndex, nSubsequences);
-                track = new MIDI_API.track.Track();
-                // nMidiMoments may be 0 (an empty track)
-                if (nMidiMoments > 0 && momentsIndex < nMidiMoments)
-                {
-                    moment = moments[momentsIndex];
-                    setEventTimestampsRelativeToSubsequence(moment.events, subsequenceMsPositionInScore);
-
-                    while (moment.msPositionInScore < nextSubsequenceMsPositionInScore)
-                    {
-                        track.addMoment(moment);
-                        ++momentsIndex;
-                        if (momentsIndex === nMidiMoments)
-                        {
-                            break;
-                        }
-                        moment = moments[momentsIndex];
-                    }
-                }
-                subsequence.tracks.push(track);
-            }
-        }
-
-        // When performing, consecutive rests in the performer's track are treated as one.
-        // The live performer only starts the first one (with a noteOff). Following rests
-        // play automatically until the next chord in the performer's track.
-        function mergeRestSubsequences(subsequences)
-        {
-            var i, nSubsequences = subsequences.length,
-            newSubsequences = [], lastNewS,
-            nTracks = sequence.tracks.length,
-            subS, t, currentTrack, trackToAppend, nMoments,
-            iMom;
-
-            newSubsequences.push(subsequences[0]);
-
-            for (i = 1; i < nSubsequences; ++i)
-            {
-                lastNewS = newSubsequences[newSubsequences.length - 1];
-                if (lastNewS.restSubsequence !== undefined && subsequences[i].restSubsequence !== undefined)
-                {
-                    subS = subsequences[i];
-                    // append subS to lastnewS
-                    for (t = 0; t < nTracks; ++t)
-                    {
-                        currentTrack = lastNewS.tracks[t];
-                        trackToAppend = subS.tracks[t];
-                        nMoments = trackToAppend.moments.length;
-                        for (iMom = 0; iMom < nMoments; ++iMom)
-                        {
-                            currentTrack.addMoment(trackToAppend.moments[iMom]);
-                        }
-                    }
-                }
-                else
-                {
-                    newSubsequences.push(subsequences[i]);
-                }
-            }
-
-            return newSubsequences;
-        }
-
-        subsequences = getEmptySubsequences(sequence.tracks[livePerformersTrackIndex]);
-
-        for (trackIndex = 0; trackIndex < nTracks; ++trackIndex)
-        {
-            fillSubsequences(subsequences, sequence.tracks[trackIndex].moments);
-        }
-
-        subsequences = mergeRestSubsequences(subsequences);
-
-        return subsequences;
-    },
-
-    // This function resets all moment timestamps to UNDEFINED_TIMESTAMP.
-    revertTimestamps = function ()
-    {
-        var i, nSubsequences = allSubsequences.length;
-
-        for (i = 0; i < nSubsequences; ++i)
-        {
-            allSubsequences[i].revertTimestamps();
-        }
-    },
-
     // creats an Assistant, complete with private subsequences
     // called when the Start button is clicked, and options.assistedPerformance === true
     Assistant = function (sequence, apControlOptions, reportEndOfWholePerformance, reportMillisecondPosition)
     {
+        // Returns an array of Sequence.
+        // Each subsequence in the array contains moments from the global sequence.
+        // A subsequence is first created for each chord or rest symbol and for the final barline in the live performer's track. 
+        // Subsequences corresponding to a live performer's chord are given a chordSubsequence attribute (=true).
+        // Subsequences corresponding to a live performer's rest are given a restSubsequence attribute (=true).
+        // Consecutive restSubsequences are merged: When performing, consecutive rests in the performer's track are treated
+        // as one. The live performer only starts the first one (with a noteOff). Following rests play automatically until
+        // the next chord (chordSubsequence) in the performer's track.
+        function getSubsequences(sequence, livePerformersTrackIndex)
+        {
+            var
+            subsequences = [],
+            nTracks = sequence.tracks.length,
+            trackIndex;
+
+            // The returned empty subsequences contain either a restSubsequence or a chordSubsequence attribute, 
+            // depending on whether they correspond to a live player's rest or chord.
+            // They also contain the correct number of empty tracks.
+            function getEmptySubsequences(nTracks, livePerformersTrack)
+            {
+                var s, emptySubsequences = [],
+                    performersMidiMoments, nPerformersMidiMoments, i,
+                    moment;
+
+                performersMidiMoments = livePerformersTrack.moments;
+                nPerformersMidiMoments = performersMidiMoments.length;
+                for (i = 0; i < nPerformersMidiMoments; ++i)
+                {
+                    s = null;
+                    moment = performersMidiMoments[i];
+
+                    if (moment.restStart !== undefined)
+                    {
+                        s = new Sequence(nTracks);
+                        Object.defineProperty(s, "restSubsequence", { value: true, writable: false });
+                        //console.log("Rest Subsequence: msPositionInScore=" + s.msPositionInScore.toString());
+                    }
+                    else if (moment.chordStart !== undefined)
+                    {
+                        s = new Sequence(nTracks);
+                        Object.defineProperty(s, "chordSubsequence", { value: true, writable: false });
+                        //console.log("Chord Subsequence: msPositionInScore=" + s.msPositionInScore.toString());
+                    }
+
+                    if (s !== null)
+                    {
+                        emptySubsequences.push(s);
+                    }
+                }
+                return emptySubsequences;
+            }
+
+            function fillSubsequences(subsequences, sequence, trackIndex)  // 'base' function in outer scope.
+            {
+                var track, moments = sequence.tracks[trackIndex].moments,
+                    moment, momentsIndex = 0,
+                    nMidiMoments = moments.length,
+                    subsequence, subsequencesIndex,
+                    nSubsequences = subsequences.length, // including the final barline
+                    subsequenceMsPositionInScore, nextSubsequenceMsPositionInScore;
+
+                function getNextSubsequenceMsPositionInScore(subsequences, subsequencesIndex, nSubsequences)
+                {
+                    var nextSubsequenceMsPositionInScore, nextIndex = subsequencesIndex + 1;
+
+                    if (nextIndex < nSubsequences)
+                    {
+                        nextSubsequenceMsPositionInScore = subsequences[nextIndex].msPositionInScore;
+                    }
+                    else
+                    {
+                        nextSubsequenceMsPositionInScore = Number.MAX_VALUE;
+                    }
+
+                    return nextSubsequenceMsPositionInScore;
+                }
+
+                function setMessageTimestampsRelativeToSubsequence(messages, subsequenceMsPositionInScore)
+                {
+                    var i, nMessages = messages.length;
+
+                    for (i = 0; i < nMessages; ++i)
+                    {
+                        messages[i].timestamp -= subsequenceMsPositionInScore;
+                    }
+                }
+
+                // nSubsequences includes the final barline (a restSubsequence which may contain noteOff messages).
+                for (subsequencesIndex = 0; subsequencesIndex < nSubsequences; ++subsequencesIndex)
+                {
+                    subsequence = subsequences[subsequencesIndex];
+                    subsequenceMsPositionInScore = subsequence.msPositionInScore;
+                    nextSubsequenceMsPositionInScore = getNextSubsequenceMsPositionInScore(subsequences, subsequencesIndex, nSubsequences);
+                    track = subsequence.tracks[trackIndex];
+                    // nMidiMoments may be 0 (an empty track)
+                    if (nMidiMoments > 0 && momentsIndex < nMidiMoments)
+                    {
+                        moment = moments[momentsIndex];
+                        setMessageTimestampsRelativeToSubsequence(moment.messages, subsequenceMsPositionInScore);
+
+                        while (moment.msPositionInScore < nextSubsequenceMsPositionInScore)
+                        {
+                            track.addMoment(moment);
+                            ++momentsIndex;
+                            if (momentsIndex === nMidiMoments)
+                            {
+                                break;
+                            }
+                            moment = moments[momentsIndex];
+                        }
+                    }
+                }
+            }
+
+            // When performing, consecutive rests in the performer's track are treated as one.
+            // The live performer only starts the first one (with a noteOff). Following rests
+            // play automatically until the next chord in the performer's track.
+            function mergeRestSubsequences(subsequences)
+            {
+                var i, nSubsequences = subsequences.length,
+                newSubsequences = [], lastNewS,
+                nTracks = sequence.tracks.length,
+                subS, t, currentTrack, trackToAppend, nMoments,
+                iMom;
+
+                newSubsequences.push(subsequences[0]);
+
+                for (i = 1; i < nSubsequences; ++i)
+                {
+                    lastNewS = newSubsequences[newSubsequences.length - 1];
+                    if (lastNewS.restSubsequence !== undefined && subsequences[i].restSubsequence !== undefined)
+                    {
+                        subS = subsequences[i];
+                        // append subS to lastnewS
+                        for (t = 0; t < nTracks; ++t)
+                        {
+                            currentTrack = lastNewS.tracks[t];
+                            trackToAppend = subS.tracks[t];
+                            nMoments = trackToAppend.moments.length;
+                            for (iMom = 0; iMom < nMoments; ++iMom)
+                            {
+                                currentTrack.addMoment(trackToAppend.moments[iMom]);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        newSubsequences.push(subsequences[i]);
+                    }
+                }
+
+                return newSubsequences;
+            }
+
+            subsequences = getEmptySubsequences(nTracks, sequence.tracks[livePerformersTrackIndex]);
+
+            for (trackIndex = 0; trackIndex < nTracks; ++trackIndex)
+            {
+                fillSubsequences(subsequences, sequence, trackIndex);
+                //fillSubsequences(subsequences, sequence.tracks[trackIndex].moments);
+            }
+
+            subsequences = mergeRestSubsequences(subsequences);
+
+            return subsequences;
+        }
+
         if (!(this instanceof Assistant))
         {
             return new Assistant(sequence, apControlOptions, reportEndOfWholePerformance, reportMillisecondPosition);
@@ -1060,7 +1044,6 @@ JI_NAMESPACE.assistant = (function (window)
         this.isPaused = isPaused; // isPaused()
 
         this.subsequences = allSubsequences; // consulted by score when setting start and end marker positions.
-        this.revertTimestamps = revertTimestamps;
     },
 
     publicAPI =

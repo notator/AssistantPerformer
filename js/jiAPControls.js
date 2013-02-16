@@ -653,7 +653,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                 throw "Error: Assisted performances are never paused.";
             }
 
-            if (sequence !== undefined && !(sequence.isStopped()) && !(sequence.isPaused()))
+            if (sequence !== undefined && sequence.isRunning())
             {
                 sequence.pause();
             }
@@ -682,12 +682,7 @@ JI_NAMESPACE.apControls = (function (document, window)
             var
             trackIsOnArray = tracksControl.getTrackIsOnArray(),
             i, nTracks = trackIsOnArray.length,
-            recordingSequence = new Sequence(score.startMarkerMsPosition());
-
-            for (i = 0; i < nTracks; ++i)
-            {
-                recordingSequence.tracks.push(new Track());
-            }
+            recordingSequence;
 
             deleteSaveMIDIFileButton();
 
@@ -695,6 +690,8 @@ JI_NAMESPACE.apControls = (function (document, window)
             {
                 if (assistant.isStopped())
                 {
+                    recordingSequence = new Sequence(nTracks);
+
                     // the running marker is at its correct position:
                     // either at the start marker, or somewhere paused.
                     score.setRunningMarkers();
@@ -716,6 +713,8 @@ JI_NAMESPACE.apControls = (function (document, window)
                 }
                 else if (sequence.isStopped())
                 {
+                    recordingSequence = new Sequence(nTracks);
+
                     // the running marker is at its correct position:
                     // either at the start marker, or somewhere paused.
                     score.setRunningMarkers();

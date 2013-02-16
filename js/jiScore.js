@@ -22,7 +22,6 @@ JI_NAMESPACE.score = (function (document)
     var 
     CMD = MIDI_API.constants.COMMAND,
     Message = MIDI_API.message.Message,
-    Track = MIDI_API.track.Track,
     Sequence = MIDI_API.sequence.Sequence,
 
     jiFile = JI_NAMESPACE.file,
@@ -1483,7 +1482,7 @@ JI_NAMESPACE.score = (function (document)
     createSequence = function (speed)
     {
         // systems->staves->voices->timeObjects
-        var sequence = new Sequence(0),
+        var sequence,
             trackIndex, track, tracks,
             timeObjectIndex, nTimeObjects, timeObject,
             voiceIndex, nVoices, voice,
@@ -1491,32 +1490,19 @@ JI_NAMESPACE.score = (function (document)
             sysIndex, nSystems = systems.length, system,
             channel, chordDef, midiChord, midiRest;
 
-        function addEmptyTracks(sequence)
+        function numberOfVoices()
         {
-            var trackIndex, nTracks;
+            var nVoices = 0,
+            staffIndex, nStaves = systems[0].staves.length;
 
-            // returns the number of voices
-            function numberOfTracks(system0)
+            for (staffIndex = 0; staffIndex < nStaves; ++staffIndex)
             {
-                var nVoices = 0,
-                staffIndex, nStaves = system0.staves.length;
-
-                for (staffIndex = 0; staffIndex < nStaves; ++staffIndex)
-                {
-                    nVoices += system0.staves[staffIndex].voices.length;
-                }
-                return nVoices;
+                nVoices += systems[0].staves[staffIndex].voices.length;
             }
-
-            nTracks = numberOfTracks(systems[0]);
-            for (trackIndex = 0; trackIndex < nTracks; ++trackIndex)
-            {
-                track = new Track();
-                sequence.tracks.push(track);
-            }
+            return nVoices;
         }
 
-        addEmptyTracks(sequence);
+        sequence = new Sequence(numberOfVoices());
         tracks = sequence.tracks;
 
         nStaves = systems[0].staves.length;
