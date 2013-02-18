@@ -24,10 +24,10 @@ JI_NAMESPACE.apControls = (function (document, window)
     Score = JI_NAMESPACE.score.Score,
     Assistant = JI_NAMESPACE.assistant.Assistant,
 
-    UNDEFINED_TIMESTAMP = MIDILib.constants.OTHER.UNDEFINED_TIMESTAMP,
-    Track = MIDILib.track.Track,
-    Sequence = MIDILib.sequence.Sequence,
-    sequenceToSMF = MIDILib.standardMIDIFile.sequenceToSMF,
+    UNDEFINED_TIMESTAMP = MIDI_API.constants.ASSISTANT_PERFORMER.UNDEFINED_TIMESTAMP,
+    Track = MIDI_API.track.Track,
+    Sequence = MIDI_API.sequence.Sequence,
+    sequenceToSMF = MIDI_API.standardMIDIFile.sequenceToSMF,
 
     midiAccess,
     score,
@@ -143,7 +143,7 @@ JI_NAMESPACE.apControls = (function (document, window)
     //     The name of the downloaded file is:
     //         scoreName + '_' + the current date (format:year-month-day) + '.mid'.
     //         (e.g. "Study 2c3.1_2013-01-08.mid")
-    // sequence is a MIDILib.sequence.Sequence object.
+    // sequence is a MIDI_API.sequence.Sequence object.
     // sequenceMsDuration is the total duration of the sequence in milliseconds (an integer).
     //      and determines the timing of the end-of-track events. When this is a recorded sequence,
     //      this value is simply the duration between the start and end markers.

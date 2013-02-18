@@ -23,11 +23,11 @@ JI_NAMESPACE.midiChord = (function ()
     "use strict";
     // begin var
     var
-    CMD = MIDILib.constants.COMMAND,
-    CTL = MIDILib.constants.CONTROL,
-    Message = MIDILib.message.Message,
-    to14Bit = MIDILib.message.to14Bit,
-    Moment = MIDILib.moment.Moment, // constructor
+    CMD = MIDI_API.constants.COMMAND,
+    CTL = MIDI_API.constants.CONTROL,
+    Message = MIDI_API.message.Message,
+    to14Bit = MIDI_API.message.to14Bit,
+    Moment = MIDI_API.moment.Moment, // constructor
 
     moments,
     // The rate (milliseconds) at which slider messages are sent.

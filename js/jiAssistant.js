@@ -19,11 +19,11 @@ JI_NAMESPACE.assistant = (function (window)
     "use strict";
     // begin var
     var
-    CMD = MIDILib.constants.COMMAND,
-    Message = MIDILib.message.Message,
-    getMessage = MIDILib.message.getMessage,
-    to14Bit = MIDILib.message.to14Bit,
-    Sequence = MIDILib.sequence.Sequence,
+    CMD = MIDI_API.constants.COMMAND,
+    Message = MIDI_API.message.Message,
+    getMessage = MIDI_API.message.getMessage,
+    to14Bit = MIDI_API.message.to14Bit,
+    Sequence = MIDI_API.sequence.Sequence,
 
     outputDevice,
     trackIsOnArray,
@@ -720,7 +720,7 @@ JI_NAMESPACE.assistant = (function (window)
                 {
                     var finalBarlineMoment, restEvt = {};
 
-                    finalBarlineMoment = new MIDILib.moment.Moment(msPositionInScore);
+                    finalBarlineMoment = new MIDI_API.moment.Moment(msPositionInScore);
                     Object.defineProperty(finalBarlineMoment, "restStart", { value: true, writable: false });
                     finalBarlineMoment.timestamp = timestamp;
 
