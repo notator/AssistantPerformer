@@ -6,9 +6,9 @@
  *  https://github.com/notator/assistant-performer/blob/master/License.md
  *
  *  jiWebMIDIAPI.js
- *  This file defines the MIDI_API.jazzWebMIDIAPI namespace which implements
+ *  This file defines the MIDILib.jazzWebMIDIAPI namespace which implements
  *  the W3C Web MIDI API using the Jazz plugin.
- *  All other namespaces in MIDI_API depend on this jazzWebMIDIAPI namespace,
+ *  All other namespaces in MIDILib depend on this jazzWebMIDIAPI namespace,
  *  and will continue to do so until browsers implement it natively.
  *  When that happens, the Jazz plugin can be uninstalled, and this file removed. 
  *  
@@ -53,9 +53,9 @@
  *  jiWebMIDIAPI.js (this file) will become redundant as soon as browsers begin
  *  to implement the above objects natively.      
  *
- *  The MIDI_API has the following namespaces:
+ *  The MIDILib has the following namespaces:
  *
- *  MIDI_API.event -- defined in lib/Event.js
+ *  MIDILib.event -- defined in lib/Event.js
  *      1. MIDI constants. These constants are categorised and defined in the following objects:
  *                  COMMAND
  *                  RUNNING_STATUS
@@ -72,19 +72,19 @@
  *      5. the functions to14Bit(value) and from14Bit(data1, data2). For dealing with PITCH_WHEEL
  *         events.
  *
- *  MIDI_API.moment -- defined in lib/Moment.js
+ *  MIDILib.moment -- defined in lib/Moment.js
  *  Moment
  *      A Moment contains Events, all of which have the same timestamp.
  *
- *  MIDI_API.track -- defined in lib/Track.js
+ *  MIDILib.track -- defined in lib/Track.js
  *  Track
  *      A Track contains Moments, whose timestamps are in ascending order.
  *
- *  MIDI_API.sequence -- defined in lib/Sequence.js
+ *  MIDILib.sequence -- defined in lib/Sequence.js
  *  Sequence
  *      A Sequence contains parallel Tracks all starting at the same timestamp.
  *
- *  MIDI_API.standardMIDIFile -- defined in lib/StandardMIDIFile.js
+ *  MIDILib.standardMIDIFile -- defined in lib/StandardMIDIFile.js
  *  Conversion Functions:
  *      Convert an in-memory Sequence to a Standard MIDI File:
  *          smf = sequenceToSMF(sequence)

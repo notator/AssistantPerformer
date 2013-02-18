@@ -20,9 +20,9 @@ JI_NAMESPACE.score = (function (document)
     "use strict";
 
     var 
-    CMD = MIDI_API.constants.COMMAND,
-    Message = MIDI_API.message.Message,
-    Sequence = MIDI_API.sequence.Sequence,
+    CMD = MIDILib.constants.COMMAND,
+    Message = MIDILib.message.Message,
+    Sequence = MIDILib.sequence.Sequence,
 
     jiFile = JI_NAMESPACE.file,
     jiMarkers = JI_NAMESPACE.markers,
