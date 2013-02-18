@@ -24,7 +24,7 @@ JI_NAMESPACE.apControls = (function (document, window)
     Score = JI_NAMESPACE.score.Score,
     Assistant = JI_NAMESPACE.assistant.Assistant,
 
-    UNDEFINED_TIMESTAMP = MIDILib.constants.ASSISTANT_PERFORMER.UNDEFINED_TIMESTAMP,
+    UNDEFINED_TIMESTAMP = MIDILib.constants.OTHER.UNDEFINED_TIMESTAMP,
     Track = MIDILib.track.Track,
     Sequence = MIDILib.sequence.Sequence,
     sequenceToSMF = MIDILib.standardMIDIFile.sequenceToSMF,
