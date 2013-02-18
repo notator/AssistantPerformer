@@ -24,7 +24,6 @@ JI_NAMESPACE.apControls = (function (document, window)
     Score = JI_NAMESPACE.score.Score,
     Assistant = JI_NAMESPACE.assistant.Assistant,
 
-    UNDEFINED_TIMESTAMP = MIDILib.constants.OTHER.UNDEFINED_TIMESTAMP,
     Track = MIDILib.track.Track,
     Sequence = MIDILib.sequence.Sequence,
     sequenceToSMF = MIDILib.standardMIDIFile.sequenceToSMF,
@@ -594,7 +593,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                 for (j = 0; j < nMoments; ++j)
                 {
                     moment = track.moments[j];
-                    moment.timestamp = UNDEFINED_TIMESTAMP;
+                    moment.timestamp = MIDILib.constants.OTHER.UNDEFINED_TIMESTAMP;
                 }
             }
         }
