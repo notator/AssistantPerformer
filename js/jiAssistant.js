@@ -860,7 +860,8 @@ JI_NAMESPACE.assistant = (function (window)
             nTracks = sequence.tracks.length,
             trackIndex;
 
-            // The returned empty subsequences contain either a restSubsequence or a chordSubsequence attribute, 
+            // The returned empty subsequences have been given an msPositionInScore attribute,
+            // and either a restSubsequence or a chordSubsequence attribute, 
             // depending on whether they correspond to a live player's rest or chord.
             // They also contain the correct number of empty tracks.
             function getEmptySubsequences(nTracks, livePerformersTrack)
@@ -880,12 +881,14 @@ JI_NAMESPACE.assistant = (function (window)
                     {
                         s = new Sequence(nTracks);
                         Object.defineProperty(s, "restSubsequence", { value: true, writable: false });
+                        Object.defineProperty(s, "msPositionInScore", { value: moment.msPositionInScore, writable: false });
                         //console.log("Rest Subsequence: msPositionInScore=" + s.msPositionInScore.toString());
                     }
                     else if (moment.chordStart !== undefined)
                     {
                         s = new Sequence(nTracks);
                         Object.defineProperty(s, "chordSubsequence", { value: true, writable: false });
+                        Object.defineProperty(s, "msPositionInScore", { value: moment.msPositionInScore, writable: false });
                         //console.log("Chord Subsequence: msPositionInScore=" + s.msPositionInScore.toString());
                     }
 
@@ -922,16 +925,6 @@ JI_NAMESPACE.assistant = (function (window)
                     return nextSubsequenceMsPositionInScore;
                 }
 
-                function setMessageTimestampsRelativeToSubsequence(messages, subsequenceMsPositionInScore)
-                {
-                    var i, nMessages = messages.length;
-
-                    for (i = 0; i < nMessages; ++i)
-                    {
-                        messages[i].timestamp -= subsequenceMsPositionInScore;
-                    }
-                }
-
                 // nSubsequences includes the final barline (a restSubsequence which may contain noteOff messages).
                 for (subsequencesIndex = 0; subsequencesIndex < nSubsequences; ++subsequencesIndex)
                 {
@@ -943,7 +936,6 @@ JI_NAMESPACE.assistant = (function (window)
                     if (nMidiMoments > 0 && momentsIndex < nMidiMoments)
                     {
                         moment = moments[momentsIndex];
-                        setMessageTimestampsRelativeToSubsequence(moment.messages, subsequenceMsPositionInScore);
 
                         while (moment.msPositionInScore < nextSubsequenceMsPositionInScore)
                         {
