@@ -21,7 +21,7 @@ JI_NAMESPACE.assistant = (function (window)
     var
     CMD = MIDILib.constants.COMMAND,
     Message = MIDILib.message.Message,
-    getMessage = MIDILib.message.getMessage,
+    getInputEvent = MIDILib.message.getInputEvent,
     to14Bit = MIDILib.message.to14Bit,
     Sequence = MIDILib.sequence.Sequence,
 
@@ -532,7 +532,7 @@ JI_NAMESPACE.assistant = (function (window)
             }
         }
 
-        inputEvent = getEvent(data, window.performance.now());
+        inputEvent = getInputEvent(data, window.performance.now());
 
         inputEventType = getInputEventType(data[0] & 0xF0);
 
@@ -710,7 +710,7 @@ JI_NAMESPACE.assistant = (function (window)
 
             // returns the portion of subsequence before toMsPositionInScore
             // to which a "finalBarline" moment has been added.
-            function newRestSequenceBeforeMsPos(sequence, toMsPositionInScore)
+            function newRestSequenceBeforeMsPos(subsequence, toMsPositionInScore)
             {
                 var
                 i, newTrack, oldTrack, nTracks = subsequence.tracks.length,
@@ -781,7 +781,6 @@ JI_NAMESPACE.assistant = (function (window)
                 }
                 return restSequence;
             }
-
 
             if (i > 0)
             {
