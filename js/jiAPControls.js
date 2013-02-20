@@ -24,7 +24,6 @@ JI_NAMESPACE.apControls = (function (document, window)
     Score = JI_NAMESPACE.score.Score,
     Assistant = JI_NAMESPACE.assistant.Assistant,
 
-    Track = MIDILib.track.Track,
     Sequence = MIDILib.sequence.Sequence,
     sequenceToSMF = MIDILib.standardMIDIFile.sequenceToSMF,
 
@@ -523,9 +522,8 @@ JI_NAMESPACE.apControls = (function (document, window)
         var
         scoreName = mo.scoreSelector.options[mo.scoreSelector.selectedIndex].text;
 
-        // Moment timestamps are shifted so as to be relative to the beginning of the
-        // recording.
-        // Returns false if the recordedSequence was empty, otherwise true.
+        // Moment timestamps in the recording are shifted so as to be relative to the beginning of the
+        // recording. Returns false if the if the recorded sequence is undefined, null or has no moments.
         function setTimestampsRelativeToSequence(recordedSequence)
         {
             var i, nTracks = sequence.tracks.length, track,
@@ -580,28 +578,9 @@ JI_NAMESPACE.apControls = (function (document, window)
             return success;
         }
 
-        // Reset all moment timestamps in the recordedSequence to UNDEFINED_TIMESTAMP.
-        function revertTimestamps(recordedSequence)
-        {
-            var i, nTracks = recordedSequence.tracks.length, track,
-                j, nMoments, moment;
-
-            for (i = 0; i < nTracks; ++i)
-            {
-                track = recordedSequence.tracks[i];
-                nMoments = track.moments.length;
-                for (j = 0; j < nMoments; ++j)
-                {
-                    moment = track.moments[j];
-                    moment.timestamp = MIDILib.constants.OTHER.UNDEFINED_TIMESTAMP;
-                }
-            }
-        }
-
-        if (setTimestampsRelativeToSequence(recordedSequence))  // false if the recorded sequence is undefined, null or has no moments
+        if (setTimestampsRelativeToSequence(recordedSequence)) 
         {
             createSaveMIDIFileButton(scoreName, recordedSequence, performanceMsDuration);
-            revertTimestamps(recordedSequence);
         }
 
         setStopped();
@@ -680,7 +659,7 @@ JI_NAMESPACE.apControls = (function (document, window)
         {
             var
             trackIsOnArray = tracksControl.getTrackIsOnArray(),
-            i, nTracks = trackIsOnArray.length,
+            nTracks = trackIsOnArray.length,
             recordingSequence;
 
             deleteSaveMIDIFileButton();

@@ -59,7 +59,7 @@ JI_NAMESPACE.assistant = (function (window)
     currentIndex = -1, // the index of the currently playing subsequence (which will be stopped when a noteOn or noteOff arrives).
     nextIndex = 0, // the index of the subsequence which will be played when a noteOn evt arrives
     performanceStartNow, // set when the first subsequence starts, used to set the reported duration of the performance 
-    subsequenceStartNow, // set when a subsequence starts, used to rectify timestamps when it stops, and in the relative durations option 
+    subsequenceStartNow, // set when a subsequence starts, used in the relative durations option 
     prevSubsequenceStartNow = 0.0, // used only with the relative durations option
     pausedNow = 0.0, // used only with the relative durations option (the time at which the subsequence was paused).
 
@@ -72,35 +72,7 @@ JI_NAMESPACE.assistant = (function (window)
 
     stop = function ()
     {
-        var i, nSubsequences, sequenceMsDuration;
-
-        // Message timestamps are set to the value of their moment's msPositioninScore.
-        // If the assistant is using relative durations, this function is called
-        // when the stop button is clicked, or when the performance reaches the
-        // end marker. (See changeMessageTimestamps() below)
-        function revertTimestamps (subsequence)
-        {
-            var
-            nTracks = subsequence.tracks.length, moment,
-            i, j, k, track, trackLength, messages, nMessages, timestamp;
-
-            for (i = 0; i < nTracks; ++i)
-            {
-                track = subsequence.tracks[i];
-                trackLength = track.moments.length;
-                for (j = 0; j < trackLength; ++j)
-                {
-                    moment = track.moments[j];
-                    timestamp = moment.msPositionInScore;
-                    messages = moment.messages;
-                    nMessages = messages.length;
-                    for (k = 0; k < nMessages; ++k)
-                    {
-                        messages[k].timestamp = timestamp;
-                    }
-                }
-            }
-        }
+        var nSubsequences, performanceMsDuration;
 
         if (stopped === false)
         {
@@ -108,20 +80,9 @@ JI_NAMESPACE.assistant = (function (window)
 
             forwardSetState("stopped");
 
-            if (options.assistantUsesAbsoluteDurations === false)
-            {
-                // reset the span
-                // (During the assisted performance, the message.timestamps have changed according
-                //  to the live performer's speed, but the moment.timestamps have not).
-                for (i = 0; i < nSubsequences; ++i)
-                {
-                    revertTimestamps(span[i]);
-                }
-            }
+            performanceMsDuration = window.performance.now() - performanceStartNow;
 
-            sequenceMsDuration = window.performance.now() - performanceStartNow;
-
-            reportEndOfPerformance(recordingSequence, sequenceMsDuration);
+            reportEndOfPerformance(recordingSequence, performanceMsDuration);
         }
     },
 
@@ -154,11 +115,6 @@ JI_NAMESPACE.assistant = (function (window)
             return inputEvent.data[2];
         }
 
-        function inputTimestamp(inputEvent)
-        {
-            return inputEvent.timestamp;
-        }
-
         function inputEventToString(inputEvent)
         {
             var
@@ -166,9 +122,9 @@ JI_NAMESPACE.assistant = (function (window)
             channel = inputChannel(inputEvent),
             data1 = inputData1(inputEvent),
             data2 = inputData2(inputEvent),
-            timestamp = inputTimestamp(inputEvent);
+            receivedTime = inputEvent.receivedTime;
 
-            return "Input message: command:".concat(command).concat(", channel:").concat(channel).concat(", data1:").concat(data1).concat(", data2:").concat(data2).concat(", timestamp:").concat(timestamp);
+            return "Input message: command:".concat(command).concat(", channel:").concat(channel).concat(", data1:").concat(data1).concat(", data2:").concat(data2).concat(", receivedTime:").concat(receivedTime);
         }
 
         // getInputEventType returns one of the following constants:
@@ -329,19 +285,20 @@ JI_NAMESPACE.assistant = (function (window)
 
         function playSubsequence(subsequence, options)
         {
-            var prevSubsequenceScoreMsDuration,
-                durationFactor;
+            var
+            prevSubsequenceScoreMsDuration,
+            durationFactor;
 
-            // Message timestamps are adjusted for the durationFactor.
-            // The msPositionInScore of each message's containing moment is unchanged, and is
-            // used to revert the message timestamps when the performance ends.
-            // (See revertTimestamps() below)
-            function changeEventTimestamps (subsequence, durationFactor)
+            // Moment adjustedTimeReSequence attributes are set (relative to the start of the
+            // subsequence), using subsequence.msPositionInScore, moment.msPositionInScore and
+            // the durationFactor.
+            // The msPositionInScore of each message's containing moment is unchanged.
+            function setMomentTimestamps (subsequence, durationFactor)
             {
                 var
-                newSubsequenceMsPosition = subsequence.msPositionInScore * durationFactor,
+                subsequenceMsPosition = subsequence.msPositionInScore,
                 nTracks = subsequence.tracks.length, moment,
-                i, j, k, track, trackLength, messages, nEvents, timestamp;
+                i, j, track, trackLength;
 
                 for (i = 0; i < nTracks; ++i)
                 {
@@ -350,13 +307,7 @@ JI_NAMESPACE.assistant = (function (window)
                     for (j = 0; j < trackLength; ++j)
                     {
                         moment = track.moments[j];
-                        timestamp = newSubsequenceMsPosition + (moment.msPositionInScore * durationFactor);
-                        messages = moment.messages;
-                        nEvents = messages.length;
-                        for (k = 0; k < nEvents; ++k)
-                        {
-                            messages[k].timestamp = timestamp;
-                        }
+                        moment.adjustedTimeReSequence = Math.floor((moment.msPositionInScore - subsequenceMsPosition) * durationFactor);
                     }
                 }
             }
@@ -367,13 +318,17 @@ JI_NAMESPACE.assistant = (function (window)
                 {
                     prevSubsequenceScoreMsDuration = span[currentIndex].msPositionInScore - span[currentIndex - 1].msPositionInScore;
                     durationFactor = (subsequenceStartNow - prevSubsequenceStartNow) / prevSubsequenceScoreMsDuration;
+
+                    console.log("currentIndex=" + currentIndex.toString() + " durationFactor=" + durationFactor.toString());
+
                     // durations in the subsequence are multiplied by durationFactor
-                    changeEventTimestamps(subsequence, durationFactor);
+                    setMomentTimestamps(subsequence, durationFactor);
                 }
                 prevSubsequenceStartNow = subsequenceStartNow; // used only with the relative durations option
             }
 
-            // if options.assistantUsesAbsoluteDurations === true, the durations will already be correct in all subsequences.
+            // if options.assistantUsesAbsoluteDurations === true, the durations are related to msPositionInScore
+            // else the durations will be related to moment.timestamps which have been set relative to the start of the sequence.
             subsequence.playSpan(outputDevice, 0, Number.MAX_VALUE, trackIsOnArray, recordingSequence, reportEndOfSubsequence, reportMsPosition);
         }
 
@@ -498,7 +453,7 @@ JI_NAMESPACE.assistant = (function (window)
 
             //console.log("NoteOn, pitch:", inputData1(inputEvent).toString(), " velocity:", inputData2(inputEvent).toString());
 
-            subsequenceStartNow = inputTimestamp(inputEvent);
+            subsequenceStartNow = inputEvent.receivedTime;
 
             currentLivePerformersKeyPitch = inputData1(inputEvent);
 
@@ -508,10 +463,8 @@ JI_NAMESPACE.assistant = (function (window)
 
                 if (nextIndex === 0)
                 {
-                    performanceStartNow = inputTimestamp(inputEvent);
+                    performanceStartNow = subsequenceStartNow;
                 }
-
-                subsequenceStartNow = inputTimestamp(inputEvent);
 
                 if (nextIndex === 0 || (nextIndex <= endIndex && span[nextIndex].chordSubsequence !== undefined))
                 {
@@ -714,15 +667,14 @@ JI_NAMESPACE.assistant = (function (window)
             {
                 var
                 i, newTrack, oldTrack, nTracks = subsequence.tracks.length,
-                j, nMoments, timestamp, restSequence;
+                j, nMoments, restSequence;
 
-                function appendFinalBarlineMoment(track, msPositionInScore, timestamp)
+                function appendFinalBarlineMoment(track, msPositionInScore)
                 {
-                    var finalBarlineMoment, restEvt = {};
+                    var finalBarlineMoment;
 
                     finalBarlineMoment = new MIDILib.moment.Moment(msPositionInScore);
                     Object.defineProperty(finalBarlineMoment, "restStart", { value: true, writable: false });
-                    finalBarlineMoment.timestamp = timestamp;
 
                     track.addMoment(finalBarlineMoment);
                 }
@@ -737,15 +689,10 @@ JI_NAMESPACE.assistant = (function (window)
                     nMoments = oldTrack.moments.length;
                     for (j = 0; j < nMoments; ++j)
                     {
-                        if (oldTrack.moments[j].msPositionInScore >= toMsPositionInScore)
-                        {
-                            timestamp = oldTrack.moments[j].messages[0].timestamp;
-                            break;
-                        }
                         newTrack.moments.push(oldTrack.moments[j]);
                     }
 
-                    appendFinalBarlineMoment(newTrack, toMsPositionInScore, timestamp);
+                    appendFinalBarlineMoment(newTrack, toMsPositionInScore);
                 }
                 return restSequence;
             }
@@ -907,7 +854,7 @@ JI_NAMESPACE.assistant = (function (window)
                     nMidiMoments = moments.length,
                     subsequence, subsequencesIndex,
                     nSubsequences = subsequences.length, // including the final barline
-                    subsequenceMsPositionInScore, nextSubsequenceMsPositionInScore;
+                    nextSubsequenceMsPositionInScore;
 
                 function getNextSubsequenceMsPositionInScore(subsequences, subsequencesIndex, nSubsequences)
                 {
@@ -929,7 +876,6 @@ JI_NAMESPACE.assistant = (function (window)
                 for (subsequencesIndex = 0; subsequencesIndex < nSubsequences; ++subsequencesIndex)
                 {
                     subsequence = subsequences[subsequencesIndex];
-                    subsequenceMsPositionInScore = subsequence.msPositionInScore;
                     nextSubsequenceMsPositionInScore = getNextSubsequenceMsPositionInScore(subsequences, subsequencesIndex, nSubsequences);
                     track = subsequence.tracks[trackIndex];
                     // nMidiMoments may be 0 (an empty track)
