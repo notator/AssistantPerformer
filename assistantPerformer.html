@@ -192,33 +192,36 @@
                         </div>
                     </div>      
                     <div id="assistantsDurationOptions" class="optionsPanel" style="margin-left:110px; margin-right:110px; margin-top:10px">
-                        Assistant's duration option:
-                        <div id="helpText" class="helpColour">
-                            This option applies while the assistant is playing alone, with or without a live performer.
-                        </div>
+                        Assistant's duration options:
                         <div style="margin-left:20px;">
+                            <div style="padding-top: 4px;">
+                                <label id="speedLabel1" for="assistantsSpeedInputText">
+                                    Speed:
+                                </label>
+                                <input type="text" id="assistantsSpeedInputText" value="100"                          
+                                    style="margin: 0px 0px 3px 0px; width: 40px; vertical-align: middle; font-weight: bold;">
+                                <label id="speedLabel2" for="assistantsSpeedInputText">
+                                    % (must be greater than 0 &mdash; higher values lead to higher speed)
+                                </label>
+                            </div>
                             <div  class="narrowLineHeight" >
                                 <input type="radio" name="durationOptions" value="V1" id="assistantUsesAbsoluteDurationsRadioButton" checked="checked"
                                  onchange="JI_NAMESPACE.apControls.doControl('assistantUsesAbsoluteDurationsRadioButton')" />
                                 <label id="assistantUsesAbsoluteDurationsRadioButtonLabel" for="assistantUsesAbsoluteDurationsRadioButton">
-                                    Absolute Symbols: (Speed option) The assistant's durations will be those stored<br /> 
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in the score, divided by the following floating point value: <br />
+                                    Absolute Symbols: The assistant's durations will be those stored in the score,<br /> 
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;divided by the above floating point value.<br />
                                 </label>
                             </div>
-                            <div style="margin-left: 45px; padding-top: 4px;">
-                                <input type="text" id="assistantsSpeedInputText" value="100"                          
-                                    style="margin: 0px 0px 3px 0px; width: 40px; vertical-align: middle; font-weight: bold;">
-                                <label id="speedLabel" for="assistantsSpeedInputText">
-                                    % (must be greater than 0 &mdash; higher values lead to higher speed)
-                                </label>
-                            </div>
+
                             <div class="narrowLineHeight">
                                 <input type="radio" name="durationOptions" value="performed" id="assistantUsesRelativeDurationsRadioButton" disabled="disabled"
                                 onchange="JI_NAMESPACE.apControls.doControl('assistantUsesRelativeDurationsRadioButton')"/>
                                 <label id="assistantUsesRelativeDurationsRadioButtonLabel" for="assistantUsesRelativeDurationsRadioButton">
-                                    Relative Symbols: The assistant's moment durations will be those stored in the <br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;score multiplied by the relation between the written and performed durations of<br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the performer's previous moment.
+                                    Relative Symbols: The durations in the first assistant's moment will be those<br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stored in the score, divided by the above floating point value. The durations in<br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;subsequent moments will be those stored in the score multiplied by the relation<br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;between the performed and stored durations of the performer's previous<br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;moment.
                                 </label> 
                             </div>
                         </div>

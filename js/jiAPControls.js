@@ -323,11 +323,13 @@ JI_NAMESPACE.apControls = (function (document, window)
                     mo.usesPitchBendOtherTracksCheckbox.disabled = true;
                     mo.pitchBendSubstituteControlDataSelector.disabled = true;
 
+                    mo.assistantsSpeedInputText.disabled = true;
                     mo.assistantUsesAbsoluteDurationsRadioButton.disabled = true;
                     mo.assistantUsesRelativeDurationsRadioButton.disabled = true;
-                    mo.assistantsSpeedInputText.disabled = true;
+                    mo.assistantUsesRelativeDurationsRadioButtonLabel.disabled = true;
+
                 }
-                else if (inputDeviceIndex !== 0)
+                else if (inputDeviceIndex > 0) // && scoreIndex > 0
                 {
                     mo.trackSelector.disabled = false;
 
@@ -369,11 +371,12 @@ JI_NAMESPACE.apControls = (function (document, window)
                         disableSelector(mo.modSustituteControlSelector);
                     }
 
+                    mo.assistantsSpeedInputText.disabled = false;
                     mo.assistantUsesAbsoluteDurationsRadioButton.disabled = false;
                     mo.assistantUsesRelativeDurationsRadioButton.disabled = false;
-                    mo.assistantsSpeedInputText.disabled = false;
+                    mo.assistantUsesRelativeDurationsRadioButtonLabel.disabled = false;
                 }
-                else // inputDevice === 0
+                else // inputDevice === 0, scoreIndex > 0
                 {
                     mo.trackSelector.disabled = true;
 
@@ -394,27 +397,18 @@ JI_NAMESPACE.apControls = (function (document, window)
                     mo.usesPitchBendOtherTracksCheckbox.disabled = true;
                     mo.pitchBendSubstituteControlDataSelector.disabled = true;
 
-                    //mo.assistantUsesAbsoluteDurationsRadioButton.disabled = true;
+                    // The speed option can be used with or without a midi input device.
+                    mo.assistantsSpeedInputText.disabled = false;
+
                     mo.assistantUsesRelativeDurationsRadioButton.disabled = true;
+                    mo.assistantUsesRelativeDurationsRadioButtonLabel.disabled = true;
 
                     mo.assistantUsesAbsoluteDurationsRadioButton.checked = true;
                     mo.assistantUsesRelativeDurationsRadioButton.checked = false;
-                    // The speed option can be used with or without a midi input device.
-                }
-
-                if (mo.assistantUsesAbsoluteDurationsRadioButton.checked === false
-                || mo.assistantUsesAbsoluteDurationsRadioButton.disabled === true)
-                {
-                    mo.assistantsSpeedInputText.disabled = true;
-                }
-                else
-                {
-                    mo.assistantsSpeedInputText.disabled = false;
                 }
 
                 // Note that the midi input device does not have to be set in order to
                 // enable the start button.
-
                 if (scoreIndex !== 0 && outputDeviceIndex !== 0)
                 {
                     mo.startRuntimeButton.disabled = false;
@@ -451,6 +445,7 @@ JI_NAMESPACE.apControls = (function (document, window)
                 mo.assistantUsesAbsoluteDurationsRadioButton.disabled = true;
                 mo.assistantsSpeedInputText.disabled = true;
                 mo.assistantUsesRelativeDurationsRadioButton.disabled = true;
+                mo.assistantUsesRelativeDurationsRadioButtonLabel.disabled = true;
                 mo.startRuntimeButton.disabled = true;
                 break;
             default:
@@ -869,9 +864,10 @@ JI_NAMESPACE.apControls = (function (document, window)
             mo.usesPitchBendOtherTracksCheckbox = document.getElementById("usesPitchBendOtherTracksCheckbox");
             mo.pitchBendSubstituteControlDataSelector = document.getElementById("pitchBendSubstituteControlDataSelector");
 
-            mo.assistantUsesAbsoluteDurationsRadioButton = document.getElementById("assistantUsesAbsoluteDurationsRadioButton");
             mo.assistantsSpeedInputText = document.getElementById("assistantsSpeedInputText");
+            mo.assistantUsesAbsoluteDurationsRadioButton = document.getElementById("assistantUsesAbsoluteDurationsRadioButton");
             mo.assistantUsesRelativeDurationsRadioButton = document.getElementById("assistantUsesRelativeDurationsRadioButton");
+            mo.assistantUsesRelativeDurationsRadioButtonLabel = document.getElementById("assistantUsesRelativeDurationsRadioButtonLabel");
             mo.startRuntimeButton = document.getElementById("startRuntimeButton");
         }
 
