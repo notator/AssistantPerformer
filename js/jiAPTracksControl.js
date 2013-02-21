@@ -55,7 +55,7 @@ JI_NAMESPACE.apTracksControl = (function (document)
 
     // Returns an array containing the on/off status of each track.
     // The tracks' status cannot be set by changing values in the returned array.
-    // This array is passed as an argument to the playSpan functions.
+    // This array is passed as an argument to the playSpan() functions.
     getTrackIsOnArray = function ()
     {
         var i, readOnlyArray = [];
@@ -330,7 +330,7 @@ JI_NAMESPACE.apTracksControl = (function (document)
 
         // Function which returns an array containing the on/off status of each track.
         // The tracks' status cannot be set by changing values in the returned array.
-        // The array is passed as an argument to the playSpan functions.
+        // The array is passed as an argument to the playSpan() functions.
         getTrackIsOnArray : getTrackIsOnArray,
 
         getUpdateDisplayCallback: getUpdateDisplayCallback
