@@ -21,8 +21,8 @@ JI_NAMESPACE.assistant = (function (window)
     var
     CMD = MIDILib.constants.COMMAND,
     Message = MIDILib.message.Message,
+    Moment = MIDILib.moment.Moment,
     getInputEvent = MIDILib.message.getInputEvent,
-    to14Bit = MIDILib.message.to14Bit,
     Sequence = MIDILib.sequence.Sequence,
 
     outputDevice,
@@ -176,80 +176,118 @@ JI_NAMESPACE.assistant = (function (window)
             return type;
         }
 
-        // channel is the new message's channel
-        // value is the new message's value
-        function newControlMessage(controlData, channel, value)
+        function handleController(controlData, value, usesSoloTrack, usesOtherTracks)
         {
-            var message, d;
+            var i, moment, messages, nMessages, j,
+                livePerformersTrackIndex = options.livePerformersTrackIndex,
+                nTracks = allSequences[0].tracks.length,
+                now = window.performance.now(),
+                channelMoments;
 
-            if (controlData.midiControl !== undefined)
+            // Returns an array of synchronous moments, one moment per channel,
+            // The moment.messages are the controller messages for the appropriate channels.
+            function getChannelMoments(nTracks, controlData, value, usesSoloTrack, usesOtherTracks)
             {
-                // a normal control
-                message = new Message(CMD.CONTROL_CHANGE + channel, controlData.midiControl, value, 0);
-            }
-            else if (controlData.statusHighNibble !== undefined)
-            {
-                // pitch-bend or channel pressure
-                if (controlData.statusHighNibble === CMD.PITCH_WHEEL)
+                var i, channelMoments = [];
+
+                // channel is the new message's channel
+                // value is the new message's value
+                function newControlMessage(controlData, channel, value)
                 {
-                    d = to14Bit(value);
-                    message = new Message(CMD.PITCH_WHEEL + channel, d.data1, d.data2, 0);
+                    var message, d;
+
+                    if (controlData.midiControl !== undefined)
+                    {
+                        // a normal control
+                        message = new Message(CMD.CONTROL_CHANGE + channel, controlData.midiControl, value, 0);
+                    }
+                    else if (controlData.statusHighNibble !== undefined)
+                    {
+                        // pitch-bend or channel pressure
+                        if (controlData.statusHighNibble === CMD.PITCH_WHEEL)
+                        {
+                            d = MIDILib.message.to14Bit(value);
+                            message = new Message(CMD.PITCH_WHEEL + channel, d.data1, d.data2, 0);
+                        }
+                        else if (controlData.statusHighNibble === CMD.CHANNEL_AFTERTOUCH)
+                        {
+                            message = new Message(CMD.CHANNEL_AFTERTOUCH + channel, value, 0, 0);
+                        }
+                        else
+                        {
+                            throw "Illegal controlData.";
+                        }
+                    }
+                    else
+                    {
+                        throw "Illegal controlData.";
+                    }
+
+                    return message;
                 }
-                else if (controlData.statusHighNibble === CMD.CHANNEL_AFTERTOUCH)
+
+                for (i = 0; i < nTracks; ++i)
                 {
-                    message = new Message(CMD.CHANNEL_AFTERTOUCH + channel, value, 0, 0);
+                    moment = new Moment(MIDILib.moment.UNDEFINED_TIMESTAMP);  // moment.msPositionInScore becomes UNDEFINED_TIMESTAMP
+                    channelMoments.push(moment);
+                }
+
+                if (usesSoloTrack && usesOtherTracks)
+                {
+                    for (i = 0; i < nTracks; ++i)
+                    {
+                        if (trackIsOnArray[i])
+                        {
+                            channelMoments[i].messages.push(newControlMessage(controlData, i, value));
+                        }
+                    }
+                }
+                else if (usesSoloTrack)
+                {
+                    channelMoments[livePerformersTrackIndex].messages.push(newControlMessage(controlData, livePerformersTrackIndex, value));
+                }
+                else if (usesOtherTracks)
+                {
+                    for (i = 0; i < nTracks; ++i)
+                    {
+                        if (trackIsOnArray[i] && i !== livePerformersTrackIndex)
+                        {
+                            channelMoments[i].messages.push(newControlMessage(controlData, i, value));
+                        }
+                    }
                 }
                 else
                 {
-                    throw "Illegal controlData.";
+                    throw "Either usesSoloTrack or usesOtherTracks must be set here.";
                 }
-            }
-            else
-            {
-                throw "Illegal controlData.";
+                
+                return channelMoments;
             }
 
-            return message;
-        }
+            channelMoments = getChannelMoments(nTracks, controlData, value, usesSoloTrack, usesOtherTracks);
 
-        function handleController(controlData, value, usesSoloTrack, usesOtherTracks)
-        {
-            var controlMessages = [], nControlMessages, i,
-                nTracks = allSequences[0].tracks.length;
-
-            if (usesSoloTrack && usesOtherTracks)
+            for (i = 0; i < nTracks; ++i)
             {
-                for (i = 0; i < nTracks; ++i)
+                moment = channelMoments[i];
+                moment.timestamp = now;
+                messages = moment.messages;
+                nMessages = messages.length;
+                if (nMessages > 0 && recordingSequence !== undefined && recordingSequence !== null)
                 {
-                    if (trackIsOnArray[i])
-                    {
-                        controlMessages.push(newControlMessage(controlData, i, value));
-                    }
+                    // Note that the score is currently being played back, and is also
+                    // writing to this recording sequence. This should not cause a problem
+                    // because this call to addTimestampedMoment() should happen while
+                    // sequence.tick() is waiting for setTimeout() to return.
+                    // If there's a problem after all, I may have to implement locking
+                    // on the sequence when adding timestamped moments -- or add new
+                    // messages to the final moment in the track if the new moment.timestamp
+                    // is less than the final moment's timestamp.
+                    recordingSequence.tracks[i].addTimestampedMoment(moment);
                 }
-            }
-            else if (usesSoloTrack)
-            {
-                controlMessages.push(newControlMessage(controlData, options.livePerformersTrackIndex, value));
-            }
-            else if (usesOtherTracks)
-            {
-                for (i = 0; i < nTracks; ++i)
+                for (j = 0; j < nMessages; ++j)
                 {
-                    if (trackIsOnArray[i] && i !== options.livePerformersTrackIndex)
-                    {
-                        controlMessages.push(newControlMessage(controlData, i, value));
-                    }
+                    outputDevice.send(messages[j].data, now);
                 }
-            }
-            else
-            {
-                throw "Either usesSoloTrack or usesOtherTracks must be set here.";
-            }
-
-            nControlMessages = controlMessages.length;
-            for (i = 0; i < nControlMessages; ++i)
-            {
-                controlMessages[i].send(outputDevice);
             }
         }
 
@@ -802,14 +840,14 @@ JI_NAMESPACE.assistant = (function (window)
     Assistant = function (sequence, apControlOptions, reportEndOfWholePerformance, reportMillisecondPosition)
     {
         // Returns an array of Sequence.
-        // Each sequence in the array contains moments from the global sequence.
+        // Each sequence in the array contains moments from the main sequence.
         // A sequence is first created for each chord or rest symbol and for the final barline in the live performer's track. 
         // Sequences corresponding to a live performer's chord are given a chordSequence attribute (=true).
         // Sequences corresponding to a live performer's rest are given a restSequence attribute (=true).
         // Consecutive restSequences are merged: When performing, consecutive rests in the performer's track are treated
         // as one. The live performer only starts the first one (with a noteOff). Following rests play automatically until
         // the next chord (chordSequence) in the performer's track.
-        function getSequences(sequence, livePerformersTrackIndex)
+        function getSequences(mainSequence, livePerformersTrackIndex)
         {
             var
             sequences = [],
@@ -856,9 +894,9 @@ JI_NAMESPACE.assistant = (function (window)
                 return emptySequences;
             }
 
-            function fillSequences(sequences, sequence, trackIndex)  // 'base' function in outer scope.
+            function fillSequences(sequences, mainSequence, trackIndex)  // 'base' function in outer scope.
             {
-                var track, moments = sequence.tracks[trackIndex].moments,
+                var track, moments = mainSequence.tracks[trackIndex].moments,
                     moment, momentsIndex = 0,
                     nMidiMoments = moments.length,
                     sequence, sequencesIndex,
@@ -950,7 +988,7 @@ JI_NAMESPACE.assistant = (function (window)
 
             for (trackIndex = 0; trackIndex < nTracks; ++trackIndex)
             {
-                fillSequences(sequences, sequence, trackIndex);
+                fillSequences(sequences, mainSequence, trackIndex);
                 //fillSequences(sequences, sequence.tracks[trackIndex].moments);
             }
 
