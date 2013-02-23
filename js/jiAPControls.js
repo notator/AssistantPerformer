@@ -25,6 +25,8 @@ JI_NAMESPACE.apControls = (function (document, window)
     Assistant = JI_NAMESPACE.assistant.Assistant,
 
     Sequence = MIDILib.sequence.Sequence,
+    COMMAND = MIDILib.constants.COMMAND,
+    CONTROL = MIDILib.constants.CONTROL,
     sequenceToSMF = MIDILib.standardMIDIFile.sequenceToSMF,
 
     midiAccess,
@@ -44,19 +46,19 @@ JI_NAMESPACE.apControls = (function (document, window)
     // options set in the pop-up menues in the main options dialog
     controlOptions =
     [
-        { name: "channel pressure", statusHighNibble: 0xD0 },
-        { name: "pitch wheel", statusHighNibble: 0xE0 },
-        { name: "modulation (1)", midiControl: 1 },
-        { name: "volume (7)", midiControl: 7 },
-        { name: "pan (10)", midiControl: 10 },
-        { name: "expression (11)", midiControl: 11 },
-        { name: "timbre (71)", midiControl: 71 },
-        { name: "brightness (74)", midiControl: 74 },
-        { name: "effects (91)", midiControl: 91 },
-        { name: "tremolo (92)", midiControl: 92 },
-        { name: "chorus (93)", midiControl: 93 },
-        { name: "celeste (94)", midiControl: 94 },
-        { name: "phaser (95)", midiControl: 95 }
+        { name: "channel pressure", statusHighNibble: COMMAND.CHANNEL_AFTERTOUCH },
+        { name: "pitch wheel", statusHighNibble: COMMAND.PITCH_WHEEL },
+        { name: "modulation (1)", midiControl: CONTROL.MODWHEEL },
+        { name: "volume (7)", midiControl: CONTROL.VOLUME },
+        { name: "pan (10)", midiControl: CONTROL.PAN },
+        { name: "expression (11)", midiControl: CONTROL.EXPRESSION },
+        { name: "timbre (71)", midiControl: CONTROL.TIMBRE },
+        { name: "brightness (74)", midiControl: CONTROL.BRIGHTNESS },
+        { name: "effects (91)", midiControl: CONTROL.EFFECTS },
+        { name: "tremolo (92)", midiControl: CONTROL.TREMOLO },
+        { name: "chorus (93)", midiControl: CONTROL.CHORUS },
+        { name: "celeste (94)", midiControl: CONTROL.CELESTE },
+        { name: "phaser (95)", midiControl: CONTROL.PHASER }
     ],
 
     // options set in the top dialog
