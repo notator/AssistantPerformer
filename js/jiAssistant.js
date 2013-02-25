@@ -487,8 +487,8 @@ JI_NAMESPACE.assistant = (function (window)
                 lowestNoteOnEvt = findLowestNoteOnEvt(NOTE_ON_CMD, track);
                 if (lowestNoteOnEvt !== null)
                 {
-                    pitchDelta = (overrideSoloPitch || overrideOtherTracksPitch) ? (newPitch - lowestNoteOnEvt.data1) : 0;
-                    velocityDelta = (overrideSoloVelocity || overrideOtherTracksVelocity) ? (newVelocity - lowestNoteOnEvt.data2) : 0;
+                    pitchDelta = (overrideSoloPitch || overrideOtherTracksPitch) ? (newPitch - lowestNoteOnEvt.data[1]) : 0;
+                    velocityDelta = (overrideSoloVelocity || overrideOtherTracksVelocity) ? (newVelocity - lowestNoteOnEvt.data[2]) : 0;
 
                     if (pitchDelta !== 0 || velocityDelta !== 0)
                     {
