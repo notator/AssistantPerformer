@@ -106,26 +106,18 @@ JI_NAMESPACE.assistant = (function (window)
             return (inputEvent.data[0] & 0xF);
         }
 
-        function inputData1(inputEvent)
-        {
-            return inputEvent.data[1];
-        }
-
-        function inputData2(inputEvent)
-        {
-            return inputEvent.data[2];
-        }
-
         function inputEventToString(inputEvent)
         {
             var
             command = inputCommand(inputEvent),
             channel = inputChannel(inputEvent),
-            data1 = inputData1(inputEvent),
-            data2 = inputData2(inputEvent),
             receivedTime = inputEvent.receivedTime;
 
-            return "Input message: command:".concat(command).concat(", channel:").concat(channel).concat(", data1:").concat(data1).concat(", data2:").concat(data2).concat(", receivedTime:").concat(receivedTime);
+            return "Input message: command:" + command.toString() +
+                   ", channel:" + channel.toString() +
+                   ", data[1]:" + inputEvent.data[1].toString() +
+                   ", data[2]:" + inputEvent.data[2].toString() +
+                   ", receivedTime:" + receivedTime.toString();
         }
 
         // getInputEventType returns one of the following constants:
@@ -142,7 +134,7 @@ JI_NAMESPACE.assistant = (function (window)
                     type = NOTE_OFF;
                     break;
                 case 0x90:
-                    if (inputData2(inputEvent) === 0) // velocity 0
+                    if (inputEvent.data[2] === 0) // velocity 0
                     {
                         type = NOTE_OFF;
                     }
@@ -156,7 +148,7 @@ JI_NAMESPACE.assistant = (function (window)
                     type = AFTERTOUCH;
                     break;
                 case 0xB0:
-                    if (inputData1(inputEvent) === 1)
+                    if (inputEvent.data[1] === 1)
                     {
                         type = MODULATION_WHEEL;
                     }
@@ -199,7 +191,7 @@ JI_NAMESPACE.assistant = (function (window)
                     if (controlData.midiControl !== undefined)
                     {
                         // a normal control
-                        message = new Message(CMD.CONTROL_CHANGE + channel, controlData.midiControl, value, 0);
+                        message = new Message(CMD.CONTROL_CHANGE + channel, controlData.midiControl, value);
                     }
                     else if (controlData.statusHighNibble !== undefined)
                     {
@@ -207,11 +199,11 @@ JI_NAMESPACE.assistant = (function (window)
                         if (controlData.statusHighNibble === CMD.PITCH_WHEEL)
                         {
                             d = MIDILib.message.to14Bit(value);
-                            message = new Message(CMD.PITCH_WHEEL + channel, d.data1, d.data2, 0);
+                            message = new Message(CMD.PITCH_WHEEL + channel, d.data1, d.data2);
                         }
                         else if (controlData.statusHighNibble === CMD.CHANNEL_AFTERTOUCH)
                         {
-                            message = new Message(CMD.CHANNEL_AFTERTOUCH + channel, value, 0, 0);
+                            message = new Message(CMD.CHANNEL_AFTERTOUCH + channel, value, 0);
                         }
                         else
                         {
@@ -381,9 +373,7 @@ JI_NAMESPACE.assistant = (function (window)
 
         function handleNoteOff(inputEvent)
         {
-            //console.log("NoteOff, pitch:", inputData1(inputEvent).toString(), " velocity:", inputEvent.data2.toString());
-
-            if (inputData1(inputEvent) === currentLivePerformersKeyPitch)
+            if (inputEvent.data[1] === currentLivePerformersKeyPitch)
             {
                 currentLivePerformersKeyPitch = -1;
 
@@ -433,7 +423,7 @@ JI_NAMESPACE.assistant = (function (window)
                         {
                             message = moment.messages[j];
                             if ((message.command() === NOTE_ON_CMD)
-                            && (lowestNoteOnMessage === null || message.data[1] < lowestNoteOnMessage.data1))
+                            && (lowestNoteOnMessage === null || message.data[1] < lowestNoteOnMessage.data[1]))
                             {
                                 lowestNoteOnMessage = message;
                             }
@@ -498,13 +488,13 @@ JI_NAMESPACE.assistant = (function (window)
                 }
             }
 
-            //console.log("NoteOn, pitch:", inputData1(inputEvent).toString(), " velocity:", inputData2(inputEvent).toString());
+            //console.log("NoteOn, pitch:", inputEvent.data[1].toString(), " velocity:", inputEvent.data[2].toString());
 
             sequenceStartNow = inputEvent.receivedTime;
 
-            currentLivePerformersKeyPitch = inputData1(inputEvent);
+            currentLivePerformersKeyPitch = inputEvent.data[1];
 
-            if (inputData2(inputEvent) > 0)
+            if (inputEvent.data[2] > 0)
             {
                 silentlyCompleteCurrentlyPlayingSequence();
 
@@ -520,7 +510,7 @@ JI_NAMESPACE.assistant = (function (window)
                     if (overrideSoloPitch || overrideOtherTracksPitch || overrideSoloVelocity || overrideOtherTracksVelocity)
                     {
                         overridePitchAndOrVelocity(sequence, options.livePerformersTrackIndex,
-                            inputData1(inputEvent), inputData2(inputEvent),
+                            inputEvent.data[1], inputEvent.data[2],
                             overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity);
                     }
                     playSequence(sequence, options);
@@ -539,34 +529,34 @@ JI_NAMESPACE.assistant = (function (window)
         switch (inputEventType)
         {
             case CHANNEL_PRESSURE: // EMU "aftertouch"
-                console.log("Channel (=key) Pressure, value:", inputData1(inputEvent).toString());
+                console.log("Channel (=key) Pressure, value:", inputEvent.data[1].toString());
                 if (options.pressureSubstituteControlData !== null)
                 {
-                    handleController(options.pressureSubstituteControlData, inputData1(inputEvent), // ACHTUNG! data1 is correct!
+                    handleController(options.pressureSubstituteControlData, inputEvent.data[1], // ACHTUNG! inputEvent.data[1] is correct!
                                                 options.usesPressureSolo, options.usesPressureOtherTracks);
                 }
                 break;
             case AFTERTOUCH: // EWI breath controller
-                console.log("Aftertouch, value:", inputData2(inputEvent).toString());
+                console.log("Aftertouch, value:", inputEvent.data[2].toString());
                 if (options.pressureSubstituteControlData !== null)
                 {
-                    handleController(options.pressureSubstituteControlData, inputData2(inputEvent),
+                    handleController(options.pressureSubstituteControlData, inputEvent.data[2],
                                                 options.usesPressureSolo, options.usesPressureOtherTracks);
                 }
                 break;
             case MODULATION_WHEEL: // EWI bite, EMU modulation wheel
-                console.log("Modulation Wheel, value:", inputData2(inputEvent).toString());
+                console.log("Modulation Wheel, value:", inputEvent.data[2].toString());
                 if (options.modSubstituteControlData !== null)
                 {
-                    handleController(options.modSubstituteControlData, inputData2(inputEvent),
+                    handleController(options.modSubstituteControlData, inputEvent.data[2],
                                                 options.usesModSolo, options.usesModOtherTracks);
                 }
                 break;
             case PITCH_WHEEL: // EWI pitch bend up/down controllers, EMU pitch wheel
-                console.log("Pitch Wheel, value:", inputData2(inputEvent).toString());
+                console.log("Pitch Wheel, value:", inputEvent.data[2].toString());
                 if (options.pitchBendSubstituteControlData !== null)
                 {
-                    handleController(options.pitchBendSubstituteControlData, inputData2(inputEvent),
+                    handleController(options.pitchBendSubstituteControlData, inputEvent.data[2],
                                                 options.usesPitchBendSolo, options.usesPitchBendOtherTracks);
                 }
                 break;

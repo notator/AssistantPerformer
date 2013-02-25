@@ -198,11 +198,11 @@ JI_NAMESPACE.midiChord = (function ()
                 function setPitchwheelDeviation(attrMoment, deviation, channel)
                 {
                     var msg;
-                    msg = new Message(CMD.CONTROL_CHANGE + channel, CTL.REGISTERED_PARAMETER_COARSE, 0, attrMoment.msPositionInScore);
+                    msg = new Message(CMD.CONTROL_CHANGE + channel, CTL.REGISTERED_PARAMETER_COARSE, 0);
                     attrMoment.messages.push(msg);
-                    msg = new Message(CMD.CONTROL_CHANGE + channel, CTL.REGISTERED_PARAMETER_FINE, 0, attrMoment.msPositionInScore);
+                    msg = new Message(CMD.CONTROL_CHANGE + channel, CTL.REGISTERED_PARAMETER_FINE, 0);
                     attrMoment.messages.push(msg);
-                    msg = new Message(CMD.CONTROL_CHANGE + channel, CTL.DATA_ENTRY_COARSE, deviation, attrMoment.msPositionInScore);
+                    msg = new Message(CMD.CONTROL_CHANGE + channel, CTL.DATA_ENTRY_COARSE, deviation);
                     attrMoment.messages.push(msg);
                 }
 
@@ -215,17 +215,17 @@ JI_NAMESPACE.midiChord = (function ()
                     // the hasChordOff attribute is dealt with later.
                     if (attributes.bank !== undefined)
                     {
-                        msg = new Message(CMD.CONTROL_CHANGE + channel, 0, attributes.bank, attrMoment.msPositionInScore); // 0 is bank control
+                        msg = new Message(CMD.CONTROL_CHANGE + channel, 0, attributes.bank); // 0 is bank control
                         attrMoment.messages.push(msg);
                     }
                     if (attributes.patch !== undefined)
                     {
-                        msg = new Message(CMD.PROGRAM_CHANGE + channel, attributes.patch, 0, attrMoment.msPositionInScore);
+                        msg = new Message(CMD.PROGRAM_CHANGE + channel, attributes.patch, 0);
                         attrMoment.messages.push(msg);
                     }
                     if (attributes.volume !== undefined)
                     {
-                        msg = new Message(CMD.CONTROL_CHANGE + channel, 7, attributes.volume, attrMoment.msPositionInScore); // 7 is volume control
+                        msg = new Message(CMD.CONTROL_CHANGE + channel, 7, attributes.volume); // 7 is volume control
                         attrMoment.messages.push(msg);
                     }
                     if (attributes.pitchWheelDeviation !== undefined)
@@ -249,21 +249,21 @@ JI_NAMESPACE.midiChord = (function ()
 
                 if (basicChordDef.bank !== undefined) // default is dont send a bank change
                 {
-                    message = new Message(CMD.CONTROL_CHANGE + channel, basicChordDef.bank, 0, bcoMoment.msPositionInScore);
+                    message = new Message(CMD.CONTROL_CHANGE + channel, basicChordDef.bank, 0);
                     bcoMoment.messages.push(message);
 
-                    message = new Message(CMD.PROGRAM_CHANGE + channel, basicChordDef.patch, 0, bcoMoment.msPositionInScore);
+                    message = new Message(CMD.PROGRAM_CHANGE + channel, basicChordDef.patch, 0);
                     bcoMoment.messages.push(message);
                 }
                 else if (basicChordDef.patch !== undefined) // default is dont send a patch change
                 {
-                    message = new Message(CMD.PROGRAM_CHANGE + channel, basicChordDef.patch, 0, bcoMoment.msPositionInScore);
+                    message = new Message(CMD.PROGRAM_CHANGE + channel, basicChordDef.patch, 0);
                     bcoMoment.messages.push(message);
                 }
 
                 for (i = 0; i < len; ++i)
                 {
-                    message = new Message(CMD.NOTE_ON + channel, midiNotes[i], midiVelocities[i], bcoMoment.msPositionInScore);
+                    message = new Message(CMD.NOTE_ON + channel, midiNotes[i], midiVelocities[i]);
                     bcoMoment.messages.push(message);
                 }
 
@@ -281,7 +281,7 @@ JI_NAMESPACE.midiChord = (function ()
 
                 for (i = 0; i < len; ++i)
                 {
-                    message = new Message(CMD.NOTE_OFF + channel, notes[i], volume, bcoffMoment.msPositionInScore);
+                    message = new Message(CMD.NOTE_OFF + channel, notes[i], volume);
                     bcoffMoment.messages.push(message);
                 }
 
@@ -316,7 +316,7 @@ JI_NAMESPACE.midiChord = (function ()
                 for (nnIndex = 0; nnIndex < uniqueNoteNumbers.length; ++nnIndex)
                 {
                     noteNumber = uniqueNoteNumbers[nnIndex];
-                    message = new Message(CMD.NOTE_OFF + channel, noteNumber.valueOf(), volume, cOffMoment.msPositionInScore);
+                    message = new Message(CMD.NOTE_OFF + channel, noteNumber.valueOf(), volume);
                     cOffMoment.messages.push(message);
                 }
 
@@ -589,16 +589,16 @@ JI_NAMESPACE.midiChord = (function ()
                                     pitchWheelValue = getPitchWheelValue(value);
                                     // to14Bit is only used for CMD.PITCH_WHEEL:
                                     d = to14Bit(pitchWheelValue);
-                                    message = new Message(CMD.PITCH_WHEEL + channel, d.data1, d.data2, moment.msPositionInScore);
+                                    message = new Message(CMD.PITCH_WHEEL + channel, d.data1, d.data2);
                                     break;
                                 case "pan":
-                                    message = new Message(CMD.CONTROL_CHANGE + channel, CTL.PAN, value, moment.msPositionInScore);
+                                    message = new Message(CMD.CONTROL_CHANGE + channel, CTL.PAN, value);
                                     break;
                                 case "modulationWheel":
-                                    message = new Message(CMD.CONTROL_CHANGE + channel, CTL.MODWHEEL, value, moment.msPositionInScore);
+                                    message = new Message(CMD.CONTROL_CHANGE + channel, CTL.MODWHEEL, value);
                                     break;
                                 case "expression":
-                                    message = new Message(CMD.CONTROL_CHANGE + channel, CTL.EXPRESSION, value, moment.msPositionInScore);
+                                    message = new Message(CMD.CONTROL_CHANGE + channel, CTL.EXPRESSION, value);
                                     break;
                             }
                             moment.messages.push(message);

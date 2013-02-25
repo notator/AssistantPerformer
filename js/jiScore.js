@@ -73,7 +73,7 @@ JI_NAMESPACE.score = (function (document)
             {
                 for (noteIndex = 0; noteIndex < 128; ++noteIndex)
                 {
-                    noteOffMessage = new Message(CMD.NOTE_OFF + channelIndex, noteIndex, 127, now);
+                    noteOffMessage = new Message(CMD.NOTE_OFF + channelIndex, noteIndex, 127);
                     midiOutputDevice.send(noteOffMessage.data, now);
                 }
             }
