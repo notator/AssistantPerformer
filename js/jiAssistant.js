@@ -170,58 +170,72 @@ JI_NAMESPACE.assistant = (function (window)
 
         function handleController(controlData, value, usesSoloTrack, usesOtherTracks)
         {
-            var i, moment, messages, nMessages, j,
-                livePerformersTrackIndex = options.livePerformersTrackIndex,
-                nTracks = allSequences[0].tracks.length,
-                now = window.performance.now(),
-                channelMoments;
+            var
+            i,
+            nTracks = allSequences[0].tracks.length,
+            now = window.performance.now(),
+            trackMoments, nMoments, moment;
 
-            // Returns an array of synchronous moments, one moment per channel,
-            // The moment.messages are the controller messages for the appropriate channels.
-            function getChannelMoments(nTracks, controlData, value, usesSoloTrack, usesOtherTracks)
+            // Returns an array of (synchronous) trackMoments.
+            // Each trackMoment.moment is a Moment whose .messages attribute contains one message,
+            // trackMoment.trackIndex is the moment's track index (=channel).
+            function getTrackMoments(nTracks, controlData, value, usesSoloTrack, usesOtherTracks)
             {
-                var i, channelMoments = [];
+                var
+                i, trackMoments = [], trackMoment,
+                livePerformersTrackIndex = options.livePerformersTrackIndex;
 
-                // channel is the new message's channel
-                // value is the new message's value
-                function newControlMessage(controlData, channel, value)
+                // returns null if no new trackMoment is created.
+                function newTrackMoment(controlData, channel, value)
                 {
-                    var message, d;
-
-                    if (controlData.midiControl !== undefined)
+                    var message, moment = null, trackMoment = null;
+                    // channel is the new message's channel
+                    // value is the new message's value
+                    // Returns null if no message is created for some reason.
+                    function newControlMessage(controlData, channel, value)
                     {
-                        // a normal control
-                        message = new Message(CMD.CONTROL_CHANGE + channel, controlData.midiControl, value);
-                    }
-                    else if (controlData.statusHighNibble !== undefined)
-                    {
-                        // pitch-bend or channel pressure
-                        if (controlData.statusHighNibble === CMD.PITCH_WHEEL)
+                        var message = null, d;
+
+                        if (controlData.midiControl !== undefined)
                         {
-                            d = MIDILib.message.to14Bit(value);
-                            message = new Message(CMD.PITCH_WHEEL + channel, d.data1, d.data2);
+                            // a normal control
+                            message = new Message(CMD.CONTROL_CHANGE + channel, controlData.midiControl, value);
                         }
-                        else if (controlData.statusHighNibble === CMD.CHANNEL_AFTERTOUCH)
+                        else if (controlData.command !== undefined)
                         {
-                            message = new Message(CMD.CHANNEL_AFTERTOUCH + channel, value, 0);
+                            switch (controlData.command)
+                            {
+                                case CMD.AFTERTOUCH:
+                                    if (currentLivePerformersKeyPitch >= 0)  // is -1 when no note is playing
+                                    {
+                                        message = new Message(CMD.AFTERTOUCH + channel, currentLivePerformersKeyPitch, value);
+                                    }
+                                    break;
+                                case CMD.CHANNEL_PRESSURE:
+                                    message = new Message(CMD.CHANNEL_PRESSURE + channel, value, 0);
+                                    break;
+                                case CMD.PITCH_WHEEL:
+                                    d = MIDILib.message.to14Bit(value);
+                                    message = new Message(CMD.PITCH_WHEEL + channel, d.data1, d.data2);
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
-                        else
-                        {
-                            throw "Illegal controlData.";
-                        }
-                    }
-                    else
-                    {
-                        throw "Illegal controlData.";
+
+                        return message;
                     }
 
-                    return message;
-                }
-
-                for (i = 0; i < nTracks; ++i)
-                {
-                    moment = new Moment(MIDILib.moment.UNDEFINED_TIMESTAMP);  // moment.msPositionInScore becomes UNDEFINED_TIMESTAMP
-                    channelMoments.push(moment);
+                    message = newControlMessage(controlData, channel, value);
+                    if (message !== null)
+                    {
+                        moment = new Moment(MIDILib.moment.UNDEFINED_TIMESTAMP);  // moment.msPositionInScore becomes UNDEFINED_TIMESTAMP
+                        moment.messages.push(message);
+                        trackMoment = {};
+                        trackMoment.moment = moment;
+                        trackMoment.trackIndex = channel;
+                    }
+                    return trackMoment;
                 }
 
                 if (usesSoloTrack && usesOtherTracks)
@@ -230,13 +244,21 @@ JI_NAMESPACE.assistant = (function (window)
                     {
                         if (trackIsOnArray[i])
                         {
-                            channelMoments[i].messages.push(newControlMessage(controlData, i, value));
+                            trackMoment = newTrackMoment(controlData, i, value);
+                            if (trackMoment !== null)
+                            {
+                                trackMoments.push(trackMoment);
+                            }
                         }
                     }
                 }
                 else if (usesSoloTrack)
                 {
-                    channelMoments[livePerformersTrackIndex].messages.push(newControlMessage(controlData, livePerformersTrackIndex, value));
+                    trackMoment = newTrackMoment(controlData, livePerformersTrackIndex, value);
+                    if (trackMoment !== null)
+                    {
+                        trackMoments.push(trackMoment);
+                    }
                 }
                 else if (usesOtherTracks)
                 {
@@ -244,7 +266,11 @@ JI_NAMESPACE.assistant = (function (window)
                     {
                         if (trackIsOnArray[i] && i !== livePerformersTrackIndex)
                         {
-                            channelMoments[i].messages.push(newControlMessage(controlData, i, value));
+                            trackMoment = newTrackMoment(controlData, i, value);
+                            if (trackMoment !== null)
+                            {
+                                trackMoments.push(trackMoment);
+                            }
                         }
                     }
                 }
@@ -253,33 +279,22 @@ JI_NAMESPACE.assistant = (function (window)
                     throw "Either usesSoloTrack or usesOtherTracks must be set here.";
                 }
                 
-                return channelMoments;
+                return trackMoments;
             }
 
-            channelMoments = getChannelMoments(nTracks, controlData, value, usesSoloTrack, usesOtherTracks);
-
-            for (i = 0; i < nTracks; ++i)
+            trackMoments = getTrackMoments(nTracks, controlData, value, usesSoloTrack, usesOtherTracks);
+            nMoments = trackMoments.length;
+            for (i = 0; i < nMoments; ++i)
             {
-                moment = channelMoments[i];
-                moment.timestamp = now;
-                messages = moment.messages;
-                nMessages = messages.length;
-                if (nMessages > 0 && recordingSequence !== undefined && recordingSequence !== null)
+                moment = trackMoments[i].moment;
+
+                if (recordingSequence !== undefined && recordingSequence !== null)
                 {
-                    // Note that the score is currently being played back, and is also
-                    // writing to this recording sequence. This should not cause a problem
-                    // because this call to addTimestampedMoment() should happen while
-                    // sequence.tick() is waiting for setTimeout() to return.
-                    // If there's a problem after all, I may have to implement locking
-                    // on the sequence when adding timestamped moments -- or add new
-                    // messages to the final moment in the track if the new moment.timestamp
-                    // is less than the final moment's timestamp.
-                    recordingSequence.tracks[i].addTimestampedMoment(moment);
+                    moment.timestamp = now;
+                    recordingSequence.tracks[trackMoments[i].trackIndex].addTimestampedMoment(moment);
                 }
-                for (j = 0; j < nMessages; ++j)
-                {
-                    outputDevice.send(messages[j].data, now);
-                }
+
+                outputDevice.send(moment.messages[0].data, now);     
             }
         }
 
@@ -532,12 +547,12 @@ JI_NAMESPACE.assistant = (function (window)
                 console.log("Channel (=key) Pressure, value:", inputEvent.data[1].toString());
                 if (options.pressureSubstituteControlData !== null)
                 {
-                    handleController(options.pressureSubstituteControlData, inputEvent.data[1], // ACHTUNG! inputEvent.data[1] is correct!
+                    handleController(options.pressureSubstituteControlData, inputEvent.data[1],  // data[1] for input CHANNEL_PRESSURE 
                                                 options.usesPressureSolo, options.usesPressureOtherTracks);
                 }
                 break;
             case AFTERTOUCH: // EWI breath controller
-                console.log("Aftertouch, value:", inputEvent.data[2].toString());
+                console.log("Aftertouch input, key:" + inputEvent.data[1].toString() + " value:", inputEvent.data[2].toString()); 
                 if (options.pressureSubstituteControlData !== null)
                 {
                     handleController(options.pressureSubstituteControlData, inputEvent.data[2],

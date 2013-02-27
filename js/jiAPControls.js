@@ -43,11 +43,12 @@ JI_NAMESPACE.apControls = (function (document, window)
     SMOKE = "0.7", // control layer is smoky (semi-transparent)
     GLASS = "0", // control layer is completely transparent
 
-    // options set in the pop-up menues in the main options dialog
+    // Options set in the pop-up menues in the main options dialog
     controlOptions =
     [
-        { name: "channel pressure", statusHighNibble: COMMAND.CHANNEL_AFTERTOUCH },
-        { name: "pitch wheel", statusHighNibble: COMMAND.PITCH_WHEEL },
+        { name: "aftertouch", command: COMMAND.AFTERTOUCH },
+        { name: "channel pressure", command: COMMAND.CHANNEL_PRESSURE },
+        { name: "pitch wheel", command: COMMAND.PITCH_WHEEL },
         { name: "modulation (1)", midiControl: CONTROL.MODWHEEL },
         { name: "volume (7)", midiControl: CONTROL.VOLUME },
         { name: "pan (10)", midiControl: CONTROL.PAN },
