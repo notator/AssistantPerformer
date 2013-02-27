@@ -581,6 +581,9 @@ JI_NAMESPACE.apControls = (function (document, window)
             createSaveMIDIFileButton(scoreName, recordedSequence, performanceMsDuration);
         }
 
+        // The moment.timestamps do not need to be restored to their original values here
+        // because they will be re-assigned next time sequence.nextMoment() is called.
+
         setStopped();
         // the following line is important, because the stop button is also the pause button.
         svgControlsState = "stopped";

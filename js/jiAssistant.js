@@ -174,7 +174,7 @@ JI_NAMESPACE.assistant = (function (window)
             i,
             nTracks = allSequences[0].tracks.length,
             now = window.performance.now(),
-            trackMoments, nMoments, moment;
+            trackMoments, nMoments, moment, track;
 
             // Returns an array of (synchronous) trackMoments.
             // Each trackMoment.moment is a Moment whose .messages attribute contains one message,
@@ -286,15 +286,19 @@ JI_NAMESPACE.assistant = (function (window)
             nMoments = trackMoments.length;
             for (i = 0; i < nMoments; ++i)
             {
-                moment = trackMoments[i].moment;
+                track = recordingSequence.tracks[trackMoments[i].trackIndex];
 
-                if (recordingSequence !== undefined && recordingSequence !== null)
+                if (track.isInChord !== undefined) // track.isInChord is defined in track.addLiveScoreMoment()
                 {
-                    moment.timestamp = now;
-                    recordingSequence.tracks[trackMoments[i].trackIndex].addTimestampedMoment(moment);
-                }
+                    moment = trackMoments[i].moment;
+                    if (recordingSequence !== undefined && recordingSequence !== null)
+                    {
+                        moment.timestamp = now;
+                        track.addLivePerformersControlMoment(moment);
+                    }
 
-                outputDevice.send(moment.messages[0].data, now);     
+                    outputDevice.send(moment.messages[0].data, now);
+                }
             }
         }
 
