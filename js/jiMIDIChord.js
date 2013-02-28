@@ -26,7 +26,6 @@ JI_NAMESPACE.midiChord = (function ()
     CMD = MIDILib.constants.COMMAND,
     CTL = MIDILib.constants.CONTROL,
     Message = MIDILib.message.Message,
-    to14Bit = MIDILib.message.to14Bit,
     Moment = MIDILib.moment.Moment, // constructor
 
     moments,
@@ -549,29 +548,6 @@ JI_NAMESPACE.midiChord = (function ()
                         message,
                         i, d, pitchWheelValue;
 
-                    // Argument value is in range 0..128 
-                    // According to the docs,
-                    //     the minimum PITCH_WHEEL value is 0
-                    //     the maximum PITCH_WHEEL value is 16383 (0x3FFF)
-                    //     centre value (0 deviation) is at 8192 (0x2000)
-                    function getPitchWheelValue(value)
-                    {
-                        var pitchWheelValue;
-
-                        if (value < 0 || value > 128)
-                        {
-                            throw "Error: value out of range.";
-                        }
-
-                        // value:0 -> pitchWheelValue:0
-                        // value:64 -> pitchWheelValue:8192 
-                        // value:128 -> pitchWheelValue:16383
-                        pitchWheelValue = 8192 - ((64 - value) * 128);
-                        pitchWheelValue = (pitchWheelValue === 16384) ? 16383 : pitchWheelValue;
-
-                        return pitchWheelValue;
-                    }
-
                     if (sliderMoments.length !== finalValuesArray.length)
                     {
                         throw "Unequal array lengths.";
@@ -586,10 +562,9 @@ JI_NAMESPACE.midiChord = (function ()
                             switch (typeString)
                             {
                                 case "pitchWheel":
-                                    pitchWheelValue = getPitchWheelValue(value);
-                                    // to14Bit is only used for CMD.PITCH_WHEEL:
-                                    d = to14Bit(pitchWheelValue);
-                                    message = new Message(CMD.PITCH_WHEEL + channel, d.data1, d.data2);
+                                    // pitch wheel messages are created with 7-bit MSB (0..127) at data[2].
+                                    // data[1], here 0, is the 7-bit LSB
+                                    message = new Message(CMD.PITCH_WHEEL + channel, 0, value);
                                     break;
                                 case "pan":
                                     message = new Message(CMD.CONTROL_CHANGE + channel, CTL.PAN, value);

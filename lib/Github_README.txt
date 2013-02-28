@@ -69,8 +69,6 @@
  *         can be used to construct events when their type is not known in advance (e.g. when
  *         reading an input stream). Note that the timestamp argument is relative to some fixed
  *         time. It is not, as in standard MIDI files, relative to the previous event. 
- *      5. the functions to14Bit(value) and from14Bit(data1, data2). For dealing with PITCH_WHEEL
- *         events.
  *
  *  MIDILib.moment -- defined in lib/Moment.js
  *  Moment

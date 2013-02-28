@@ -215,8 +215,8 @@ JI_NAMESPACE.assistant = (function (window)
                                     message = new Message(CMD.CHANNEL_PRESSURE + channel, value, 0);
                                     break;
                                 case CMD.PITCH_WHEEL:
-                                    d = MIDILib.message.to14Bit(value);
-                                    message = new Message(CMD.PITCH_WHEEL + channel, d.data1, d.data2);
+                                    // value is inputEvent.data[2]
+                                    message = new Message(CMD.PITCH_WHEEL + channel, 0, value);
                                     break;
                                 default:
                                     break;
@@ -547,34 +547,43 @@ JI_NAMESPACE.assistant = (function (window)
 
         switch (inputEventType)
         {
-            case CHANNEL_PRESSURE: // EMU "aftertouch"
-                console.log("Channel (=key) Pressure, value:", inputEvent.data[1].toString());
+            case CHANNEL_PRESSURE: // produced by my E-MU XBoard49 when using "aftertouch"
+                console.log("ChannelPressure, data[1]:", inputEvent.data[1].toString());  // CHANNEL_PRESSURE control has no data[2]
                 if (options.pressureSubstituteControlData !== null)
                 {
-                    handleController(options.pressureSubstituteControlData, inputEvent.data[1],  // data[1] for input CHANNEL_PRESSURE 
+                    // CHANNEL_PRESSURE.data[1] is the amount of pressure 0..127.
+                    handleController(options.pressureSubstituteControlData, inputEvent.data[1],
                                                 options.usesPressureSolo, options.usesPressureOtherTracks);
                 }
                 break;
-            case AFTERTOUCH: // EWI breath controller
+            case AFTERTOUCH: // produced by the EWI breath controller
                 console.log("Aftertouch input, key:" + inputEvent.data[1].toString() + " value:", inputEvent.data[2].toString()); 
                 if (options.pressureSubstituteControlData !== null)
                 {
+                    // AFTERTOUCH.data[1] is the MIDIpitch to which to apply the aftertouch, but I dont need that
+                    // because the current pitch is kept in currentLivePerformersKeyPitch (in the closure).
+                    // AFTERTOUCH.data[2] is the amount of pressure 0..127.
                     handleController(options.pressureSubstituteControlData, inputEvent.data[2],
                                                 options.usesPressureSolo, options.usesPressureOtherTracks);
                 }
                 break;
-            case MODULATION_WHEEL: // EWI bite, EMU modulation wheel
-                console.log("Modulation Wheel, value:", inputEvent.data[2].toString());
+            case MODULATION_WHEEL: // EWI bite, EMU modulation wheel (CC 1, Coarse Modulation)
+                console.log("Mod Wheel, data[1]:", inputEvent.data[1].toString() + " data[2]:", inputEvent.data[2].toString());
                 if (options.modSubstituteControlData !== null)
                 {
+                    // MODULATION_WHEEL.data[1] is the 7-bit LSB (0..127) -- ignored here
+                    // MODULATION_WHEEL.data[2] is the 7-bit MSB (0..127)
                     handleController(options.modSubstituteControlData, inputEvent.data[2],
                                                 options.usesModSolo, options.usesModOtherTracks);
                 }
                 break;
             case PITCH_WHEEL: // EWI pitch bend up/down controllers, EMU pitch wheel
-                console.log("Pitch Wheel, value:", inputEvent.data[2].toString());
+                console.log("Pitch Wheel, data[1]:", inputEvent.data[1].toString() + " data[2]:", inputEvent.data[2].toString());
+                // by experiment: inputEvent.data[2] is the "high byte" and has a range 0..127. 
                 if (options.pitchBendSubstituteControlData !== null)
                 {
+                    // PITCH_WHEEL.data[1] is the 7-bit LSB (0..127) -- ignored here
+                    // PITCH_WHEEL.data[2] is the 7-bit MSB (0..127)
                     handleController(options.pitchBendSubstituteControlData, inputEvent.data[2],
                                                 options.usesPitchBendSolo, options.usesPitchBendOtherTracks);
                 }
