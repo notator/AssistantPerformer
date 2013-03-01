@@ -19,10 +19,9 @@ JI_NAMESPACE.assistant = (function (window)
     "use strict";
     // begin var
     var
-    CMD = MIDILib.constants.COMMAND,
     Message = MIDILib.message.Message,
+    SysExMessage = MIDILib.message.SysExMessage,
     Moment = MIDILib.moment.Moment,
-    getInputEvent = MIDILib.message.getInputEvent,
     Sequence = MIDILib.sequence.Sequence,
 
     outputDevice,
@@ -95,6 +94,88 @@ JI_NAMESPACE.assistant = (function (window)
     handleMIDIInputEvent = function (data)
     {
         var inputEvent, inputEventType, command, cmd;
+
+        // The returned object has .data and .receivedTime attributes, and so constitutes a
+        // timestamped Message. (Web MIDI API simply calls this an Event)
+        // If the input data is undefined, an empty object is returned, otherwise data must
+        // be an array of numbers in range 0..0xF0. An exception is thrown if the data is illegal.
+        // The returned .data attribute can be a 1, 2 or 3-byte Message, or a SysExMessage
+        // depending on the input data.
+        function getInputEvent(data, now)
+        {
+            var
+            SYSTEM_EXCLUSIVE = MIDILib.constants.SYSTEM_EXCLUSIVE,
+            inputEvent;
+
+            function isRunningStatus(constant)
+            {
+                var
+                RUNNING_STATUS = MIDILib.constants.RUNNING_STATUS,
+                result = false;
+
+                if ((constant === RUNNING_STATUS.MTC_QUARTER_FRAME)
+                || (constant === RUNNING_STATUS.SONG_POSITION_POINTER)
+                || (constant === RUNNING_STATUS.SONG_SELECT)
+                || (constant === RUNNING_STATUS.TUNE_REQUEST)
+                || (constant === RUNNING_STATUS.MIDI_CLOCK)
+                || (constant === RUNNING_STATUS.MIDI_TICK)
+                || (constant === RUNNING_STATUS.MIDI_START)
+                || (constant === RUNNING_STATUS.MIDI_CONTINUE)
+                || (constant === RUNNING_STATUS.MIDI_STOP)
+                || (constant === RUNNING_STATUS.ACTIVE_SENSE)
+                || (constant === RUNNING_STATUS.RESET))
+                {
+                    result = true;
+                }
+                return result;
+            }
+
+            if (data === undefined)
+            {
+                inputEvent = {};
+            }
+            else if (data[0] === SYSTEM_EXCLUSIVE.START)
+            {
+                if (data.length > 2 && data[data.length - 1] === SYSTEM_EXCLUSIVE.END)
+                {
+                    inputEvent = new SysExMessage(data);
+                }
+                else
+                {
+                    throw "Error in System Exclusive inputEvent.";
+                }
+            }
+            else if ((data[0] & 0xF0) === 0xF0)
+            {
+                if (isRunningStatus(data[0]))
+                {
+                    inputEvent = new Message(data[0], 0, 0);
+                }
+                else
+                {
+                    throw "Error: illegal data.";
+                }
+            }
+            else if (data.length === 2)
+            {
+                inputEvent = new Message(data[0], data[1], 0);
+            }
+            else if (data.length === 3)
+            {
+                inputEvent = new Message(data[0], data[1], data[2]);
+            }
+            else
+            {
+                throw "Error: illegal data.";
+            }
+
+            if (data !== undefined && data.length > 0)
+            {
+                inputEvent.receivedTime = now;
+            }
+
+            return inputEvent;
+        }
 
         function inputCommand(inputEvent)
         {
@@ -194,7 +275,9 @@ JI_NAMESPACE.assistant = (function (window)
                     // Returns null if no message is created for some reason.
                     function newControlMessage(controlData, channel, value)
                     {
-                        var message = null, d;
+                        var
+                        CMD = MIDILib.constants.COMMAND,
+                        message = null;
 
                         if (controlData.midiControl !== undefined)
                         {
@@ -377,7 +460,7 @@ JI_NAMESPACE.assistant = (function (window)
                     prevSequenceScoreMsDuration = performedSequences[currentIndex].msPositionInScore - performedSequences[currentIndex - 1].msPositionInScore;
                     durationFactor = (sequenceStartNow - prevSequenceStartNow) / prevSequenceScoreMsDuration;
 
-                    console.log("currentIndex=" + currentIndex.toString() + " durationFactor=" + durationFactor.toString());
+                    //console.log("currentIndex=" + currentIndex.toString() + " durationFactor=" + durationFactor.toString());
 
                     // durations in the sequence are multiplied by durationFactor
                     setMomentTimestamps(sequence, durationFactor);
@@ -425,7 +508,7 @@ JI_NAMESPACE.assistant = (function (window)
                 overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity)
             {
                 var
-                NOTE_ON_CMD = CMD.NOTE_ON,
+                NOTE_ON_CMD = MIDILib.constants.COMMAND.NOTE_ON,
                 track = sequence.tracks[soloTrackIndex], message, lowestNoteOnEvt, pitchDelta, velocityDelta;
 
                 // Returns the lowest NoteOn message in the first moment in the track to contain a NoteOnMessage.
@@ -548,7 +631,7 @@ JI_NAMESPACE.assistant = (function (window)
         switch (inputEventType)
         {
             case CHANNEL_PRESSURE: // produced by my E-MU XBoard49 when using "aftertouch"
-                console.log("ChannelPressure, data[1]:", inputEvent.data[1].toString());  // CHANNEL_PRESSURE control has no data[2]
+                //console.log("ChannelPressure, data[1]:", inputEvent.data[1].toString());  // CHANNEL_PRESSURE control has no data[2]
                 if (options.pressureSubstituteControlData !== null)
                 {
                     // CHANNEL_PRESSURE.data[1] is the amount of pressure 0..127.
@@ -557,7 +640,7 @@ JI_NAMESPACE.assistant = (function (window)
                 }
                 break;
             case AFTERTOUCH: // produced by the EWI breath controller
-                console.log("Aftertouch input, key:" + inputEvent.data[1].toString() + " value:", inputEvent.data[2].toString()); 
+                //console.log("Aftertouch input, key:" + inputEvent.data[1].toString() + " value:", inputEvent.data[2].toString()); 
                 if (options.pressureSubstituteControlData !== null)
                 {
                     // AFTERTOUCH.data[1] is the MIDIpitch to which to apply the aftertouch, but I dont need that
@@ -568,7 +651,7 @@ JI_NAMESPACE.assistant = (function (window)
                 }
                 break;
             case MODULATION_WHEEL: // EWI bite, EMU modulation wheel (CC 1, Coarse Modulation)
-                console.log("Mod Wheel, data[1]:", inputEvent.data[1].toString() + " data[2]:", inputEvent.data[2].toString());
+                //console.log("Mod Wheel, data[1]:", inputEvent.data[1].toString() + " data[2]:", inputEvent.data[2].toString());
                 if (options.modSubstituteControlData !== null)
                 {
                     // MODULATION_WHEEL.data[1] is the 7-bit LSB (0..127) -- ignored here
@@ -578,7 +661,7 @@ JI_NAMESPACE.assistant = (function (window)
                 }
                 break;
             case PITCH_WHEEL: // EWI pitch bend up/down controllers, EMU pitch wheel
-                console.log("Pitch Wheel, data[1]:", inputEvent.data[1].toString() + " data[2]:", inputEvent.data[2].toString());
+                //console.log("Pitch Wheel, data[1]:", inputEvent.data[1].toString() + " data[2]:", inputEvent.data[2].toString());
                 // by experiment: inputEvent.data[2] is the "high byte" and has a range 0..127. 
                 if (options.pitchBendSubstituteControlData !== null)
                 {
