@@ -183,31 +183,48 @@ MIDILib.standardMIDIFile = (function ()
                 var
                 trackData, trackHeader, trackChunk, trackMessages;
 
+                // The other midiLib functions should create tracks containing moments having unique timestamps in ascending order,
+                // but I have (very seldom) experienced exceptions being thrown at the beginning of the function
+                // _variableLengthValueLength(value) above, showing that this is not always the case.
+                // Probably, the moment.timestamps sometimes get slightly out of order as a result of awkward thread switching.
+                // This anomalous state should, however, not lead to the loss of an otherwise good recording, so I have added
+                // this function to force a solution:
+                // If a moment's timestamp is less than its predecessor's, moment.timestamp is set to the predecessor's timestamp.
+                // Equal timestamps should not be produced by the other midiLib code, but this state does not actually lead to a broken,
+                // unplayable Standard MIDI File. 
+                function validateMomentTimestamps(trackMoments)
+                {
+                    var
+                    i, nMoments = trackMoments.length, moment, previousMoment, diff;
+
+                    if (nMoments > 1)
+                    {
+                        for (i = 1; i < nMoments; ++i)
+                        {
+                            moment = trackMoments[i];
+                            previousMoment = trackMoments[i-1];
+                            if (previousMoment.timestamp > moment.timestamp)
+                            {
+                                diff = Math.ceil(previousMoment.timestamp - moment.timestamp);
+                                //console.log("moment.timestamp out of order (now corrected). Time difference re previous was: " + diff + "ms");
+                                moment.timestamp = previousMoment.timestamp;
+                            }
+                        }
+                    }
+                }
+
                 // Add a timestamp attribute to each message,
-                // setting it to the moment's timestamp
+                // setting it to the moment's timestamp.
                 function createMessageTimestamps(trackMoments)
                 {
                     var
                     i, nMoments = trackMoments.length, moment,
                     j, nMessages, timestamp, previousTimestamp = -1;
 
-                    function check(timestamp, previousTimestamp)
-                    {
-                        // console.log("timestamp=" + timestamp + " previousTimestamp=" + previousTimestamp);
-                        if (timestamp <= previousTimestamp)
-                        {
-                            throw "Error: timestamp error. timestamp=" + timestamp + " previousTimestamp=" + previousTimestamp;
-                        }
-
-                    }
-
                     for (i = 0; i < nMoments; ++i)
                     {
                         moment = trackMoments[i];
                         timestamp = moment.timestamp;
-
-                        check(timestamp, previousTimestamp);
-
                         nMessages = moment.messages.length;
                         for (j = 0; j < nMessages; ++j)
                         {
@@ -275,23 +292,10 @@ MIDILib.standardMIDIFile = (function ()
                         dataLength = 0,
                         previousTimestamp = startOfTrackTimeOffset;
 
-                        function logStrangeTimeOffset()
-                        {
-                            console.log("Unexpected timeOffset: This should never happen, but it might very occasionally, as a result of awkward process switching.");
-                        }
-
                         for (i = 0; i < nMessages; ++i)
                         {
                             msg = trackMessages[i];
                             timeOffset = msg.timestamp - previousTimestamp;
-                            if (timeOffset < 0)
-                            {
-                                // This should never happen, but it might very occasionally,
-                                // as a result of awkward process switching.
-                                logStrangeTimeOffset();
-                                msg.timestamp = previousTimestamp;
-                                timeOffset = 0;
-                            }
                             previousTimestamp = msg.timestamp;
 
                             dataLength += _variableLengthValueLength(timeOffset);
@@ -299,14 +303,6 @@ MIDILib.standardMIDIFile = (function ()
                         }
 
                         timeOffset = endOfTrackTimestamp - previousTimestamp;
-                        if (timeOffset < 0)
-                        {
-                            // This should never happen, but it might very occasionally,
-                            // as a result of awkward process switching.
-                            logStrangeTimeOffset();
-                            endOfTrackTimestamp = previousTimestamp + 300;
-                            timeOffset = 300;
-                        }
                         dataLength += _variableLengthValueLength(timeOffset);
                         dataLength += 3; // all sound off ( Bx 78 00 )
                         dataLength += 4; // time + all controllers off ( 00 Bx 79 00 ) 
@@ -401,10 +397,9 @@ MIDILib.standardMIDIFile = (function ()
                     return trackHeader;
                 }
 
-                //if (trackMoments[trackMoments.length - 1].timestamp > sequenceMsDuration)
-                //{
-                //    throw "Error: timestamp error.";
-                //}
+                // In the unlikely event that a moment.timestamp is less than that of its predecessor,
+                // it is set to its predecessor's value.
+                validateMomentTimestamps(trackMoments);
 
                 createMessageTimestamps(trackMoments);
 
