@@ -1,0 +1,124 @@
+﻿
+copyright 2013 James Ingram
+http://james-ingram-act-two.de/
+
+Code licensed under MIT
+https://github.com/notator/assistant-performer/blob/master/License.md
+
+ap/AssistantPerformerJSOverview.txt:
+
+The Javascript files in this directory (js) together define the Assistant
+Performer application, which uses (is dependent on) the files in the MIDILib
+namespace (in the lib directory).
+This file (ap/AssistantPerformerJSOverview.txt) is intended to provide a
+quick overview of the files in this directory.
+For more detailed information, see the comments in the individual files.
+
+The following list of files is in order of dependency.
+
+
+Namespace.js
+File.js
+Markers.js
+Palettes.js
+MIDIChord.js
+Assistant.js
+Score.js
+TracksControl.js
+Controls.js
+Main.js
+
+
+
+
+
+
+
+
+
+
+****************************************************************************
+midiLib/Namespace.js
+	Defines the MIDILib namespace itself.
+
+midiLib/JazzWebMIDIAPI.js
+	The MIDILib.jazzWebMIDIAPI namespace which implements the W3C Web MIDI
+	API (as defined on 17.01.2013) using the Jazz plugin.
+	This code defines a single function:
+		
+		init()
+
+	which sets up various window attributes, where necessary.
+	In particular, after calling
+	MIDILib.jazzWebMIDIAPI.init(window), the MIDIAccess object can be
+	retrieved by calling
+	window.navigator.requestMIDIAccess(onSuccessCallback, onErrorCallback);
+
+midiLib/Constants.js
+	The MIDILib.constants namespace, which exposes four objects containing
+	standard MIDI constant definitions:
+        COMMAND
+        RUNNING_STATUS
+        CONTROL
+        SYSTEM_EXCLUSIVE
+
+midiLib/Message.js
+	The MIDILib.message namespace which exposes	two constructors:
+
+		Message(status, data1, data2)
+			for constructing 1- 2- or 3-byte MIDI messages which are
+			not SysExMessages. 1-byte Messages are "running status".
+
+		SysExMessage(data)
+			for explicitly constructing system exclusive messages.
+
+midiLib/Moment.js
+	The MIDILib.moment namespace which exposes a single constructor:
+
+		Moment(msPositionInScore)
+
+	A moment is conceptually a collection of messages, all of which are to
+	be sent at the same time on the same channel.
+	This constructor is used when creating Moments from files such as
+	scores or Standard MIDI Files. Empty Moments having no relation to
+	such files, can be constructed with an empty argument list.
+	The moment.messages array contains the messages themselves. They are
+	always sent 'at the same time' (in the order in which they occur
+	in the array).
+
+midiLib/Track.js
+	The MIDILib.track namespace which exposes a single constructor:
+
+		Track()
+
+	A track is conceptually a temporally ordered list of Moments, all of
+	which share the same channel, and none of which is synchronous with any
+	of the others. Moments are, if necessary, merged when added to the track.
+	Tracks correspond to voices in scores and channels in both scores and
+	Standard MIDI Files. There may be 1 or 2 voices per	staff in a score.
+
+midiLib/Sequence.js
+	The MIDILib.sequence namespace which exposes a single constructor:
+
+		Sequence(nTracks)
+
+	A sequence is a collection of parallel tracks, all of which start at the
+	same time. The new Sequence has nTracks new, empty Tracks.
+	The Tracks collection is implemented as an array, with the tracks in order
+	of voice (i.e. channel) from top to bottom in a score.system.
+	When loaded from a score,
+		tracks[0] contains all the moments for voices[0] (on channel 0) on all
+		systems in the score,
+		tracks[1] contains all the moments for voices[1] (on channel 1) on all
+		systems in the score,
+		etc. 
+
+midiLib/StandardMIDIFile.js
+	The MIDILib.standardMIDIFile namespace which exposes the function
+		standardMidiFile = sequenceToSMF(sequence);
+	This function converts a Sequence to a Standard MIDI File (actually a Blob).
+    The SMF can be made downloadable by connecting it to a document link element.
+	When the user clicks the link, the browser saves the file on the user's
+	computer. See https://developer.mozilla.org/en/docs/DOM/Blob.
+      
+
