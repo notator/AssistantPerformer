@@ -1,6 +1,7 @@
 Introduction
 ------------
-This is a web MIDI application, which gives a single performer control over the performance of a music score displayed in a browser.
+This is a web MIDI application, which gives a single performer control over the performance of a music score displayed in a browser. A stable, public version can be tried out at<br />
+http://james-ingram-act-two.de/open-source/publicAssistantPerformer/assistantPerformer.html
 
 The project is written in HTML5 and Javascript. It uses MIDI input and output devices, and scores stored in an SVG format which has been enhanced to contain MIDI information. See: http://james-ingram-act-two.de/open-source/svgScoreExtensions.html
 
@@ -8,7 +9,7 @@ The Jazz plugin (http://jazz-soft.net) is currently required for MIDI support, b
 
 This application has only been thoroughly tested on the latest version of Chrome (Version 25.0.1364.152 m), but it should also work in other webkit browsers. 
 
-Monophonic input, such as produced by an EWI (http://www.akaipro.com/ewiseries), is assumed. A MIDI keyboard can be used, but only one key at a time (incoming noteOffs are matched to noteOns, so playing legato is no problem). Timing is related to the times of single noteOns and noteOffs. The performance can be affected by input MIDI pitch, velocity, modulation-wheel, pitch-wheel and aftertouch or channel-pressure information, depending on the settings in the upper options panel.
+Monophonic input, such as produced by an EWI (http://www.akaipro.com/ewiseries), is assumed. A MIDI keyboard can be used, but only one key at a time (incoming noteOffs are matched to noteOns, so playing legato is no problem). Timing is related to the times of single noteOns and noteOffs. In addition to noteOn/Off, pitch and velocity information, the performance can also be affected by the instrument's continuous controllers - modulation-wheel, pitch-wheel and aftertouch or channel-pressure.
 
 Future directions: I am currently working on the creation of more scores in the necessary format. Clearly, more examples are needed. New scores could be created in several ways:
 
@@ -34,7 +35,7 @@ http://james-ingram-act-two.de/open-source/assistantPerformer/aboutAssistantPerf
 Code
 ----
 
-This project is a work-in-progress having two main branches: 'master' and 'dev'. The code in the 'master' branch defines an appplication which can be tried out publicly at
+This project is a work-in-progress having two main branches: 'master' and 'dev'. The code in the 'master' branch defines an appplication which can be tried out publicly at<br />
 http://james-ingram-act-two.de/open-source/publicAssistantPerformer/assistantPerformer.html
 
 The 'master' version is stable, but is possibly not the latest version of this project.<br />
