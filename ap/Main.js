@@ -10,8 +10,8 @@
  *     window interfaces are set correctly. This call, the file midiLib/JazzWebMIDIAPI.js
  *     and the Jazz plugin can be deleted when browsers implement the Web MIDI API
  *     natively.
- *  2. Retrieves the midiAccess object, currently using the Jazz plugin v1.2
- *     http://jazz-soft.net/
+ *  2. Retrieves the midiAccess object by calling
+ *      window.navigator.requestMIDIAccess(onSuccessCallback, onErrorCallback);
  *  3. Calls _AP.controls.init(midiAccess) to set the contents of the
  *     device selector menus;
  */

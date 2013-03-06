@@ -12,7 +12,7 @@
  *  
  */
 
-/*jslint bitwise: false, nomen: false, plusplus: true, white: true */
+/*jslint bitwise: false, nomen: false, plusplus: false, white: true */
 
 _AP.namespace('_AP.file');
 
@@ -44,7 +44,7 @@ _AP.file = (function ()
     publicAPI =
     {
         // returns the xml of the given embedded_element
-        // for examples of its use, see Palettes.js and apMidiControl.js.
+        // for examples of its use, see Palettes.js and Score.js.
         getSubDocument: getSubDocument
     };
 

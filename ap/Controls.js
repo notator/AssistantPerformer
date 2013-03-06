@@ -1275,7 +1275,7 @@ _AP.controls = (function (document, window)
         }
     },
 
-    // functions for adjusting the appearance of the options dialog
+    // functions for adjusting the appearance of the score options
     showOverRect = function (overRectID, disabledID)
     {
         var overRectElem = document.getElementById(overRectID),

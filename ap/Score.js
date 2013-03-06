@@ -139,68 +139,67 @@ _AP.score = (function (document)
     // }
     // Otherwise do the same for performing tracks successively above.
     // If that does not work, try the tracks successively below.
-        findStartMarkerTimeObject = function (timeObject, clickedTrackIndex, system, trackIsOn)
+    findStartMarkerTimeObject = function (timeObject, clickedTrackIndex, system, trackIsOn)
+    {
+        var nTracks, returnedTimeObject, t, diff, timeObjectsArray;
+
+        // Returns the chord timeObject at alignmentX, or the following object in the track (if it is a chord), or null.
+        // If the timeObject following alignmentX is the final barline, the last chord in the track is returned.
+        function nextChordTimeObject(timeObjects, alignmentX)
         {
-            var nTracks, returnedTimeObject, t, diff, timeObjectsArray;
+            var i, nTimeObjects = timeObjects.length,
+            returnTimeObject = null, tObject, lastChordTimeObject;
 
-            // Returns the chord timeObject at alignmentX, or the following object in the track (if it is a chord), or null.
-            // If the timeObject following alignmentX is the final barline, the last chord in the track is returned.
-            function nextChordTimeObject(timeObjects, alignmentX)
+            for (i = 0; i < nTimeObjects; ++i)
             {
-                var i, nTimeObjects = timeObjects.length,
-                returnTimeObject = null, tObject, lastChordTimeObject;
-
-                for (i = 0; i < nTimeObjects; ++i)
+                tObject = timeObjects[i];
+                if (tObject.chordDef !== undefined)
                 {
-                    tObject = timeObjects[i];
-                    if (tObject.chordDef !== undefined)
-                    {
-                        lastChordTimeObject = tObject;
-                    }
-                    if (i === (nTimeObjects - 1))
-                    {
-                        returnTimeObject = lastChordTimeObject;
-                        break;
-                    }
-                    if (tObject.alignmentX >= alignmentX && (tObject.chordIndex !== undefined || tObject.chordDef !== undefined))
-                    {
-                        returnTimeObject = tObject;
-                        break;
-                    }
-                    if (tObject.alignmentX > alignmentX)
-                    {
-                        break;
-                    }
+                    lastChordTimeObject = tObject;
                 }
-                return returnTimeObject;
-            }
-
-            timeObjectsArray = getTimeObjectsArray(system);
-            nTracks = timeObjectsArray.length;
-            returnedTimeObject = null;
-            t = clickedTrackIndex;
-            diff = 1;
-            while (returnedTimeObject === null)
-            {
-                if (trackIsOn(t))
+                if (i === (nTimeObjects - 1))
                 {
-                    returnedTimeObject = nextChordTimeObject(timeObjectsArray[t], timeObject.alignmentX);
+                    returnTimeObject = lastChordTimeObject;
+                    break;
                 }
-                t -= diff;
-                if (t < 0)
+                if (tObject.alignmentX >= alignmentX && (tObject.chordIndex !== undefined || tObject.chordDef !== undefined))
                 {
-                    t = clickedTrackIndex + 1;
-                    diff = -1;
+                    returnTimeObject = tObject;
+                    break;
                 }
-                if (t === timeObjectsArray.length)
+                if (tObject.alignmentX > alignmentX)
                 {
-                    throw "Error: there must be at least one chord on the system!";
+                    break;
                 }
             }
+            return returnTimeObject;
+        }
 
-            return returnedTimeObject;
-        },
+        timeObjectsArray = getTimeObjectsArray(system);
+        nTracks = timeObjectsArray.length;
+        returnedTimeObject = null;
+        t = clickedTrackIndex;
+        diff = 1;
+        while (returnedTimeObject === null)
+        {
+            if (trackIsOn(t))
+            {
+                returnedTimeObject = nextChordTimeObject(timeObjectsArray[t], timeObject.alignmentX);
+            }
+            t -= diff;
+            if (t < 0)
+            {
+                t = clickedTrackIndex + 1;
+                diff = -1;
+            }
+            if (t === timeObjectsArray.length)
+            {
+                throw "Error: there must be at least one chord on the system!";
+            }
+        }
 
+        return returnedTimeObject;
+    },
 
     // This function is called by the svgTracksControl whenever the score's display needs to be updated.
     // It draws the staves with the right colours and, if necessary, moves the start marker to a chord.

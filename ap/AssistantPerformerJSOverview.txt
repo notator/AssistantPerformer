@@ -17,108 +17,169 @@ For more detailed information, see the comments in the individual files.
 The following list of files is in order of dependency.
 
 
-Namespace.js
-File.js
-Markers.js
-Palettes.js
-MIDIChord.js
-Assistant.js
-Score.js
-TracksControl.js
-Controls.js
-Main.js
+ap/Namespace.js
+	Defines the _AP namespace. _AP is the namespace which will contain all
+	the other code in this folder (ap).
 
+ap/File.js
+	The file namespace containing a single function:
 
+        xml = getSubDocument(embedded_element);
 
+	which returns the xml of the given embedded HTML element.
+	For examples of its use, see Palettes.js and Score.js.
+	
+ap/Markers.js
 
+	The markers namespace. Defines constructors for the
 
+		StartMarker,
+		EndMarker and 
+		RunningMarker objects.
 
+	The StartMarker and EndMarker are the objects in a score which determine
+	where a performance begins and ends.
+	The RunningMarker is the line which shows the current position in a
+	performance while it is running.
 
+ap/Palettes.js
+	The palettes namespace. Defines constructors for
+	
+		ChordDef(chordDefNode)
+			This constructor reads an XML node into a ChordDef.
+			A ChordDef is a data structure containing the definition of a
+			MIDIChord (see below).ntained ornament.
 
+		Palettes()
+			Constructs the palettes defined in a "midiDefs" element in the
+			first SVG page embedded in a score's HTML.(The score being the
+			current document.) See
+			http://james-ingram-act-two.de/open-source/svgScoreExtensions.html
+			Palettes is an array of palette. Each palette is an array of ChordDef
+			and RestDef. Note that RestDefs are placeholders in palettes. They
+			are never actually referred to outside this namespace, so their
+			definition is not public.
+     
+ap/MIDIChord.js
+	The midiChord namespace. Defines the following constructors, which are used
+	when reading the score to produce playable MIDI messages (see Score.js below):
+		
+		// Arguments:
+		// channel: the MIDI channel on which to send this MIDIChord
+		// chordDef: the chord definition (see above)
+		// timeObject: the chord symbol's temporal and spatial position (see below)
+		// speed: a factor by which the default durations in the score can be
+		// divided. Higher speed means shorter durations inside the MIDIChord. 
+		MIDIChord(channel, chordDef, timeObject, speed)
+			A MIDIChord contains a private array of Moments containing all
+			the MIDI messages required for playing an (ornamented) chord.
+			A Moment is a collection of logically synchronous MIDI messages.
+			(see MIDILib/Moment.js).
+			A MIDIChord has one public function:
+				addToTrack(track)
+					which moves the midiChord's Moments onto the track.
+
+		// Argument:
+		// timeObject: the rest symbol's temporal and spatial position (see below)
+		MIDIRest(timeObject)
+			A MIDIRest is like a MIDIChord having a single, empty Moment.
+			MIDIRests are necessary so that running cursors can be moved to rest
+			symbols. In some circumstances, a rest moment can also contain MIDI
+			note off messages.
+
+		Note about TimeObjects:
+		The score contains spatial and temporal information for each chord and rest
+		symbol. The part of that information needed by the Assistant Performer is
+		encapsulated in the timeObject passed to the above constructors.
+		A timeObject has three attributes:
+			// the (default) number of milliseconds from the start of a performance
+			msPosition
+			// the (default) millisecond duration.
+			msDuration
+			// the x-coordinate (alignment) re the left side of the page.
+			alignmentX 
+		A chord or rest symbol's y-coordinate is related to the position of its
+		page, system and staff - which are organised separately.
+ 
+ap/Assistant.js
+	The assistant namespace. This exposes a single constructor:
+		
+		// Arguments:
+		// sequence: a midiLib.Sequence which has been constructed from a score.
+		// apControlOptions: options that have been set by the user in the options panel.
+		// reportEndOfPerformance: a callback function, called when the performance
+		//     ends (for any reason).
+		// reportMsPosition: a callback function, called when the running
+		//     cursor position needs to be updated.
+		Assistant(sequence, apControlOptions, reportEndOfPerformance, reportMsPosition);
+			An Assistant is created when the user has selected a MIDI input device,
+			and clicks the "Start" button on the browser page.
+
+ap/Score.js
+	The score namespace containing a single constructor:
+
+		// Argument:
+		// runningMarkerHeightChanged: a callback function, called when the running
+		//     marker moves to a new system.
+		Score(runningMarkerHeightChanged);
+			A Score is created and displayed when the user selects one in the
+			score drop down menu in the options panel.
+			The Score object is responsible for the graphic appearance and user
+			interaction with the score's symbols. In particular, it is responsible
+			for moving the running marker during performance. The score is not
+			responsible for its containing environment, so the
+			runningMarkerHeightChanged callback is used to move the whole
+			display, when necessary, to keep the marker in view.
+
+ap/TracksControl.js
+	The tracksControl object. This is the control which appears at the top left of
+	the user's score controls. It can be used to turn the performance of tracks
+	(voices) on and off. There can be 1 or 2 voices per staff in the score.
+	Tracks are ordered by channel, from top to bottom in the score, with channel 0
+	being the top voice in each system.
+
+ap/Controls.js
+	The functionality for the main user controls panel which appears when the
+	Assistant Performer is first loaded into a browser. Contains the functions
+	called when clicking on the browser page.
+	Has the following API:
+
+		init()
+			initialises the controls. In particular, sets up the drop-down
+			menues containing MIDI input and output devices, and the available
+			scores. This function is called from Main.js (see below).
+
+		doControl(controlID)
+			reacts to the corresponding control clicked in the HTML.
+
+		showOverRect(overRectName, disabledName)
+		hideOverRect(overRectName)
+			these functions change the appearance of score option buttons
+			when hovering the mouse over/out of them.
+
+		beginRuntime()
+			Called when the "Start" button is clicked.
+			The Start button is enabled when both a score and a MIDI output
+			device have been selected. If no MIDI input is selected, the
+			score can be played back using the other available options
+			(speed etc.).
+
+ap/Main.js
+	The main entry point to the Assistant Performer's code. Calls
+	
+		window.addEventListener("load", func, false),
+
+	func, which is defined inline:
+	1.	calls MIDILib.jazzWebMIDIAPI.init(window) to ensure that the relevant
+		window interfaces are set correctly.
+		It should be fairly trivial to adapt the current code to the final
+		version of the Web MIDI API, when it is finalised and implemented
+		natively in browsers. This call, the file midiLib/JazzWebMIDIAPI.js,
+		and the Jazz plug-in can then be removed.
+	2.	Retrieves the midiAccess object, currently using the Jazz plugin v1.2
+		http://jazz-soft.net/
+	3.	Calls _AP.controls.init(midiAccess) to set the contents of the
+		device selector menus.
 
 
 ****************************************************************************
-midiLib/Namespace.js
-	Defines the MIDILib namespace itself.
-
-midiLib/JazzWebMIDIAPI.js
-	The MIDILib.jazzWebMIDIAPI namespace which implements the W3C Web MIDI
-	API (as defined on 17.01.2013) using the Jazz plugin.
-	This code defines a single function:
-		
-		init()
-
-	which sets up various window attributes, where necessary.
-	In particular, after calling
-	MIDILib.jazzWebMIDIAPI.init(window), the MIDIAccess object can be
-	retrieved by calling
-	window.navigator.requestMIDIAccess(onSuccessCallback, onErrorCallback);
-
-midiLib/Constants.js
-	The MIDILib.constants namespace, which exposes four objects containing
-	standard MIDI constant definitions:
-        COMMAND
-        RUNNING_STATUS
-        CONTROL
-        SYSTEM_EXCLUSIVE
-
-midiLib/Message.js
-	The MIDILib.message namespace which exposes	two constructors:
-
-		Message(status, data1, data2)
-			for constructing 1- 2- or 3-byte MIDI messages which are
-			not SysExMessages. 1-byte Messages are "running status".
-
-		SysExMessage(data)
-			for explicitly constructing system exclusive messages.
-
-midiLib/Moment.js
-	The MIDILib.moment namespace which exposes a single constructor:
-
-		Moment(msPositionInScore)
-
-	A moment is conceptually a collection of messages, all of which are to
-	be sent at the same time on the same channel.
-	This constructor is used when creating Moments from files such as
-	scores or Standard MIDI Files. Empty Moments having no relation to
-	such files, can be constructed with an empty argument list.
-	The moment.messages array contains the messages themselves. They are
-	always sent 'at the same time' (in the order in which they occur
-	in the array).
-
-midiLib/Track.js
-	The MIDILib.track namespace which exposes a single constructor:
-
-		Track()
-
-	A track is conceptually a temporally ordered list of Moments, all of
-	which share the same channel, and none of which is synchronous with any
-	of the others. Moments are, if necessary, merged when added to the track.
-	Tracks correspond to voices in scores and channels in both scores and
-	Standard MIDI Files. There may be 1 or 2 voices per	staff in a score.
-
-midiLib/Sequence.js
-	The MIDILib.sequence namespace which exposes a single constructor:
-
-		Sequence(nTracks)
-
-	A sequence is a collection of parallel tracks, all of which start at the
-	same time. The new Sequence has nTracks new, empty Tracks.
-	The Tracks collection is implemented as an array, with the tracks in order
-	of voice (i.e. channel) from top to bottom in a score.system.
-	When loaded from a score,
-		tracks[0] contains all the moments for voices[0] (on channel 0) on all
-		systems in the score,
-		tracks[1] contains all the moments for voices[1] (on channel 1) on all
-		systems in the score,
-		etc. 
-
-midiLib/StandardMIDIFile.js
-	The MIDILib.standardMIDIFile namespace which exposes the function
-		standardMidiFile = sequenceToSMF(sequence);
-	This function converts a Sequence to a Standard MIDI File (actually a Blob).
-    The SMF can be made downloadable by connecting it to a document link element.
-	When the user clicks the link, the browser saves the file on the user's
-	computer. See https://developer.mozilla.org/en/docs/DOM/Blob.
-      
-

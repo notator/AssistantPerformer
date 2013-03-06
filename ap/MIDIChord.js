@@ -6,12 +6,10 @@
  *  https://github.com/notator/assistant-performer/blob/master/License.md
  *
  *  ap/MIDIChord.js
- *  This module uses JazzMidiBridge to create Messages.
- *  Its public interface contains:
+ *  Public interface:
  *      newAllSoundOffMessage() // returns a new AllSoundOffMessage
  *      MIDIChord(channel, chordDef, timeObject, speed) // MIDIChord constructor
- *      MIDIRest(timeObject) // MIDIRest constructor
- *  
+ *      MIDIRest(timeObject) // MIDIRest constructor  
  */
 
 /*jslint bitwise: false, nomen: false, plusplus: true, white: true */
