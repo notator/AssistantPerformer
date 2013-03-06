@@ -7,22 +7,22 @@ https://github.com/notator/assistant-performer/blob/master/License.md
 
 ap/AssistantPerformerJSOverview.txt:
 
-The Javascript files in this directory (js) together define the Assistant
-Performer application, which uses (is dependent on) the files in the MIDILib
-namespace (in the lib directory).
-This file (ap/AssistantPerformerJSOverview.txt) is intended to provide a
-quick overview of the files in this directory.
+This file is intended to provide a quick overview of the files in the ap folder.
 For more detailed information, see the comments in the individual files.
+
+The Javascript files in this directory (ap) together define the Assistant
+Performer application. They use (are dependent on) the files in all the other
+folders. In particular, they are dependent on the MIDI library defined by the
+files in the midiLib folder (the MIDILib namespace).
 
 The following list of files is in order of dependency.
 
-
 ap/Namespace.js
-	Defines the _AP namespace. _AP is the namespace which will contain all
+	Defines the _AP namespace. _AP is the namespace containing all
 	the other code in this folder (ap).
 
 ap/File.js
-	The file namespace containing a single function:
+	The _AP.file namespace containing a single function:
 
         xml = getSubDocument(embedded_element);
 
@@ -30,25 +30,24 @@ ap/File.js
 	For examples of its use, see Palettes.js and Score.js.
 	
 ap/Markers.js
-
-	The markers namespace. Defines constructors for the
+	The _AP.markers namespace. Defines constructors for the
 
 		StartMarker,
 		EndMarker and 
 		RunningMarker objects.
 
-	The StartMarker and EndMarker are the objects in a score which determine
-	where a performance begins and ends.
-	The RunningMarker is the line which shows the current position in a
-	performance while it is running.
+	The StartMarker and EndMarker are the objects in the user interface
+	which determine	where a performance begins and ends.
+	The RunningMarker is the line which shows the current position during
+	a performance.
 
 ap/Palettes.js
-	The palettes namespace. Defines constructors for
+	The _AP.palettes namespace. Defines constructors for
 	
 		ChordDef(chordDefNode)
 			This constructor reads an XML node into a ChordDef.
 			A ChordDef is a data structure containing the definition of a
-			MIDIChord (see below).ntained ornament.
+			MIDIChord (see below).
 
 		Palettes()
 			Constructs the palettes defined in a "midiDefs" element in the
@@ -61,7 +60,7 @@ ap/Palettes.js
 			definition is not public.
      
 ap/MIDIChord.js
-	The midiChord namespace. Defines the following constructors, which are used
+	The _AP.midiChord namespace. Defines the following constructors, which are used
 	when reading the score to produce playable MIDI messages (see Score.js below):
 		
 		// Arguments:
@@ -102,7 +101,7 @@ ap/MIDIChord.js
 		page, system and staff - which are organised separately.
  
 ap/Assistant.js
-	The assistant namespace. This exposes a single constructor:
+	The _AP.assistant namespace. This exposes a single constructor:
 		
 		// Arguments:
 		// sequence: a midiLib.Sequence which has been constructed from a score.
@@ -116,7 +115,7 @@ ap/Assistant.js
 			and clicks the "Start" button on the browser page.
 
 ap/Score.js
-	The score namespace containing a single constructor:
+	The _AP.score namespace containing a single constructor:
 
 		// Argument:
 		// runningMarkerHeightChanged: a callback function, called when the running
@@ -181,5 +180,3 @@ ap/Main.js
 	3.	Calls _AP.controls.init(midiAccess) to set the contents of the
 		device selector menus.
 
-
-****************************************************************************
