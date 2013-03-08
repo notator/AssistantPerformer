@@ -9,7 +9,7 @@
  *  The MIDILib.message namespace which defines the following constructors:
  *
  *      // Constructs 1- 2- or 3-byte MIDI messages which are not SysExMessages.
- *      // 1-byte Messages are "running status".
+ *      // 1-byte Messages are "real time".
  *      Message(status, data1, data2)
  *
  *      // Constructs system exclusive messages.
@@ -42,7 +42,7 @@ MIDILib.message = (function ()
     "use strict";
     var
     COMMAND = MIDILib.constants.COMMAND,
-    RUNNING_STATUS = MIDILib.constants.RUNNING_STATUS,
+    REAL_TIME = MIDILib.constants.REAL_TIME,
     SYSTEM_EXCLUSIVE = MIDILib.constants.SYSTEM_EXCLUSIVE,
 
     _length,
@@ -114,21 +114,21 @@ MIDILib.message = (function ()
             {
                 case SYSTEM_EXCLUSIVE.START:
                     throw "Error: Use the special SysExMessage constructor to construct variable length messages.";
-                case RUNNING_STATUS.TUNE_REQUEST:
-                case RUNNING_STATUS.MIDI_CLOCK:
-                case RUNNING_STATUS.MIDI_TICK:
-                case RUNNING_STATUS.MIDI_START:
-                case RUNNING_STATUS.MIDI_CONTINUE:
-                case RUNNING_STATUS.MIDI_STOP:
-                case RUNNING_STATUS.ACTIVE_SENSE:
-                case RUNNING_STATUS.RESET:
+                case REAL_TIME.TUNE_REQUEST:
+                case REAL_TIME.MIDI_CLOCK:
+                case REAL_TIME.MIDI_TICK:
+                case REAL_TIME.MIDI_START:
+                case REAL_TIME.MIDI_CONTINUE:
+                case REAL_TIME.MIDI_STOP:
+                case REAL_TIME.ACTIVE_SENSE:
+                case REAL_TIME.RESET:
                     length = 1;
                     break;
-                case RUNNING_STATUS.MTC_QUARTER_FRAME:
-                case RUNNING_STATUS.SONG_SELECT:
+                case REAL_TIME.MTC_QUARTER_FRAME:
+                case REAL_TIME.SONG_SELECT:
                     length = 2;
                     break;
-                case RUNNING_STATUS.SONG_POSITION_POINTER:
+                case REAL_TIME.SONG_POSITION_POINTER:
                     length = 3;
                     break;
             }
@@ -143,8 +143,8 @@ MIDILib.message = (function ()
     },
 
     // This is the constructor to use for non-SysExMessages having 1, 2 or 3 data bytes.
-    // A 1-byte "running status" message will be constructed if data.length is 1, and data[0]
-    // matches one of the RUNNING_STATUS values. 
+    // A 1-byte "real time" message will be constructed if data.length is 1, and data[0]
+    // matches one of the REAL_TIME values. 
     // When reading an input stream, use the factory function getInputEvent(data, now) see below.
     // The data1Arg and data2Arg arguments are optional and default to 0.
     Message = function (status, data1Arg, data2Arg)
@@ -255,29 +255,29 @@ MIDILib.message = (function ()
         {
             switch (this.data[0])
             {
-                case RUNNING_STATUS.TUNE_REQUEST:
-                    returnString = "RUNNING_STATUS.TUNE_REQUEST ( " + RUNNING_STATUS.TUNE_REQUEST.toString(16) + " )";
+                case REAL_TIME.TUNE_REQUEST:
+                    returnString = "REAL_TIME.TUNE_REQUEST ( " + REAL_TIME.TUNE_REQUEST.toString(16) + " )";
                     break;
-                case RUNNING_STATUS.MIDI_CLOCK:
-                    returnString = "RUNNING_STATUS.MIDI_CLOCK ( " + RUNNING_STATUS.MIDI_CLOCK.toString(16) + " )";
+                case REAL_TIME.MIDI_CLOCK:
+                    returnString = "REAL_TIME.MIDI_CLOCK ( " + REAL_TIME.MIDI_CLOCK.toString(16) + " )";
                     break;
-                case RUNNING_STATUS.MIDI_TICK:
-                    returnString = "RUNNING_STATUS.MIDI_TICK ( " + RUNNING_STATUS.MIDI_TICK.toString(16) + " )";
+                case REAL_TIME.MIDI_TICK:
+                    returnString = "REAL_TIME.MIDI_TICK ( " + REAL_TIME.MIDI_TICK.toString(16) + " )";
                     break;
-                case RUNNING_STATUS.MIDI_START:
-                    returnString = "RUNNING_STATUS.MIDI_START ( " + RUNNING_STATUS.MIDI_START.toString(16) + " )";
+                case REAL_TIME.MIDI_START:
+                    returnString = "REAL_TIME.MIDI_START ( " + REAL_TIME.MIDI_START.toString(16) + " )";
                     break;
-                case RUNNING_STATUS.MIDI_CONTINUE:
-                    returnString = "RUNNING_STATUS.MIDI_CONTINUE ( " + RUNNING_STATUS.MIDI_CONTINUE.toString(16) + " )";
+                case REAL_TIME.MIDI_CONTINUE:
+                    returnString = "REAL_TIME.MIDI_CONTINUE ( " + REAL_TIME.MIDI_CONTINUE.toString(16) + " )";
                     break;
-                case RUNNING_STATUS.MIDI_STOP:
-                    returnString = "RUNNING_STATUS.MIDI_STOP ( " + RUNNING_STATUS.MIDI_STOP.toString(16) + " )";
+                case REAL_TIME.MIDI_STOP:
+                    returnString = "REAL_TIME.MIDI_STOP ( " + REAL_TIME.MIDI_STOP.toString(16) + " )";
                     break;
-                case RUNNING_STATUS.ACTIVE_SENSE:
-                    returnString = "RUNNING_STATUS.ACTIVE_SENSE ( " + RUNNING_STATUS.ACTIVE_SENSE.toString(16) + " )";
+                case REAL_TIME.ACTIVE_SENSE:
+                    returnString = "REAL_TIME.ACTIVE_SENSE ( " + REAL_TIME.ACTIVE_SENSE.toString(16) + " )";
                     break;
-                case RUNNING_STATUS.RESET:
-                    returnString = "RUNNING_STATUS.RESET ( " + RUNNING_STATUS.RESET.toString(16) + " )";
+                case REAL_TIME.RESET:
+                    returnString = "REAL_TIME.RESET ( " + REAL_TIME.RESET.toString(16) + " )";
                     break;
             }
         }
@@ -289,10 +289,10 @@ MIDILib.message = (function ()
                 case 0xF0:
                     switch (this.data[0])
                     {
-                        case RUNNING_STATUS.MTC_QUARTER_FRAME:
+                        case REAL_TIME.MTC_QUARTER_FRAME:
                             returnString = 'realtime: MTC_QUARTER_FRAME';
                             break;
-                        case RUNNING_STATUS.SONG_SELECT:
+                        case REAL_TIME.SONG_SELECT:
                             returnString = 'realtime: SONG_SELECT';
                             break;
                     }

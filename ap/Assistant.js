@@ -107,23 +107,23 @@ _AP.assistant = (function (window)
             SYSTEM_EXCLUSIVE = MIDILib.constants.SYSTEM_EXCLUSIVE,
             inputEvent;
 
-            function isRunningStatus(constant)
+            function isRealTime(constant)
             {
                 var
-                RUNNING_STATUS = MIDILib.constants.RUNNING_STATUS,
+                REAL_TIME = MIDILib.constants.REAL_TIME,
                 result = false;
 
-                if ((constant === RUNNING_STATUS.MTC_QUARTER_FRAME)
-                || (constant === RUNNING_STATUS.SONG_POSITION_POINTER)
-                || (constant === RUNNING_STATUS.SONG_SELECT)
-                || (constant === RUNNING_STATUS.TUNE_REQUEST)
-                || (constant === RUNNING_STATUS.MIDI_CLOCK)
-                || (constant === RUNNING_STATUS.MIDI_TICK)
-                || (constant === RUNNING_STATUS.MIDI_START)
-                || (constant === RUNNING_STATUS.MIDI_CONTINUE)
-                || (constant === RUNNING_STATUS.MIDI_STOP)
-                || (constant === RUNNING_STATUS.ACTIVE_SENSE)
-                || (constant === RUNNING_STATUS.RESET))
+                if ((constant === REAL_TIME.MTC_QUARTER_FRAME)
+                || (constant === REAL_TIME.SONG_POSITION_POINTER)
+                || (constant === REAL_TIME.SONG_SELECT)
+                || (constant === REAL_TIME.TUNE_REQUEST)
+                || (constant === REAL_TIME.MIDI_CLOCK)
+                || (constant === REAL_TIME.MIDI_TICK)
+                || (constant === REAL_TIME.MIDI_START)
+                || (constant === REAL_TIME.MIDI_CONTINUE)
+                || (constant === REAL_TIME.MIDI_STOP)
+                || (constant === REAL_TIME.ACTIVE_SENSE)
+                || (constant === REAL_TIME.RESET))
                 {
                     result = true;
                 }
@@ -147,7 +147,7 @@ _AP.assistant = (function (window)
             }
             else if ((data[0] & 0xF0) === 0xF0)
             {
-                if (isRunningStatus(data[0]))
+                if (isRealTime(data[0]))
                 {
                     inputEvent = new Message(data[0], 0, 0);
                 }

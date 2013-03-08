@@ -9,7 +9,7 @@
  *  The MIDILib.constants namespace which defines read-only MIDI constants
  *  in the following categories:
  *      COMMAND
- *      RUNNING_STATUS
+ *      REAL_TIME
  *      CONTROL
  *      SYSTEM_EXCLUSIVE
  */
@@ -23,13 +23,13 @@ MIDILib.constants = (function ()
     "use strict";
     var 
     COMMAND = {},
-    RUNNING_STATUS = {},
+    REAL_TIME = {},
     CONTROL = {},
     SYSTEM_EXCLUSIVE = {}, 
     API =
     {
         COMMAND: COMMAND,
-        RUNNING_STATUS: RUNNING_STATUS,
+        REAL_TIME: REAL_TIME,
         CONTROL: CONTROL,
         SYSTEM_EXCLUSIVE: SYSTEM_EXCLUSIVE
     };
@@ -42,27 +42,27 @@ MIDILib.constants = (function ()
     Object.defineProperty(COMMAND, "CHANNEL_PRESSURE", { value: 0xD0, writable: false });
     Object.defineProperty(COMMAND, "PITCH_WHEEL", { value: 0xE0, writable: false });
 
-    // RUNNING_STATUS
-    // Am I right in thinking that these are the RUNNING_STATUS constants?
+    // REAL_TIME
+    // Am I right in thinking that these are the REAL_TIME constants?
     // As far as I can see, they are only needed when an application sends a stream of Events.
     // They are not stored in files. 0xF4, 0xF5, and 0xFD are missing. Do they do anything?
     //
     // 0xF0 is SYSTEM_EXCLUSIVE.START (used in Standard MIDI Files)
-    Object.defineProperty(RUNNING_STATUS, "MTC_QUARTER_FRAME", { value: 0xF1, writable: false });
-    Object.defineProperty(RUNNING_STATUS, "SONG_POSITION_POINTER", { value: 0xF2, writable: false });
-    Object.defineProperty(RUNNING_STATUS, "SONG_SELECT", { value: 0xF3, writable: false });
+    Object.defineProperty(REAL_TIME, "MTC_QUARTER_FRAME", { value: 0xF1, writable: false });
+    Object.defineProperty(REAL_TIME, "SONG_POSITION_POINTER", { value: 0xF2, writable: false });
+    Object.defineProperty(REAL_TIME, "SONG_SELECT", { value: 0xF3, writable: false });
     // ? : 0xF4
     // ? : 0xF5
-    Object.defineProperty(RUNNING_STATUS, "TUNE_REQUEST", { value: 0xF6, writable: false });
+    Object.defineProperty(REAL_TIME, "TUNE_REQUEST", { value: 0xF6, writable: false });
     // 0xF7 is SYSTEM_EXCLUSIVE.END (used in Standard MIDI Files) 
-    Object.defineProperty(RUNNING_STATUS, "MIDI_CLOCK", { value: 0xF8, writable: false });
-    Object.defineProperty(RUNNING_STATUS, "MIDI_TICK", { value: 0xF9, writable: false });
-    Object.defineProperty(RUNNING_STATUS, "MIDI_START", { value: 0xFA, writable: false });
-    Object.defineProperty(RUNNING_STATUS, "MIDI_CONTINUE", { value: 0xFB, writable: false });
-    Object.defineProperty(RUNNING_STATUS, "MIDI_STOP", { value: 0xFC, writable: false });
+    Object.defineProperty(REAL_TIME, "MIDI_CLOCK", { value: 0xF8, writable: false });
+    Object.defineProperty(REAL_TIME, "MIDI_TICK", { value: 0xF9, writable: false });
+    Object.defineProperty(REAL_TIME, "MIDI_START", { value: 0xFA, writable: false });
+    Object.defineProperty(REAL_TIME, "MIDI_CONTINUE", { value: 0xFB, writable: false });
+    Object.defineProperty(REAL_TIME, "MIDI_STOP", { value: 0xFC, writable: false });
     // ? : 0xFD
-    Object.defineProperty(RUNNING_STATUS, "ACTIVE_SENSE", { value: 0xFE, writable: false });
-    Object.defineProperty(RUNNING_STATUS, "RESET", { value: 0xFF, writable: false });
+    Object.defineProperty(REAL_TIME, "ACTIVE_SENSE", { value: 0xFE, writable: false });
+    Object.defineProperty(REAL_TIME, "RESET", { value: 0xFF, writable: false });
 
     // CONTROL
     // These are all I use for the moment (Feb. 2013).

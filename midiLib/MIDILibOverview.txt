@@ -39,7 +39,7 @@ midiLib/Constants.js
 	The MIDILib.constants namespace, which exposes four objects containing
 	standard MIDI constant definitions:
         COMMAND
-        RUNNING_STATUS
+        REAL_TIME
         CONTROL
         SYSTEM_EXCLUSIVE
 
@@ -48,7 +48,7 @@ midiLib/Message.js
 
 		Message(status, data1, data2)
 			for constructing 1- 2- or 3-byte MIDI messages which are
-			not SysExMessages. 1-byte Messages are "running status".
+			not SysExMessages. 1-byte Messages are "real time".
 
 		SysExMessage(data)
 			for explicitly constructing system exclusive messages.
