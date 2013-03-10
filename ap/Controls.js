@@ -192,7 +192,7 @@ _AP.controls = (function (document, window)
     },
 
     // This function is called when the input or output device selectors change.
-    setMidiDevices = function (midiAccess)
+    setMIDIDevices = function (midiAccess)
     {
         var 
         inSelector = document.getElementById("midiInputDeviceSelector"),
@@ -1187,7 +1187,7 @@ _AP.controls = (function (document, window)
 
         if (controlID === "midiInputDeviceSelector")
         {
-            setMidiDevices(midiAccess);
+            setMIDIDevices(midiAccess);
             tracksControl.setTracksControlState(mo.midiInputDeviceSelector.selectedIndex > 0, mo.trackSelector.selectedIndex);
         }
 
@@ -1199,7 +1199,7 @@ _AP.controls = (function (document, window)
 
         if (controlID === "midiOutputDeviceSelector")
         {
-            setMidiDevices(midiAccess);
+            setMIDIDevices(midiAccess);
         }
 
         if (controlID === "trackSelector")

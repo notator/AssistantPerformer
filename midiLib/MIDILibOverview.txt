@@ -36,19 +36,22 @@ midiLib/JazzWebMIDIAPI.js
 	window.navigator.requestMIDIAccess(onSuccessCallback, onErrorCallback);
 
 midiLib/Constants.js
-	The MIDILib.constants namespace, which exposes four objects containing
-	standard MIDI constant definitions:
+	The MIDILib.constants namespace, which exposes
+	four objects containing	standard MIDI constant definitions:
         COMMAND
         REAL_TIME
         CONTROL
         SYSTEM_EXCLUSIVE
+	and a function
+		isRealTimeStatus(statusByte)
+			for testing if a status byte is for a realTime message.
 
 midiLib/Message.js
 	The MIDILib.message namespace which exposes	two constructors:
 
 		Message(status, data1, data2)
 			for constructing 1- 2- or 3-byte MIDI messages which are
-			not SysExMessages. 1-byte Messages are "real time".
+			not SysExMessages.
 
 		SysExMessage(data)
 			for explicitly constructing system exclusive messages.
@@ -96,7 +99,7 @@ midiLib/Sequence.js
 
 midiLib/StandardMIDIFile.js
 	The MIDILib.standardMIDIFile namespace which exposes the function
-		standardMidiFile = sequenceToSMF(sequence);
+		standardMIDIFile = sequenceToSMF(sequence);
 	This function converts a Sequence to a Standard MIDI File (actually a Blob).
     The SMF can be made downloadable by connecting it to a document link element.
 	When the user clicks the link, the browser saves the file on the user's

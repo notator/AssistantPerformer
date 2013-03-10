@@ -25,13 +25,37 @@ MIDILib.constants = (function ()
     COMMAND = {},
     REAL_TIME = {},
     CONTROL = {},
-    SYSTEM_EXCLUSIVE = {}, 
+    SYSTEM_EXCLUSIVE = {},
+
+    // True if constant is one of the REAL_TIME status bytes, otherwise false
+    isRealTimeStatus = function(constant)
+    {
+        var result = false;
+
+        if ((constant === REAL_TIME.MTC_QUARTER_FRAME)
+        || (constant === REAL_TIME.SONG_POSITION_POINTER)
+        || (constant === REAL_TIME.SONG_SELECT)
+        || (constant === REAL_TIME.TUNE_REQUEST)
+        || (constant === REAL_TIME.MIDI_CLOCK)
+        || (constant === REAL_TIME.MIDI_TICK)
+        || (constant === REAL_TIME.MIDI_START)
+        || (constant === REAL_TIME.MIDI_CONTINUE)
+        || (constant === REAL_TIME.MIDI_STOP)
+        || (constant === REAL_TIME.ACTIVE_SENSE)
+        || (constant === REAL_TIME.RESET))
+        {
+            result = true;
+        }
+        return result;
+    },
+
     API =
     {
         COMMAND: COMMAND,
         REAL_TIME: REAL_TIME,
         CONTROL: CONTROL,
-        SYSTEM_EXCLUSIVE: SYSTEM_EXCLUSIVE
+        SYSTEM_EXCLUSIVE: SYSTEM_EXCLUSIVE,
+        isRealTimeStatus: isRealTimeStatus
     };
 
     Object.defineProperty(COMMAND, "NOTE_OFF", { value: 0x80, writable: false });
@@ -43,16 +67,16 @@ MIDILib.constants = (function ()
     Object.defineProperty(COMMAND, "PITCH_WHEEL", { value: 0xE0, writable: false });
 
     // REAL_TIME
-    // Am I right in thinking that these are the REAL_TIME constants?
-    // As far as I can see, they are only needed when an application sends a stream of Events.
-    // They are not stored in files. 0xF4, 0xF5, and 0xFD are missing. Do they do anything?
+    // These constants can be received or sent live during performances.
+    // They are not stored in files.
+    // The MIDI standard does not define 0xF4, 0xF5 or 0xFD.
     //
     // 0xF0 is SYSTEM_EXCLUSIVE.START (used in Standard MIDI Files)
     Object.defineProperty(REAL_TIME, "MTC_QUARTER_FRAME", { value: 0xF1, writable: false });
     Object.defineProperty(REAL_TIME, "SONG_POSITION_POINTER", { value: 0xF2, writable: false });
     Object.defineProperty(REAL_TIME, "SONG_SELECT", { value: 0xF3, writable: false });
-    // ? : 0xF4
-    // ? : 0xF5
+    // 0xF4 is not defined by the MIDI standard
+    // 0xF5 is not defined by the MIDI standard
     Object.defineProperty(REAL_TIME, "TUNE_REQUEST", { value: 0xF6, writable: false });
     // 0xF7 is SYSTEM_EXCLUSIVE.END (used in Standard MIDI Files) 
     Object.defineProperty(REAL_TIME, "MIDI_CLOCK", { value: 0xF8, writable: false });
@@ -60,7 +84,7 @@ MIDILib.constants = (function ()
     Object.defineProperty(REAL_TIME, "MIDI_START", { value: 0xFA, writable: false });
     Object.defineProperty(REAL_TIME, "MIDI_CONTINUE", { value: 0xFB, writable: false });
     Object.defineProperty(REAL_TIME, "MIDI_STOP", { value: 0xFC, writable: false });
-    // ? : 0xFD
+    // 0xFD is not defined by the MIDI standard
     Object.defineProperty(REAL_TIME, "ACTIVE_SENSE", { value: 0xFE, writable: false });
     Object.defineProperty(REAL_TIME, "RESET", { value: 0xFF, writable: false });
 

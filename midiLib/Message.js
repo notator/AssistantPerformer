@@ -143,9 +143,8 @@ MIDILib.message = (function ()
     },
 
     // This is the constructor to use for non-SysExMessages having 1, 2 or 3 data bytes.
-    // A 1-byte "real time" message will be constructed if data.length is 1, and data[0]
-    // matches one of the REAL_TIME values. 
-    // When reading an input stream, use the factory function getInputEvent(data, now) see below.
+    // A 1-byte "realTime" message will be constructed if data.length is 1, and data[0]
+    // matches one of the appropriate REAL_TIME values. 
     // The data1Arg and data2Arg arguments are optional and default to 0.
     Message = function (status, data1Arg, data2Arg)
     {
@@ -192,12 +191,14 @@ MIDILib.message = (function ()
     // An exception is thrown if:
     //     data.length is less than 3.
     //     any of the numbers in data is outside the range 0x00 to 0xFF,
+    //     any of the numbers in data is a realTime status byte.
     //     any of the numbers is not an "integer" (Math.floor() is used to check)
     //     data[0] is not SYSTEM_EXCLUSIVE.START (0xF0)
     //     data[data.length -1] is not SYSTEM_EXCLUSIVE.END (0xF7)
     SysExMessage = function (data)
     {
-        var i, dataLength = data.length;
+        var i, dataLength = data.length,
+            isRealTimeStatus = MIDILib.constants.isRealTimeStatus;
 
         if (!(this instanceof SysExMessage))
         {
@@ -223,6 +224,10 @@ MIDILib.message = (function ()
             {
                 throw "Error: System exclusive data may only contain integers in the range 0 to 0xFF";
             }
+            if (isRealTimeStatus(data[i]))
+            {
+                throw "Error: RealTime messages should be removed from data before calling this constructor";
+            }
         }
 
         this.data = new Uint8Array(data);
@@ -232,7 +237,7 @@ MIDILib.message = (function ()
     {
         // constructors
         Message: Message,
-        SysExMessage: SysExMessage,
+        SysExMessage: SysExMessage
     };
 
     Message.prototype.command = function ()

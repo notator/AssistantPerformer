@@ -12,7 +12,7 @@
  *      // The SMF can be made downloadable by connecting it to a document link element.
  *      // When the user clicks the link, the browser saves the file on the user's
  *      // computer. See https://developer.mozilla.org/en/docs/DOM/Blob.
- *      standardMidiFile = sequenceToSMF(sequence);
+ *      standardMIDIFile = sequenceToSMF(sequence);
  *
  *      // TODO (1st March 2013)
  *      // Convert a Standard MIDI File to a Sequence
@@ -213,13 +213,15 @@ MIDILib.standardMIDIFile = (function ()
                     }
                 }
 
-                // Add a timestamp attribute to each message,
-                // setting it to the moment's timestamp.
+                // Add a timestamp attribute to each message, setting it to the moment's timestamp.
+                // An exception is thrown if a MIDI realTime message is found while looping through the messages.
+                // The recorded Sequence should never contain MIDI realTime messages.
                 function createMessageTimestamps(trackMoments)
                 {
                     var
+                    isRealTimeStatus = MIDILib.constants.isRealTimeStatus,
                     i, nMoments = trackMoments.length, moment,
-                    j, nMessages, timestamp, previousTimestamp = -1;
+                    j, nMessages, timestamp, previousTimestamp = -1, message;
 
                     for (i = 0; i < nMoments; ++i)
                     {
@@ -228,7 +230,12 @@ MIDILib.standardMIDIFile = (function ()
                         nMessages = moment.messages.length;
                         for (j = 0; j < nMessages; ++j)
                         {
-                            moment.messages[j].timestamp = timestamp;
+                            message = moment.messages[j];
+                            if(isRealTimeStatus(message.data[0]))
+                            {
+                                throw "Error: MIDI realTime messages should never be recorded in the Sequence.";
+                            }
+                            message.timestamp = timestamp;
                         }
                         previousTimestamp = timestamp;
                     }
