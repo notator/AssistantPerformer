@@ -141,7 +141,7 @@ _AP.score = (function (document)
     // If that does not work, try the tracks successively below.
     findStartMarkerTimeObject = function (timeObject, clickedTrackIndex, system, trackIsOn)
     {
-        var nTracks, returnedTimeObject, t, diff, timeObjectsArray;
+        var nTracks, returnedTimeObject, trackIndex, diff, timeObjectsArray;
 
         // Returns the chord timeObject at alignmentX, or the following object in the track (if it is a chord), or null.
         // If the timeObject following alignmentX is the final barline, the last chord in the track is returned.
@@ -178,23 +178,26 @@ _AP.score = (function (document)
         timeObjectsArray = getTimeObjectsArray(system);
         nTracks = timeObjectsArray.length;
         returnedTimeObject = null;
-        t = clickedTrackIndex;
-        diff = 1;
-        while (returnedTimeObject === null)
+        trackIndex = clickedTrackIndex;
+        diff = -1;
+        while (returnedTimeObject === null && trackIndex >= 0)
         {
-            if (trackIsOn(t))
+            if (trackIsOn(trackIndex))
             {
-                returnedTimeObject = nextChordTimeObject(timeObjectsArray[t], timeObject.alignmentX);
+                returnedTimeObject = nextChordTimeObject(timeObjectsArray[trackIndex], timeObject.alignmentX);
             }
-            t -= diff;
-            if (t < 0)
+            if (returnedTimeObject === null)
             {
-                t = clickedTrackIndex + 1;
-                diff = -1;
-            }
-            if (t === timeObjectsArray.length)
-            {
-                throw "Error: there must be at least one chord on the system!";
+                trackIndex += diff;
+                if (trackIndex < 0)
+                {
+                    trackIndex = clickedTrackIndex + 1;
+                    diff = 1;
+                }
+                if (diff === 1 && trackIndex === timeObjectsArray.length)
+                {
+                    throw "Error: there must be at least one chord on the system!";
+                }
             }
         }
 
