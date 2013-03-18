@@ -1369,6 +1369,10 @@ _AP.score = (function (document)
                     childID = svgChildren[j].getAttribute("id");
                     if (childID === systemID)
                     {
+                        if (systems[systemIndex].msDuration !== undefined)
+                        {
+                            delete systems[systemIndex].msDuration; // is reset in the following function
+                        }
                         getSystemTimeObjects(systems[systemIndex], viewBoxScale, svgChildren[j], speed);
                         systemIndex++;
                         systemID = "page" + (i + 1).toString() + "_system" + (sysNumber++).toString();

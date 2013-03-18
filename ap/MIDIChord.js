@@ -128,16 +128,28 @@ _AP.midiChord = (function ()
                 moment,
                 currentMoment;
 
-            function bcMsDurations(basicChords, totalMsDuration, speed)
+            // Returns an array of integral msDurations whose sum is totalMsDuration.
+            // The msDurations in the basicChords are first totalled to localTotal,
+            // then the new speed is calculated as
+            // speed = basicChordsTotalMsDuration / totalMsDuration;
+            // (totalMsDuration already takes account of the global speed option)
+            function bcMsDurations(basicChords, totalMsDuration)
             {
-                var msDurations = [],
+                var msDurations = [], speed,
                 i, basicChordsLength = basicChords.length, msFPDuration,
-                        msFPPositions = [], msPositions = [], nMsPositions, msDuration, localTotal;
+                msFPPositions = [], msPositions = [], nMsPositions, msDuration, basicChordsTotalMsDuration = 0, localTotal = 0;
 
-                if (basicChordsLength < 2)
+                if (basicChordsLength < 1)
                 {
-                    throw "Condition: there must be more than one basic chord here.";
+                    throw "Condition: there must be at least one basic chord here.";
                 }
+
+                for (i = 0; i < basicChordsLength; ++i)
+                {
+                    basicChordsTotalMsDuration += basicChords[i].msDuration;
+                }
+
+                speed = basicChordsTotalMsDuration / totalMsDuration;
 
                 if (speed === 1)
                 {
@@ -159,7 +171,6 @@ _AP.midiChord = (function ()
                     {
                         msPositions.push(Math.round(msFPPositions[i]));
                     }
-                    localTotal = 0;
                     for (i = 0; i < basicChordsLength; ++i)
                     {
                         msDuration = msPositions[i + 1] - msPositions[i];
@@ -327,10 +338,8 @@ _AP.midiChord = (function ()
                 chordMoments.push(currentMoment);
             }
 
-            if (len > 1)
-            {
-                basicChordMsDurations = bcMsDurations(chordDef.basicChordsArray, timeObject.msDuration, speed);
-            }
+            // timeObject.msDuration has already been corrected for speed
+            basicChordMsDurations = bcMsDurations(chordDef.basicChordsArray, timeObject.msDuration);
 
             // BasicChordMoments
             for (i = 0; i < len; i++)
