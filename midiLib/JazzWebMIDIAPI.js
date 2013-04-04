@@ -2,8 +2,18 @@
  *  copyright 2013 James Ingram
  *  http://james-ingram-act-two.de/
  *
- *  Code licensed under MIT
- *  https://github.com/notator/assistant-performer/blob/master/License.md
+ ***************************************************************************
+ * This file uses Chris Wilson's function for polyfilling window.performance.now()
+ * Chris' originally anonymous, immediate function was lifted from the end of
+ * https://github.com/cwilso/WebMIDIAPIShim/blob/master/lib/WebMIDIAPI.js
+ * It is now a private function named getPerformanceNow(window) inside the init()
+ * function below. I named it so as to conform with my own programming style.
+ * It is released under the following licence:
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * The other code in this file is licenced under MIT:
+ * https://github.com/notator/assistant-performer/blob/master/License.md
+ ***************************************************************************
  *
  *  midiLib/JazzWebMIDIAPI.js
  *  This file defines the MIDILib.jazzWebMIDIAPI namespace which implements
@@ -314,11 +324,80 @@ MIDILib.jazzWebMIDIAPI = (function (document)
     // window.URL and window.navigator.requestMIDIAccess
     init = function (window)
     {
-        window.performance = window.performance || window.mozPerformance || window.msPerformance || window.webkitPerformance || {};
-        if (!window.performance.now)
+        /******************************************************************/
+        // Chris Wilson's function for polyfilling window.performance.now() if necessary.
+        // See the copyright notice above.
+        function getPerformanceNow(window)
         {
-            window.performance.now = window.performance.webkitNow;
-        }
+            var perf = {},
+                props;
+
+            function findAlt()
+            {
+                var prefix = "moz,webkit,opera,ms".split(","),
+                    i = prefix.length,
+                    //worst case, we use Date.now()
+                    props = {
+                        value: function (start)
+                        {
+                            return function ()
+                            {
+                                return Date.now() - start;
+                            }
+                        }(Date.now())
+                    };
+
+                //seach for vendor prefixed version
+                for (; i >= 0; i--)
+                {
+                    if ((prefix[i] + "Now") in window.performance)
+                    {
+                        props.value = function (method)
+                        {
+                            return function ()
+                            {
+                                window.performance[method]();
+                            }
+                        }(prefix[i] + "Now");
+                        return props;
+                    }
+                }
+
+                //otherwise, try to use connectionStart
+                if ("timing" in window.performance &&
+                    "connectStart" in window.performance.timing)
+                {
+                    //this pretty much approximates performance.now() to the millisecond
+                    props.value = function (start)
+                    {
+                        return function () { Date.now() - start; }
+                    }(window.performance.timing.connectStart);
+                }
+                return props;
+            }
+
+            //if already defined, bail
+            if (("performance" in window) && ("now" in window.performance))
+            {
+                return;
+            }
+            if (!("performance" in window))
+            {
+                Object.defineProperty(window, "performance", {
+                    get: function ()
+                    {
+                        return perf;
+                    }
+                });
+                //otherwise, performance is there, but not "now()"
+            }
+            props = findAlt();
+            Object.defineProperty(window.performance, "now", props);
+        };
+        // End of Chris Wilson's code.
+        /******************************************************************/
+
+        getPerformanceNow(window);
 
         window.URL = window.URL || window.webkitURL;
 
