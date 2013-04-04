@@ -142,7 +142,7 @@ MIDILib.jazzWebMIDIAPI = (function (document)
         },
 
         // added to MIDIOutputs
-        // Note that Jazz 1.2 does not support timestamps
+        // Note that Jazz does not support timestamps
         send = function (port, data)
         {
             var i, nValues = data.length, numbersArray = [];
@@ -151,34 +151,14 @@ MIDILib.jazzWebMIDIAPI = (function (document)
             {
                 port.open();
             }
-            if (data.length === 0)
-            {
-                i = 10; // conditional breakpoint on data.length === 0
-            }
-            // data is a Uint8Array, convert it to Numbers, before sending to Jazz!
+
+            // data is a Uint8Array, convert it to an ordinary JavaScript array of Numbers, before sending to Jazz!
             for (i = 0; i < nValues; ++i)
             {
                 numbersArray.push(data[i]);
             }
-            try
-            {
-                Jazz.MidiOutLong(numbersArray);
-            }
-            catch (e)
-            {
-                i = 10; // conditional breakpoint
-            }
-        },
 
-        openInput = function (port)
-        {
-            port.isOpen = true;
-        },
-
-        openOutput = function (index)
-        {
-            port = Jazz.MidiOutOpen(index);
-            port.isOpen = true;
+            Jazz.MidiOutLong(numbersArray);
         },
 
         closeOutput = function (port)
@@ -197,6 +177,42 @@ MIDILib.jazzWebMIDIAPI = (function (document)
                 Jazz.MidiInClose();
             }
             port.isOpen = false;
+        },
+
+        openInput = function (port)
+        {
+            var openPortName,
+                i, nInputPorts = inputDevices.length;
+
+            for (i = 0; i < nInputPorts; ++i)
+            {
+                closeInput(inputDevices[i]);
+            }
+
+            openPortName = Jazz.MidiInOpen(port.name);
+            if (openPortName !== port.name)
+            {
+                throw "Failed to open input port!";
+            }
+            port.isOpen = true;
+        },
+
+        openOutput = function (port)
+        {
+            var openPortName,
+                i, nOutputPorts = outputDevices.length;
+
+            for (i = 0; i < nOutputPorts; ++i)
+            {
+                closeOutput(outputDevices[i]);
+            }
+
+            openPortName = Jazz.MidiOutOpen(port.name);
+            if (openPortName !== port.name)
+            {
+                throw "Failed to open output port!";
+            }
+            port.isOpen = true;
         };
 
         if (type === "input")
