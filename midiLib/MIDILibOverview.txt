@@ -2,8 +2,19 @@
 copyright 2013 James Ingram
 http://james-ingram-act-two.de/
 
-Code licensed under MIT
-https://github.com/notator/assistant-performer/blob/master/License.md
+**************************************************************************
+ The file midiLib/JazzWebMIDIAPI.js uses Chris Wilson's function for
+ polyfilling window.performance.now().
+ Chris' originally anonymous, immediate function was lifted from the end of
+ https://github.com/cwilso/WebMIDIAPIShim/blob/master/lib/WebMIDIAPI.js
+ It is now a private function named getPerformanceNow(window) inside the init()
+ function in midiLib/JazzWebMIDIAPI.js. I named it so as to conform to my own
+ programming style. It is released under the following licence:
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ The other code in this midiLib folder is licenced under MIT:
+ https://github.com/notator/assistant-performer/blob/master/License.md
+**************************************************************************
 
 midiLib/MIDILibOverview.txt:
 
