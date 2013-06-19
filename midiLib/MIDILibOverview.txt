@@ -3,13 +3,12 @@ copyright 2013 James Ingram
 http://james-ingram-act-two.de/
 
 **************************************************************************
- The file midiLib/JazzWebMIDIAPI.js uses Chris Wilson's function for
- polyfilling window.performance.now().
- Chris' originally anonymous, immediate function was lifted from the end of
- https://github.com/cwilso/WebMIDIAPIShim/blob/master/lib/WebMIDIAPI.js
- It is now a private function named getPerformanceNow(window) inside the init()
- function in midiLib/JazzWebMIDIAPI.js. I named it so as to conform to my own
- programming style. It is released under the following licence:
+ The file midiLib/WebMIDIAPI.js is Chris Wilson's code for polyfilling the
+ Web MIDI API currently in development at
+ http://lists.w3.org/Archives/Public/public-audio/
+ It was copied from
+ https://github.com/cwilso/WebMIDIAPIShim/tree/master/lib on 19.06.2013
+ and is released under the following licence:
  http://www.apache.org/licenses/LICENSE-2.0
 
  The other code in this midiLib folder is licenced under MIT:
@@ -30,21 +29,17 @@ i.e. 'midi' or 'MIDI' is used, never 'mIDI' or 'Midi'.
 
 The following list of files is in order of dependency.
 
+midiLib/WebMIDIAPI.js
+	Chris Wilson's code for polyfilling the official Web MIDI API, which is
+	currently in development.
+	See the instructions for its use on
+	https://github.com/cwilso/WebMIDIAPIShim
+	Briefly, if midiLib/WebMIDIAPI.js is loaded, the Web MIDI API can be
+	used as if it were implemented in the browser itself.
+	See also: ../ap/Main.js.
+
 midiLib/Namespace.js
 	Defines the MIDILib namespace itself.
-
-midiLib/JazzWebMIDIAPI.js
-	The MIDILib.jazzWebMIDIAPI namespace which implements the W3C Web MIDI
-	API (as defined on 17.01.2013) using the Jazz plugin.
-	This code defines a single function:
-		
-		init()
-
-	which sets up various window attributes, where necessary.
-	In particular, after calling
-	MIDILib.jazzWebMIDIAPI.init(window), the MIDIAccess object can be
-	retrieved by calling
-	window.navigator.requestMIDIAccess(onSuccessCallback, onErrorCallback);
 
 midiLib/Constants.js
 	The MIDILib.constants namespace, which exposes

@@ -25,8 +25,7 @@ _AP.palettes = (function (document)
     "use strict";
     // begin var
     // module dependencies (see Javascript Patterns p.98)
-    var File = _AP.file,
-
+    var
     // private properties (see Javascript Patterns p.98)
     // private methods (see Javascript Patterns p.98)
     paletteNumber = function (id)
@@ -338,10 +337,10 @@ _AP.palettes = (function (document)
         return this;
     },
 
-    // public Palettes() constructor.
+    // public Palettes() constructor. Returns an empty array if there are no palettes in the score.
     // Gets the palettes defined in a "midiDefs" element in the first SVG page embedded in the HTML.
     // Palettes is an array of palette. Each palette is an array of ChordDef.
-    Palettes = function ()
+    Palettes = function (svg)
     {
         if (!(this instanceof Palettes))
         {
@@ -349,7 +348,7 @@ _AP.palettes = (function (document)
         }
 
         var embeddedSvgPages, svgPage1,
-            defNodes, defNode,
+            midiDefs, defNodes, defNode,
             id,
             defsArray = [],
             palettes = [],
@@ -358,37 +357,40 @@ _AP.palettes = (function (document)
 
         // Note that document has been passed as a local variable to this namespace.
         embeddedSvgPages = document.querySelectorAll(".svgPage");
-        svgPage1 = File.getSubDocument(embeddedSvgPages[0]); // public function (see above)
-        defNodes = svgPage1.getElementsByTagName("midiDefs")[0].childNodes;
-
-        for (i = 0; i < defNodes.length; ++i)
+        svgPage1 = svg.getSVGDocument(embeddedSvgPages[0]); // public function (see above)
+        midiDefs = svgPage1.getElementsByTagName("midiDefs");
+        if(midiDefs.length > 0)
         {
-            defNode = defNodes[i];
-            if (defNode.nodeName !== '#text')
+            defNodes = midiDefs[0].childNodes;
+
+            for (i = 0; i < defNodes.length; ++i)
             {
-                id = defNode.getAttribute("id");
+                defNode = defNodes[i];
+                if(defNodes[i].nodeName !== '#text' && defNodes[i].nodeName !== '#comment' && defNodes[i].nodeName !== 'script')
+                {
+                    id = defNode.getAttribute("id");
 
-                if (paletteNumber(id) !== currentPaletteNumber)
-                {
-                    palettes.push(defsArray);
-                    defsArray = [];
-                    currentPaletteNumber++;
-                }
+                    if (paletteNumber(id) !== currentPaletteNumber)
+                    {
+                        palettes.push(defsArray);
+                        defsArray = [];
+                        currentPaletteNumber++;
+                    }
 
-                if (id.indexOf("chord") > 0)
-                {
-                    chordDef = new ChordDef(defNode);
-                    defsArray.push(chordDef);
-                }
-                else if (id.indexOf("rest") > 0)
-                {
-                    restDef = new RestDef(defNode);
-                    defsArray.push(restDef);
+                    if (id.indexOf("chord") > 0)
+                    {
+                        chordDef = new ChordDef(defNode);
+                        defsArray.push(chordDef);
+                    }
+                    else if (id.indexOf("rest") > 0)
+                    {
+                        restDef = new RestDef(defNode);
+                        defsArray.push(restDef);
+                    }
                 }
             }
+            palettes.push(defsArray);
         }
-        palettes.push(defsArray);
-
         return palettes;
     },
 

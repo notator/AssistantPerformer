@@ -31,6 +31,7 @@ _AP.controls = (function (document, window)
 
     midiAccess,
     score,
+    svg = {}, // an object containing pointers to functions defined in SVG files
     assistant,
     sequence,
     svgControlsState = 'stopped', //svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd'.
@@ -192,51 +193,28 @@ _AP.controls = (function (document, window)
     },
 
     // This function is called when the input or output device selectors change.
-    setMIDIDevices = function (midiAccess)
+    setMIDIDevices = function ()
     {
         var 
         inSelector = document.getElementById("midiInputDeviceSelector"),
         outSelector = document.getElementById("midiOutputDeviceSelector");
 
-        options.inputDeviceId = inSelector.selectedIndex - 1;
-        options.outputDeviceId = outSelector.selectedIndex - 1;
-        options.getInputDevice = function (midiInputEventHandler)
+        if(inSelector.selectedIndex === 0)
         {
-            if (options.inputDevice !== undefined && options.inputDevice !== null)
-            {
-                options.inputDevice.close();
-                options.inputDevice = null;
-            }
-            if (options.inputDeviceId !== -1)
-            {
-                options.inputDevice = midiAccess.getInput(options.inputDeviceId);
-                if (midiInputEventHandler !== null)
-                {
-                    //// 14.01.2013: W3C says there is simply an onmessage field in InputDevice
-                    //options.inputDevice.onmessage = midiInputEventHandler;
-
-                    //options.inputDevice.addEventListener("midimessage", function (msg)
-                    //{
-                    //    midiInputEventHandler(msg);
-                    //});
-
-                    options.inputDevice.addEventListener("message", function (msg)
-                    {
-                        midiInputEventHandler(msg);
-                    });
-                }
-            }
-        };
-
-        if (options.outputDevice !== undefined && options.outputDevice !== null)
+            options.inputDevice = null;
+        }
+        else
         {
-            options.outputDevice.close();
-            options.outputDevice = null;
+            options.inputDevice = inSelector.options[inSelector.selectedIndex].inputDevice;
         }
 
-        if (options.outputDeviceId !== -1)
+        if(outSelector.selectedIndex === 0)
         {
-            options.outputDevice = midiAccess.getOutput(options.outputDeviceId);
+            options.outputDevice = null;
+        }
+        else
+        {
+            options.outputDevice = outSelector.options[outSelector.selectedIndex].outputDevice;
         }
     },
 
@@ -843,6 +821,7 @@ _AP.controls = (function (document, window)
         }
     },
 
+    // Defines the window.svgLoaded(...) function.
     // Sets up the pop-up menues for scores and MIDI input and output devices.
     init = function (mAccess)
     {
@@ -880,12 +859,12 @@ _AP.controls = (function (document, window)
         // sets the options in the device selectors' menus
         function setMIDIDeviceSelectors(midiAccess)
         {
-            var 
+            var
             i, nItems, option,
             is = mo.midiInputDeviceSelector, // = document.getElementById("midiInputDeviceSelector")
             os = mo.midiOutputDeviceSelector, // = document.getElementById("midiOutputDeviceSelector")
-            inputs = midiAccess.enumerateInputs(),
-            outputs = midiAccess.enumerateOutputs();
+            inputs = midiAccess.getInputs(),
+            outputs = midiAccess.getOutputs(); // WebMIDIAPI creates new OutputDevices
 
             option = document.createElement("option");
             option.text = "choose a MIDI input device";
@@ -895,6 +874,8 @@ _AP.controls = (function (document, window)
             {
                 option = document.createElement("option");
                 option.text = inputs[i].name;
+                option.inputDevice = midiAccess.getInput(i);  // WebMIDIAPI creates a new InputDevice
+                option.inputDevice.addEventListener("message", _AP.assistant.handleMIDIInputEvent);
                 is.add(option, null);
             }
 
@@ -906,6 +887,7 @@ _AP.controls = (function (document, window)
             {
                 option = document.createElement("option");
                 option.text = outputs[i].name;
+                option.outputDevice = midiAccess.getOutput(i);  // WebMIDIAPI creates a new OutputDevice
                 os.add(option, null);
             }
         }
@@ -963,6 +945,16 @@ _AP.controls = (function (document, window)
             svgPagesDiv = document.getElementById("svgPages");
             svgPagesDiv.style.height = window.innerHeight - 43;
         }
+
+        // This function is called by the first SVG page in a score when it loads (using an onLoad() function).
+        // The argument list contains pointers to functions defined in scores/SVG.js
+        // The first SVG page in each score contains the line
+        //     <script type="text/javascript" xlink:href="../SVG.js"/>
+        // Each argument function is added to the local svg object (which only exists for that purpose).
+        window._JI_SVGLoaded = function(getSVGDocument)
+        {
+            svg.getSVGDocument = getSVGDocument;
+        };
 
         midiAccess = mAccess;
 
@@ -1034,7 +1026,8 @@ _AP.controls = (function (document, window)
             }
 
             // To embed other scores, simply follow this pattern with the appropriate number of pages.
-            // The page size defined at the top of the svg pages should be 1010 x 1037, as in Study2c3.1.
+            // Also: add the new score as an option in the "scoreSelector" in assistantPerformer.html. 
+            // The page size defined at the top of the svg pages should be 1010 x 1237, as in Study2c3.1.
             function setStudy2c3_1()
             {
                 var embedCode = "",
@@ -1065,6 +1058,24 @@ _AP.controls = (function (document, window)
                 return 8; // the number of tracks
             }
 
+            function setSong6Sketch()
+            {
+                var svgPagesFrame,
+                    embedCode = "",
+                    page1Url = "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Song 6 sketch/Song 6 sketch page 1.svg",
+                    page2Url = "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Song 6 sketch/Song 6 sketch page 2.svg";
+
+                embedCode += embedPageCode(page1Url);
+                embedCode += embedPageCode(page2Url);
+
+                svgPagesFrame = document.getElementById('svgPages');
+
+                // should call svgPagesFrame.svgLoaded, and set svgPagesFrame.svgScript 
+                svgPagesFrame.innerHTML = embedCode;
+
+                return 1; // the number of tracks
+            }
+
             switch (scoreSelectorElem.selectedIndex)
             {
                 case 0:
@@ -1075,6 +1086,9 @@ _AP.controls = (function (document, window)
                     break;
                 case 2:
                     nTracks = setStudy3Sketch1();
+                    break;
+                case 3:
+                    nTracks = setSong6Sketch();
                     break;
                 default:
                     throw "unknown score!";
@@ -1187,7 +1201,7 @@ _AP.controls = (function (document, window)
 
         if (controlID === "midiInputDeviceSelector")
         {
-            setMIDIDevices(midiAccess);
+            setMIDIDevices();
             tracksControl.setTracksControlState(mo.midiInputDeviceSelector.selectedIndex > 0, mo.trackSelector.selectedIndex);
         }
 
@@ -1421,10 +1435,10 @@ _AP.controls = (function (document, window)
         {
             if (scoreHasJustBeenSelected)
             {
-                score.getEmptyPagesAndSystems(); // everything except the timeObjects (which have to take account of speed)
+                score.getEmptyPagesAndSystems(svg); // everything except the timeObjects (which have to take account of speed)
             }
 
-            score.getTimeObjects(options.assistantsSpeed);
+            score.getTimeObjects(svg, options.assistantsSpeed);
 
             sequence = score.createSequence(options.assistantsSpeed);
 

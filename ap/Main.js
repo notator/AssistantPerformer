@@ -6,14 +6,14 @@
  *  https://github.com/notator/assistant-performer/blob/master/License.md
  *
  *  ap/Main.js
- *  1. calls MIDILib.jazzWebMIDIAPI.init(window) to ensure that the relevant
- *     window interfaces are set correctly. This call, the file midiLib/JazzWebMIDIAPI.js
- *     and the Jazz plugin can be deleted when browsers implement the Web MIDI API
- *     natively.
- *  2. Retrieves the midiAccess object by calling
- *      window.navigator.requestMIDIAccess(onSuccessCallback, onErrorCallback);
- *  3. Calls _AP.controls.init(midiAccess) to set the contents of the
- *     device selector menus;
+ *  midiLib/WebMIDIAPI.js has been included in ../assistantPerformer.html,
+ *  so the Web MIDI API is available. When browsers implement the Web MIDI API
+ *  natively, the code in midiLib/WebMIDIAPI.js is ignored (does nothing).
+ *  1. The midiAccess object is first retrieved by calling
+ *       window.navigator.requestMIDIAccess(onSuccessCallback, onErrorCallback);
+ *  2. onSuccessCallback calls _AP.controls.init(midiAccess) which saves the
+ *     midiAccess object and sets the contents of the device selector menus in
+ *     the Assistant Performer's user interface.
  */
 
 /*jslint bitwise: false, nomen: false, plusplus: true, white: true */
@@ -23,21 +23,18 @@ window.addEventListener("load", function (window)
     "use strict";
 
     var
-    midiAccess,
-    onSuccessCallback = function (midi)
+    onSuccessCallback = function (midiAccess)
     {
-        midiAccess = midi;
+        // Save the midiAccess object and set
+        // the contents of the device selector menus.
+        _AP.controls.init(midiAccess);
     },
     onErrorCallback = function (error)
     {
         throw "Error: Unable to set midiAccess. Error code:".concat(error.code);
     };
 
-    MIDILib.jazzWebMIDIAPI.init(window); // delete this line when browsers implement the Web MIDI API
-
-    window.navigator.requestMIDIAccess(onSuccessCallback, onErrorCallback);
-
-    _AP.controls.init(midiAccess); // sets the contents of the device selector menus
+    navigator.requestMIDIAccess(onSuccessCallback, onErrorCallback);
 
 }, false);
 

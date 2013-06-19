@@ -174,7 +174,7 @@ MIDILib.sequence = (function (window)
 
             if (!isStopped())
             {
-                performanceMsDuration = Math.ceil(window.performance.now() - sequenceStartTime);
+                performanceMsDuration = Math.ceil(performance.now() - sequenceStartTime);
                 currentMoment = null;
                 setState("stopped");
                 if (reportEndOfSpan !== undefined && reportEndOfSpan !== null)
@@ -299,7 +299,7 @@ MIDILib.sequence = (function (window)
             var
             deviation,
             PREQUEUE = 0, // needs to be set to a larger value later. See above.
-            now = window.performance.now(),
+            now = performance.now(),
             delay;
 
             // moment.timestamps are always absolute DOMHRT values here.
@@ -402,7 +402,7 @@ MIDILib.sequence = (function (window)
         {
             if (isPaused())
             {
-                runFrom(pausedMoment, window.performance.now());
+                runFrom(pausedMoment, performance.now());
             }
             else
             {
@@ -551,7 +551,7 @@ MIDILib.sequence = (function (window)
 
             setTrackAttributes(that.tracks, trackIsOnArray, fromMsPositionInScore, toMsPositionInScore);
 
-            sequenceStartTime = window.performance.now();
+            sequenceStartTime = performance.now();
             firstMomentInThisSequence = getFirstMomentInThisSequence(that.tracks);
             runFrom(firstMomentInThisSequence, sequenceStartTime);
         },
@@ -563,7 +563,7 @@ MIDILib.sequence = (function (window)
             var
             i, nMessages, messages, message,
             moment = nextMoment(),
-            now = window.performance.now();
+            now = performance.now();
 
             while (moment !== null)
             {

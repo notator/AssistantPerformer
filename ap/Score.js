@@ -24,7 +24,6 @@ _AP.score = (function (document)
     Message = MIDILib.message.Message,
     Sequence = MIDILib.sequence.Sequence,
 
-    File = _AP.file,
     Markers = _AP.markers,
     Palettes = _AP.palettes,
     MIDIChord = _AP.midiChord,
@@ -65,7 +64,7 @@ _AP.score = (function (document)
     {
         var 
         noteOffMessage, channelIndex, noteIndex,
-        now = window.performance.now();
+        now = performance.now();
 
         if (midiOutputDevice !== undefined && midiOutputDevice !== null)
         {
@@ -769,14 +768,15 @@ _AP.score = (function (document)
         showRunningMarker();
     },
 
+    // The svg argument contains pointers to functions that work on the SVG score.
     // Constructs all pages, complete except for the timeObjects.
-    // Palettes are also loaded.
+    // Palettes are also loaded. If the score does not contain any palettes, Palettes will be an empty array.
     // Each page has a frame and the correct number of empty systems.
     // Each system has the correct number of empty staves and barlines, it also has
     // a startMarker, a runningMarker and an endMarker.
     // Each staff has empty voices, each voice has an empty timeObjects array.
     // If these objects have graphic parameters, they are set.
-    getEmptyPagesAndSystems = function ()
+    getEmptyPagesAndSystems = function (svg)
     {
         var system, embeddedSvgPages, nPages, totalSysNumber, viewBoxOriginY,
             i, j,
@@ -799,11 +799,11 @@ _AP.score = (function (document)
             }
         }
 
-        function getPalettes()
+        function getPalettes(svg)
         {
             var i, pals;
 
-            pals = new Palettes.Palettes();
+            pals = new Palettes.Palettes(svg);
             for (i = 0; i < pals.length; ++i)
             {
                 palettes.push(pals[i]);
@@ -991,7 +991,7 @@ _AP.score = (function (document)
 
         resetContent();
 
-        getPalettes();
+        getPalettes(svg);
 
         embeddedSvgPages = document.querySelectorAll(".svgPage");
         nPages = embeddedSvgPages.length;
@@ -1000,7 +1000,7 @@ _AP.score = (function (document)
         for (i = 0; i < nPages; ++i)
         {
             sysNumber = 1;
-            svgPage = File.getSubDocument(embeddedSvgPages[i]);
+            svgPage = svg.getSVGDocument(embeddedSvgPages[i]);
 
             svgElem = svgPage.childNodes[1];
             viewBoxScale = getViewBoxScale(svgElem); // a float >= 1 (currently, usually 8.0)
@@ -1008,7 +1008,7 @@ _AP.score = (function (document)
             systemID = "page" + (i + 1).toString() + "_system" + (sysNumber++).toString();
             for (j = 0; j < svgChildren.length; ++j)
             {
-                if (svgChildren[j].nodeName !== '#text')
+                if(svgChildren[j].nodeName !== '#text' && svgChildren[j].nodeName !== '#comment' && svgChildren[j].nodeName !== 'script')
                 {
                     childID = svgChildren[j].getAttribute("id");
                     if (childID === "frame")
@@ -1036,7 +1036,7 @@ _AP.score = (function (document)
     // msDurations stored in the score are divided by speed.
     // Rounding errors are corrected, so that all voices in
     // a system continue to have the same msDuration.
-    getTimeObjects = function (speed)
+    getTimeObjects = function (svg, speed)
     {
         var embeddedSvgPages, nPages, totalSysNumber, viewBoxOriginY,
             i, j,
@@ -1356,7 +1356,7 @@ _AP.score = (function (document)
         for (i = 0; i < nPages; ++i)
         {
             sysNumber = 1;
-            svgPage = File.getSubDocument(embeddedSvgPages[i]);
+            svgPage = svg.getSVGDocument(embeddedSvgPages[i]);
 
             svgElem = svgPage.childNodes[1];
             viewBoxScale = getViewBoxScale(svgElem); // a float >= 1 (currently, usually 8.0)
@@ -1364,7 +1364,7 @@ _AP.score = (function (document)
             systemID = "page" + (i + 1).toString() + "_system" + (sysNumber++).toString();
             for (j = 0; j < svgChildren.length; ++j)
             {
-                if (svgChildren[j].nodeName !== '#text')
+                if(svgChildren[j].nodeName !== '#text' && svgChildren[j].nodeName !== '#comment' && svgChildren[j].nodeName !== 'script')
                 {
                     childID = svgChildren[j].getAttribute("id");
                     if (childID === systemID)

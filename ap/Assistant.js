@@ -72,7 +72,7 @@ _AP.assistant = (function (window)
 
             forwardSetState("stopped");
 
-            performanceMsDuration = window.performance.now() - performanceStartNow;
+            performanceMsDuration = performance.now() - performanceStartNow;
 
             reportEndOfPerformance(recordingSequence, performanceMsDuration);
         }
@@ -83,7 +83,7 @@ _AP.assistant = (function (window)
     // The Assistant
     // a) ignores both RealTime and SysEx messages in its input, and
     // b) assumes that RealTime messages will not interrupt the messages being received.    
-    handleMIDIInputEvent = function (data)
+    handleMIDIInputEvent = function (msg)
     {
         var inputEvent;
 
@@ -149,7 +149,7 @@ _AP.assistant = (function (window)
             var
             i,
             nTracks = allSequences[0].tracks.length,
-            now = window.performance.now(),
+            now = performance.now(),
             trackMoments, nMoments, moment, track;
 
             // Returns an array of (synchronous) trackMoments.
@@ -395,16 +395,20 @@ _AP.assistant = (function (window)
 
         function handleNoteOn(inputEvent, overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity)
         {
-            var sequence;
+            var
+            allSubsequences = performedSequences;
 
-            // Shifts the pitches in the whole performer's track up or down so that the lowest pitch in the
+            // Shifts the pitches in the subsequence up or down so that the lowest pitch in the
             // first noteOn moment is newPitch. Similarly with velocity.
-            function overridePitchAndOrVelocity (sequence, soloTrackIndex, newPitch, newVelocity,
+            function overridePitchAndOrVelocity (allSubsequences, currentSubsequenceIndex, soloTrackIndex, newPitch, newVelocity,
                 overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity)
             {
                 var
+                subsequence = allSubsequences[currentSubsequenceIndex],
                 NOTE_ON_CMD = MIDILib.constants.COMMAND.NOTE_ON,
-                track = sequence.tracks[soloTrackIndex], message, lowestNoteOnEvt, pitchDelta, velocityDelta;
+                NOTE_OFF_CMD = MIDILib.constants.COMMAND.NOTE_OFF,
+                track = subsequence.tracks[soloTrackIndex], message, lowestNoteOnEvt, pitchDelta, velocityDelta,
+                hangingScorePitchesPerTrack;
 
                 // Returns the lowest NoteOn message in the first moment in the track to contain a NoteOnMessage.
                 // Returns null if there is no such message.
@@ -440,17 +444,24 @@ _AP.assistant = (function (window)
                     return result;
                 }
 
-                function adjustTracks(NOTE_ON_CMD, soloTrackIndex, pitchDelta, velocityDelta,
+                // Adjusts the noteOn and noteOff messages inside this subsequence
+                // Either returns an array of arrays, or null.
+                // The returned array[track] is an array containing the score pitches which have not been turned off in each track.
+                // null is returned if all the pitches which are turned on inside the subsequence are also turned off inside the subsequence.
+                function adjustTracks(NOTE_ON_CMD, NOTE_OFF_CMD, soloTrackIndex, pitchDelta, velocityDelta,
                     overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity)
                 {
-                    var nTracks = sequence.tracks.length, i, j, k, nMoments, moment, nEvents;
+                    var nTracks = subsequence.tracks.length, i, j, k, nMoments, moment, nEvents, index, nPitches,
+                        pendingScorePitchesPerTrack = [], returnPendingScorePitchesPerTrack = [], pendingPitches = false;
 
                     for (i = 0; i < nTracks; ++i)
                     {
+                        pendingScorePitchesPerTrack.push([]);
+
                         if ((i === soloTrackIndex && (overrideSoloPitch || overrideSoloVelocity))
                         || (i !== soloTrackIndex && (overrideOtherTracksPitch || overrideOtherTracksVelocity)))
                         {
-                            track = sequence.tracks[i];
+                            track = subsequence.tracks[i];
                             nMoments = track.moments.length;
 
                             for (j = 0; j < nMoments; ++j)
@@ -462,13 +473,112 @@ _AP.assistant = (function (window)
                                     message = moment.messages[k];
                                     if (message.command() === NOTE_ON_CMD)
                                     {
+                                        index = pendingScorePitchesPerTrack[i].indexOf(message.data[1]);
+                                        if(index === -1)
+                                        {
+                                            pendingScorePitchesPerTrack[i].push(message.data[1]);
+                                        }
+                                        
                                         message.data[1] = midiValue(message.data[1] + pitchDelta);
                                         message.data[2] = midiValue(message.data[2] + velocityDelta);
+                                    }
+                                    if(message.command() === NOTE_OFF_CMD)
+                                    {
+                                        index = pendingScorePitchesPerTrack[i].indexOf(message.data[1]);
+                                        if(index !== -1) // ignore noteOffs which are not related to noteOns in this subsequence.
+                                        {
+                                            delete pendingScorePitchesPerTrack[i][index];
+                                            message.data[1] = midiValue(message.data[1] + pitchDelta);
+                                        }                                
                                     }
                                 }
                             }
                         }
                     }
+
+                    for(i = 0; i < nTracks; ++i)
+                    {
+                        returnPendingScorePitchesPerTrack.push([]);
+                        nPitches = pendingScorePitchesPerTrack[i].length; 
+                        for(j = 0; j < nPitches; j++)
+                        {
+                            if(pendingScorePitchesPerTrack[i][j] !== undefined)
+                            {
+                                pendingPitches = true;
+                                returnPendingScorePitchesPerTrack[i].push(pendingScorePitchesPerTrack[i][j]);
+                            }
+                        }
+                    }
+                    if(pendingPitches === false) {
+                        returnPendingScorePitchesPerTrack = null;
+                    }
+
+                    return returnPendingScorePitchesPerTrack;
+                }
+
+                // In each following subsequence and track, looks for the first noteOff corresponding to a hanging note, and adds pitchDelta to its pitch.
+                function adjustSubsequentNoteOffs(NOTE_OFF_CMD, allSubsequences, currentSubsequenceIndex, pitchDelta, hangingScorePitchesPerTrack)
+                {
+                    var trackIndex, nTracks = hangingScorePitchesPerTrack.length, hangingPitches,
+                        i, nHangingPitches, hangingPitch, nextNoteOffMessage;
+
+                    // returns the first noteOff message corresponding to the hanging Pitch in any of the following subsequences.
+                    function findNextNoteOffMessage(NOTE_OFF_CMD, allSubsequences, currentSubsequenceIndex, trackIndex, hangingPitch)
+                    {
+                        var
+                        nextSubsequenceIndex = currentSubsequenceIndex + 1,
+                        i, nSubsequences = allSubsequences.length, track,
+                        j, nMoments, moment,
+                        k, nMessages, message, returnMessage = null;
+                        
+                        for(i = nextSubsequenceIndex; i < nSubsequences; ++i)
+                        {
+                            track = allSubsequences[i].tracks[trackIndex];
+                            nMoments = track.moments.length;
+                            for(j = 0; j < nMoments; ++j)
+                            {
+                                moment = track.moments[j];
+                                nMessages = moment.messages.length;
+                                for(k = 0; k < nMessages; ++k)
+                                {
+                                    message = moment.messages[k];
+                                    if(message.data[1] === hangingPitch)
+                                    {
+                                        if(message.command() === NOTE_OFF_CMD)
+                                        {
+                                            returnMessage = message;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if(returnMessage !== null)
+                                {
+                                    break;
+                                }
+                            }
+                            if(returnMessage !== null)
+                            {
+                                break;
+                            }
+                        }
+                        return returnMessage;
+                    }
+
+                    for(trackIndex = 0; trackIndex < nTracks; trackIndex++)
+                    {
+                        hangingPitches = hangingScorePitchesPerTrack[trackIndex];
+                        nHangingPitches = hangingPitches.length;
+                        for(i = 0; i < nHangingPitches; i++)
+                        {
+                            hangingPitch = hangingPitches[i];
+                            nextNoteOffMessage = findNextNoteOffMessage(NOTE_OFF_CMD, allSubsequences, currentSubsequenceIndex, trackIndex, hangingPitch);
+                            if(nextNoteOffMessage !== null)
+                            {
+                                nextNoteOffMessage.data[1] = hangingPitch + pitchDelta;
+                            }
+                        }
+                    }
+
                 }
 
                 lowestNoteOnEvt = findLowestNoteOnEvt(NOTE_ON_CMD, track);
@@ -479,8 +589,14 @@ _AP.assistant = (function (window)
 
                     if (pitchDelta !== 0 || velocityDelta !== 0)
                     {
-                        adjustTracks(NOTE_ON_CMD, soloTrackIndex, pitchDelta, velocityDelta,
+                        hangingScorePitchesPerTrack =
+                            adjustTracks(NOTE_ON_CMD, NOTE_OFF_CMD, soloTrackIndex, pitchDelta, velocityDelta,
                             overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity);
+
+                        if(hangingScorePitchesPerTrack !== null)
+                        {
+                            adjustSubsequentNoteOffs(NOTE_OFF_CMD, allSubsequences, currentSubsequenceIndex, pitchDelta, hangingScorePitchesPerTrack);
+                        }
                     }
                 }
             }
@@ -500,17 +616,17 @@ _AP.assistant = (function (window)
                     performanceStartNow = sequenceStartNow;
                 }
 
-                if (nextIndex === 0 || (nextIndex <= endIndex && performedSequences[nextIndex].chordSequence !== undefined))
+                if (nextIndex === 0 || (nextIndex <= endIndex && allSubsequences[nextIndex].chordSequence !== undefined))
                 {
                     currentIndex = nextIndex++;
-                    sequence = performedSequences[currentIndex];
+                    
                     if (overrideSoloPitch || overrideOtherTracksPitch || overrideSoloVelocity || overrideOtherTracksVelocity)
                     {
-                        overridePitchAndOrVelocity(sequence, options.livePerformersTrackIndex,
+                        overridePitchAndOrVelocity(allSubsequences, currentIndex, options.livePerformersTrackIndex,
                             inputEvent.data[1], inputEvent.data[2],
                             overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity);
                     }
-                    playSequence(sequence, options);
+                    playSequence(allSubsequences[currentIndex], options);
                 }
             }
             else // velocity 0 is "noteOff"
@@ -519,7 +635,7 @@ _AP.assistant = (function (window)
             }
         }
 
-        inputEvent = getInputEvent(data, window.performance.now());
+        inputEvent = getInputEvent(msg.data, performance.now());
 
         if (inputEvent.data !== undefined)
         {
@@ -567,7 +683,7 @@ _AP.assistant = (function (window)
                     }
                     break;
                 case CMD.NOTE_ON:
-                    if (data[2] !== 0)
+                    if(inputEvent.data[2] !== 0)
                     {
                         handleNoteOn(inputEvent,
                             options.overrideSoloPitch, options.overrideOtherTracksPitch,
@@ -589,13 +705,13 @@ _AP.assistant = (function (window)
 
     setState = function (state)
     {
-        function closeInputDevice(options)
-        {
-             if (options.inputDevice !== undefined && options.inputDevice !== null)
-             {
-                 options.inputDevice.close();
-             }
-        }
+        //function closeInputDevice(options)
+        //{
+        //     if (options.inputDevice !== undefined && options.inputDevice !== null)
+        //     {
+        //         options.inputDevice.close();
+        //     }
+        //}
 
         switch (state)
         {
@@ -612,17 +728,17 @@ _AP.assistant = (function (window)
                 pausedNow = 0.0; // used only with the relative durations option (the time at which the sequence was paused).
                 stopped = true;
                 paused = false;
-                closeInputDevice(options);
+                //closeInputDevice(options);
                 break;
             case "paused":
                 stopped = false;
                 paused = true;
-                closeInputDevice(options);
+                //closeInputDevice(options);
                 break;
             case "running":
                 stopped = false;
                 paused = false;
-                options.getInputDevice(handleMIDIInputEvent);
+                //options.getInputDevice();
                 break;
             default:
                 throw "Unknown sequencer state!";
@@ -636,7 +752,7 @@ _AP.assistant = (function (window)
         {
             if (options.assistantUsesAbsoluteDurations === false)
             {
-                sequenceStartNow = window.performance.now();
+                sequenceStartNow = performance.now();
                 prevSequenceStartNow += (sequenceStartNow - pausedNow);
             }
             performedSequences[currentIndex].resume();
@@ -650,7 +766,7 @@ _AP.assistant = (function (window)
     {
         if (stopped === false && paused === false)
         {
-            pausedNow = window.performance.now();
+            pausedNow = performance.now();
 
             performedSequences[currentIndex].pause();
             setState("paused");
@@ -1013,7 +1129,8 @@ _AP.assistant = (function (window)
     publicAPI =
     {
         // empty Assistant constructor
-        Assistant: Assistant
+        Assistant: Assistant,
+        handleMIDIInputEvent: handleMIDIInputEvent
     };
     // end var
 
