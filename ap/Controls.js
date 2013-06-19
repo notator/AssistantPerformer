@@ -1269,7 +1269,9 @@ _AP.controls = (function (document, window)
                 sequence = score.createSequence(options.assistantsSpeed);
 
                 if (options.assistedPerformance === true)
-                {// this constructor consumes sequence, resetting moment timestamps relative to the start of their subsection.
+                {
+                    // this constructor consumes sequence, resetting moment timestamps
+                    // relative to the start of their subsection.
                     assistant = new Assistant(sequence, options, reportEndOfPerformance, reportMsPos);
                 }
             }

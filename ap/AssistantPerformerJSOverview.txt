@@ -106,6 +106,9 @@ ap/Assistant.js
 			An Assistant is created when the user has selected a MIDI input device,
 			and clicks the "Start" button on the browser page.
 
+		and the handler for messages arriving at a MIDI input device:
+			handleMIDIInputEvent(msg)
+
 ap/Score.js
 	The _AP.score namespace containing a single constructor:
 

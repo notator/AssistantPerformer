@@ -6,8 +6,9 @@
 *  https://github.com/notator/assistant-performer/blob/master/License.md
 *
 *  ap/Assistant.js
-*  The _AP.assistant namespace which defines the
-*    Assistant() constructor. 
+*  The _AP.assistant namespace which defines
+*    Assistant() [constructor]
+*    handleMIDIInputEvent(msg) [message handler for input devices]. 
 */
 
 /*jslint bitwise: true, nomen: true, plusplus: true, white: true */
@@ -705,14 +706,6 @@ _AP.assistant = (function (window)
 
     setState = function (state)
     {
-        //function closeInputDevice(options)
-        //{
-        //     if (options.inputDevice !== undefined && options.inputDevice !== null)
-        //     {
-        //         options.inputDevice.close();
-        //     }
-        //}
-
         switch (state)
         {
             case "stopped":
@@ -728,17 +721,14 @@ _AP.assistant = (function (window)
                 pausedNow = 0.0; // used only with the relative durations option (the time at which the sequence was paused).
                 stopped = true;
                 paused = false;
-                //closeInputDevice(options);
                 break;
             case "paused":
                 stopped = false;
                 paused = true;
-                //closeInputDevice(options);
                 break;
             case "running":
                 stopped = false;
                 paused = false;
-                //options.getInputDevice();
                 break;
             default:
                 throw "Unknown sequencer state!";
