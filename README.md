@@ -1,15 +1,20 @@
 Introduction
 ------------
 This is a web MIDI application, which gives a single performer control over the performance of a music score displayed in a browser. A stable, public version can be tried out at<br />
-http://james-ingram-act-two.de/open-source/publicAssistantPerformer/assistantPerformer.html
+http://james-ingram-act-two.de/open-source/publicAssistantPerformer/assistantPerformer.html<br />
+This has only been tested on the latest version of Chrome, and is not guaranteed to work in other browsers.
 
-The project is written in HTML5 and Javascript. It uses MIDI input and output devices, and scores stored in an SVG format which has been enhanced to contain MIDI information. See: http://james-ingram-act-two.de/open-source/svgScoreExtensions.html
+The project is written in HTML5 and Javascript. It uses MIDI input and output devices, and scores stored in an SVG format which has been enhanced to contain MIDI information. See:<br />
+http://james-ingram-act-two.de/open-source/svgScoreExtensions.html<br />
 
-The Jazz plugin (http://jazz-soft.net) is currently required for MIDI support, but this will change when/if browsers implement the new Web MIDI API currently being discussed on the W3C Audio Group's public forum (http://www.w3.org/2011/audio/).
+The file midiLib/WebMIDIAPI.js has been copied from Chris Wilson's Web MIDI API Polyfill at GitHub:<br />
+https://github.com/cwilso/WebMIDIAPIShim<br />
+This code supplies MIDI support in browsers, and requires the <b>Jazz plugin</b> (http://jazz-soft.net) to be installed on the user's computer. Both the Jazz plugin and Chris Wilson's polyfill will become obsolete as soon as the Web MIDI API is actually implemented in browsers. For more details on the Web MIDI API, see: <br />
+http://www.w3.org/2011/audio/.
 
-This application has only been thoroughly tested on the latest version of Chrome (Version 25.0.1364.152 m), but it should also work in other webkit browsers. 
+ 
 
-Monophonic input, such as produced by an EWI (http://www.akaipro.com/ewiseries), is assumed. A MIDI keyboard can be used, but only one key at a time (incoming noteOffs are matched to noteOns, so playing legato is no problem). Timing is related to the times of single noteOns and noteOffs. In addition to noteOn/Off, pitch and velocity information, the performance can also be affected by the instrument's continuous controllers - modulation-wheel, pitch-wheel and aftertouch or channel-pressure.
+Monophonic input, such as produced by an EWI (http://www.akaipro.com/ewiseries), is currently assumed. A MIDI keyboard can be used, but only one key at a time (incoming noteOffs are matched to noteOns, so playing legato is no problem). Timing is related to the times of single noteOns and noteOffs. In addition to noteOn/Off, pitch and velocity information, the performance can also be affected by the instrument's continuous controllers - modulation-wheel, pitch-wheel and aftertouch or channel-pressure.
 
 Future directions: I am currently working on the creation of more scores in the necessary format. Clearly, more examples are needed. New scores could be created in several ways:
 
@@ -65,7 +70,7 @@ Files containing Javscript code for a MIDI library:
 MIDI constant definitions
 </li>
 <li>
-An interface to the Jazz plugin
+WebMIDIAPI.js: Chris Wilson's wrapper for the Jazz plugin
 </li>
 <li>
 Definitions of the objects
