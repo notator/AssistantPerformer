@@ -863,8 +863,8 @@ _AP.controls = (function (document, window)
             i, nItems, option,
             is = mo.midiInputDeviceSelector, // = document.getElementById("midiInputDeviceSelector")
             os = mo.midiOutputDeviceSelector, // = document.getElementById("midiOutputDeviceSelector")
-            inputs = midiAccess.getInputs(),
-            outputs = midiAccess.getOutputs(); // WebMIDIAPI creates new OutputDevices
+            inputs = midiAccess.inputs(),
+            outputs = midiAccess.outputs(); // WebMIDIAPI creates new OutputDevices
 
             option = document.createElement("option");
             option.text = "choose a MIDI input device";
@@ -873,9 +873,9 @@ _AP.controls = (function (document, window)
             for (i = 0; i < nItems; ++i)
             {
                 option = document.createElement("option");
+                option.inputDevice = inputs[i];
                 option.text = inputs[i].name;
-                option.inputDevice = midiAccess.getInput(i);  // WebMIDIAPI creates a new InputDevice
-                option.inputDevice.addEventListener("message", _AP.assistant.handleMIDIInputEvent);
+                option.inputDevice.addEventListener("midimessage", _AP.assistant.handleMIDIInputEvent);
                 is.add(option, null);
             }
 
@@ -886,8 +886,9 @@ _AP.controls = (function (document, window)
             for (i = 0; i < nItems; ++i)
             {
                 option = document.createElement("option");
+                option.outputDevice = outputs[i];
                 option.text = outputs[i].name;
-                option.outputDevice = midiAccess.getOutput(i);  // WebMIDIAPI creates a new OutputDevice
+                //option.outputDevice = midiAccess.getOutput(i);  // WebMIDIAPI creates a new OutputDevice
                 os.add(option, null);
             }
         }
