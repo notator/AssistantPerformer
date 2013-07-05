@@ -1059,12 +1059,12 @@ _AP.controls = (function (document, window)
                 return 8; // the number of tracks
             }
 
-            function setSong6Sketch()
+            function setSongSix()
             {
                 var svgPagesFrame,
                     embedCode = "",
-                    page1Url = "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Song 6 sketch/Song 6 sketch page 1.svg",
-                    page2Url = "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Song 6 sketch/Song 6 sketch page 2.svg";
+                    page1Url = "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Song Six/Song Six page 1.svg",
+                    page2Url = "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Song Six/Song Six page 2.svg";
 
                 embedCode += embedPageCode(page1Url);
                 embedCode += embedPageCode(page2Url);
@@ -1089,7 +1089,7 @@ _AP.controls = (function (document, window)
                     nTracks = setStudy3Sketch1();
                     break;
                 case 3:
-                    nTracks = setSong6Sketch();
+                    nTracks = setSongSix();
                     break;
                 default:
                     throw "unknown score!";
