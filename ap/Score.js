@@ -30,9 +30,6 @@ _AP.score = (function (document)
 
     MAX_MIDI_CHANNELS = 16,
 
-    // private variable, used when resetting main performance options
-    _previousSpeed = -1,
-
     // The frames around each svgPage
     svgFrames = [],
 
@@ -140,7 +137,7 @@ _AP.score = (function (document)
     // If that does not work, try the tracks successively below.
     findStartMarkerTimeObject = function (timeObject, clickedTrackIndex, system, trackIsOn)
     {
-        var nTracks, returnedTimeObject, trackIndex, diff, timeObjectsArray;
+        var returnedTimeObject, trackIndex, diff, timeObjectsArray;
 
         // Returns the chord timeObject at alignmentX, or the following object in the track (if it is a chord), or null.
         // If the timeObject following alignmentX is the final barline, the last chord in the track is returned.
@@ -175,7 +172,6 @@ _AP.score = (function (document)
         }
 
         timeObjectsArray = getTimeObjectsArray(system);
-        nTracks = timeObjectsArray.length;
         returnedTimeObject = null;
         trackIndex = clickedTrackIndex;
         diff = -1;
@@ -205,7 +201,7 @@ _AP.score = (function (document)
 
     // This function is called by the svgTracksControl whenever the score's display needs to be updated.
     // It draws the staves with the right colours and, if necessary, moves the start marker to a chord.
-    refreshDisplay = function (isAssistedPerformance, livePerformersTrackIndex)
+    refreshDisplay = function (isAssistedPerformance, livePerformersTrackIndex, livePerformerIsSilent)
     {
         var system = systems[startMarker.systemIndex()],
         timeObject = startMarker.timeObject(),
@@ -255,7 +251,8 @@ _AP.score = (function (document)
                             timeObjectFound = true;
                             break;
                         }
-                        else if (alignmentX < timeObjectsArray[i][j].alignmentX)
+
+                        if(alignmentX < timeObjectsArray[i][j].alignmentX)
                         {
                             break;
                         }
@@ -269,26 +266,28 @@ _AP.score = (function (document)
         // Staves can have either one or two voices (=tracks). The tracks are 0-indexed channels from top
         // to bottom of the system.
         // If a staff has one track (=voice)
-        //      if it is the live performer's track, its stafflines are coloured black, else
+        //      if it is the live performer's track,
+        //          if its sounds are to be played, its stafflines are coloured black, else
+        //          (conductor option) its stafflines are coloured blue.
         //      if it is an assistant's track
         //          if the track is to be played, its stafflines are coloured grey, else
         //          if the track is disabled, its stafflines are coloured light red.
-        // Similarly when the staff has two tracks. Then the top two stafflines are for the upper track,
-        // and the lower two lines are for the lower track. 
-        function setView(isAssistedPerformance, livePerformersTrackIndex, trackIsOnCallback)
+        // When the staff has two tracks. Then the top three stafflines are coloured for the upper track,
+        // and the lower two lines are coloured for the lower track. 
+        function setView(isAssistedPerformance, livePerformersTrackIndex, livePerformerIsSilent, trackIsOn)
         {
             function setLivePerformersTitleColor(isAssistedPerformance, livePerformersTrackIndex)
             {
                 var i, nSystems = systems.length, j, nStaves = systems[0].staves.length,
                 k, staff, nVoices, track, LIVE_PERFORMERS_TITLECOLOR = "#8888FF";
 
-                for (i = 0; i < nSystems; ++i)
+                for(i = 0; i < nSystems; ++i)
                 {
                     track = 0;
-                    for (j = 0; j < nStaves; ++j)
+                    for(j = 0; j < nStaves; ++j)
                     {
                         staff = systems[i].staves[j];
-                        if (isAssistedPerformance && track === livePerformersTrackIndex)
+                        if(isAssistedPerformance && track === livePerformersTrackIndex)
                         {
                             staff.nameElem.style.fill = LIVE_PERFORMERS_TITLECOLOR;
                             staff.nameElem.style.fontWeight = 'bold';
@@ -299,7 +298,7 @@ _AP.score = (function (document)
                             staff.nameElem.style.fontWeight = 'normal';
                         }
                         nVoices = staff.voices.length;
-                        for (k = 0; k < nVoices; ++k)
+                        for(k = 0; k < nVoices; ++k)
                         {
                             ++track;
                         }
@@ -307,142 +306,98 @@ _AP.score = (function (document)
                 }
             }
 
-            // If this is a non-assisted performance, or this is the soloist's track, the track's
-            // stafflines are coloured black, otherwise they are coloured grey.
-            // There is a maximum of 2 voices per staff. If there is 1 track per staff, all the
-            // staff's lines are coloured the same. If there are 2 voices, the staff must have 
-            // five lines, and the top 2 stafflines are coloured for the top track, the bottom
-            // three lines are coloured for the bottom track.
-            function setStafflinesToDefaultColors(isAssistedPerformance, soloistsTrackIndex)
+            function setStafflineColors(isAssistedPerformance, livePerformersTrackIndex, livePerformerIsSilent, trackIsOn)
             {
                 var i, nSystems = systems.length, j, nStaves = systems[0].staves.length,
-                k, staff, nVoices, track, m, nLines, color;
+                k, staff, trackIndex, m, nLines,
+                stafflineColor;
 
-                function getColor(track, isAssistedPerformance, livePerformersTrackIndex)
+                function getStafflineColor(trackIndex, isAssistedPerformance, livePerformersTrackIndex, livePerformerIsSilent, trackIsOn)
                 {
-                    var color,
+                    var
+                    color,
                     BLACK_COLOR = "#000000",
-                    ASSISTED_GREY_STAFFCOLOR = "#7888A0";
+                    ASSISTED_GREY_STAFFCOLOR = "#7888A0",
+                    SILENT_LIVEPERFORMER_STAFFCOLOR = "#0033CC",
+                    DISABLED_PINK_STAFFCOLOR = "#FFAAAA";
 
-                    if (isAssistedPerformance === false || track === livePerformersTrackIndex)
+                    if(trackIsOn(trackIndex))
                     {
-                        // non-assisted performance or soloist's staff (black stafflines)
-                        color = BLACK_COLOR;
+                        if(!isAssistedPerformance)
+                        {
+                            color = BLACK_COLOR;
+                        }
+                        else if(trackIndex === livePerformersTrackIndex)
+                        {
+                            if(livePerformerIsSilent === true)
+                            {
+                                color = SILENT_LIVEPERFORMER_STAFFCOLOR;
+                            }
+                            else
+                            {
+                                color = BLACK_COLOR;
+                            }
+                        }
+                        else
+                        {
+                            color = ASSISTED_GREY_STAFFCOLOR;
+                        }
                     }
                     else
-                    {   // assistant's staff (grey stafflines)
-                        color = ASSISTED_GREY_STAFFCOLOR;
+                    {
+                        color = DISABLED_PINK_STAFFCOLOR;
                     }
                     return color;
                 }
 
-                // The livePerformersTrackIndex is also consulted while setting the end marker.
-                livePerformersTrackIndex = soloistsTrackIndex;
-
-                for (i = 0; i < nSystems; ++i)
+                for(i = 0; i < nSystems; ++i)
                 {
-                    track = 0;
-                    for (j = 0; j < nStaves; ++j)
+                    trackIndex = 0;
+                    for(j = 0; j < nStaves; ++j)
                     {
                         staff = systems[i].staves[j];
-                        nVoices = staff.voices.length;
-                        if (nVoices > 2)
+                        if(staff.voices.length === 1)
                         {
-                            throw "Error: staff can have at most two voices (=tracks).";
+                            stafflineColor = getStafflineColor(trackIndex, isAssistedPerformance, livePerformersTrackIndex, livePerformerIsSilent, trackIsOn);
+                            nLines = staff.svgStafflines.length;
+                            for(m = 0; m < nLines; ++m) // could be any number of lines
+                            {
+                                staff.svgStafflines[m].style.stroke = stafflineColor;
+                            }
+                            ++trackIndex;
                         }
-                        for (k = 0; k < nVoices; ++k)
+                        else if(staff.voices.length === 2 && staff.svgStafflines.length === 5) // the staff has two voices
                         {
-                            if (k === 0)
+                            for(k = 0; k < 2; ++k)
                             {
-                                nLines = staff.svgStafflines.length;
-                                color = getColor(track, isAssistedPerformance, livePerformersTrackIndex);
-                                for (m = 0; m < nLines; ++m) // could be any number of lines
+                                stafflineColor = getStafflineColor(trackIndex, isAssistedPerformance, livePerformersTrackIndex, livePerformerIsSilent, trackIsOn);
+                                if(k === 0)
                                 {
-                                    staff.svgStafflines[m].style.stroke = color;
+                                    staff.svgStafflines[0].style.stroke = stafflineColor;
+                                    staff.svgStafflines[1].style.stroke = stafflineColor;
+                                    staff.svgStafflines[2].style.stroke = stafflineColor;
                                 }
-                            }
-                            else if (k === 1)
-                            {
-                                if (nLines !== 5)
+                                if(k === 1)
                                 {
-                                    throw "Error: 2-voice staves must have 5 lines.";
+                                    staff.svgStafflines[3].style.stroke = stafflineColor;
+                                    staff.svgStafflines[4].style.stroke = stafflineColor;
                                 }
-                                color = getColor(track, isAssistedPerformance, livePerformersTrackIndex);
-                                staff.svgStafflines[2].style.stroke = color;
-                                staff.svgStafflines[3].style.stroke = color;
-                                staff.svgStafflines[4].style.stroke = color;
+                                ++trackIndex;
                             }
-                            ++track;
                         }
-                    }
-                }
-            }
-
-            function setDisabledStafflinesToPink(isAssistedPerformance, livePerformersTrackIndex, trackIsOnCallback)
-            {
-                var i, nSystems = systems.length, j, nStaves = systems[0].staves.length,
-                k, staff, track, m, nLines,
-                DISABLED_PINK_STAFFCOLOR = "#FFAAAA";
-
-                function doDisabledColor(isAssistedPerformance, livePerformersTrackIndex, track, trackIsOff)
-                {
-                    var disable = false;
-                    if (trackIsOff && ((isAssistedPerformance && livePerformersTrackIndex !== track) || !isAssistedPerformance))
-                    {
-                        disable = true;
-                    }
-                    return disable;
-                }
-
-                for (i = 0; i < nSystems; ++i)
-                {
-                    track = 0;
-                    for (j = 0; j < nStaves; ++j)
-                    {
-                        staff = systems[i].staves[j];
-                        if (staff.voices.length === 1)
-                        {
-                            if (doDisabledColor(isAssistedPerformance, livePerformersTrackIndex, track, !trackIsOnCallback(track)))
-                            {
-                                nLines = staff.svgStafflines.length;
-                                for (m = 0; m < nLines; ++m) // could be any number of lines
-                                {
-                                    staff.svgStafflines[m].style.stroke = DISABLED_PINK_STAFFCOLOR;
-                                }
-                            }
-                            ++track;
-                        }
-                        else if (staff.voices.length !== 2 || staff.svgStafflines.length !== 5)
+                        else
                         {
                             throw "Error: staff cannot have more than two voices! Two voice staves must have five lines.";
-                        }
-                        else // the staff has two voices
-                        {
-                            for (k = 0; k < 2; ++k)
-                            {
-                                if (k === 0 && doDisabledColor(isAssistedPerformance, livePerformersTrackIndex, track, !trackIsOnCallback(track)))
-                                {
-                                    staff.svgStafflines[0].style.stroke = DISABLED_PINK_STAFFCOLOR;
-                                    staff.svgStafflines[1].style.stroke = DISABLED_PINK_STAFFCOLOR;
-                                }
-                                if (k === 1 && doDisabledColor(isAssistedPerformance, livePerformersTrackIndex, track, !trackIsOnCallback(track)))
-                                {
-                                    staff.svgStafflines[3].style.stroke = DISABLED_PINK_STAFFCOLOR;
-                                    staff.svgStafflines[4].style.stroke = DISABLED_PINK_STAFFCOLOR;
-                                }
-                                ++track;
-                            }
                         }
                     }
                 }
             }
 
             setLivePerformersTitleColor(isAssistedPerformance, livePerformersTrackIndex);
-            setStafflinesToDefaultColors(isAssistedPerformance, livePerformersTrackIndex); // black or (grey for assistant's tracks).
-            setDisabledStafflinesToPink(isAssistedPerformance, livePerformersTrackIndex, trackIsOnCallback);
+            setStafflineColors(isAssistedPerformance, livePerformersTrackIndex, livePerformerIsSilent, trackIsOn);
         }
 
-        setView(isAssistedPerformance, livePerformersTrackIndex, trackIsOn); // marks the disabled tracks
+        setView(isAssistedPerformance, livePerformersTrackIndex, livePerformerIsSilent, trackIsOn); // marks the disabled tracks
 
         // move the start marker if necessary
         if (thereIsNoPerformingChordOnTheStartBarline(timeObjectsArray, timeObject.alignmentX, trackIsOn))
@@ -547,13 +502,11 @@ _AP.score = (function (document)
                         staffIndex = ((y - topLimit) < (bottomLimit - y)) ? i - 1 : i;
                         break;
                     }
-                    else // in staff
+
+                    if (y >= staves[i].topLineY && y <= staves[i].bottomLineY)
                     {
-                        if (y >= staves[i].topLineY && y <= staves[i].bottomLineY)
-                        {
-                            staffIndex = i;
-                            break;
-                        }
+                        staffIndex = i;
+                        break;
                     }
                 }
             }
@@ -778,7 +731,7 @@ _AP.score = (function (document)
     // If these objects have graphic parameters, they are set.
     getEmptyPagesAndSystems = function (svg)
     {
-        var system, embeddedSvgPages, nPages, totalSysNumber, viewBoxOriginY,
+        var system, embeddedSvgPages, nPages, viewBoxOriginY,
             i, j,
             sysNumber, svgPage, svgElem, svgChildren, systemID,
             childID, currentFrame, pageHeight;
@@ -995,7 +948,6 @@ _AP.score = (function (document)
 
         embeddedSvgPages = document.querySelectorAll(".svgPage");
         nPages = embeddedSvgPages.length;
-        totalSysNumber = 1;
         viewBoxOriginY = 0; // absolute coordinates
         for (i = 0; i < nPages; ++i)
         {
@@ -1038,10 +990,10 @@ _AP.score = (function (document)
     // a system continue to have the same msDuration.
     getTimeObjects = function (svg, speed)
     {
-        var embeddedSvgPages, nPages, totalSysNumber, viewBoxOriginY,
+        var embeddedSvgPages, nPages,
             i, j,
             systemIndex, sysNumber, svgPage, svgElem, viewBoxScale, svgChildren, systemID,
-            childID, pageHeight,
+            childID,
             lastSystemTimeObjects, finalBarlineMsPosition;
 
         function getSystemTimeObjects(system, viewBoxScale, systemNode, speed)
@@ -1129,7 +1081,8 @@ _AP.score = (function (document)
                                                 timeObject.chordIndex = parseInt(subStrings[1], 10) - 1;
                                                 break;
                                             }
-                                            else if (midiChildren[k].nodeName === 'score:basicChords')
+
+                                            if(midiChildren[k].nodeName === 'score:basicChords')
                                             {
                                                 timeObject.chordDef = new Palettes.ChordDef(chordChildren[j]);
                                                 break;
@@ -1350,8 +1303,6 @@ _AP.score = (function (document)
 
         embeddedSvgPages = document.querySelectorAll(".svgPage");
         nPages = embeddedSvgPages.length;
-        totalSysNumber = 1;
-        viewBoxOriginY = 0; // absolute coordinates
         systemIndex = 0;
         for (i = 0; i < nPages; ++i)
         {
@@ -1379,8 +1330,6 @@ _AP.score = (function (document)
                     }
                 }
             }
-            pageHeight = parseInt(svgElem.getAttribute('height'), 10);
-
         }
 
         finalBarlineMsPosition = setMsPositions(systems);
@@ -1389,7 +1338,6 @@ _AP.score = (function (document)
         lastSystemTimeObjects = systems[systems.length - 1].staves[0].voices[0].timeObjects;
         finalBarlineInScore = lastSystemTimeObjects[lastSystemTimeObjects.length - 1]; // 'global' object
 
-        _previousSpeed = speed;
         setSystemMarkerParameters(systems);
     },
 
@@ -1485,12 +1433,13 @@ _AP.score = (function (document)
 
     // In a completed Sequence, the tracks array contains one track per channel (ordered by channel).
     // Each track is an array of moments ordered in time (see apTrack.js and apMoment.js).
-    createSequence = function (speed)
+    // If trackIndexOfSilentSoloist is >= 0, the chords in that track have no messages.
+    createSequence = function (trackIndexOfSilentSoloist)
     {
         // systems->staves->voices->timeObjects
         var sequence,
             trackIndex, track, tracks,
-            timeObjectIndex, nTimeObjects, timeObject,
+            timeObjectIndex, nTimeObjects, timeObject, chordIsSilent,
             voiceIndex, nVoices, voice,
             staffIndex, nStaves, staff,
             sysIndex, nSystems = systems.length, system,
@@ -1553,7 +1502,8 @@ _AP.score = (function (document)
                             {
                                 chordDef = timeObject.chordDef;
                             }
-                            midiChord = new MIDIChord.MIDIChord(channel, chordDef, timeObject, speed);
+                            chordIsSilent = (trackIndex === trackIndexOfSilentSoloist);
+                            midiChord = new MIDIChord.MIDIChord(channel, chordDef, timeObject, chordIsSilent);
                             midiChord.addToTrack(track);
                             //console.log("midiChord added at sysIndex=", +sysIndex + ", staffIndex=", +staffIndex + ", timeObjectIndex=" + timeObjectIndex);
                         }

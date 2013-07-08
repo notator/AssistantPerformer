@@ -131,10 +131,8 @@ _AP.assistant = (function (window)
                 {
                     inputEvent = new Message(data[0], data[1], data[2]);
                 }
-                else
-                {
-                    throw "Error: illegal data.";
-                }
+
+                // other data is simply ignored
 
                 if (inputEvent.data !== undefined)
                 {

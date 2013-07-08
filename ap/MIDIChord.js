@@ -8,7 +8,7 @@
  *  ap/MIDIChord.js
  *  Public interface:
  *      newAllSoundOffMessage() // returns a new AllSoundOffMessage
- *      MIDIChord(channel, chordDef, timeObject, speed) // MIDIChord constructor
+ *      MIDIChord(channel, chordDef, timeObject, chordIsSilent) // MIDIChord constructor
  *      MIDIRest(timeObject) // MIDIRest constructor  
  */
 
@@ -45,11 +45,13 @@ _AP.midiChord = (function ()
 
     // public MIDIChord constructor
     // A MIDIChord contains all the midi messages required for playing an (ornamented) chord.
-    MIDIChord = function (channel, chordDef, timeObject, speed)
+    // If chordisSilent == true, this is a chord being played by a silent soloist (=conductor),
+    // and the chord is not given any MIDI messages.
+    MIDIChord = function (channel, chordDef, timeObject, chordIsSilent)
     {
         if (!(this instanceof MIDIChord))
         {
-            return new MIDIChord(channel, chordDef, timeObject, speed);
+            return new MIDIChord(channel, chordDef, timeObject, chordIsSilent);
         }
 
         if (chordDef.basicChordsArray === undefined)
@@ -59,9 +61,16 @@ _AP.midiChord = (function ()
 
         this.msPosition = timeObject.msPosition;
         this.msDuration = timeObject.msDuration;
-        this.moments = this.getMoments(channel, chordDef, timeObject, speed); // defined in prototype
-        // moments is an ordered array of moments (containing messages for sequential chords and slider messages).
-        // A Moment is a list of logically synchronous MIDI messages.
+        if(chordIsSilent === true)
+        {
+            this.moments = this.getSilentMoment(timeObject); // like rest.getMoments()
+        }
+        else
+        {
+            this.moments = this.getMoments(channel, chordDef, timeObject); // defined in prototype
+            // moments is an ordered array of moments (containing messages for sequential chords and slider messages).
+            // A Moment is a list of logically synchronous MIDI messages.
+        }
 
         this.addToTrack = addToTrack; // private function in this namespace, shared by MIDIChord and MIDIRest
 
@@ -104,7 +113,7 @@ _AP.midiChord = (function ()
     };
     // end var
 
-    MIDIChord.prototype.getMoments = function(channel, chordDef, timeObject, speed)
+    MIDIChord.prototype.getMoments = function(channel, chordDef, timeObject)
     {
         var 
         chordMoments,
@@ -113,7 +122,7 @@ _AP.midiChord = (function ()
         // An array of moments whose msPosition has been set.
         // The moments contain all the non-slider components of the chordDef.
         // The msPosition of the first Moment is set to the value in the msPosition argument.
-        function getChordMoments(channel, chordDef, timeObject, speed)
+        function getChordMoments(channel, chordDef, timeObject)
         {
             var i, j,
                 len = chordDef.basicChordsArray.length,
@@ -409,7 +418,7 @@ _AP.midiChord = (function ()
         // msPosition of the final sliderMoment is less than (msPosition + msDuration).
         function getSliderMoments(channel, sliders, msPosition, msDuration, sliderMilliseconds)
         {
-            var i, sliderMoments, sliderMomentsLength, nonEmptySliderMoments;
+            var i, sliderMoments, nonEmptySliderMoments;
 
             function getEmptySliderMoments(msPosition, msDuration, sliderMilliseconds)
             {
@@ -549,11 +558,9 @@ _AP.midiChord = (function ()
                 function addSliderValues(channel, sliderMoments, typeString, finalValuesArray)
                 {
                     var len = finalValuesArray.length,
-                        moment,
-                        value,
+                        moment, value,
                         previousValue = -1,
-                        message,
-                        i, d, pitchWheelValue;
+                        message, i;
 
                     if (sliderMoments.length !== finalValuesArray.length)
                     {
@@ -617,7 +624,6 @@ _AP.midiChord = (function ()
                 setSlider(channel, sliderMoments, "expression", sliders.expressionSlider);
             }
 
-            sliderMomentsLength = sliderMoments.length;
             nonEmptySliderMoments = [];
             for (i = 0; i < sliderMoments.length; ++i)
             {
@@ -716,7 +722,7 @@ _AP.midiChord = (function ()
             return momentsArray;
         }
 
-        chordMoments = getChordMoments(channel, chordDef, timeObject, speed);
+        chordMoments = getChordMoments(channel, chordDef, timeObject);
 
         if (chordDef.sliders !== undefined)
         {
@@ -731,9 +737,24 @@ _AP.midiChord = (function ()
         Object.defineProperty(moments[0], "chordStart", { value: true, writable: false });
     };
 
-    // returns an array containing a single moment having a "restStart" attribute.
+    // returns an array containing a single empty moment having a "chordStart" attribute.
     // The moment's messages array is empty.
-    MIDIRest.prototype.getMoments = function (timeObject)
+    MIDIChord.prototype.getSilentMoment = function(timeObject)
+    {
+        var silentMoment;
+
+        silentMoment = new Moment(timeObject.msPosition);
+        Object.defineProperty(silentMoment, "chordStart", { value: true, writable: false });
+
+        moments = [];
+        moments.push(silentMoment); // an empty chordStart moment.
+
+        return moments;
+    };
+
+    // returns an array containing a single empty moment having a "restStart" attribute.
+    // The moment's messages array is empty.
+    MIDIRest.prototype.getMoments = function(timeObject)
     {
         var restMoment;
 

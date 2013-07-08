@@ -59,15 +59,25 @@
                         Performer's options:
                         <div style="display:table">
                         <div style="display:table-row;">
-                            <div style="display: table-cell; padding-left:25px; text-align:center"> 
-                                Track:
-                                <div style="margin-left: 3px">
-                                    <select id="trackSelector" name="trackSelector" style="width:40px;"
-                                    onchange="_AP.controls.doControl('trackSelector')" disabled="disabled">
-                                    </select>
+                            <div style="display: table-cell; text-align:center; width: 80px; padding-left:24px;"> 
+                                <div style="display: table-row;">
+                                    Track:
+                                    <div style="margin-left: 3px">
+                                        <select id="trackSelector" name="trackSelector" style="width:40px;"
+                                        onchange="_AP.controls.doControl('trackSelector')" disabled="disabled">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="display: table-row;">
+                                    <div style="display:table-cell; padding-left:6px;">
+                                        <label id="silentOption" for="silentSoloistOptionCheckbox" style="vertical-align:middle"> 
+                                            silent</label>
+                                        <input type="checkbox" name="silentSoloistOptionCheckbox" value="silent"  id="silentSoloistOptionCheckbox"
+                                            class="standardCheckBox14px" disabled="disabled"/>
+                                    </div>
                                 </div>
                             </div>
-                            <div style="display: table-cell; padding-left:35px;">
+                            <div style="display: table-cell; padding-left:20px;">
                                 <div class="helpColour">
                                         Override the score using:
                                 </div>

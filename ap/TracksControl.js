@@ -19,22 +19,24 @@ _AP.tracksControl = (function (document)
 {
     "use strict";
 
-    var 
+    var
+    BACKGROUND_GREEN = "#F5FFF5",
     // button colours in this tracksControl 
     SOLOISTS_STROKECOLOR = "#0000FF",
-    SOLOISTS_FILLCOLOR = "#CCCCFF", // "#8888FF" is css helpColor in top options dialog, and live performer's title color    
-    ASSISTANTS_STROKECOLOR = "#000000",
-    ASSISTANTS_FILLCOLOR = "#DDDDDD",
-    ENABLED_STROKECOLOR = "#000000",
-    ENABLED_FILLCOLOR = "#AAAAAA",
-    DISABLED_STROKECOLOR = "#FF3333",
-    DISABLED_FILLCOLOR = "#FFEEEE",
+    SOLOISTS_FILLCOLOR_WHEN_SOUNDING = "#CCCCFF",    
+    NORMAL_STROKECOLOR = "#000000",
+    NORMAL_FILLCOLOR = "#AAAAAA",
+    DISABLED_STROKECOLOR = "#000000",
+    DISABLED_FILLCOLOR = BACKGROUND_GREEN,
+    SOLOISTS_FILLCOLOR, // is set to either SOLOISTS_FILLCOLOR_WHEN_SOUNDING or BACKGROUND_GREEN.
+
     disableLayerIDs = [],  // disableLayerIDs[0] is the disable layer id for the whole tracks control
     trackIsOnStatus = [],
     trackIsDisabledStatus = [],
     disabled = true,
     refreshScoreDisplay = null,
     livePerformersTrackIndex = -1,
+    livePerformerIsSilent = false,
     isAssistedPerformance = false,
 
     // Returns the (read only) boolean state of the track at trackIndex.
@@ -73,7 +75,7 @@ _AP.tracksControl = (function (document)
         // the position of the start marker (which always starts on a chord).
         if (refreshScoreDisplay !== null)
         {
-            refreshScoreDisplay(isAssistedPerformance, livePerformersTrackIndex);
+            refreshScoreDisplay(isAssistedPerformance, livePerformersTrackIndex, livePerformerIsSilent);
         }
     },
 
@@ -104,8 +106,8 @@ _AP.tracksControl = (function (document)
                 }
                 else
                 {
-                    elem.style.stroke = ASSISTANTS_STROKECOLOR;
-                    elem.style.fill = ASSISTANTS_FILLCOLOR;
+                    elem.style.stroke = NORMAL_STROKECOLOR;
+                    elem.style.fill = NORMAL_FILLCOLOR;
                     trackIsOnStatus[trackIndex] = true;
                 }
             }
@@ -119,8 +121,8 @@ _AP.tracksControl = (function (document)
                 }
                 else
                 {
-                    elem.style.stroke = ENABLED_STROKECOLOR;
-                    elem.style.fill = ENABLED_FILLCOLOR;
+                    elem.style.stroke = NORMAL_STROKECOLOR;
+                    elem.style.fill = NORMAL_FILLCOLOR;
                     trackIsOnStatus[trackIndex] = true;
                 }
 
@@ -147,15 +149,15 @@ _AP.tracksControl = (function (document)
             }
             else
             {
-                elem.style.stroke = ASSISTANTS_STROKECOLOR;
-                elem.style.fill = ASSISTANTS_FILLCOLOR;
+                elem.style.stroke = NORMAL_STROKECOLOR;
+                elem.style.fill = NORMAL_FILLCOLOR;
                 trackIsOnStatus[trackIndex] = true;
             }
         }
         else
         {
-            elem.style.stroke = ENABLED_STROKECOLOR;
-            elem.style.fill = ENABLED_FILLCOLOR;
+            elem.style.stroke = NORMAL_STROKECOLOR;
+            elem.style.fill = NORMAL_FILLCOLOR;
             trackIsOnStatus[trackIndex] = true;
         }
     },
@@ -170,12 +172,22 @@ _AP.tracksControl = (function (document)
         }
     },
 
-    setTracksControlState = function (isAssisted, soloistsTrackIndex)
+    setTracksControlState = function(isAssisted, soloistsTrackIndex, soloistIsSilent)
     {
         var i, nTracks = trackIsOnStatus.length;
 
         isAssistedPerformance = isAssisted;
         livePerformersTrackIndex = soloistsTrackIndex;
+        livePerformerIsSilent = soloistIsSilent;
+        
+        if(soloistIsSilent)
+        {
+            SOLOISTS_FILLCOLOR = DISABLED_FILLCOLOR;
+        }
+        else
+        {
+            SOLOISTS_FILLCOLOR = SOLOISTS_FILLCOLOR_WHEN_SOUNDING;
+        }
 
         for (i = 0; i < nTracks; ++i)
         {

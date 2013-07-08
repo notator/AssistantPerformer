@@ -286,6 +286,7 @@ _AP.controls = (function (document, window)
                 if (scoreIndex === 0)
                 {
                     mo.trackSelector.disabled = true;
+                    mo.silentSoloistOptionCheckbox.disabled = true;
 
                     mo.soloVelocityOptionCheckbox.disabled = true;
                     mo.otherTracksVelocityOptionCheckbox.disabled = true;
@@ -313,6 +314,7 @@ _AP.controls = (function (document, window)
                 else if (inputDeviceIndex > 0) // && scoreIndex > 0
                 {
                     mo.trackSelector.disabled = false;
+                    mo.silentSoloistOptionCheckbox.disabled = false;
 
                     mo.soloVelocityOptionCheckbox.disabled = false;
                     mo.otherTracksVelocityOptionCheckbox.disabled = false;
@@ -360,6 +362,7 @@ _AP.controls = (function (document, window)
                 else // inputDevice === 0, scoreIndex > 0
                 {
                     mo.trackSelector.disabled = true;
+                    mo.silentSoloistOptionCheckbox.disabled = true;
 
                     mo.soloVelocityOptionCheckbox.disabled = true;
                     mo.otherTracksVelocityOptionCheckbox.disabled = true;
@@ -405,6 +408,7 @@ _AP.controls = (function (document, window)
                 mo.midiOutputDeviceSelector.disabled = true;
 
                 mo.trackSelector.disabled = true;
+                mo.silentSoloistOptionCheckbox.disabled = true;
 
                 mo.soloVelocityOptionCheckbox.disabled = true;
                 mo.otherTracksVelocityOptionCheckbox.disabled = true;
@@ -831,6 +835,7 @@ _AP.controls = (function (document, window)
             mo.scoreSelector = document.getElementById("scoreSelector");
             mo.midiOutputDeviceSelector = document.getElementById("midiOutputDeviceSelector");
             mo.trackSelector = document.getElementById("trackSelector");
+            mo.silentSoloistOptionCheckbox = document.getElementById("silentSoloistOptionCheckbox");
 
             mo.soloVelocityOptionCheckbox = document.getElementById("soloVelocityOptionCheckbox");
             mo.otherTracksVelocityOptionCheckbox = document.getElementById("otherTracksVelocityOptionCheckbox");
@@ -1343,6 +1348,8 @@ _AP.controls = (function (document, window)
     // It does not require a MIDI input.
     beginRuntime = function ()
     {
+        var silentSoloistsTrack = -1;
+
         function getOptions()
         {
             var success;
@@ -1369,6 +1376,7 @@ _AP.controls = (function (document, window)
             {
                 // options is a global inside this namespace
                 options.livePerformersTrackIndex = mo.trackSelector.selectedIndex;
+                options.silentSoloist = mo.silentSoloistOptionCheckbox.checked;
 
                 options.overrideSoloVelocity = mo.soloVelocityOptionCheckbox.checked;
                 options.overrideOtherTracksVelocity = mo.otherTracksVelocityOptionCheckbox.checked;
@@ -1443,7 +1451,12 @@ _AP.controls = (function (document, window)
 
             score.getTimeObjects(svg, options.assistantsSpeed);
 
-            sequence = score.createSequence(options.assistantsSpeed);
+            if(options.assistedPerformance === true && options.silentSoloist === true)
+            {
+                silentSoloistsTrack = options.livePerformersTrackIndex;
+            }
+
+            sequence = score.createSequence(silentSoloistsTrack);
 
             // The tracksControl is in charge of refreshing the entire display, including both itself and the score.
             // TracksControl.refreshDisplay() calls score.refreshDisplay(isAssistedPerformance, livePerformersTrackIndex)
@@ -1454,7 +1467,7 @@ _AP.controls = (function (document, window)
             // tracksControl.trackIsOn(trackIndex) returns a boolean which is the on/off status of its trackIndex argument
             score.getTrackIsOnCallback(tracksControl.trackIsOn);
 
-            tracksControl.setTracksControlState(options.assistedPerformance, options.livePerformersTrackIndex);
+            tracksControl.setTracksControlState(options.assistedPerformance, options.livePerformersTrackIndex, options.silentSoloist);
             tracksControl.setAllTracksOn();
 
             tracksControl.refreshDisplay(); // refreshes itself and the score
