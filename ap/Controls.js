@@ -34,6 +34,7 @@ _AP.controls = (function (document, window)
     svg = {}, // an object containing pointers to functions defined in SVG files
     assistant,
     sequence,
+    livePerformerIsSilent = false,
     svgControlsState = 'stopped', //svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd'.
     svgPagesDiv,
     mo = {}, // main option panel elements
@@ -286,7 +287,6 @@ _AP.controls = (function (document, window)
                 if (scoreIndex === 0)
                 {
                     mo.trackSelector.disabled = true;
-                    mo.silentSoloistOptionCheckbox.disabled = true;
 
                     mo.soloVelocityOptionCheckbox.disabled = true;
                     mo.otherTracksVelocityOptionCheckbox.disabled = true;
@@ -314,7 +314,6 @@ _AP.controls = (function (document, window)
                 else if (inputDeviceIndex > 0) // && scoreIndex > 0
                 {
                     mo.trackSelector.disabled = false;
-                    mo.silentSoloistOptionCheckbox.disabled = false;
 
                     mo.soloVelocityOptionCheckbox.disabled = false;
                     mo.otherTracksVelocityOptionCheckbox.disabled = false;
@@ -362,7 +361,6 @@ _AP.controls = (function (document, window)
                 else // inputDevice === 0, scoreIndex > 0
                 {
                     mo.trackSelector.disabled = true;
-                    mo.silentSoloistOptionCheckbox.disabled = true;
 
                     mo.soloVelocityOptionCheckbox.disabled = true;
                     mo.otherTracksVelocityOptionCheckbox.disabled = true;
@@ -408,7 +406,6 @@ _AP.controls = (function (document, window)
                 mo.midiOutputDeviceSelector.disabled = true;
 
                 mo.trackSelector.disabled = true;
-                mo.silentSoloistOptionCheckbox.disabled = true;
 
                 mo.soloVelocityOptionCheckbox.disabled = true;
                 mo.otherTracksVelocityOptionCheckbox.disabled = true;
@@ -493,6 +490,11 @@ _AP.controls = (function (document, window)
         /********* end performance buttons *******************/
 
         tracksControl.setDisabled(false);
+
+        if(options.assistedPerformance === true)
+        {
+            options.inputDevice.removeEventListener("midimessage", _AP.assistant.handleMIDIInputEvent);
+        }
     },
 
     // callback called when a performing sequence is stopped or has played its last message,
@@ -603,6 +605,11 @@ _AP.controls = (function (document, window)
             /********* end performance buttons *******************/
 
             tracksControl.setDisabled(true);
+
+            if(options.assistedPerformance === true)
+            {
+                options.inputDevice.removeEventListener("midimessage", _AP.assistant.handleMIDIInputEvent);
+            }
         }
 
         // setStopped is outer function
@@ -622,6 +629,11 @@ _AP.controls = (function (document, window)
             score.allNotesOff(options.outputDevice);
 
             tracksControl.setDisabled(true);
+
+            if(options.assistedPerformance === true)
+            {
+                options.inputDevice.removeEventListener("midimessage", _AP.assistant.handleMIDIInputEvent);
+            }
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
             cl.livePerformerOnOffDisabled.setAttribute("opacity", SMOKE);
@@ -691,6 +703,11 @@ _AP.controls = (function (document, window)
             }
 
             tracksControl.setDisabled(true);
+
+            if(options.assistedPerformance === true)
+            {
+                options.inputDevice.addEventListener("midimessage", _AP.assistant.handleMIDIInputEvent);
+            }
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
             cl.livePerformerOnOffDisabled.setAttribute("opacity", SMOKE);
@@ -835,7 +852,6 @@ _AP.controls = (function (document, window)
             mo.scoreSelector = document.getElementById("scoreSelector");
             mo.midiOutputDeviceSelector = document.getElementById("midiOutputDeviceSelector");
             mo.trackSelector = document.getElementById("trackSelector");
-            mo.silentSoloistOptionCheckbox = document.getElementById("silentSoloistOptionCheckbox");
 
             mo.soloVelocityOptionCheckbox = document.getElementById("soloVelocityOptionCheckbox");
             mo.otherTracksVelocityOptionCheckbox = document.getElementById("otherTracksVelocityOptionCheckbox");
@@ -880,7 +896,7 @@ _AP.controls = (function (document, window)
                 option = document.createElement("option");
                 option.inputDevice = inputs[i];
                 option.text = inputs[i].name;
-                option.inputDevice.addEventListener("midimessage", _AP.assistant.handleMIDIInputEvent);
+                //option.inputDevice.addEventListener("midimessage", _AP.assistant.handleMIDIInputEvent);
                 is.add(option, null);
             }
 
@@ -1101,7 +1117,7 @@ _AP.controls = (function (document, window)
             }
 
             setPerformersTrackSelector(nTracks);
-            tracksControl.init(nTracks);
+            tracksControl.setNumberOfTracks(nTracks);
             svgPagesDiv.scrollTop = 0;
 
             scoreHasJustBeenSelected = true;
@@ -1208,13 +1224,13 @@ _AP.controls = (function (document, window)
         if (controlID === "midiInputDeviceSelector")
         {
             setMIDIDevices();
-            tracksControl.setTracksControlState(mo.midiInputDeviceSelector.selectedIndex > 0, mo.trackSelector.selectedIndex);
+            tracksControl.setInitialTracksControlState(mo.midiInputDeviceSelector.selectedIndex > 0, mo.trackSelector.selectedIndex);
         }
 
         if (controlID === "scoreSelector")
         {
             setScore();
-            tracksControl.setTracksControlState(mo.trackSelector.selectedIndex >= 0, mo.trackSelector.selectedIndex);
+            tracksControl.setInitialTracksControlState(mo.trackSelector.selectedIndex >= 0, mo.trackSelector.selectedIndex);
         }
 
         if (controlID === "midiOutputDeviceSelector")
@@ -1224,7 +1240,7 @@ _AP.controls = (function (document, window)
 
         if (controlID === "trackSelector")
         {
-            tracksControl.setTracksControlState(mo.trackSelector.selectedIndex >= 0, mo.trackSelector.selectedIndex);
+            tracksControl.setInitialTracksControlState(mo.trackSelector.selectedIndex >= 0, mo.trackSelector.selectedIndex);
         }
 
         /*** SVG controls ***/
@@ -1263,12 +1279,12 @@ _AP.controls = (function (document, window)
 
                 if (options.assistedPerformance)
                 {
-                    tracksControl.setTracksControlState(true, options.livePerformersTrackIndex);
+                    tracksControl.setInitialTracksControlState(true, options.livePerformersTrackIndex);
                     tracksControl.refreshDisplay();
                 }
                 else
                 {
-                    tracksControl.setTracksControlState(false, options.livePerformersTrackIndex);
+                    tracksControl.setInitialTracksControlState(false, options.livePerformersTrackIndex);
                     tracksControl.refreshDisplay();
                 }
 
@@ -1342,14 +1358,24 @@ _AP.controls = (function (document, window)
         }
     },
 
+    trackToggled = function (soloistIsSilent)
+    {
+        score.refreshDisplay(sequence, options.assistedPerformance, options.livePerformersTrackIndex, soloistIsSilent);
+        // score.refreshDisplay() sets sequence.tracks[livePerformersTrackIndex] to a silent track, if necessary.
+        if(options.assistedPerformance === true && livePerformerIsSilent !== soloistIsSilent)
+        {
+            livePerformerIsSilent = soloistIsSilent;
+            assistant = new Assistant(sequence, options, reportEndOfPerformance, reportMsPos);
+        }
+
+    },
+
     // Called when the Start button is clicked in the top options dialog.
     // The score selector sets the array of svgScorePage urls.
     // The Start button is enabled when a score and MIDI output have been selected.
     // It does not require a MIDI input.
     beginRuntime = function ()
     {
-        var silentSoloistsTrack = -1;
-
         function getOptions()
         {
             var success;
@@ -1376,7 +1402,6 @@ _AP.controls = (function (document, window)
             {
                 // options is a global inside this namespace
                 options.livePerformersTrackIndex = mo.trackSelector.selectedIndex;
-                options.silentSoloist = mo.silentSoloistOptionCheckbox.checked;
 
                 options.overrideSoloVelocity = mo.soloVelocityOptionCheckbox.checked;
                 options.overrideOtherTracksVelocity = mo.otherTracksVelocityOptionCheckbox.checked;
@@ -1451,27 +1476,21 @@ _AP.controls = (function (document, window)
 
             score.getTimeObjects(svg, options.assistantsSpeed);
 
-            if(options.assistedPerformance === true && options.silentSoloist === true)
-            {
-                silentSoloistsTrack = options.livePerformersTrackIndex;
-            }
-
-            sequence = score.createSequence(silentSoloistsTrack);
+            sequence = score.createSequence(options.assistedPerformance, options.livePerformersTrackIndex);
 
             // The tracksControl is in charge of refreshing the entire display, including both itself and the score.
-            // TracksControl.refreshDisplay() calls score.refreshDisplay(isAssistedPerformance, livePerformersTrackIndex)
+            // TracksControl.refreshDisplay() calls
+            //     score.refreshDisplay(isAssistedPerformance, livePerformersTrackIndex, livePerformerisSilent)
             // to tell the score to repaint itself. The score may also update the position of the start marker (which
             // always starts on a chord) if a track becomes disabled.
-            tracksControl.getUpdateDisplayCallback(score.refreshDisplay);
+            tracksControl.getTrackToggledCallback(trackToggled);
 
             // tracksControl.trackIsOn(trackIndex) returns a boolean which is the on/off status of its trackIndex argument
             score.getTrackIsOnCallback(tracksControl.trackIsOn);
 
-            tracksControl.setTracksControlState(options.assistedPerformance, options.livePerformersTrackIndex, options.silentSoloist);
-            tracksControl.setAllTracksOn();
+            tracksControl.setInitialTracksControlState(options.assistedPerformance, options.livePerformersTrackIndex);
 
-            tracksControl.refreshDisplay(); // refreshes itself and the score
-
+            score.refreshDisplay(sequence, options.assistedPerformance, options.livePerformersTrackIndex, false);
             if (options.assistedPerformance === true)
             {
                 // This constructor resets moment timestamps relative to the start of their subsequence.

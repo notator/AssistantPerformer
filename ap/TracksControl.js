@@ -23,18 +23,18 @@ _AP.tracksControl = (function (document)
     BACKGROUND_GREEN = "#F5FFF5",
     // button colours in this tracksControl 
     SOLOISTS_STROKECOLOR = "#0000FF",
-    SOLOISTS_FILLCOLOR_WHEN_SOUNDING = "#CCCCFF",    
+    SOLOISTS_FILLCOLOR_WHEN_SOUNDING = "#CCCCFF",
+    SOLOISTS_FILLCOLOR_WHEN_SILENT = BACKGROUND_GREEN,
     NORMAL_STROKECOLOR = "#000000",
     NORMAL_FILLCOLOR = "#AAAAAA",
     DISABLED_STROKECOLOR = "#000000",
     DISABLED_FILLCOLOR = BACKGROUND_GREEN,
-    SOLOISTS_FILLCOLOR, // is set to either SOLOISTS_FILLCOLOR_WHEN_SOUNDING or BACKGROUND_GREEN.
 
     disableLayerIDs = [],  // disableLayerIDs[0] is the disable layer id for the whole tracks control
     trackIsOnStatus = [],
     trackIsDisabledStatus = [],
     disabled = true,
-    refreshScoreDisplay = null,
+    trackToggled = null,
     livePerformersTrackIndex = -1,
     livePerformerIsSilent = false,
     isAssistedPerformance = false,
@@ -68,14 +68,15 @@ _AP.tracksControl = (function (document)
         return readOnlyArray;
     },
 
-    refreshDisplay = function ()
+    trackHasBeenToggled = function ()
     {
-        // Calling this callback, which is defined in Score, tells the score
-        // which colours to paint the staves. The score may also have to update
-        // the position of the start marker (which always starts on a chord).
-        if (refreshScoreDisplay !== null)
+        // Calling this callback, which is defined in Controls, tells the score to redraw itself
+        // using the appropriate colours.
+        // If this is an assisted performance and the soloists silence status changes, the score
+        // sets the soloist's track appropriately, and the assistant is reconstructed.
+        if (trackToggled !== null)
         {
-            refreshScoreDisplay(isAssistedPerformance, livePerformersTrackIndex, livePerformerIsSilent);
+            trackToggled(livePerformerIsSilent);
         }
     },
 
@@ -95,8 +96,17 @@ _AP.tracksControl = (function (document)
                 if (trackIndex === livePerformersTrackIndex)
                 {
                     elem.style.stroke = SOLOISTS_STROKECOLOR;
-                    elem.style.fill = SOLOISTS_FILLCOLOR;
-                    trackIsOnStatus[trackIndex] = true;
+                    trackIsOnStatus[trackIndex] = true; // always
+                    if(livePerformerIsSilent === true)
+                    {
+                        elem.style.fill = SOLOISTS_FILLCOLOR_WHEN_SOUNDING;
+                        livePerformerIsSilent = false;
+                    }
+                    else
+                    {
+                        elem.style.fill = SOLOISTS_FILLCOLOR_WHEN_SILENT;
+                        livePerformerIsSilent = true;
+                    }
                 }
                 else if (trackIsOnStatus[trackIndex])
                 {
@@ -125,15 +135,12 @@ _AP.tracksControl = (function (document)
                     elem.style.fill = NORMAL_FILLCOLOR;
                     trackIsOnStatus[trackIndex] = true;
                 }
-
             }
         }
 
-        refreshDisplay();
+        trackHasBeenToggled();
     },
 
-
-    // In an assisted performance, this function is called (in Controls.startRuntime) when the Go or playLive/playScore buttons are clicked.
     setTrackOn = function (trackIndex)
     {
         var elemID = 'track' + (trackIndex + 1).toString() + 'Bullet',
@@ -144,8 +151,15 @@ _AP.tracksControl = (function (document)
             if (trackIndex === livePerformersTrackIndex)
             {
                 elem.style.stroke = SOLOISTS_STROKECOLOR;
-                elem.style.fill = SOLOISTS_FILLCOLOR;
-                trackIsOnStatus[trackIndex] = true;
+                trackIsOnStatus[trackIndex] = true; // always
+                if(livePerformerIsSilent === false)
+                {
+                    elem.style.fill = SOLOISTS_FILLCOLOR_WHEN_SOUNDING;
+                }
+                else
+                {
+                    elem.style.fill = SOLOISTS_FILLCOLOR_WHEN_SILENT;
+                }
             }
             else
             {
@@ -162,39 +176,17 @@ _AP.tracksControl = (function (document)
         }
     },
 
-    setAllTracksOn = function ()
-    {
-        var i, nTracks = trackIsOnStatus.length;
-
-        for (i = 0; i < nTracks; ++i)
-        {
-            setTrackOn(i);
-        }
-    },
-
-    setTracksControlState = function(isAssisted, soloistsTrackIndex, soloistIsSilent)
+    setInitialTracksControlState = function(isAssisted, soloistsTrackIndex)
     {
         var i, nTracks = trackIsOnStatus.length;
 
         isAssistedPerformance = isAssisted;
         livePerformersTrackIndex = soloistsTrackIndex;
-        livePerformerIsSilent = soloistIsSilent;
-        
-        if(soloistIsSilent)
-        {
-            SOLOISTS_FILLCOLOR = DISABLED_FILLCOLOR;
-        }
-        else
-        {
-            SOLOISTS_FILLCOLOR = SOLOISTS_FILLCOLOR_WHEN_SOUNDING;
-        }
+        livePerformerIsSilent = false;       
 
         for (i = 0; i < nTracks; ++i)
         {
-            if (trackIsOn(i) || i === soloistsTrackIndex)
-            {
-                setTrackOn(i);
-            }
+            setTrackOn(i);
         }
     },
 
@@ -277,7 +269,7 @@ _AP.tracksControl = (function (document)
         disableLayerIDs.push(disableControlID);
     },
 
-    init = function (nTracks)
+    setNumberOfTracks = function (nTracks)
     {
         var trackControlsSvgElem,
             controlPanel = document.getElementById("controlPanel"),
@@ -318,34 +310,40 @@ _AP.tracksControl = (function (document)
         controlPanel.insertBefore(trackControlsSvgElem, firstControlPanelChild);
     },
 
-    // the callback is score.refreshDisplay(isAssistedPerformance, livePerformersTrackIndex);
-    getUpdateDisplayCallback = function (callback)
+    getTrackToggledCallback = function (callback)
     {
-        refreshScoreDisplay = callback;
+        trackToggled = callback;
     },
 
     publicAPI =
     {
-        init: init,
+        // Called after loading a particular score.
+        setNumberOfTracks: setNumberOfTracks,
 
+        // Called when the user clicks the start button in the upper options.
+        setInitialTracksControlState: setInitialTracksControlState,
+
+        // called if the user clicks a trackControl
         trackOnOff: trackOnOff,
+
+        // used to disable the tracks control when changing it makes no sense.
         setDisabled: setDisabled,
 
-        setTrackOn: setTrackOn,
-        setAllTracksOn: setAllTracksOn,
-        setTracksControlState: setTracksControlState,
-        refreshDisplay: refreshDisplay,
+        //setTrackOn: setTrackOn,
+        //setAllTracksOn: setAllTracksOn,
 
         // Function which returns the (read only) boolean state of the track at trackIndex.
-        // This function is used while setting options.
+        // This function is used by the score when redrawing itself.
         trackIsOn: trackIsOn,
 
         // Function which returns an array containing the on/off status of each track.
         // The tracks' status cannot be set by changing values in the returned array.
         // The array is passed as an argument to the playSpan() functions.
+        // In an assisted performance, the soloist's track is always ON, but it can be
+        // either sounding or silent.
         getTrackIsOnArray : getTrackIsOnArray,
 
-        getUpdateDisplayCallback: getUpdateDisplayCallback
+        getTrackToggledCallback: getTrackToggledCallback
     };
     // end var
 

@@ -23,6 +23,7 @@ _AP.score = (function (document)
     CMD = MIDILib.constants.COMMAND,
     Message = MIDILib.message.Message,
     Sequence = MIDILib.sequence.Sequence,
+    Track = MIDILib.track.Track,
 
     Markers = _AP.markers,
     Palettes = _AP.palettes,
@@ -44,6 +45,9 @@ _AP.score = (function (document)
     // This value is changed when/if the assistant has been constructed.
     // It is used when setting the position of the end marker in assisted performances.
     livePerformersTrackIndex = -1,
+
+    livePerformersSoundingTrack = null,
+    livePerformersSilentTrack = null,
 
     // callback: trackIsOn(trackIndex) returns a boolean which is the yes/no playing status of the track
     // This callback is used at Score construction time.
@@ -199,9 +203,10 @@ _AP.score = (function (document)
         return returnedTimeObject;
     },
 
-    // This function is called by the svgTracksControl whenever the score's display needs to be updated.
+    // This function is called by the Controls whenever the score's display needs to be updated.
     // It draws the staves with the right colours and, if necessary, moves the start marker to a chord.
-    refreshDisplay = function (isAssistedPerformance, livePerformersTrackIndex, livePerformerIsSilent)
+    // If necessary, it also sets sequence.tracks[ livePerformersTrackIndex] to be silent.
+    refreshDisplay = function (sequence, isAssistedPerformance, livePerformersTrackIndex, livePerformerIsSilent)
     {
         var system = systems[startMarker.systemIndex()],
         timeObject = startMarker.timeObject(),
@@ -398,6 +403,18 @@ _AP.score = (function (document)
         }
 
         setView(isAssistedPerformance, livePerformersTrackIndex, livePerformerIsSilent, trackIsOn); // marks the disabled tracks
+
+        if(isAssistedPerformance === true)
+        {
+            if(livePerformerIsSilent === true)
+            {
+                sequence.tracks[livePerformersTrackIndex] = livePerformersSilentTrack;
+            }
+            else
+            {
+                sequence.tracks[livePerformersTrackIndex] = livePerformersSoundingTrack;
+            }
+        }
 
         // move the start marker if necessary
         if (thereIsNoPerformingChordOnTheStartBarline(timeObjectsArray, timeObject.alignmentX, trackIsOn))
@@ -1433,8 +1450,11 @@ _AP.score = (function (document)
 
     // In a completed Sequence, the tracks array contains one track per channel (ordered by channel).
     // Each track is an array of moments ordered in time (see apTrack.js and apMoment.js).
-    // If trackIndexOfSilentSoloist is >= 0, the chords in that track have no messages.
-    createSequence = function (trackIndexOfSilentSoloist)
+    // If this is an assisted performance, the livePerformersSilentTrack is also filled with rests
+    // and silent chords. Then, when score.redrawDisplay() is called (on toggling a trackContol),
+    // the live performer's track is set to livePerformersSoundingTrack or livePerformersSilentTrack
+    // as necessary.
+    createSequence = function (isAssistedPerformance, livePerformersTrackIndex)
     {
         // systems->staves->voices->timeObjects
         var sequence,
@@ -1459,6 +1479,10 @@ _AP.score = (function (document)
 
         sequence = new Sequence(numberOfVoices());
         tracks = sequence.tracks;
+        if(isAssistedPerformance === true)
+        {
+            livePerformersSilentTrack = new Track();
+        }
 
         nStaves = systems[0].staves.length;
 
@@ -1488,6 +1512,11 @@ _AP.score = (function (document)
                                 // The final barline on the final staff is a 'rest'.
                                 midiRest = new MIDIChord.MIDIRest(timeObject);
                                 midiRest.addToTrack(track);
+                                if(isAssistedPerformance === true && trackIndex === livePerformersTrackIndex)
+                                {
+                                    midiRest = new MIDIChord.MIDIRest(timeObject);
+                                    midiRest.addToTrack(livePerformersSilentTrack);
+                                }
                                 //console.log("midiRest added at sysIndex=", +sysIndex + ", staffIndex=", +staffIndex + ", timeObjectIndex=" + timeObjectIndex);
                             }
                         }
@@ -1502,11 +1531,21 @@ _AP.score = (function (document)
                             {
                                 chordDef = timeObject.chordDef;
                             }
-                            chordIsSilent = (trackIndex === trackIndexOfSilentSoloist);
+                            chordIsSilent = false;
                             midiChord = new MIDIChord.MIDIChord(channel, chordDef, timeObject, chordIsSilent);
                             midiChord.addToTrack(track);
                             //console.log("midiChord added at sysIndex=", +sysIndex + ", staffIndex=", +staffIndex + ", timeObjectIndex=" + timeObjectIndex);
+                            if(isAssistedPerformance === true && trackIndex === livePerformersTrackIndex)
+                            {
+                                chordIsSilent = true;
+                                midiChord = new MIDIChord.MIDIChord(channel, chordDef, timeObject, chordIsSilent);
+                                midiChord.addToTrack(livePerformersSilentTrack);
+                            }
                         }
+                    }
+                    if(isAssistedPerformance === true && trackIndex === livePerformersTrackIndex)
+                    {
+                        livePerformersSoundingTrack = track;
                     }
                     ++trackIndex;
                 }
