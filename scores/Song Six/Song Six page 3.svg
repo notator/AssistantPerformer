@@ -1,0 +1,5448 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet href="http://james-ingram-act-two.de/fontsStyleSheet.css" type="text/css"?>
+<svg
+	version="1.1"
+	baseProfile="full"
+	width="1010"
+	height="1237"
+	viewBox="0 0 8080 9888" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:score="http://www.james-ingram-act-two.de/open-source/svgScoreExtensions.html" xmlns="http://www.w3.org/2000/svg">
+	<title>Song Six</title>
+	<desc>
+		Author: James Ingram
+		Website: http://www.james-ingram-act-two.de
+		Date: Wednesday 18.09.2013, 11:51:06
+		Software: Moritz/Assistant Composer</desc>
+	<defs>
+		<g
+			id="trebleClef">
+			<text
+				x="0"
+				y="0"
+				font-size="1px"
+				font-family="CLicht">&amp;</text>
+		</g>
+		<g
+			id="trebleClef8">
+			<text
+				x="0"
+				y="0"
+				font-size="1px"
+				font-family="CLicht">&amp;</text>
+			<text
+				x="0.28"
+				y="-1.17"
+				font-size="0.67px"
+				font-family="CLicht">•</text>
+		</g>
+		<g
+			id="trebleClef2x8">
+			<text
+				x="0"
+				y="0"
+				font-size="1px"
+				font-family="CLicht">&amp;</text>
+			<text
+				x="0.037"
+				y="-1.17"
+				font-size="0.67px"
+				font-family="CLicht">™</text>
+			<text
+				x="0.252"
+				y="-1.17"
+				font-size="0.4px"
+				font-family="Estrangelo Edessa">x</text>
+			<text
+				x="0.441"
+				y="-1.17"
+				font-size="0.67px"
+				font-family="CLicht">•</text>
+		</g>
+		<g
+			id="trebleClef3x8">
+			<text
+				x="0"
+				y="0"
+				font-size="1px"
+				font-family="CLicht">&amp;</text>
+			<text
+				x="0.037"
+				y="-1.17"
+				font-size="0.67px"
+				font-family="CLicht">£</text>
+			<text
+				x="0.252"
+				y="-1.17"
+				font-size="0.4px"
+				font-family="Estrangelo Edessa">x</text>
+			<text
+				x="0.441"
+				y="-1.17"
+				font-size="0.67px"
+				font-family="CLicht">•</text>
+		</g>
+		<g
+			id="bassClef">
+			<text
+				x="0"
+				y="0"
+				font-size="1px"
+				font-family="CLicht">?</text>
+		</g>
+		<g
+			id="bassClef8">
+			<text
+				x="0"
+				y="0"
+				font-size="1px"
+				font-family="CLicht">?</text>
+			<text
+				x="0.16"
+				y="1.1"
+				font-size="0.67px"
+				font-family="CLicht">•</text>
+		</g>
+		<g
+			id="bassClef2x8">
+			<text
+				x="0"
+				y="0"
+				font-size="1px"
+				font-family="CLicht">?</text>
+			<text
+				x="0"
+				y="1.1"
+				font-size="0.67px"
+				font-family="CLicht">™</text>
+			<text
+				x="0.194"
+				y="1.1"
+				font-size="0.4px"
+				font-family="Estrangelo Edessa">x</text>
+			<text
+				x="0.383"
+				y="1.1"
+				font-size="0.67px"
+				font-family="CLicht">•</text>
+		</g>
+		<g
+			id="bassClef3x8">
+			<text
+				x="0"
+				y="0"
+				font-size="1px"
+				font-family="CLicht">?</text>
+			<text
+				x="0"
+				y="1.1"
+				font-size="0.67px"
+				font-family="CLicht">£</text>
+			<text
+				x="0.194"
+				y="1.1"
+				font-size="0.4px"
+				font-family="Estrangelo Edessa">x</text>
+			<text
+				x="0.383"
+				y="1.1"
+				font-size="0.67px"
+				font-family="CLicht">•</text>
+		</g>
+		<g
+			id="Right1Flag">
+			<path
+				d="M 0,0 0,0.12096 0.31809,0.2467 Q 0.299,0.2 0.31809,0.1257" />
+		</g>
+		<g
+			id="Left1Flag">
+			<path
+				d="M 0,0 0,-0.12096 0.31809,-0.2467 Q 0.299,-0.2 0.31809,-0.1257" />
+		</g>
+		<g
+			id="Right2Flags">
+			<path
+				d="M 0,0 0,0.12096 0.31809,0.2467 Q 0.299,0.2 0.31809,0.1257" />
+			<path
+				d="M 0,0.25 0,0.37096 0.31809,0.4967 Q 0.299,0.45 0.31809,0.3757" />
+		</g>
+		<g
+			id="Left2Flags">
+			<path
+				d="M 0,0 0,-0.12096 0.31809,-0.2467 Q 0.299,-0.2 0.31809,-0.1257" />
+			<path
+				d="M 0,-0.25 0,-0.37096 0.31809,-0.4967 Q 0.299,-0.45 0.31809,-0.3757" />
+		</g>
+		<g
+			id="Right3Flags">
+			<path
+				d="M 0,0 0,0.12096 0.31809,0.2467 Q 0.299,0.2 0.31809,0.1257" />
+			<path
+				d="M 0,0.25 0,0.37096 0.31809,0.4967 Q 0.299,0.45 0.31809,0.3757" />
+			<path
+				d="M 0,0.5 0,0.62096 0.31809,0.7467 Q 0.299,0.7 0.31809,0.6257" />
+		</g>
+		<g
+			id="Left3Flags">
+			<path
+				d="M 0,0 0,-0.12096 0.31809,-0.2467 Q 0.299,-0.2 0.31809,-0.1257" />
+			<path
+				d="M 0,-0.25 0,-0.37096 0.31809,-0.4967 Q 0.299,-0.45 0.31809,-0.3757" />
+			<path
+				d="M 0,-0.5 0,-0.62096 0.31809,-0.7467 Q 0.299,-0.7 0.31809,-0.6257" />
+		</g>
+		<g
+			id="Right4Flags">
+			<path
+				d="M 0,0 0,0.12096 0.31809,0.2467 Q 0.299,0.2 0.31809,0.1257" />
+			<path
+				d="M 0,0.25 0,0.37096 0.31809,0.4967 Q 0.299,0.45 0.31809,0.3757" />
+			<path
+				d="M 0,0.5 0,0.62096 0.31809,0.7467 Q 0.299,0.7 0.31809,0.6257" />
+			<path
+				d="M 0,0.75 0,0.87096 0.31809,0.9967 Q 0.299,0.95 0.31809,0.8757" />
+		</g>
+		<g
+			id="Left4Flags">
+			<path
+				d="M 0,0 0,-0.12096 0.31809,-0.2467 Q 0.299,-0.2 0.31809,-0.1257" />
+			<path
+				d="M 0,-0.25 0,-0.37096 0.31809,-0.4967 Q 0.299,-0.45 0.31809,-0.3757" />
+			<path
+				d="M 0,-0.5 0,-0.62096 0.31809,-0.7467 Q 0.299,-0.7 0.31809,-0.6257" />
+			<path
+				d="M 0,-0.75 0,-0.87096 0.31809,-0.9967 Q 0.299,-0.95 0.31809,-0.8757" />
+		</g>
+		<g
+			id="Right5Flags">
+			<path
+				d="M 0,0 0,0.12096 0.31809,0.2467 Q 0.299,0.2 0.31809,0.1257" />
+			<path
+				d="M 0,0.25 0,0.37096 0.31809,0.4967 Q 0.299,0.45 0.31809,0.3757" />
+			<path
+				d="M 0,0.5 0,0.62096 0.31809,0.7467 Q 0.299,0.7 0.31809,0.6257" />
+			<path
+				d="M 0,0.75 0,0.87096 0.31809,0.9967 Q 0.299,0.95 0.31809,0.8757" />
+			<path
+				d="M 0,1 0,1.12096 0.31809,1.2467 Q 0.299,1.2 0.31809,1.1257" />
+		</g>
+		<g
+			id="Left5Flags">
+			<path
+				d="M 0,0 0,-0.12096 0.31809,-0.2467 Q 0.299,-0.2 0.31809,-0.1257" />
+			<path
+				d="M 0,-0.25 0,-0.37096 0.31809,-0.4967 Q 0.299,-0.45 0.31809,-0.3757" />
+			<path
+				d="M 0,-0.5 0,-0.62096 0.31809,-0.7467 Q 0.299,-0.7 0.31809,-0.6257" />
+			<path
+				d="M 0,-0.75 0,-0.87096 0.31809,-0.9967 Q 0.299,-0.95 0.31809,-0.8757" />
+			<path
+				d="M 0,-1 0,-1.12096 0.31809,-1.2467 Q 0.299,-1.2 0.31809,-1.1257" />
+		</g>
+	</defs>
+	<score:midiDefs>
+		<score:midiChord
+			id="palette1_chord1"
+			patch="122"
+			pitchWheelDeviation="10">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="8500"
+					patch="122"
+					notes="30"
+					velocities="100" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="0 127"
+				pan="127 0"
+				expressionSlider="0 50 100 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette1_chord2"
+			patch="122"
+			pitchWheelDeviation="10">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="8023"
+					patch="122"
+					notes="30"
+					velocities="103" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="127 0"
+				pan="0 127"
+				expressionSlider="0 50 100 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette1_chord3"
+			patch="122"
+			pitchWheelDeviation="10">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="7573"
+					patch="122"
+					notes="30"
+					velocities="105" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="0 64 0"
+				pan="127 127 0 108 27 81 53"
+				expressionSlider="0 100 100 30 50 30 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette1_chord4"
+			patch="122"
+			pitchWheelDeviation="10">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="7148"
+					patch="122"
+					notes="25"
+					velocities="108" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="64 0 64"
+				pan="53 81 27 108 0 127 127"
+				expressionSlider="0 100 100 30 50 30 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette1_chord5"
+			patch="122"
+			pitchWheelDeviation="10">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="6746"
+					patch="122"
+					notes="25"
+					velocities="110" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="64 96 0 64"
+				pan="127 76 100 25 50 0"
+				expressionSlider="0 20 50 20 80 20 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette1_chord6"
+			patch="122"
+			pitchWheelDeviation="10">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="6368"
+					patch="122"
+					notes="25"
+					velocities="113" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="64 0 96 64"
+				pan="0 50 25 100 76 127"
+				expressionSlider="0 20 50 20 80 20 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette1_chord7"
+			patch="122"
+			pitchWheelDeviation="10">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="6010"
+					patch="122"
+					notes="23"
+					velocities="115" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="0 70 35 105 0"
+				pan="0 127 44 88 0"
+				expressionSlider="0 64 64 80 30 30 20 100 64 50 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette1_chord8"
+			patch="122"
+			pitchWheelDeviation="10">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="5673"
+					patch="122"
+					notes="23"
+					velocities="118" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="0 105 35 70 0"
+				pan="0 88 44 127 0"
+				expressionSlider="0 64 64 80 30 30 20 100 64 50 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette1_chord9"
+			patch="122"
+			pitchWheelDeviation="10">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="5355"
+					patch="122"
+					notes="23"
+					velocities="120" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="0 40 20 80 60 100"
+				pan="65 0 127 65"
+				expressionSlider="0 20 80 20 50 20 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette1_chord10"
+			patch="122"
+			pitchWheelDeviation="10">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="5054"
+					patch="122"
+					notes="20"
+					velocities="123" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="100 60 80 20 40 0"
+				pan="65 127 0 65"
+				expressionSlider="0 20 80 20 50 20 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette1_chord11"
+			patch="122"
+			pitchWheelDeviation="10">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="4770"
+					patch="122"
+					notes="20"
+					velocities="125" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="42 64 21 85 0 100 100"
+				pan="65 0 65"
+				expressionSlider="0 30 50 30 100 100 50 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette1_chord12"
+			patch="122"
+			pitchWheelDeviation="10">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="4503"
+					patch="122"
+					notes="20"
+					velocities="127" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="100 100 0 85 21 64 42"
+				pan="65 127 65"
+				expressionSlider="0 30 50 30 100 100 50 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette2_chord1"
+			patch="122"
+			pitchWheelDeviation="10">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="75"
+					notes="99"
+					velocities="35" />
+				<score:basicChord
+					msDuration="71"
+					notes="96"
+					velocities="35" />
+				<score:basicChord
+					msDuration="67"
+					notes="93"
+					velocities="35" />
+				<score:basicChord
+					msDuration="63"
+					notes="90"
+					velocities="35" />
+				<score:basicChord
+					msDuration="106"
+					notes="117"
+					velocities="35" />
+				<score:basicChord
+					msDuration="101"
+					notes="114"
+					velocities="35" />
+				<score:basicChord
+					msDuration="79"
+					notes="102"
+					velocities="35" />
+				<score:basicChord
+					msDuration="85"
+					notes="105"
+					velocities="35" />
+				<score:basicChord
+					msDuration="89"
+					notes="108"
+					velocities="35" />
+				<score:basicChord
+					msDuration="75"
+					notes="99"
+					velocities="35" />
+				<score:basicChord
+					msDuration="95"
+					notes="111"
+					velocities="35" />
+				<score:basicChord
+					msDuration="71"
+					notes="96"
+					velocities="35" />
+				<score:basicChord
+					msDuration="67"
+					notes="93"
+					velocities="35" />
+				<score:basicChord
+					msDuration="79"
+					notes="102"
+					velocities="35" />
+				<score:basicChord
+					msDuration="113"
+					notes="120"
+					velocities="35" />
+				<score:basicChord
+					msDuration="85"
+					notes="105"
+					velocities="35" />
+			</score:basicChords>
+			<score:sliders />
+		</score:midiChord>
+		<score:midiChord
+			id="palette2_chord2"
+			patch="122"
+			pitchWheelDeviation="10"
+			minBasicChordMsDuration="15">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="62"
+					notes="122"
+					velocities="35" />
+				<score:basicChord
+					msDuration="39"
+					notes="98"
+					velocities="35" />
+				<score:basicChord
+					msDuration="47"
+					notes="107"
+					velocities="35" />
+				<score:basicChord
+					msDuration="33"
+					notes="89"
+					velocities="35" />
+				<score:basicChord
+					msDuration="37"
+					notes="95"
+					velocities="35" />
+				<score:basicChord
+					msDuration="53"
+					notes="113"
+					velocities="35" />
+				<score:basicChord
+					msDuration="42"
+					notes="101"
+					velocities="35" />
+				<score:basicChord
+					msDuration="49"
+					notes="110"
+					velocities="35" />
+				<score:basicChord
+					msDuration="35"
+					notes="92"
+					velocities="35" />
+				<score:basicChord
+					msDuration="56"
+					notes="116"
+					velocities="35" />
+				<score:basicChord
+					msDuration="44"
+					notes="104"
+					velocities="35" />
+				<score:basicChord
+					msDuration="39"
+					notes="98"
+					velocities="35" />
+				<score:basicChord
+					msDuration="47"
+					notes="107"
+					velocities="35" />
+				<score:basicChord
+					msDuration="37"
+					notes="95"
+					velocities="35" />
+				<score:basicChord
+					msDuration="42"
+					notes="101"
+					velocities="35" />
+				<score:basicChord
+					msDuration="33"
+					notes="89"
+					velocities="35" />
+				<score:basicChord
+					msDuration="40"
+					notes="98"
+					velocities="35" />
+				<score:basicChord
+					msDuration="44"
+					notes="104"
+					velocities="35" />
+				<score:basicChord
+					msDuration="35"
+					notes="92"
+					velocities="35" />
+				<score:basicChord
+					msDuration="49"
+					notes="110"
+					velocities="35" />
+				<score:basicChord
+					msDuration="59"
+					notes="119"
+					velocities="35" />
+				<score:basicChord
+					msDuration="53"
+					notes="113"
+					velocities="35" />
+				<score:basicChord
+					msDuration="37"
+					notes="95"
+					velocities="35" />
+				<score:basicChord
+					msDuration="42"
+					notes="101"
+					velocities="35" />
+				<score:basicChord
+					msDuration="46"
+					notes="107"
+					velocities="35" />
+				<score:basicChord
+					msDuration="40"
+					notes="98"
+					velocities="35" />
+				<score:basicChord
+					msDuration="62"
+					notes="122"
+					velocities="35" />
+				<score:basicChord
+					msDuration="45"
+					notes="104"
+					velocities="35" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="127 30" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette2_chord3"
+			patch="122"
+			pitchWheelDeviation="10"
+			minBasicChordMsDuration="28">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="68"
+					notes="115"
+					velocities="35" />
+				<score:basicChord
+					msDuration="41"
+					notes="88"
+					velocities="35" />
+				<score:basicChord
+					msDuration="51"
+					notes="100"
+					velocities="35" />
+				<score:basicChord
+					msDuration="43"
+					notes="91"
+					velocities="35" />
+				<score:basicChord
+					msDuration="46"
+					notes="94"
+					velocities="35" />
+				<score:basicChord
+					msDuration="60"
+					notes="109"
+					velocities="35" />
+				<score:basicChord
+					msDuration="58"
+					notes="106"
+					velocities="35" />
+				<score:basicChord
+					msDuration="48"
+					notes="97"
+					velocities="35" />
+				<score:basicChord
+					msDuration="55"
+					notes="103"
+					velocities="35" />
+				<score:basicChord
+					msDuration="64"
+					notes="112"
+					velocities="35" />
+				<score:basicChord
+					msDuration="51"
+					notes="100"
+					velocities="35" />
+				<score:basicChord
+					msDuration="46"
+					notes="94"
+					velocities="35" />
+				<score:basicChord
+					msDuration="49"
+					notes="97"
+					velocities="35" />
+				<score:basicChord
+					msDuration="43"
+					notes="91"
+					velocities="35" />
+				<score:basicChord
+					msDuration="57"
+					notes="106"
+					velocities="35" />
+				<score:basicChord
+					msDuration="54"
+					notes="103"
+					velocities="35" />
+				<score:basicChord
+					msDuration="73"
+					notes="118"
+					velocities="35" />
+				<score:basicChord
+					msDuration="41"
+					notes="88"
+					velocities="35" />
+				<score:basicChord
+					msDuration="60"
+					notes="109"
+					velocities="35" />
+				<score:basicChord
+					msDuration="52"
+					notes="100"
+					velocities="35" />
+				<score:basicChord
+					msDuration="68"
+					notes="115"
+					velocities="35" />
+				<score:basicChord
+					msDuration="49"
+					notes="97"
+					velocities="35" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="64 120"
+				expressionSlider="30 127 30" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette2_chord4"
+			patch="122"
+			pitchWheelDeviation="10"
+			minBasicChordMsDuration="42">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="49"
+					notes="93"
+					velocities="35" />
+				<score:basicChord
+					msDuration="83"
+					notes="120"
+					velocities="35" />
+				<score:basicChord
+					msDuration="58"
+					notes="102"
+					velocities="35" />
+				<score:basicChord
+					msDuration="47"
+					notes="90"
+					velocities="35" />
+				<score:basicChord
+					msDuration="69"
+					notes="111"
+					velocities="35" />
+				<score:basicChord
+					msDuration="62"
+					notes="105"
+					velocities="35" />
+				<score:basicChord
+					msDuration="56"
+					notes="99"
+					velocities="35" />
+				<score:basicChord
+					msDuration="52"
+					notes="96"
+					velocities="35" />
+				<score:basicChord
+					msDuration="44"
+					notes="87"
+					velocities="35" />
+				<score:basicChord
+					msDuration="65"
+					notes="108"
+					velocities="35" />
+				<score:basicChord
+					msDuration="50"
+					notes="93"
+					velocities="35" />
+				<score:basicChord
+					msDuration="58"
+					notes="102"
+					velocities="35" />
+				<score:basicChord
+					msDuration="56"
+					notes="99"
+					velocities="35" />
+				<score:basicChord
+					msDuration="46"
+					notes="90"
+					velocities="35" />
+				<score:basicChord
+					msDuration="62"
+					notes="105"
+					velocities="35" />
+				<score:basicChord
+					msDuration="52"
+					notes="96"
+					velocities="35" />
+				<score:basicChord
+					msDuration="74"
+					notes="114"
+					velocities="35" />
+				<score:basicChord
+					msDuration="78"
+					notes="117"
+					velocities="35" />
+				<score:basicChord
+					msDuration="50"
+					notes="93"
+					velocities="35" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="64 100" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette2_chord5"
+			patch="122"
+			pitchWheelDeviation="10"
+			minBasicChordMsDuration="55">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="63"
+					notes="92"
+					velocities="35" />
+				<score:basicChord
+					msDuration="71"
+					notes="98"
+					velocities="35" />
+				<score:basicChord
+					msDuration="75"
+					notes="101"
+					velocities="35" />
+				<score:basicChord
+					msDuration="67"
+					notes="95"
+					velocities="35" />
+				<score:basicChord
+					msDuration="84"
+					notes="107"
+					velocities="35" />
+				<score:basicChord
+					msDuration="94"
+					notes="113"
+					velocities="35" />
+				<score:basicChord
+					msDuration="80"
+					notes="104"
+					velocities="35" />
+				<score:basicChord
+					msDuration="56"
+					notes="86"
+					velocities="35" />
+				<score:basicChord
+					msDuration="90"
+					notes="110"
+					velocities="35" />
+				<score:basicChord
+					msDuration="70"
+					notes="98"
+					velocities="35" />
+				<score:basicChord
+					msDuration="60"
+					notes="89"
+					velocities="35" />
+				<score:basicChord
+					msDuration="63"
+					notes="92"
+					velocities="35" />
+				<score:basicChord
+					msDuration="75"
+					notes="101"
+					velocities="35" />
+				<score:basicChord
+					msDuration="101"
+					notes="116"
+					velocities="35" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="127 30" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette2_chord6"
+			patch="122"
+			pitchWheelDeviation="10"
+			minBasicChordMsDuration="69">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="136"
+					notes="118"
+					velocities="35" />
+				<score:basicChord
+					msDuration="121"
+					notes="112"
+					velocities="35" />
+				<score:basicChord
+					msDuration="91"
+					notes="97"
+					velocities="35" />
+				<score:basicChord
+					msDuration="81"
+					notes="91"
+					velocities="35" />
+				<score:basicChord
+					msDuration="76"
+					notes="88"
+					velocities="35" />
+				<score:basicChord
+					msDuration="96"
+					notes="100"
+					velocities="35" />
+				<score:basicChord
+					msDuration="86"
+					notes="94"
+					velocities="35" />
+				<score:basicChord
+					msDuration="128"
+					notes="115"
+					velocities="35" />
+				<score:basicChord
+					msDuration="102"
+					notes="103"
+					velocities="35" />
+				<score:basicChord
+					msDuration="73"
+					notes="85"
+					velocities="35" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="30 127 30" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette2_chord7"
+			patch="122"
+			pitchWheelDeviation="10"
+			minBasicChordMsDuration="82">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="118"
+					notes="96"
+					velocities="35" />
+				<score:basicChord
+					msDuration="99"
+					notes="87"
+					velocities="35" />
+				<score:basicChord
+					msDuration="111"
+					notes="93"
+					velocities="35" />
+				<score:basicChord
+					msDuration="94"
+					notes="84"
+					velocities="35" />
+				<score:basicChord
+					msDuration="125"
+					notes="99"
+					velocities="35" />
+				<score:basicChord
+					msDuration="149"
+					notes="108"
+					velocities="35" />
+				<score:basicChord
+					msDuration="132"
+					notes="102"
+					velocities="35" />
+				<score:basicChord
+					msDuration="106"
+					notes="90"
+					velocities="35" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="30 127 30" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette2_chord8"
+			patch="122"
+			pitchWheelDeviation="10"
+			minBasicChordMsDuration="96">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="153"
+					notes="104"
+					velocities="35" />
+				<score:basicChord
+					msDuration="173"
+					notes="110"
+					velocities="35" />
+				<score:basicChord
+					msDuration="137"
+					notes="98"
+					velocities="35" />
+				<score:basicChord
+					msDuration="116"
+					notes="89"
+					velocities="35" />
+				<score:basicChord
+					msDuration="194"
+					notes="116"
+					velocities="35" />
+				<score:basicChord
+					msDuration="109"
+					notes="86"
+					velocities="35" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="30 127 30" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette2_chord9"
+			patch="122"
+			pitchWheelDeviation="10"
+			minBasicChordMsDuration="109">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="126"
+					notes="85"
+					velocities="35" />
+				<score:basicChord
+					msDuration="160"
+					notes="97"
+					velocities="35" />
+				<score:basicChord
+					msDuration="190"
+					notes="106"
+					velocities="35" />
+				<score:basicChord
+					msDuration="142"
+					notes="91"
+					velocities="35" />
+				<score:basicChord
+					msDuration="214"
+					notes="112"
+					velocities="35" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="30 127 30" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette2_chord10"
+			patch="122"
+			pitchWheelDeviation="10"
+			minBasicChordMsDuration="123">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="239"
+					notes="108"
+					velocities="35" />
+				<score:basicChord
+					msDuration="151"
+					notes="84"
+					velocities="35" />
+				<score:basicChord
+					msDuration="226"
+					notes="105"
+					velocities="35" />
+				<score:basicChord
+					msDuration="170"
+					notes="90"
+					velocities="35" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="30 127 30" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette2_chord11"
+			patch="122"
+			pitchWheelDeviation="10"
+			minBasicChordMsDuration="136">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="256"
+					notes="110"
+					velocities="35" />
+				<score:basicChord
+					msDuration="181"
+					notes="92"
+					velocities="35" />
+				<score:basicChord
+					msDuration="161"
+					notes="86"
+					velocities="35" />
+				<score:basicChord
+					msDuration="144"
+					notes="80"
+					velocities="35" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="30 127 30" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette2_chord12"
+			patch="122"
+			pitchWheelDeviation="10"
+			minBasicChordMsDuration="150">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="259"
+					notes="106"
+					velocities="35" />
+				<score:basicChord
+					msDuration="246"
+					notes="103"
+					velocities="35" />
+				<score:basicChord
+					msDuration="195"
+					notes="91"
+					velocities="35" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="30 127 30" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette3_chord1"
+			patch="122"
+			pitchWheelDeviation="10">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="1716"
+					patch="122"
+					notes="80"
+					velocities="64" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="0 64"
+				expressionSlider="0 64 127 127 0" />
+		</score:midiChord>
+		<score:midiRest
+			id="palette3_rest2"
+			msDuration="1246" />
+		<score:midiChord
+			id="palette3_chord3"
+			patch="122"
+			pitchWheelDeviation="10">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="1189"
+					patch="122"
+					notes="70"
+					velocities="64" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="0 100 0 0 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette3_chord4"
+			patch="122"
+			pitchWheelDeviation="10">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="410"
+					patch="122"
+					notes="80"
+					velocities="67" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="64" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette3_chord5"
+			patch="122"
+			pitchWheelDeviation="10">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="856"
+					patch="122"
+					notes="30"
+					velocities="100" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="64" />
+		</score:midiChord>
+		<score:midiRest
+			id="palette3_rest6"
+			msDuration="1515" />
+		<score:midiChord
+			id="palette3_chord7"
+			patch="122"
+			pitchWheelDeviation="10">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="584"
+					patch="122"
+					notes="30"
+					velocities="100" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="64" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette3_chord8"
+			patch="122"
+			pitchWheelDeviation="10">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="366"
+					patch="122"
+					notes="30"
+					velocities="100" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="64" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette3_chord9"
+			patch="122"
+			pitchWheelDeviation="10">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="363"
+					patch="122"
+					notes="30"
+					velocities="100" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="64" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette3_chord10"
+			patch="122"
+			pitchWheelDeviation="10">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="890"
+					patch="122"
+					notes="30"
+					velocities="100" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="64" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette3_chord11"
+			patch="122"
+			pitchWheelDeviation="10">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="380"
+					patch="122"
+					notes="30"
+					velocities="100" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="64" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette3_chord12"
+			patch="122"
+			pitchWheelDeviation="10">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="1364"
+					patch="122"
+					notes="30"
+					velocities="100" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="64" />
+		</score:midiChord>
+	</score:midiDefs>
+	<rect
+		id="frame"
+		x="0"
+		y="0"
+		width="8080"
+		height="9888"
+		stroke="#CCCCCC"
+		stroke-width="1"
+		fill="white" />
+	<style>text:hover{cursor:default;}</style>
+	<text
+		x="80"
+		y="80"
+		font-size="72"
+		font-family="Arial">Song Six: page 3, Wednesday 18.09.2013, 11:45:22</text>
+	<g
+		id="page3_system1"
+		score:object="system">
+		<g
+			id="markers482">
+			<g
+				id="startMarker">
+				<line
+					x1="0"
+					y1="0"
+					x2="0"
+					y2="0"
+					stroke="009900"
+					stroke-width="1" />
+				<ellipse
+					cx="0"
+					cy="0"
+					rx="0"
+					ry="0"
+					stroke-width="1"
+					fill="009900" />
+			</g>
+			<g
+				id="runningMarker">
+				<line
+					x1="0"
+					y1="0"
+					x2="0"
+					y2="0"
+					stroke="888888"
+					stroke-width="1" />
+			</g>
+			<g
+				id="endMarker">
+				<line
+					x1="0"
+					y1="0"
+					x2="0"
+					y2="0"
+					stroke="FF0000"
+					stroke-width="1" />
+				<rect
+					x="0"
+					y="0"
+					width="0"
+					height="0"
+					stroke-width="1"
+					fill="FF0000" />
+			</g>
+		</g>
+		<g
+			id="p3_sys1_staff1"
+			score:object="staff"
+			score:staffName="Clyt."
+			score:stafflines="5"
+			score:gap="32">
+			<g
+				id="stafflines483">
+				<line
+					x1="400"
+					y1="458.6667"
+					x2="7680"
+					y2="458.6667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="490.6667"
+					x2="7680"
+					y2="490.6667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="522.6666"
+					x2="7680"
+					y2="522.6666"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="554.6666"
+					x2="7680"
+					y2="554.6666"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="586.6666"
+					x2="7680"
+					y2="586.6666"
+					stroke="black"
+					stroke-width="4" />
+			</g>
+			<g
+				id="voice484"
+				score:object="voice"
+				score:midiChannel="0">
+				<use
+					xlink:href="#trebleClef"
+					x="0"
+					y="0"
+					transform="translate(400,554.6666) scale(125.44)" />
+				<text
+					x="232"
+					y="548.2667"
+					text-anchor="middle"
+					font-size="80"
+					font-family="Times New Roman">Clyt.</text>
+				<g
+					id="barnumber485">
+					<text
+						x="503.2"
+						y="266.6667"
+						text-anchor="middle"
+						font-size="64"
+						font-family="Arial">70</text>
+					<rect
+						x="445.712"
+						y="199.2267"
+						width="114.976"
+						height="89.44"
+						stroke="black"
+						stroke-width="4.8"
+						fill="none" />
+				</g>
+				<g
+					id="beamBlock486">
+					<path
+						fill="white"
+						opacity="0.65"
+						d="M 1551.26 444.2667 L 1589.66 444.2667 1589.66 463.4667 1551.26 463.4667 z" />
+					<path
+						stroke="black"
+						stroke-width="4"
+						fill="black"
+						d="M 1551.26 457.0667 L 1589.66 457.0667 1589.66 469.8666 1551.26 469.8666 z" />
+					<path
+						fill="white"
+						opacity="0.65"
+						d="M 873.7769 412.2667 L 1852.627 412.2667 1852.627 431.4667 873.7769 431.4667 z" />
+					<path
+						stroke="black"
+						stroke-width="4"
+						fill="black"
+						d="M 873.7769 425.0667 L 1852.627 425.0667 1852.627 437.8666 873.7769 437.8666 z" />
+					<path
+						stroke="black"
+						stroke-width="4"
+						fill="black"
+						d="M 616.2366 393.0667 L 2273.036 393.0667 2273.036 405.8666 616.2366 405.8666 z" />
+				</g>
+				<g
+					id="chord487"
+					score:object="chord"
+					score:alignmentX="599.824"
+					score:msDuration="522">
+					<score:midiChord
+						id="midi487"
+						patch="126"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="522"
+								notes="65"
+								velocities="105" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics487">
+						<line
+							x1="616.2366"
+							y1="393.0667"
+							x2="616.2366"
+							y2="550.9707"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="581.4113"
+							y="554.6666"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="599.824"
+							y="679.1979"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">light-</text>
+					</g>
+				</g>
+				<g
+					id="chord488"
+					score:object="chord"
+					score:alignmentX="857.3642"
+					score:msDuration="351">
+					<score:midiChord
+						id="midi488"
+						patch="126"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="351"
+								notes="66"
+								velocities="105" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics488">
+						<line
+							x1="873.7769"
+							y1="393.0667"
+							x2="873.7769"
+							y2="550.9707"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="838.9515"
+							y="554.6666"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="857.3642"
+							y="679.1979"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">ly</text>
+					</g>
+				</g>
+				<g
+					id="chord489"
+					score:object="chord"
+					score:alignmentX="1030.538"
+					score:msDuration="372">
+					<score:midiChord
+						id="midi489"
+						patch="126"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="372"
+								notes="67"
+								velocities="105" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics489">
+						<line
+							x1="1046.95"
+							y1="393.0667"
+							x2="1046.95"
+							y2="550.9707"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="1012.125"
+							y="554.6666"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="1030.538"
+							y="679.1979"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">o'er</text>
+					</g>
+				</g>
+				<g
+					id="chord490"
+					score:object="chord"
+					score:alignmentX="1214.072"
+					score:msDuration="340">
+					<score:midiChord
+						id="midi490"
+						patch="126"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="340"
+								notes="68"
+								velocities="105" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics490">
+						<line
+							x1="1230.485"
+							y1="393.0667"
+							x2="1230.485"
+							y2="550.9707"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="1195.66"
+							y="554.6666"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="1214.072"
+							y="679.1979"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">the</text>
+					</g>
+				</g>
+				<g
+					id="chord491"
+					score:object="chord"
+					score:alignmentX="1381.819"
+					score:msDuration="388">
+					<score:midiChord
+						id="midi491"
+						patch="126"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="388"
+								notes="69"
+								velocities="105" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics491">
+						<line
+							x1="1398.231"
+							y1="393.0667"
+							x2="1398.231"
+							y2="550.9707"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="1363.406"
+							y="554.6666"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="1381.819"
+							y="679.1979"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">net</text>
+					</g>
+				</g>
+				<g
+					id="chord492"
+					score:object="chord"
+					score:alignmentX="1573.247"
+					score:msDuration="170">
+					<score:midiChord
+						id="midi492"
+						patch="126"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="170"
+								notes="70"
+								velocities="105" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics492">
+						<line
+							x1="1589.66"
+							y1="393.0667"
+							x2="1589.66"
+							y2="550.9707"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="1554.834"
+							y="554.6666"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="1573.247"
+							y="679.1979"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">Of</text>
+					</g>
+				</g>
+				<g
+					id="chord493"
+					score:object="chord"
+					score:alignmentX="1657.12"
+					score:msDuration="363">
+					<score:midiChord
+						id="midi493"
+						patch="126"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="363"
+								notes="71"
+								velocities="105" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics493">
+						<line
+							x1="1673.533"
+							y1="393.0667"
+							x2="1673.533"
+							y2="550.9707"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="1638.708"
+							y="554.6666"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="1657.12"
+							y="679.1979"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">the</text>
+					</g>
+				</g>
+				<g
+					id="chord494"
+					score:object="chord"
+					score:alignmentX="1836.214"
+					score:msDuration="213">
+					<score:midiChord
+						id="midi494"
+						patch="126"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="213"
+								notes="72"
+								velocities="105" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics494">
+						<line
+							x1="1852.627"
+							y1="393.0667"
+							x2="1852.627"
+							y2="550.9707"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="1817.802"
+							y="554.6666"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="1836.214"
+							y="679.1979"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">un-</text>
+					</g>
+				</g>
+				<g
+					id="chord495"
+					score:object="chord"
+					score:alignmentX="1948.265"
+					score:msDuration="625">
+					<score:midiChord
+						id="midi495"
+						patch="126"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="625"
+								notes="73"
+								velocities="105" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics495">
+						<line
+							x1="1964.678"
+							y1="393.0667"
+							x2="1964.678"
+							y2="550.9707"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="1929.853"
+							y="554.6666"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="1948.265"
+							y="679.1979"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">skill-</text>
+					</g>
+				</g>
+				<g
+					id="chord496"
+					score:object="chord"
+					score:alignmentX="2256.623"
+					score:msDuration="501">
+					<score:midiChord
+						id="midi496"
+						patch="126"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="501"
+								notes="74"
+								velocities="105" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics496">
+						<line
+							x1="2273.036"
+							y1="393.0667"
+							x2="2273.036"
+							y2="550.9707"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="2238.21"
+							y="554.6666"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="2256.623"
+							y="679.1979"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">ful</text>
+					</g>
+				</g>
+				<g
+					id="beamBlock497">
+					<path
+						fill="white"
+						opacity="0.65"
+						d="M 2632.839 444.2667 L 2671.239 444.2667 2671.239 463.4667 2632.839 463.4667 z" />
+					<path
+						stroke="black"
+						stroke-width="4"
+						fill="black"
+						d="M 2632.839 457.0667 L 2671.239 457.0667 2671.239 469.8666 2632.839 469.8666 z" />
+					<path
+						stroke="black"
+						stroke-width="4"
+						fill="black"
+						d="M 2632.839 425.0667 L 2812.92 425.0667 2812.92 437.8666 2632.839 437.8666 z" />
+				</g>
+				<g
+					id="chord498"
+					score:object="chord"
+					score:alignmentX="2616.427"
+					score:msDuration="365">
+					<score:midiChord
+						id="midi498"
+						patch="126"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="365"
+								notes="75"
+								velocities="105" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics498">
+						<line
+							x1="2632.839"
+							y1="425.0667"
+							x2="2632.839"
+							y2="550.9707"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="2598.014"
+							y="554.6666"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="2616.427"
+							y="679.1979"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">hun-</text>
+					</g>
+				</g>
+				<g
+					id="chord499"
+					score:object="chord"
+					score:alignmentX="2796.507"
+					score:msDuration="410">
+					<score:midiChord
+						id="midi499"
+						patch="126"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="410"
+								notes="76"
+								velocities="105" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics499">
+						<line
+							x1="2812.92"
+							y1="425.0667"
+							x2="2812.92"
+							y2="550.9707"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="2778.095"
+							y="554.6666"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="2796.507"
+							y="679.1979"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">ter,</text>
+					</g>
+				</g>
+				<g
+					id="rest500"
+					score:object="rest"
+					score:alignmentX="2998.79"
+					score:msDuration="1413">
+					<text
+						x="2979.31"
+						y="522.6666"
+						font-size="125.44"
+						font-family="CLicht">Œ</text>
+				</g>
+				<g
+					id="beamBlock501">
+					<path
+						fill="white"
+						opacity="0.65"
+						d="M 3712.337 444.2667 L 3750.737 444.2667 3750.737 463.4667 3712.337 463.4667 z" />
+					<path
+						stroke="black"
+						stroke-width="4"
+						fill="black"
+						d="M 3712.337 457.0667 L 3750.737 457.0667 3750.737 469.8666 3712.337 469.8666 z" />
+					<path
+						stroke="black"
+						stroke-width="4"
+						fill="black"
+						d="M 3712.337 425.0667 L 3890.445 425.0667 3890.445 437.8666 3712.337 437.8666 z" />
+				</g>
+				<g
+					id="chord502"
+					score:object="chord"
+					score:alignmentX="3695.925"
+					score:msDuration="361">
+					<score:midiChord
+						id="midi502"
+						patch="126"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="361"
+								notes="77"
+								velocities="105" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics502">
+						<line
+							x1="3712.337"
+							y1="425.0667"
+							x2="3712.337"
+							y2="550.9707"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="3677.512"
+							y="554.6666"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="3695.925"
+							y="679.1979"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">and</text>
+					</g>
+				</g>
+				<g
+					id="chord503"
+					score:object="chord"
+					score:alignmentX="3874.032"
+					score:msDuration="576">
+					<score:midiChord
+						id="midi503"
+						patch="126"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="576"
+								notes="78"
+								velocities="105" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics503">
+						<line
+							x1="3890.445"
+							y1="425.0667"
+							x2="3890.445"
+							y2="550.9707"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="3855.619"
+							y="554.6666"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="3874.032"
+							y="679.1979"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">he</text>
+					</g>
+				</g>
+				<g
+					id="beamBlock504">
+					<path
+						fill="white"
+						opacity="0.65"
+						d="M 4560.869 444.2667 L 4599.269 444.2667 4599.269 463.4667 4560.869 463.4667 z" />
+					<path
+						stroke="black"
+						stroke-width="4"
+						fill="black"
+						d="M 4560.869 457.0667 L 4599.269 457.0667 4599.269 469.8666 4560.869 469.8666 z" />
+					<path
+						stroke="black"
+						stroke-width="4"
+						fill="black"
+						d="M 4301.272 425.0667 L 4599.269 425.0667 4599.269 437.8666 4301.272 437.8666 z" />
+				</g>
+				<g
+					id="chord505"
+					score:object="chord"
+					score:alignmentX="4284.86"
+					score:msDuration="604">
+					<score:midiChord
+						id="midi505"
+						patch="126"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="604"
+								notes="79"
+								velocities="105" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics505">
+						<line
+							x1="4301.272"
+							y1="425.0667"
+							x2="4301.272"
+							y2="550.9707"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="4266.447"
+							y="554.6666"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="4284.86"
+							y="679.1979"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">mocks</text>
+					</g>
+				</g>
+				<g
+					id="chord506"
+					score:object="chord"
+					score:alignmentX="4582.856"
+					score:msDuration="259">
+					<score:midiChord
+						id="midi506"
+						patch="126"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="259"
+								notes="80"
+								velocities="105" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics506">
+						<line
+							x1="4599.269"
+							y1="425.0667"
+							x2="4599.269"
+							y2="550.9707"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="4564.444"
+							y="554.6666"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="4582.856"
+							y="679.1979"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">The</text>
+					</g>
+				</g>
+				<g
+					id="beamBlock507">
+					<path
+						stroke="black"
+						stroke-width="4"
+						fill="black"
+						d="M 4839.728 425.0667 L 5075.559 425.0667 5075.559 437.8666 4839.728 437.8666 z" />
+				</g>
+				<g
+					id="chord508"
+					score:object="chord"
+					score:alignmentX="4823.315"
+					score:msDuration="478">
+					<score:midiChord
+						id="midi508"
+						patch="126"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="478"
+								notes="81"
+								velocities="105" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics508">
+						<line
+							x1="4839.728"
+							y1="425.0667"
+							x2="4839.728"
+							y2="550.9707"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="4804.902"
+							y="554.6666"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="4823.315"
+							y="679.1979"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">clum-</text>
+					</g>
+				</g>
+				<g
+					id="chord509"
+					score:object="chord"
+					score:alignmentX="5059.146"
+					score:msDuration="401">
+					<score:midiChord
+						id="midi509"
+						patch="126"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="401"
+								notes="82"
+								velocities="105" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics509">
+						<line
+							x1="5075.559"
+							y1="425.0667"
+							x2="5075.559"
+							y2="550.9707"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="5040.734"
+							y="554.6666"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="5059.146"
+							y="679.1979"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">sy</text>
+					</g>
+				</g>
+				<g
+					id="chord510"
+					score:object="chord"
+					score:alignmentX="5256.988"
+					score:msDuration="1159">
+					<score:midiChord
+						id="midi510"
+						patch="126"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="1159"
+								notes="83"
+								velocities="105" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics510">
+						<line
+							x1="5273.401"
+							y1="439.4667"
+							x2="5273.401"
+							y2="550.9707"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="5238.576"
+							y="554.6666"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="5256.988"
+							y="679.1979"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">toils</text>
+					</g>
+				</g>
+				<g
+					id="chord511"
+					score:object="chord"
+					score:alignmentX="5828.807"
+					score:msDuration="266">
+					<score:midiChord
+						id="midi511"
+						patch="126"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="266"
+								notes="84"
+								velocities="105" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics511">
+						<line
+							x1="5845.219"
+							y1="434.7606"
+							x2="5845.219"
+							y2="550.9707"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<use
+							xlink:href="#Right2Flags"
+							x="0"
+							y="0"
+							transform="translate(5845.219,434.7606) scale(125.44)" />
+						<text
+							x="5810.394"
+							y="554.6666"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="5828.807"
+							y="679.1979"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">ye</text>
+					</g>
+				</g>
+				<g
+					id="chord512"
+					score:object="chord"
+					score:alignmentX="6091.981"
+					score:msDuration="921">
+					<score:midiChord
+						id="midi512"
+						patch="126"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="921"
+								notes="85"
+								velocities="105" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics512">
+						<line
+							x1="6108.394"
+							y1="439.4667"
+							x2="6108.394"
+							y2="550.9707"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="6073.569"
+							y="554.6666"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="6091.981"
+							y="679.1979"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">spread</text>
+					</g>
+				</g>
+				<g
+					id="beamBlock513">
+					<path
+						fill="white"
+						opacity="0.65"
+						d="M 6562.79 444.2667 L 6694.026 444.2667 6694.026 463.4667 6562.79 463.4667 z" />
+					<path
+						stroke="black"
+						stroke-width="4"
+						fill="black"
+						d="M 6562.79 457.0667 L 6694.026 457.0667 6694.026 469.8666 6562.79 469.8666 z" />
+					<path
+						stroke="black"
+						stroke-width="4"
+						fill="black"
+						d="M 6562.79 425.0667 L 6860.292 425.0667 6860.292 437.8666 6562.79 437.8666 z" />
+				</g>
+				<g
+					id="chord514"
+					score:object="chord"
+					score:alignmentX="6546.377"
+					score:msDuration="266">
+					<score:midiChord
+						id="midi514"
+						patch="126"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="266"
+								notes="86"
+								velocities="105" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics514">
+						<line
+							x1="6562.79"
+							y1="425.0667"
+							x2="6562.79"
+							y2="550.9707"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="6527.964"
+							y="554.6666"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="6546.377"
+							y="679.1979"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">for</text>
+					</g>
+				</g>
+				<g
+					id="chord515"
+					score:object="chord"
+					score:alignmentX="6677.614"
+					score:msDuration="337">
+					<score:midiChord
+						id="midi515"
+						patch="126"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="337"
+								notes="87"
+								velocities="105" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics515">
+						<line
+							x1="6694.026"
+							y1="425.0667"
+							x2="6694.026"
+							y2="550.9707"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="6659.201"
+							y="554.6666"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="6677.614"
+							y="679.1979"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">him</text>
+					</g>
+				</g>
+				<g
+					id="chord516"
+					score:object="chord"
+					score:alignmentX="6843.88"
+					score:msDuration="501">
+					<score:midiChord
+						id="midi516"
+						patch="126"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="501"
+								notes="88"
+								velocities="105" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics516">
+						<line
+							x1="6860.292"
+							y1="425.0667"
+							x2="6860.292"
+							y2="550.9707"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="6825.467"
+							y="554.6666"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="6843.88"
+							y="679.1979"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">in</text>
+					</g>
+				</g>
+				<g
+					id="chord517"
+					score:object="chord"
+					score:alignmentX="7203.684"
+					score:msDuration="933">
+					<score:midiChord
+						id="midi517"
+						patch="126"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="933"
+								notes="89"
+								velocities="105" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics517">
+						<line
+							x1="7220.096"
+							y1="439.4667"
+							x2="7220.096"
+							y2="550.9707"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="7185.271"
+							y="554.6666"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="7203.684"
+							y="679.1979"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">vain.</text>
+					</g>
+				</g>
+			</g>
+		</g>
+		<g
+			id="p3_sys1_staff2"
+			score:object="staff"
+			score:staffName="Wind"
+			score:stafflines="5"
+			score:gap="32">
+			<g
+				id="stafflines518">
+				<line
+					x1="400"
+					y1="746.6666"
+					x2="7680"
+					y2="746.6666"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="778.6666"
+					x2="7680"
+					y2="778.6666"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="810.6666"
+					x2="7680"
+					y2="810.6666"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="842.6666"
+					x2="7680"
+					y2="842.6666"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="874.6666"
+					x2="7680"
+					y2="874.6666"
+					stroke="black"
+					stroke-width="4" />
+			</g>
+			<g
+				id="voice519"
+				score:object="voice"
+				score:midiChannel="1">
+				<use
+					xlink:href="#bassClef"
+					x="0"
+					y="0"
+					transform="translate(400,778.6666) scale(125.44)" />
+				<text
+					x="232"
+					y="836.2667"
+					text-anchor="middle"
+					font-size="80"
+					font-family="Times New Roman">Wind</text>
+				<g
+					id="cautionaryChord520">
+					<g
+						id="graphics520">
+						<text
+							x="585.0939"
+							y="1002.667"
+							font-size="100.352"
+							font-family="CLicht">œ</text>
+						<text
+							x="542.4"
+							y="1002.667"
+							font-size="100.352"
+							font-family="CLicht">#</text>
+						<line
+							x1="574.3637"
+							y1="906.6666"
+							x2="625.2842"
+							y2="906.6666"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="574.3637"
+							y1="938.6666"
+							x2="625.2842"
+							y2="938.6666"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="574.3637"
+							y1="970.6666"
+							x2="625.2842"
+							y2="970.6666"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="574.3637"
+							y1="1002.667"
+							x2="625.2842"
+							y2="1002.667"
+							stroke="black"
+							stroke-width="4" />
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 539.2,963.8077 L 523.2,963.8077 523.2,1041.526 539.2,1041.526" />
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 633.2842,963.8077 L 649.2842,963.8077 649.2842,1041.526 633.2842,1041.526" />
+						<line
+							x1="491.2"
+							y1="1002.667"
+							x2="523.2"
+							y2="1002.667"
+							stroke="black"
+							stroke-width="13.6"
+							stroke-linecap="butt" />
+						<line
+							x1="649.2842"
+							y1="1002.667"
+							x2="1155.55"
+							y2="1002.667"
+							stroke="black"
+							stroke-width="13.6"
+							stroke-linecap="butt" />
+					</g>
+				</g>
+				<g
+					id="chord521"
+					score:object="chord"
+					score:alignmentX="1251.075"
+					score:msDuration="5347">
+					<score:midiChord
+						id="midi521">
+						<use
+							xlink:href="#palette1_chord3" />
+					</score:midiChord>
+					<g
+						id="graphics521">
+						<text
+							x="1223.99"
+							y="1002.667"
+							font-size="125.44"
+							font-family="CLicht">w</text>
+						<text
+							x="1162.75"
+							y="1002.667"
+							font-size="125.44"
+							font-family="CLicht">#</text>
+						<line
+							x1="1200.905"
+							y1="906.6666"
+							x2="1301.246"
+							y2="906.6666"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="1200.905"
+							y1="938.6666"
+							x2="1301.246"
+							y2="938.6666"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="1200.905"
+							y1="970.6666"
+							x2="1301.246"
+							y2="970.6666"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="1200.905"
+							y1="1002.667"
+							x2="1301.246"
+							y2="1002.667"
+							stroke="black"
+							stroke-width="4" />
+						<text
+							x="1201.948"
+							y="1090.126"
+							font-size="94.08"
+							font-family="CLicht">ƒ</text>
+						<line
+							x1="1309.246"
+							y1="1002.667"
+							x2="3913.197"
+							y2="1002.667"
+							stroke="black"
+							stroke-width="13.6"
+							stroke-linecap="butt" />
+					</g>
+				</g>
+				<g
+					id="chord522"
+					score:object="chord"
+					score:alignmentX="4008.722"
+					score:msDuration="5348">
+					<score:midiChord
+						id="midi522">
+						<use
+							xlink:href="#palette1_chord3" />
+					</score:midiChord>
+					<g
+						id="graphics522">
+						<text
+							x="3981.637"
+							y="1002.667"
+							font-size="125.44"
+							font-family="CLicht">w</text>
+						<text
+							x="3920.397"
+							y="1002.667"
+							font-size="125.44"
+							font-family="CLicht">#</text>
+						<line
+							x1="3958.552"
+							y1="906.6666"
+							x2="4058.893"
+							y2="906.6666"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="3958.552"
+							y1="938.6666"
+							x2="4058.893"
+							y2="938.6666"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="3958.552"
+							y1="970.6666"
+							x2="4058.893"
+							y2="970.6666"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="3958.552"
+							y1="1002.667"
+							x2="4058.893"
+							y2="1002.667"
+							stroke="black"
+							stroke-width="4" />
+					</g>
+				</g>
+				<g
+					id="cautionaryChord523">
+					<g
+						id="graphics523">
+						<text
+							x="4270.13"
+							y="1002.667"
+							font-size="100.352"
+							font-family="CLicht">œ</text>
+						<text
+							x="4227.436"
+							y="1002.667"
+							font-size="100.352"
+							font-family="CLicht">#</text>
+						<line
+							x1="4259.399"
+							y1="906.6666"
+							x2="4310.32"
+							y2="906.6666"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="4259.399"
+							y1="938.6666"
+							x2="4310.32"
+							y2="938.6666"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="4259.399"
+							y1="970.6666"
+							x2="4310.32"
+							y2="970.6666"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="4259.399"
+							y1="1002.667"
+							x2="4310.32"
+							y2="1002.667"
+							stroke="black"
+							stroke-width="4" />
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 4224.236,963.8077 L 4208.236,963.8077 4208.236,1041.526 4224.236,1041.526" />
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 4318.32,963.8077 L 4334.32,963.8077 4334.32,1041.526 4318.32,1041.526" />
+					</g>
+				</g>
+				<g
+					id="cautionaryChord524">
+					<g
+						id="graphics524">
+						<text
+							x="4808.585"
+							y="1002.667"
+							font-size="100.352"
+							font-family="CLicht">œ</text>
+						<text
+							x="4765.891"
+							y="1002.667"
+							font-size="100.352"
+							font-family="CLicht">#</text>
+						<line
+							x1="4797.854"
+							y1="906.6666"
+							x2="4848.775"
+							y2="906.6666"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="4797.854"
+							y1="938.6666"
+							x2="4848.775"
+							y2="938.6666"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="4797.854"
+							y1="970.6666"
+							x2="4848.775"
+							y2="970.6666"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="4797.854"
+							y1="1002.667"
+							x2="4848.775"
+							y2="1002.667"
+							stroke="black"
+							stroke-width="4" />
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 4762.691,963.8077 L 4746.691,963.8077 4746.691,1041.526 4762.691,1041.526" />
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 4856.775,963.8077 L 4872.775,963.8077 4872.775,1041.526 4856.775,1041.526" />
+					</g>
+				</g>
+				<g
+					id="cautionaryChord525">
+					<g
+						id="graphics525">
+						<text
+							x="6077.251"
+							y="1002.667"
+							font-size="100.352"
+							font-family="CLicht">œ</text>
+						<text
+							x="6034.558"
+							y="1002.667"
+							font-size="100.352"
+							font-family="CLicht">#</text>
+						<line
+							x1="6066.521"
+							y1="906.6666"
+							x2="6117.442"
+							y2="906.6666"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="6066.521"
+							y1="938.6666"
+							x2="6117.442"
+							y2="938.6666"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="6066.521"
+							y1="970.6666"
+							x2="6117.442"
+							y2="970.6666"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="6066.521"
+							y1="1002.667"
+							x2="6117.442"
+							y2="1002.667"
+							stroke="black"
+							stroke-width="4" />
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 6031.357,963.8077 L 6015.357,963.8077 6015.357,1041.526 6031.357,1041.526" />
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 6125.442,963.8077 L 6141.442,963.8077 6141.442,1041.526 6125.442,1041.526" />
+					</g>
+				</g>
+				<g
+					id="chord526"
+					score:object="chord"
+					score:alignmentX="7018.534"
+					score:msDuration="6001">
+					<score:midiChord
+						id="midi526">
+						<use
+							xlink:href="#palette1_chord1" />
+					</score:midiChord>
+					<g
+						id="graphics526">
+						<text
+							x="6991.448"
+							y="1002.667"
+							font-size="125.44"
+							font-family="CLicht">w</text>
+						<text
+							x="6930.208"
+							y="1002.667"
+							font-size="125.44"
+							font-family="CLicht">#</text>
+						<line
+							x1="6968.363"
+							y1="906.6666"
+							x2="7068.704"
+							y2="906.6666"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="6968.363"
+							y1="938.6666"
+							x2="7068.704"
+							y2="938.6666"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="6968.363"
+							y1="970.6666"
+							x2="7068.704"
+							y2="970.6666"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="6968.363"
+							y1="1002.667"
+							x2="7068.704"
+							y2="1002.667"
+							stroke="black"
+							stroke-width="4" />
+						<text
+							x="6969.406"
+							y="1090.126"
+							font-size="94.08"
+							font-family="CLicht">ƒ</text>
+					</g>
+				</g>
+				<g
+					id="cautionaryChord527">
+					<g
+						id="graphics527">
+						<text
+							x="7188.954"
+							y="1002.667"
+							font-size="100.352"
+							font-family="CLicht">œ</text>
+						<text
+							x="7146.26"
+							y="1002.667"
+							font-size="100.352"
+							font-family="CLicht">#</text>
+						<line
+							x1="7178.223"
+							y1="906.6666"
+							x2="7229.144"
+							y2="906.6666"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="7178.223"
+							y1="938.6666"
+							x2="7229.144"
+							y2="938.6666"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="7178.223"
+							y1="970.6666"
+							x2="7229.144"
+							y2="970.6666"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="7178.223"
+							y1="1002.667"
+							x2="7229.144"
+							y2="1002.667"
+							stroke="black"
+							stroke-width="4" />
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 7143.06,963.8077 L 7127.06,963.8077 7127.06,1041.526 7143.06,1041.526" />
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 7237.144,963.8077 L 7253.144,963.8077 7253.144,1041.526 7237.144,1041.526" />
+					</g>
+				</g>
+			</g>
+		</g>
+		<g
+			id="barlines528">
+			<line
+				x1="503.2"
+				y1="458.6667"
+				x2="503.2"
+				y2="586.6666"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="2519.802"
+				y1="458.6667"
+				x2="2519.802"
+				y2="586.6666"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="4174.214"
+				y1="458.6667"
+				x2="4174.214"
+				y2="586.6666"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="4726.64"
+				y1="458.6667"
+				x2="4726.64"
+				y2="586.6666"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="5976.043"
+				y1="458.6667"
+				x2="5976.043"
+				y2="586.6666"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7107.06"
+				y1="458.6667"
+				x2="7107.06"
+				y2="586.6666"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7680"
+				y1="456.6667"
+				x2="7680"
+				y2="588.6666"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="503.2"
+				y1="586.6666"
+				x2="503.2"
+				y2="746.6666"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="2519.802"
+				y1="586.6666"
+				x2="2519.802"
+				y2="746.6666"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="4174.214"
+				y1="586.6666"
+				x2="4174.214"
+				y2="746.6666"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="4726.64"
+				y1="586.6666"
+				x2="4726.64"
+				y2="746.6666"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="5976.043"
+				y1="586.6666"
+				x2="5976.043"
+				y2="746.6666"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7107.06"
+				y1="586.6666"
+				x2="7107.06"
+				y2="746.6666"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7680"
+				y1="586.6666"
+				x2="7680"
+				y2="746.6666"
+				stroke="#000000"
+				stroke-width="8" />
+		</g>
+	</g>
+	<g
+		id="page3_system2"
+		score:object="system">
+		<g
+			id="markers529">
+			<g
+				id="startMarker">
+				<line
+					x1="0"
+					y1="0"
+					x2="0"
+					y2="0"
+					stroke="009900"
+					stroke-width="1" />
+				<ellipse
+					cx="0"
+					cy="0"
+					rx="0"
+					ry="0"
+					stroke-width="1"
+					fill="009900" />
+			</g>
+			<g
+				id="runningMarker">
+				<line
+					x1="0"
+					y1="0"
+					x2="0"
+					y2="0"
+					stroke="888888"
+					stroke-width="1" />
+			</g>
+			<g
+				id="endMarker">
+				<line
+					x1="0"
+					y1="0"
+					x2="0"
+					y2="0"
+					stroke="FF0000"
+					stroke-width="1" />
+				<rect
+					x="0"
+					y="0"
+					width="0"
+					height="0"
+					stroke-width="1"
+					fill="FF0000" />
+			</g>
+		</g>
+		<g
+			id="p3_sys2_staff1"
+			score:object="staff"
+			score:staffName="Clyt."
+			score:stafflines="5"
+			score:gap="32">
+			<g
+				id="stafflines530">
+				<line
+					x1="400"
+					y1="1482.667"
+					x2="7680"
+					y2="1482.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="1514.667"
+					x2="7680"
+					y2="1514.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="1546.667"
+					x2="7680"
+					y2="1546.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="1578.667"
+					x2="7680"
+					y2="1578.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="1610.667"
+					x2="7680"
+					y2="1610.667"
+					stroke="black"
+					stroke-width="4" />
+			</g>
+			<g
+				id="voice531"
+				score:object="voice"
+				score:midiChannel="0">
+				<use
+					xlink:href="#trebleClef"
+					x="0"
+					y="0"
+					transform="translate(400,1578.667) scale(125.44)" />
+				<text
+					x="232"
+					y="1572.267"
+					text-anchor="middle"
+					font-size="80"
+					font-family="Times New Roman">Clyt.</text>
+				<g
+					id="barnumber532">
+					<text
+						x="503.2"
+						y="1290.667"
+						text-anchor="middle"
+						font-size="64"
+						font-family="Arial">76</text>
+					<rect
+						x="445.712"
+						y="1223.227"
+						width="114.976"
+						height="89.44006"
+						stroke="black"
+						stroke-width="4.8"
+						fill="none" />
+				</g>
+				<g
+					id="rest533"
+					score:object="rest"
+					score:alignmentX="591.824"
+					score:msDuration="8000">
+					<text
+						x="573.5447"
+						y="1546.667"
+						font-size="125.44"
+						font-family="CLicht">∑</text>
+				</g>
+			</g>
+		</g>
+		<g
+			id="p3_sys2_staff2"
+			score:object="staff"
+			score:staffName="Wind"
+			score:stafflines="5"
+			score:gap="32">
+			<g
+				id="stafflines534">
+				<line
+					x1="400"
+					y1="1738.667"
+					x2="7680"
+					y2="1738.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="1770.667"
+					x2="7680"
+					y2="1770.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="1802.667"
+					x2="7680"
+					y2="1802.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="1834.667"
+					x2="7680"
+					y2="1834.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="1866.667"
+					x2="7680"
+					y2="1866.667"
+					stroke="black"
+					stroke-width="4" />
+			</g>
+			<g
+				id="voice535"
+				score:object="voice"
+				score:midiChannel="1">
+				<use
+					xlink:href="#bassClef"
+					x="0"
+					y="0"
+					transform="translate(400,1770.667) scale(125.44)" />
+				<text
+					x="232"
+					y="1828.267"
+					text-anchor="middle"
+					font-size="80"
+					font-family="Times New Roman">Wind</text>
+				<g
+					id="cautionaryChord536">
+					<g
+						id="graphics536">
+						<text
+							x="585.0939"
+							y="1994.667"
+							font-size="100.352"
+							font-family="CLicht">œ</text>
+						<text
+							x="542.4"
+							y="1994.667"
+							font-size="100.352"
+							font-family="CLicht">#</text>
+						<line
+							x1="574.3637"
+							y1="1898.667"
+							x2="625.2842"
+							y2="1898.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="574.3637"
+							y1="1930.667"
+							x2="625.2842"
+							y2="1930.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="574.3637"
+							y1="1962.667"
+							x2="625.2842"
+							y2="1962.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="574.3637"
+							y1="1994.667"
+							x2="625.2842"
+							y2="1994.667"
+							stroke="black"
+							stroke-width="4" />
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 539.2,1955.808 L 523.2,1955.808 523.2,2033.526 539.2,2033.526" />
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 633.2842,1955.808 L 649.2842,1955.808 649.2842,2033.526 633.2842,2033.526" />
+						<line
+							x1="491.2"
+							y1="1994.667"
+							x2="523.2"
+							y2="1994.667"
+							stroke="black"
+							stroke-width="13.6"
+							stroke-linecap="butt" />
+						<line
+							x1="649.2842"
+							y1="1994.667"
+							x2="4849.65"
+							y2="1994.667"
+							stroke="black"
+							stroke-width="13.6"
+							stroke-linecap="butt" />
+					</g>
+				</g>
+				<g
+					id="chord537"
+					score:object="chord"
+					score:alignmentX="4945.175"
+					score:msDuration="6002">
+					<score:midiChord
+						id="midi537">
+						<use
+							xlink:href="#palette1_chord1" />
+					</score:midiChord>
+					<g
+						id="graphics537">
+						<text
+							x="4918.09"
+							y="1994.667"
+							font-size="125.44"
+							font-family="CLicht">w</text>
+						<text
+							x="4856.85"
+							y="1994.667"
+							font-size="125.44"
+							font-family="CLicht">#</text>
+						<line
+							x1="4895.005"
+							y1="1898.667"
+							x2="4995.346"
+							y2="1898.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="4895.005"
+							y1="1930.667"
+							x2="4995.346"
+							y2="1930.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="4895.005"
+							y1="1962.667"
+							x2="4995.346"
+							y2="1962.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="4895.005"
+							y1="1994.667"
+							x2="4995.346"
+							y2="1994.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="5003.346"
+							y1="1994.667"
+							x2="7712"
+							y2="1994.667"
+							stroke="black"
+							stroke-width="13.6"
+							stroke-linecap="butt" />
+					</g>
+				</g>
+			</g>
+		</g>
+		<g
+			id="barlines538">
+			<line
+				x1="503.2"
+				y1="1482.667"
+				x2="503.2"
+				y2="1610.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7680"
+				y1="1480.667"
+				x2="7680"
+				y2="1612.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="503.2"
+				y1="1610.667"
+				x2="503.2"
+				y2="1738.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7680"
+				y1="1610.667"
+				x2="7680"
+				y2="1738.667"
+				stroke="#000000"
+				stroke-width="8" />
+		</g>
+	</g>
+	<g
+		id="page3_system3"
+		score:object="system">
+		<g
+			id="markers539">
+			<g
+				id="startMarker">
+				<line
+					x1="0"
+					y1="0"
+					x2="0"
+					y2="0"
+					stroke="009900"
+					stroke-width="1" />
+				<ellipse
+					cx="0"
+					cy="0"
+					rx="0"
+					ry="0"
+					stroke-width="1"
+					fill="009900" />
+			</g>
+			<g
+				id="runningMarker">
+				<line
+					x1="0"
+					y1="0"
+					x2="0"
+					y2="0"
+					stroke="888888"
+					stroke-width="1" />
+			</g>
+			<g
+				id="endMarker">
+				<line
+					x1="0"
+					y1="0"
+					x2="0"
+					y2="0"
+					stroke="FF0000"
+					stroke-width="1" />
+				<rect
+					x="0"
+					y="0"
+					width="0"
+					height="0"
+					stroke-width="1"
+					fill="FF0000" />
+			</g>
+		</g>
+		<g
+			id="p3_sys3_staff1"
+			score:object="staff"
+			score:staffName="Clyt."
+			score:stafflines="5"
+			score:gap="32">
+			<g
+				id="stafflines540">
+				<line
+					x1="400"
+					y1="2474.667"
+					x2="7680"
+					y2="2474.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="2506.667"
+					x2="7680"
+					y2="2506.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="2538.667"
+					x2="7680"
+					y2="2538.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="2570.667"
+					x2="7680"
+					y2="2570.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="2602.667"
+					x2="7680"
+					y2="2602.667"
+					stroke="black"
+					stroke-width="4" />
+			</g>
+			<g
+				id="voice541"
+				score:object="voice"
+				score:midiChannel="0">
+				<use
+					xlink:href="#trebleClef"
+					x="0"
+					y="0"
+					transform="translate(400,2570.667) scale(125.44)" />
+				<text
+					x="232"
+					y="2564.267"
+					text-anchor="middle"
+					font-size="80"
+					font-family="Times New Roman">Clyt.</text>
+				<g
+					id="barnumber542">
+					<text
+						x="503.2"
+						y="2282.667"
+						text-anchor="middle"
+						font-size="64"
+						font-family="Arial">77</text>
+					<rect
+						x="445.712"
+						y="2215.227"
+						width="114.976"
+						height="89.43994"
+						stroke="black"
+						stroke-width="4.8"
+						fill="none" />
+				</g>
+				<g
+					id="chord543"
+					score:object="chord"
+					score:alignmentX="599.824"
+					score:msDuration="812">
+					<score:midiChord
+						id="midi543"
+						patch="127"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="812"
+								notes="0"
+								velocities="120" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics543">
+						<line
+							x1="616.2366"
+							y1="2455.467"
+							x2="616.2366"
+							y2="2566.971"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="581.4113"
+							y="2570.667"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="599.824"
+							y="2695.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">Give</text>
+						<text
+							x="534.8856"
+							y="2414.417"
+							font-size="94.08"
+							font-family="CLicht">Ï</text>
+					</g>
+				</g>
+				<g
+					id="chord544"
+					score:object="chord"
+					score:alignmentX="919.118"
+					score:msDuration="861">
+					<score:midiChord
+						id="midi544"
+						patch="127"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="861"
+								notes="1"
+								velocities="120" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics544">
+						<line
+							x1="935.5306"
+							y1="2455.467"
+							x2="935.5306"
+							y2="2566.971"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="900.7053"
+							y="2570.667"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="919.118"
+							y="2695.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">ear</text>
+					</g>
+				</g>
+				<g
+					id="chord545"
+					score:object="chord"
+					score:alignmentX="1138.26"
+					score:msDuration="758">
+					<score:midiChord
+						id="midi545"
+						patch="127"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="758"
+								notes="2"
+								velocities="120" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics545">
+						<line
+							x1="1154.672"
+							y1="2450.121"
+							x2="1154.672"
+							y2="2566.971"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<use
+							xlink:href="#Right1Flag"
+							x="0"
+							y="0"
+							transform="translate(1154.672,2450.121) scale(125.44)" />
+						<text
+							x="1119.847"
+							y="2570.667"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="1138.26"
+							y="2695.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">ye</text>
+					</g>
+				</g>
+				<g
+					id="beamBlock546">
+					<path
+						stroke="black"
+						stroke-width="4"
+						fill="black"
+						d="M 1460.222 2441.067 L 1827.901 2441.067 1827.901 2453.867 1460.222 2453.867 z" />
+				</g>
+				<g
+					id="chord547"
+					score:object="chord"
+					score:alignmentX="1443.809"
+					score:msDuration="500">
+					<score:midiChord
+						id="midi547"
+						patch="127"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="500"
+								notes="3"
+								velocities="120" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics547">
+						<line
+							x1="1460.222"
+							y1="2441.067"
+							x2="1460.222"
+							y2="2566.971"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="1425.397"
+							y="2570.667"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="1443.809"
+							y="2695.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">God-</text>
+					</g>
+				</g>
+				<g
+					id="chord548"
+					score:object="chord"
+					score:alignmentX="1594.292"
+					score:msDuration="420">
+					<score:midiChord
+						id="midi548"
+						patch="127"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="420"
+								notes="4"
+								velocities="120" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics548">
+						<line
+							x1="1610.705"
+							y1="2441.067"
+							x2="1610.705"
+							y2="2566.971"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="1575.879"
+							y="2570.667"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="1594.292"
+							y="2695.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">dess-</text>
+					</g>
+				</g>
+				<g
+					id="chord549"
+					score:object="chord"
+					score:alignmentX="1708.154"
+					score:msDuration="406">
+					<score:midiChord
+						id="midi549"
+						patch="127"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="406"
+								notes="5"
+								velocities="120" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics549">
+						<line
+							x1="1724.567"
+							y1="2441.067"
+							x2="1724.567"
+							y2="2566.971"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="1689.741"
+							y="2570.667"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="1708.154"
+							y="2695.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">es</text>
+					</g>
+				</g>
+				<g
+					id="chord550"
+					score:object="chord"
+					score:alignmentX="1811.489"
+					score:msDuration="528">
+					<score:midiChord
+						id="midi550"
+						patch="127"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="528"
+								notes="6"
+								velocities="120" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics550">
+						<line
+							x1="1827.901"
+							y1="2441.067"
+							x2="1827.901"
+							y2="2566.971"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="1793.076"
+							y="2570.667"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="1811.489"
+							y="2695.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">of</text>
+					</g>
+				</g>
+				<g
+					id="chord551"
+					score:object="chord"
+					score:alignmentX="2058.499"
+					score:msDuration="1195">
+					<score:midiChord
+						id="midi551"
+						patch="127"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="1195"
+								notes="7"
+								velocities="120" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics551">
+						<line
+							x1="2074.912"
+							y1="2455.467"
+							x2="2074.912"
+							y2="2566.971"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="2040.087"
+							y="2570.667"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="2058.499"
+							y="2695.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">Hell!</text>
+					</g>
+				</g>
+				<g
+					id="rest552"
+					score:object="rest"
+					score:alignmentX="2362.65"
+					score:msDuration="1201">
+					<text
+						x="2343.17"
+						y="2538.667"
+						font-size="125.44"
+						font-family="CLicht">Œ</text>
+				</g>
+				<g
+					id="chord553"
+					score:object="chord"
+					score:alignmentX="2668.328"
+					score:msDuration="604">
+					<score:midiChord
+						id="midi553"
+						patch="127"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="604"
+								notes="8"
+								velocities="120" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics553">
+						<line
+							x1="2684.741"
+							y1="2450.121"
+							x2="2684.741"
+							y2="2566.971"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<use
+							xlink:href="#Right1Flag"
+							x="0"
+							y="0"
+							transform="translate(2684.741,2450.121) scale(125.44)" />
+						<text
+							x="2649.916"
+							y="2570.667"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="2668.328"
+							y="2695.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">A</text>
+					</g>
+				</g>
+				<g
+					id="chord554"
+					score:object="chord"
+					score:alignmentX="2946.988"
+					score:msDuration="1630">
+					<score:midiChord
+						id="midi554"
+						patch="127"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="1630"
+								notes="9"
+								velocities="120" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics554">
+						<line
+							x1="2963.4"
+							y1="2455.467"
+							x2="2963.4"
+							y2="2566.971"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="2928.575"
+							y="2570.667"
+							font-size="125.44"
+							font-family="CLicht">˙</text>
+						<text
+							x="2946.988"
+							y="2695.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">dream</text>
+					</g>
+				</g>
+				<g
+					id="chord555"
+					score:object="chord"
+					score:alignmentX="3361.855"
+					score:msDuration="621">
+					<score:midiChord
+						id="midi555"
+						patch="127"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="621"
+								notes="10"
+								velocities="120" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics555">
+						<line
+							x1="3378.267"
+							y1="2450.121"
+							x2="3378.267"
+							y2="2566.971"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<use
+							xlink:href="#Right1Flag"
+							x="0"
+							y="0"
+							transform="translate(3378.267,2450.121) scale(125.44)" />
+						<text
+							x="3343.442"
+							y="2570.667"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="3361.855"
+							y="2695.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">that</text>
+					</g>
+				</g>
+				<g
+					id="chord556"
+					score:object="chord"
+					score:alignmentX="3519.911"
+					score:msDuration="851">
+					<score:midiChord
+						id="midi556"
+						patch="127"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="851"
+								notes="11"
+								velocities="120" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics556">
+						<line
+							x1="3536.324"
+							y1="2455.467"
+							x2="3536.324"
+							y2="2566.971"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="3501.499"
+							y="2570.667"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="3519.911"
+							y="2695.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">once</text>
+					</g>
+				</g>
+				<g
+					id="chord557"
+					score:object="chord"
+					score:alignmentX="3736.508"
+					score:msDuration="681">
+					<score:midiChord
+						id="midi557"
+						patch="127"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="681"
+								notes="12"
+								velocities="120" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics557">
+						<line
+							x1="3752.92"
+							y1="2450.121"
+							x2="3752.92"
+							y2="2566.971"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<use
+							xlink:href="#Right1Flag"
+							x="0"
+							y="0"
+							transform="translate(3752.92,2450.121) scale(125.44)" />
+						<text
+							x="3718.095"
+							y="2570.667"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="3736.508"
+							y="2695.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">was</text>
+					</g>
+				</g>
+				<g
+					id="chord558"
+					score:object="chord"
+					score:alignmentX="4022.46"
+					score:msDuration="1615">
+					<score:midiChord
+						id="midi558"
+						patch="127"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="1615"
+								notes="13"
+								velocities="120" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics558">
+						<line
+							x1="4038.872"
+							y1="2455.467"
+							x2="4038.872"
+							y2="2566.971"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="4004.047"
+							y="2570.667"
+							font-size="125.44"
+							font-family="CLicht">˙</text>
+						<text
+							x="4022.46"
+							y="2695.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">Cly-</text>
+					</g>
+				</g>
+				<g
+					id="chord559"
+					score:object="chord"
+					score:alignmentX="4433.509"
+					score:msDuration="1595">
+					<score:midiChord
+						id="midi559"
+						patch="127"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="1595"
+								notes="14"
+								velocities="120" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics559">
+						<line
+							x1="4449.922"
+							y1="2455.467"
+							x2="4449.922"
+							y2="2566.971"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="4415.097"
+							y="2570.667"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="4433.509"
+							y="2695.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">tam-</text>
+					</g>
+				</g>
+				<g
+					id="chord560"
+					score:object="chord"
+					score:alignmentX="4839.468"
+					score:msDuration="1438">
+					<score:midiChord
+						id="midi560"
+						patch="127"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="1438"
+								notes="15"
+								velocities="120" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics560">
+						<line
+							x1="4855.881"
+							y1="2455.467"
+							x2="4855.881"
+							y2="2566.971"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="4821.056"
+							y="2570.667"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="4839.468"
+							y="2695.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">nes-</text>
+					</g>
+				</g>
+				<g
+					id="chord561"
+					score:object="chord"
+					score:alignmentX="5205.468"
+					score:msDuration="1111">
+					<score:midiChord
+						id="midi561"
+						patch="127"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="1111"
+								notes="16"
+								velocities="120" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics561">
+						<line
+							x1="5221.881"
+							y1="2455.467"
+							x2="5221.881"
+							y2="2566.971"
+							stroke="black"
+							stroke-width="4"
+							stroke-linecap="round" />
+						<text
+							x="5187.056"
+							y="2570.667"
+							font-size="125.44"
+							font-family="CLicht">œ</text>
+						<text
+							x="5205.468"
+							y="2695.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">tra</text>
+					</g>
+				</g>
+				<g
+					id="rest562"
+					score:object="rest"
+					score:alignmentX="5488.24"
+					score:msDuration="1263">
+					<text
+						x="5468.76"
+						y="2538.667"
+						font-size="125.44"
+						font-family="CLicht">Œ</text>
+				</g>
+				<g
+					id="chord563"
+					score:object="chord"
+					score:alignmentX="5922.322"
+					score:msDuration="6843">
+					<score:midiChord
+						id="midi563"
+						patch="127"
+						volume="127">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="6843"
+								notes="17"
+								velocities="120" />
+						</score:basicChords>
+					</score:midiChord>
+					<g
+						id="graphics563">
+						<text
+							x="5904.043"
+							y="2570.667"
+							font-size="125.44"
+							font-family="CLicht">›</text>
+						<text
+							x="5922.322"
+							y="2695.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">calls!</text>
+					</g>
+				</g>
+			</g>
+		</g>
+		<g
+			id="p3_sys3_staff2"
+			score:object="staff"
+			score:staffName="Wind"
+			score:stafflines="5"
+			score:gap="32">
+			<g
+				id="stafflines564">
+				<line
+					x1="400"
+					y1="2762.667"
+					x2="7680"
+					y2="2762.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="2794.667"
+					x2="7680"
+					y2="2794.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="2826.667"
+					x2="7680"
+					y2="2826.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="2858.667"
+					x2="7680"
+					y2="2858.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="2890.667"
+					x2="7680"
+					y2="2890.667"
+					stroke="black"
+					stroke-width="4" />
+			</g>
+			<g
+				id="voice565"
+				score:object="voice"
+				score:midiChannel="1">
+				<use
+					xlink:href="#bassClef"
+					x="0"
+					y="0"
+					transform="translate(400,2794.667) scale(125.44)" />
+				<text
+					x="232"
+					y="2852.267"
+					text-anchor="middle"
+					font-size="80"
+					font-family="Times New Roman">Wind</text>
+				<g
+					id="cautionaryChord566">
+					<g
+						id="graphics566">
+						<text
+							x="585.0939"
+							y="3018.667"
+							font-size="100.352"
+							font-family="CLicht">œ</text>
+						<text
+							x="542.4"
+							y="3018.667"
+							font-size="100.352"
+							font-family="CLicht">#</text>
+						<line
+							x1="574.3637"
+							y1="2922.667"
+							x2="625.2842"
+							y2="2922.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="574.3637"
+							y1="2954.667"
+							x2="625.2842"
+							y2="2954.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="574.3637"
+							y1="2986.667"
+							x2="625.2842"
+							y2="2986.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="574.3637"
+							y1="3018.667"
+							x2="625.2842"
+							y2="3018.667"
+							stroke="black"
+							stroke-width="4" />
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 539.2,2979.808 L 523.2,2979.808 523.2,3057.526 539.2,3057.526" />
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 633.2842,2979.808 L 649.2842,2979.808 649.2842,3057.526 633.2842,3057.526" />
+						<line
+							x1="491.2"
+							y1="3018.667"
+							x2="523.2"
+							y2="3018.667"
+							stroke="black"
+							stroke-width="13.6"
+							stroke-linecap="butt" />
+						<line
+							x1="649.2842"
+							y1="3018.667"
+							x2="854.494"
+							y2="3018.667"
+							stroke="black"
+							stroke-width="13.6"
+							stroke-linecap="butt" />
+					</g>
+				</g>
+				<g
+					id="cautionaryChord567">
+					<g
+						id="graphics567">
+						<text
+							x="904.3879"
+							y="3018.667"
+							font-size="100.352"
+							font-family="CLicht">œ</text>
+						<text
+							x="861.694"
+							y="3018.667"
+							font-size="100.352"
+							font-family="CLicht">#</text>
+						<line
+							x1="893.6577"
+							y1="2922.667"
+							x2="944.5782"
+							y2="2922.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="893.6577"
+							y1="2954.667"
+							x2="944.5782"
+							y2="2954.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="893.6577"
+							y1="2986.667"
+							x2="944.5782"
+							y2="2986.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="893.6577"
+							y1="3018.667"
+							x2="944.5782"
+							y2="3018.667"
+							stroke="black"
+							stroke-width="4" />
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 858.494,2979.808 L 842.494,2979.808 842.494,3057.526 858.494,3057.526" />
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 952.5782,2979.808 L 968.5782,2979.808 968.5782,3057.526 952.5782,3057.526" />
+					</g>
+				</g>
+				<g
+					id="cautionaryChord568">
+					<g
+						id="graphics568">
+						<text
+							x="1429.079"
+							y="3018.667"
+							font-size="100.352"
+							font-family="CLicht">œ</text>
+						<text
+							x="1386.385"
+							y="3018.667"
+							font-size="100.352"
+							font-family="CLicht">#</text>
+						<line
+							x1="1418.349"
+							y1="2922.667"
+							x2="1469.27"
+							y2="2922.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="1418.349"
+							y1="2954.667"
+							x2="1469.27"
+							y2="2954.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="1418.349"
+							y1="2986.667"
+							x2="1469.27"
+							y2="2986.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="1418.349"
+							y1="3018.667"
+							x2="1469.27"
+							y2="3018.667"
+							stroke="black"
+							stroke-width="4" />
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 1383.185,2979.808 L 1367.185,2979.808 1367.185,3057.526 1383.185,3057.526" />
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 1477.27,2979.808 L 1493.27,2979.808 1493.27,3057.526 1477.27,3057.526" />
+					</g>
+				</g>
+				<g
+					id="chord569"
+					score:object="chord"
+					score:alignmentX="1591.884"
+					score:msDuration="6002">
+					<score:midiChord
+						id="midi569">
+						<use
+							xlink:href="#palette1_chord1" />
+					</score:midiChord>
+					<g
+						id="graphics569">
+						<text
+							x="1564.799"
+							y="3018.667"
+							font-size="125.44"
+							font-family="CLicht">w</text>
+						<text
+							x="1503.559"
+							y="3018.667"
+							font-size="125.44"
+							font-family="CLicht">#</text>
+						<line
+							x1="1541.714"
+							y1="2922.667"
+							x2="1642.055"
+							y2="2922.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="1541.714"
+							y1="2954.667"
+							x2="1642.055"
+							y2="2954.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="1541.714"
+							y1="2986.667"
+							x2="1642.055"
+							y2="2986.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="1541.714"
+							y1="3018.667"
+							x2="1642.055"
+							y2="3018.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="1650.055"
+							y1="3018.667"
+							x2="3268.875"
+							y2="3018.667"
+							stroke="black"
+							stroke-width="13.6"
+							stroke-linecap="butt" />
+					</g>
+				</g>
+				<g
+					id="chord570"
+					score:object="chord"
+					score:alignmentX="3364.4"
+					score:msDuration="6002">
+					<score:midiChord
+						id="midi570">
+						<use
+							xlink:href="#palette1_chord1" />
+					</score:midiChord>
+					<g
+						id="graphics570">
+						<text
+							x="3337.315"
+							y="3018.667"
+							font-size="125.44"
+							font-family="CLicht">w</text>
+						<text
+							x="3276.075"
+							y="3018.667"
+							font-size="125.44"
+							font-family="CLicht">#</text>
+						<line
+							x1="3314.229"
+							y1="2922.667"
+							x2="3414.571"
+							y2="2922.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="3314.229"
+							y1="2954.667"
+							x2="3414.571"
+							y2="2954.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="3314.229"
+							y1="2986.667"
+							x2="3414.571"
+							y2="2986.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="3314.229"
+							y1="3018.667"
+							x2="3414.571"
+							y2="3018.667"
+							stroke="black"
+							stroke-width="4" />
+					</g>
+				</g>
+				<g
+					id="cautionaryChord571">
+					<g
+						id="graphics571">
+						<text
+							x="4007.729"
+							y="3018.667"
+							font-size="100.352"
+							font-family="CLicht">œ</text>
+						<text
+							x="3965.036"
+							y="3018.667"
+							font-size="100.352"
+							font-family="CLicht">#</text>
+						<line
+							x1="3997"
+							y1="2922.667"
+							x2="4047.92"
+							y2="2922.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="3997"
+							y1="2954.667"
+							x2="4047.92"
+							y2="2954.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="3997"
+							y1="2986.667"
+							x2="4047.92"
+							y2="2986.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="3997"
+							y1="3018.667"
+							x2="4047.92"
+							y2="3018.667"
+							stroke="black"
+							stroke-width="4" />
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 3961.836,2979.808 L 3945.836,2979.808 3945.836,3057.526 3961.836,3057.526" />
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 4055.92,2979.808 L 4071.92,2979.808 4071.92,3057.526 4055.92,3057.526" />
+					</g>
+				</g>
+				<g
+					id="chord572"
+					score:object="chord"
+					score:alignmentX="5004.652"
+					score:msDuration="6002">
+					<score:midiChord
+						id="midi572">
+						<use
+							xlink:href="#palette1_chord1" />
+					</score:midiChord>
+					<g
+						id="graphics572">
+						<text
+							x="4977.566"
+							y="3018.667"
+							font-size="125.44"
+							font-family="CLicht">w</text>
+						<text
+							x="4916.327"
+							y="3018.667"
+							font-size="125.44"
+							font-family="CLicht">#</text>
+						<line
+							x1="4954.481"
+							y1="2922.667"
+							x2="5054.822"
+							y2="2922.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="4954.481"
+							y1="2954.667"
+							x2="5054.822"
+							y2="2954.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="4954.481"
+							y1="2986.667"
+							x2="5054.822"
+							y2="2986.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="4954.481"
+							y1="3018.667"
+							x2="5054.822"
+							y2="3018.667"
+							stroke="black"
+							stroke-width="4" />
+					</g>
+				</g>
+				<g
+					id="cautionaryChord573">
+					<g
+						id="graphics573">
+						<text
+							x="5907.592"
+							y="3018.667"
+							font-size="100.352"
+							font-family="CLicht">œ</text>
+						<text
+							x="5864.898"
+							y="3018.667"
+							font-size="100.352"
+							font-family="CLicht">#</text>
+						<line
+							x1="5896.862"
+							y1="2922.667"
+							x2="5947.783"
+							y2="2922.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="5896.862"
+							y1="2954.667"
+							x2="5947.783"
+							y2="2954.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="5896.862"
+							y1="2986.667"
+							x2="5947.783"
+							y2="2986.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="5896.862"
+							y1="3018.667"
+							x2="5947.783"
+							y2="3018.667"
+							stroke="black"
+							stroke-width="4" />
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 5861.698,2979.808 L 5845.698,2979.808 5845.698,3057.526 5861.698,3057.526" />
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 5955.783,2979.808 L 5971.783,2979.808 5971.783,3057.526 5955.783,3057.526" />
+					</g>
+				</g>
+				<g
+					id="chord574"
+					score:object="chord"
+					score:alignmentX="6644.904"
+					score:msDuration="6002">
+					<score:midiChord
+						id="midi574">
+						<use
+							xlink:href="#palette1_chord1" />
+					</score:midiChord>
+					<g
+						id="graphics574">
+						<text
+							x="6617.818"
+							y="3018.667"
+							font-size="125.44"
+							font-family="CLicht">w</text>
+						<text
+							x="6556.579"
+							y="3018.667"
+							font-size="125.44"
+							font-family="CLicht">#</text>
+						<line
+							x1="6594.733"
+							y1="2922.667"
+							x2="6695.074"
+							y2="2922.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="6594.733"
+							y1="2954.667"
+							x2="6695.074"
+							y2="2954.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="6594.733"
+							y1="2986.667"
+							x2="6695.074"
+							y2="2986.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="6594.733"
+							y1="3018.667"
+							x2="6695.074"
+							y2="3018.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="6703.074"
+							y1="3018.667"
+							x2="7712"
+							y2="3018.667"
+							stroke="black"
+							stroke-width="13.6"
+							stroke-linecap="butt" />
+					</g>
+				</g>
+			</g>
+		</g>
+		<g
+			id="barlines575">
+			<line
+				x1="503.2"
+				y1="2474.667"
+				x2="503.2"
+				y2="2602.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="822.494"
+				y1="2474.667"
+				x2="822.494"
+				y2="2602.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="1347.185"
+				y1="2474.667"
+				x2="1347.185"
+				y2="2602.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="1961.875"
+				y1="2474.667"
+				x2="1961.875"
+				y2="2602.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="2838.058"
+				y1="2474.667"
+				x2="2838.058"
+				y2="2602.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="3925.836"
+				y1="2474.667"
+				x2="3925.836"
+				y2="2602.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="5825.698"
+				y1="2474.667"
+				x2="5825.698"
+				y2="2602.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7680.001"
+				y1="2472.667"
+				x2="7680.001"
+				y2="2604.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="503.2"
+				y1="2602.667"
+				x2="503.2"
+				y2="2762.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="822.494"
+				y1="2602.667"
+				x2="822.494"
+				y2="2762.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="1347.185"
+				y1="2602.667"
+				x2="1347.185"
+				y2="2762.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="1961.875"
+				y1="2602.667"
+				x2="1961.875"
+				y2="2762.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="2838.058"
+				y1="2602.667"
+				x2="2838.058"
+				y2="2762.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="3925.836"
+				y1="2602.667"
+				x2="3925.836"
+				y2="2762.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="5825.698"
+				y1="2602.667"
+				x2="5825.698"
+				y2="2762.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7680.001"
+				y1="2602.667"
+				x2="7680.001"
+				y2="2762.667"
+				stroke="#000000"
+				stroke-width="8" />
+		</g>
+	</g>
+	<g
+		id="page3_system4"
+		score:object="system">
+		<g
+			id="markers576">
+			<g
+				id="startMarker">
+				<line
+					x1="0"
+					y1="0"
+					x2="0"
+					y2="0"
+					stroke="009900"
+					stroke-width="1" />
+				<ellipse
+					cx="0"
+					cy="0"
+					rx="0"
+					ry="0"
+					stroke-width="1"
+					fill="009900" />
+			</g>
+			<g
+				id="runningMarker">
+				<line
+					x1="0"
+					y1="0"
+					x2="0"
+					y2="0"
+					stroke="888888"
+					stroke-width="1" />
+			</g>
+			<g
+				id="endMarker">
+				<line
+					x1="0"
+					y1="0"
+					x2="0"
+					y2="0"
+					stroke="FF0000"
+					stroke-width="1" />
+				<rect
+					x="0"
+					y="0"
+					width="0"
+					height="0"
+					stroke-width="1"
+					fill="FF0000" />
+			</g>
+		</g>
+		<g
+			id="p3_sys4_staff1"
+			score:object="staff"
+			score:staffName="Clyt."
+			score:stafflines="5"
+			score:gap="32">
+			<g
+				id="stafflines577">
+				<line
+					x1="400"
+					y1="3434.667"
+					x2="7680"
+					y2="3434.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="3466.667"
+					x2="7680"
+					y2="3466.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="3498.667"
+					x2="7680"
+					y2="3498.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="3530.667"
+					x2="7680"
+					y2="3530.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="3562.667"
+					x2="7680"
+					y2="3562.667"
+					stroke="black"
+					stroke-width="4" />
+			</g>
+			<g
+				id="voice578"
+				score:object="voice"
+				score:midiChannel="0">
+				<use
+					xlink:href="#trebleClef"
+					x="0"
+					y="0"
+					transform="translate(400,3530.667) scale(125.44)" />
+				<text
+					x="232"
+					y="3524.267"
+					text-anchor="middle"
+					font-size="80"
+					font-family="Times New Roman">Clyt.</text>
+				<g
+					id="barnumber579">
+					<text
+						x="503.2"
+						y="3242.667"
+						text-anchor="middle"
+						font-size="64"
+						font-family="Arial">84</text>
+					<rect
+						x="445.712"
+						y="3175.227"
+						width="114.976"
+						height="89.43994"
+						stroke="black"
+						stroke-width="4.8"
+						fill="none" />
+				</g>
+				<g
+					id="rest580"
+					score:object="rest"
+					score:alignmentX="591.824"
+					score:msDuration="8000">
+					<text
+						x="573.5447"
+						y="3498.667"
+						font-size="125.44"
+						font-family="CLicht">∑</text>
+				</g>
+			</g>
+		</g>
+		<g
+			id="p3_sys4_staff2"
+			score:object="staff"
+			score:staffName="Wind"
+			score:stafflines="5"
+			score:gap="32">
+			<g
+				id="stafflines581">
+				<line
+					x1="400"
+					y1="3690.667"
+					x2="7680"
+					y2="3690.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="3722.667"
+					x2="7680"
+					y2="3722.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="3754.667"
+					x2="7680"
+					y2="3754.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="3786.667"
+					x2="7680"
+					y2="3786.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="3818.667"
+					x2="7680"
+					y2="3818.667"
+					stroke="black"
+					stroke-width="4" />
+			</g>
+			<g
+				id="voice582"
+				score:object="voice"
+				score:midiChannel="1">
+				<use
+					xlink:href="#bassClef"
+					x="0"
+					y="0"
+					transform="translate(400,3722.667) scale(125.44)" />
+				<text
+					x="232"
+					y="3780.267"
+					text-anchor="middle"
+					font-size="80"
+					font-family="Times New Roman">Wind</text>
+				<g
+					id="cautionaryChord583">
+					<g
+						id="graphics583">
+						<text
+							x="585.0939"
+							y="3946.667"
+							font-size="100.352"
+							font-family="CLicht">œ</text>
+						<text
+							x="542.4"
+							y="3946.667"
+							font-size="100.352"
+							font-family="CLicht">#</text>
+						<line
+							x1="574.3637"
+							y1="3850.667"
+							x2="625.2842"
+							y2="3850.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="574.3637"
+							y1="3882.667"
+							x2="625.2842"
+							y2="3882.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="574.3637"
+							y1="3914.667"
+							x2="625.2842"
+							y2="3914.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="574.3637"
+							y1="3946.667"
+							x2="625.2842"
+							y2="3946.667"
+							stroke="black"
+							stroke-width="4" />
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 539.2,3907.808 L 523.2,3907.808 523.2,3985.526 539.2,3985.526" />
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 633.2842,3907.808 L 649.2842,3907.808 649.2842,3985.526 633.2842,3985.526" />
+						<line
+							x1="491.2"
+							y1="3946.667"
+							x2="523.2"
+							y2="3946.667"
+							stroke="black"
+							stroke-width="13.6"
+							stroke-linecap="butt" />
+						<line
+							x1="649.2842"
+							y1="3946.667"
+							x2="2258.986"
+							y2="3946.667"
+							stroke="black"
+							stroke-width="13.6"
+							stroke-linecap="butt" />
+					</g>
+				</g>
+				<g
+					id="chord584"
+					score:object="chord"
+					score:alignmentX="2354.511"
+					score:msDuration="6002">
+					<score:midiChord
+						id="midi584">
+						<use
+							xlink:href="#palette1_chord1" />
+					</score:midiChord>
+					<g
+						id="graphics584">
+						<text
+							x="2327.426"
+							y="3946.667"
+							font-size="125.44"
+							font-family="CLicht">w</text>
+						<text
+							x="2266.186"
+							y="3946.667"
+							font-size="125.44"
+							font-family="CLicht">#</text>
+						<line
+							x1="2304.341"
+							y1="3850.667"
+							x2="2404.682"
+							y2="3850.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="2304.341"
+							y1="3882.667"
+							x2="2404.682"
+							y2="3882.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="2304.341"
+							y1="3914.667"
+							x2="2404.682"
+							y2="3914.667"
+							stroke="black"
+							stroke-width="4" />
+						<line
+							x1="2304.341"
+							y1="3946.667"
+							x2="2404.682"
+							y2="3946.667"
+							stroke="black"
+							stroke-width="4" />
+					</g>
+				</g>
+			</g>
+		</g>
+		<g
+			id="barlines585">
+			<line
+				x1="503.2"
+				y1="3434.667"
+				x2="503.2"
+				y2="3562.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7656"
+				y1="3432.667"
+				x2="7656"
+				y2="3564.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7680"
+				y1="3432.667"
+				x2="7680"
+				y2="3564.667"
+				stroke="#000000"
+				stroke-width="16" />
+			<line
+				x1="503.2"
+				y1="3562.667"
+				x2="503.2"
+				y2="3690.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7656"
+				y1="3562.667"
+				x2="7656"
+				y2="3690.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7680"
+				y1="3562.667"
+				x2="7680"
+				y2="3690.667"
+				stroke="#000000"
+				stroke-width="16" />
+			<line
+				x1="7656"
+				y1="3688.667"
+				x2="7656"
+				y2="3820.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7680"
+				y1="3688.667"
+				x2="7680"
+				y2="3820.667"
+				stroke="#000000"
+				stroke-width="16" />
+		</g>
+	</g>
+</svg>

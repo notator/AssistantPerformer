@@ -1085,17 +1085,19 @@ _AP.controls = (function (document, window)
                 var svgPagesFrame,
                     embedCode = "",
                     page1Url = "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Song Six/Song Six page 1.svg",
-                    page2Url = "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Song Six/Song Six page 2.svg";
+                    page2Url = "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Song Six/Song Six page 2.svg",
+                    page3Url = "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Song Six/Song Six page 3.svg";
 
                 embedCode += embedPageCode(page1Url);
                 embedCode += embedPageCode(page2Url);
+                embedCode += embedPageCode(page3Url);
 
                 svgPagesFrame = document.getElementById('svgPages');
 
                 // should call svgPagesFrame.svgLoaded, and set svgPagesFrame.svgScript 
                 svgPagesFrame.innerHTML = embedCode;
 
-                return 1; // the number of tracks
+                return 2; // the number of tracks
             }
 
             switch (scoreSelectorElem.selectedIndex)
