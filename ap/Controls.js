@@ -20,6 +20,7 @@ _AP.controls = (function (document, window)
     "use strict";
 
     var
+    scoreConstants = _AP.scoreConstants,
     tracksControl = _AP.tracksControl,
     Score = _AP.score.Score,
     Assistant = _AP.assistant.Assistant,
@@ -1035,69 +1036,45 @@ _AP.controls = (function (document, window)
                 }
             }
 
-            function embedPageCode(url)
+            function setPages(scoreConstants)
             {
-                var code = "<embed " +
-                                "src=\'" + url + "\' " +
-                                "content-type=\'image/svg+xml\' " +
-                                "class=\'svgPage\' " +
-                                "width=\'1010\' " +  // the value at the top of the Study2c3.1 svg pages
-                                "height=\'1237\' />" +   // the value at the top of the Study2c3.1 svg pages
-                            "<br />";
-                return code;
-            }
-
-            // To embed other scores, simply follow this pattern with the appropriate number of pages.
-            // Also: add the new score as an option in the "scoreSelector" in assistantPerformer.html. 
-            // The page size defined at the top of the svg pages should be 1010 x 1237, as in Study2c3.1.
-            function setStudy2c3_1()
-            {
-                var embedCode = "",
-                    page1Url = "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Study 2c3.1/Study 2c3.1 page 1.svg",
-                    page2Url = "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Study 2c3.1/Study 2c3.1 page 2.svg",
-                    page3Url = "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Study 2c3.1/Study 2c3.1 page 3.svg";
-
-                embedCode += embedPageCode(page1Url);
-                embedCode += embedPageCode(page2Url);
-                embedCode += embedPageCode(page3Url);
-
-                document.getElementById('svgPages').innerHTML = embedCode;
-
-                return 3; // the number of tracks
-            }
-
-            function setStudy3Sketch1()
-            {
-                var embedCode = "",
-                    page1Url = "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Study 3 sketch 1/Study 3 sketch 1 page 1.svg",
-                    page2Url = "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Study 3 sketch 1/Study 3 sketch 1 page 2.svg";
-
-                embedCode += embedPageCode(page1Url);
-                embedCode += embedPageCode(page2Url);
-
-                document.getElementById('svgPages').innerHTML = embedCode;
-
-                return 8; // the number of tracks
-            }
-
-            function setSongSix()
-            {
-                var svgPagesFrame,
+                var rootURL = "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/",
+                    name = scoreConstants.name, // e.g. "Song Six"
+                    nPages = scoreConstants.nPages,
+                    nChannels = scoreConstants.nChannels,
+                    svgPagesFrame,
                     embedCode = "",
-                    page1Url = "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Song Six/Song Six page 1.svg",
-                    page2Url = "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Song Six/Song Six page 2.svg",
-                    page3Url = "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Song Six/Song Six page 3.svg";
+                    pageURL,
+                    i;
 
-                embedCode += embedPageCode(page1Url);
-                embedCode += embedPageCode(page2Url);
-                embedCode += embedPageCode(page3Url);
+                function embedPageCode(url)
+                {
+                    var code = "<embed " +
+                                    "src=\'" + url + "\' " +
+                                    "content-type=\'image/svg+xml\' " +
+                                    "class=\'svgPage\' " +
+                                    "width=\'1010\' " +  // the value at the top of the Study2c3.1 svg pages
+                                    "height=\'1237\' />" +   // the value at the top of the Study2c3.1 svg pages
+                                "<br />";
+                    return code;
+                }
 
+                for(i = 0; i < nPages; ++i)
+                {
+                    pageURL = rootURL + name;
+                    pageURL = pageURL + "/";
+                    pageURL = pageURL + name;
+                    pageURL = pageURL + " page ";
+                    pageURL = pageURL + (i + 1).toString();
+                    pageURL = pageURL + ".svg";
+                    // e.g. "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Song Six/Song Six page 1.svg"
+                    embedCode += embedPageCode(pageURL);
+                }
                 svgPagesFrame = document.getElementById('svgPages');
-
                 // should call svgPagesFrame.svgLoaded, and set svgPagesFrame.svgScript 
                 svgPagesFrame.innerHTML = embedCode;
 
-                return 3; // the number of tracks
+                return nChannels;
             }
 
             switch (scoreSelectorElem.selectedIndex)
@@ -1106,13 +1083,13 @@ _AP.controls = (function (document, window)
                     nTracks = 0;
                     break;
                 case 1:
-                    nTracks = setStudy2c3_1();
+                    nTracks = setPages(scoreConstants.Study2c3_1);
                     break;
                 case 2:
-                    nTracks = setStudy3Sketch1();
+                    nTracks = setPages(scoreConstants.Study3Sketch1);
                     break;
                 case 3:
-                    nTracks = setSongSix();
+                    nTracks = setPages(scoreConstants.SongSix);
                     break;
                 default:
                     throw "unknown score!";
