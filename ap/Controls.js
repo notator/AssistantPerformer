@@ -1097,7 +1097,7 @@ _AP.controls = (function (document, window)
                 // should call svgPagesFrame.svgLoaded, and set svgPagesFrame.svgScript 
                 svgPagesFrame.innerHTML = embedCode;
 
-                return 2; // the number of tracks
+                return 3; // the number of tracks
             }
 
             switch (scoreSelectorElem.selectedIndex)
