@@ -44,10 +44,10 @@
                         </select>
                         <select id="scoreSelector" name="scoreSelector"
                             class="deviceSelector" onchange="_AP.controls.doControl('scoreSelector')">
-                            <option>choose a score</option>
-                            <option>Study 2c3.1</option>
-                            <option>Study 3 sketch 1</option>
-                            <option>Song Six</option>
+                            <option id="choose a score, nPages=0, nTracks=0">choose a score</option>
+                            <option id="Study 2c3.1, nPages=3, nTracks=3">Study 2c3.1</option>
+                            <option id="Study 3 sketch 1, nPages=2, nTracks=8">Study 3 sketch 1</option>
+                            <option id="Song Six, nPages=3, nTracks=3">Song Six</option>
                         </select>
                         <select id="midiOutputDeviceSelector"
 					        name="midiOutputDeviceSelector"
@@ -516,7 +516,6 @@
     <script src="ap/Assistant.js" type="text/javascript"></script>
     <script src="ap/Score.js" type="text/javascript"></script>
     <script src="ap/TracksControl.js" type="text/javascript"></script>
-    <script src="ap/ScoreConstants.js" type="text/javascript"></script>
     <script src="ap/Controls.js" type="text/javascript"></script>
     <script src="ap/Main.js" type="text/javascript"></script>
     

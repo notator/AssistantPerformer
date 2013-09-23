@@ -20,7 +20,6 @@ _AP.controls = (function (document, window)
     "use strict";
 
     var
-    scoreConstants = _AP.scoreConstants,
     tracksControl = _AP.tracksControl,
     Score = _AP.score.Score,
     Assistant = _AP.assistant.Assistant,
@@ -1005,8 +1004,72 @@ _AP.controls = (function (document, window)
         // The score is actually analysed when the Start button is clicked.
         function setScore()
         {
-            var scoreSelectorElem = document.getElementById("scoreSelector"),
-                nTracks = 0;
+            var scoreInfo;
+
+            function getScoreInfo()
+            {
+                var scoreSelectorElem = document.getElementById("scoreSelector"),
+                    scoreInfoStrings, scoreInfoString, scoreInfo;
+
+                function getScoreInfoStrings(scoreSelectorElem)
+                {
+                    var scoreInfoStrings = [], i, childNode;
+
+                    for(i = 0 ; i < scoreSelectorElem.childNodes.length; ++i)
+                    {
+                        childNode = scoreSelectorElem.childNodes[i];
+                        if(childNode.id !== undefined)
+                        {
+                            scoreInfoStrings.push(childNode.id);
+                        }
+                    }
+                    return scoreInfoStrings;
+                }
+
+                function analyseString(infoString)
+                {
+                    // sets
+                    // scoreInfo.name
+                    // scoreInfo.nPages
+                    // scoreInfo.nTracks
+                    // "Song Six, nPages=3, nTracks=3"
+
+                    var scoreInfo = {}, components;
+
+                    components = infoString.split(", ");
+
+                    if(components.length !== 3 || components[1].slice(0, 7) !== "nPages=" || components[2].slice(0, 8) !== "nTracks=")
+                    {
+                        throw "Illegal id string in assistantPerformer.html";
+                        // The string must contain:
+                        //    nameString followed by
+                        //    ", " followed by
+                        //    "nPages="  followed by
+                        //    the number of pages (an integer of any length) followed by
+                        //    ", " followed by
+                        //    "nTracks="  followed by
+                        //    the number of tracks (an integer of any length)
+                        // for example:
+                        //    "Song Six, nPages=3, nTracks=3"
+                        // The name part is used (twice) to construct the URLs for the score pages, for example:
+                        // "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Song Six/Song Six page 1.svg"
+                    }
+
+                    scoreInfo.name = components[0];
+                    scoreInfo.nPages = parseInt(components[1].slice(7), 10);
+                    scoreInfo.nTracks = parseInt(components[2].slice(8), 10);
+
+                    return scoreInfo;
+                }
+
+                scoreInfoStrings = getScoreInfoStrings(scoreSelectorElem);
+
+                scoreInfoString = scoreInfoStrings[scoreSelectorElem.selectedIndex];
+
+                scoreInfo = analyseString(scoreInfoString);
+
+                return scoreInfo;
+            }
 
             // removes existing mo.trackSelector.ChildNodes
             // adds nTracks new child nodes
@@ -1036,12 +1099,11 @@ _AP.controls = (function (document, window)
                 }
             }
 
-            function setPages(scoreConstants)
+            function setPages(scoreInfo)
             {
                 var rootURL = "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/",
-                    name = scoreConstants.name, // e.g. "Song Six"
-                    nPages = scoreConstants.nPages,
-                    nChannels = scoreConstants.nChannels,
+                    name = scoreInfo.name, // e.g. "Song Six"
+                    nPages = scoreInfo.nPages,
                     svgPagesFrame,
                     embedCode = "",
                     pageURL,
@@ -1073,32 +1135,14 @@ _AP.controls = (function (document, window)
                 svgPagesFrame = document.getElementById('svgPages');
                 // should call svgPagesFrame.svgLoaded, and set svgPagesFrame.svgScript 
                 svgPagesFrame.innerHTML = embedCode;
-
-                return nChannels;
             }
 
-            switch (scoreSelectorElem.selectedIndex)
-            {
-                case 0:
-                    nTracks = 0;
-                    break;
-                case 1:
-                    nTracks = setPages(scoreConstants.Study2c3_1);
-                    break;
-                case 2:
-                    nTracks = setPages(scoreConstants.Study3Sketch1);
-                    break;
-                case 3:
-                    nTracks = setPages(scoreConstants.SongSix);
-                    break;
-                default:
-                    throw "unknown score!";
-            }
+            scoreInfo = getScoreInfo();
+            setPages(scoreInfo);
+            setPerformersTrackSelector(scoreInfo.nTracks);
+            tracksControl.setNumberOfTracks(scoreInfo.nTracks);
 
-            setPerformersTrackSelector(nTracks);
-            tracksControl.setNumberOfTracks(nTracks);
             svgPagesDiv.scrollTop = 0;
-
             scoreHasJustBeenSelected = true;
         }
 

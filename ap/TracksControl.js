@@ -307,7 +307,10 @@ _AP.tracksControl = (function (document)
 
         //controlPanel.appendChild(trackControlsSvgElem);
         firstControlPanelChild = controlPanel.firstChild;
-        controlPanel.insertBefore(trackControlsSvgElem, firstControlPanelChild);
+        if(nTracks > 0)
+        {
+            controlPanel.insertBefore(trackControlsSvgElem, firstControlPanelChild);
+        }
     },
 
     getTrackToggledCallback = function (callback)
