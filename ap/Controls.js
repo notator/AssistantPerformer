@@ -393,10 +393,13 @@ _AP.controls = (function (document, window)
                 // enable the start button.
                 if (scoreIndex !== 0 && outputDeviceIndex !== 0)
                 {
+                    mo.startRuntimeButton.setAttribute('value', 'Start');
                     mo.startRuntimeButton.disabled = false;
                 }
                 else
                 {
+                    mo.startRuntimeButton.setAttribute('value', 'not ready');
+                    //mo.startRuntimeButton.value = 'not ready';
                     mo.startRuntimeButton.disabled = true;
                 }
                 break;
@@ -1532,6 +1535,8 @@ _AP.controls = (function (document, window)
                 setSvgControlsState('playing');
             }
         }
+
+        mo.startRuntimeButton.setAttribute('value', 'Running'); // the button is disabled/enabled elsewhere
     },
 
     publicAPI =
