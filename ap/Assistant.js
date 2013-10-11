@@ -317,6 +317,9 @@ _AP.assistant = (function (window)
 
         function playSequence(sequence, options)
         {
+            var thirtiethRootOfTwo = 1.023373892,
+                thirtiethRootOfHalf = 0.977159968;
+
             // Moment adjustedTimeReSequence attributes are set (relative to the start of the
             // sequence), using sequence.msPositionInScore, moment.msPositionInScore and
             // the durationFactor.
@@ -346,13 +349,13 @@ _AP.assistant = (function (window)
                 if(currentLivePerformersKeyPitch !== -1) // if its a NoteOff, the durationFactor does not change
                 {
                     // this is a NoteOn
-                    if(currentLivePerformersKeyPitch > 30)  // pitch range is set to 1..60 on the R2M
+                    if(currentLivePerformersKeyPitch > 30)  // pitch range is set to 0..59 on the R2M
                     {
-                        options.durationFactor = 1 + ((30 - currentLivePerformersKeyPitch) / 30); // pitch 0..29 --> factor 1..2
+                        options.durationFactor = Math.pow(thirtiethRootOfHalf, (currentLivePerformersKeyPitch - 30));
                     }
                     else
                     {
-                        options.durationFactor = 1 - ((currentLivePerformersKeyPitch - 30) / 60); // pitch 30..60 --> factor 0.5 .. 59/60
+                        options.durationFactor = Math.pow(thirtiethRootOfTwo, (30 - currentLivePerformersKeyPitch));
                     }
                 }
 
