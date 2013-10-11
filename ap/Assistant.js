@@ -317,8 +317,7 @@ _AP.assistant = (function (window)
 
         function playSequence(sequence, options)
         {
-            var thirtiethRootOfTwo = 1.023373892,
-                thirtiethRootOfHalf = 0.977159968;
+            var sixtiethRootOfFour = 1.023373892;
 
             // Moment adjustedTimeReSequence attributes are set (relative to the start of the
             // sequence), using sequence.msPositionInScore, moment.msPositionInScore and
@@ -338,7 +337,7 @@ _AP.assistant = (function (window)
                     for (j = 0; j < trackLength; ++j)
                     {
                         moment = track.moments[j];
-                        moment.adjustedTimeReSequence = Math.floor((moment.msPositionInScore - sequenceMsPosition) * durationFactor);
+                        moment.adjustedTimeReSequence = Math.floor((moment.msPositionInScore - sequenceMsPosition) / durationFactor);
                     }
                 }
             }
@@ -348,20 +347,12 @@ _AP.assistant = (function (window)
                 // duration factor calculation (depends on performed pitch)
                 if(currentLivePerformersKeyPitch !== -1) // if its a NoteOff, the durationFactor does not change
                 {
-                    // this is a NoteOn
-                    if(currentLivePerformersKeyPitch > 30)  // pitch range is set to 0..59 on the R2M
-                    {
-                        options.durationFactor = Math.pow(thirtiethRootOfHalf, (currentLivePerformersKeyPitch - 30));
-                    }
-                    else
-                    {
-                        options.durationFactor = Math.pow(thirtiethRootOfTwo, (30 - currentLivePerformersKeyPitch));
-                    }
+                    options.durationFactor = 0.5 * Math.pow(sixtiethRootOfFour, currentLivePerformersKeyPitch);
                 }
 
                 //console.log("currentIndex=" + currentIndex.toString() + " durationFactor=" + options.durationFactor.toString());
 
-                // durations in the sequence are multiplied by options.durationFactor
+                // durations in the sequence are divided by options.durationFactor
                 setMomentTimestamps(sequence, options.durationFactor);
             }
 
