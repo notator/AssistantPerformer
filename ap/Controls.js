@@ -381,12 +381,8 @@ _AP.controls = (function (document, window)
 
                     // The speed option can be used with or without a midi input device.
                     mo.assistantsSpeedInputText.disabled = false;
-
                     mo.assistantUsesRelativeDurationsRadioButton.disabled = true;
                     mo.assistantUsesRelativeDurationsRadioButtonLabel.disabled = true;
-
-                    mo.assistantUsesAbsoluteDurationsRadioButton.checked = true;
-                    mo.assistantUsesRelativeDurationsRadioButton.checked = false;
                 }
 
                 // Note that the midi input device does not have to be set in order to

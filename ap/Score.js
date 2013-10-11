@@ -1033,7 +1033,7 @@ _AP.score = (function (document)
             {
                 var timeObjects = [], id,
                     timeObject, i, j, k, length, noteObject, chordChildren, midiChildren,
-                    chordAddressString, subStrings, voiceMsDuration;
+                    chordAddressString, subStrings;
 
                 // timeObjects is an array of timeObject.
                 // speed is a floating point number, greater than zero.
@@ -1124,15 +1124,7 @@ _AP.score = (function (document)
 
                 if (speed !== 1)
                 {
-                    voiceMsDuration = changeSpeed(timeObjects, speed);
-                    if (system.msDuration === undefined)
-                    {
-                        system.msDuration = voiceMsDuration;
-                    }
-                    else if (system.msDuration !== voiceMsDuration)
-                    {
-                        throw "Error in changing speed calculation.";
-                    }
+                    changeSpeed(timeObjects, speed);
                 }
 
                 return timeObjects;

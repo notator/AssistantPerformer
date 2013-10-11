@@ -47,7 +47,7 @@
                             <option id="choose a score, nPages=0, nTracks=0">choose a score</option>
                             <option id="Study 2c3.1, nPages=3, nTracks=3">Study 2c3.1</option>
                             <option id="Study 3 sketch 1, nPages=2, nTracks=8">Study 3 sketch 1</option>
-                            <option id="Song Six, nPages=7, nTracks=6">Song Six</option>
+                            <option id="Song Six, nPages=6, nTracks=5">Song Six</option>
                         </select>
                         <select id="midiOutputDeviceSelector"
 					        name="midiOutputDeviceSelector"
@@ -194,12 +194,12 @@
                         </div>
                         </div>
                     </div>      
-                    <div id="assistantsDurationOptions" class="optionsPanel" style="margin-left:110px; margin-right:110px; margin-top:10px">
+                    <div id="assistantsDurationOptions" class="optionsPanel" style="margin-left:60px; margin-right:60px; margin-top:10px">
                         Assistant's duration options:
                         <div style="margin-left:20px;">
                             <div style="padding-top: 4px;">
                                 <label id="speedLabel1" for="assistantsSpeedInputText">
-                                    Speed:
+                                    Speed Factor:
                                 </label>
                                 <input type="text" id="assistantsSpeedInputText" value="100"                          
                                     style="margin: 0px 0px 3px 0px; width: 40px; vertical-align: middle; font-weight: bold;">
@@ -208,23 +208,23 @@
                                 </label>
                             </div>
                             <div  class="narrowLineHeight" >
-                                <input type="radio" name="durationOptions" value="V1" id="assistantUsesAbsoluteDurationsRadioButton" checked="checked"
+                                <input type="radio" name="durationOptions" value="V1" id="assistantUsesAbsoluteDurationsRadioButton" disabled="disabled"
                                  onchange="_AP.controls.doControl('assistantUsesAbsoluteDurationsRadioButton')" />
                                 <label id="assistantUsesAbsoluteDurationsRadioButtonLabel" for="assistantUsesAbsoluteDurationsRadioButton">
-                                    Absolute Symbols: The assistant's durations will be those stored in the score,<br /> 
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;divided by the above floating point value.<br />
+                                    Fixed Speed: The assistant's durations will be those stored in the score, divided by the above<br /> 
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(floating point) factor.<br />
                                 </label>
                             </div>
 
                             <div class="narrowLineHeight">
-                                <input type="radio" name="durationOptions" value="performed" id="assistantUsesRelativeDurationsRadioButton" disabled="disabled"
+                                <input type="radio" name="durationOptions" value="performed" id="assistantUsesRelativeDurationsRadioButton" checked="checked"
                                 onchange="_AP.controls.doControl('assistantUsesRelativeDurationsRadioButton')"/>
                                 <label id="assistantUsesRelativeDurationsRadioButtonLabel" for="assistantUsesRelativeDurationsRadioButton">
-                                    Relative Symbols: The durations in the first assistant's moment will be those<br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stored in the score, divided by the above floating point value. The durations in<br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;subsequent moments will be those stored in the score multiplied by the relation<br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;between the performed and stored durations of the performer's previous<br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;moment.
+                                    Variable Speed: The assistant's durations will be affected both by the above speed factor<br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and by the pitch played by the live performer. The live performer plays pitches in the range<br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C0..B5 (MIDI pitches 0..59) to achieve a range of speeds between 50% and 200% of the original.<br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;At the bottom of the scale, at C0, the performed speed is halved. In the middle, at F#3, the<br />
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;speed is unchanged. At the top, B5 the speed is doubled.<br />
                                 </label> 
                             </div>
                         </div>

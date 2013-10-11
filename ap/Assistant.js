@@ -52,8 +52,7 @@ _AP.assistant = (function (window)
     currentIndex = -1, // the index of the currently playing sequence (which will be stopped when a noteOn or noteOff arrives).
     nextIndex = 0, // the index of the sequence which will be played when a noteOn evt arrives
     performanceStartNow, // set when the first sequence starts, used to set the reported duration of the performance 
-    sequenceStartNow, // set when a sequence starts playing, used in the relative durations option 
-    prevSequenceStartNow = 0.0, // used only with the relative durations option
+    sequenceStartNow, // set when a sequence starts playing 
     pausedNow = 0.0, // used only with the relative durations option (the time at which the sequence was paused).
 
     stopped = true,
@@ -65,12 +64,10 @@ _AP.assistant = (function (window)
 
     stop = function ()
     {
-        var nSequences, performanceMsDuration;
+        var performanceMsDuration;
 
         if (stopped === false)
         {
-            nSequences = performedSequences.length;
-
             forwardSetState("stopped");
 
             performanceMsDuration = performance.now() - performanceStartNow;
@@ -320,10 +317,6 @@ _AP.assistant = (function (window)
 
         function playSequence(sequence, options)
         {
-            var
-            prevSequenceScoreMsDuration,
-            durationFactor;
-
             // Moment adjustedTimeReSequence attributes are set (relative to the start of the
             // sequence), using sequence.msPositionInScore, moment.msPositionInScore and
             // the durationFactor.
@@ -347,19 +340,26 @@ _AP.assistant = (function (window)
                 }
             }
 
-            if (options.assistantUsesAbsoluteDurations === false)
+            if(options.assistantUsesAbsoluteDurations === false)
             {
-                if (currentIndex > 0)
+                // duration factor calculation (depends on performed pitch)
+                if(currentLivePerformersKeyPitch !== -1) // if its a NoteOff, the durationFactor does not change
                 {
-                    prevSequenceScoreMsDuration = performedSequences[currentIndex].msPositionInScore - performedSequences[currentIndex - 1].msPositionInScore;
-                    durationFactor = (sequenceStartNow - prevSequenceStartNow) / prevSequenceScoreMsDuration;
-
-                    //console.log("currentIndex=" + currentIndex.toString() + " durationFactor=" + durationFactor.toString());
-
-                    // durations in the sequence are multiplied by durationFactor
-                    setMomentTimestamps(sequence, durationFactor);
+                    // this is a NoteOn
+                    if(currentLivePerformersKeyPitch > 30)  // pitch range is set to 1..60 on the R2M
+                    {
+                        options.durationFactor = 1 + ((30 - currentLivePerformersKeyPitch) / 30); // pitch 0..29 --> factor 1..2
+                    }
+                    else
+                    {
+                        options.durationFactor = 1 - ((currentLivePerformersKeyPitch - 30) / 60); // pitch 30..60 --> factor 0.5 .. 59/60
+                    }
                 }
-                prevSequenceStartNow = sequenceStartNow; // used only with the relative durations option
+
+                //console.log("currentIndex=" + currentIndex.toString() + " durationFactor=" + options.durationFactor.toString());
+
+                // durations in the sequence are multiplied by options.durationFactor
+                setMomentTimestamps(sequence, options.durationFactor);
             }
 
             // if options.assistantUsesAbsoluteDurations === true, the durations are related to msPositionInScore
@@ -715,7 +715,6 @@ _AP.assistant = (function (window)
                 endIndex = (performedSequences === undefined) ? -1 : (performedSequences.length - 1); // the index of the (unplayed) end chord or rest or endBarline
                 currentIndex = -1;
                 nextIndex = 0;
-                prevSequenceStartNow = 0.0; // used only with the relative durations option
                 pausedNow = 0.0; // used only with the relative durations option (the time at which the sequence was paused).
                 stopped = true;
                 paused = false;
@@ -741,7 +740,6 @@ _AP.assistant = (function (window)
             if (options.assistantUsesAbsoluteDurations === false)
             {
                 sequenceStartNow = performance.now();
-                prevSequenceStartNow += (sequenceStartNow - pausedNow);
             }
             performedSequences[currentIndex].resume();
             setState("running");
@@ -916,7 +914,6 @@ _AP.assistant = (function (window)
         endIndex = performedSequences.length - 1;
         currentIndex = -1;
         nextIndex = 0;
-        prevSequenceStartNow = -1;
     },
 
     // creats an Assistant, complete with private sequences
