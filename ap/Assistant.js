@@ -317,7 +317,7 @@ _AP.assistant = (function (window)
 
         function playSequence(sequence, options)
         {
-            var sixtiethRootOfFour = 1.023373892;
+            var twentyfourthRootOfTwo = 1.029302237;
 
             // Moment adjustedTimeReSequence attributes are set (relative to the start of the
             // sequence), using sequence.msPositionInScore, moment.msPositionInScore and
@@ -347,7 +347,7 @@ _AP.assistant = (function (window)
                 // duration factor calculation (depends on performed pitch)
                 if(currentLivePerformersKeyPitch !== -1) // if its a NoteOff, the durationFactor does not change
                 {
-                    options.durationFactor = 0.5 * Math.pow(sixtiethRootOfFour, currentLivePerformersKeyPitch);
+                    options.durationFactor = Math.pow(twentyfourthRootOfTwo, currentLivePerformersKeyPitch - 60);  // is 1 at middle C (MIDI Note 60)
                 }
 
                 //console.log("currentIndex=" + currentIndex.toString() + " durationFactor=" + options.durationFactor.toString());
