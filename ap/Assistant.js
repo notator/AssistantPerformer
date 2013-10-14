@@ -50,6 +50,7 @@ _AP.assistant = (function (window)
     // these variables are initialized by playSpan() and used by handleMIDIInputEvent() 
     endIndex = -1,
     currentIndex = -1, // the index of the currently playing sequence (which will be stopped when a noteOn or noteOff arrives).
+    endOfPerformance = false, // flag, set to true when (currentIndex === endIndex)
     nextIndex = 0, // the index of the sequence which will be played when a noteOn evt arrives
     performanceStartNow, // set when the first sequence starts, used to set the reported duration of the performance 
     sequenceStartNow, // set when a sequence starts playing 
@@ -297,22 +298,14 @@ _AP.assistant = (function (window)
         //      reportEndOfPerformance(recordingSequence, performanceMsDuration);
         function reportEndOfSequence()
         {
-            if (currentLivePerformersKeyPitch === -1) // key is up
+            if(currentLivePerformersKeyPitch === -1 && endOfPerformance) // key is up
             {
-                if (currentIndex === endIndex)
-                {
-                    stop();
-                }
-                else if (performedSequences[nextIndex].chordSequence !== undefined)
-                {
-                    reportMsPosition(performedSequences[nextIndex].msPositionInScore);
-                }
+                stop();
             }
-            else if (nextIndex <= endIndex && performedSequences[nextIndex].restSequence !== undefined)
+            else
             {
                 reportMsPosition(performedSequences[nextIndex].msPositionInScore);
             }
-            // else wait for noteOff message (see handleNoteOff below).
         }
 
         function playSequence(sequence, options)
@@ -369,13 +362,14 @@ _AP.assistant = (function (window)
 
                 silentlyCompleteCurrentlyPlayingSequence();
 
-                if (currentIndex === endIndex) // see reportEndOfPerformance() above 
+                if(endOfPerformance) // see reportEndOfPerformance() above 
                 {
                     stop();
                 }
                 else if (performedSequences[nextIndex].restSequence !== undefined) // only play the next sequence if it is a restSequence
                 {
                     currentIndex = nextIndex++;
+                    endOfPerformance = (currentIndex === endIndex);
                     sequenceStartNow = inputEvent.receivedTime;
                     playSequence(performedSequences[currentIndex], options);
                 }
@@ -612,6 +606,7 @@ _AP.assistant = (function (window)
                 if (nextIndex === 0 || (nextIndex <= endIndex && allSubsequences[nextIndex].chordSequence !== undefined))
                 {
                     currentIndex = nextIndex++;
+                    endOfPerformance = (currentIndex === endIndex);
                     
                     if (overrideSoloPitch || overrideOtherTracksPitch || overrideSoloVelocity || overrideOtherTracksVelocity)
                     {
@@ -708,6 +703,7 @@ _AP.assistant = (function (window)
                 // these variables are also set in playSpan() when the state is first set to "running"
                 endIndex = (performedSequences === undefined) ? -1 : (performedSequences.length - 1); // the index of the (unplayed) end chord or rest or endBarline
                 currentIndex = -1;
+                endOfPerformance = false;
                 nextIndex = 0;
                 pausedNow = 0.0; // used only with the relative durations option (the time at which the sequence was paused).
                 stopped = true;
@@ -907,6 +903,7 @@ _AP.assistant = (function (window)
 
         endIndex = performedSequences.length - 1;
         currentIndex = -1;
+        endOfPerformance = false;
         nextIndex = 0;
     },
 
