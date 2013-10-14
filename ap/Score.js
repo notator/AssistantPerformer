@@ -1496,12 +1496,11 @@ _AP.score = (function (document)
                     {
                         timeObject = voice.timeObjects[timeObjectIndex];
 
-                        if (timeObject.paletteIndex === undefined && timeObject.chordDef === undefined)
+                        if (timeObject.chordDef === undefined)
                         {
-                            if (timeObjectIndex < (nTimeObjects - 1) || sysIndex === (nSystems - 1))
+                            if(timeObjectIndex < (nTimeObjects - 1))
                             {
-                                // A rest. A barline on the right end of a staff is ignored, except on the final system.
-                                // The final barline on the final staff is a 'rest'.
+                                // A real rest. All barlines on the right ends of staves are ignored.
                                 midiRest = new MIDIChord.MIDIRest(timeObject);
                                 midiRest.addToTrack(track);
                                 if(isAssistedPerformance === true && trackIndex === livePerformersTrackIndex)

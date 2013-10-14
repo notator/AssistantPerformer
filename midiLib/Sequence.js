@@ -411,8 +411,8 @@ MIDILib.sequence = (function (window)
         },
 
         // playSpan();
-        // Note that the final Moment (at toMsPositionInScore) is often at the final barline
-        // (which may or may not contain noteOff Messages).
+        // Note that the moment at toMsPositionInScore is not part of the span,
+        // but the span ends at the end of its last Moment (at toMsPositioninScore).
         //
         // trackIsOnArray[trackIndex] returns a boolean which determines whether the track will
         // be played or not. This array belongs to its creator, and is read only.
@@ -446,8 +446,7 @@ MIDILib.sequence = (function (window)
             // Sets each track's isPerforming attribute. If the track is performing,
             // its fromIndex, currentIndex and toIndex attributes are also set.
             // Sets each performing track to contain all the moments between msOffsetFromStartOfScore
-            // and toMsPositionInScore inclusive.
-            // Note that the final Moment can be at the final barline (a restStart).
+            // and the last moment before toMsPositionInScore
             function setTrackAttributes(tracks, trackIsOnArray, msOffsetFromStartOfScore, toMsPositionInScore)
             {
                 var
@@ -483,11 +482,10 @@ MIDILib.sequence = (function (window)
                         }
                         for (j = track.fromIndex; j < trackLength; ++j)
                         {
-                            // The track's final position can be the position of the final barline.
-                            // The moment at trackMoments[track.toIndex] is never performed as part of this sequence.
+                            // toIndex is the index of the last performed moment
                             if (trackMoments[j].msPositionInScore < toMsPositionInScore)
                             {
-                                track.toIndex = j + 1;
+                                track.toIndex = j;
                             }
                             else
                             {

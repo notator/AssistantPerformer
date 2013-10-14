@@ -310,7 +310,7 @@ _AP.assistant = (function (window)
 
         function playSequence(sequence, options)
         {
-            var twentyfourthRootOfTwo = 1.029302237;
+            var twentyfourthRootOfTwo = 1.029302236643492; // Math.pow(2, (1 / 24))
 
             // Moment adjustedTimeReSequence attributes are set (relative to the start of the
             // sequence), using sequence.msPositionInScore, moment.msPositionInScore and
@@ -781,25 +781,15 @@ _AP.assistant = (function (window)
                 performedSequences = []; // an array of sequences
 
             // returns the portion of sequence before toMsPositionInScore
-            // to which a "finalBarline" moment has been added.
             function newRestSequenceBeforeMsPos(sequence, toMsPositionInScore)
             {
                 var
                 i, newTrack, oldTrack, nTracks = sequence.tracks.length,
                 j, nMoments, restSequence;
 
-                function appendFinalBarlineMoment(track, msPositionInScore)
-                {
-                    var finalBarlineMoment;
-
-                    finalBarlineMoment = new MIDILib.moment.Moment(msPositionInScore);
-                    Object.defineProperty(finalBarlineMoment, "restStart", { value: true, writable: false });
-
-                    track.addMoment(finalBarlineMoment);
-                }
-
                 restSequence = new Sequence(nTracks);
                 Object.defineProperty(restSequence, "restSequence", { value: true, writable: false });
+                Object.defineProperty(restSequence, "msPositionInScore", { value: sequence.msPositionInScore, writable: false });
 
                 for (i = 0; i < nTracks; ++i)
                 {
@@ -810,8 +800,6 @@ _AP.assistant = (function (window)
                     {
                         newTrack.moments.push(oldTrack.moments[j]);
                     }
-
-                    appendFinalBarlineMoment(newTrack, toMsPositionInScore);
                 }
                 return restSequence;
             }
@@ -884,7 +872,6 @@ _AP.assistant = (function (window)
             {
                 // newRestSequenceBeforeMsPos() returns a new sequence which is
                 // a copy of the beginning of lastSequence up to (but not including) toMsPositionInScore,
-                // to which a "finalBarline" moment has been added.
                 lastSequence = newRestSequenceBeforeMsPos(lastSequence, toMsPositionInScore);
             }
 
@@ -912,8 +899,8 @@ _AP.assistant = (function (window)
     Assistant = function (sequence, apControlOptions, reportEndOfWholePerformance, reportMillisecondPosition)
     {
         // Returns an array of Sequence.
-        // Each sequence in the array contains moments from the main sequence.
-        // A sequence is first created for each chord or rest symbol and for the final barline in the live performer's track. 
+        // Each sequence in the array contains moments from the main sequence (which contains no barlines).
+        // A sequence is first created for each chord or rest symbol. 
         // Sequences corresponding to a live performer's chord are given a chordSequence attribute (=true).
         // Sequences corresponding to a live performer's rest are given a restSequence attribute (=true).
         // Consecutive restSequences are merged: When performing, consecutive rests in the performer's track are treated
