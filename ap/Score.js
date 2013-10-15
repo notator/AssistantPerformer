@@ -1496,7 +1496,7 @@ _AP.score = (function (document)
                     {
                         timeObject = voice.timeObjects[timeObjectIndex];
 
-                        if (timeObject.chordDef === undefined)
+                        if(timeObject.paletteIndex === undefined && timeObject.chordDef === undefined)
                         {
                             if(timeObjectIndex < (nTimeObjects - 1))
                             {
