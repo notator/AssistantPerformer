@@ -43,7 +43,8 @@ _AP.score = (function (document)
 
     // Initially there is no assistant (a non-assisted performance).
     // This value is changed when/if the assistant has been constructed.
-    // It is used when setting the position of the end marker in assisted performances.
+    // It is used to determine whether this is an assisted performance or not,
+    // and when setting the position of the end marker in assisted performances.
     livePerformersTrackIndex = -1,
 
     livePerformersSoundingTrack = null,
@@ -443,52 +444,87 @@ _AP.score = (function (document)
             x = e.pageX,
             y = e.pageY + frame.originY,
             systemIndex, system,
-            staffIndex, voiceIndex, timeObject, clickedTrackIndex;
+            staffIndex, voiceIndex, timeObject;
 
         // x and y now use the <body> element as their frame of reference.
         // this is the same frame of reference as in the systems.
         // systems is a single global array (inside this namespace)of all systems.
         // This is important when identifying systems, and when performing.
 
-        // Returns the system having stafflines closest to y, and for which
-        //    (firstBarlineX <= x && lastBarlineX >= x)
-        // otherwise undefined.
-        function findSystemIndex(x, y)
+        // Returns either the live performer's staff index or voice index, depending
+        // on the value of the returnStaffIndex argument.
+        function livePerformersIndex(system, livePerformersTrackIndex, returnStaffIndex)
         {
-            var i, topLimit, bottomLimit, systemIndex, lastSystem;
+            var staff, staffIndex, voiceIndex, trackIndex = 0, returnIndex = -1;
+
+            for(staffIndex = 0; staffIndex < system.staves.length; ++staffIndex)
+            {
+                staff = system.staves[staffIndex];
+                for(voiceIndex = 0; voiceIndex < staff.voices.length; ++voiceIndex)
+                {
+                    if(trackIndex === livePerformersTrackIndex)
+                    {
+                        if(returnStaffIndex)
+                        {
+                            returnIndex = staffIndex;
+                        }
+                        else
+                        {
+                            returnIndex = voiceIndex;
+                        }
+                        break;
+                    }
+                    ++trackIndex;
+                }
+                if(returnIndex >= 0)
+                {
+                    break;
+                }
+            }
+            if(returnIndex < 0)
+            {
+                throw "livePerformersTrackIndex must be on the system!";
+            }
+            return returnIndex;
+        }
+
+        function livePerformersStaffIndex(system, livePerformersTrackIndex)
+        {
+            return livePerformersIndex(system, livePerformersTrackIndex, true);
+        }
+
+        function livePerformersVoiceIndex(system, livePerformersTrackIndex)
+        {
+            return livePerformersIndex(system, livePerformersTrackIndex, false);
+        }
+
+
+        // Returns the system having stafflines closest to y.
+        function findSystemIndex(y)
+        {
+            var i, topLimit, bottomLimit, systemIndex;
 
             if (systems.length === 1)
             {
-                if (systems[0].firstBarlineX <= x && x <= systems[0].right)
-                {
-                    systemIndex = 0;
-                }
+                systemIndex = 0;
             }
             else
             {
                 topLimit = -1;
                 for (i = 0; i < systems.length - 1; ++i)
                 {
-                    if (systems[i].firstBarlineX <= x && x <= systems[i].right)
+                    bottomLimit = (systems[i].bottomLineY + systems[i + 1].topLineY) / 2;
+                    if (y >= topLimit && y < bottomLimit)
                     {
-                        bottomLimit = (systems[i].bottomLineY + systems[i + 1].topLineY) / 2;
-                        if (y >= topLimit && y < bottomLimit)
-                        {
-                            systemIndex = i;
-                            break;
-                        }
-                        topLimit = bottomLimit;
+                        systemIndex = i;
+                        break;
                     }
+                    topLimit = bottomLimit;
                 }
 
                 if (systemIndex === undefined)
                 {
-                    lastSystem = systems[systems.length - 1];
-                    if (lastSystem.firstBarlineX <= x && x <= lastSystem.right)
-                    {
-                        systemIndex = systems.length - 1;
-                    }
-
+                    systemIndex = systems.length - 1; // last system
                 }
             }
             return systemIndex;
@@ -563,142 +599,164 @@ _AP.score = (function (document)
             return timeObject;
         }
 
-        // If the timeObject argument has the same alignmentX as a soloist's chord or rest, or lies
-        // within a soloist's rest, it is returned unchanged. Otherwise the timeObject for the following
-        // chord or rest in the soloists part is returned.
-        function findEndMarkerTimeObject(timeObject, system, voiceIndex)
+        function isChord(timeObject)
         {
-            var i, nTimeObjects, returnTimeObject = null, timeObjects = null, x;
-
-            function findSoloistsTimeObjects(system, voiceIndex)
+            if(timeObject.chordIndex !== undefined || timeObject.chordDef !== undefined)
             {
-                var i, nStaves = system.staves.length, j, nVoices, vIndex = 0, timeObjects = null;
-                for (i = 0; i < nStaves; ++i)
+                return true;
+            }
+            return false;
+        }
+
+        // In a performance without live performer, returns the timeObject argument unchanged.
+        // In a performance with live performer:
+        //      If the timeObject is a chord or the final barline, return it unchanged.
+        //      If the timeObject is a rest, and the previous object is also a rest,
+        //      return the following chord or final barline. 
+        function getEndMarkerTimeObject(timeObject, timeObjects)
+        {
+            var returnedTimeObject = null, i, j;
+
+            if(livePerformersTrackIndex === -1)
+            {
+                // no live performer
+                returnedTimeObject = timeObject;
+            }
+            else // with live performer
+            {
+                if(isChord(timeObject) || (timeObject === timeObjects[timeObjects.length - 1]))
                 {
-                    nVoices = system.staves[i].voices.length;
-                    for (j = 0; j < nVoices; ++j)
+                    returnedTimeObject = timeObject;
+                }
+                else
+                {
+                    // timeObject is a rest, and
+                    // not the first timeObject in timeObjects and not the final barline
+                    for(i = 1; i < timeObjects.length - 1; ++i)
                     {
-                        if (vIndex === voiceIndex)
+                        if(timeObject === timeObjects[i])
                         {
-                            timeObjects = system.staves[i].voices[j].timeObjects;
+                            if(!(isChord(timeObjects[i - 1])))
+                            {
+                                for(j = i + 1; j < timeObjects.length - 1; ++j)
+                                {
+                                    if(isChord(timeObjects[j]))
+                                    {
+                                        returnedTimeObject = timeObjects[j]; // the first chord after the multiple rest
+                                        break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                returnedTimeObject = timeObject; // return the rest
+                            }
                             break;
                         }
-                        ++vIndex;
                     }
-                    if (timeObjects !== null)
+                    if(returnedTimeObject === null)
                     {
-                        break;
+                        // the final barline
+                        returnedTimeObject = timeObjects[timeObjects.length - 1];
                     }
-                }
-                return timeObjects;
-            }
-
-            timeObjects = findSoloistsTimeObjects(system, voiceIndex);
-
-            x = timeObject.alignmentX;
-            nTimeObjects = timeObjects.length;
-            for (i = 0; i < nTimeObjects; ++i)
-            {
-                if (timeObjects[i].alignmentX === x)
-                {
-                    // In all tracks, the last timeObject in timeObjects is the final barline (a rest with zero duration),
-                    // so we arrive here when timeObject is the final barline, and i < (nTimeObjects - 1) below.
-                    returnTimeObject = timeObject;
-                    break;
-                }
-                // i is always less than (nTimeObjects - 1) here
-                if (timeObjects[i].alignmentX < x && timeObjects[i + 1].alignmentX > x)
-                {
-                    if (timeObjects[i].chordDef !== undefined)
-                    {
-                        returnTimeObject = timeObjects[i + 1];
-                    }
-                    else
-                    {
-                        returnTimeObject = timeObject;
-                    }
-                    break;
-                }
-                if (timeObjects[i].alignmentX > x)
-                {
-                    break;
                 }
             }
-
-            return returnTimeObject;
+            return returnedTimeObject;
         }
 
-        function findClickedTrackIndex(system, staffIndex, voiceIndex)
+        // If the timeObject is a chord, return it unchanged.
+        // If the timeObject is a rest, return the following chord.
+        // If it is the final barline, or there are no chords following the rest, return null.
+        function getStartMarkerChordObject(timeObject, timeObjects )
         {
-            var i, nStaves = system.staves.length,
-            j, nVoices, clickedTrackIndex = -1;
+            var returnedChord = null, found, i;
 
-            for (i = 0; i < nStaves; ++i)
+            if(isChord(timeObject))
             {
-                nVoices = system.staves[i].voices.length;
-                for (j = 0; j < nVoices; ++j)
+                returnedChord = timeObject;
+            }
+            else if(!(timeObject === timeObjects[timeObjects.length - 1]))
+            {
+                // a rest
+                found = false;
+                for(i = 0; i < timeObjects.length; ++i)
                 {
-                    ++clickedTrackIndex;
-                    if (i === staffIndex && j === voiceIndex)
+                    if(timeObjects[i] === timeObject)
                     {
+                        found = true;
+                    }
+                    else if(found && isChord(timeObjects[i]))
+                    {
+                        returnedChord = timeObjects[i];
                         break;
                     }
                 }
-                if (i === staffIndex)
-                {
-                    break;
-                }
             }
-            return clickedTrackIndex;
+
+            return returnedChord;
         }
 
-        systemIndex = findSystemIndex(x, y);
+        systemIndex = findSystemIndex(y);
         if (systemIndex !== undefined)
         {
             system = systems[systemIndex];
-            staffIndex = findStaffIndex(y, system.staves);
-            voiceIndex = findVoiceIndex(y, system.staves[staffIndex].voices);
+            if(livePerformersTrackIndex >= 0)
+            {
+                staffIndex = livePerformersStaffIndex(system, livePerformersTrackIndex);
+                voiceIndex = livePerformersVoiceIndex(system, livePerformersTrackIndex);
+            }
+            else
+            {
+                staffIndex = findStaffIndex(y, system.staves);
+                voiceIndex = findVoiceIndex(y, system.staves[staffIndex].voices);
+            }
             timeObject = findTimeObject(x, system.staves[staffIndex].voices[voiceIndex].timeObjects);
-            clickedTrackIndex = findClickedTrackIndex(system, staffIndex, voiceIndex);
 
-            // timeObject is now the next object to the right of the click in the clicked voice.
+            // timeObject is now the next object to the right of the click,
+            // either in the live performers voice (if there is one) or in the clicked voice.
             // The object can be a chord or rest or the final barline on the voice. 
 
-            if (state === "settingEnd")
+            if(state === "settingEnd")
             {
-                if (livePerformersTrackIndex >= 0 && livePerformersTrackIndex !== clickedTrackIndex)
-                {
-                    // Algorithm comment: see the function itself.
-                    timeObject = findEndMarkerTimeObject(timeObject, system, livePerformersTrackIndex);
-                }
-                // else do nothing
+
+                // If the timeObject is a chord or the final barline, return it unchanged.
+                // If the timeObject is a rest, and the previous object is also a rest,
+                // return the following chord or final barline.
+                // Returns null if the timeObject is the first timeObject in the timeObjects.
+                timeObject = getEndMarkerTimeObject(timeObject, system.staves[staffIndex].voices[voiceIndex].timeObjects);
+
             }
-            else if (state === "settingStart")
+            if (state === "settingStart")
             {
-                // Algorithm comment: see the function itself.
-                timeObject = findStartMarkerTimeObject(timeObject, clickedTrackIndex, system, trackIsOn);
+                // If the timeObject is a chord, return it unchanged.
+                // If it is a rest, return the following chord.
+                // Returns null if unsuccessful.
+                timeObject = getStartMarkerChordObject(timeObject, system.staves[staffIndex].voices[voiceIndex].timeObjects );
             }
 
-            switch (state)
+            if(timeObject !== null)
             {
-                case 'settingStart':
-                    if (timeObject.msPosition < endMarker.msPosition())
-                    {
-                        startMarker = system.startMarker;
-                        hideStartMarkersExcept(startMarker);
-                        startMarker.moveTo(timeObject);
-                    }
-                    break;
-                case 'settingEnd':
-                    if (startMarker.msPosition() < timeObject.msPosition)
-                    {
-                        endMarker = system.endMarker;
-                        hideEndMarkersExcept(endMarker);
-                        endMarker.moveTo(timeObject);
-                    }
-                    break;
-                default:
-                    break;
+                switch(state)
+                {
+                    case 'settingStart':
+                        if(timeObject.msPosition < endMarker.msPosition())
+                        {
+                            startMarker = system.startMarker;
+                            hideStartMarkersExcept(startMarker);
+                            startMarker.moveTo(timeObject);
+                        }
+                        break;
+                    case 'settingEnd':
+                        if(startMarker.msPosition() < timeObject.msPosition)
+                        {
+                            endMarker = system.endMarker;
+                            hideEndMarkersExcept(endMarker);
+                            endMarker.moveTo(timeObject);
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     },
@@ -1029,7 +1087,7 @@ _AP.score = (function (document)
             // they have no 'use' element).
             // Later in this program (as soon as all systems have been read), the msPosition
             // of all timeObjects will appended to them.
-            function getTimeObjects(system, noteObjects, speed)
+            function getTimeObjects(noteObjects, speed)
             {
                 var timeObjects = [], id,
                     timeObject, i, j, k, length, noteObject, chordChildren, midiChildren,
@@ -1148,7 +1206,7 @@ _AP.score = (function (document)
                                 if (staffChildID.indexOf('voice') !== -1)
                                 {
                                     voice = staff.voices[voiceIndex++];
-                                    voice.timeObjects = getTimeObjects(system, staffChildren[j].childNodes, speed);
+                                    voice.timeObjects = getTimeObjects(staffChildren[j].childNodes, speed);
                                 }
                             }
                         }
@@ -1446,7 +1504,7 @@ _AP.score = (function (document)
     // and silent chords. Then, when score.redrawDisplay() is called (on toggling a trackContol),
     // the live performer's track is set to livePerformersSoundingTrack or livePerformersSilentTrack
     // as necessary.
-    createSequence = function (isAssistedPerformance, livePerformersTrackIndex)
+    createSequence = function(isAssistedPerformance, livePerfTrackIndex)
     {
         // systems->staves->voices->timeObjects
         var sequence,
@@ -1474,6 +1532,11 @@ _AP.score = (function (document)
         if(isAssistedPerformance === true)
         {
             livePerformersSilentTrack = new Track();
+            livePerformersTrackIndex = livePerfTrackIndex;
+        }
+        else
+        {
+            livePerformersTrackIndex = -1;
         }
 
         nStaves = systems[0].staves.length;
