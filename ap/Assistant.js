@@ -298,7 +298,7 @@ _AP.assistant = (function (window)
         //      reportEndOfPerformance(recordingSequence, performanceMsDuration);
         function reportEndOfSequence()
         {
-            if(currentLivePerformersKeyPitch === -1 && endOfPerformance) // key is up
+            if(endOfPerformance)
             {
                 stop();
             }
@@ -375,6 +375,7 @@ _AP.assistant = (function (window)
                 }
                 else if (nextIndex <= endIndex)
                 {
+                    endOfPerformance = (nextIndex === endIndex);
                     reportMsPosition(performedSequences[nextIndex].msPositionInScore);
                 }
             }
