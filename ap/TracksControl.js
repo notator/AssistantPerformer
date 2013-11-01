@@ -291,7 +291,7 @@ _AP.tracksControl = (function (document)
         trackControlsSvgElem.style.position = "absolute";
         trackControlsSvgElem.style.top = 0;
         trackControlsSvgElem.style.left = 0;
-        groupElem = svgElem('<g id="trackControls" transform="translate(0.5,5.5)" \\>');
+        groupElem = svgElem('<g id="trackControls" transform="translate(0.5,0.5)" \\>');
         trackControlsSvgElem.appendChild(groupElem);
 
         addFrames(groupElem, nTracks);

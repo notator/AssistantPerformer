@@ -276,6 +276,10 @@ _AP.controls = (function (document, window)
         switch (mainOptionsState)
         {
             case "enable":
+                mo.controlPanel.style.visibility = "hidden";
+                mo.svgPages.style.visibility = "hidden";
+                mo.titleOptionsDiv.style.visibility = "visible";
+
                 inputDeviceIndex = mo.midiInputDeviceSelector.selectedIndex;
                 scoreIndex = mo.scoreSelector.selectedIndex;
                 outputDeviceIndex = mo.midiOutputDeviceSelector.selectedIndex;
@@ -400,6 +404,10 @@ _AP.controls = (function (document, window)
                 }
                 break;
             case "disabled":
+                mo.controlPanel.style.visibility = "visible";
+                mo.svgPages.style.visibility = "visible";
+                mo.titleOptionsDiv.style.visibility = "hidden";
+
                 mo.midiInputDeviceSelector.disabled = true;
                 mo.scoreSelector.disabled = true;
                 mo.midiOutputDeviceSelector.disabled = true;
@@ -847,6 +855,10 @@ _AP.controls = (function (document, window)
     {
         function getMainOptionElements()
         {
+            mo.titleOptionsDiv = document.getElementById("titleOptionsDiv");
+            mo.controlPanel = document.getElementById("controlPanel");
+            mo.svgPages = document.getElementById("svgPages");
+
             mo.midiInputDeviceSelector = document.getElementById("midiInputDeviceSelector");
             mo.scoreSelector = document.getElementById("scoreSelector");
             mo.midiOutputDeviceSelector = document.getElementById("midiOutputDeviceSelector");
@@ -911,6 +923,13 @@ _AP.controls = (function (document, window)
                 //option.outputDevice = midiAccess.getOutput(i);  // WebMIDIAPI creates a new OutputDevice
                 os.add(option, null);
             }
+        }
+
+        // resets the score selector in case the browser has cached the last value
+        function initScoreSelector()
+        {
+            mo.scoreSelector.selectedIndex = 0;
+            score = new Score(runningMarkerHeightChanged); // an empty score, with callback function
         }
 
         function getControlLayers(document)
@@ -983,7 +1002,7 @@ _AP.controls = (function (document, window)
 
         setMIDIDeviceSelectors(midiAccess);
 
-        score = new Score(runningMarkerHeightChanged); // an empty score, with callback function
+        initScoreSelector();
 
         setSvgPagesDivHeight();
 
@@ -1519,8 +1538,6 @@ _AP.controls = (function (document, window)
                 // The sequence therefore needs to be reloaded when the options (performer's track index) change.    
                 assistant = new Assistant(sequence, options, reportEndOfPerformance, reportMsPos);
             }
-
-            window.scrollTo(0, 630); // 600 is the absolute position of the controlPanel div (!)
 
             score.moveStartMarkerToTop(svgPagesDiv);
 
