@@ -63,34 +63,34 @@ _AP.palettes = (function (document)
         {
             a = chordDefNode.attributes[i];
 
-            // console.log(a.name + " = " + a.nodeValue);
+            // console.log(a.name + " = " + a.value);
 
             switch (a.name)
             {
                 case "id":
-                    attributes.id = a.nodeValue; // a string
+                    attributes.id = a.value; // a string
                     break;
                 case "bank":
-                    attributes.bank = parseInt(a.nodeValue, 10);
+                    attributes.bank = parseInt(a.value, 10);
                     break;
                 case "patch":
-                    attributes.patch = parseInt(a.nodeValue, 10);
+                    attributes.patch = parseInt(a.value, 10);
                     break;
                 case "volume":
-                    attributes.volume = parseInt(a.nodeValue, 10);
+                    attributes.volume = parseInt(a.value, 10);
                     break;
                 case "hasChordOff":
-                    if (a.nodeValue === "0")
+                    if (a.value === "0")
                     {
                         attributes.hasChordOff = false;
                     }
                     // if hasChordOff is undefined, it is true
                     break;
                 case "pitchWheelDeviation":
-                    attributes.pitchWheelDeviation = parseInt(a.nodeValue, 10);
+                    attributes.pitchWheelDeviation = parseInt(a.value, 10);
                     break;
                 case "minBasicChordMsDuration":
-                    attributes.minBasicChordMsDuration = parseInt(a.nodeValue, 10);
+                    attributes.minBasicChordMsDuration = parseInt(a.value, 10);
                     break;
                 default:
                     throw (">>>>>>>>>> Illegal midiChord attribute  <<<<<<<<<<");
@@ -127,20 +127,20 @@ _AP.palettes = (function (document)
             for (i = 0; i < attributesLength; ++i)
             {
                 attr = basicChordDef.attributes[i];
-                // console.log(attr.name + " = " + attr.nodeValue);
+                // console.log(attr.name + " = " + attr.value);
                 switch (attr.name)
                 {
                     case "msDuration":
-                        basicChord.msDuration = parseInt(attr.nodeValue, 10);
+                        basicChord.msDuration = parseInt(attr.value, 10);
                         break;
                     case "bank":
-                        basicChord.bank = parseInt(attr.nodeValue, 10);
+                        basicChord.bank = parseInt(attr.value, 10);
                         break;
                     case "patch":
-                        basicChord.patch = parseInt(attr.nodeValue, 10);
+                        basicChord.patch = parseInt(attr.value, 10);
                         break;
                     case "hasChordOff":
-                        if (attr.nodeValue === "0")
+                        if (attr.value === "0")
                         {
                             basicChord.hasChordOff = false;
                         }
@@ -148,11 +148,11 @@ _AP.palettes = (function (document)
                         break;
                     case "notes":
                         basicChord.notes = [];
-                        basicChord.notes = numberArray(attr.nodeValue);
+                        basicChord.notes = numberArray(attr.value);
                         break;
                     case "velocities":
                         basicChord.velocities = [];
-                        basicChord.velocities = numberArray(attr.nodeValue);
+                        basicChord.velocities = numberArray(attr.value);
                         break;
                     default:
                         throw (">>>>>>>>>> Illegal basicChord attribute <<<<<<<<<<");
@@ -208,25 +208,25 @@ _AP.palettes = (function (document)
             for (i = 0; i < attributesLength; ++i)
             {
                 attr = slidersDef.attributes[i];
-                // console.log(attr.name + " = " + attr.nodeValue);
+                // console.log(attr.name + " = " + attr.value);
 
                 switch (attr.name)
                 {
                     case "pitchWheel":
                         sliders.pitchWheel = [];
-                        sliders.pitchWheel = numberArray(attr.nodeValue);
+                        sliders.pitchWheel = numberArray(attr.value);
                         break;
                     case "pan":
                         sliders.pan = [];
-                        sliders.pan = numberArray(attr.nodeValue);
+                        sliders.pan = numberArray(attr.value);
                         break;
                     case "modulationWheel":
                         sliders.modulationWheel = [];
-                        sliders.modulationWheel = numberArray(attr.nodeValue);
+                        sliders.modulationWheel = numberArray(attr.value);
                         break;
                     case "expressionSlider":
                         sliders.expressionSlider = [];
-                        sliders.expressionSlider = numberArray(attr.nodeValue);
+                        sliders.expressionSlider = numberArray(attr.value);
                         break;
                     default:
                         throw (">>>>>>>>>> Illegal slider <<<<<<<<<<");
@@ -247,15 +247,15 @@ _AP.palettes = (function (document)
         {
             attr = restDefNode.attributes[i];
 
-            // console.log(attr.name + " = " + attr.nodeValue);
+            // console.log(attr.name + " = " + attr.value);
 
             switch (attr.name)
             {
                 case "id":
-                    attributes.id = attr.nodeValue; // a string
+                    attributes.id = attr.value; // a string
                     break;
                 case "msDuration":
-                    attributes.msDuration = parseInt(attr.nodeValue, 10);
+                    attributes.msDuration = parseInt(attr.value, 10);
                     break;
                 default:
                     throw (">>>>>>>>>> Illegal midiChord attribute  <<<<<<<<<<");
