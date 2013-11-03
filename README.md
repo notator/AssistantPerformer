@@ -14,7 +14,7 @@ http://www.w3.org/2011/audio/.
 
  
 
-Monophonic input, such as produced by an EWI (http://www.akaipro.com/ewiseries), is currently assumed. A MIDI keyboard can be used, but only one key at a time (incoming noteOffs are matched to noteOns, so playing legato is no problem). Timing is related to the times of single noteOns and noteOffs. In addition to noteOn/Off, pitch and velocity information, the performance can also be affected by the instrument's continuous controllers - modulation-wheel, pitch-wheel and aftertouch or channel-pressure.
+Monophonic input, such as produced by an EWI (http://www.akaipro.com/ewiseries), or R2M (http://www.doepfer.de/R2M.htm) is currently assumed. A MIDI keyboard can be used, but only one key at a time (incoming noteOffs are matched to noteOns, so playing legato is no problem). Timing is related to the times of single noteOns and noteOffs. In addition to noteOn/Off, pitch and velocity information, the performance can also be affected by the instrument's continuous controllers - modulation-wheel, pitch-wheel and aftertouch or channel-pressure.
 
 Future directions: I am currently working on the creation of more scores in the necessary format. Clearly, more examples are needed. New scores could be created in several ways:
 
@@ -101,9 +101,5 @@ A Sequence to Standard MIDI File conversion function.
 <br />
 <strong>scores</strong> - scores used by the files in the ap folder.<br />
 <br />
-
-James Ingram
-
-March 2013
 
 
