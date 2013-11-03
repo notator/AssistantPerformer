@@ -11,7 +11,7 @@
 *  
 */
 
-/*jslint bitwise: false, nomen: false, plusplus: true, white: true */
+/*jslint bitwise: false, nomen: true, plusplus: true, white: true */
 
 _AP.namespace('_AP.controls');
 
@@ -219,59 +219,39 @@ _AP.controls = (function (document, window)
         }
     },
 
+    setControlSubstitutionSelectorsDisabledState = function ()
+    {
+        if(mo.usesPressureSoloCheckbox.disabled === false && (mo.usesPressureSoloCheckbox.checked === true || mo.usesPressureOtherTracksCheckbox.checked === true))
+        {
+            mo.pressureSubstituteControlDataSelector.disabled = false;
+        }
+        else
+        {
+            mo.pressureSubstituteControlDataSelector.disabled = true;
+        }
+
+        if(mo.usesPitchBendSoloCheckbox.disabled === false && (mo.usesPitchBendSoloCheckbox.checked === true || mo.usesPitchBendOtherTracksCheckbox.checked === true))
+        {
+            mo.pitchBendSubstituteControlDataSelector.disabled = false;
+        }
+        else
+        {
+            mo.pitchBendSubstituteControlDataSelector.disabled = true;
+        }
+
+        if(mo.usesModSoloCheckbox.disabled === false && (mo.usesModSoloCheckbox.checked === true || mo.usesModOtherTracksCheckbox.checked === true))
+        {
+            mo.modSustituteControlSelector.disabled = false;
+        }
+        else
+        {
+            mo.modSustituteControlSelector.disabled = true;
+        }
+    },
+
     setMainOptionsState = function (mainOptionsState)
     {
         var inputDeviceIndex, scoreIndex, outputDeviceIndex;
-
-        function disableSelector(selector)
-        {
-            if (selector.disabled === false)
-            {
-                selector.disabled = true;
-                while (selector.options !== undefined && selector.options.length > 0)
-                {
-                    selector.remove(0);
-                }
-            }
-        }
-
-        function enableSelector(selector, defaultString)
-        {
-            var options, i, nOptions;
-            function populate(selector)
-            {
-                var 
-                i, nOptions = controlOptions.length,
-                    element, textNode;
-
-                for (i = 0; i < nOptions; ++i)
-                {
-                    element = document.createElement("option");
-                    textNode = document.createTextNode(controlOptions[i].name);
-                    element.appendChild(textNode);
-                    selector.add(element, null);
-                }
-            }
-
-            if (selector.disabled)
-            {
-                selector.disabled = false;
-                if (selector.selectedIndex < 0)
-                {
-                    populate(selector);
-                    options = selector.options;
-                    nOptions = options.length;
-                    for (i = 0; i < nOptions; ++i)
-                    {
-                        if (options[i].childNodes[0].nodeValue === defaultString)
-                        {
-                            selector.selectedIndex = i;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
 
         switch (mainOptionsState)
         {
@@ -299,15 +279,12 @@ _AP.controls = (function (document, window)
 
                     mo.usesPressureSoloCheckbox.disabled = true;
                     mo.usesPressureOtherTracksCheckbox.disabled = true;
-                    mo.pressureSubstituteControlDataSelector.disabled = true;
 
                     mo.usesModSoloCheckbox.disabled = true;
                     mo.usesModOtherTracksCheckbox.disabled = true;
-                    mo.modSustituteControlSelector.disabled = true;
 
                     mo.usesPitchBendSoloCheckbox.disabled = true;
                     mo.usesPitchBendOtherTracksCheckbox.disabled = true;
-                    mo.pitchBendSubstituteControlDataSelector.disabled = true;
 
                     mo.assistantsSpeedInputText.disabled = true;
                     mo.assistantUsesAbsoluteDurationsRadioButton.disabled = true;
@@ -326,43 +303,19 @@ _AP.controls = (function (document, window)
 
                     mo.usesPressureSoloCheckbox.disabled = false;
                     mo.usesPressureOtherTracksCheckbox.disabled = false;
-                    if (mo.usesPressureSoloCheckbox.checked || mo.usesPressureOtherTracksCheckbox.checked)
-                    {
-                        enableSelector(mo.pressureSubstituteControlDataSelector, "channel pressure");
-                    }
-                    else
-                    {
-                        disableSelector(mo.pressureSubstituteControlDataSelector);
-                    }
 
                     mo.usesPitchBendSoloCheckbox.disabled = false;
                     mo.usesPitchBendOtherTracksCheckbox.disabled = false;
-                    if (mo.usesPitchBendSoloCheckbox.checked || mo.usesPitchBendOtherTracksCheckbox.checked)
-                    {
-                        enableSelector(mo.pitchBendSubstituteControlDataSelector, "pitch wheel");
-                    }
-                    else
-                    {
-                        disableSelector(mo.pitchBendSubstituteControlDataSelector);
-                    }
 
                     mo.usesModSoloCheckbox.disabled = false;
                     mo.usesModOtherTracksCheckbox.disabled = false;
-                    if (mo.usesModSoloCheckbox.checked || mo.usesModOtherTracksCheckbox.checked)
-                    {
-                        enableSelector(mo.modSustituteControlSelector, "modulation (1)");
-                    }
-                    else
-                    {
-                        disableSelector(mo.modSustituteControlSelector);
-                    }
 
                     mo.assistantsSpeedInputText.disabled = false;
                     mo.assistantUsesAbsoluteDurationsRadioButton.disabled = false;
                     mo.assistantUsesRelativeDurationsRadioButton.disabled = false;
                     mo.assistantUsesRelativeDurationsRadioButtonLabel.disabled = false;
                 }
-                else // inputDevice === 0, scoreIndex > 0
+                else // inputDevice === 0, scoreIndex > 0 (The speed option can be used with or without a midi input device).
                 {
                     mo.trackSelector.disabled = true;
 
@@ -373,15 +326,12 @@ _AP.controls = (function (document, window)
 
                     mo.usesPressureSoloCheckbox.disabled = true;
                     mo.usesPressureOtherTracksCheckbox.disabled = true;
-                    mo.pressureSubstituteControlDataSelector.disabled = true;
 
                     mo.usesModSoloCheckbox.disabled = true;
                     mo.usesModOtherTracksCheckbox.disabled = true;
-                    mo.modSustituteControlSelector.disabled = true;
 
                     mo.usesPitchBendSoloCheckbox.disabled = true;
                     mo.usesPitchBendOtherTracksCheckbox.disabled = true;
-                    mo.pitchBendSubstituteControlDataSelector.disabled = true;
 
                     // The speed option can be used with or without a midi input device.
                     mo.assistantsSpeedInputText.disabled = false;
@@ -440,6 +390,8 @@ _AP.controls = (function (document, window)
             default:
                 throw "Unknown svgControlsState";
         }
+
+        setControlSubstitutionSelectorsDisabledState();
     },
 
     setStopped = function ()
@@ -849,6 +801,34 @@ _AP.controls = (function (document, window)
         }
     },
 
+    // Sets the states of the main options to the states they have when no score is selected.
+    // This function is called by both init() and setScoreDefaultOptions() below.
+    setMainOptionsDefaultStates = function ()
+    {
+        mo.trackSelector.selectedIndex = 0;
+
+        mo.soloPitchOptionCheckbox.checked = false;
+        mo.otherTracksPitchOptionCheckbox.checked = false;
+        mo.soloVelocityOptionCheckbox.checked = false;
+        mo.otherTracksVelocityOptionCheckbox.checked = false;
+
+        mo.usesPressureSoloCheckbox.checked = false;
+        mo.usesPressureOtherTracksCheckbox.checked = false;
+        mo.pressureSubstituteControlDataSelector.selectedIndex = 0;
+
+        mo.usesPitchBendSoloCheckbox.checked = false;
+        mo.usesPitchBendOtherTracksCheckbox.checked = false;
+        mo.pitchBendSubstituteControlDataSelector.selectedIndex = 2;
+
+        mo.usesModSoloCheckbox.checked = false;
+        mo.usesModOtherTracksCheckbox.checked = false;
+        mo.modSustituteControlSelector.selectedIndex = 3;
+
+        mo.assistantsSpeedInputText.value = "100";
+        mo.assistantUsesAbsoluteDurationsRadioButton.checked = false;
+        mo.assistantUsesRelativeDurationsRadioButton.checked = true;
+    },
+
     // Defines the window.svgLoaded(...) function.
     // Sets up the pop-up menues for scores and MIDI input and output devices.
     init = function (mAccess)
@@ -926,10 +906,32 @@ _AP.controls = (function (document, window)
         }
 
         // resets the score selector in case the browser has cached the last value
-        function initScoreSelector()
+        function initScoreSelector(runningMarkerHeightChanged)
         {
             mo.scoreSelector.selectedIndex = 0;
             score = new Score(runningMarkerHeightChanged); // an empty score, with callback function
+        }
+
+        function setControlOptionSelectors()
+        {
+            function populate(selector)
+            {
+                var
+                i, nOptions = controlOptions.length,
+                    element, textNode;
+
+                for(i = 0; i < nOptions; ++i)
+                {
+                    element = document.createElement("option");
+                    textNode = document.createTextNode(controlOptions[i].name);
+                    element.appendChild(textNode);
+                    selector.add(element, null);
+                }
+            }
+
+            populate(mo.pressureSubstituteControlDataSelector);
+            populate(mo.pitchBendSubstituteControlDataSelector);
+            populate(mo.modSustituteControlSelector);
         }
 
         function getControlLayers(document)
@@ -971,10 +973,9 @@ _AP.controls = (function (document, window)
         function runningMarkerHeightChanged(runningMarkerYCoordinates)
         {
             var div = svgPagesDiv,
-            height = Math.round(parseFloat(div.style.height)),
-            scrollTop = div.scrollTop;
+            height = Math.round(parseFloat(div.style.height));
 
-            if (runningMarkerYCoordinates.bottom > (height + scrollTop))
+            if (runningMarkerYCoordinates.bottom > (height + div.scrollTop))
             {
                 div.scrollTop = runningMarkerYCoordinates.top - 10;
             }
@@ -1002,15 +1003,217 @@ _AP.controls = (function (document, window)
 
         setMIDIDeviceSelectors(midiAccess);
 
-        initScoreSelector();
+        initScoreSelector(runningMarkerHeightChanged);
+
+        setControlOptionSelectors();
+
+        setMainOptionsDefaultStates();
 
         setSvgPagesDivHeight();
 
         getControlLayers(document);
 
         setSvgControlsState('disabled');
+    },
+ 
+    // Returns a scoreInfo object constructed from the id string of the score
+    // currently selected in the scoreSelector (Defined in assistantPerformer.html.)
+    // The id string must contain:
+    //    nameString followed by ", " followed by
+    //    "nPages="  followed by the number of pages (an integer of any length) followed by ", " followed by
+    //    "nTracks="  followed by the number of tracks (an integer of any length)  followed by ", "  followed by
+    //    zero or more default performer's options separated by ", " (see setDefaultPerformanceOptions() below)
+    //    zero or more default assistant's duration options separated by ", " (see setDefaultAssistantsDurationOptions() below)
+    // for example:
+    //    "Song Six, nPages=7, nTracks=6, po.pitchWheel.otherTracks"
+    // The nameString is used (twice) to construct the URLs for the score pages, for example:
+    // "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Song Six/Song Six page 1.svg"
+    //
+    // The scoreInfo object returned by this function has the following attributes:
+    //      scoreInfo.name (e.g. "Song Six"
+    //      scoreInfo.nPages (e.g. 7)
+    //      scoreInfo.nTracks (e.g. 8)
+    // and optionally (if present)
+    //      scoreInfo.defaultPerformanceOptions (see below)
+    // and optionally (if present)
+    //      scoreInfo.defaultAssistantsDurationOptions (see below)
+    getScoreInfo = function ()
+    {
+        var scoreSelectorElem = document.getElementById("scoreSelector"),
+            scoreInfoStrings, scoreInfoString, scoreInfo;
 
-        window.scrollTo(0, 0);
+        function getScoreInfoStrings(scoreSelectorElem)
+        {
+            var scoreInfoStrings = [], i, childNode;
+
+            for(i = 0 ; i < scoreSelectorElem.childNodes.length; ++i)
+            {
+                childNode = scoreSelectorElem.childNodes[i];
+                if(childNode.id !== undefined)
+                {
+                    scoreInfoStrings.push(childNode.id);
+                }
+            }
+            return scoreInfoStrings;
+        }
+
+        function analyseString(infoString)
+        {
+            var i, scoreInfo = {}, components;
+
+            // Default performer's options are all optional. Each begins with the string "po." followed by any of the following:
+            // (CheckBoxes are unchecked by default, they are checked if defined here.)
+            //    "track=" followed by the default track number (1..nTracks)
+            //    "pitch.soloTrack" and/or "pitch.otherTracks"
+            //    "velocity.soloTrack" and/or "velocity.otherTracks"
+            //    "aftertouch.soloTrack" and/or "aftertouch.otherTracks" and ("aftertouch.selectedIndex=" followed by the selector's index)
+            //    "pitchWheel.soloTrack" and/or "pitchWheel.otherTracks" and ("pitchWheel.selectedIndex=" followed by the selector's index)
+            //    "modWheel.soloTrack" and/or "modWheel.otherTracks" and ("modWheel.selectedIndex=" followed by the selector's index)
+            //
+            // In this function, the optionString argument is the part of the option string after "po."
+            function setDefaultPerformanceOptions(defaultPerformanceOptions, optionString)
+            {
+                // soloTrackOtherTracksString is either "soloTrack" or "otherTracks"
+                function setSoloOtherOption(option, soloTrackOtherTracksString)
+                {
+                    if(soloTrackOtherTracksString === "soloTrack")
+                    {
+                        option.soloTrack = true;
+                    }
+                    else if(soloTrackOtherTracksString === "otherTracks")
+                    {
+                        option.otherTracks = true;
+                    }
+                }
+
+                if(optionString.slice(0, 6) === "track=")
+                {
+                    defaultPerformanceOptions.track = parseInt(optionString.slice(6), 10);
+                }
+                else if(optionString.slice(0, 6) === "pitch.")
+                {
+                    if(defaultPerformanceOptions.pitch === undefined)
+                    {
+                        defaultPerformanceOptions.pitch = {};
+                    }
+                    setSoloOtherOption(defaultPerformanceOptions.pitch, optionString.slice(6));
+                }
+                else if(optionString.slice(0, 9) === "velocity.")
+                {
+                    if(defaultPerformanceOptions.velocity === undefined)
+                    {
+                        defaultPerformanceOptions.velocity = {};
+                    }
+                    setSoloOtherOption(defaultPerformanceOptions.velocity, optionString.slice(9));
+                }
+                else if(optionString.slice(0, 11) === "aftertouch.")
+                {
+                    if(defaultPerformanceOptions.aftertouch === undefined)
+                    {
+                        defaultPerformanceOptions.aftertouch = {};
+                    }
+                    if(optionString.slice(0, 25) === "aftertouch.selectedIndex=")
+                    {
+                        defaultPerformanceOptions.aftertouch.selectedIndex = parseInt(optionString.slice(25), 10);
+                    }
+                    else
+                    {
+                        setSoloOtherOption(defaultPerformanceOptions.aftertouch, optionString.slice(11));
+                    }
+                }
+                else if(optionString.slice(0, 11) === "pitchWheel.")
+                {
+                    if(defaultPerformanceOptions.pitchWheel === undefined)
+                    {
+                        defaultPerformanceOptions.pitchWheel = {};
+                    }
+                    if(optionString.slice(0, 25) === "pitchWheel.selectedIndex=")
+                    {
+                        defaultPerformanceOptions.pitchWheel.selectedIndex = parseInt(optionString.slice(25), 10);
+                    }
+                    else
+                    {
+                        setSoloOtherOption(defaultPerformanceOptions.pitchWheel, optionString.slice(11));
+                    }
+                }
+                else if(optionString.slice(0, 9) === "modWheel.")
+                {
+                    if(defaultPerformanceOptions.modWheel === undefined)
+                    {
+                        defaultPerformanceOptions.modWheel = {};
+                    }
+                    if(optionString.slice(0, 23) === "modWheel.selectedIndex=")
+                    {
+                        defaultPerformanceOptions.modWheel.selectedIndex = parseInt(optionString.slice(23), 10);
+                    }
+                    else
+                    {
+                        setSoloOtherOption(defaultPerformanceOptions.modWheel, optionString.slice(9));
+                    }
+                }
+            }
+
+            // Default assistant's duration options begin with the string "ado." followed by
+            //    "speed=" followed by the (float) string to be put in the text box (e.g. "speed=26"). Default is speed=100.
+            //    "fixedSpeed" Default is variable speed.
+            //
+            // In this function, the optionString argument is the part of the option string after "ado."
+            function setDefaultAssistantsDurationOptions(defaultAssistantsDurationOptions, optionString)
+            {
+                if(optionString.slice(0, 6) === "speed=")
+                {
+                    defaultAssistantsDurationOptions.speed = optionString.slice(6);
+                }
+                else if(optionString === "fixedSpeed") // default is variable speed
+                {
+                    defaultAssistantsDurationOptions.fixedSpeed = true;
+                }
+            }
+
+            components = infoString.split(", ");
+
+            if(components.length < 3 || components[1].slice(0, 7) !== "nPages=" || components[2].slice(0, 8) !== "nTracks=")
+            {
+                throw "Illegal id string in assistantPerformer.html";
+            }
+
+            scoreInfo.name = components[0];
+            scoreInfo.nPages = parseInt(components[1].slice(7), 10);
+            scoreInfo.nTracks = parseInt(components[2].slice(8), 10);
+
+            if(components.length > 3)
+            {
+                for(i = 3; i < components.length; ++i)
+                {
+                    if(components[i].slice(0, 3) === "po.")
+                    {
+                        if(scoreInfo.defaultPerformanceOptions === undefined)
+                        {
+                            scoreInfo.defaultPerformanceOptions = {};
+                        }
+                        setDefaultPerformanceOptions(scoreInfo.defaultPerformanceOptions, components[i].slice(3));
+                    }
+                    else if(components[i].slice(0, 4) === "ado.")
+                    {
+                        if(scoreInfo.defaultAssistantsDurationOptions === undefined)
+                        {
+                            scoreInfo.defaultAssistantsDurationOptions = {};
+                        }
+                        setDefaultAssistantsDurationOptions(scoreInfo.defaultAssistantsDurationOptions, components[i].slice(4));
+                    }
+                }
+            }
+
+            return scoreInfo;
+        }
+
+        scoreInfoStrings = getScoreInfoStrings(scoreSelectorElem);
+
+        scoreInfoString = scoreInfoStrings[scoreSelectorElem.selectedIndex];
+
+        scoreInfo = analyseString(scoreInfoString);
+
+        return scoreInfo;
     },
 
     // called when the user clicks a control in the GUI
@@ -1023,71 +1226,6 @@ _AP.controls = (function (document, window)
         function setScore()
         {
             var scoreInfo;
-
-            function getScoreInfo()
-            {
-                var scoreSelectorElem = document.getElementById("scoreSelector"),
-                    scoreInfoStrings, scoreInfoString, scoreInfo;
-
-                function getScoreInfoStrings(scoreSelectorElem)
-                {
-                    var scoreInfoStrings = [], i, childNode;
-
-                    for(i = 0 ; i < scoreSelectorElem.childNodes.length; ++i)
-                    {
-                        childNode = scoreSelectorElem.childNodes[i];
-                        if(childNode.id !== undefined)
-                        {
-                            scoreInfoStrings.push(childNode.id);
-                        }
-                    }
-                    return scoreInfoStrings;
-                }
-
-                function analyseString(infoString)
-                {
-                    // sets
-                    // scoreInfo.name
-                    // scoreInfo.nPages
-                    // scoreInfo.nTracks
-                    // "Song Six, nPages=3, nTracks=3"
-
-                    var scoreInfo = {}, components;
-
-                    components = infoString.split(", ");
-
-                    if(components.length !== 3 || components[1].slice(0, 7) !== "nPages=" || components[2].slice(0, 8) !== "nTracks=")
-                    {
-                        throw "Illegal id string in assistantPerformer.html";
-                        // The string must contain:
-                        //    nameString followed by
-                        //    ", " followed by
-                        //    "nPages="  followed by
-                        //    the number of pages (an integer of any length) followed by
-                        //    ", " followed by
-                        //    "nTracks="  followed by
-                        //    the number of tracks (an integer of any length)
-                        // for example:
-                        //    "Song Six, nPages=3, nTracks=3"
-                        // The name part is used (twice) to construct the URLs for the score pages, for example:
-                        // "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Song Six/Song Six page 1.svg"
-                    }
-
-                    scoreInfo.name = components[0];
-                    scoreInfo.nPages = parseInt(components[1].slice(7), 10);
-                    scoreInfo.nTracks = parseInt(components[2].slice(8), 10);
-
-                    return scoreInfo;
-                }
-
-                scoreInfoStrings = getScoreInfoStrings(scoreSelectorElem);
-
-                scoreInfoString = scoreInfoStrings[scoreSelectorElem.selectedIndex];
-
-                scoreInfo = analyseString(scoreInfoString);
-
-                return scoreInfo;
-            }
 
             // removes existing mo.trackSelector.ChildNodes
             // adds nTracks new child nodes
@@ -1156,8 +1294,10 @@ _AP.controls = (function (document, window)
             }
 
             scoreInfo = getScoreInfo();
+
             setPages(scoreInfo);
             setPerformersTrackSelector(scoreInfo.nTracks);
+
             tracksControl.setNumberOfTracks(scoreInfo.nTracks);
 
             svgPagesDiv.scrollTop = 0;
@@ -1246,6 +1386,106 @@ _AP.controls = (function (document, window)
             }
         }
 
+        function setScoreDefaultOptions()
+        {
+            var 
+            scoreInfo = getScoreInfo(),
+            dpo = scoreInfo.defaultPerformanceOptions,
+            dado = scoreInfo.defaultAssistantsDurationOptions;
+
+            setMainOptionsDefaultStates(); // also called by init() above
+
+            if(dpo !== undefined)
+            {
+                if(dpo.track !== undefined)
+                {
+                    mo.trackSelector.selectedIndex = dpo.track - 1;
+                }
+                if(dpo.pitch !== undefined)
+                {
+                    if(dpo.pitch.soloTrack !== undefined)
+                    {
+                        mo.soloPitchOptionCheckbox.checked = true;
+                    }
+                    if(dpo.pitch.otherTracks !== undefined)
+                    {
+                        mo.otherTracksPitchOptionCheckbox.checked = true;
+                    }
+                }
+                if(dpo.velocity !== undefined)
+                {
+                    if(dpo.velocity.soloTrack !== undefined)
+                    {
+                        mo.soloVelocityOptionCheckbox.checked = true;
+                    }
+                    if(dpo.velocity.otherTracks !== undefined)
+                    {
+                        mo.otherTracksVelocityOptionCheckbox.checked = true;
+                    }
+                }
+                if(dpo.aftertouch !== undefined)
+                {
+                    if(dpo.aftertouch.soloTrack !== undefined)
+                    {
+                        mo.usesPressureSoloCheckbox.checked = true;
+                    }
+                    if(dpo.aftertouch.otherTracks !== undefined)
+                    {
+                        mo.usesPressureOtherTracksCheckbox.checked = true;
+                    }
+                    if(dpo.aftertouch.selectedIndex !== undefined)
+                    {
+                        mo.pressureSubstituteControlDataSelector.selectedIndex = dpo.aftertouch.selectedIndex;
+                    }
+                }
+                if(dpo.pitchWheel !== undefined)
+                {
+                    if(dpo.pitchWheel.soloTrack !== undefined)
+                    {
+                        mo.usesPitchBendSoloCheckbox.checked = true;
+                    }
+                    if(dpo.pitchWheel.otherTracks !== undefined)
+                    {
+                        mo.usesPitchBendOtherTracksCheckbox.checked = true;
+                    }
+                    if(dpo.pitchWheel.selectedIndex !== undefined)
+                    {
+                        mo.pitchBendSubstituteControlDataSelector.selectedIndex = dpo.pitchWheel.selectedIndex;
+                    }
+                }
+                if(dpo.modWheel !== undefined)
+                {
+                    if(dpo.modWheel.soloTrack !== undefined)
+                    {
+                        mo.usesModSoloCheckbox.checked = true;
+                    }
+                    if(dpo.modWheel.otherTracks !== undefined)
+                    {
+                        mo.usesModOtherTracksCheckbox.checked = true;
+                    }
+                    if(dpo.modWheel.selectedIndex !== undefined)
+                    {
+                        mo.modSustituteControlSelector.selectedIndex = dpo.modWheel.selectedIndex;
+                    }
+                }
+            }
+
+            if(dado !== undefined)
+            {
+                if(dado.speed !== undefined)
+                {
+                    mo.assistantsSpeedInputText.value = dado.speed;
+                }
+                if(dado.fixedSpeed !== undefined)
+                {
+                    mo.assistantUsesAbsoluteDurationsRadioButton.checked = true;
+                    mo.assistantUsesRelativeDurationsRadioButton.checked = false;
+                }
+            }
+
+            setControlSubstitutionSelectorsDisabledState();
+        }
+
         /**** controls in options panel ***/
         if (controlID === "midiInputDeviceSelector"
         || controlID === "scoreSelector"
@@ -1266,12 +1506,20 @@ _AP.controls = (function (document, window)
         {
             setMIDIDevices();
             tracksControl.setInitialTracksControlState(mo.midiInputDeviceSelector.selectedIndex > 0, mo.trackSelector.selectedIndex);
+            if(mo.scoreSelector.selectedIndex > 0)
+            {
+                setScoreDefaultOptions();
+            }
         }
 
         if (controlID === "scoreSelector")
         {
             setScore();
             tracksControl.setInitialTracksControlState(mo.trackSelector.selectedIndex >= 0, mo.trackSelector.selectedIndex);
+            if(mo.midiInputDeviceSelector.selectedIndex > 0)
+            {
+                setScoreDefaultOptions();
+            }
         }
 
         if (controlID === "midiOutputDeviceSelector")
@@ -1348,7 +1596,6 @@ _AP.controls = (function (document, window)
             {
                 setSvgControlsState('disabled');
                 score.moveStartMarkerToTop(svgPagesDiv);
-                window.scrollTo(0, 0);
                 scoreHasJustBeenSelected = false;
             }
         }

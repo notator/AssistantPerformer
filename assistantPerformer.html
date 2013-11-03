@@ -309,7 +309,13 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
                         <option id="choose a score, nPages=0, nTracks=0">choose a score</option>
                         <option id="Study 2c3.1, nPages=3, nTracks=3">Study 2c3.1</option>
                         <option id="Study 3 sketch 1, nPages=2, nTracks=8">Study 3 sketch 1</option>
-                        <option id="Song Six, nPages=7, nTracks=6">Song Six</option>
+                        <option id="Song Six, nPages=7, nTracks=6, po.pitchWheel.otherTracks">Song Six</option>
+                        <!-------------------------------------------------------------------------------------
+                            See getScoreInfo() in Controls.js. for a description of how to set these id strings.
+                            The Performance Options (po.) and Assistant's Duration Options (ado.) are optional.
+                            Here is an example, using the complete set:
+                            <option id="Song Six, nPages=7, nTracks=6, po.track=4, po.pitch.soloTrack, po.pitch.otherTracks, po.velocity.soloTrack, po.velocity.otherTracks, po.aftertouch.soloTrack, po.aftertouch.otherTracks, po.aftertouch.selectedIndex=5, po.pitchWheel.soloTrack, po.pitchWheel.otherTracks, po.pitchWheel.selectedIndex=6, po.modWheel.soloTrack, po.modWheel.otherTracks, po.modWheel.selectedIndex=7, ado.speed=57.5, ado.fixedSpeed">Song Six</option>
+                        ---------------------------------------------------------------------------------------->
                     </select>
                     <select id="midiOutputDeviceSelector"
                         name="midiOutputDeviceSelector"
@@ -413,7 +419,7 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
                                         </div>
                                         <div style="margin-left: 20px; line-height: 16px; display: table-row; vertical-align: middle">
                                             <div style="text-align: right; display: table-cell; padding-right: 5px;">
-                                                <label id="aftertouchLabel" for="usesPressureSoloCheckbox" style="vertical-align: middle">aftertouch (breath)</label>
+                                                <label id="aftertouchLabel" for="usesPressureSoloCheckbox" style="vertical-align: middle">aftertouch</label>
                                             </div>
                                             <div class="checkboxCell">
                                                 <input type="checkbox" id="usesPressureSoloCheckbox" class="standardCheckBox14px"
@@ -431,7 +437,7 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
                                         </div>
                                         <div style="margin-left: 20px; line-height: 16px; display: table-row; vertical-align: middle">
                                             <div style="text-align: right; display: table-cell; padding-right: 5px;">
-                                                <label id="pitchWheelLabel" for="usesPitchBendSoloCheckbox" style="vertical-align: middle">pitch wheel (pitch bend)</label>
+                                                <label id="pitchWheelLabel" for="usesPitchBendSoloCheckbox" style="vertical-align: middle">pitch wheel</label>
                                             </div>
                                             <div class="checkboxCell">
                                                 <input type="checkbox" id="usesPitchBendSoloCheckbox" class="standardCheckBox14px"
@@ -449,7 +455,7 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
                                         </div>
                                         <div style="margin-left: 20px; line-height: 16px; display: table-row; vertical-align: middle">
                                             <div style="text-align: right; display: table-cell; padding-right: 5px;">
-                                                <label id="modWheelLabel" for="usesModSoloCheckbox" style="vertical-align: middle">mod wheel (bite)</label>
+                                                <label id="modWheelLabel" for="usesModSoloCheckbox" style="vertical-align: middle">mod wheel</label>
                                             </div>
                                             <div class="checkboxCell">
                                                 <input type="checkbox" id="usesModSoloCheckbox" class="standardCheckBox14px"
