@@ -18,6 +18,7 @@ _AP.namespace('_AP.assistant');
 _AP.assistant = (function (window)
 {
     "use strict";
+
     // begin var
     var
     CMD = MIDILib.constants.COMMAND,
@@ -25,6 +26,10 @@ _AP.assistant = (function (window)
     Moment = MIDILib.moment.Moment,
     Sequence = MIDILib.sequence.Sequence,
 
+    // If the volume control is overridden, the sent volume will be this value
+    // plus half the performed value. The sent value thus never exceeds 127.
+    MINIMUM_VOLUME = 64,
+ 
     outputDevice,
     trackIsOnArray,
 
@@ -54,7 +59,6 @@ _AP.assistant = (function (window)
     nextIndex = 0, // the index of the sequence which will be played when a noteOn evt arrives
     performanceStartNow, // set when the first sequence starts, used to set the reported duration of the performance 
     sequenceStartNow, // set when a sequence starts playing 
-    pausedNow = 0.0, // used only with the relative durations option (the time at which the sequence was paused).
 
     stopped = true,
     paused = false,
@@ -84,7 +88,7 @@ _AP.assistant = (function (window)
     // b) assumes that RealTime messages will not interrupt the messages being received.    
     handleMIDIInputEvent = function (msg)
     {
-        var inputEvent;
+        var inputEvent, command;
 
         // The returned object is either empty, or has .data and .receivedTime attributes,
         // and so constitutes a timestamped Message. (Web MIDI API simply calls this an Event)
@@ -171,9 +175,13 @@ _AP.assistant = (function (window)
                         CMD = MIDILib.constants.COMMAND,
                         message = null;
 
-                        if (controlData.midiControl !== undefined)
+                        if (controlData.midiControl !== undefined) // a normal control
                         {
-                            // a normal control
+                            if(controlData.midiControl === MIDILib.constants.CONTROL.VOLUME)
+                            {
+                                value = Math.floor(value / 2) + MINIMUM_VOLUME;
+                            }
+
                             message = new Message(CMD.CONTROL_CHANGE + channel, controlData.midiControl, value);
                         }
                         else if (controlData.command !== undefined)
@@ -628,9 +636,10 @@ _AP.assistant = (function (window)
 
         if (inputEvent.data !== undefined)
         {
-            switch (inputEvent.command())
+            command = inputEvent.command();
+            switch(command)
             {
-                case CMD.CHANNEL_PRESSURE: // produced by my E-MU XBoard49 when using "aftertouch"
+                case CMD.CHANNEL_PRESSURE: // produced by both R2M and E-MU XBoard49 when using "aftertouch"
                     //console.log("ChannelPressure, data[1]:", inputEvent.data[1].toString());  // CHANNEL_PRESSURE control has no data[2]
                     if (options.pressureSubstituteControlData !== null)
                     {
@@ -650,12 +659,11 @@ _AP.assistant = (function (window)
                                                     options.usesPressureSolo, options.usesPressureOtherTracks);
                     }
                     break;
-                case CMD.MODULATION_WHEEL: // EWI bite, EMU modulation wheel (CC 1, Coarse Modulation)
-                    //console.log("Mod Wheel, data[1]:", inputEvent.data[1].toString() + " data[2]:", inputEvent.data[2].toString());
-                    if (options.modSubstituteControlData !== null)
+                case CMD.CONTROL_CHANGE: // sent when the input device's mod wheel changes.
+                    // (EWI bite, EMU modulation wheel (CC 1, Coarse Modulation))
+                    if(inputEvent.data[1] === MIDILib.constants.CONTROL.MODWHEEL && options.modSubstituteControlData !== null)
                     {
-                        // MODULATION_WHEEL.data[1] is the 7-bit LSB (0..127) -- ignored here
-                        // MODULATION_WHEEL.data[2] is the 7-bit MSB (0..127)
+                        // inputEvent.data[2] is the value to which to set the changed control
                         handleController(options.modSubstituteControlData, inputEvent.data[2],
                                                     options.usesModSolo, options.usesModOtherTracks);
                     }
@@ -706,7 +714,6 @@ _AP.assistant = (function (window)
                 currentIndex = -1;
                 endOfPerformance = false;
                 nextIndex = 0;
-                pausedNow = 0.0; // used only with the relative durations option (the time at which the sequence was paused).
                 stopped = true;
                 paused = false;
                 break;
@@ -743,8 +750,6 @@ _AP.assistant = (function (window)
     {
         if (stopped === false && paused === false)
         {
-            pausedNow = performance.now();
-
             performedSequences[currentIndex].pause();
             setState("paused");
         }
