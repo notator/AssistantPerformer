@@ -36,6 +36,7 @@ MIDILib.standardMIDIFile = (function ()
     var
     // Returns the number of bytes used by the MIDI 'variable length value' corresponding 
     // to the argument value.
+    // The argument 'value' should never be negative.
     _variableLengthValueLength = function (value)
     {
         var length;
@@ -70,6 +71,7 @@ MIDILib.standardMIDIFile = (function ()
 
     // Returns a Uint8Array of the correct length, containing the
     // argument value as a MIDI 'variable length value'.
+    // Steps have been taken to ensure that value is never negative here.
     _getVariableLengthValue = function (value)
     {
         var 
@@ -326,8 +328,15 @@ MIDILib.standardMIDIFile = (function ()
                     for (i = 0; i < nMessages; ++i)
                     {
                         msg = trackMessages[i];
-                        timeOffset = msg.timestamp - previousTimestamp;
-                        previousTimestamp = msg.timestamp;
+                        if(msg.timestamp > previousTimestamp)
+                        {
+                            timeOffset = msg.timestamp - previousTimestamp;
+                            previousTimestamp = msg.timestamp;
+                        }
+                        else
+                        {
+                            timeOffset = 0;
+                        }
 
                         variableLengthTime = _getVariableLengthValue(timeOffset);
                         variableLengthTimeLength = variableLengthTime.length;
@@ -360,7 +369,15 @@ MIDILib.standardMIDIFile = (function ()
                     // the last chord in the track. Probably a safety measure!
                     // Quicktime is also playing the last chord now! 
 
-                    timeOffset = endOfTrackTimestamp - previousTimestamp;
+                    if(endOfTrackTimestamp > previousTimestamp)
+                    {
+                        timeOffset = endOfTrackTimestamp - previousTimestamp;
+                    }
+                    else
+                    {
+                        timeOffset = 0;
+                    }
+
                     variableLengthTime = _getVariableLengthValue(timeOffset);
                     variableLengthTimeLength = variableLengthTime.length;
                     for (j = 0; j < variableLengthTimeLength; ++j)
