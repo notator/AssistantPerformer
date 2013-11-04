@@ -292,14 +292,12 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
             </div>
             <div id="options" class="options">
                 <div style="font-size: 14px;">
-                    options
-                   
+                    options          
                 </div>
                 <div class="helpColour">
-                    MIDI devices will only be recognized if they are connected and switched on before loading this page.
-                   
+                    MIDI devices will only be recognized if they are connected and switched on before loading this page.                
                 </div>
-                <div style="margin-top: 6px">
+                <div id="deviceAndScoreSelectors" style="margin-top: 6px">
                     <select id="midiInputDeviceSelector"
                         name="midiInputDeviceSelector"
                         class="deviceSelector" onchange="_AP.controls.doControl('midiInputDeviceSelector')">
@@ -309,23 +307,21 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
                         <option id="choose a score, nPages=0, nTracks=0">choose a score</option>
                         <option id="Study 2c3.1, nPages=3, nTracks=3">Study 2c3.1</option>
                         <option id="Study 3 sketch 1, nPages=2, nTracks=8">Study 3 sketch 1</option>
-                        <option id="Song Six, nPages=7, nTracks=6, po.pitchWheel.otherTracks">Song Six</option>
+                        <option id="Song Six, nPages=7, nTracks=6, po.pressure.otherTracks, po.pressure.selectedIndex=6, po.pitchWheel.otherTracks, po.pitchWheel.selectedIndex=2, po.modWheel.otherTracks, po.modWheel.selectedIndex=6">Song Six</option>
                         <!-------------------------------------------------------------------------------------
-                            See getScoreInfo() in Controls.js. for a description of how to set these id strings.
+                            See getScoreInfo() in Controls.js. for a description of how to set the above id strings.
                             The Performance Options (po.) and Assistant's Duration Options (ado.) are optional.
                             Here is an example, using the complete set:
-                            <option id="Song Six, nPages=7, nTracks=6, po.track=4, po.pitch.soloTrack, po.pitch.otherTracks, po.velocity.soloTrack, po.velocity.otherTracks, po.aftertouch.soloTrack, po.aftertouch.otherTracks, po.aftertouch.selectedIndex=5, po.pitchWheel.soloTrack, po.pitchWheel.otherTracks, po.pitchWheel.selectedIndex=6, po.modWheel.soloTrack, po.modWheel.otherTracks, po.modWheel.selectedIndex=7, ado.speed=57.5, ado.fixedSpeed">Song Six</option>
+                            <option id="Song Six, nPages=7, nTracks=6, po.track=4, po.pitch.soloTrack, po.pitch.otherTracks, po.velocity.soloTrack, po.velocity.otherTracks, po.pressure.soloTrack, po.pressure.otherTracks, po.pressure.selectedIndex=5, po.pitchWheel.soloTrack, po.pitchWheel.otherTracks, po.pitchWheel.selectedIndex=6, po.modWheel.soloTrack, po.modWheel.otherTracks, po.modWheel.selectedIndex=7, ado.speed=57.5, ado.fixedSpeed">Song Six</option>
                         ---------------------------------------------------------------------------------------->
                     </select>
                     <select id="midiOutputDeviceSelector"
                         name="midiOutputDeviceSelector"
                         class="deviceSelector" onchange="_AP.controls.doControl('midiOutputDeviceSelector')">
                     </select>
-
                 </div>
                 <div id="performersOptions" class="optionsPanel">
-                    Performer's options:
-                       
+                    Performer's options:                 
                         <div style="display: table">
                             <div style="display: table-row;">
                                 <div style="display: table-cell; text-align: center; width: 80px; padding-left: 24px;">
@@ -394,23 +390,19 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
                                 <div style="display: table-cell; padding-left: 40px;">
                                     <div class="helpColour">
                                         Add live controller information to the information in the score:
-                               
                                     </div>
                                     <div style="display: table">
                                         <div style="display: table-row;">
                                             <div style="text-align: right; display: table-cell; padding-right: 3px;">
                                                 Continuous controllers:
-                                       
                                             </div>
                                             <div class="checkboxCell">
                                                 solo<br />
                                                 track
-                                       
                                             </div>
                                             <div class="checkboxCell">
                                                 other<br />
-                                                tracks
-                                       
+                                                tracks                                      
                                             </div>
                                             <div style="display: table-cell;">
                                                 &nbsp;
@@ -419,7 +411,7 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
                                         </div>
                                         <div style="margin-left: 20px; line-height: 16px; display: table-row; vertical-align: middle">
                                             <div style="text-align: right; display: table-cell; padding-right: 5px;">
-                                                <label id="aftertouchLabel" for="usesPressureSoloCheckbox" style="vertical-align: middle">aftertouch</label>
+                                                <label id="pressureLabel" for="usesPressureSoloCheckbox" style="vertical-align: middle">aftertouch/channel pressure</label>
                                             </div>
                                             <div class="checkboxCell">
                                                 <input type="checkbox" id="usesPressureSoloCheckbox" class="standardCheckBox14px"
@@ -516,7 +508,7 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
                 </div>
                 <input id="startRuntimeButton" type="button" value="not ready"
                     onclick="_AP.controls.beginRuntime()" disabled="disabled"
-                    style="margin-top: 8px; font-size: 13px; width: 100px; height: 24px;" />
+                    style="margin-top: 8px; font-size: 13px; width: 200px; height: 28px;" />
             </div>
         </div>
     </div>

@@ -1066,7 +1066,7 @@ _AP.controls = (function (document, window)
             //    "track=" followed by the default track number (1..nTracks)
             //    "pitch.soloTrack" and/or "pitch.otherTracks"
             //    "velocity.soloTrack" and/or "velocity.otherTracks"
-            //    "aftertouch.soloTrack" and/or "aftertouch.otherTracks" and ("aftertouch.selectedIndex=" followed by the selector's index)
+            //    "pressure.soloTrack" and/or "pressure.otherTracks" and ("pressure.selectedIndex=" followed by the selector's index)
             //    "pitchWheel.soloTrack" and/or "pitchWheel.otherTracks" and ("pitchWheel.selectedIndex=" followed by the selector's index)
             //    "modWheel.soloTrack" and/or "modWheel.otherTracks" and ("modWheel.selectedIndex=" followed by the selector's index)
             //
@@ -1106,19 +1106,19 @@ _AP.controls = (function (document, window)
                     }
                     setSoloOtherOption(defaultPerformanceOptions.velocity, optionString.slice(9));
                 }
-                else if(optionString.slice(0, 11) === "aftertouch.")
+                else if(optionString.slice(0, 9) === "pressure.")
                 {
-                    if(defaultPerformanceOptions.aftertouch === undefined)
+                    if(defaultPerformanceOptions.pressure === undefined)
                     {
-                        defaultPerformanceOptions.aftertouch = {};
+                        defaultPerformanceOptions.pressure = {};
                     }
-                    if(optionString.slice(0, 25) === "aftertouch.selectedIndex=")
+                    if(optionString.slice(0, 23) === "pressure.selectedIndex=")
                     {
-                        defaultPerformanceOptions.aftertouch.selectedIndex = parseInt(optionString.slice(25), 10);
+                        defaultPerformanceOptions.pressure.selectedIndex = parseInt(optionString.slice(23), 10);
                     }
                     else
                     {
-                        setSoloOtherOption(defaultPerformanceOptions.aftertouch, optionString.slice(11));
+                        setSoloOtherOption(defaultPerformanceOptions.pressure, optionString.slice(9));
                     }
                 }
                 else if(optionString.slice(0, 11) === "pitchWheel.")
@@ -1423,19 +1423,19 @@ _AP.controls = (function (document, window)
                         mo.otherTracksVelocityOptionCheckbox.checked = true;
                     }
                 }
-                if(dpo.aftertouch !== undefined)
+                if(dpo.pressure !== undefined)
                 {
-                    if(dpo.aftertouch.soloTrack !== undefined)
+                    if(dpo.pressure.soloTrack !== undefined)
                     {
                         mo.usesPressureSoloCheckbox.checked = true;
                     }
-                    if(dpo.aftertouch.otherTracks !== undefined)
+                    if(dpo.pressure.otherTracks !== undefined)
                     {
                         mo.usesPressureOtherTracksCheckbox.checked = true;
                     }
-                    if(dpo.aftertouch.selectedIndex !== undefined)
+                    if(dpo.pressure.selectedIndex !== undefined)
                     {
-                        mo.pressureSubstituteControlDataSelector.selectedIndex = dpo.aftertouch.selectedIndex;
+                        mo.pressureSubstituteControlDataSelector.selectedIndex = dpo.pressure.selectedIndex;
                     }
                 }
                 if(dpo.pitchWheel !== undefined)
