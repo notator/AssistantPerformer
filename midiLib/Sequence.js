@@ -21,8 +21,8 @@
 *           // Start playing (part of) the Sequence.
 *           // Arguments:
 *           // midiOutdevice: the MIDI output device
-*           // fromMsPositionInScore, toMsPositionInScore: the part of the sequence to play 
-*           //      (not including toMsPositionInScore)
+*           // startMarkerMsPosition, endMarkerMsPosition: the part of the sequence to play 
+*           //      (not including endMarkerMsPosition)
 *           // trackIsOnArray[trackIndex] returns a boolean which determines whether the track will
 *           //       be played or not. This array is read only.
 *           // [optional] recording: a sequence in which the performed messages will be recorded.
@@ -30,7 +30,7 @@
 *           // [optional] reportMsPositionInScoreCallback: called whenever a cursor needs to be updated
 *           //       in the score.
 *           //  The optional arguments can either be missing or null.
-*           playSpan(midiOutDevice, fromMsPositionInScore, toMsPositionInScore, trackIsOnArray,
+*           playSpan(midiOutDevice, startMarkerMsPosition, endMarkerMsPosition, trackIsOnArray,
 *                    recording, reportEndOfSpanCallback, reportMsPositionInScoreCallback)
 *       
 *           // pause a running performance
@@ -223,7 +223,7 @@ MIDILib.sequence = (function (window)
                 for (i = 0; i < nTracks; ++i)
                 {
                     track = the.tracks[i];
-                    if (track.isPerforming && track.currentIndex < track.toIndex)
+                    if(track.isPerforming && track.currentIndex <= track.toIndex)
                     {
                         moment = track.moments[track.currentIndex];
                         if (moment.msPositionInScore < minMsPositionInScore)
@@ -254,6 +254,7 @@ MIDILib.sequence = (function (window)
                     {
                         // the position will be reported by tick() when nextMomt is sent.
                         msPositionToReport = nextMomt.msPositionInScore;
+                        //console.log("msPositionToReport=" + msPositionToReport);
                     }
 
                     nextMomt.timestamp = timeReSequence(nextMomt) + sequenceStartTime;
@@ -411,8 +412,9 @@ MIDILib.sequence = (function (window)
         },
 
         // playSpan();
-        // Note that the moment at toMsPositionInScore is not part of the span,
-        // but the span ends at the end of its last Moment (at toMsPositioninScore).
+        // Note that the moment at endMarkerMsPosition will NOT be played as part of the span.
+        // endMarkerMsPosition is the msPosition of the endMarker, and moments on the endMarker
+        // are never performed.
         //
         // trackIsOnArray[trackIndex] returns a boolean which determines whether the track will
         // be played or not. This array belongs to its creator, and is read only.
@@ -438,16 +440,19 @@ MIDILib.sequence = (function (window)
         // chord and rest symbols in the score, and so to synchronize the running cursor.
         // Moments whose msPositionInScore is to be reported are given chordStart or restStart
         // attributes before playSpan() is called.
-        playSpan = function (midiOutDevice, fromMsPositionInScore, toMsPositionInScore, trackIsOnArray,
+        playSpan = function (midiOutDevice, startMarkerMsPosition, endMarkerMsPosition, trackIsOnArray,
                                 recording, reportEndOfSpanCallback, reportMsPositionInScoreCallback)
         {
             var firstMomentInThisSequence;
 
-            // Sets each track's isPerforming attribute. If the track is performing,
-            // its fromIndex, currentIndex and toIndex attributes are also set.
-            // Sets each performing track to contain all the moments between msOffsetFromStartOfScore
-            // and the last moment before toMsPositionInScore
-            function setTrackAttributes(tracks, trackIsOnArray, msOffsetFromStartOfScore, toMsPositionInScore)
+            // Sets each track's isPerforming attribute.
+            // If the track is set to perform (in the trackIsOnArray -- the trackControl settings),
+            // an attempt is made to set its fromIndex, currentIndex and toIndex attributes such that
+            //     fromIndex is the index of the first moment at or after startMarkerMsPosition
+            //     toIndex is the index of the last moment before endMarkerMsPosition.
+            //     currentIndex is set to fromIndex
+            // If, however, the track contains no such moments, track.isPerforming is set to false. 
+            function setTrackAttributes(tracks, trackIsOnArray, startMarkerMsPosition, endMarkerMsPosition)
             {
                 var
                 i, nTracks = tracks.length, track,
@@ -474,26 +479,34 @@ MIDILib.sequence = (function (window)
                     {
                         for (j = 0; j < trackLength; ++j)
                         {
-                            if (trackMoments[j].msPositionInScore >= msOffsetFromStartOfScore)
+                            if (trackMoments[j].msPositionInScore >= startMarkerMsPosition)
                             {
                                 track.fromIndex = j;
                                 break;
                             }
                         }
-                        for (j = track.fromIndex; j < trackLength; ++j)
+                        if(track.fromIndex >= 0) // is -1 if not set
                         {
-                            // toIndex is the index of the last performed moment
-                            if (trackMoments[j].msPositionInScore < toMsPositionInScore)
+                            for(j = track.fromIndex; j < trackLength; ++j)
                             {
-                                track.toIndex = j;
+                                // endMarkerMsPosition is the position of the endMarker.
+                                // moments at the endMarker's msPosition should not be played.
+                                // track.toIndex is the index of the last performed moment.
+                                if(trackMoments[j].msPositionInScore < endMarkerMsPosition)
+                                {
+                                    track.toIndex = j;
+                                }
+                                else
+                                {
+                                    break;
+                                }
                             }
-                            else
-                            {
-                                break;
-                            }
+                            track.currentIndex = track.fromIndex;
                         }
-
-                        track.currentIndex = track.fromIndex;
+                        else
+                        {
+                            track.isPerforming = false;
+                        }
                     }
                 }
             }
@@ -547,7 +560,7 @@ MIDILib.sequence = (function (window)
 
             maxDeviation = 0; // for console.log
 
-            setTrackAttributes(that.tracks, trackIsOnArray, fromMsPositionInScore, toMsPositionInScore);
+            setTrackAttributes(that.tracks, trackIsOnArray, startMarkerMsPosition, endMarkerMsPosition);
 
             sequenceStartTime = performance.now();
             firstMomentInThisSequence = getFirstMomentInThisSequence(that.tracks);

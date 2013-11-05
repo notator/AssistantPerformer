@@ -820,6 +820,7 @@ _AP.assistant = (function (window)
 
                 restSequence = new Sequence(nTracks);
                 Object.defineProperty(restSequence, "restSequence", { value: true, writable: false });
+                Object.defineProperty(restSequence, "msPositionInScore", { value: fromMsPositionInScore, writable: false });
 
                 for (i = 0; i < nTracks; ++i)
                 {
