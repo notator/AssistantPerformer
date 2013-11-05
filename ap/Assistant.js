@@ -41,15 +41,12 @@ _AP.assistant = (function (window)
     // An array of Sequence containing one sequence for each chord or rest
     // symbol in the whole live performer's track (except that the sequences
     // in consecutive rests have been concatenated to one sequence).
+    // This array is set in the Assistant constructor.
     allSequences,
 
     // An array containing only the sequences which are to be performed.
     // This array is constructed in playSpan() from allSequences, using
-    // fromMsPositionInScore and toMsPositionInScore.
-    // The first sequence in performedSequences may be the second part
-    // of a sequence which has been split at fromMsPositionInScore.
-    // The last sequence in performedSequences may be the first part
-    // of a sequence which has been split at toMsPositionInScore.
+    // startMarkerMsPosition and endMarkerMsPosition.
     performedSequences,
 
     // these variables are initialized by playSpan() and used by handleMIDIInputEvent() 
@@ -771,120 +768,32 @@ _AP.assistant = (function (window)
 
     // This function is called when options.assistedPerformance === true and the Go button is clicked (in the performance controls).
     // If options.assistedPerformance === false, the main sequence.playSpan(...) is called instead.
-    // The assistant's allSequences array contains the whole piece as an array of sequence, with one sequence per performer's
-    // rest or chord, whereby consecutive rests in the performer's track have been merged.
-    // This function first constructs a performedSequences, which is the section of the allSequences array between fromMsPositionInScore and toMsPositionInScore.
-    // Creating the performedSequences does *not* change the data in allSequences. The start and end markers can therefore be moved between
-    // performances
-    playSpan = function (outDevice, fromMsPositionInScore, toMsPositionInScore, argTrackIsOnArray, recordingSeq)
+    // The assistant's allSequences array (set in the assistant's constructor), contains the whole piece as an array of sequence,
+    // with one sequence per performer's rest or chord, whereby consecutive rests in the performer's track have been merged.
+    // This function sets the performedSequences array, which is the section of the allSequences array between startMarkerMsPosition and
+    // endMarkerMsPosition (not including moments at the endMarkerMsPosition).
+    // Creating the performedSequences array does *not* change the data in allSequences, so the start and end markers can be moved between
+    // performances without reconstructing the assistant.
+    playSpan = function (outDevice, startMarkerMsPosition, endMarkerMsPosition, argTrackIsOnArray, recordingSeq)
     {
-        function getPerformedSequences(allSequences, fromMsPositionInScore, toMsPositionInScore)
+        function getPerformedSequences(allSequences, startMarkerMsPosition, endMarkerMsPosition)
         {
-            var nSequences = allSequences.length,
-                i = nSequences - 1,
-                maxIndex = i, lastSequence,
-                sequence = null,
+            var sequence, i,
+                nSequences = allSequences.length,
                 performedSequences = []; // an array of sequences
 
-            // returns the portion of sequence before toMsPositionInScore
-            function newRestSequenceBeforeMsPos(sequence, toMsPositionInScore)
-            {
-                var
-                i, newTrack, oldTrack, nTracks = sequence.tracks.length,
-                j, nMoments, restSequence;
-
-                restSequence = new Sequence(nTracks);
-                Object.defineProperty(restSequence, "restSequence", { value: true, writable: false });
-                Object.defineProperty(restSequence, "msPositionInScore", { value: sequence.msPositionInScore, writable: false });
-
-                for (i = 0; i < nTracks; ++i)
-                {
-                    newTrack = restSequence.tracks[i];
-                    oldTrack = sequence.tracks[i];
-                    nMoments = oldTrack.moments.length;
-                    for (j = 0; j < nMoments; ++j)
-                    {
-                        newTrack.moments.push(oldTrack.moments[j]);
-                    }
-                }
-                return restSequence;
-            }
-
-            // returns the portion of sequence beginning at fromMsPositionInScore
-            // as a new rest sequence.
-            function newRestSequenceAfterMsPos(sequence, fromMsPositionInScore)
-            {
-                var
-                i, newTrack, oldTrack, nTracks = sequence.tracks.length,
-                j, nMoments, k, restSequence;
-
-                restSequence = new Sequence(nTracks);
-                Object.defineProperty(restSequence, "restSequence", { value: true, writable: false });
-                Object.defineProperty(restSequence, "msPositionInScore", { value: fromMsPositionInScore, writable: false });
-
-                for (i = 0; i < nTracks; ++i)
-                {
-                    newTrack = restSequence.tracks[i];
-                    oldTrack = sequence.tracks[i];
-                    nMoments = oldTrack.moments.length;
-                    for (j = 0; j < nMoments; ++j)
-                    {
-                        if (oldTrack.moments[j].msPositionInScore >= fromMsPositionInScore)
-                        {
-                            k = j;
-                            break;
-                        }
-                    }
-                    for (j = k; j < nMoments; ++j)
-                    {
-                        newTrack.moments.push(oldTrack.moments[j]);
-                    }
-                }
-                return restSequence;
-            }
-
-            if (i > 0)
+            for(i = 0; i < nSequences; ++i)
             {
                 sequence = allSequences[i];
-                while (i > 0 && sequence.msPositionInScore > fromMsPositionInScore)
-                {
-                    --i;
-                    sequence = allSequences[i];
-                }
-            }
-
-            // sequence.msPositionInScore <= fromMsPositionInScore
-            if (sequence.restSequence !== undefined && sequence.msPositionInScore < fromMsPositionInScore)
-            {
-                sequence = newRestSequenceAfterMsPos(sequence, fromMsPositionInScore); // returns a new restSequence starting at fromMsPositionInScore
-            }
-
-            performedSequences.push(sequence); // the first sequence
-
-            while (i < maxIndex)
-            {
-                ++i;
-                sequence = allSequences[i];
-                if (sequence.msPositionInScore >= toMsPositionInScore)
+                if(sequence.msPositionInScore >= endMarkerMsPosition)
                 {
                     break;
                 }
-                performedSequences.push(sequence);
+                if(sequence.msPositionInScore >= startMarkerMsPosition)
+                {
+                    performedSequences.push(sequence);
+                }
             }
-
-            lastSequence = performedSequences.pop();
-
-            // lastSequence.msPositionInScore < toMsPositionInScore
-            if (lastSequence.restSequence !== undefined)
-            {
-                // newRestSequenceBeforeMsPos() returns a new sequence which is
-                // a copy of the beginning of lastSequence up to (but not including) toMsPositionInScore,
-                lastSequence = newRestSequenceBeforeMsPos(lastSequence, toMsPositionInScore);
-            }
-
-            //finalBarline = finalBarlineSequence(lastSequence.tracks.length, toMsPositionInScore);
-            performedSequences.push(lastSequence);
-
             return performedSequences;
         }
 
@@ -892,7 +801,7 @@ _AP.assistant = (function (window)
         outputDevice = outDevice;
         // trackIsOnArray is read only
         trackIsOnArray = argTrackIsOnArray;
-        performedSequences = getPerformedSequences(allSequences, fromMsPositionInScore, toMsPositionInScore);
+        performedSequences = getPerformedSequences(allSequences, startMarkerMsPosition, endMarkerMsPosition);
         recordingSequence = recordingSeq;
 
         endIndex = performedSequences.length - 1;
