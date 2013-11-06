@@ -794,6 +794,10 @@ _AP.assistant = (function (window)
                     performedSequences.push(sequence);
                 }
             }
+            if(performedSequences[0].chordSequence === undefined || performedSequences[0].msPositionInScore !== startMarkerMsPosition)
+            {
+                throw "The performance must start with a chordSequence at the startMarker's msPosition";
+            }
             return performedSequences;
         }
 
