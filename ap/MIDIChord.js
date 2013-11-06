@@ -12,7 +12,7 @@
  *      MIDIRest(timeObject) // MIDIRest constructor  
  */
 
-/*jslint bitwise: false, nomen: false, plusplus: true, white: true */
+/*jslint bitwise: false, nomen: true, plusplus: true, white: true */
 
 _AP.namespace('_AP.midiChord');
 
@@ -200,7 +200,7 @@ _AP.midiChord = (function ()
                 return msDurations;
             }
 
-            // Chord Bank, Patch, Volume and PitchwheelDeviation messages
+            // Chord Bank, Patch and PitchwheelDeviation messages
             // Returns undefined if there are no attributes
             function attributesMoment(channel, chordDef, msPosition)
             {
@@ -238,11 +238,6 @@ _AP.midiChord = (function ()
                     if (attributes.patch !== undefined)
                     {
                         msg = new Message(CMD.PROGRAM_CHANGE + channel, attributes.patch, 0);
-                        attrMoment.messages.push(msg);
-                    }
-                    if (attributes.volume !== undefined)
-                    {
-                        msg = new Message(CMD.CONTROL_CHANGE + channel, 7, attributes.volume); // 7 is volume control
                         attrMoment.messages.push(msg);
                     }
                     if (attributes.pitchWheelDeviation !== undefined)
@@ -291,14 +286,14 @@ _AP.midiChord = (function ()
             {
                 var notes = basicChordDef.notes,
                     len = notes.length,
-                    volume = 100,
+                    velocity = 127,
                     bcoffMoment = new Moment(msPosition),
                     message,
                     i;
 
                 for (i = 0; i < len; ++i)
                 {
-                    message = new Message(CMD.NOTE_OFF + channel, notes[i], volume);
+                    message = new Message(CMD.NOTE_OFF + channel, notes[i], velocity);
                     bcoffMoment.messages.push(message);
                 }
 
@@ -310,7 +305,7 @@ _AP.midiChord = (function ()
             function chordOffMoment(channel, noteOffs, msPosition)
             {
                 var uniqueNoteNumbers = [], nnIndex, noteNumber,
-                    volume = 127,
+                    velocity = 127,
                     cOffMoment = new Moment(msPosition),
                     message;
 
@@ -333,7 +328,7 @@ _AP.midiChord = (function ()
                 for (nnIndex = 0; nnIndex < uniqueNoteNumbers.length; ++nnIndex)
                 {
                     noteNumber = uniqueNoteNumbers[nnIndex];
-                    message = new Message(CMD.NOTE_OFF + channel, noteNumber.valueOf(), volume);
+                    message = new Message(CMD.NOTE_OFF + channel, noteNumber.valueOf(), velocity);
                     cOffMoment.messages.push(message);
                 }
 

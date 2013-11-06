@@ -33,7 +33,8 @@ _AP.assistant = (function (window)
     outputDevice,
     trackIsOnArray,
 
-    options, // performance options. This is the options object in Controls. 
+    options, // performance options. This is the mo (=options) object in Controls.
+    pressureFactor, // calculated from options.performersMinimumPressure in the Assistant constructor.
     reportEndOfPerformance, // callback
     recordingSequence, // initially set by assistant.playSpan(...), passed repeatedly to sequence.playSpan(...), returned by reportEndOfPerformance()
     reportMsPosition, // callback
@@ -629,6 +630,11 @@ _AP.assistant = (function (window)
             }
         }
 
+        function pressureSubstituteValue(inputValue)
+        {
+            return ( options.performersMinimumPressure  + Math.floor(inputValue * pressureFactor) );
+        }
+
         inputEvent = getInputEvent(msg.data, performance.now());
 
         if (inputEvent.data !== undefined)
@@ -641,7 +647,7 @@ _AP.assistant = (function (window)
                     if (options.pressureSubstituteControlData !== null)
                     {
                         // CHANNEL_PRESSURE.data[1] is the amount of pressure 0..127.
-                        handleController(options.pressureSubstituteControlData, inputEvent.data[1],
+                        handleController(options.pressureSubstituteControlData, pressureSubstituteValue(inputEvent.data[1]),
                                                     options.usesPressureSolo, options.usesPressureOtherTracks);
                     }
                     break;
@@ -652,7 +658,7 @@ _AP.assistant = (function (window)
                         // AFTERTOUCH.data[1] is the MIDIpitch to which to apply the aftertouch, but I dont need that
                         // because the current pitch is kept in currentLivePerformersKeyPitch (in the closure).
                         // AFTERTOUCH.data[2] is the amount of pressure 0..127.
-                        handleController(options.pressureSubstituteControlData, inputEvent.data[2],
+                        handleController(options.pressureSubstituteControlData, pressureSubstituteValue(inputEvent.data[2]),
                                                     options.usesPressureSolo, options.usesPressureOtherTracks);
                     }
                     break;
@@ -990,6 +996,7 @@ _AP.assistant = (function (window)
 
         setState("stopped");
 
+        pressureFactor = (127 - options.performersMinimumPressure) / 127; // a float
         reportEndOfPerformance = reportEndOfWholePerformance;
         reportMsPosition = reportMillisecondPosition;
 

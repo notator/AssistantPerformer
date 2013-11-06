@@ -55,6 +55,10 @@
 *           // unsent messages except noteOns, and then calls stop().
 *           // The sent messages are not recorded.
 *           finishSilently: finishSilently
+*
+*           // Sets the volume of each track to midiValue
+*           setTrackPressureControls(outputDevice, midiValue)
+*
 */
 
 /*jslint bitwise: false, nomen: false, plusplus: true, white: true */
@@ -593,6 +597,17 @@ MIDILib.sequence = (function (window)
             stop();
         },
 
+        setTrackPressureControls = function (outputDevice, controller, midiValue)
+        {
+            var trackIndex, msg;
+
+            for(trackIndex = 0; trackIndex < this.tracks.length; ++trackIndex)
+            {
+                msg = new MIDILib.message.Message(CMD.CONTROL_CHANGE + trackIndex, controller, midiValue); // controller 7 is volume control
+                outputDevice.send(msg.data, 0);
+            }
+        },
+
         publicPrototypeAPI =
         {
             playSpan: playSpan,
@@ -602,7 +617,8 @@ MIDILib.sequence = (function (window)
             isStopped: isStopped,
             isPaused: isPaused,
             isRunning: isRunning,
-            finishSilently: finishSilently
+            finishSilently: finishSilently,
+            setTrackPressureControls: setTrackPressureControls
         };
 
         return publicPrototypeAPI;

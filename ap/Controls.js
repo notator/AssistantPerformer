@@ -15,7 +15,7 @@
 
 _AP.namespace('_AP.controls');
 
-_AP.controls = (function (document, window)
+_AP.controls = (function(document, window)
 {
     "use strict";
 
@@ -70,19 +70,19 @@ _AP.controls = (function (document, window)
     scoreHasJustBeenSelected = false,
 
     // deletes the 'save' button created by createSaveMIDIFileButton() 
-    deleteSaveMIDIFileButton = function ()
+    deleteSaveMIDIFileButton = function()
     {
-        var 
+        var
         downloadLinkDiv,
         downloadLink = document.getElementById("downloadLink");
 
-        if (downloadLink)
+        if(downloadLink)
         {
             downloadLinkDiv = document.getElementById("downloadLinkDiv");
             downloadLinkDiv.innerHTML = '';
 
             // Need a small delay for the revokeObjectURL to work properly.
-            window.setTimeout(function ()
+            window.setTimeout(function()
             {
                 window.URL.revokeObjectURL(downloadLink.href); // window.URL is set in Main.js
             }, 1500);
@@ -91,12 +91,12 @@ _AP.controls = (function (document, window)
 
     // Returns true if any of the tracks contain moments, otherwise false.
     // Used to prevent the creation of a 'save' button when there is nothing to save.
-    hasData = function (nTracks, tracks)
+    hasData = function(nTracks, tracks)
     {
         var i, has = false;
-        for (i = 0; i < nTracks; ++i)
+        for(i = 0; i < nTracks; ++i)
         {
-            if (tracks[i].moments.length > 0)
+            if(tracks[i].moments.length > 0)
             {
                 has = true;
                 break;
@@ -109,21 +109,21 @@ _AP.controls = (function (document, window)
     // The date part of the name is formatted as
     //     year-month-day, with month and day always having two characters
     // so that downloaded files will list in order of creation time.
-    getMIDIFileName = function (scoreName)
+    getMIDIFileName = function(scoreName)
     {
-        var 
+        var
         d = new Date(),
         dayOfTheMonth = (d.getDate()).toString(),
         month = (d.getMonth() + 1).toString(),
         year = (d.getFullYear()).toString(),
         downloadName;
 
-        if (month.length === 1)
+        if(month.length === 1)
         {
             month = "0".concat(month);
         }
 
-        if (dayOfTheMonth.length === 1)
+        if(dayOfTheMonth.length === 1)
         {
             dayOfTheMonth = "0".concat(dayOfTheMonth);
         }
@@ -150,15 +150,15 @@ _AP.controls = (function (document, window)
     // sequenceMsDuration is the total duration of the sequence in milliseconds (an integer).
     //      and determines the timing of the end-of-track events. When this is a recorded sequence,
     //      this value is simply the duration between the start and end markers.
-    createSaveMIDIFileButton = function (scoreName, sequence, sequenceMsDuration)
+    createSaveMIDIFileButton = function(scoreName, sequence, sequenceMsDuration)
     {
-        var 
+        var
         standardMIDIFile,
         downloadName,
         downloadLinkDiv, a,
         nTracks = sequence.tracks.length;
 
-        if (hasData(nTracks, sequence.tracks))
+        if(hasData(nTracks, sequence.tracks))
         {
             downloadLinkDiv = document.getElementById("downloadLinkDiv"); // the empty Element which will contain the link
             downloadName = getMIDIFileName(scoreName);
@@ -171,20 +171,20 @@ _AP.controls = (function (document, window)
             a.href = window.URL.createObjectURL(standardMIDIFile); // window.URL is set in Main.js
             a.innerHTML = '<img id="saveImg" border="0" src="images/saveMouseOut.png" alt="saveMouseOutImage" width="56" height="31">';
 
-            a.onmouseover = function (e)
+            a.onmouseover = function(e)
             {
                 var img = document.getElementById("saveImg");
                 img.src = "images/saveMouseOver.png";
                 a.style.cursor = 'default';
             };
 
-            a.onmouseout = function (e)
+            a.onmouseout = function(e)
             {
                 var img = document.getElementById("saveImg");
                 img.src = "images/saveMouseOut.png";
             };
 
-            a.onclick = function (e)
+            a.onclick = function(e)
             {
                 deleteSaveMIDIFileButton();
             };
@@ -194,9 +194,9 @@ _AP.controls = (function (document, window)
     },
 
     // This function is called when the input or output device selectors change.
-    setMIDIDevices = function ()
+    setMIDIDevices = function()
     {
-        var 
+        var
         inSelector = document.getElementById("midiInputDeviceSelector"),
         outSelector = document.getElementById("midiOutputDeviceSelector");
 
@@ -219,7 +219,7 @@ _AP.controls = (function (document, window)
         }
     },
 
-    setControlSubstitutionSelectorsDisabledState = function ()
+    setControlSubstitutionSelectorsDisabledState = function()
     {
         if(mo.usesPressureSoloCheckbox.disabled === false && (mo.usesPressureSoloCheckbox.checked === true || mo.usesPressureOtherTracksCheckbox.checked === true))
         {
@@ -249,11 +249,11 @@ _AP.controls = (function (document, window)
         }
     },
 
-    setMainOptionsState = function (mainOptionsState)
+    setMainOptionsState = function(mainOptionsState)
     {
         var inputDeviceIndex, scoreIndex, outputDeviceIndex;
 
-        switch (mainOptionsState)
+        switch(mainOptionsState)
         {
             case "enable":
                 mo.controlPanel.style.visibility = "hidden";
@@ -268,7 +268,7 @@ _AP.controls = (function (document, window)
                 mo.scoreSelector.disabled = false;
                 mo.midiOutputDeviceSelector.disabled = false;
 
-                if (scoreIndex === 0)
+                if(scoreIndex === 0)
                 {
                     mo.trackSelector.disabled = true;
 
@@ -292,7 +292,7 @@ _AP.controls = (function (document, window)
                     mo.assistantUsesRelativeDurationsRadioButtonLabel.disabled = true;
 
                 }
-                else if (inputDeviceIndex > 0) // && scoreIndex > 0
+                else if(inputDeviceIndex > 0) // && scoreIndex > 0
                 {
                     mo.trackSelector.disabled = false;
 
@@ -341,7 +341,7 @@ _AP.controls = (function (document, window)
 
                 // Note that the midi input device does not have to be set in order to
                 // enable the start button.
-                if (scoreIndex !== 0 && outputDeviceIndex !== 0)
+                if(scoreIndex !== 0 && outputDeviceIndex !== 0)
                 {
                     mo.startRuntimeButton.setAttribute('value', 'Start');
                     mo.startRuntimeButton.disabled = false;
@@ -394,9 +394,9 @@ _AP.controls = (function (document, window)
         setControlSubstitutionSelectorsDisabledState();
     },
 
-    setStopped = function ()
+    setStopped = function()
     {
-        if (options.assistedPerformance === true)
+        if(options.assistedPerformance === true)
         {
             assistant.stop();
         }
@@ -413,7 +413,7 @@ _AP.controls = (function (document, window)
 
         cl.gotoOptionsDisabled.setAttribute("opacity", GLASS);
 
-        if (document.getElementById("midiInputDeviceSelector").selectedIndex === 0)
+        if(document.getElementById("midiInputDeviceSelector").selectedIndex === 0)
         {
             cl.livePerformerOnOffDisabled.setAttribute("opacity", SMOKE);
         }
@@ -458,7 +458,7 @@ _AP.controls = (function (document, window)
 
     // callback called when a performing sequence is stopped or has played its last message,
     // or when the assistant is stopped or has played its last subsequence.
-    reportEndOfPerformance = function (recordedSequence, performanceMsDuration)
+    reportEndOfPerformance = function(recordedSequence, performanceMsDuration)
     {
         var
         scoreName = mo.scoreSelector.options[mo.scoreSelector.selectedIndex].text;
@@ -480,13 +480,13 @@ _AP.controls = (function (document, window)
                 timestamp,
                 offset = Number.MAX_VALUE;
 
-                if (recordedSequence !== undefined && recordedSequence !== null)
+                if(recordedSequence !== undefined && recordedSequence !== null)
                 {
                     nTracks = recordedSequence.tracks.length;
-                    for (i = 0; i < nTracks; ++i)
+                    for(i = 0; i < nTracks; ++i)
                     {
                         track = recordedSequence.tracks[i];
-                        if (track.moments.length > 0)
+                        if(track.moments.length > 0)
                         {
                             timestamp = track.moments[0].timestamp;
                             offset = (offset < timestamp) ? offset : timestamp;
@@ -499,17 +499,17 @@ _AP.controls = (function (document, window)
 
             offset = findOffset(recordedSequence);
 
-            if (offset === Number.MAX_VALUE)
+            if(offset === Number.MAX_VALUE)
             {
                 success = false;
             }
             else
             {
-                for (i = 0; i < nTracks; ++i)
+                for(i = 0; i < nTracks; ++i)
                 {
                     track = recordedSequence.tracks[i];
                     nMoments = track.moments.length;
-                    for (j = 0; j < nMoments; ++j)
+                    for(j = 0; j < nMoments; ++j)
                     {
                         moment = track.moments[j];
                         moment.timestamp -= offset;
@@ -519,7 +519,7 @@ _AP.controls = (function (document, window)
             return success;
         }
 
-        if (setTimestampsRelativeToSequence(recordedSequence)) 
+        if(setTimestampsRelativeToSequence(recordedSequence))
         {
             createSaveMIDIFileButton(scoreName, recordedSequence, performanceMsDuration);
         }
@@ -535,7 +535,7 @@ _AP.controls = (function (document, window)
     // callback called by a performing sequence. Reports the msPositionInScore of the
     // Moment curently being sent. When all the events in the span have been played,
     // reportEndOfPerformance() is called (see above).
-    reportMsPos = function (msPositionInScore)
+    reportMsPos = function(msPositionInScore)
     {
         //console.log("Controls: calling score.advanceRunningMarker(msPosition), msPositionInScore=" + msPositionInScore);
         // If there is a graphic object in the score having msPositionInScore,
@@ -544,7 +544,7 @@ _AP.controls = (function (document, window)
     },
 
     //svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd'.
-    setSvgControlsState = function (svgCtlsState)
+    setSvgControlsState = function(svgCtlsState)
     {
         function setDisabled()
         {
@@ -575,12 +575,12 @@ _AP.controls = (function (document, window)
 
         function setPaused()
         {
-            if (options.assistedPerformance === true)
+            if(options.assistedPerformance === true)
             {
                 throw "Error: Assisted performances are never paused.";
             }
 
-            if (sequence !== undefined && sequence.isRunning())
+            if(sequence !== undefined && sequence.isRunning())
             {
                 sequence.pause();
             }
@@ -618,9 +618,9 @@ _AP.controls = (function (document, window)
 
             deleteSaveMIDIFileButton();
 
-            if (options.assistedPerformance === true && assistant !== undefined)
+            if(options.assistedPerformance === true && assistant !== undefined)
             {
-                if (assistant.isStopped())
+                if(assistant.isStopped())
                 {
                     recordingSequence = new Sequence(nTracks);
 
@@ -628,6 +628,14 @@ _AP.controls = (function (document, window)
                     // either at the start marker, or somewhere paused.
                     score.setRunningMarkers();
                     score.moveStartMarkerToTop(svgPagesDiv);
+
+                    sequence.setTrackPressureControls(options.outputDevice,
+                        options.pressureSubstituteControlData.midiControl, options.performersMinimumPressure);
+
+                    if(options.pressureSubstituteControlData.midiControl !== CONTROL.VOLUME)
+                    {
+                        sequence.setTrackPressureControls(options.outputDevice, CONTROL.VOLUME, 127);
+                    }
 
                     assistant.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
                         trackIsOnArray, recordingSequence);
@@ -637,13 +645,13 @@ _AP.controls = (function (document, window)
                     cl.goDisabled.setAttribute("opacity", SMOKE);
                 }
             }
-            else if (sequence !== undefined) // playing score (main sequence)
+            else if(sequence !== undefined) // playing score (main sequence)
             {
-                if (sequence.isPaused())
+                if(sequence.isPaused())
                 {
                     sequence.resume();
                 }
-                else if (sequence.isStopped())
+                else if(sequence.isStopped())
                 {
                     recordingSequence = new Sequence(nTracks);
 
@@ -651,6 +659,8 @@ _AP.controls = (function (document, window)
                     // either at the start marker, or somewhere paused.
                     score.setRunningMarkers();
                     score.moveStartMarkerToTop(svgPagesDiv);
+
+                    sequence.setTrackPressureControls(options.outputDevice, CONTROL.VOLUME, 127);
 
                     sequence.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
                         trackIsOnArray, recordingSequence, reportEndOfPerformance, reportMsPos);
@@ -685,26 +695,26 @@ _AP.controls = (function (document, window)
             var i,
                 s = score;
 
-            if (s.svgFrames !== undefined)
+            if(s.svgFrames !== undefined)
             {
-                switch (svgControlsState)
+                switch(svgControlsState)
                 {
                     case 'settingStart':
-                        for (i = 0; i < s.svgFrames.length; ++i)
+                        for(i = 0; i < s.svgFrames.length; ++i)
                         {
                             s.svgFrames[i].addEventListener('click', s.setStartMarkerClick, false);
                             s.svgFrames[i].style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setStartCursor.cur'), crosshair";
                         }
                         break;
                     case 'settingEnd':
-                        for (i = 0; i < s.svgFrames.length; ++i)
+                        for(i = 0; i < s.svgFrames.length; ++i)
                         {
                             s.svgFrames[i].addEventListener('click', s.setEndMarkerClick, false);
                             s.svgFrames[i].style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setEndCursor.cur'), pointer";
                         }
                         break;
                     default:
-                        for (i = 0; i < s.svgFrames.length; ++i)
+                        for(i = 0; i < s.svgFrames.length; ++i)
                         {
                             // According to
                             // https://developer.mozilla.org/en-US/docs/DOM/element.removeEventListener#Notes
@@ -775,7 +785,7 @@ _AP.controls = (function (document, window)
 
         setCursorAndEventListener('default');
 
-        switch (svgControlsState)
+        switch(svgControlsState)
         {
             case 'disabled':
                 setDisabled(); // enables the main options panel
@@ -784,7 +794,7 @@ _AP.controls = (function (document, window)
                 setStopped();
                 break;
             case 'paused':
-                if (options.assistedPerformance === false)
+                if(options.assistedPerformance === false)
                 {
                     setPaused();
                 }
@@ -803,8 +813,9 @@ _AP.controls = (function (document, window)
 
     // Sets the states of the main options to the states they have when no score is selected.
     // This function is called by both init() and setScoreDefaultOptions() below.
-    setMainOptionsDefaultStates = function ()
+    setMainOptionsDefaultStates = function()
     {
+        mo.performersMinimumPressure = 127; // only used in live performances. non-assisted performances are always at volume 127.
         mo.trackSelector.selectedIndex = 0;
 
         mo.soloPitchOptionCheckbox.checked = false;
@@ -831,7 +842,7 @@ _AP.controls = (function (document, window)
 
     // Defines the window.svgLoaded(...) function.
     // Sets up the pop-up menues for scores and MIDI input and output devices.
-    init = function (mAccess)
+    init = function(mAccess)
     {
         function getMainOptionElements()
         {
@@ -882,7 +893,7 @@ _AP.controls = (function (document, window)
             option.text = "choose a MIDI input device";
             is.add(option, null);
             nItems = inputs.length;
-            for (i = 0; i < nItems; ++i)
+            for(i = 0; i < nItems; ++i)
             {
                 option = document.createElement("option");
                 option.inputDevice = inputs[i];
@@ -895,7 +906,7 @@ _AP.controls = (function (document, window)
             option.text = "choose a MIDI output device";
             os.add(option, null);
             nItems = outputs.length;
-            for (i = 0; i < nItems; ++i)
+            for(i = 0; i < nItems; ++i)
             {
                 option = document.createElement("option");
                 option.outputDevice = outputs[i];
@@ -975,7 +986,7 @@ _AP.controls = (function (document, window)
             var div = svgPagesDiv,
             height = Math.round(parseFloat(div.style.height));
 
-            if (runningMarkerYCoordinates.bottom > (height + div.scrollTop))
+            if(runningMarkerYCoordinates.bottom > (height + div.scrollTop))
             {
                 div.scrollTop = runningMarkerYCoordinates.top - 10;
             }
@@ -1015,7 +1026,7 @@ _AP.controls = (function (document, window)
 
         setSvgControlsState('disabled');
     },
- 
+
     // Returns a scoreInfo object constructed from the id string of the score
     // currently selected in the scoreSelector (Defined in assistantPerformer.html.)
     // The id string must contain:
@@ -1037,7 +1048,7 @@ _AP.controls = (function (document, window)
     //      scoreInfo.defaultPerformanceOptions (see below)
     // and optionally (if present)
     //      scoreInfo.defaultAssistantsDurationOptions (see below)
-    getScoreInfo = function ()
+    getScoreInfo = function()
     {
         var scoreSelectorElem = document.getElementById("scoreSelector"),
             scoreInfoStrings, scoreInfoString, scoreInfo;
@@ -1063,6 +1074,10 @@ _AP.controls = (function (document, window)
 
             // Default performer's options are all optional. Each begins with the string "po." followed by any of the following:
             // (CheckBoxes are unchecked by default, they are checked if defined here.)
+            //    "minPressure=" followed by the minimum MIDI volume to be sent in a live performance.
+            //        minPressure is the volume used for restSequences. When playing, the soloist's input aftertouch or channel presure
+            //        values are mapped to values between minPressure and 127. po.minPressure defaults to 127 (aftertouch has no effect).
+            //        Note that performances without a live performer are always sent at volume=127 (for maximum expressivity).
             //    "track=" followed by the default track number (1..nTracks)
             //    "pitch.soloTrack" and/or "pitch.otherTracks"
             //    "velocity.soloTrack" and/or "velocity.otherTracks"
@@ -1112,6 +1127,11 @@ _AP.controls = (function (document, window)
                     {
                         defaultPerformanceOptions.pressure = {};
                     }
+                    if(optionString.slice(0, 17) === "pressure.minimum=")
+                    {
+                        defaultPerformanceOptions.pressure.minimum = parseInt(optionString.slice(17), 10);
+                    }
+                    else
                     if(optionString.slice(0, 23) === "pressure.selectedIndex=")
                     {
                         defaultPerformanceOptions.pressure.selectedIndex = parseInt(optionString.slice(23), 10);
@@ -1217,7 +1237,7 @@ _AP.controls = (function (document, window)
     },
 
     // called when the user clicks a control in the GUI
-    doControl = function (controlID)
+    doControl = function(controlID)
     {
         // This function sets the html content of the "svgPages" div, and initializes
         // both the performer's track selector (in the main options dialog) and
@@ -1235,18 +1255,18 @@ _AP.controls = (function (document, window)
                 var i, optionElem, textElem, sibling,
                 firstChildNode;
 
-                if (mo.trackSelector.childNodes.length > 0)
+                if(mo.trackSelector.childNodes.length > 0)
                 {
                     firstChildNode = mo.trackSelector.childNodes[0];
                     sibling = firstChildNode.nextSibling;
-                    while (sibling !== null)
+                    while(sibling !== null)
                     {
                         mo.trackSelector.removeChild(sibling);
                         sibling = firstChildNode.nextSibling;
                     }
                     mo.trackSelector.removeChild(firstChildNode);
                 }
-                for (i = 0; i < nTracks; ++i)
+                for(i = 0; i < nTracks; ++i)
                 {
                     optionElem = document.createElement("option");
                     textElem = document.createTextNode((i + 1).toString());
@@ -1306,11 +1326,11 @@ _AP.controls = (function (document, window)
 
         function goControlClicked()
         {
-            if (svgControlsState === 'stopped' || svgControlsState === 'paused')
+            if(svgControlsState === 'stopped' || svgControlsState === 'paused')
             {
                 setSvgControlsState('playing');
             }
-            else if (svgControlsState === 'playing')
+            else if(svgControlsState === 'playing')
             {
                 setSvgControlsState('paused');
             }
@@ -1321,7 +1341,7 @@ _AP.controls = (function (document, window)
         function toggleBack(selected)
         {
             selected.setAttribute("opacity", "1");
-            window.setTimeout(function ()
+            window.setTimeout(function()
             {
                 selected.setAttribute("opacity", "0");
             }, 200);
@@ -1329,13 +1349,13 @@ _AP.controls = (function (document, window)
 
         function stopControlClicked()
         {
-            if (svgControlsState === 'paused')
+            if(svgControlsState === 'paused')
             {
                 toggleBack(cl.stopControlSelected);
                 setSvgControlsState('stopped');
             }
 
-            if (svgControlsState === 'playing')
+            if(svgControlsState === 'playing')
             {
                 toggleBack(cl.stopControlSelected);
                 setSvgControlsState('stopped');
@@ -1344,11 +1364,11 @@ _AP.controls = (function (document, window)
 
         function setStartControlClicked()
         {
-            if (svgControlsState === 'stopped')
+            if(svgControlsState === 'stopped')
             {
                 setSvgControlsState('settingStart');
             }
-            else if (svgControlsState === 'settingStart')
+            else if(svgControlsState === 'settingStart')
             {
                 setSvgControlsState('stopped');
                 score.moveRunningMarkerToStartMarker();
@@ -1357,11 +1377,11 @@ _AP.controls = (function (document, window)
 
         function setEndControlClicked()
         {
-            if (svgControlsState === 'stopped')
+            if(svgControlsState === 'stopped')
             {
                 setSvgControlsState('settingEnd');
             }
-            else if (svgControlsState === 'settingEnd')
+            else if(svgControlsState === 'settingEnd')
             {
                 setSvgControlsState('stopped');
             }
@@ -1369,7 +1389,7 @@ _AP.controls = (function (document, window)
 
         function sendStartToBeginningControlClicked()
         {
-            if (svgControlsState === 'stopped')
+            if(svgControlsState === 'stopped')
             {
                 toggleBack(cl.sendStartToBeginningControlSelected);
                 score.sendStartMarkerToStart();
@@ -1379,7 +1399,7 @@ _AP.controls = (function (document, window)
 
         function sendStopToEndControlClicked()
         {
-            if (svgControlsState === 'stopped')
+            if(svgControlsState === 'stopped')
             {
                 toggleBack(cl.sendStopToEndControlSelected);
                 score.sendEndMarkerToEnd();
@@ -1388,7 +1408,7 @@ _AP.controls = (function (document, window)
 
         function setScoreDefaultOptions()
         {
-            var 
+            var
             scoreInfo = getScoreInfo(),
             dpo = scoreInfo.defaultPerformanceOptions,
             dado = scoreInfo.defaultAssistantsDurationOptions;
@@ -1436,6 +1456,10 @@ _AP.controls = (function (document, window)
                     if(dpo.pressure.selectedIndex !== undefined)
                     {
                         mo.pressureSubstituteControlDataSelector.selectedIndex = dpo.pressure.selectedIndex;
+                    }
+                    if(dpo.pressure.minimum !== undefined)
+                    {
+                        mo.performersMinimumPressure = dpo.pressure.minimum;
                     }
                 }
                 if(dpo.pitchWheel !== undefined)
@@ -1487,7 +1511,7 @@ _AP.controls = (function (document, window)
         }
 
         /**** controls in options panel ***/
-        if (controlID === "midiInputDeviceSelector"
+        if(controlID === "midiInputDeviceSelector"
         || controlID === "scoreSelector"
         || controlID === "midiOutputDeviceSelector"
         || controlID === "usesPressureSoloCheckbox"
@@ -1502,7 +1526,7 @@ _AP.controls = (function (document, window)
             setMainOptionsState("enable"); // enables only the appropriate controls
         }
 
-        if (controlID === "midiInputDeviceSelector")
+        if(controlID === "midiInputDeviceSelector")
         {
             setMIDIDevices();
             tracksControl.setInitialTracksControlState(mo.midiInputDeviceSelector.selectedIndex > 0, mo.trackSelector.selectedIndex);
@@ -1512,7 +1536,7 @@ _AP.controls = (function (document, window)
             }
         }
 
-        if (controlID === "scoreSelector")
+        if(controlID === "scoreSelector")
         {
             setScore();
             tracksControl.setInitialTracksControlState(mo.trackSelector.selectedIndex >= 0, mo.trackSelector.selectedIndex);
@@ -1522,20 +1546,20 @@ _AP.controls = (function (document, window)
             }
         }
 
-        if (controlID === "midiOutputDeviceSelector")
+        if(controlID === "midiOutputDeviceSelector")
         {
             setMIDIDevices(midiAccess);
         }
 
-        if (controlID === "trackSelector")
+        if(controlID === "trackSelector")
         {
             tracksControl.setInitialTracksControlState(mo.trackSelector.selectedIndex >= 0, mo.trackSelector.selectedIndex);
         }
 
         /*** SVG controls ***/
-        if (cl.performanceButtonsDisabled.getAttribute("opacity") !== SMOKE)
+        if(cl.performanceButtonsDisabled.getAttribute("opacity") !== SMOKE)
         {
-            switch (controlID)
+            switch(controlID)
             {
                 case "goControl":
                     goControlClicked();
@@ -1560,13 +1584,13 @@ _AP.controls = (function (document, window)
             }
         }
 
-        if (controlID === "livePerformerOnOff")
+        if(controlID === "livePerformerOnOff")
         {
-            if (cl.livePerformerOnOffDisabled.getAttribute("opacity") !== SMOKE)
+            if(cl.livePerformerOnOffDisabled.getAttribute("opacity") !== SMOKE)
             {
                 options.assistedPerformance = !(options.assistedPerformance);
 
-                if (options.assistedPerformance)
+                if(options.assistedPerformance)
                 {
                     tracksControl.setInitialTracksControlState(true, options.livePerformersTrackIndex);
                     tracksControl.refreshDisplay();
@@ -1579,7 +1603,7 @@ _AP.controls = (function (document, window)
 
                 sequence = score.createSequence(options.assistantsSpeed);
 
-                if (options.assistedPerformance === true)
+                if(options.assistedPerformance === true)
                 {
                     // this constructor consumes sequence, resetting moment timestamps
                     // relative to the start of their subsection.
@@ -1588,11 +1612,11 @@ _AP.controls = (function (document, window)
             }
         }
 
-        if (controlID === "gotoOptions")
+        if(controlID === "gotoOptions")
         {
             deleteSaveMIDIFileButton();
 
-            if (cl.gotoOptionsDisabled.getAttribute("opacity") !== SMOKE)
+            if(cl.gotoOptionsDisabled.getAttribute("opacity") !== SMOKE)
             {
                 setSvgControlsState('disabled');
                 score.moveStartMarkerToTop(svgPagesDiv);
@@ -1602,20 +1626,20 @@ _AP.controls = (function (document, window)
     },
 
     // functions for adjusting the appearance of the score options
-    showOverRect = function (overRectID, disabledID)
+    showOverRect = function(overRectID, disabledID)
     {
         var overRectElem = document.getElementById(overRectID),
             disabledElem = document.getElementById(disabledID),
             disabledOpacity = disabledElem.getAttribute("opacity"),
             livePerformerOffLayer;
 
-        if (disabledOpacity !== SMOKE)
+        if(disabledOpacity !== SMOKE)
         {
             overRectElem.setAttribute("opacity", METAL);
-            if (overRectID === 'overLivePerformerOnOffFrame')
+            if(overRectID === 'overLivePerformerOnOffFrame')
             {
                 livePerformerOffLayer = document.getElementById('livePerformerOff');
-                if (options.assistedPerformance === true)
+                if(options.assistedPerformance === true)
                 {
                     livePerformerOffLayer.setAttribute("opacity", METAL);
                 }
@@ -1626,16 +1650,16 @@ _AP.controls = (function (document, window)
             }
         }
     },
-    hideOverRect = function (overRectID)
+    hideOverRect = function(overRectID)
     {
         var overRect = document.getElementById(overRectID),
             livePerformerOffLayer;
 
         overRect.setAttribute("opacity", GLASS);
-        if (overRectID === 'overLivePerformerOnOffFrame')
+        if(overRectID === 'overLivePerformerOnOffFrame')
         {
             livePerformerOffLayer = document.getElementById('livePerformerOff');
-            if (options.assistedPerformance === true)
+            if(options.assistedPerformance === true)
             {
                 livePerformerOffLayer.setAttribute("opacity", GLASS);
             }
@@ -1646,7 +1670,7 @@ _AP.controls = (function (document, window)
         }
     },
 
-    trackToggled = function (soloistIsSilent)
+    trackToggled = function(soloistIsSilent)
     {
         score.refreshDisplay(sequence, options.assistedPerformance, options.livePerformersTrackIndex, soloistIsSilent);
         // score.refreshDisplay() sets sequence.tracks[livePerformersTrackIndex] to a silent track, if necessary.
@@ -1662,7 +1686,7 @@ _AP.controls = (function (document, window)
     // The score selector sets the array of svgScorePage urls.
     // The Start button is enabled when a score and MIDI output have been selected.
     // It does not require a MIDI input.
-    beginRuntime = function ()
+    beginRuntime = function()
     {
         function getOptions()
         {
@@ -1673,7 +1697,7 @@ _AP.controls = (function (document, window)
                 var inputText = mo.assistantsSpeedInputText,
                 speed = parseFloat(inputText.value), success;
 
-                if (isNaN(speed) || speed <= 0)
+                if(isNaN(speed) || speed <= 0)
                 {
                     inputText.style.backgroundColor = "#FFDDDD";
                     success = false;
@@ -1686,9 +1710,10 @@ _AP.controls = (function (document, window)
                 return success;
             }
 
-            if (checkSpeedInput())
+            if(checkSpeedInput())
             {
                 // options is a global inside this namespace
+                options.performersMinimumPressure = mo.performersMinimumPressure;
                 options.livePerformersTrackIndex = mo.trackSelector.selectedIndex;
 
                 options.overrideSoloVelocity = mo.soloVelocityOptionCheckbox.checked;
@@ -1701,7 +1726,7 @@ _AP.controls = (function (document, window)
                 options.usesPressureSolo = mo.usesPressureSoloCheckbox.checked;
                 options.usesPressureOtherTracks = mo.usesPressureOtherTracksCheckbox.checked;
                 options.pressureSubstituteControlData = null;
-                if (options.usesPressureSolo || options.usesPressureOtherTracks)
+                if(options.usesPressureSolo || options.usesPressureOtherTracks)
                 {
                     options.pressureSubstituteControlData = controlOptions[mo.pressureSubstituteControlDataSelector.selectedIndex];
                 }
@@ -1711,7 +1736,7 @@ _AP.controls = (function (document, window)
                 options.usesPitchBendSolo = mo.usesPitchBendSoloCheckbox.checked;
                 options.usesPitchBendOtherTracks = mo.usesPitchBendOtherTracksCheckbox.checked;
                 options.pitchBendSubstituteControlData = null;
-                if (options.usesPitchBendSolo || options.usesPitchBendOtherTracks)
+                if(options.usesPitchBendSolo || options.usesPitchBendOtherTracks)
                 {
                     options.pitchBendSubstituteControlData = controlOptions[mo.pitchBendSubstituteControlDataSelector.selectedIndex];
                 }
@@ -1721,7 +1746,7 @@ _AP.controls = (function (document, window)
                 options.usesModSolo = mo.usesModSoloCheckbox.checked;
                 options.usesModOtherTracks = mo.usesModOtherTracksCheckbox.checked;
                 options.modSubstituteControlData = null;
-                if (options.usesModSolo || options.usesModOtherTracks)
+                if(options.usesModSolo || options.usesModOtherTracks)
                 {
                     options.modSubstituteControlData = controlOptions[mo.modSustituteControlSelector.selectedIndex];
                 }
@@ -1743,7 +1768,7 @@ _AP.controls = (function (document, window)
             return success;
         }
 
-        if (document.getElementById("midiInputDeviceSelector").selectedIndex === 0)
+        if(document.getElementById("midiInputDeviceSelector").selectedIndex === 0)
         {
             // alert("Warning: A MIDI input device has not been selected");
             cl.livePerformerOff.setAttribute("opacity", METAL);
@@ -1755,9 +1780,9 @@ _AP.controls = (function (document, window)
             cl.livePerformerOnOffDisabled.setAttribute("opacity", SMOKE);
         }
 
-        if (getOptions())
+        if(getOptions())
         {
-            if (scoreHasJustBeenSelected)
+            if(scoreHasJustBeenSelected)
             {
                 score.getEmptyPagesAndSystems(svg); // everything except the timeObjects (which have to take account of speed)
             }
@@ -1779,7 +1804,7 @@ _AP.controls = (function (document, window)
             tracksControl.setInitialTracksControlState(options.assistedPerformance, options.livePerformersTrackIndex);
 
             score.refreshDisplay(sequence, options.assistedPerformance, options.livePerformersTrackIndex, false);
-            if (options.assistedPerformance === true)
+            if(options.assistedPerformance === true)
             {
                 // This constructor resets moment timestamps relative to the start of their subsequence.
                 // The sequence therefore needs to be reloaded when the options (performer's track index) change.    
@@ -1790,7 +1815,7 @@ _AP.controls = (function (document, window)
 
             setSvgControlsState('stopped');
 
-            if (options.assistedPerformance === true && assistant !== undefined)
+            if(options.assistedPerformance === true && assistant !== undefined)
             {
                 setSvgControlsState('playing');
             }
@@ -1813,4 +1838,4 @@ _AP.controls = (function (document, window)
 
     return publicAPI;
 
-} (document, window));
+}(document, window));
