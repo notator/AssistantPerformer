@@ -219,33 +219,33 @@ _AP.controls = (function(document, window)
         }
     },
 
-    setControlSubstitutionSelectorsDisabledState = function()
+    setControlSubstitutionSelectorsVisibilityState = function()
     {
         if(mo.usesPressureSoloCheckbox.disabled === false && (mo.usesPressureSoloCheckbox.checked === true || mo.usesPressureOtherTracksCheckbox.checked === true))
         {
-            mo.pressureSubstituteControlDataSelector.disabled = false;
+            mo.pressureSubstituteControlDataSelector.style.visibility = "visible"; //.disabled = false;
         }
         else
         {
-            mo.pressureSubstituteControlDataSelector.disabled = true;
+            mo.pressureSubstituteControlDataSelector.style.visibility = "hidden"; //.disabled = true;
         }
 
         if(mo.usesPitchBendSoloCheckbox.disabled === false && (mo.usesPitchBendSoloCheckbox.checked === true || mo.usesPitchBendOtherTracksCheckbox.checked === true))
         {
-            mo.pitchBendSubstituteControlDataSelector.disabled = false;
+            mo.pitchBendSubstituteControlDataSelector.style.visibility = "visible"; //.disabled = false;
         }
         else
         {
-            mo.pitchBendSubstituteControlDataSelector.disabled = true;
+            mo.pitchBendSubstituteControlDataSelector.style.visibility = "hidden"; //.disabled = true;
         }
 
         if(mo.usesModSoloCheckbox.disabled === false && (mo.usesModSoloCheckbox.checked === true || mo.usesModOtherTracksCheckbox.checked === true))
         {
-            mo.modSustituteControlSelector.disabled = false;
+            mo.modSustituteControlSelector.style.visibility = "visible"; //.disabled = false;
         }
         else
         {
-            mo.modSustituteControlSelector.disabled = true;
+            mo.modSustituteControlSelector.style.visibility = "hidden"; //.disabled = true;
         }
     },
 
@@ -391,7 +391,7 @@ _AP.controls = (function(document, window)
                 throw "Unknown svgControlsState";
         }
 
-        setControlSubstitutionSelectorsDisabledState();
+        setControlSubstitutionSelectorsVisibilityState();
     },
 
     setStopped = function()
@@ -1507,7 +1507,7 @@ _AP.controls = (function(document, window)
                 }
             }
 
-            setControlSubstitutionSelectorsDisabledState();
+            setControlSubstitutionSelectorsVisibilityState();
         }
 
         /**** controls in options panel ***/
