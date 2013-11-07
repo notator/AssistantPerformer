@@ -614,6 +614,45 @@ _AP.controls = (function(document, window)
             nTracks = trackIsOnArray.length,
             recordingSequence;
 
+            function sendTrackInitializationMessages(options, isAssistedPerformance)
+            {
+                var nTracks = trackIsOnArray.length,
+                    trackIndex, value, factor;
+
+                for(trackIndex = 0; trackIndex < nTracks; ++trackIndex)
+                { 
+                    if(options.trackInitPitchWheelDeviations.length > 0)
+                    {
+                        value = options.trackInitPitchWheelDeviations[trackIndex];
+                    }
+                    else
+                    {
+                        value = 2;
+                    }
+                    sequence.sendSetPitchWheelDeviationMessageNow(options.outputDevice, trackIndex, value);
+
+                    if(options.trackInitVolumes.length > 0)
+                    {
+                        value = options.trackInitVolumes[trackIndex];
+                    }
+                    else
+                    {
+                        value = 127; // default
+                    }  
+                    if(isAssistedPerformance && options.pressureSubstituteControlData.midiControl === CONTROL.VOLUME)
+                    {
+                        value = options.performersMinimumPressure; // overrides trackInitVolumes in assisted performances
+                    }
+                    sequence.sendControlMessageNow(options.outputDevice, trackIndex, CONTROL.VOLUME, value);
+
+                    if(isAssistedPerformance && options.pressureSubstituteControlData.midiControl !== CONTROL.VOLUME)
+                    {
+                        sequence.sendControlMessageNow(options.outputDevice, trackIndex, options.pressureSubstituteControlData.midiControl,
+                            options.performersMinimumPressure);
+                    }
+                }
+            }
+
             deleteSaveMIDIFileButton();
 
             if(options.assistedPerformance === true && assistant !== undefined)
@@ -627,13 +666,7 @@ _AP.controls = (function(document, window)
                     score.setRunningMarkers();
                     score.moveStartMarkerToTop(svgPagesDiv);
 
-                    sequence.setTrackPressureControls(options.outputDevice,
-                        options.pressureSubstituteControlData.midiControl, options.performersMinimumPressure);
-
-                    if(options.pressureSubstituteControlData.midiControl !== CONTROL.VOLUME)
-                    {
-                        sequence.setTrackPressureControls(options.outputDevice, CONTROL.VOLUME, 127);
-                    }
+                    sendTrackInitializationMessages(options, options.assistedPerformance);
 
                     assistant.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
                         trackIsOnArray, recordingSequence);
@@ -658,7 +691,9 @@ _AP.controls = (function(document, window)
                     score.setRunningMarkers();
                     score.moveStartMarkerToTop(svgPagesDiv);
 
-                    sequence.setTrackPressureControls(options.outputDevice, CONTROL.VOLUME, 127);
+                    sendTrackInitializationMessages(options, options.assistedPerformance);
+
+                    sequence.sendControlMessageNow(options.outputDevice, CONTROL.VOLUME, 127);
 
                     sequence.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
                         trackIsOnArray, recordingSequence, reportEndOfPerformance, reportMsPos);
@@ -813,6 +848,9 @@ _AP.controls = (function(document, window)
     // This function is called by both init() and setScoreDefaultOptions() below.
     setMainOptionsDefaultStates = function()
     {
+        mo.trackInitVolumes = [];
+        mo.trackInitPitchWheelDeviations = [];
+
         mo.minPressureInputText.value = 127;  // only used in live performances. non-assisted performances are always at volume 127.
 
         mo.trackSelector.selectedIndex = 0;
@@ -1028,14 +1066,15 @@ _AP.controls = (function(document, window)
         setSvgControlsState('disabled');
     },
 
-    // Returns a scoreInfo object constructed from the id string of the score
-    // currently selected in the scoreSelector (Defined in assistantPerformer.html.)
-    // The id string must contain:
-    //    nameString followed by ", " followed by
-    //    "nPages="  followed by the number of pages (an integer of any length) followed by ", " followed by
-    //    "nTracks="  followed by the number of tracks (an integer of any length)  followed by ", "  followed by
-    //    zero or more default performer's options separated by ", " (see setDefaultPerformanceOptions() below)
-    //    zero or more default assistant's duration options separated by ", " (see setDefaultAssistantsDurationOptions() below)
+    // Returns a scoreInfo object constructed from the id string of the score currently selected in the scoreSelector
+    // (Defined in assistantPerformer.html.)
+    // The id string contains the following items, each separated by a 'separator'. The 'separator' consists of a comma
+    // and any amount of whitespace on either side.
+    //    nameString followed by the separator 
+    //    "nPages="  followed by the number of pages (an integer of any length) followed by the separator followed by
+    //    "nTracks="  followed by the number of tracks (an integer of any length)  followed by the separator followed by
+    //    zero or more default performer's options separated by the separator (see setDefaultPerformanceOptions() below)
+    //    zero or more default assistant's duration options separated by the separator (see setDefaultAssistantsDurationOptions() below)
     // for example:
     //    "Song Six, nPages=7, nTracks=6, po.pitchWheel.otherTracks"
     // The nameString is used (twice) to construct the URLs for the score pages, for example:
@@ -1045,6 +1084,8 @@ _AP.controls = (function(document, window)
     //      scoreInfo.name (e.g. "Song Six"
     //      scoreInfo.nPages (e.g. 7)
     //      scoreInfo.nTracks (e.g. 8)
+    // and optionally (if present)
+    //      scoreInfo.trackInitialisationValues (see below)
     // and optionally (if present)
     //      scoreInfo.defaultPerformanceOptions (see below)
     // and optionally (if present)
@@ -1073,6 +1114,43 @@ _AP.controls = (function(document, window)
         {
             var i, scoreInfo = {}, components;
 
+            // The (optional) track initialisation values begin with the string "ti." followed by
+            //    "volume=" followed by a volume value (in the range 0..127) for each track, each separated by a single space.
+            //    "pitchWheelDeviation=" followed by a pitch wheel deviation value (in the range 0..127) for each track, each separated by a single space.
+            //
+            // If these values are defined, they are sent once at the beginning of all performances (both live and non-live).
+            // If they are not defined, the default values volume=127 and pitchWheelDeviation=2 are sent.
+            // They will be overridden if the same MIDI commands are sent later during the performance.
+            //
+            // In this function, the optionString argument is the part of the option string after "ado."
+            function setTrackInitialisationValues(trackInitialisationValues, optionString)
+            {
+                var i, volumesString, volumesStringArray, pwdString, pwdStringArray;
+
+                if(optionString.slice(0, 7) === "volume=")
+                {
+                    volumesString = optionString.slice(7);
+                    volumesStringArray = volumesString.split(" ");
+
+                    trackInitialisationValues.volumes = [];
+                    for(i = 0; i < volumesStringArray.length; ++i)
+                    {
+                        trackInitialisationValues.volumes.push(parseInt(volumesStringArray[i], 10));
+                    }
+                }
+                else if(optionString.slice(0, 20) === "pitchWheelDeviation=") // default is variable speed
+                {
+                    pwdString = optionString.slice(20);
+                    pwdStringArray = pwdString.split(" ");
+
+                    trackInitialisationValues.pitchWheelDeviations = [];
+                    for(i = 0; i < pwdStringArray.length; ++i)
+                    {
+                        trackInitialisationValues.pitchWheelDeviations.push(parseInt(pwdStringArray[i], 10));
+                    }
+                }
+            }
+                
             // Default performer's options are all optional. Each begins with the string "po." followed by any of the following:
             // (CheckBoxes are unchecked by default, they are checked if defined here.)
             //    "minPressure=" followed by the minimum MIDI volume to be sent in a live performance.
@@ -1191,7 +1269,11 @@ _AP.controls = (function(document, window)
                 }
             }
 
-            components = infoString.split(", ");
+            components = infoString.split(",");
+            for(i = 0; i < components.length; ++i)
+            {
+                components[i] = components[i].trim();
+            }
 
             if(components.length < 3 || components[1].slice(0, 7) !== "nPages=" || components[2].slice(0, 8) !== "nTracks=")
             {
@@ -1206,7 +1288,15 @@ _AP.controls = (function(document, window)
             {
                 for(i = 3; i < components.length; ++i)
                 {
-                    if(components[i].slice(0, 3) === "po.")
+                    if(components[i].slice(0, 3) === "ti.")
+                    {
+                        if(scoreInfo.trackInitialisationValues === undefined)
+                        {
+                            scoreInfo.trackInitialisationValues = {};
+                        }
+                        setTrackInitialisationValues(scoreInfo.trackInitialisationValues, components[i].slice(3));
+                    }
+                    else if(components[i].slice(0, 3) === "po.")
                     {
                         if(scoreInfo.defaultPerformanceOptions === undefined)
                         {
@@ -1411,10 +1501,23 @@ _AP.controls = (function(document, window)
         {
             var
             scoreInfo = getScoreInfo(),
+            tid = scoreInfo.trackInitialisationValues,
             dpo = scoreInfo.defaultPerformanceOptions,
             dado = scoreInfo.defaultAssistantsDurationOptions;
 
             setMainOptionsDefaultStates(); // also called by init() above
+
+            if(tid !== undefined)
+            {
+                if(tid.volumes !== undefined)
+                {
+                    mo.trackInitVolumes = tid.volumes; // default is empty array
+                }
+                if(tid.pitchWheelDeviations !== undefined)
+                {
+                    mo.trackInitPitchWheelDeviations = tid.pitchWheelDeviations; // default is empty array
+                }
+            }
 
             if(dpo !== undefined)
             {
@@ -1733,6 +1836,9 @@ _AP.controls = (function(document, window)
 
             if(checkMinPressureInput() && checkSpeedInput())
             {
+                options.trackInitVolumes = mo.trackInitVolumes;
+                options.trackInitPitchWheelDeviations = mo.trackInitPitchWheelDeviations;
+
                 // options is a global inside this namespace
                 options.performersMinimumPressure = parseInt(mo.minPressureInputText.value, 10);
 

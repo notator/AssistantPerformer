@@ -307,12 +307,22 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
                         <option id="choose a score, nPages=0, nTracks=0">choose a score</option>
                         <option id="Study 2c3.1, nPages=3, nTracks=3">Study 2c3.1</option>
                         <option id="Study 3 sketch 1, nPages=2, nTracks=8">Study 3 sketch 1</option>
-                        <option id="Song Six, nPages=7, nTracks=6, po.pressure.minimum=40, po.pressure.otherTracks, po.pressure.selectedIndex=4, po.pitchWheel.otherTracks, po.pitchWheel.selectedIndex=2">Song Six</option>
+                        <option id="Song Six, nPages=7, nTracks=6,
+                            ti.volume=127 127 127 127 127 127, ti.pitchWheelDeviation=2 2 50 2 2 2,
+                            po.pressure.minimum=40, po.pressure.otherTracks, po.pressure.selectedIndex=4,
+                            po.pitchWheel.otherTracks, po.pitchWheel.selectedIndex=2">Song Six</option>
                         <!-------------------------------------------------------------------------------------
                             See getScoreInfo() in Controls.js. for a description of what these id string options mean and how to set them.
                             The Performance Options (po.) and Assistant's Duration Options (ado.) are optional.
                             Here is an example, using the complete set:
-                            <option id="Song Six, nPages=7, nTracks=6, po.pressure.minimum=50, po.track=4, po.pitch.soloTrack, po.pitch.otherTracks, po.velocity.soloTrack, po.velocity.otherTracks, po.pressure.soloTrack, po.pressure.otherTracks, po.pressure.selectedIndex=5, po.pitchWheel.soloTrack, po.pitchWheel.otherTracks, po.pitchWheel.selectedIndex=6, po.modWheel.soloTrack, po.modWheel.otherTracks, po.modWheel.selectedIndex=7, ado.speed=57.5, ado.fixedSpeed">Song Six</option>
+                            <option 
+                                id="Song Six, nPages=7, nTracks=6,
+                                ti.volume=127 127 127 127 127 127, ti.pitchwheelDeviation=2 2 50 2 2 2,
+                                po.pressure.minimum=50, po.track=4, po.pitch.soloTrack, po.pitch.otherTracks, po.velocity.soloTrack,
+                                po.velocity.otherTracks, po.pressure.soloTrack, po.pressure.otherTracks, po.pressure.selectedIndex=5,
+                                po.pitchWheel.soloTrack, po.pitchWheel.otherTracks, po.pitchWheel.selectedIndex=6, po.modWheel.soloTrack,
+                                po.modWheel.otherTracks, po.modWheel.selectedIndex=7,
+                                ado.speed=57.5, ado.fixedSpeed">Song Six</option>
                         ---------------------------------------------------------------------------------------->
                     </select>
                     <select id="midiOutputDeviceSelector"

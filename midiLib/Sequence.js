@@ -56,8 +56,11 @@
 *           // The sent messages are not recorded.
 *           finishSilently: finishSilently
 *
-*           // Sets the volume of each track to midiValue
-*           setTrackPressureControls(outputDevice, midiValue)
+*           // Sends the controller message to the given track immediately.
+*           sendControlMessageNow(outputDevice, track, controller, midiValue)
+*
+*           /// Sets the track's pitchWheel deviation to value
+*           sendSetPitchWheelDeviationMessageNow(outputDevice, track, value)
 *
 */
 
@@ -72,6 +75,7 @@ MIDILib.sequence = (function (window)
     var
     UNDEFINED_TIMESTAMP = MIDILib.moment.UNDEFINED_TIMESTAMP,
     CMD = MIDILib.constants.COMMAND,
+    CTL = MIDILib.constants.CONTROL,
     Track = MIDILib.track.Track,
 
     // An empty sequence is created. It contains an empty array of MIDILib.track.Tracks.
@@ -597,15 +601,28 @@ MIDILib.sequence = (function (window)
             stop();
         },
 
-        setTrackPressureControls = function (outputDevice, controller, midiValue)
+        sendControlMessageNow = function (outputDevice, trackIndex, controller, midiValue)
         {
-            var trackIndex, msg;
+            var msg;
 
-            for(trackIndex = 0; trackIndex < this.tracks.length; ++trackIndex)
-            {
-                msg = new MIDILib.message.Message(CMD.CONTROL_CHANGE + trackIndex, controller, midiValue); // controller 7 is volume control
-                outputDevice.send(msg.data, 0);
-            }
+            msg = new MIDILib.message.Message(CMD.CONTROL_CHANGE + trackIndex, controller, midiValue); // controller 7 is volume control
+            outputDevice.send(msg.data, 0);
+        },
+
+        // Sets the track's pitchWheel deviation to value
+        // Sets both RegisteredParameter controls to 0 (zero). This is standard MIDI for selecting the
+        // pitch wheel so that it can be set by the subsequent DataEntry messages.
+        // A DataEntryFine message is not set, because it is not needed and has no effect anyway.
+        // However, RegisteredParameterFine MUST be set, otherwise the messages as a whole have no effect!
+        sendSetPitchWheelDeviationMessageNow = function(outputDevice, track, value)
+        {
+            var msg;
+            msg = new MIDILib.message.Message(CMD.CONTROL_CHANGE + track, CTL.REGISTERED_PARAMETER_COARSE, 0);
+            outputDevice.send(msg.data, 0);
+            msg = new MIDILib.message.Message(CMD.CONTROL_CHANGE + track, CTL.REGISTERED_PARAMETER_FINE, 0);
+            outputDevice.send(msg.data, 0);
+            msg = new MIDILib.message.Message(CMD.CONTROL_CHANGE + track, CTL.DATA_ENTRY_COARSE, value);
+            outputDevice.send(msg.data, 0);
         },
 
         publicPrototypeAPI =
@@ -618,7 +635,8 @@ MIDILib.sequence = (function (window)
             isPaused: isPaused,
             isRunning: isRunning,
             finishSilently: finishSilently,
-            setTrackPressureControls: setTrackPressureControls
+            sendControlMessageNow: sendControlMessageNow,
+            sendSetPitchWheelDeviationMessageNow: sendSetPitchWheelDeviationMessageNow
         };
 
         return publicPrototypeAPI;
