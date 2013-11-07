@@ -223,10 +223,12 @@ _AP.controls = (function(document, window)
     {
         if(mo.usesPressureSoloCheckbox.disabled === false && (mo.usesPressureSoloCheckbox.checked === true || mo.usesPressureOtherTracksCheckbox.checked === true))
         {
-            mo.pressureSubstituteControlDataSelector.style.visibility = "visible"; //.disabled = false;
+            mo.minPressureDiv.style.visibility = "visible";
+            mo.pressureSubstituteControlDataSelector.style.visibility = "visible";
         }
         else
         {
+            mo.minPressureDiv.style.visibility = "hidden";
             mo.pressureSubstituteControlDataSelector.style.visibility = "hidden"; //.disabled = true;
         }
 
@@ -349,7 +351,6 @@ _AP.controls = (function(document, window)
                 else
                 {
                     mo.startRuntimeButton.setAttribute('value', 'not ready');
-                    //mo.startRuntimeButton.value = 'not ready';
                     mo.startRuntimeButton.disabled = true;
                 }
                 break;
@@ -371,15 +372,12 @@ _AP.controls = (function(document, window)
 
                 mo.usesPressureSoloCheckbox.disabled = true;
                 mo.usesPressureOtherTracksCheckbox.disabled = true;
-                mo.pressureSubstituteControlDataSelector.disabled = true;
 
                 mo.usesModSoloCheckbox.disabled = true;
                 mo.usesModOtherTracksCheckbox.disabled = true;
-                mo.modSustituteControlSelector.disabled = true;
 
                 mo.usesPitchBendSoloCheckbox.disabled = true;
                 mo.usesPitchBendOtherTracksCheckbox.disabled = true;
-                mo.pitchBendSubstituteControlDataSelector.disabled = true;
 
                 mo.assistantUsesAbsoluteDurationsRadioButton.disabled = true;
                 mo.assistantsSpeedInputText.disabled = true;
@@ -815,7 +813,8 @@ _AP.controls = (function(document, window)
     // This function is called by both init() and setScoreDefaultOptions() below.
     setMainOptionsDefaultStates = function()
     {
-        mo.performersMinimumPressure = 127; // only used in live performances. non-assisted performances are always at volume 127.
+        mo.minPressureInputText.value = 127;  // only used in live performances. non-assisted performances are always at volume 127.
+
         mo.trackSelector.selectedIndex = 0;
 
         mo.soloPitchOptionCheckbox.checked = false;
@@ -862,6 +861,8 @@ _AP.controls = (function(document, window)
 
             mo.usesPressureSoloCheckbox = document.getElementById("usesPressureSoloCheckbox");
             mo.usesPressureOtherTracksCheckbox = document.getElementById("usesPressureOtherTracksCheckbox");
+            mo.minPressureDiv = document.getElementById("minPressureDiv");
+            mo.minPressureInputText = document.getElementById("minPressureInputText");
             mo.pressureSubstituteControlDataSelector = document.getElementById("pressureSubstituteControlDataSelector");
 
             mo.usesModSoloCheckbox = document.getElementById("usesModSoloCheckbox");
@@ -1459,7 +1460,7 @@ _AP.controls = (function(document, window)
                     }
                     if(dpo.pressure.minimum !== undefined)
                     {
-                        mo.performersMinimumPressure = dpo.pressure.minimum;
+                        mo.minPressureInputText.value = dpo.pressure.minimum;
                     }
                 }
                 if(dpo.pitchWheel !== undefined)
@@ -1692,6 +1693,24 @@ _AP.controls = (function(document, window)
         {
             var success;
 
+            function checkMinPressureInput()
+            {
+                var inputText = mo.minPressureInputText,
+                pressure = parseFloat(inputText.value), success;
+
+                if(isNaN(pressure) || Math.floor(pressure) !== pressure || pressure < 0 || pressure > 127)
+                {
+                    alert("Illegal minimum pressure.\n\nThe value must be an integer in the range 0..127.");
+                    success = false;
+                }
+                else
+                {
+                    success = true;
+                }
+
+                return success;
+            }
+
             function checkSpeedInput()
             {
                 var inputText = mo.assistantsSpeedInputText,
@@ -1699,21 +1718,24 @@ _AP.controls = (function(document, window)
 
                 if(isNaN(speed) || speed <= 0)
                 {
-                    inputText.style.backgroundColor = "#FFDDDD";
+                    alert("Illegal speed factor.\n\n" +
+                          "The value must be an integer or\n" +
+                          "floating point number greater than 0.");
                     success = false;
                 }
                 else
                 {
-                    inputText.style.backgroundColor = "#FFFFFF";
                     success = true;
                 }
+
                 return success;
             }
 
-            if(checkSpeedInput())
+            if(checkMinPressureInput() && checkSpeedInput())
             {
                 // options is a global inside this namespace
-                options.performersMinimumPressure = mo.performersMinimumPressure;
+                options.performersMinimumPressure = parseInt(mo.minPressureInputText.value, 10);
+
                 options.livePerformersTrackIndex = mo.trackSelector.selectedIndex;
 
                 options.overrideSoloVelocity = mo.soloVelocityOptionCheckbox.checked;
@@ -1804,6 +1826,7 @@ _AP.controls = (function(document, window)
             tracksControl.setInitialTracksControlState(options.assistedPerformance, options.livePerformersTrackIndex);
 
             score.refreshDisplay(sequence, options.assistedPerformance, options.livePerformersTrackIndex, false);
+
             if(options.assistedPerformance === true)
             {
                 // This constructor resets moment timestamps relative to the start of their subsequence.
@@ -1815,13 +1838,7 @@ _AP.controls = (function(document, window)
 
             setSvgControlsState('stopped');
 
-            if(options.assistedPerformance === true && assistant !== undefined)
-            {
-                setSvgControlsState('playing');
-            }
         }
-
-        mo.startRuntimeButton.setAttribute('value', 'Running'); // the button is disabled/enabled elsewhere
     },
 
     publicAPI =
