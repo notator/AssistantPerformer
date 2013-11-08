@@ -609,7 +609,7 @@ MIDILib.sequence = (function (window)
             outputDevice.send(msg.data, 0);
         },
 
-        // Sets the track's pitchWheel deviation to value
+        // Sets the track's pitchWheel deviation to value, and the pitchWheel to 64 (=centre position).
         // Sets both RegisteredParameter controls to 0 (zero). This is standard MIDI for selecting the
         // pitch wheel so that it can be set by the subsequent DataEntry messages.
         // A DataEntryFine message is not set, because it is not needed and has no effect anyway.
@@ -622,6 +622,9 @@ MIDILib.sequence = (function (window)
             msg = new MIDILib.message.Message(CMD.CONTROL_CHANGE + track, CTL.REGISTERED_PARAMETER_FINE, 0);
             outputDevice.send(msg.data, 0);
             msg = new MIDILib.message.Message(CMD.CONTROL_CHANGE + track, CTL.DATA_ENTRY_COARSE, value);
+            outputDevice.send(msg.data, 0);
+
+            msg = new MIDILib.message.Message(CMD.PITCH_WHEEL + track, 0, 64); // centre the pitch wheel
             outputDevice.send(msg.data, 0);
         },
 
