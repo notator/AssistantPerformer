@@ -34,7 +34,6 @@ _AP.assistant = (function (window)
     trackIsOnArray,
 
     options, // performance options. This is the mo (=options) object in Controls.
-    pressureFactor, // calculated from options.performersMinimumPressure in the Assistant constructor.
     reportEndOfPerformance, // callback
     recordingSequence, // initially set by assistant.playSpan(...), passed repeatedly to sequence.playSpan(...), returned by reportEndOfPerformance()
     reportMsPosition, // callback
@@ -86,7 +85,7 @@ _AP.assistant = (function (window)
     // b) assumes that RealTime messages will not interrupt the messages being received.    
     handleMIDIInputEvent = function (msg)
     {
-        var inputEvent, command;
+        var inputEvent, command, localOptions = options;
 
         // The returned object is either empty, or has .data and .receivedTime attributes,
         // and so constitutes a timestamped Message. (Web MIDI API simply calls this an Event)
@@ -143,7 +142,7 @@ _AP.assistant = (function (window)
             return inputEvent;
         }
 
-        function handleController(controlData, value, usesSoloTrack, usesOtherTracks)
+        function handleController(runtimeTrackOptions, controlData, value, usesSoloTrack, usesOtherTracks)
         {
             var
             i,
@@ -151,36 +150,45 @@ _AP.assistant = (function (window)
             now = performance.now(),
             trackMoments, nMoments, moment, track;
 
-            // Returns an array of (synchronous) trackMoments.
+            // Returns a new array of (synchronous) trackMoments.
             // Each trackMoment.moment is a Moment whose .messages attribute contains one message,
             // trackMoment.trackIndex is the moment's track index (=channel).
-            function getTrackMoments(nTracks, controlData, value, usesSoloTrack, usesOtherTracks)
+            function getTrackMoments(runtimeTrackOptions, nTracks, controlData, value, usesSoloTrack, usesOtherTracks)
             {
                 var
                 i, trackMoments = [], trackMoment,
-                livePerformersTrackIndex = options.livePerformersTrackIndex;
+                livePerformersTrackIndex = runtimeTrackOptions.livePerformersTrackIndex;
 
                 // returns null if no new trackMoment is created.
-                function newTrackMoment(controlData, channel, value)
+                function newTrackMoment(runtimeTrackOptions, controlData, trackIndex, value)
                 {
                     var message, moment = null, trackMoment = null;
-                    // channel is the new message's channel
-                    // value is the new message's value
+
+                    // runtimeTrackOptions is a pointer to the runtimeOptions attribute of the global options object.
+                    // The runtimeTrackOptions has the following attributes:
+                    //      trackMinVolumes -- an array of integers in the range 0..127, one value per track.
+                    //      trackScales -- an array of floats in the range 0.0..1.0, one value per track.
+                    // controlData is the controlData received from the live performer (via the controlSelector pop-ups).
+                    // value is the control value received from the live performer.
+                    // trackIndex is the new message's trackIndex (is used to index the arrays in runtimeTrackOptions).
                     // Returns null if no message is created for some reason.
-                    function newControlMessage(controlData, channel, value)
+                    function newControlMessage(runtimeTrackOptions, controlData, value, trackIndex)
                     {
                         var
                         CMD = MIDILib.constants.COMMAND,
-                        message = null;
+                        message = null,
+                        minVolume, scale;
 
                         if (controlData.midiControl !== undefined) // a normal control
                         {
                             if(controlData.midiControl === MIDILib.constants.CONTROL.VOLUME)
                             {
-                                value = Math.floor(value / 2) + MINIMUM_VOLUME;
+                                minVolume = runtimeTrackOptions.trackMinVolumes[trackIndex],
+                                scale = runtimeTrackOptions.trackScales[trackIndex];
+                                value = Math.floor(minVolume + (value * scale));
                             }
-
-                            message = new Message(CMD.CONTROL_CHANGE + channel, controlData.midiControl, value);
+                            // for other controls, value is unchanged
+                            message = new Message(CMD.CONTROL_CHANGE + trackIndex, controlData.midiControl, value);
                         }
                         else if (controlData.command !== undefined)
                         {
@@ -189,15 +197,15 @@ _AP.assistant = (function (window)
                                 case CMD.AFTERTOUCH:
                                     if (currentLivePerformersKeyPitch >= 0)  // is -1 when no note is playing
                                     {
-                                        message = new Message(CMD.AFTERTOUCH + channel, currentLivePerformersKeyPitch, value);
+                                        message = new Message(CMD.AFTERTOUCH + trackIndex, currentLivePerformersKeyPitch, value);
                                     }
                                     break;
                                 case CMD.CHANNEL_PRESSURE:
-                                    message = new Message(CMD.CHANNEL_PRESSURE + channel, value, 0);
+                                    message = new Message(CMD.CHANNEL_PRESSURE + trackIndex, value, 0);
                                     break;
                                 case CMD.PITCH_WHEEL:
                                     // value is inputEvent.data[2]
-                                    message = new Message(CMD.PITCH_WHEEL + channel, 0, value);
+                                    message = new Message(CMD.PITCH_WHEEL + trackIndex, 0, value);
                                     break;
                                 default:
                                     break;
@@ -207,14 +215,14 @@ _AP.assistant = (function (window)
                         return message;
                     }
 
-                    message = newControlMessage(controlData, channel, value);
+                    message = newControlMessage(runtimeTrackOptions, controlData, value, trackIndex);
                     if (message !== null)
                     {
                         moment = new Moment(MIDILib.moment.UNDEFINED_TIMESTAMP);  // moment.msPositionInScore becomes UNDEFINED_TIMESTAMP
                         moment.messages.push(message);
                         trackMoment = {};
                         trackMoment.moment = moment;
-                        trackMoment.trackIndex = channel;
+                        trackMoment.trackIndex = trackIndex;
                     }
                     return trackMoment;
                 }
@@ -225,7 +233,7 @@ _AP.assistant = (function (window)
                     {
                         if (trackIsOnArray[i])
                         {
-                            trackMoment = newTrackMoment(controlData, i, value);
+                            trackMoment = newTrackMoment(runtimeTrackOptions, controlData, i, value);
                             if (trackMoment !== null)
                             {
                                 trackMoments.push(trackMoment);
@@ -235,7 +243,7 @@ _AP.assistant = (function (window)
                 }
                 else if (usesSoloTrack)
                 {
-                    trackMoment = newTrackMoment(controlData, livePerformersTrackIndex, value);
+                    trackMoment = newTrackMoment(runtimeTrackOptions, controlData, livePerformersTrackIndex, value);
                     if (trackMoment !== null)
                     {
                         trackMoments.push(trackMoment);
@@ -247,7 +255,7 @@ _AP.assistant = (function (window)
                     {
                         if (trackIsOnArray[i] && i !== livePerformersTrackIndex)
                         {
-                            trackMoment = newTrackMoment(controlData, i, value);
+                            trackMoment = newTrackMoment(runtimeTrackOptions, controlData, i, value);
                             if (trackMoment !== null)
                             {
                                 trackMoments.push(trackMoment);
@@ -263,7 +271,7 @@ _AP.assistant = (function (window)
                 return trackMoments;
             }
 
-            trackMoments = getTrackMoments(nTracks, controlData, value, usesSoloTrack, usesOtherTracks);
+            trackMoments = getTrackMoments(runtimeTrackOptions, nTracks, controlData, value, usesSoloTrack, usesOtherTracks);
             nMoments = trackMoments.length;
             for (i = 0; i < nMoments; ++i)
             {
@@ -630,11 +638,6 @@ _AP.assistant = (function (window)
             }
         }
 
-        function pressureSubstituteValue(inputValue)
-        {
-            return ( options.performersMinimumPressure  + Math.floor(inputValue * pressureFactor) );
-        }
-
         inputEvent = getInputEvent(msg.data, performance.now());
 
         if (inputEvent.data !== undefined)
@@ -644,50 +647,50 @@ _AP.assistant = (function (window)
             {
                 case CMD.CHANNEL_PRESSURE: // produced by both R2M and E-MU XBoard49 when using "aftertouch"
                     //console.log("ChannelPressure, data[1]:", inputEvent.data[1].toString());  // CHANNEL_PRESSURE control has no data[2]
-                    if (options.pressureSubstituteControlData !== null)
+                    if(localOptions.pressureSubstituteControlData !== null)
                     {
                         // CHANNEL_PRESSURE.data[1] is the amount of pressure 0..127.
-                        handleController(options.pressureSubstituteControlData, pressureSubstituteValue(inputEvent.data[1]),
-                                                    options.usesPressureSolo, options.usesPressureOtherTracks);
+                        handleController(localOptions.runtimeOptions, localOptions.pressureSubstituteControlData, inputEvent.data[1],
+                                                    localOptions.usesPressureSolo, localOptions.usesPressureOtherTracks);
                     }
                     break;
                 case CMD.AFTERTOUCH: // produced by the EWI breath controller
                     //console.log("Aftertouch input, key:" + inputEvent.data[1].toString() + " value:", inputEvent.data[2].toString()); 
-                    if (options.pressureSubstituteControlData !== null)
+                    if (localOptions.pressureSubstituteControlData !== null)
                     {
                         // AFTERTOUCH.data[1] is the MIDIpitch to which to apply the aftertouch, but I dont need that
                         // because the current pitch is kept in currentLivePerformersKeyPitch (in the closure).
                         // AFTERTOUCH.data[2] is the amount of pressure 0..127.
-                        handleController(options.pressureSubstituteControlData, pressureSubstituteValue(inputEvent.data[2]),
-                                                    options.usesPressureSolo, options.usesPressureOtherTracks);
+                        handleController(localOptions.runtimeOptions, localOptions.pressureSubstituteControlData, inputEvent.data[2],
+                                                    localOptions.usesPressureSolo, localOptions.usesPressureOtherTracks);
                     }
                     break;
                 case CMD.CONTROL_CHANGE: // sent when the input device's mod wheel changes.
                     // (EWI bite, EMU modulation wheel (CC 1, Coarse Modulation))
-                    if(inputEvent.data[1] === MIDILib.constants.CONTROL.MODWHEEL && options.modSubstituteControlData !== null)
+                    if(inputEvent.data[1] === MIDILib.constants.CONTROL.MODWHEEL && localOptions.modSubstituteControlData !== null)
                     {
                         // inputEvent.data[2] is the value to which to set the changed control
-                        handleController(options.modSubstituteControlData, inputEvent.data[2],
-                                                    options.usesModSolo, options.usesModOtherTracks);
+                        handleController(localOptions.runtimeOptions, localOptions.modSubstituteControlData, inputEvent.data[2],
+                                                    localOptions.usesModSolo, localOptions.usesModOtherTracks);
                     }
                     break;
                 case CMD.PITCH_WHEEL: // EWI pitch bend up/down controllers, EMU pitch wheel
                     //console.log("Pitch Wheel, data[1]:", inputEvent.data[1].toString() + " data[2]:", inputEvent.data[2].toString());
                     // by experiment: inputEvent.data[2] is the "high byte" and has a range 0..127. 
-                    if (options.pitchBendSubstituteControlData !== null)
+                    if (localOptions.pitchBendSubstituteControlData !== null)
                     {
                         // PITCH_WHEEL.data[1] is the 7-bit LSB (0..127) -- ignored here
                         // PITCH_WHEEL.data[2] is the 7-bit MSB (0..127)
-                        handleController(options.pitchBendSubstituteControlData, inputEvent.data[2],
-                                                    options.usesPitchBendSolo, options.usesPitchBendOtherTracks);
+                        handleController(localOptions.runtimeOptions, localOptions.pitchBendSubstituteControlData, inputEvent.data[2],
+                                                    localOptions.usesPitchBendSolo, localOptions.usesPitchBendOtherTracks);
                     }
                     break;
                 case CMD.NOTE_ON:
                     if(inputEvent.data[2] !== 0)
                     {
                         handleNoteOn(inputEvent,
-                            options.overrideSoloPitch, options.overrideOtherTracksPitch,
-                            options.overrideSoloVelocity, options.overrideOtherTracksVelocity);
+                            localOptions.overrideSoloPitch, localOptions.overrideOtherTracksPitch,
+                            localOptions.overrideSoloVelocity, localOptions.overrideOtherTracksVelocity);
                     }
                     else
                     {
@@ -996,7 +999,6 @@ _AP.assistant = (function (window)
 
         setState("stopped");
 
-        pressureFactor = (127 - options.performersMinimumPressure) / 127; // a float
         reportEndOfPerformance = reportEndOfWholePerformance;
         reportMsPosition = reportMillisecondPosition;
 

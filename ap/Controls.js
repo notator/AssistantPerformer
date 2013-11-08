@@ -617,13 +617,13 @@ _AP.controls = (function(document, window)
             function sendTrackInitializationMessages(options, isAssistedPerformance)
             {
                 var nTracks = trackIsOnArray.length,
-                    trackIndex, value, factor;
+                    trackIndex, value;
 
                 for(trackIndex = 0; trackIndex < nTracks; ++trackIndex)
                 { 
-                    if(options.trackInitPitchWheelDeviations.length > 0)
+                    if(options.trackPitchWheelDeviations.length > 0)
                     {
-                        value = options.trackInitPitchWheelDeviations[trackIndex];
+                        value = options.trackPitchWheelDeviations[trackIndex];
                     }
                     else
                     {
@@ -631,17 +631,17 @@ _AP.controls = (function(document, window)
                     }
                     sequence.sendSetPitchWheelDeviationMessageNow(options.outputDevice, trackIndex, value);
 
-                    if(options.trackInitVolumes.length > 0)
+                    if(isAssistedPerformance && options.pressureSubstituteControlData.midiControl === CONTROL.VOLUME)
                     {
-                        value = options.trackInitVolumes[trackIndex];
+                        value = options.runtimeOptions.trackMinVolumes[trackIndex];
+                    }
+                    else if(options.trackMaxVolumes !== undefined && options.trackMaxVolumes.length > 0)
+                    {
+                        value = options.trackMaxVolumes[trackIndex];
                     }
                     else
                     {
                         value = 127; // default
-                    }  
-                    if(isAssistedPerformance && options.pressureSubstituteControlData.midiControl === CONTROL.VOLUME)
-                    {
-                        value = options.performersMinimumPressure; // overrides trackInitVolumes in assisted performances
                     }
                     sequence.sendControlMessageNow(options.outputDevice, trackIndex, CONTROL.VOLUME, value);
 
@@ -848,8 +848,8 @@ _AP.controls = (function(document, window)
     // This function is called by both init() and setScoreDefaultOptions() below.
     setMainOptionsDefaultStates = function()
     {
-        mo.trackInitVolumes = [];
-        mo.trackInitPitchWheelDeviations = [];
+        mo.trackMaxVolumes = [];
+        mo.trackPitchWheelDeviations = [];
 
         mo.minPressureInputText.value = 127;  // only used in live performances. non-assisted performances are always at volume 127.
 
@@ -1114,33 +1114,33 @@ _AP.controls = (function(document, window)
         {
             var i, scoreInfo = {}, components;
 
-            // The (optional) track initialisation values begin with the string "ti." followed by
-            //    "volume=" followed by a volume value (in the range 0..127) for each track, each separated by a single space.
-            //    "pitchWheelDeviation=" followed by a pitch wheel deviation value (in the range 0..127) for each track, each separated by a single space.
+            // The (optional) track initialisation values begin with the string "track." followed by
+            //    "maxVolumes=" followed by a maximum volume value (in the range 0..127) for each track, each separated by a single space.
+            //    "pitchWheelDeviations=" followed by a pitch wheel deviation value (in the range 0..127) for each track, each separated by a single space.
             //
             // If these values are defined, they are sent once at the beginning of all performances (both live and non-live).
             // If they are not defined, the default values volume=127 and pitchWheelDeviation=2 are sent.
             // They will be overridden if the same MIDI commands are sent later during the performance.
             //
-            // In this function, the optionString argument is the part of the option string after "ado."
+            // In this function, the optionString argument is the part of the option string after "track."
             function setTrackInitialisationValues(trackInitialisationValues, optionString)
             {
                 var i, volumesString, volumesStringArray, pwdString, pwdStringArray;
 
-                if(optionString.slice(0, 7) === "volume=")
+                if(optionString.slice(0, 11) === "maxVolumes=")
                 {
-                    volumesString = optionString.slice(7);
+                    volumesString = optionString.slice(11);
                     volumesStringArray = volumesString.split(" ");
 
-                    trackInitialisationValues.volumes = [];
+                    trackInitialisationValues.maxVolumes = [];
                     for(i = 0; i < volumesStringArray.length; ++i)
                     {
-                        trackInitialisationValues.volumes.push(parseInt(volumesStringArray[i], 10));
+                        trackInitialisationValues.maxVolumes.push(parseInt(volumesStringArray[i], 10));
                     }
                 }
-                else if(optionString.slice(0, 20) === "pitchWheelDeviation=") // default is variable speed
+                else if(optionString.slice(0, 21) === "pitchWheelDeviations=") // default is variable speed
                 {
-                    pwdString = optionString.slice(20);
+                    pwdString = optionString.slice(21);
                     pwdStringArray = pwdString.split(" ");
 
                     trackInitialisationValues.pitchWheelDeviations = [];
@@ -1288,13 +1288,13 @@ _AP.controls = (function(document, window)
             {
                 for(i = 3; i < components.length; ++i)
                 {
-                    if(components[i].slice(0, 3) === "ti.")
+                    if(components[i].slice(0, 6) === "track.")
                     {
                         if(scoreInfo.trackInitialisationValues === undefined)
                         {
                             scoreInfo.trackInitialisationValues = {};
                         }
-                        setTrackInitialisationValues(scoreInfo.trackInitialisationValues, components[i].slice(3));
+                        setTrackInitialisationValues(scoreInfo.trackInitialisationValues, components[i].slice(6));
                     }
                     else if(components[i].slice(0, 3) === "po.")
                     {
@@ -1509,13 +1509,13 @@ _AP.controls = (function(document, window)
 
             if(tid !== undefined)
             {
-                if(tid.volumes !== undefined)
+                if(tid.maxVolumes !== undefined)
                 {
-                    mo.trackInitVolumes = tid.volumes; // default is empty array
+                    mo.trackMaxVolumes = tid.maxVolumes; // default is empty array
                 }
                 if(tid.pitchWheelDeviations !== undefined)
                 {
-                    mo.trackInitPitchWheelDeviations = tid.pitchWheelDeviations; // default is empty array
+                    mo.trackPitchWheelDeviations = tid.pitchWheelDeviations; // default is empty array
                 }
             }
 
@@ -1834,13 +1834,47 @@ _AP.controls = (function(document, window)
                 return success;
             }
 
+            // minVolumes are integers in range 0..127
+            function getMinVolumes(maxVolumes, restPressure)
+            {
+                var minVolumes = [],
+                    i;
+
+                for(i = 0; i < maxVolumes.length; ++i)
+                {
+                    minVolumes.push(Math.floor(maxVolumes[i] * restPressure / 127));
+                }
+
+                return minVolumes;
+            }
+
+            // scales are floating point values in range 0.0..1.0
+            function getScales(maxVolumes, minVolumes)
+            {
+                var scales = [], i;
+
+                for(i = 0; i < maxVolumes.length; ++i)
+                {
+                    scales.push((maxVolumes[i] - minVolumes[i]) / 127);
+                }
+
+                return scales;
+            }
+
             if(checkMinPressureInput() && checkSpeedInput())
             {
-                options.trackInitVolumes = mo.trackInitVolumes;
-                options.trackInitPitchWheelDeviations = mo.trackInitPitchWheelDeviations;
+                // options.assistedPerformance is kept up to date by the livePerformerOnOffButton.
+                options.assistedPerformance = (cl.livePerformerOff.getAttribute("opacity") === "0");
 
-                // options is a global inside this namespace
-                options.performersMinimumPressure = parseInt(mo.minPressureInputText.value, 10);
+                options.trackMaxVolumes = mo.trackMaxVolumes;
+                if(options.assistedPerformance)
+                {
+                    options.runtimeOptions = {};
+                    options.runtimeOptions.trackMinVolumes = getMinVolumes(options.trackMaxVolumes, parseInt(mo.minPressureInputText.value, 10));
+                    options.runtimeOptions.trackScales = getScales(options.trackMaxVolumes, options.runtimeOptions.trackMinVolumes);
+                }
+
+                options.trackPitchWheelDeviations = mo.trackPitchWheelDeviations;
 
                 options.livePerformersTrackIndex = mo.trackSelector.selectedIndex;
 
@@ -1882,9 +1916,6 @@ _AP.controls = (function(document, window)
                 options.assistantUsesAbsoluteDurations = mo.assistantUsesAbsoluteDurationsRadioButton.checked;
 
                 options.assistantsSpeed = parseFloat(mo.assistantsSpeedInputText.value) / 100.0;
-
-                // options.assistedPerformance is kept up to date by the livePerformerOnOffButton.
-                options.assistedPerformance = (cl.livePerformerOff.getAttribute("opacity") === "0");
 
                 success = true;
             }
