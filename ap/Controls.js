@@ -851,7 +851,7 @@ _AP.controls = (function(document, window)
         mo.trackMaxVolumes = [];
         mo.trackPitchWheelDeviations = [];
 
-        mo.minPressureInputText.value = 127;  // only used in live performances. non-assisted performances are always at volume 127.
+        mo.minPressureInputText.value = 64;  // default value. Only used in assisted performances.
 
         mo.trackSelector.selectedIndex = 0;
 
@@ -862,7 +862,7 @@ _AP.controls = (function(document, window)
 
         mo.usesPressureSoloCheckbox.checked = false;
         mo.usesPressureOtherTracksCheckbox.checked = false;
-        mo.pressureSubstituteControlDataSelector.selectedIndex = 0;
+        mo.pressureSubstituteControlDataSelector.selectedIndex = 4;
 
         mo.usesPitchBendSoloCheckbox.checked = false;
         mo.usesPitchBendOtherTracksCheckbox.checked = false;
@@ -1223,15 +1223,14 @@ _AP.controls = (function(document, window)
                             {
                                 defaultPerformanceOptions.pressure.minimum = parseInt(optionString.slice(17), 10);
                             }
+                            else if(optionString.slice(0, 23) === "pressure.selectedIndex=")
+                            {
+                                defaultPerformanceOptions.pressure.selectedIndex = parseInt(optionString.slice(23), 10);
+                            }
                             else
-                                if(optionString.slice(0, 23) === "pressure.selectedIndex=")
-                                {
-                                    defaultPerformanceOptions.pressure.selectedIndex = parseInt(optionString.slice(23), 10);
-                                }
-                                else
-                                {
-                                    setSoloOtherOption(defaultPerformanceOptions.pressure, optionString.slice(9));
-                                }
+                            {
+                                setSoloOtherOption(defaultPerformanceOptions.pressure, optionString.slice(9));
+                            }
                         }
                         else if(optionString.slice(0, 11) === "pitchWheel.")
                         {
