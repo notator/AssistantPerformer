@@ -221,34 +221,58 @@ _AP.controls = (function(document, window)
 
     setControlSubstitutionSelectorsVisibilityState = function()
     {
+        function volumeDivVisibility()
+        {
+            var returnValue = "hidden";
+
+            function isVisibleAndMappedToVolume(selector)
+            {
+                var rval = false;
+                if(selector.style.visibility === "visible" && selector.selectedIndex === 4) // 4 is volume
+                {
+                    rval = true;
+                }
+                return rval;
+            }
+
+            if(isVisibleAndMappedToVolume(mo.pressureSubstituteControlDataSelector)
+                || isVisibleAndMappedToVolume(mo.pitchBendSubstituteControlDataSelector)
+                || isVisibleAndMappedToVolume(mo.modSustituteControlSelector))
+            {
+                return "visible";
+            }
+            
+            return returnValue;
+        }
+
         if(mo.usesPressureSoloCheckbox.disabled === false && (mo.usesPressureSoloCheckbox.checked === true || mo.usesPressureOtherTracksCheckbox.checked === true))
         {
-            mo.minPressureDiv.style.visibility = "visible";
             mo.pressureSubstituteControlDataSelector.style.visibility = "visible";
         }
         else
         {
-            mo.minPressureDiv.style.visibility = "hidden";
-            mo.pressureSubstituteControlDataSelector.style.visibility = "hidden"; //.disabled = true;
+            mo.pressureSubstituteControlDataSelector.style.visibility = "hidden";
         }
 
         if(mo.usesPitchBendSoloCheckbox.disabled === false && (mo.usesPitchBendSoloCheckbox.checked === true || mo.usesPitchBendOtherTracksCheckbox.checked === true))
         {
-            mo.pitchBendSubstituteControlDataSelector.style.visibility = "visible"; //.disabled = false;
+            mo.pitchBendSubstituteControlDataSelector.style.visibility = "visible";
         }
         else
         {
-            mo.pitchBendSubstituteControlDataSelector.style.visibility = "hidden"; //.disabled = true;
+            mo.pitchBendSubstituteControlDataSelector.style.visibility = "hidden";
         }
 
         if(mo.usesModSoloCheckbox.disabled === false && (mo.usesModSoloCheckbox.checked === true || mo.usesModOtherTracksCheckbox.checked === true))
         {
-            mo.modSustituteControlSelector.style.visibility = "visible"; //.disabled = false;
+            mo.modSustituteControlSelector.style.visibility = "visible";
         }
         else
         {
-            mo.modSustituteControlSelector.style.visibility = "hidden"; //.disabled = true;
+            mo.modSustituteControlSelector.style.visibility = "hidden";
         }
+
+        mo.minVolumeDiv.style.visibility = volumeDivVisibility();
     },
 
     setMainOptionsState = function(mainOptionsState)
@@ -851,7 +875,7 @@ _AP.controls = (function(document, window)
         mo.trackMaxVolumes = [];
         mo.trackPitchWheelDeviations = [];
 
-        mo.minPressureInputText.value = 64;  // default value. Only used in assisted performances.
+        mo.minVolumeInputText.value = 64;  // default value. Only used in assisted performances.
 
         mo.trackSelector.selectedIndex = 0;
 
@@ -899,8 +923,8 @@ _AP.controls = (function(document, window)
 
             mo.usesPressureSoloCheckbox = document.getElementById("usesPressureSoloCheckbox");
             mo.usesPressureOtherTracksCheckbox = document.getElementById("usesPressureOtherTracksCheckbox");
-            mo.minPressureDiv = document.getElementById("minPressureDiv");
-            mo.minPressureInputText = document.getElementById("minPressureInputText");
+            mo.minVolumeDiv = document.getElementById("minVolumeDiv");
+            mo.minVolumeInputText = document.getElementById("minVolumeInputText");
             mo.pressureSubstituteControlDataSelector = document.getElementById("pressureSubstituteControlDataSelector");
 
             mo.usesModSoloCheckbox = document.getElementById("usesModSoloCheckbox");
@@ -1131,9 +1155,11 @@ _AP.controls = (function(document, window)
                     //    "maxVolumes=" followed by a maximum volume value (in the range 0..127) for each track, each separated by a single space.
                     //    "pitchWheelDeviations=" followed by a pitch wheel deviation value (in the range 0..127) for each track, each separated by a single space.
                     //
-                    // If these values are defined, they are sent once at the beginning of all performances (both live and non-live).
-                    // If they are not defined, the default values volume=127 and pitchWheelDeviation=2 are sent.
-                    // They will be overridden if the same MIDI commands are sent later during the performance.
+                    // If maxVolumes is defined, the values are sent once at the beginning of non-assisted performances. In assisted performances,
+                    // the minVolumes are sent instead.
+                    // The pitchWheelDeviations are sent for both assisted and non-assisted performances.
+                    // If such values are not defined, the default value are maxVolume=127, minVolume=64 and pitchWheelDeviation=2.
+                    // These parameters will, of course, be overridden if the same MIDI commands are sent later during the performance.
                     //
                     // In this function, the optionString argument is the part of the option string after "track."
                     function setTrackInitialisationValues(trackInitialisationValues, optionString)
@@ -1166,13 +1192,15 @@ _AP.controls = (function(document, window)
 
                     // Default performer's options are all optional. Each begins with the string "po." followed by any of the following:
                     // (CheckBoxes are unchecked by default, they are checked if defined here.)
-                    //    "minPressure=" followed by the minimum MIDI volume to be sent in a live performance.
-                    //        minPressure is the volume used for restSequences. When playing, the soloist's input aftertouch or channel presure
-                    //        values are mapped to values between minPressure and 127. po.minPressure defaults to 127 (aftertouch has no effect).
-                    //        Note that performances without a live performer are always sent at volume=127 (for maximum expressivity).
                     //    "track=" followed by the default track number (1..nTracks)
                     //    "pitch.soloTrack" and/or "pitch.otherTracks"
                     //    "velocity.soloTrack" and/or "velocity.otherTracks"
+                    //    "minimumVolume=" followed by the minimum MIDI volume to be sent in a live performance.
+                    //        minimumVolume is the volume used for restSequences. It is the minimum volume of any track whose maximum volume is 127.
+                    //        minimumVolume defaults to 127, meaning that the associated performers control will have no effect.
+                    //    Note that, in performances without a live performer, tracks are always sent at their maxVolume (see above)(for maximum
+                    //    expressivity). The minVolumes of individual tracks are set programmatically using this minimumVolume and their maxVolumes
+                    //    values (see above).
                     //    "pressure.soloTrack" and/or "pressure.otherTracks" and ("pressure.selectedIndex=" followed by the selector's index)
                     //    "pitchWheel.soloTrack" and/or "pitchWheel.otherTracks" and ("pitchWheel.selectedIndex=" followed by the selector's index)
                     //    "modWheel.soloTrack" and/or "modWheel.otherTracks" and ("modWheel.selectedIndex=" followed by the selector's index)
@@ -1213,17 +1241,17 @@ _AP.controls = (function(document, window)
                             }
                             setSoloOtherOption(defaultPerformanceOptions.velocity, optionString.slice(9));
                         }
+                        else if(optionString.slice(0, 14) === "minimumVolume=")
+                        {
+                            defaultPerformanceOptions.minimumVolume = parseInt(optionString.slice(14), 10);
+                        }
                         else if(optionString.slice(0, 9) === "pressure.")
                         {
                             if(defaultPerformanceOptions.pressure === undefined)
                             {
                                 defaultPerformanceOptions.pressure = {};
                             }
-                            if(optionString.slice(0, 17) === "pressure.minimum=")
-                            {
-                                defaultPerformanceOptions.pressure.minimum = parseInt(optionString.slice(17), 10);
-                            }
-                            else if(optionString.slice(0, 23) === "pressure.selectedIndex=")
+                            if(optionString.slice(0, 23) === "pressure.selectedIndex=")
                             {
                                 defaultPerformanceOptions.pressure.selectedIndex = parseInt(optionString.slice(23), 10);
                             }
@@ -1454,6 +1482,10 @@ _AP.controls = (function(document, window)
                             mo.otherTracksVelocityOptionCheckbox.checked = true;
                         }
                     }
+                    if(dpo.minimumVolume !== undefined)
+                    {
+                        mo.minVolumeInputText.value = dpo.minimumVolume;
+                    }
                     if(dpo.pressure !== undefined)
                     {
                         if(dpo.pressure.soloTrack !== undefined)
@@ -1467,10 +1499,6 @@ _AP.controls = (function(document, window)
                         if(dpo.pressure.selectedIndex !== undefined)
                         {
                             mo.pressureSubstituteControlDataSelector.selectedIndex = dpo.pressure.selectedIndex;
-                        }
-                        if(dpo.pressure.minimum !== undefined)
-                        {
-                            mo.minPressureInputText.value = dpo.pressure.minimum;
                         }
                     }
                     if(dpo.pitchWheel !== undefined)
@@ -1654,6 +1682,13 @@ _AP.controls = (function(document, window)
             tracksControl.setInitialTracksControlState(mo.trackSelector.selectedIndex >= 0, mo.trackSelector.selectedIndex);
         }
 
+        if (controlID === "pressureSubstituteControlDataSelector"
+            || controlID === "pitchBendSubstituteControlDataSelector"
+            || controlID === "modSustituteControlSelector")
+        {
+            setControlSubstitutionSelectorsVisibilityState(); // here just sets the visibility of the minimum volume div.
+        }
+
         /*** SVG controls ***/
         if(cl.performanceButtonsDisabled.getAttribute("opacity") !== SMOKE)
         {
@@ -1790,14 +1825,13 @@ _AP.controls = (function(document, window)
         {
             var success;
 
-            function checkMinPressureInput()
+            function checkMinVolumeInput()
             {
-                var inputText = mo.minPressureInputText,
-                pressure = parseFloat(inputText.value), success;
+                var volume = parseFloat(mo.minVolumeInputText.value), success;
 
-                if(isNaN(pressure) || Math.floor(pressure) !== pressure || pressure < 0 || pressure > 127)
+                if(isNaN(volume) || Math.floor(volume) !== volume || volume < 0 || volume > 127)
                 {
-                    alert("Illegal minimum pressure.\n\nThe value must be an integer in the range 0..127.");
+                    alert("Illegal minimum volume.\n\nThe value must be an integer in the range 0..127.");
                     success = false;
                 }
                 else
@@ -1855,7 +1889,7 @@ _AP.controls = (function(document, window)
                 return scales;
             }
 
-            if(checkMinPressureInput() && checkSpeedInput())
+            if(checkMinVolumeInput() && checkSpeedInput())
             {
                 // options.assistedPerformance is kept up to date by the livePerformerOnOffButton.
                 options.assistedPerformance = (cl.livePerformerOff.getAttribute("opacity") === "0");
@@ -1864,7 +1898,7 @@ _AP.controls = (function(document, window)
                 if(options.assistedPerformance)
                 {
                     options.runtimeOptions = {};
-                    options.runtimeOptions.trackMinVolumes = getMinVolumes(options.trackMaxVolumes, parseInt(mo.minPressureInputText.value, 10));
+                    options.runtimeOptions.trackMinVolumes = getMinVolumes(options.trackMaxVolumes, parseInt(mo.minVolumeInputText.value, 10));
                     options.runtimeOptions.trackScales = getScales(options.trackMaxVolumes, options.runtimeOptions.trackMinVolumes);
                 }
 
