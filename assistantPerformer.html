@@ -309,26 +309,46 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
                         <option id="Study 3 sketch 1, nPages=2, nTracks=8, track.maxVolumes=100 100 100 100 100 100 100 100">Study 3 sketch 1</option>
                         <option id="Song Six, nPages=7, nTracks=6,
                             track.maxVolumes=100 100 127 100 100 100, track.pitchWheelDeviations=2 2 4 2 2 2,
-                            po.minimumVolume=40, po.pressure.otherTracks, po.pressure.selectedIndex=4,
-                            po.pitchWheel.otherTracks, po.pitchWheel.selectedIndex=2">Song Six</option>
+                            po.pressure.otherTracks, po.pressure.selectedIndex=4,
+                            po.pitchWheel.otherTracks, po.pitchWheel.selectedIndex=2,
+                            po.speedControl.maximumFactor=200, po.speedControl.selectedIndex=4,
+                            po.minimumVolume=40">Song Six</option>
                         <!-------------------------------------------------------------------------------------
                             See getScoreInfo() in Controls.js. for a description of what these id string options mean and how to set them.
-                            The Performance Options (po.) and Assistant's Duration Options (ado.) are optional.
+                            The first three options (name, nPages and nTracks) are compulsory, all the others are optional.
                             Here is an example, using the complete set:
                             <option 
                                 id="Song Six, nPages=7, nTracks=6,
-                                track.maxVolumes=100 100 127 100 100 100, track.pitchWheelDeviations=2 2 4 2 2 2,
-                                po.minimumVolume=50, po.track=4, po.pitch.soloTrack, po.pitch.otherTracks, po.velocity.soloTrack,
-                                po.velocity.otherTracks, po.pressure.soloTrack, po.pressure.otherTracks, po.pressure.selectedIndex=5,
-                                po.pitchWheel.soloTrack, po.pitchWheel.otherTracks, po.pitchWheel.selectedIndex=6, po.modWheel.soloTrack,
-                                po.modWheel.otherTracks, po.modWheel.selectedIndex=7,
-                                ado.speed=57.5, ado.fixedSpeed">Song Six</option>
+                                speedPercentInputText=57.5, // default is 100
+                                track.maxVolumes=100 100 127 100 100 100, // default is 127 per track
+                                track.pitchWheelDeviations=2 2 4 2 2 2, // default is 2 per track
+                                po.track=4, // default is 1
+                                po.pitch.soloTrack, po.pitch.otherTracks, // default is checkBox.checked === false 
+                                po.velocity.soloTrack, po.velocity.otherTracks,  // default is checkBox.checked === false
+                                po.pressure.soloTrack, po.pressure.otherTracks, po.pressure.selectedIndex=5,  // default is checkBox.checked === false and selectedIndex === 0
+                                po.pitchWheel.soloTrack, po.pitchWheel.otherTracks, po.pitchWheel.selectedIndex=6,  // default is checkBox.checked === false and selectedIndex === 0
+                                po.modWheel.soloTrack, po.modWheel.otherTracks, po.modWheel.selectedIndex=7",  // default is checkBox.checked === false and selectedIndex === 0
+                                po.speedControl.maximumFactor=200, po.speedControllerSelectedIndex=4,  // default is maximumFactor=2, selectedIndex === 0
+                                po.minimumVolume=50 >   // default is minimumVolume === 64
+                            Song Six</option>
                         ---------------------------------------------------------------------------------------->
                     </select>
                     <select id="midiOutputDeviceSelector"
                         name="midiOutputDeviceSelector"
                         class="deviceSelector" onchange="_AP.controls.doControl('midiOutputDeviceSelector')">
                     </select>
+                </div>
+                <div id="defaultSpeedDiv" class="optionsPanel" style="padding: 5px 15px 5px 15px; text-align:center; margin-right: 120px; margin-left: 120px;">
+                    <div style="padding-top: 4px;">
+                        <label id="speedLabel1" for="speedInputText">
+                            speed:
+                        </label>
+                        <input type="text" id="speedPercentInputText" value="100"
+                            style="margin: 0px 0px 3px 0px; width: 40px; vertical-align: middle;">
+                        <label id="speedLabel2" for="speedInputText">
+                            % (must be greater than 0 &mdash; higher values lead to higher speed)
+                        </label>
+                    </div>
                 </div>
                 <div id="performersOptions" class="optionsPanel">
                     Performer's options:                 
@@ -414,21 +434,6 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
                                                 other<br />
                                                 tracks                                      
                                             </div>
-                                            <div style="display: table">
-                                                <div id="minVolumeDiv" style="display: table-row; text-align:right; visibility:hidden;">
-                                                    <div class="checkboxCell">
-                                                        &nbsp;
-                                                    </div>
-                                                    <div class="checkboxCell" style="width: 50px; text-align:right;">
-                                                        minimum<br />
-                                                        volume                                      
-                                                    </div>
-                                                    <div class="checkboxCell">
-                                                        <input type="text" id="minVolumeInputText" value="64"
-                                                            style="padding: 0px; margin: 8px 0px 0px 0px; width: 30px; vertical-align: middle; font-size: 11px;">
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
                                         <div style="margin-left: 20px; line-height: 16px; display: table-row; vertical-align: middle">
                                             <div style="text-align: right; display: table-cell; padding-right: 5px;">
@@ -468,7 +473,7 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
                                         </div>
                                         <div style="margin-left: 20px; line-height: 16px; display: table-row; vertical-align: middle">
                                             <div style="text-align: right; display: table-cell; padding-right: 5px;">
-                                                <label id="modWheelLabel" for="usesModSoloCheckbox" style="vertical-align: middle">mod wheel</label>
+                                                <label id="modWheelLabel" for="usesModSoloCheckbox" style="vertical-align: middle">modulation wheel</label>
                                             </div>
                                             <div class="checkboxCell">
                                                 <input type="checkbox" id="usesModSoloCheckbox" class="standardCheckBox14px"
@@ -488,42 +493,32 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
                                 </div>
                             </div>
                         </div>
-                </div>
-                <div id="assistantsDurationOptions" class="optionsPanel" style="margin-left: 60px; margin-right: 60px; margin-top: 10px">
-                    Assistant's duration options:
                        
-                        <div style="margin-left: 20px;">
-                            <div style="padding-top: 4px;">
-                                <label id="speedLabel1" for="assistantsSpeedInputText">
-                                    Speed Factor:
-                               
-                                </label>
-                                <input type="text" id="assistantsSpeedInputText" value="100"
-                                    style="margin: 0px 0px 3px 0px; width: 40px; vertical-align: middle; font-weight: bold;">
-                                <label id="speedLabel2" for="assistantsSpeedInputText">
-                                    % (must be greater than 0 &mdash; higher values lead to higher speed)
-                               
-                                </label>
-                            </div>
-                            <div class="narrowLineHeight">
-                                <input type="radio" name="durationOptions" value="V1" id="assistantUsesAbsoluteDurationsRadioButton" disabled="disabled"
-                                    onchange="_AP.controls.doControl('assistantUsesAbsoluteDurationsRadioButton')" />
-                                <label id="assistantUsesAbsoluteDurationsRadioButtonLabel" for="assistantUsesAbsoluteDurationsRadioButton">
-                                    Fixed Speed: The assistant's durations will be those stored in the score, divided by the above<br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(floating point) factor.<br />
-                                </label>
-                            </div>
-
-                            <div class="narrowLineHeight">
-                                <input type="radio" name="durationOptions" value="performed" id="assistantUsesRelativeDurationsRadioButton" checked="checked"
-                                    onchange="_AP.controls.doControl('assistantUsesRelativeDurationsRadioButton')" />
-                                <label id="assistantUsesRelativeDurationsRadioButtonLabel" for="assistantUsesRelativeDurationsRadioButton">
-                                    Variable Speed: The assistant's durations will be affected both by the above speed factor<br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and by the note played by the live performer. If the live performer plays a middle C<br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(C5, MIDI Note 60), the performed speed will be the default speed stored in the score.<br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Playing lower or higher keys results in lower or higher speeds respectively.<br />
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Two octaves lower (C3) the speed is halved. Two octaves higher (C7) it is doubled.<br />
-                                </label>
+                        <div style="display: table">
+                            <div style="display: table-row; line-height: 11px;">
+                                <div id="speedControllerSelectorDiv" style="display: table-cell; padding-top: 6px; padding-left: 24px;">
+                                    speed controller:
+                                    <select id="speedControllerSelector" name="speedControllerSelector"
+                                        class="deviceSelector" style="width: 190px; margin-left: 0px;" onchange="_AP.controls.doControl('speedControllerSelector')">
+                                        <option id="noneID">none</option>
+                                        <option id="pitchID">noteOn: pitch</option>
+                                        <option id="velocityID">noteOn: velocity</option>
+                                        <option id="pressureID">aftertouch/channel pressure</option>
+                                        <option id="pitchWheelID">pitch wheel</option>
+                                        <option id="modWheelID">modulation wheel</option>
+                                    </select>
+                                </div>
+                                <div  id="speedControllerMaxSpeedDiv" style="display: table-cell; padding-top:6px; padding-left: 5px; visibility: hidden;">
+                                    max speed:
+                                    <input type="text" id="speedControllerMaxSpeedInputText" value="200" style="padding: 0px; margin: 0px 0px 3px 0px;
+                                            width: 40px; vertical-align: middle;">
+                                    %
+                                </div>
+                                <div id="minVolumeDiv" style="display: table-cell; padding-top: 6px; padding-left: 50px; visibility: hidden;">
+                                    min volume:                                     
+                                    <input type="text" id="minVolumeInputText" value="64" style="padding: 0px; margin: 0px 0px 3px 0px;
+                                            width: 40px; vertical-align: middle;">
+                                </div>
                             </div>
                         </div>
                 </div>

@@ -219,7 +219,7 @@ _AP.controls = (function(document, window)
         }
     },
 
-    setControlSubstitutionSelectorsVisibilityState = function()
+    setControlVisibilityStates = function()
     {
         function volumeDivVisibility()
         {
@@ -272,6 +272,15 @@ _AP.controls = (function(document, window)
             mo.modSustituteControlSelector.style.visibility = "hidden";
         }
 
+        if(mo.speedControllerSelector.disabled === false && mo.speedControllerSelector.selectedIndex > 0)
+        {
+            mo.speedControllerMaxSpeedDiv.style.visibility = "visible";
+        }
+        else
+        {
+            mo.speedControllerMaxSpeedDiv.style.visibility = "hidden";
+        }
+
         mo.minVolumeDiv.style.visibility = volumeDivVisibility();
     },
 
@@ -296,6 +305,7 @@ _AP.controls = (function(document, window)
 
                 if(scoreIndex === 0)
                 {
+                    mo.speedPercentInputText.disabled = true;
                     mo.trackSelector.disabled = true;
 
                     mo.soloVelocityOptionCheckbox.disabled = true;
@@ -312,14 +322,12 @@ _AP.controls = (function(document, window)
                     mo.usesPitchBendSoloCheckbox.disabled = true;
                     mo.usesPitchBendOtherTracksCheckbox.disabled = true;
 
-                    mo.assistantsSpeedInputText.disabled = true;
-                    mo.assistantUsesAbsoluteDurationsRadioButton.disabled = true;
-                    mo.assistantUsesRelativeDurationsRadioButton.disabled = true;
-                    mo.assistantUsesRelativeDurationsRadioButtonLabel.disabled = true;
-
+                    mo.speedControllerSelector.disabled = true;
                 }
                 else if(inputDeviceIndex > 0) // && scoreIndex > 0
                 {
+                    // The speed option can be used with or without a midi input device.
+                    mo.speedPercentInputText.disabled = false;
                     mo.trackSelector.disabled = false;
 
                     mo.soloVelocityOptionCheckbox.disabled = false;
@@ -336,13 +344,12 @@ _AP.controls = (function(document, window)
                     mo.usesModSoloCheckbox.disabled = false;
                     mo.usesModOtherTracksCheckbox.disabled = false;
 
-                    mo.assistantsSpeedInputText.disabled = false;
-                    mo.assistantUsesAbsoluteDurationsRadioButton.disabled = false;
-                    mo.assistantUsesRelativeDurationsRadioButton.disabled = false;
-                    mo.assistantUsesRelativeDurationsRadioButtonLabel.disabled = false;
+                    mo.speedControllerSelector.disabled = false;
                 }
                 else // inputDevice === 0, scoreIndex > 0 (The speed option can be used with or without a midi input device).
                 {
+                    // The speed option can be used with or without a midi input device.
+                    mo.speedPercentInputText.disabled = false;
                     mo.trackSelector.disabled = true;
 
                     mo.soloVelocityOptionCheckbox.disabled = true;
@@ -359,10 +366,7 @@ _AP.controls = (function(document, window)
                     mo.usesPitchBendSoloCheckbox.disabled = true;
                     mo.usesPitchBendOtherTracksCheckbox.disabled = true;
 
-                    // The speed option can be used with or without a midi input device.
-                    mo.assistantsSpeedInputText.disabled = false;
-                    mo.assistantUsesRelativeDurationsRadioButton.disabled = true;
-                    mo.assistantUsesRelativeDurationsRadioButtonLabel.disabled = true;
+                    mo.speedControllerSelector.disabled = true;
                 }
 
                 // Note that the midi input device does not have to be set in order to
@@ -387,6 +391,8 @@ _AP.controls = (function(document, window)
                 mo.scoreSelector.disabled = true;
                 mo.midiOutputDeviceSelector.disabled = true;
 
+                mo.speedPercentInputText.disabled = true;
+
                 mo.trackSelector.disabled = true;
 
                 mo.soloVelocityOptionCheckbox.disabled = true;
@@ -403,17 +409,15 @@ _AP.controls = (function(document, window)
                 mo.usesPitchBendSoloCheckbox.disabled = true;
                 mo.usesPitchBendOtherTracksCheckbox.disabled = true;
 
-                mo.assistantUsesAbsoluteDurationsRadioButton.disabled = true;
-                mo.assistantsSpeedInputText.disabled = true;
-                mo.assistantUsesRelativeDurationsRadioButton.disabled = true;
-                mo.assistantUsesRelativeDurationsRadioButtonLabel.disabled = true;
+                mo.speedControllerSelector.disabled = true;
+
                 mo.startRuntimeButton.disabled = true;
                 break;
             default:
                 throw "Unknown svgControlsState";
         }
 
-        setControlSubstitutionSelectorsVisibilityState();
+        setControlVisibilityStates();
     },
 
     setStopped = function()
@@ -635,8 +639,7 @@ _AP.controls = (function(document, window)
         {
             var
             trackIsOnArray = tracksControl.getTrackIsOnArray(),
-            nTracks = trackIsOnArray.length,
-            recordingSequence;
+            nTracks = trackIsOnArray.length, recordingSequence;
 
             function sendTrackInitializationMessages(options, isAssistedPerformance)
             {
@@ -657,7 +660,7 @@ _AP.controls = (function(document, window)
 
                     if(isAssistedPerformance && options.pressureSubstituteControlData.midiControl === CONTROL.VOLUME)
                     {
-                        value = options.runtimeOptions.trackMinVolumes[trackIndex];
+                        value = options.runtimeOptions.track.minVolumes[trackIndex];
                     }
                     else if(options.trackMaxVolumes !== undefined && options.trackMaxVolumes.length > 0)
                     {
@@ -693,7 +696,7 @@ _AP.controls = (function(document, window)
                     sendTrackInitializationMessages(options, options.assistedPerformance);
 
                     assistant.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
-                        trackIsOnArray, recordingSequence);
+                        options.runtimeOptions.speed, trackIsOnArray, recordingSequence);
 
                     cl.pauseUnselected.setAttribute("opacity", GLASS);
                     cl.pauseSelected.setAttribute("opacity", GLASS);
@@ -718,6 +721,8 @@ _AP.controls = (function(document, window)
                     sendTrackInitializationMessages(options, options.assistedPerformance);
 
                     sequence.sendControlMessageNow(options.outputDevice, CONTROL.VOLUME, 127);
+
+                    sequence.setSpeedFactor(1); // just in case... (The speedFactor should always be constant 1 in non-assisted performances.)
 
                     sequence.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
                         trackIsOnArray, recordingSequence, reportEndOfPerformance, reportMsPos);
@@ -875,7 +880,7 @@ _AP.controls = (function(document, window)
         mo.trackMaxVolumes = [];
         mo.trackPitchWheelDeviations = [];
 
-        mo.minVolumeInputText.value = 64;  // default value. Only used in assisted performances.
+        mo.speedPercentInputText.value = "100";
 
         mo.trackSelector.selectedIndex = 0;
 
@@ -896,9 +901,10 @@ _AP.controls = (function(document, window)
         mo.usesModOtherTracksCheckbox.checked = false;
         mo.modSustituteControlSelector.selectedIndex = 3;
 
-        mo.assistantsSpeedInputText.value = "100";
-        mo.assistantUsesAbsoluteDurationsRadioButton.checked = false;
-        mo.assistantUsesRelativeDurationsRadioButton.checked = true;
+        mo.speedControllerSelector.selectedIndex = 0;
+        mo.speedControllerMaxSpeedInputText.value = 2;
+
+        mo.minVolumeInputText.value = 64;  // default value. Only used in assisted performances.
     },
 
     // Defines the window.svgLoaded(...) function.
@@ -914,6 +920,9 @@ _AP.controls = (function(document, window)
             mo.midiInputDeviceSelector = document.getElementById("midiInputDeviceSelector");
             mo.scoreSelector = document.getElementById("scoreSelector");
             mo.midiOutputDeviceSelector = document.getElementById("midiOutputDeviceSelector");
+
+            mo.speedPercentInputText = document.getElementById("speedPercentInputText");
+
             mo.trackSelector = document.getElementById("trackSelector");
 
             mo.soloVelocityOptionCheckbox = document.getElementById("soloVelocityOptionCheckbox");
@@ -923,8 +932,6 @@ _AP.controls = (function(document, window)
 
             mo.usesPressureSoloCheckbox = document.getElementById("usesPressureSoloCheckbox");
             mo.usesPressureOtherTracksCheckbox = document.getElementById("usesPressureOtherTracksCheckbox");
-            mo.minVolumeDiv = document.getElementById("minVolumeDiv");
-            mo.minVolumeInputText = document.getElementById("minVolumeInputText");
             mo.pressureSubstituteControlDataSelector = document.getElementById("pressureSubstituteControlDataSelector");
 
             mo.usesModSoloCheckbox = document.getElementById("usesModSoloCheckbox");
@@ -935,10 +942,13 @@ _AP.controls = (function(document, window)
             mo.usesPitchBendOtherTracksCheckbox = document.getElementById("usesPitchBendOtherTracksCheckbox");
             mo.pitchBendSubstituteControlDataSelector = document.getElementById("pitchBendSubstituteControlDataSelector");
 
-            mo.assistantsSpeedInputText = document.getElementById("assistantsSpeedInputText");
-            mo.assistantUsesAbsoluteDurationsRadioButton = document.getElementById("assistantUsesAbsoluteDurationsRadioButton");
-            mo.assistantUsesRelativeDurationsRadioButton = document.getElementById("assistantUsesRelativeDurationsRadioButton");
-            mo.assistantUsesRelativeDurationsRadioButtonLabel = document.getElementById("assistantUsesRelativeDurationsRadioButtonLabel");
+            mo.speedControllerSelector = document.getElementById("speedControllerSelector");
+            mo.speedControllerMaxSpeedDiv = document.getElementById("speedControllerMaxSpeedDiv");
+            mo.speedControllerMaxSpeedInputText = document.getElementById("speedControllerMaxSpeedInputText");
+
+            mo.minVolumeDiv = document.getElementById("minVolumeDiv");
+            mo.minVolumeInputText = document.getElementById("minVolumeInputText");
+            
             mo.startRuntimeButton = document.getElementById("startRuntimeButton");
         }
 
@@ -1110,8 +1120,7 @@ _AP.controls = (function(document, window)
             //    nameString followed by the separator 
             //    "nPages="  followed by the number of pages (an integer of any length) followed by the separator followed by
             //    "nTracks="  followed by the number of tracks (an integer of any length)  followed by the separator followed by
-            //    zero or more default performer's options separated by the separator (see setDefaultPerformanceOptions() below)
-            //    zero or more default assistant's duration options separated by the separator (see setDefaultAssistantsDurationOptions() below)
+            //    zero or more performer's options separated by the separator (see setDefaultPerformanceOptions() below)
             // for example:
             //    "Song Six, nPages=7, nTracks=6, po.pitchWheel.otherTracks"
             // The nameString is used (twice) to construct the URLs for the score pages, for example:
@@ -1121,12 +1130,11 @@ _AP.controls = (function(document, window)
             //      scoreInfo.name (e.g. "Song Six"
             //      scoreInfo.nPages (e.g. 7)
             //      scoreInfo.nTracks (e.g. 8)
+            //      scoreInfo.speedPercent (optional. If undefined, default is 100)
             // and optionally (if present)
-            //      scoreInfo.trackInitialisationValues (see below)
+            //      scoreInfo.trackInitialisationValues (optional maxVolumes and pitchWheelDeviations. If undefined, defaults are all 127 and/or all 2, see below)
             // and optionally (if present)
             //      scoreInfo.defaultPerformanceOptions (see below)
-            // and optionally (if present)
-            //      scoreInfo.defaultAssistantsDurationOptions (see below)
             function getScoreInfo()
             {
                 var scoreSelectorElem = document.getElementById("scoreSelector"),
@@ -1195,15 +1203,16 @@ _AP.controls = (function(document, window)
                     //    "track=" followed by the default track number (1..nTracks)
                     //    "pitch.soloTrack" and/or "pitch.otherTracks"
                     //    "velocity.soloTrack" and/or "velocity.otherTracks"
+                    //    "pressure.soloTrack" and/or "pressure.otherTracks" and ("pressure.selectedIndex=" followed by the selector's index)
+                    //    "pitchWheel.soloTrack" and/or "pitchWheel.otherTracks" and ("pitchWheel.selectedIndex=" followed by the selector's index)
+                    //    "modWheel.soloTrack" and/or "modWheel.otherTracks" and ("modWheel.selectedIndex=" followed by the selector's index)
+                    //    "speedControllerSelectedIndex=", followed by the selector's index
                     //    "minimumVolume=" followed by the minimum MIDI volume to be sent in a live performance.
                     //        minimumVolume is the volume used for restSequences. It is the minimum volume of any track whose maximum volume is 127.
                     //        minimumVolume defaults to 127, meaning that the associated performers control will have no effect.
                     //    Note that, in performances without a live performer, tracks are always sent at their maxVolume (see above)(for maximum
                     //    expressivity). The minVolumes of individual tracks are set programmatically using this minimumVolume and their maxVolumes
                     //    values (see above).
-                    //    "pressure.soloTrack" and/or "pressure.otherTracks" and ("pressure.selectedIndex=" followed by the selector's index)
-                    //    "pitchWheel.soloTrack" and/or "pitchWheel.otherTracks" and ("pitchWheel.selectedIndex=" followed by the selector's index)
-                    //    "modWheel.soloTrack" and/or "modWheel.otherTracks" and ("modWheel.selectedIndex=" followed by the selector's index)
                     //
                     // In this function, the optionString argument is the part of the option string after "po."
                     function setDefaultPerformanceOptions(defaultPerformanceOptions, optionString)
@@ -1240,10 +1249,6 @@ _AP.controls = (function(document, window)
                                 defaultPerformanceOptions.velocity = {};
                             }
                             setSoloOtherOption(defaultPerformanceOptions.velocity, optionString.slice(9));
-                        }
-                        else if(optionString.slice(0, 14) === "minimumVolume=")
-                        {
-                            defaultPerformanceOptions.minimumVolume = parseInt(optionString.slice(14), 10);
                         }
                         else if(optionString.slice(0, 9) === "pressure.")
                         {
@@ -1290,22 +1295,24 @@ _AP.controls = (function(document, window)
                                 setSoloOtherOption(defaultPerformanceOptions.modWheel, optionString.slice(9));
                             }
                         }
-                    }
-
-                    // Default assistant's duration options begin with the string "ado." followed by
-                    //    "speed=" followed by the (float) string to be put in the text box (e.g. "speed=26"). Default is speed=100.
-                    //    "fixedSpeed" Default is variable speed.
-                    //
-                    // In this function, the optionString argument is the part of the option string after "ado."
-                    function setDefaultAssistantsDurationOptions(defaultAssistantsDurationOptions, optionString)
-                    {
-                        if(optionString.slice(0, 6) === "speed=")
+                        else if(optionString.slice(0, 13) === "speedControl.")
                         {
-                            defaultAssistantsDurationOptions.speed = optionString.slice(6);
+                            if(defaultPerformanceOptions.speedControl === undefined)
+                            {
+                                defaultPerformanceOptions.speedControl = {};
+                            }
+                            if(optionString.slice(0, 27) === "speedControl.selectedIndex=")
+                            {
+                                defaultPerformanceOptions.speedControl.selectedIndex = parseInt(optionString.slice(27), 10);
+                            }
+                            else if(optionString.slice(0, 27) === "speedControl.maximumFactor=")
+                            {
+                                defaultPerformanceOptions.speedControl.maximumFactor = parseFloat(optionString.slice(27), 10);
+                            }
                         }
-                        else if(optionString === "fixedSpeed") // default is variable speed
+                        else if(optionString.slice(0, 14) === "minimumVolume=")
                         {
-                            defaultAssistantsDurationOptions.fixedSpeed = true;
+                            defaultPerformanceOptions.minimumVolume = parseInt(optionString.slice(14), 10);
                         }
                     }
 
@@ -1343,14 +1350,6 @@ _AP.controls = (function(document, window)
                                     scoreInfo.defaultPerformanceOptions = {};
                                 }
                                 setDefaultPerformanceOptions(scoreInfo.defaultPerformanceOptions, components[i].slice(3));
-                            }
-                            else if(components[i].slice(0, 4) === "ado.")
-                            {
-                                if(scoreInfo.defaultAssistantsDurationOptions === undefined)
-                                {
-                                    scoreInfo.defaultAssistantsDurationOptions = {};
-                                }
-                                setDefaultAssistantsDurationOptions(scoreInfo.defaultAssistantsDurationOptions, components[i].slice(4));
                             }
                         }
                     }
@@ -1437,8 +1436,7 @@ _AP.controls = (function(document, window)
             {
                 var
                 tid = scoreInfo.trackInitialisationValues,
-                dpo = scoreInfo.defaultPerformanceOptions,
-                dado = scoreInfo.defaultAssistantsDurationOptions;
+                dpo = scoreInfo.defaultPerformanceOptions;
 
                 setMainOptionsDefaultStates(); // also called by init() above
 
@@ -1481,10 +1479,6 @@ _AP.controls = (function(document, window)
                         {
                             mo.otherTracksVelocityOptionCheckbox.checked = true;
                         }
-                    }
-                    if(dpo.minimumVolume !== undefined)
-                    {
-                        mo.minVolumeInputText.value = dpo.minimumVolume;
                     }
                     if(dpo.pressure !== undefined)
                     {
@@ -1531,22 +1525,24 @@ _AP.controls = (function(document, window)
                             mo.modSustituteControlSelector.selectedIndex = dpo.modWheel.selectedIndex;
                         }
                     }
+                    if(dpo.speedControl !== undefined)
+                    {
+                        if(dpo.speedControl.selectedIndex !== undefined)
+                        {
+                            mo.speedControllerSelector.selectedIndex = dpo.speedControl.selectedIndex;
+                        }
+                        if(dpo.speedControl.maximumFactor !== undefined)
+                        {
+                            mo.speedControllerMaxSpeedInputText.value = dpo.speedControl.maximumFactor;
+                        }
+                    }
+                    if(dpo.minimumVolume !== undefined)
+                    {
+                        mo.minVolumeInputText.value = dpo.minimumVolume;
+                    }
                 }
 
-                if(dado !== undefined)
-                {
-                    if(dado.speed !== undefined)
-                    {
-                        mo.assistantsSpeedInputText.value = dado.speed;
-                    }
-                    if(dado.fixedSpeed !== undefined)
-                    {
-                        mo.assistantUsesAbsoluteDurationsRadioButton.checked = true;
-                        mo.assistantUsesRelativeDurationsRadioButton.checked = false;
-                    }
-                }
-
-                setControlSubstitutionSelectorsVisibilityState();
+                setControlVisibilityStates();
             }
 
             scoreInfo = getScoreInfo();
@@ -1654,8 +1650,7 @@ _AP.controls = (function(document, window)
         || controlID === "usesModOtherTracksCheckbox"
         || controlID === "usesPitchBendSoloCheckbox"
         || controlID === "usesPitchBendOtherTracksCheckbox"
-        || controlID === "assistantUsesAbsoluteDurationsRadioButton"
-        || controlID === "assistantUsesRelativeDurationsRadioButton")
+        || controlID === "speedControllerSelector")
         {
             setMainOptionsState("enable"); // enables only the appropriate controls
         }
@@ -1686,7 +1681,7 @@ _AP.controls = (function(document, window)
             || controlID === "pitchBendSubstituteControlDataSelector"
             || controlID === "modSustituteControlSelector")
         {
-            setControlSubstitutionSelectorsVisibilityState(); // here just sets the visibility of the minimum volume div.
+            setControlVisibilityStates(); // here just sets the visibility of the minimum volume div.
         }
 
         /*** SVG controls ***/
@@ -1823,7 +1818,7 @@ _AP.controls = (function(document, window)
     {
         function getOptions()
         {
-            var success;
+            var success, speedRoots;
 
             function checkMinVolumeInput()
             {
@@ -1844,12 +1839,12 @@ _AP.controls = (function(document, window)
 
             function checkSpeedInput()
             {
-                var inputText = mo.assistantsSpeedInputText,
+                var inputText = mo.speedPercentInputText,
                 speed = parseFloat(inputText.value), success;
 
                 if(isNaN(speed) || speed <= 0)
                 {
-                    alert("Illegal speed factor.\n\n" +
+                    alert("Illegal standard speed percentage.\n\n" +
                           "The value must be an integer or\n" +
                           "floating point number greater than 0.");
                     success = false;
@@ -1889,6 +1884,18 @@ _AP.controls = (function(document, window)
                 return scales;
             }
 
+            function getSpeedRoots(speedControllerMaxSpeedInputText)
+            {
+                var speedRoots = {},
+                    maxSpeedFactor = parseFloat(speedControllerMaxSpeedInputText.value) / 100,
+                    minSpeedFactor = 1 / maxSpeedFactor;
+
+                speedRoots.faster = 1 / Math.pow(maxSpeedFactor, (1 / 63));
+                speedRoots.slower = 1 / Math.pow(minSpeedFactor, (1 / 64));
+
+                return speedRoots;
+            }
+
             if(checkMinVolumeInput() && checkSpeedInput())
             {
                 // options.assistedPerformance is kept up to date by the livePerformerOnOffButton.
@@ -1898,8 +1905,19 @@ _AP.controls = (function(document, window)
                 if(options.assistedPerformance)
                 {
                     options.runtimeOptions = {};
-                    options.runtimeOptions.trackMinVolumes = getMinVolumes(options.trackMaxVolumes, parseInt(mo.minVolumeInputText.value, 10));
-                    options.runtimeOptions.trackScales = getScales(options.trackMaxVolumes, options.runtimeOptions.trackMinVolumes);
+                    options.runtimeOptions.track = {};
+                    options.runtimeOptions.track.minVolumes = getMinVolumes(options.trackMaxVolumes, parseInt(mo.minVolumeInputText.value, 10));
+                    options.runtimeOptions.track.scales = getScales(options.trackMaxVolumes, options.runtimeOptions.track.minVolumes);
+
+                    options.runtimeOptions.speed = {};
+                    options.runtimeOptions.speed.controllerIndex = mo.speedControllerSelector.selectedIndex;
+                    speedRoots = getSpeedRoots(mo.speedControllerMaxSpeedInputText);
+                    options.runtimeOptions.speed.fasterRoot = speedRoots.faster;
+                    options.runtimeOptions.speed.slowerRoot = speedRoots.slower;
+                    // If the controller's value (cv, in range 0..127) is >= 64, the factor which is passed to tick() will be
+                    //     factor = fasterRoot ^ (cv - 64) -- if cv = 64, factor is 1, if cv is 127, factor is maximumFactor
+                    // If the controller's value is < 64, the factor which is passed to tick() will be
+                    //     factor = slowerRoot ^ (64 - cv) -- if cv = 0, factor will is 1/maximumFactor
                 }
 
                 options.trackPitchWheelDeviations = mo.trackPitchWheelDeviations;
@@ -1941,9 +1959,7 @@ _AP.controls = (function(document, window)
                     options.modSubstituteControlData = controlOptions[mo.modSustituteControlSelector.selectedIndex];
                 }
 
-                options.assistantUsesAbsoluteDurations = mo.assistantUsesAbsoluteDurationsRadioButton.checked;
-
-                options.assistantsSpeed = parseFloat(mo.assistantsSpeedInputText.value) / 100.0;
+                options.assistantsSpeed = parseFloat(mo.speedPercentInputText.value) / 100.0;
 
                 success = true;
             }

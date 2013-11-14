@@ -15,7 +15,7 @@
 
 _AP.namespace('_AP.assistant');
 
-_AP.assistant = (function (window)
+_AP.assistant = (function ()
 {
     "use strict";
 
@@ -25,13 +25,12 @@ _AP.assistant = (function (window)
     Message = MIDILib.message.Message,
     Moment = MIDILib.moment.Moment,
     Sequence = MIDILib.sequence.Sequence,
-
-    // If the volume control is overridden, the sent volume will be this value
-    // plus half the performed value. The sent value thus never exceeds 127.
-    MINIMUM_VOLUME = 64,
  
     outputDevice,
     trackIsOnArray,
+
+    performersSpeedOptions,
+    currentLivePerformersKeyPitch = -1, // -1 means "no key depressed". This value is set when the live performer sends a noteOff
 
     options, // performance options. This is the mo (=options) object in Controls.
     reportEndOfPerformance, // callback
@@ -60,8 +59,6 @@ _AP.assistant = (function (window)
     stopped = true,
     paused = false,
 
-    currentLivePerformersKeyPitch = -1, // -1 means "no key depressed". This value is set when the live performer sends a noteOff
-
     forwardSetState, // forward declaration, set to setState later.
 
     stop = function ()
@@ -85,7 +82,8 @@ _AP.assistant = (function (window)
     // b) assumes that RealTime messages will not interrupt the messages being received.    
     handleMIDIInputEvent = function (msg)
     {
-        var inputEvent, command, localOptions = options;
+        var inputEvent, command,
+            localOptions = options, trackOptions = localOptions.runtimeOptions.track;
 
         // The returned object is either empty, or has .data and .receivedTime attributes,
         // and so constitutes a timestamped Message. (Web MIDI API simply calls this an Event)
@@ -142,6 +140,39 @@ _AP.assistant = (function (window)
             return inputEvent;
         }
 
+        function setSpeedFactor(receivedCommandIndexInHTMLMenu, controllerValue)
+        {
+            var speedFactor;
+            // If the controller's value (cv, in range 0..127) is >= 64, the factor which is passed to tick() will be
+            //     factor = fasterRoot ^ (cv - 64) -- if cv = 64, factor is 1, if cv is 127, factor is maximumFactor
+            // If the controller's value is < 64, the factor which is passed to tick() will be
+            //     factor = slowerRoot ^ (64 - cv) -- if cv = 0, factor will is 1/maximumFactor
+            function getSpeedFactor(fasterRoot, slowerRoot, controllerValue)
+            {
+                var factor;
+                if(controllerValue < 64) // 0..63
+                {
+                    factor = Math.pow(slowerRoot, (64 - controllerValue));
+                }
+                else // 64..127
+                {
+                    factor = Math.pow(fasterRoot, (controllerValue - 64));
+                }
+
+                console.log("assistant: factor=" + factor.toString(10));
+
+                return factor;
+            }
+
+            if(performersSpeedOptions !== undefined
+                && performersSpeedOptions.controllerIndex !== undefined && performersSpeedOptions.controllerIndex === receivedCommandIndexInHTMLMenu
+                && performersSpeedOptions.fasterRoot !== undefined && performersSpeedOptions.slowerRoot !== undefined)
+            {
+                speedFactor = getSpeedFactor(performersSpeedOptions.fasterRoot, performersSpeedOptions.slowerRoot, controllerValue);
+                performedSequences[currentIndex].setSpeedFactor(speedFactor);
+            }
+        }
+
         function handleController(runtimeTrackOptions, controlData, value, usesSoloTrack, usesOtherTracks)
         {
             var
@@ -164,7 +195,7 @@ _AP.assistant = (function (window)
                 {
                     var message, moment = null, trackMoment = null;
 
-                    // runtimeTrackOptions is a pointer to the runtimeOptions attribute of the global options object.
+                    // runtimeTrackOptions is a pointer to the runtimeTrackOptions attribute of the global options object.
                     // The runtimeTrackOptions has the following attributes:
                     //      trackMinVolumes -- an array of integers in the range 0..127, one value per track.
                     //      trackScales -- an array of floats in the range 0.0..1.0, one value per track.
@@ -183,8 +214,8 @@ _AP.assistant = (function (window)
                         {
                             if(controlData.midiControl === MIDILib.constants.CONTROL.VOLUME)
                             {
-                                minVolume = runtimeTrackOptions.trackMinVolumes[trackIndex],
-                                scale = runtimeTrackOptions.trackScales[trackIndex];
+                                minVolume = runtimeTrackOptions.minVolumes[trackIndex];
+                                scale = runtimeTrackOptions.scales[trackIndex];
                                 value = Math.floor(minVolume + (value * scale));
                             }
                             // for other controls, value is unchanged
@@ -322,49 +353,31 @@ _AP.assistant = (function (window)
             }
         }
 
-        function playSequence(sequence, options)
+        function playSequence(sequence)
         {
-            var twentyfourthRootOfTwo = 1.029302236643492; // Math.pow(2, (1 / 24))
-
-            // Moment adjustedTimeReSequence attributes are set (relative to the start of the
-            // sequence), using sequence.msPositionInScore, moment.msPositionInScore and
-            // the durationFactor.
-            // The msPositionInScore of each message's containing moment is unchanged.
-            function setMomentTimestamps (sequence, durationFactor)
+            function setMomentTimestamps(sequence)
             {
                 var
                 sequenceMsPosition = sequence.msPositionInScore,
                 nTracks = sequence.tracks.length, moment,
                 i, j, track, trackLength;
 
-                for (i = 0; i < nTracks; ++i)
+                for(i = 0; i < nTracks; ++i)
                 {
                     track = sequence.tracks[i];
                     trackLength = track.moments.length;
-                    for (j = 0; j < trackLength; ++j)
+                    for(j = 0; j < trackLength; ++j)
                     {
                         moment = track.moments[j];
-                        moment.adjustedTimeReSequence = Math.floor((moment.msPositionInScore - sequenceMsPosition) / durationFactor);
+                        moment.adjustedTimeReSequence = moment.msPositionInScore - sequenceMsPosition;
                     }
                 }
             }
 
-            if(options.assistantUsesAbsoluteDurations === false)
-            {
-                // duration factor calculation (depends on performed pitch)
-                if(currentLivePerformersKeyPitch !== -1) // if its a NoteOff, the durationFactor does not change
-                {
-                    options.durationFactor = Math.pow(twentyfourthRootOfTwo, currentLivePerformersKeyPitch - 60);  // is 1 at middle C (MIDI Note 60)
-                }
+            setMomentTimestamps(sequence);
 
-                //console.log("currentIndex=" + currentIndex.toString() + " durationFactor=" + options.durationFactor.toString());
-
-                // durations in the sequence are divided by options.durationFactor
-                setMomentTimestamps(sequence, options.durationFactor);
-            }
-
-            // if options.assistantUsesAbsoluteDurations === true, the durations are related to msPositionInScore
-            // else the durations will be related to moment.timestamps which have been set relative to the start of the sequence.
+            // The durations will be related to moment.timestamps which have been
+            // set relative to the start of the sequence, and to speedFactorObject argument.
             sequence.playSpan(outputDevice, 0, Number.MAX_VALUE, trackIsOnArray, recordingSequence, reportEndOfSequence, reportMsPosition);
         }
 
@@ -385,7 +398,7 @@ _AP.assistant = (function (window)
                     currentIndex = nextIndex++;
                     endOfPerformance = (currentIndex === endIndex);
                     sequenceStartNow = inputEvent.receivedTime;
-                    playSequence(performedSequences[currentIndex], options);
+                    playSequence(performedSequences[currentIndex]);
                 }
                 else if (nextIndex <= endIndex)
                 {
@@ -629,7 +642,8 @@ _AP.assistant = (function (window)
                             inputEvent.data[1], inputEvent.data[2],
                             overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity);
                     }
-                    playSequence(allSubsequences[currentIndex], options);
+
+                    playSequence(allSubsequences[currentIndex]);
                 }
             }
             else // velocity 0 is "noteOff"
@@ -643,51 +657,67 @@ _AP.assistant = (function (window)
         if (inputEvent.data !== undefined)
         {
             command = inputEvent.command();
+
             switch(command)
             {
                 case CMD.CHANNEL_PRESSURE: // produced by both R2M and E-MU XBoard49 when using "aftertouch"
+                    setSpeedFactor(3, inputEvent.data[1]);
                     //console.log("ChannelPressure, data[1]:", inputEvent.data[1].toString());  // CHANNEL_PRESSURE control has no data[2]
                     if(localOptions.pressureSubstituteControlData !== null)
                     {
                         // CHANNEL_PRESSURE.data[1] is the amount of pressure 0..127.
-                        handleController(localOptions.runtimeOptions, localOptions.pressureSubstituteControlData, inputEvent.data[1],
+                        handleController(trackOptions, localOptions.pressureSubstituteControlData, inputEvent.data[1],
                                                     localOptions.usesPressureSolo, localOptions.usesPressureOtherTracks);
                     }
                     break;
                 case CMD.AFTERTOUCH: // produced by the EWI breath controller
+                    setSpeedFactor(3, inputEvent.data[2]);
                     //console.log("Aftertouch input, key:" + inputEvent.data[1].toString() + " value:", inputEvent.data[2].toString()); 
                     if (localOptions.pressureSubstituteControlData !== null)
                     {
                         // AFTERTOUCH.data[1] is the MIDIpitch to which to apply the aftertouch, but I dont need that
                         // because the current pitch is kept in currentLivePerformersKeyPitch (in the closure).
                         // AFTERTOUCH.data[2] is the amount of pressure 0..127.
-                        handleController(localOptions.runtimeOptions, localOptions.pressureSubstituteControlData, inputEvent.data[2],
+                        handleController(trackOptions, localOptions.pressureSubstituteControlData, inputEvent.data[2],
                                                     localOptions.usesPressureSolo, localOptions.usesPressureOtherTracks);
                     }
                     break;
                 case CMD.CONTROL_CHANGE: // sent when the input device's mod wheel changes.
-                    // (EWI bite, EMU modulation wheel (CC 1, Coarse Modulation))
-                    if(inputEvent.data[1] === MIDILib.constants.CONTROL.MODWHEEL && localOptions.modSubstituteControlData !== null)
+                    if(inputEvent.data[1] === MIDILib.constants.CONTROL.MODWHEEL)
                     {
-                        // inputEvent.data[2] is the value to which to set the changed control
-                        handleController(localOptions.runtimeOptions, localOptions.modSubstituteControlData, inputEvent.data[2],
-                                                    localOptions.usesModSolo, localOptions.usesModOtherTracks);
+                        setSpeedFactor(5, inputEvent.data[2]);
+                        // (EWI bite, EMU modulation wheel (CC 1, Coarse Modulation))
+                        if(localOptions.modSubstituteControlData !== null)
+                        {
+                            // inputEvent.data[2] is the value to which to set the changed control
+                            handleController(trackOptions, localOptions.modSubstituteControlData, inputEvent.data[2],
+                                                        localOptions.usesModSolo, localOptions.usesModOtherTracks);
+                        }
                     }
                     break;
                 case CMD.PITCH_WHEEL: // EWI pitch bend up/down controllers, EMU pitch wheel
+                    setSpeedFactor(4, inputEvent.data[2]);
                     //console.log("Pitch Wheel, data[1]:", inputEvent.data[1].toString() + " data[2]:", inputEvent.data[2].toString());
                     // by experiment: inputEvent.data[2] is the "high byte" and has a range 0..127. 
                     if (localOptions.pitchBendSubstituteControlData !== null)
                     {
                         // PITCH_WHEEL.data[1] is the 7-bit LSB (0..127) -- ignored here
                         // PITCH_WHEEL.data[2] is the 7-bit MSB (0..127)
-                        handleController(localOptions.runtimeOptions, localOptions.pitchBendSubstituteControlData, inputEvent.data[2],
+                        handleController(trackOptions, localOptions.pitchBendSubstituteControlData, inputEvent.data[2],
                                                     localOptions.usesPitchBendSolo, localOptions.usesPitchBendOtherTracks);
                     }
                     break;
                 case CMD.NOTE_ON:
                     if(inputEvent.data[2] !== 0)
                     {
+                        if(performersSpeedOptions.selectedIndex === 1)
+                        {
+                            setSpeedFactor(1, inputEvent.data[1]);
+                        }
+                        else if(performersSpeedOptions.selectedIndex === 2)
+                        {
+                            setSpeedFactor(2, inputEvent.data[2]);
+                        }
                         handleNoteOn(inputEvent,
                             localOptions.overrideSoloPitch, localOptions.overrideOtherTracksPitch,
                             localOptions.overrideSoloVelocity, localOptions.overrideOtherTracksVelocity);
@@ -783,7 +813,7 @@ _AP.assistant = (function (window)
     // endMarkerMsPosition (not including moments at the endMarkerMsPosition).
     // Creating the performedSequences array does *not* change the data in allSequences, so the start and end markers can be moved between
     // performances without reconstructing the assistant.
-    playSpan = function (outDevice, startMarkerMsPosition, endMarkerMsPosition, argTrackIsOnArray, recordingSeq)
+    playSpan = function (outDevice, startMarkerMsPosition, endMarkerMsPosition, performersSpeedOpts, argTrackIsOnArray, recordingSeq)
     {
         function getPerformedSequences(allSequences, startMarkerMsPosition, endMarkerMsPosition)
         {
@@ -812,6 +842,7 @@ _AP.assistant = (function (window)
 
         setState("running");
         outputDevice = outDevice;
+        performersSpeedOptions = performersSpeedOpts;
         // trackIsOnArray is read only
         trackIsOnArray = argTrackIsOnArray;
         performedSequences = getPerformedSequences(allSequences, startMarkerMsPosition, endMarkerMsPosition);
@@ -1030,4 +1061,4 @@ _AP.assistant = (function (window)
 
     return publicAPI;
 
-}(window));
+}());

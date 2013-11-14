@@ -104,6 +104,7 @@ MIDILib.sequence = (function (window)
     Sequence.prototype = (function (window)
     {
         var
+        speedFactor = 1.0, // nextMoment()
         // used by setState()
         currentMoment = null, // nextMoment(), resume(), tick()
         pausedMoment = null, // set by pause(), used by resume()
@@ -192,15 +193,16 @@ MIDILib.sequence = (function (window)
             }
         },
 
-        // If the time relative to the sequence has been adjusted (as currently in an assisted
-        // performances that uses the 'relative durations' option), this function returns the
-        // adjusted time. Otherwise it returns this.msPositionInScore (which takes account of
-        // the global speed option).
+        // moment.msPositionInScore is returned if moment.adjustedTimeReSequence is equal to UNDEFINED_TIMESTAMP,
+        // otherwise moment.adjustedTimeReSequence is returned. 
+        // (In assisted performances moment.adjustedTimeReSequence is set to the time relative
+        // to its subsequence, using the subsequence's msPositionInScore).
+        // msPositionInScore always takes the global speed option into account.
         timeReSequence = function (moment)
         {
             var time;
 
-            if (moment.adjustedTimeReSequence === UNDEFINED_TIMESTAMP)
+            if(moment.adjustedTimeReSequence === UNDEFINED_TIMESTAMP)
             {
                 time = moment.msPositionInScore;
             }
@@ -223,7 +225,7 @@ MIDILib.sequence = (function (window)
             nTracks = the.tracks.length,
             track, i, currentTrack,
             moment, minMsPositionInScore = Number.MAX_VALUE,
-            nextMomt = null;
+            nextMomt = null, prevTrackMoment;
 
             if (!stopped && !paused)
             {
@@ -251,11 +253,6 @@ MIDILib.sequence = (function (window)
                 }
                 else
                 {
-                    //console.log("currentIndex=" + currentTrack.currentIndex +
-                    //            "toIndex=" + currentTrack.toIndex +
-                    //            "totalMoments=" + currentTrack.moments.length);
-                    currentTrack.currentIndex++;
-
                     if (reportMsPositionInScore !== undefined && reportMsPositionInScore !== null
                     && (nextMomt.chordStart || nextMomt.restStart) // These attributes are set when loading a score.
                     && (nextMomt.msPositionInScore > lastReportedMsPosition))
@@ -265,14 +262,27 @@ MIDILib.sequence = (function (window)
                         //console.log("msPositionToReport=" + msPositionToReport);
                     }
 
-                    nextMomt.timestamp = timeReSequence(nextMomt) + sequenceStartTime;
+                    if(currentTrack.currentIndex === 0)
+                    {
+                        nextMomt.timestamp = sequenceStartTime;
+                    }
+                    else
+                    {
+                        prevTrackMoment = currentTrack.moments[currentTrack.currentIndex - 1];
+                        nextMomt.timestamp = ((timeReSequence(nextMomt) - timeReSequence(prevTrackMoment)) * speedFactor) + prevTrackMoment.timestamp;
+                    }
+
+                    //console.log("currentIndex=" + currentTrack.currentIndex +
+                    //            "toIndex=" + currentTrack.toIndex +
+                    //            "totalMoments=" + currentTrack.moments.length);
+                    currentTrack.currentIndex++;
                 }
             }
 
             return nextMomt; // null stops tick().
         },
 
-        // tick() function -- which ws a lot to Chris Wilson of the Web Audio Group
+        // tick() function -- which ows a lot to Chris Wilson of the Web Audio Group
         // Recursive function. Also used by resume(), playSpan()
         // This function has been tested as far as possible without having "a conformant outputDevice.send() with timestamps".
         // It needs testing again with the conformant outputDevice.send() and a higher value for PREQUEUE. What would the
@@ -333,7 +343,7 @@ MIDILib.sequence = (function (window)
             }
 
             delay = currentMoment.timestamp - now; // compensates for inaccuracies in setTimeout
-            //console.log("tick: delay1 = " + delay);
+            //console.log("tick: delay1 = " + delay.toString(10));
             //console.log("currentMoment.msPositionInScore: " + currentMoment.msPositionInScore);
             //console.log("currentMoment.timestamp: " + currentMoment.timestamp);
             // send all messages that are due between now and PREQUEUE ms later. 
@@ -377,7 +387,7 @@ MIDILib.sequence = (function (window)
 
                 delay = currentMoment.timestamp - now;
 
-                //console.log("tick: delay2 = " + delay + "(PREQUEUE: " + PREQUEUE + ")");
+                console.log("tick: delay2 = " + delay.toString(10));
             }
 
             //console.log("tick: delay3 = " + delay);
@@ -628,6 +638,11 @@ MIDILib.sequence = (function (window)
             outputDevice.send(msg.data, 0);
         },
 
+        setSpeedFactor = function (factor)
+        {
+            speedFactor = factor;
+        },
+
         publicPrototypeAPI =
         {
             playSpan: playSpan,
@@ -639,7 +654,8 @@ MIDILib.sequence = (function (window)
             isRunning: isRunning,
             finishSilently: finishSilently,
             sendControlMessageNow: sendControlMessageNow,
-            sendSetPitchWheelDeviationMessageNow: sendSetPitchWheelDeviationMessageNow
+            sendSetPitchWheelDeviationMessageNow: sendSetPitchWheelDeviationMessageNow,
+            setSpeedFactor: setSpeedFactor
         };
 
         return publicPrototypeAPI;
