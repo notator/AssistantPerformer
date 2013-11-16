@@ -27,10 +27,15 @@
  *      // Is set to absolute DOMHRT time in Sequence.nextMoment().
  *      timestamp;
  *      
- *      // Either UNDEFINED_TIMESTAMP or relative to the beginning of the sequence.
- *      // Is used during the Assistant Performer's "relative durations" option, in
- *      // which timings are calculated while the Performer is performing live.
- *      adjustedTimeReSequence;
+ *      // Either UNDEFINED_TIMESTAMP or relative to the beginning of a subsequence.
+ *      // This value, which is set by the Assistant, is only used only during performances
+ *      // with a live performer. (In such performances, the original, complete sequence
+ *      // is converted to a list of subsequences, each of which corresponds to a chord
+ *      // or rest symbol in the performer's track. The subsequences are then treaded
+ *      // exactly like a sequence in a performance without a live performer.
+ *      // Subsequences have exactly the same form as ordinary sequences, and the
+ *      // Sequence object (defined in Sequence.js) plays both in exactly the same way.
+ *      msPositionReSubsequence;
  *
  *      // functions (defined on the prototype):
  *
@@ -39,13 +44,13 @@
  *          mergeMoment(moment);
  *             
  *  Note about UNDEFINED_TIMESTAMP:
- *  The idea behind this is always to have timestamp and adjustedTimeReSequence defined in
+ *  The idea behind this is always to have timestamp and msPositionReSubsequence defined in
  *  some way, so that memory use becomes more consistent during performance, and garbage
  *  collection interruptions become less likely. In other words: It would be possible to
- *  reproduce the same behaviour using defined and undefined timestamp/adjustedTimeReSequence,
+ *  reproduce the same behaviour using defined and undefined timestamp/msPositionReSubsequence,
  *  but this would mean allocating memory for them at performance time, possibly leading to
  *  garbage collections which would interrupt the performance. If this fear is ungrounded,
- *  timestamp and adjustedTimeReSequence could simply be defined or undefined instead of
+ *  timestamp and msPositionReSubsequence could simply be defined or undefined instead of
  *  always being defined.
  */
 
@@ -85,11 +90,8 @@ MIDILib.moment = (function ()
         // This value is always set in Sequence.nextMoment().
         this.timestamp = UNDEFINED_TIMESTAMP;
 
-        // This value is set if the time relative to the default values in the score
-        // needs to change. For example, when the speed changes during a performance, or
-        // the performance is 'assisted'. This attribute is used by Sequence.timeReSequence()
-        // when setting the moment's absolute timestamp.
-        this.adjustedTimeReSequence = UNDEFINED_TIMESTAMP;
+        // This value is only set (in Assistant.js) for assisted performances
+        this.msPositionReSubsequence = UNDEFINED_TIMESTAMP;
 
         this.messages = []; // an array of Messages
 
@@ -102,7 +104,7 @@ MIDILib.moment = (function ()
         Moment: Moment
     };
 
-    // This constant is used as the default value of this.adjustedTimeReSequence and
+    // This constant is used as the default value of this.msPositionReSubsequence and
     // this.timestamp. It is also used when constructing new moments which are not in
     // the score at all to set their moment.msPositionInScore value. 
     Object.defineProperty(publicAPI, "UNDEFINED_TIMESTAMP", { value: UNDEFINED_TIMESTAMP, writable: false });

@@ -695,7 +695,7 @@ _AP.controls = (function(document, window)
 
                     sendTrackInitializationMessages(options, options.assistedPerformance);
 
-                    assistant.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
+                    assistant.perform(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
                         options.runtimeOptions.speed, trackIsOnArray, recordingSequence);
 
                     cl.pauseUnselected.setAttribute("opacity", GLASS);
@@ -724,7 +724,7 @@ _AP.controls = (function(document, window)
 
                     sequence.setSpeedFactor(1); // just in case... (The speedFactor should always be constant 1 in non-assisted performances.)
 
-                    sequence.playSpan(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
+                    sequence.play(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
                         trackIsOnArray, recordingSequence, reportEndOfPerformance, reportMsPos);
                 }
 
@@ -2010,8 +2010,8 @@ _AP.controls = (function(document, window)
 
             if(options.assistedPerformance === true)
             {
-                // This constructor resets moment timestamps relative to the start of their subsequence.
-                // The sequence therefore needs to be reloaded when the options (performer's track index) change.    
+                // This constructor sets each moment.timestamp to UNDEFINED_TIMESTAMP, and each moment.msPositionReSubsequence
+                // to moment.msPositionInScore - subsequence.msPositionInScore.    
                 assistant = new Assistant(sequence, options, reportEndOfPerformance, reportMsPos);
             }
 

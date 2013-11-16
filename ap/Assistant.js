@@ -21,6 +21,7 @@ _AP.assistant = (function ()
 
     // begin var
     var
+    UNDEFINED_TIMESTAMP = MIDILib.moment.UNDEFINED_TIMESTAMP,
     CMD = MIDILib.constants.COMMAND,
     Message = MIDILib.message.Message,
     Moment = MIDILib.moment.Moment,
@@ -34,7 +35,7 @@ _AP.assistant = (function ()
 
     options, // performance options. This is the mo (=options) object in Controls.
     reportEndOfPerformance, // callback
-    recordingSequence, // initially set by assistant.playSpan(...), passed repeatedly to sequence.playSpan(...), returned by reportEndOfPerformance()
+    recordingSequence, // initially set by assistant.perform(...), passed repeatedly to sequence.play(...), returned by reportEndOfPerformance()
     reportMsPosition, // callback
 
     // An array of Sequence containing one sequence for each chord or rest
@@ -44,11 +45,11 @@ _AP.assistant = (function ()
     allSequences,
 
     // An array containing only the sequences which are to be performed.
-    // This array is constructed in playSpan() from allSequences, using
+    // This array is constructed in perform() from allSequences, using
     // startMarkerMsPosition and endMarkerMsPosition.
     performedSequences,
 
-    // these variables are initialized by playSpan() and used by handleMIDIInputEvent() 
+    // these variables are initialized by perform() and used by handleMIDIInputEvent() 
     endIndex = -1,
     currentIndex = -1, // the index of the currently playing sequence (which will be stopped when a noteOn or noteOff arrives).
     endOfPerformance = false, // flag, set to true when (currentIndex === endIndex)
@@ -164,7 +165,7 @@ _AP.assistant = (function ()
                 return factor;
             }
 
-            if(performersSpeedOptions !== undefined
+            if(performersSpeedOptions !== undefined && currentIndex >= 0
                 && performersSpeedOptions.controllerIndex !== undefined && performersSpeedOptions.controllerIndex === receivedCommandIndexInHTMLMenu
                 && performersSpeedOptions.fasterRoot !== undefined && performersSpeedOptions.slowerRoot !== undefined)
             {
@@ -355,30 +356,9 @@ _AP.assistant = (function ()
 
         function playSequence(sequence)
         {
-            function setMomentTimestamps(sequence)
-            {
-                var
-                sequenceMsPosition = sequence.msPositionInScore,
-                nTracks = sequence.tracks.length, moment,
-                i, j, track, trackLength;
-
-                for(i = 0; i < nTracks; ++i)
-                {
-                    track = sequence.tracks[i];
-                    trackLength = track.moments.length;
-                    for(j = 0; j < trackLength; ++j)
-                    {
-                        moment = track.moments[j];
-                        moment.adjustedTimeReSequence = moment.msPositionInScore - sequenceMsPosition;
-                    }
-                }
-            }
-
-            setMomentTimestamps(sequence);
-
-            // The durations will be related to moment.timestamps which have been
-            // set relative to the start of the sequence, and to speedFactorObject argument.
-            sequence.playSpan(outputDevice, 0, Number.MAX_VALUE, trackIsOnArray, recordingSequence, reportEndOfSequence, reportMsPosition);
+            // The durations will be related to the moment.msPositionReSubsequence attrbutes (which have been
+            // set relative to the start of each subsequence), and to speedFactorObject argument.
+            sequence.play(outputDevice, 0, Number.MAX_VALUE, trackIsOnArray, recordingSequence, reportEndOfSequence, reportMsPosition);
         }
 
         function handleNoteOff(inputEvent)
@@ -616,6 +596,18 @@ _AP.assistant = (function ()
                 }
             }
 
+            function setSpeed(inputEventData)
+            {
+                if(performersSpeedOptions.controllerIndex === 1)
+                {
+                    setSpeedFactor(1, inputEventData[1]);
+                }
+                else if(performersSpeedOptions.controllerIndex === 2)
+                {
+                    setSpeedFactor(2, inputEventData[2]);
+                }
+            }
+
             //console.log("NoteOn, pitch:", inputEvent.data[1].toString(), " velocity:", inputEvent.data[2].toString());
 
             sequenceStartNow = inputEvent.receivedTime;
@@ -642,6 +634,8 @@ _AP.assistant = (function ()
                             inputEvent.data[1], inputEvent.data[2],
                             overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity);
                     }
+
+                    setSpeed(inputEvent.data);
 
                     playSequence(allSubsequences[currentIndex]);
                 }
@@ -710,14 +704,7 @@ _AP.assistant = (function ()
                 case CMD.NOTE_ON:
                     if(inputEvent.data[2] !== 0)
                     {
-                        if(performersSpeedOptions.selectedIndex === 1)
-                        {
-                            setSpeedFactor(1, inputEvent.data[1]);
-                        }
-                        else if(performersSpeedOptions.selectedIndex === 2)
-                        {
-                            setSpeedFactor(2, inputEvent.data[2]);
-                        }
+                        // setSpeedFactor is called inside handleNoteOn(...) because currentIndex needs to be >= 0.
                         handleNoteOn(inputEvent,
                             localOptions.overrideSoloPitch, localOptions.overrideOtherTracksPitch,
                             localOptions.overrideSoloVelocity, localOptions.overrideOtherTracksVelocity);
@@ -745,7 +732,7 @@ _AP.assistant = (function ()
                 {
                     performedSequences[currentIndex].stop();
                 }
-                // these variables are also set in playSpan() when the state is first set to "running"
+                // these variables are also set in perform() when the state is first set to "running"
                 endIndex = (performedSequences === undefined) ? -1 : (performedSequences.length - 1); // the index of the (unplayed) end chord or rest or endBarline
                 currentIndex = -1;
                 endOfPerformance = false;
@@ -806,20 +793,43 @@ _AP.assistant = (function ()
     },
 
     // This function is called when options.assistedPerformance === true and the Go button is clicked (in the performance controls).
-    // If options.assistedPerformance === false, the main sequence.playSpan(...) is called instead.
+    // If options.assistedPerformance === false, the main sequence.play(...) is called instead.
     // The assistant's allSequences array (set in the assistant's constructor), contains the whole piece as an array of sequence,
     // with one sequence per performer's rest or chord, whereby consecutive rests in the performer's track have been merged.
     // This function sets the performedSequences array, which is the section of the allSequences array between startMarkerMsPosition and
     // endMarkerMsPosition (not including moments at the endMarkerMsPosition).
     // Creating the performedSequences array does *not* change the data in allSequences, so the start and end markers can be moved between
     // performances without reconstructing the assistant.
-    playSpan = function (outDevice, startMarkerMsPosition, endMarkerMsPosition, performersSpeedOpts, argTrackIsOnArray, recordingSeq)
+    perform = function (outDevice, startMarkerMsPosition, endMarkerMsPosition, performersSpeedOpts, argTrackIsOnArray, recordingSeq)
     {
         function getPerformedSequences(allSequences, startMarkerMsPosition, endMarkerMsPosition)
         {
             var sequence, i,
                 nSequences = allSequences.length,
                 performedSequences = []; // an array of sequences
+
+            function resetTimestamps(sequences)
+            {
+                var
+                sequenceMsPosition = sequence.msPositionInScore,
+                nTracks = sequence.tracks.length, moment,
+                i, j, k, track, trackLength;
+
+                for(i = 0; i < sequences.length; ++i)
+                {
+                    sequence = sequences[i];
+                    for(j = 0; j < nTracks; ++j)
+                    {
+                        track = sequence.tracks[j];
+                        trackLength = track.moments.length;
+                        for(k = 0; k < trackLength; ++k)
+                        {
+                            moment = track.moments[k];
+                            moment.timestamp = UNDEFINED_TIMESTAMP;
+                        }
+                    }
+                }
+            }
 
             for(i = 0; i < nSequences; ++i)
             {
@@ -837,6 +847,9 @@ _AP.assistant = (function ()
             {
                 throw "The performance must start with a chordSequence at the startMarker's msPosition";
             }
+
+            resetTimestamps(performedSequences);
+
             return performedSequences;
         }
 
@@ -866,6 +879,7 @@ _AP.assistant = (function ()
         // Consecutive restSequences are merged: When performing, consecutive rests in the performer's track are treated
         // as one. The live performer only starts the first one (with a noteOff). Following rests play automatically until
         // the next chord (chordSequence) in the performer's track.
+        // The msPositionReSubsequence attributes are set for all moments.
         function getSequences(mainSequence, livePerformersTrackIndex)
         {
             var
@@ -1003,6 +1017,28 @@ _AP.assistant = (function ()
                 return newSequences;
             }
 
+            function setMsPositionsReSubsequences(sequences)
+            {
+                var
+                nTracks = sequence.tracks.length, moment,
+                i, j, k, track, trackLength;
+
+                for(i = 0; i < sequences.length; ++i)
+                {
+                    sequence = sequences[i];
+                    for(j = 0; j < nTracks; ++j)
+                    {
+                        track = sequence.tracks[j];
+                        trackLength = track.moments.length;
+                        for(k = 0; k < trackLength; ++k)
+                        {
+                            moment = track.moments[k];
+                            moment.msPositionReSubsequence = moment.msPositionInScore - sequence.msPositionInScore;
+                        }
+                    }
+                }
+            }
+
             sequences = getEmptySequences(nTracks, sequence.tracks[livePerformersTrackIndex]);
 
             for (trackIndex = 0; trackIndex < nTracks; ++trackIndex)
@@ -1012,6 +1048,8 @@ _AP.assistant = (function ()
             }
 
             sequences = mergeRestSequences(sequences);
+
+            setMsPositionsReSubsequences(sequences);
 
             return sequences;
         }
@@ -1036,7 +1074,7 @@ _AP.assistant = (function ()
         allSequences = getSequences(sequence, options.livePerformersTrackIndex);
 
         // Starts an assisted performance 
-        this.playSpan = playSpan;
+        this.perform = perform;
 
         // these are called by the performance controls
         this.pause = pause; // pause()        

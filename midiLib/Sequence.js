@@ -30,7 +30,7 @@
 *           // [optional] reportMsPositionInScoreCallback: called whenever a cursor needs to be updated
 *           //       in the score.
 *           //  The optional arguments can either be missing or null.
-*           playSpan(midiOutDevice, startMarkerMsPosition, endMarkerMsPosition, trackIsOnArray,
+*           play(midiOutDevice, startMarkerMsPosition, endMarkerMsPosition, trackIsOnArray,
 *                    recording, reportEndOfSpanCallback, reportMsPositionInScoreCallback)
 *       
 *           // pause a running performance
@@ -73,7 +73,6 @@ MIDILib.sequence = (function (window)
 {
     "use strict";
     var
-    UNDEFINED_TIMESTAMP = MIDILib.moment.UNDEFINED_TIMESTAMP,
     CMD = MIDILib.constants.COMMAND,
     CTL = MIDILib.constants.CONTROL,
     Track = MIDILib.track.Track,
@@ -105,24 +104,26 @@ MIDILib.sequence = (function (window)
     {
         var
         speedFactor = 1.0, // nextMoment()
-        // used by setState()
+        previousMoment = null, // nextMoment()
         currentMoment = null, // nextMoment(), resume(), tick()
+
+        // used by setState()
         pausedMoment = null, // set by pause(), used by resume()
         stopped = true, // nextMoment(), stop(), pause(), resume(), isStopped()
         paused = false, // nextMoment(), pause(), isPaused()
 
-        that, // closure variable set by playSpan(), used by nextMoment()
+        that, // closure variable set by play(), used by nextMoment()
 
         maxDeviation, // for console.log, set to 0 when performance starts
-        midiOutputDevice, // set in playSpan(), used by tick()
-        reportEndOfSpan, // callback. Can be null or undefined. Set in playSpan().
-        reportMsPositionInScore,  // callback. Can be null or undefined. Set in playSpan().
+        midiOutputDevice, // set in play(), used by tick()
+        reportEndOfSpan, // callback. Can be null or undefined. Set in play().
+        reportMsPositionInScore,  // callback. Can be null or undefined. Set in play().
         lastReportedMsPosition = -1, // set by tick() used by nextMoment()
         msPositionToReport = -1,   // set in nextMoment() and used/reset by tick()
 
-        sequenceStartTime = -1,  // set in playSpan(), used by stop(), runFrom()
+        sequenceStartTime = -1,  // set in play(), used by stop(), run()
 
-        recordingSequence, // the sequence being recorded. set in playSpan() and resume(), used by tick()
+        recordingSequence, // the sequence being recorded. set in play() and resume(), used by tick()
 
         setState = function (state)
         {
@@ -132,6 +133,7 @@ MIDILib.sequence = (function (window)
                     stopped = true;
                     paused = false;
                     pausedMoment = null;
+                    previousMoment = null;
                     break;
                 case "paused":
                     stopped = false;
@@ -193,27 +195,7 @@ MIDILib.sequence = (function (window)
             }
         },
 
-        // moment.msPositionInScore is returned if moment.adjustedTimeReSequence is equal to UNDEFINED_TIMESTAMP,
-        // otherwise moment.adjustedTimeReSequence is returned. 
-        // (In assisted performances moment.adjustedTimeReSequence is set to the time relative
-        // to its subsequence, using the subsequence's msPositionInScore).
-        // msPositionInScore always takes the global speed option into account.
-        timeReSequence = function (moment)
-        {
-            var time;
-
-            if(moment.adjustedTimeReSequence === UNDEFINED_TIMESTAMP)
-            {
-                time = moment.msPositionInScore;
-            }
-            else
-            {
-                time = moment.adjustedTimeReSequence;
-            }
-            return time;
-        },
-
-        // used by tick(), resume(), playSpan(), finishSilently()
+        // used by tick(), resume(), play(), finishSilently()
         // Returns either the next moment in the sequence, or null.
         // Null is returned if there are no more moments or if the sequence is paused or stopped.
         // The next moment in the sequence is the earliest moment indexed by any of the
@@ -221,11 +203,11 @@ MIDILib.sequence = (function (window)
         nextMoment = function ()
         {
             var
-            the = that, // that is set in playSpan(). Maybe using a local variable is faster...
+            the = that, // that is set in play(). Maybe using a local variable is faster...
             nTracks = the.tracks.length,
             track, i, currentTrack,
             moment, minMsPositionInScore = Number.MAX_VALUE,
-            nextMomt = null, prevTrackMoment;
+            nextMomt = null;
 
             if (!stopped && !paused)
             {
@@ -262,15 +244,16 @@ MIDILib.sequence = (function (window)
                         //console.log("msPositionToReport=" + msPositionToReport);
                     }
 
-                    if(currentTrack.currentIndex === 0)
+                    if(previousMoment === null)
                     {
                         nextMomt.timestamp = sequenceStartTime;
                     }
                     else
                     {
-                        prevTrackMoment = currentTrack.moments[currentTrack.currentIndex - 1];
-                        nextMomt.timestamp = ((timeReSequence(nextMomt) - timeReSequence(prevTrackMoment)) * speedFactor) + prevTrackMoment.timestamp;
+                        nextMomt.timestamp = ((nextMomt.msPositionInScore - previousMoment.msPositionInScore) * speedFactor) + previousMoment.timestamp;
                     }
+
+                    previousMoment = nextMomt;
 
                     //console.log("currentIndex=" + currentTrack.currentIndex +
                     //            "toIndex=" + currentTrack.toIndex +
@@ -283,7 +266,7 @@ MIDILib.sequence = (function (window)
         },
 
         // tick() function -- which ows a lot to Chris Wilson of the Web Audio Group
-        // Recursive function. Also used by resume(), playSpan()
+        // Recursive function. Also used by resume(), play()
         // This function has been tested as far as possible without having "a conformant outputDevice.send() with timestamps".
         // It needs testing again with the conformant outputDevice.send() and a higher value for PREQUEUE. What would the
         // ideal value for PREQUEUE be? 
@@ -302,7 +285,7 @@ MIDILib.sequence = (function (window)
         // to matter.
         // 18th Jan. 2013 -- Jazz 1.2 does not support timestamps.
         //
-        // The following variables are initialised in playSpan() to start playing the span:
+        // The following variables are initialised in play() to start playing the span:
         //      currentMoment // the first moment in the sequence
         //      track attributes:
         //          isPerforming // set by referring to the track control
@@ -354,7 +337,7 @@ MIDILib.sequence = (function (window)
                 maxDeviation = (deviation > maxDeviation) ? deviation : maxDeviation;
                 //console.log("deviation: " + deviation + "ms");
 
-                if (msPositionToReport > 0)
+                if (msPositionToReport >= 0)
                 {
                     reportMsPositionInScore(msPositionToReport);
                     lastReportedMsPosition = msPositionToReport; // lastReportedMsPosition is used in nextMoment() above.
@@ -387,21 +370,19 @@ MIDILib.sequence = (function (window)
 
                 delay = currentMoment.timestamp - now;
 
-                console.log("tick: delay2 = " + delay.toString(10));
+                //console.log("tick: delay2 = " + delay.toString(10));
             }
 
             //console.log("tick: delay3 = " + delay);
             window.setTimeout(tick, delay);  // that will schedule the next tick.
         },
 
-        // Should only be called when the sequence is stopped or paused.
-        runFrom = function (moment, now)
+        // Should only be called when the sequence is stopped.
+        run = function ()
         {
-            if (isStopped() || isPaused())
+            if (isStopped())
             {
                 setState("running");
-
-                sequenceStartTime = now - timeReSequence(moment);
 
                 currentMoment = nextMoment();
                 if (currentMoment === null)
@@ -412,16 +393,28 @@ MIDILib.sequence = (function (window)
             }
             else
             {
-                throw "Error: runFrom() should only be called when the sequence is stopped or paused.";
+                throw "Error: run() should only be called when the sequence is stopped.";
             }
         },
 
-        // Should only be called when this sequence is paused and pausedMoment is not null.
+        // Public function. Should only be called when this sequence is paused (and pausedMoment is set correctly).
+        // The sequence pauses if nextMoment() sets currentMoment to null while tick() is waiting for setTimeout().
+        // So the messages in pausedMoment (set to the last non-null currentMoment) have already been sent.
         resume = function ()
         {
             if (isPaused())
             {
-                runFrom(pausedMoment, performance.now());
+                currentMoment = pausedMoment; // the last moment whose messages were sent.
+
+                setState("running");
+
+                currentMoment = nextMoment();
+                if(currentMoment === null)
+{
+                    return;
+                }
+                currentMoment.timestamp = performance.now();
+                tick();
             }
             else
             {
@@ -429,7 +422,7 @@ MIDILib.sequence = (function (window)
             }
         },
 
-        // playSpan();
+        // play();
         // Note that the moment at endMarkerMsPosition will NOT be played as part of the span.
         // endMarkerMsPosition is the msPosition of the endMarker, and moments on the endMarker
         // are never performed.
@@ -457,12 +450,10 @@ MIDILib.sequence = (function (window)
         // the score (taking the global speed option into account). This value is used to identify
         // chord and rest symbols in the score, and so to synchronize the running cursor.
         // Moments whose msPositionInScore is to be reported are given chordStart or restStart
-        // attributes before playSpan() is called.
-        playSpan = function (midiOutDevice, startMarkerMsPosition, endMarkerMsPosition, trackIsOnArray,
+        // attributes before play() is called.
+        play = function (midiOutDevice, startMarkerMsPosition, endMarkerMsPosition, trackIsOnArray,
                                 recording, reportEndOfSpanCallback, reportMsPositionInScoreCallback)
         {
-            var firstMomentInThisSequence;
-
             // Sets each track's isPerforming attribute.
             // If the track is set to perform (in the trackIsOnArray -- the trackControl settings),
             // an attempt is made to set its fromIndex, currentIndex and toIndex attributes such that
@@ -529,39 +520,9 @@ MIDILib.sequence = (function (window)
                 }
             }
 
-            // Returns the first moment that will be performed in this sequence
-            function getFirstMomentInThisSequence(tracks)
-            {
-                var 
-                i, nTracks = tracks.length, track, moment, msPosition,
-                firstMoment = null, firstPosition = Number.MAX_VALUE;
-
-                for (i = 0; i < nTracks; ++i)
-                {
-                    track = tracks[i];
-                    if (track.isPerforming)
-                    {
-                        moment = track.moments[track.fromIndex];
-                        msPosition = moment.msPositionInScore;
-                        if (msPosition < firstPosition)
-                        {
-                            firstMoment = moment;
-                            firstPosition = msPosition;
-                        }
-                    }
-                }
-
-                if (firstMoment === null)
-                {
-                    throw "Error: at least one track must be performing.";
-                }
-
-                return firstMoment;
-            }
-
             that = this;
 
-            stop(); //  sets state to "stopped" if it isn't already.
+            setState("stopped");
 
             recordingSequence = recording; // can be undefined or null
 
@@ -581,8 +542,8 @@ MIDILib.sequence = (function (window)
             setTrackAttributes(that.tracks, trackIsOnArray, startMarkerMsPosition, endMarkerMsPosition);
 
             sequenceStartTime = performance.now();
-            firstMomentInThisSequence = getFirstMomentInThisSequence(that.tracks);
-            runFrom(firstMomentInThisSequence, sequenceStartTime);
+
+            run();
         },
 
         // When called, immediately sends all the sequence's unsent messages, except noteOns,
@@ -645,7 +606,7 @@ MIDILib.sequence = (function (window)
 
         publicPrototypeAPI =
         {
-            playSpan: playSpan,
+            play: play,
             pause: pause,
             resume: resume,
             stop: stop,
