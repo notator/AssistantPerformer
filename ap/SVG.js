@@ -52,14 +52,13 @@ function onLoad()
 {
     "use strict";
 
-    // _JI_SVGLoaded() is defined in init() in ap/Controls.js
-    // It adds the argument function to a local 'svg' object inside Controls.
-    if(window.parent._JI_SVGLoaded)
+    if(document.URL.search("http://") === 0) // the web version.
     {
-        window.parent._JI_SVGLoaded(getSVGDocument);
-    }
-    else
-    {
-        alert("didn't find _JI_SVGLoaded() in enclosing window!");
+        // _JI_SVGLoaded() is defined in init() in ap/Controls.js if the AP is loaded from the web. 
+        // It adds the argument function to a local 'svg' object inside Controls.
+        if(window.parent._JI_SVGLoaded !== undefined)
+        {
+            window.parent._JI_SVGLoaded(getSVGDocument);
+        }
     }
 }

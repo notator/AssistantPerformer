@@ -1071,15 +1071,40 @@ _AP.controls = (function(document, window)
             svgPagesDiv.style.height = window.innerHeight - 43;
         }
 
-        // This function is called by the first SVG page in a score when it loads (using an onLoad() function).
-        // The argument list contains pointers to functions defined in scores/SVG.js
-        // The first SVG page in each score contains the line
-        //     <script type="text/javascript" xlink:href="../SVG.js"/>
-        // Each argument function is added to the local svg object (which only exists for that purpose).
-        window._JI_SVGLoaded = function(getSVGDocument)
+        if(document.URL.search("file://") === 0)
         {
-            svg.getSVGDocument = getSVGDocument;
-        };
+            svg.getSVGDocument = function (embedded_element)
+            {
+                var subdoc;
+
+                if(embedded_element.contentDocument)
+                {
+                    subdoc = embedded_element.contentDocument;
+                }
+                else
+                {
+                    subdoc = null;
+                    try
+                    {
+                        subdoc = embedded_element.getSVGDocument();
+                    }
+                    catch(e) { }
+                }
+                return subdoc;
+            }
+        }
+        else
+        {
+            // This function is called by the first SVG page in a score when it loads (using an onLoad() function).
+            // The argument list contains pointers to functions defined in scores/SVG.js
+            // The first SVG page in each score contains the line
+            //     <script type="text/javascript" xlink:href="../SVG.js"/>
+            // Each argument function is added to the local svg object (which only exists for that purpose).
+            window._JI_SVGLoaded = function (getSVGDocument)
+            {
+                svg.getSVGDocument = getSVGDocument;
+            };
+        }
 
         midiAccess = mAccess;
 
@@ -1125,6 +1150,8 @@ _AP.controls = (function(document, window)
             //    "Song Six, nPages=7, nTracks=6, po.pitchWheel.otherTracks"
             // The nameString is used (twice) to construct the URLs for the score pages, for example:
             // "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Song Six/Song Six page 1.svg"
+            // or
+            // "file:///C:/xampp/htdocs/localAssistantPerformer/scores/Song Six/Song Six page 1.svg"
             //
             // The scoreInfo object returned by this function has the following attributes:
             //      scoreInfo.name (e.g. "Song Six"
@@ -1396,13 +1423,26 @@ _AP.controls = (function(document, window)
 
             function setPages(scoreInfo)
             {
-                var rootURL = "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/",
+                var rootURL,
                     name = scoreInfo.name, // e.g. "Song Six"
                     nPages = scoreInfo.nPages,
                     svgPagesFrame,
                     embedCode = "",
                     pageURL,
                     i;
+
+                // Returns the URL of the scores directory. This can either be in the local server:
+                // e.g. "file:///C:/xampp/htdocs/localAssistantPerformer/scores/"
+                // or on the web:
+                // e.g. "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/"
+                function scoresURL(documentURL)
+                {
+                    var
+                    apIndex = documentURL.search("assistantPerformer.html"),
+                    url = documentURL.slice(0, apIndex) + "scores/";
+
+                    return url;
+                }
 
                 function embedPageCode(url)
                 {
@@ -1416,6 +1456,8 @@ _AP.controls = (function(document, window)
                     return code;
                 }
 
+                rootURL = scoresURL(document.URL);
+
                 for(i = 0; i < nPages; ++i)
                 {
                     pageURL = rootURL + name;
@@ -1425,6 +1467,7 @@ _AP.controls = (function(document, window)
                     pageURL = pageURL + (i + 1).toString();
                     pageURL = pageURL + ".svg";
                     // e.g. "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Song Six/Song Six page 1.svg"
+                    // or   "file:///C:/xampp/htdocs/localAssistantPerformer/scores/Song Six/Song Six page 1.svg"
                     embedCode += embedPageCode(pageURL);
                 }
                 svgPagesFrame = document.getElementById('svgPages');
