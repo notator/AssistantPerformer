@@ -1,0 +1,3767 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet href="../../fontsStyleSheet.css" type="text/css"?>
+<svg
+	version="1.1"
+	baseProfile="full"
+	width="1010"
+	height="1237"
+	viewBox="0 0 8080 9888" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:score="http://www.james-ingram-act-two.de/open-source/svgScoreExtensions.html" xmlns="http://www.w3.org/2000/svg">
+	<title>Song Six</title>
+	<desc>
+		Author: James Ingram
+		Website: http://www.james-ingram-act-two.de
+		Date: Sunday 01.12.2013, 12:04:30
+		Software: Moritz/Assistant Composer</desc>
+	<defs>
+		<g
+			id="trebleClef">
+			<text
+				x="0"
+				y="0"
+				font-size="1px"
+				font-family="CLicht">&amp;</text>
+		</g>
+		<g
+			id="trebleClef8">
+			<text
+				x="0"
+				y="0"
+				font-size="1px"
+				font-family="CLicht">&amp;</text>
+			<text
+				x="0.28"
+				y="-1.17"
+				font-size="0.67px"
+				font-family="CLicht">•</text>
+		</g>
+		<g
+			id="trebleClef2x8">
+			<text
+				x="0"
+				y="0"
+				font-size="1px"
+				font-family="CLicht">&amp;</text>
+			<text
+				x="0.037"
+				y="-1.17"
+				font-size="0.67px"
+				font-family="CLicht">™</text>
+			<text
+				x="0.252"
+				y="-1.17"
+				font-size="0.4px"
+				font-family="Estrangelo Edessa">x</text>
+			<text
+				x="0.441"
+				y="-1.17"
+				font-size="0.67px"
+				font-family="CLicht">•</text>
+		</g>
+		<g
+			id="trebleClef3x8">
+			<text
+				x="0"
+				y="0"
+				font-size="1px"
+				font-family="CLicht">&amp;</text>
+			<text
+				x="0.037"
+				y="-1.17"
+				font-size="0.67px"
+				font-family="CLicht">£</text>
+			<text
+				x="0.252"
+				y="-1.17"
+				font-size="0.4px"
+				font-family="Estrangelo Edessa">x</text>
+			<text
+				x="0.441"
+				y="-1.17"
+				font-size="0.67px"
+				font-family="CLicht">•</text>
+		</g>
+		<g
+			id="bassClef">
+			<text
+				x="0"
+				y="0"
+				font-size="1px"
+				font-family="CLicht">?</text>
+		</g>
+		<g
+			id="bassClef8">
+			<text
+				x="0"
+				y="0"
+				font-size="1px"
+				font-family="CLicht">?</text>
+			<text
+				x="0.16"
+				y="1.1"
+				font-size="0.67px"
+				font-family="CLicht">•</text>
+		</g>
+		<g
+			id="bassClef2x8">
+			<text
+				x="0"
+				y="0"
+				font-size="1px"
+				font-family="CLicht">?</text>
+			<text
+				x="0"
+				y="1.1"
+				font-size="0.67px"
+				font-family="CLicht">™</text>
+			<text
+				x="0.194"
+				y="1.1"
+				font-size="0.4px"
+				font-family="Estrangelo Edessa">x</text>
+			<text
+				x="0.383"
+				y="1.1"
+				font-size="0.67px"
+				font-family="CLicht">•</text>
+		</g>
+		<g
+			id="bassClef3x8">
+			<text
+				x="0"
+				y="0"
+				font-size="1px"
+				font-family="CLicht">?</text>
+			<text
+				x="0"
+				y="1.1"
+				font-size="0.67px"
+				font-family="CLicht">£</text>
+			<text
+				x="0.194"
+				y="1.1"
+				font-size="0.4px"
+				font-family="Estrangelo Edessa">x</text>
+			<text
+				x="0.383"
+				y="1.1"
+				font-size="0.67px"
+				font-family="CLicht">•</text>
+		</g>
+		<g
+			id="Right1Flag">
+			<path
+				d="M 0,0 0,0.12096 0.31809,0.2467 Q 0.299,0.2 0.31809,0.1257" />
+		</g>
+		<g
+			id="Left1Flag">
+			<path
+				d="M 0,0 0,-0.12096 0.31809,-0.2467 Q 0.299,-0.2 0.31809,-0.1257" />
+		</g>
+		<g
+			id="Right2Flags">
+			<path
+				d="M 0,0 0,0.12096 0.31809,0.2467 Q 0.299,0.2 0.31809,0.1257" />
+			<path
+				d="M 0,0.25 0,0.37096 0.31809,0.4967 Q 0.299,0.45 0.31809,0.3757" />
+		</g>
+		<g
+			id="Left2Flags">
+			<path
+				d="M 0,0 0,-0.12096 0.31809,-0.2467 Q 0.299,-0.2 0.31809,-0.1257" />
+			<path
+				d="M 0,-0.25 0,-0.37096 0.31809,-0.4967 Q 0.299,-0.45 0.31809,-0.3757" />
+		</g>
+		<g
+			id="Right3Flags">
+			<path
+				d="M 0,0 0,0.12096 0.31809,0.2467 Q 0.299,0.2 0.31809,0.1257" />
+			<path
+				d="M 0,0.25 0,0.37096 0.31809,0.4967 Q 0.299,0.45 0.31809,0.3757" />
+			<path
+				d="M 0,0.5 0,0.62096 0.31809,0.7467 Q 0.299,0.7 0.31809,0.6257" />
+		</g>
+		<g
+			id="Left3Flags">
+			<path
+				d="M 0,0 0,-0.12096 0.31809,-0.2467 Q 0.299,-0.2 0.31809,-0.1257" />
+			<path
+				d="M 0,-0.25 0,-0.37096 0.31809,-0.4967 Q 0.299,-0.45 0.31809,-0.3757" />
+			<path
+				d="M 0,-0.5 0,-0.62096 0.31809,-0.7467 Q 0.299,-0.7 0.31809,-0.6257" />
+		</g>
+		<g
+			id="Right4Flags">
+			<path
+				d="M 0,0 0,0.12096 0.31809,0.2467 Q 0.299,0.2 0.31809,0.1257" />
+			<path
+				d="M 0,0.25 0,0.37096 0.31809,0.4967 Q 0.299,0.45 0.31809,0.3757" />
+			<path
+				d="M 0,0.5 0,0.62096 0.31809,0.7467 Q 0.299,0.7 0.31809,0.6257" />
+			<path
+				d="M 0,0.75 0,0.87096 0.31809,0.9967 Q 0.299,0.95 0.31809,0.8757" />
+		</g>
+		<g
+			id="Left4Flags">
+			<path
+				d="M 0,0 0,-0.12096 0.31809,-0.2467 Q 0.299,-0.2 0.31809,-0.1257" />
+			<path
+				d="M 0,-0.25 0,-0.37096 0.31809,-0.4967 Q 0.299,-0.45 0.31809,-0.3757" />
+			<path
+				d="M 0,-0.5 0,-0.62096 0.31809,-0.7467 Q 0.299,-0.7 0.31809,-0.6257" />
+			<path
+				d="M 0,-0.75 0,-0.87096 0.31809,-0.9967 Q 0.299,-0.95 0.31809,-0.8757" />
+		</g>
+		<g
+			id="Right5Flags">
+			<path
+				d="M 0,0 0,0.12096 0.31809,0.2467 Q 0.299,0.2 0.31809,0.1257" />
+			<path
+				d="M 0,0.25 0,0.37096 0.31809,0.4967 Q 0.299,0.45 0.31809,0.3757" />
+			<path
+				d="M 0,0.5 0,0.62096 0.31809,0.7467 Q 0.299,0.7 0.31809,0.6257" />
+			<path
+				d="M 0,0.75 0,0.87096 0.31809,0.9967 Q 0.299,0.95 0.31809,0.8757" />
+			<path
+				d="M 0,1 0,1.12096 0.31809,1.2467 Q 0.299,1.2 0.31809,1.1257" />
+		</g>
+		<g
+			id="Left5Flags">
+			<path
+				d="M 0,0 0,-0.12096 0.31809,-0.2467 Q 0.299,-0.2 0.31809,-0.1257" />
+			<path
+				d="M 0,-0.25 0,-0.37096 0.31809,-0.4967 Q 0.299,-0.45 0.31809,-0.3757" />
+			<path
+				d="M 0,-0.5 0,-0.62096 0.31809,-0.7467 Q 0.299,-0.7 0.31809,-0.6257" />
+			<path
+				d="M 0,-0.75 0,-0.87096 0.31809,-0.9967 Q 0.299,-0.95 0.31809,-0.8757" />
+			<path
+				d="M 0,-1 0,-1.12096 0.31809,-1.2467 Q 0.299,-1.2 0.31809,-1.1257" />
+		</g>
+	</defs>
+	<score:midiDefs>
+		<score:midiChord
+			id="palette1_chord1"
+			patch="122"
+			pitchWheelDeviation="48">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="8500"
+					patch="122"
+					notes="30"
+					velocities="40" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="0 127"
+				pan="127 0"
+				expressionSlider="0 64 127 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette1_chord2"
+			patch="122"
+			pitchWheelDeviation="48">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="7699"
+					patch="122"
+					notes="30"
+					velocities="43" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="127 0"
+				pan="0 127"
+				expressionSlider="0 64 127 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette1_chord3"
+			patch="122"
+			pitchWheelDeviation="48">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="6973"
+					patch="122"
+					notes="25"
+					velocities="47" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="64 0 64"
+				pan="53 81 27 108 0 127 127"
+				expressionSlider="0 127 127 38 64 38 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette1_chord4"
+			patch="122"
+			pitchWheelDeviation="48">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="6315"
+					patch="122"
+					notes="25"
+					velocities="51" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="64 0 96 64"
+				pan="0 50 25 100 76 127"
+				expressionSlider="0 25 64 25 102 25 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette1_chord5"
+			patch="122"
+			pitchWheelDeviation="48">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="5720"
+					patch="122"
+					notes="23"
+					velocities="55" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="0 105 35 70 0"
+				pan="0 88 44 127 0"
+				expressionSlider="0 81 81 102 38 38 25 127 81 64 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette1_chord6"
+			patch="122"
+			pitchWheelDeviation="48">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="5181"
+					patch="122"
+					notes="20"
+					velocities="59" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="100 60 80 20 40 0"
+				pan="65 127 0 65"
+				expressionSlider="0 25 102 25 64 25 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette1_chord7"
+			patch="122"
+			pitchWheelDeviation="48">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="4692"
+					patch="122"
+					notes="20"
+					velocities="64" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="100 100 0 85 21 64 42"
+				pan="65 127 65"
+				expressionSlider="0 38 64 38 127 127 64 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette2_chord1"
+			patch="60"
+			pitchWheelDeviation="1">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="5000"
+					patch="60"
+					notes="1 7 14"
+					velocities="120 120 120" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="64 80 127 64"
+				expressionSlider="0 80 127 80 64 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette2_chord2"
+			patch="60">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="5000"
+					patch="60"
+					notes="5 11 18"
+					velocities="120 120 120" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="64 127 80 64"
+				expressionSlider="0 80 127 80 64 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette2_chord3"
+			patch="60"
+			pitchWheelDeviation="1">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="5000"
+					patch="60"
+					notes="3 9 16"
+					velocities="120 120 120" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="64 80 127 64"
+				expressionSlider="0 80 127 80 64 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette2_chord4"
+			patch="60"
+			pitchWheelDeviation="1">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="2487"
+					patch="60"
+					notes="4 11 17"
+					velocities="120 120 120" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="64 80 127 64"
+				expressionSlider="0 80 127 80 64 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette2_chord5"
+			patch="60"
+			pitchWheelDeviation="1">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="2335"
+					patch="60"
+					notes="5"
+					velocities="120" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="64 80 127 64"
+				expressionSlider="0 80 127 80 64 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette2_chord6"
+			patch="60"
+			pitchWheelDeviation="1">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="2193"
+					patch="60"
+					notes="6"
+					velocities="120" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="64 80 127 64"
+				expressionSlider="0 80 127 80 64 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette2_chord7"
+			patch="60"
+			pitchWheelDeviation="1">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="2059"
+					patch="60"
+					notes="7"
+					velocities="120" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="64 80 127 64"
+				expressionSlider="0 80 127 80 64 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette2_chord8"
+			patch="60"
+			pitchWheelDeviation="1">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="1933"
+					patch="60"
+					notes="8"
+					velocities="120" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="64 80 127 64"
+				expressionSlider="0 80 127 80 64 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette2_chord9"
+			patch="60"
+			pitchWheelDeviation="1">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="1815"
+					patch="60"
+					notes="9"
+					velocities="120" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="64 80 127 64"
+				expressionSlider="0 80 127 80 64 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette2_chord10"
+			patch="60"
+			pitchWheelDeviation="1">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="1704"
+					patch="60"
+					notes="10"
+					velocities="120" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="64 80 127 64"
+				expressionSlider="0 80 127 80 64 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette2_chord11"
+			patch="60"
+			pitchWheelDeviation="1">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="1600"
+					patch="60"
+					notes="11"
+					velocities="120" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="64 80 127 64"
+				expressionSlider="0 80 127 80 64 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette2_chord12"
+			patch="60"
+			pitchWheelDeviation="1">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="1503"
+					patch="60"
+					notes="12"
+					velocities="120" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="64 80 127 64"
+				expressionSlider="0 80 127 80 64 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette3_chord1"
+			patch="89"
+			pitchWheelDeviation="12">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="429"
+					notes="102 109 115"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="429"
+					notes="102 109 115"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="429"
+					notes="102 109 115"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="430"
+					notes="102 109 115"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="429"
+					notes="102 109 115"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="429"
+					notes="102 109 115"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="430"
+					notes="102 109 115"
+					velocities="120 120 120" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="0 127 127 127 127 127 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette3_chord2"
+			patch="89"
+			pitchWheelDeviation="72">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="119"
+					notes="109 116 122"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="79"
+					notes="103 110 116"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="119"
+					notes="109 116 122"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="80"
+					notes="111 118 124"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="79"
+					notes="107 114 120"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="119"
+					notes="113 120 126"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="120"
+					notes="105 112 118"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="79"
+					notes="107 114 120"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="119"
+					notes="113 120 126"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="80"
+					notes="115 122 127"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="119"
+					notes="105 112 118"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="119"
+					notes="109 116 122"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="80"
+					notes="111 118 124"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="79"
+					notes="107 114 120"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="119"
+					notes="105 112 118"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="120"
+					notes="109 116 122"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="119"
+					notes="109 116 122"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="79"
+					notes="103 110 116"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="80"
+					notes="111 118 124"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="79"
+					notes="107 114 120"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="119"
+					notes="113 120 126"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="120"
+					notes="105 112 118"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="119"
+					notes="109 116 122"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="79"
+					notes="111 118 124"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="80"
+					notes="107 114 120"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="119"
+					notes="109 116 122"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="119"
+					notes="109 116 122"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="80"
+					notes="111 118 124"
+					velocities="120 120 120" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="120"
+				expressionSlider="0 127 127 127 127 127 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette3_chord3"
+			patch="89"
+			pitchWheelDeviation="100">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="108"
+					notes="108 115 121"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="108"
+					notes="108 115 121"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="162"
+					notes="106 113 119"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="108"
+					notes="108 115 121"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="162"
+					notes="110 117 123"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="108"
+					notes="108 115 121"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="108"
+					notes="104 111 117"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="163"
+					notes="110 117 123"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="108"
+					notes="108 115 121"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="108"
+					notes="108 115 121"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="162"
+					notes="106 113 119"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="108"
+					notes="112 119 125"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="108"
+					notes="108 115 121"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="163"
+					notes="110 117 123"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="108"
+					notes="108 115 121"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="108"
+					notes="108 115 121"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="162"
+					notes="110 117 123"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="108"
+					notes="108 115 121"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="108"
+					notes="108 115 121"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="162"
+					notes="106 113 119"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="109"
+					notes="104 111 117"
+					velocities="120 120 120" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="0 127 127 127 127 127 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette3_chord4"
+			patch="89"
+			pitchWheelDeviation="100">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="41"
+					notes="109 116 122"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="41"
+					notes="105 112 118"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="42"
+					notes="117 124 127"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="41"
+					notes="113 120 126"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="62"
+					notes="107 114 120"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="63"
+					notes="115 122 127"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="62"
+					notes="111 118 124"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="41"
+					notes="109 116 122"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="42"
+					notes="105 112 118"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="41"
+					notes="117 124 127"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="42"
+					notes="113 120 126"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="62"
+					notes="107 114 120"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="62"
+					notes="115 122 127"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="62"
+					notes="111 118 124"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="42"
+					notes="109 116 122"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="41"
+					notes="105 112 118"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="42"
+					notes="117 124 127"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="41"
+					notes="113 120 126"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="62"
+					notes="107 114 120"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="62"
+					notes="115 122 127"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="62"
+					notes="111 118 124"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="42"
+					notes="117 124 127"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="62"
+					notes="115 122 127"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="42"
+					notes="117 124 127"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="41"
+					notes="113 120 126"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="62"
+					notes="107 114 120"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="62"
+					notes="115 122 127"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="63"
+					notes="111 118 124"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="41"
+					notes="109 116 122"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="41"
+					notes="105 112 118"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="42"
+					notes="117 124 127"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="41"
+					notes="113 120 126"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="62"
+					notes="107 114 120"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="63"
+					notes="115 122 127"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="62"
+					notes="111 118 124"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="41"
+					notes="109 116 122"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="42"
+					notes="105 112 118"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="41"
+					notes="117 124 127"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="42"
+					notes="113 120 126"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="62"
+					notes="107 114 120"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="62"
+					notes="115 122 127"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="62"
+					notes="111 118 124"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="42"
+					notes="109 116 122"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="41"
+					notes="105 112 118"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="42"
+					notes="117 124 127"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="41"
+					notes="113 120 126"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="62"
+					notes="107 114 120"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="62"
+					notes="115 122 127"
+					velocities="120 120 120" />
+				<score:basicChord
+					msDuration="63"
+					notes="111 118 124"
+					velocities="120 120 120" />
+			</score:basicChords>
+			<score:sliders
+				pitchWheel="100"
+				expressionSlider="0 127 127 127 127 127 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette3_chord5"
+			patch="63"
+			pitchWheelDeviation="12">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="38"
+					notes="110"
+					velocities="120" />
+				<score:basicChord
+					msDuration="39"
+					notes="106"
+					velocities="120" />
+				<score:basicChord
+					msDuration="39"
+					notes="118"
+					velocities="120" />
+				<score:basicChord
+					msDuration="39"
+					notes="114"
+					velocities="120" />
+				<score:basicChord
+					msDuration="59"
+					notes="108"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="112"
+					velocities="120" />
+				<score:basicChord
+					msDuration="39"
+					notes="110"
+					velocities="120" />
+				<score:basicChord
+					msDuration="39"
+					notes="106"
+					velocities="120" />
+				<score:basicChord
+					msDuration="39"
+					notes="118"
+					velocities="120" />
+				<score:basicChord
+					msDuration="39"
+					notes="114"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="108"
+					velocities="120" />
+				<score:basicChord
+					msDuration="59"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="112"
+					velocities="120" />
+				<score:basicChord
+					msDuration="39"
+					notes="110"
+					velocities="120" />
+				<score:basicChord
+					msDuration="39"
+					notes="106"
+					velocities="120" />
+				<score:basicChord
+					msDuration="39"
+					notes="118"
+					velocities="120" />
+				<score:basicChord
+					msDuration="39"
+					notes="114"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="108"
+					velocities="120" />
+				<score:basicChord
+					msDuration="59"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="112"
+					velocities="120" />
+				<score:basicChord
+					msDuration="39"
+					notes="118"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="39"
+					notes="118"
+					velocities="120" />
+				<score:basicChord
+					msDuration="39"
+					notes="114"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="108"
+					velocities="120" />
+				<score:basicChord
+					msDuration="59"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="112"
+					velocities="120" />
+				<score:basicChord
+					msDuration="39"
+					notes="110"
+					velocities="120" />
+				<score:basicChord
+					msDuration="39"
+					notes="106"
+					velocities="120" />
+				<score:basicChord
+					msDuration="39"
+					notes="118"
+					velocities="120" />
+				<score:basicChord
+					msDuration="39"
+					notes="114"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="108"
+					velocities="120" />
+				<score:basicChord
+					msDuration="59"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="112"
+					velocities="120" />
+				<score:basicChord
+					msDuration="39"
+					notes="110"
+					velocities="120" />
+				<score:basicChord
+					msDuration="39"
+					notes="106"
+					velocities="120" />
+				<score:basicChord
+					msDuration="39"
+					notes="118"
+					velocities="120" />
+				<score:basicChord
+					msDuration="39"
+					notes="114"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="108"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="59"
+					notes="112"
+					velocities="120" />
+				<score:basicChord
+					msDuration="39"
+					notes="110"
+					velocities="120" />
+				<score:basicChord
+					msDuration="39"
+					notes="106"
+					velocities="120" />
+				<score:basicChord
+					msDuration="38"
+					notes="118"
+					velocities="120" />
+				<score:basicChord
+					msDuration="39"
+					notes="114"
+					velocities="120" />
+				<score:basicChord
+					msDuration="59"
+					notes="108"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="59"
+					notes="112"
+					velocities="120" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="0 127 127 127 127 127 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette3_chord6"
+			patch="63"
+			pitchWheelDeviation="12">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="89"
+					notes="111"
+					velocities="120" />
+				<score:basicChord
+					msDuration="90"
+					notes="111"
+					velocities="120" />
+				<score:basicChord
+					msDuration="134"
+					notes="109"
+					velocities="120" />
+				<score:basicChord
+					msDuration="89"
+					notes="111"
+					velocities="120" />
+				<score:basicChord
+					msDuration="135"
+					notes="113"
+					velocities="120" />
+				<score:basicChord
+					msDuration="89"
+					notes="111"
+					velocities="120" />
+				<score:basicChord
+					msDuration="90"
+					notes="107"
+					velocities="120" />
+				<score:basicChord
+					msDuration="134"
+					notes="113"
+					velocities="120" />
+				<score:basicChord
+					msDuration="89"
+					notes="111"
+					velocities="120" />
+				<score:basicChord
+					msDuration="90"
+					notes="111"
+					velocities="120" />
+				<score:basicChord
+					msDuration="134"
+					notes="109"
+					velocities="120" />
+				<score:basicChord
+					msDuration="90"
+					notes="115"
+					velocities="120" />
+				<score:basicChord
+					msDuration="89"
+					notes="111"
+					velocities="120" />
+				<score:basicChord
+					msDuration="134"
+					notes="113"
+					velocities="120" />
+				<score:basicChord
+					msDuration="90"
+					notes="111"
+					velocities="120" />
+				<score:basicChord
+					msDuration="89"
+					notes="111"
+					velocities="120" />
+				<score:basicChord
+					msDuration="135"
+					notes="113"
+					velocities="120" />
+				<score:basicChord
+					msDuration="89"
+					notes="111"
+					velocities="120" />
+				<score:basicChord
+					msDuration="90"
+					notes="111"
+					velocities="120" />
+				<score:basicChord
+					msDuration="134"
+					notes="109"
+					velocities="120" />
+				<score:basicChord
+					msDuration="90"
+					notes="107"
+					velocities="120" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="0 127 127 127 127 127 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette3_chord7"
+			patch="63"
+			pitchWheelDeviation="12">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="87"
+					notes="114"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="108"
+					velocities="120" />
+				<score:basicChord
+					msDuration="87"
+					notes="114"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="112"
+					velocities="120" />
+				<score:basicChord
+					msDuration="87"
+					notes="118"
+					velocities="120" />
+				<score:basicChord
+					msDuration="87"
+					notes="110"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="112"
+					velocities="120" />
+				<score:basicChord
+					msDuration="87"
+					notes="118"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="120"
+					velocities="120" />
+				<score:basicChord
+					msDuration="87"
+					notes="110"
+					velocities="120" />
+				<score:basicChord
+					msDuration="87"
+					notes="114"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="112"
+					velocities="120" />
+				<score:basicChord
+					msDuration="87"
+					notes="110"
+					velocities="120" />
+				<score:basicChord
+					msDuration="87"
+					notes="114"
+					velocities="120" />
+				<score:basicChord
+					msDuration="87"
+					notes="114"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="108"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="112"
+					velocities="120" />
+				<score:basicChord
+					msDuration="87"
+					notes="118"
+					velocities="120" />
+				<score:basicChord
+					msDuration="87"
+					notes="110"
+					velocities="120" />
+				<score:basicChord
+					msDuration="87"
+					notes="114"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="112"
+					velocities="120" />
+				<score:basicChord
+					msDuration="87"
+					notes="114"
+					velocities="120" />
+				<score:basicChord
+					msDuration="87"
+					notes="114"
+					velocities="120" />
+				<score:basicChord
+					msDuration="58"
+					notes="116"
+					velocities="120" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="0 127 127 127 127 127 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette3_chord8"
+			patch="63"
+			pitchWheelDeviation="12">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="67"
+					notes="115"
+					velocities="120" />
+				<score:basicChord
+					msDuration="45"
+					notes="117"
+					velocities="120" />
+				<score:basicChord
+					msDuration="67"
+					notes="119"
+					velocities="120" />
+				<score:basicChord
+					msDuration="68"
+					notes="115"
+					velocities="120" />
+				<score:basicChord
+					msDuration="45"
+					notes="117"
+					velocities="120" />
+				<score:basicChord
+					msDuration="45"
+					notes="113"
+					velocities="120" />
+				<score:basicChord
+					msDuration="45"
+					notes="121"
+					velocities="120" />
+				<score:basicChord
+					msDuration="67"
+					notes="115"
+					velocities="120" />
+				<score:basicChord
+					msDuration="67"
+					notes="111"
+					velocities="120" />
+				<score:basicChord
+					msDuration="45"
+					notes="117"
+					velocities="120" />
+				<score:basicChord
+					msDuration="45"
+					notes="109"
+					velocities="120" />
+				<score:basicChord
+					msDuration="68"
+					notes="119"
+					velocities="120" />
+				<score:basicChord
+					msDuration="45"
+					notes="113"
+					velocities="120" />
+				<score:basicChord
+					msDuration="45"
+					notes="121"
+					velocities="120" />
+				<score:basicChord
+					msDuration="67"
+					notes="119"
+					velocities="120" />
+				<score:basicChord
+					msDuration="45"
+					notes="117"
+					velocities="120" />
+				<score:basicChord
+					msDuration="68"
+					notes="115"
+					velocities="120" />
+				<score:basicChord
+					msDuration="44"
+					notes="113"
+					velocities="120" />
+				<score:basicChord
+					msDuration="45"
+					notes="121"
+					velocities="120" />
+				<score:basicChord
+					msDuration="68"
+					notes="119"
+					velocities="120" />
+				<score:basicChord
+					msDuration="45"
+					notes="117"
+					velocities="120" />
+				<score:basicChord
+					msDuration="67"
+					notes="119"
+					velocities="120" />
+				<score:basicChord
+					msDuration="45"
+					notes="113"
+					velocities="120" />
+				<score:basicChord
+					msDuration="45"
+					notes="109"
+					velocities="120" />
+				<score:basicChord
+					msDuration="45"
+					notes="121"
+					velocities="120" />
+				<score:basicChord
+					msDuration="68"
+					notes="115"
+					velocities="120" />
+				<score:basicChord
+					msDuration="44"
+					notes="117"
+					velocities="120" />
+				<score:basicChord
+					msDuration="68"
+					notes="111"
+					velocities="120" />
+				<score:basicChord
+					msDuration="67"
+					notes="115"
+					velocities="120" />
+				<score:basicChord
+					msDuration="68"
+					notes="111"
+					velocities="120" />
+				<score:basicChord
+					msDuration="45"
+					notes="113"
+					velocities="120" />
+				<score:basicChord
+					msDuration="45"
+					notes="121"
+					velocities="120" />
+				<score:basicChord
+					msDuration="67"
+					notes="119"
+					velocities="120" />
+				<score:basicChord
+					msDuration="68"
+					notes="115"
+					velocities="120" />
+				<score:basicChord
+					msDuration="45"
+					notes="117"
+					velocities="120" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="0 127 127 127 127 127 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette3_chord9"
+			patch="122"
+			pitchWheelDeviation="12">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="63"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="42"
+					notes="118"
+					velocities="120" />
+				<score:basicChord
+					msDuration="63"
+					notes="120"
+					velocities="120" />
+				<score:basicChord
+					msDuration="64"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="42"
+					notes="118"
+					velocities="120" />
+				<score:basicChord
+					msDuration="42"
+					notes="114"
+					velocities="120" />
+				<score:basicChord
+					msDuration="42"
+					notes="122"
+					velocities="120" />
+				<score:basicChord
+					msDuration="64"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="63"
+					notes="112"
+					velocities="120" />
+				<score:basicChord
+					msDuration="42"
+					notes="118"
+					velocities="120" />
+				<score:basicChord
+					msDuration="42"
+					notes="110"
+					velocities="120" />
+				<score:basicChord
+					msDuration="64"
+					notes="120"
+					velocities="120" />
+				<score:basicChord
+					msDuration="42"
+					notes="114"
+					velocities="120" />
+				<score:basicChord
+					msDuration="42"
+					notes="122"
+					velocities="120" />
+				<score:basicChord
+					msDuration="63"
+					notes="120"
+					velocities="120" />
+				<score:basicChord
+					msDuration="43"
+					notes="118"
+					velocities="120" />
+				<score:basicChord
+					msDuration="63"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="42"
+					notes="114"
+					velocities="120" />
+				<score:basicChord
+					msDuration="42"
+					notes="122"
+					velocities="120" />
+				<score:basicChord
+					msDuration="64"
+					notes="120"
+					velocities="120" />
+				<score:basicChord
+					msDuration="42"
+					notes="118"
+					velocities="120" />
+				<score:basicChord
+					msDuration="63"
+					notes="120"
+					velocities="120" />
+				<score:basicChord
+					msDuration="42"
+					notes="114"
+					velocities="120" />
+				<score:basicChord
+					msDuration="43"
+					notes="110"
+					velocities="120" />
+				<score:basicChord
+					msDuration="42"
+					notes="122"
+					velocities="120" />
+				<score:basicChord
+					msDuration="63"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="42"
+					notes="118"
+					velocities="120" />
+				<score:basicChord
+					msDuration="64"
+					notes="112"
+					velocities="120" />
+				<score:basicChord
+					msDuration="63"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="63"
+					notes="112"
+					velocities="120" />
+				<score:basicChord
+					msDuration="42"
+					notes="114"
+					velocities="120" />
+				<score:basicChord
+					msDuration="43"
+					notes="122"
+					velocities="120" />
+				<score:basicChord
+					msDuration="63"
+					notes="120"
+					velocities="120" />
+				<score:basicChord
+					msDuration="63"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="43"
+					notes="118"
+					velocities="120" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="0 127 127 127 127 127 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette3_chord10"
+			patch="122"
+			pitchWheelDeviation="12">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="72"
+					notes="117"
+					velocities="120" />
+				<score:basicChord
+					msDuration="48"
+					notes="111"
+					velocities="120" />
+				<score:basicChord
+					msDuration="72"
+					notes="117"
+					velocities="120" />
+				<score:basicChord
+					msDuration="48"
+					notes="119"
+					velocities="120" />
+				<score:basicChord
+					msDuration="48"
+					notes="115"
+					velocities="120" />
+				<score:basicChord
+					msDuration="72"
+					notes="121"
+					velocities="120" />
+				<score:basicChord
+					msDuration="72"
+					notes="113"
+					velocities="120" />
+				<score:basicChord
+					msDuration="48"
+					notes="115"
+					velocities="120" />
+				<score:basicChord
+					msDuration="72"
+					notes="121"
+					velocities="120" />
+				<score:basicChord
+					msDuration="48"
+					notes="123"
+					velocities="120" />
+				<score:basicChord
+					msDuration="72"
+					notes="113"
+					velocities="120" />
+				<score:basicChord
+					msDuration="72"
+					notes="117"
+					velocities="120" />
+				<score:basicChord
+					msDuration="48"
+					notes="119"
+					velocities="120" />
+				<score:basicChord
+					msDuration="48"
+					notes="115"
+					velocities="120" />
+				<score:basicChord
+					msDuration="72"
+					notes="113"
+					velocities="120" />
+				<score:basicChord
+					msDuration="72"
+					notes="117"
+					velocities="120" />
+				<score:basicChord
+					msDuration="72"
+					notes="117"
+					velocities="120" />
+				<score:basicChord
+					msDuration="48"
+					notes="111"
+					velocities="120" />
+				<score:basicChord
+					msDuration="48"
+					notes="119"
+					velocities="120" />
+				<score:basicChord
+					msDuration="48"
+					notes="115"
+					velocities="120" />
+				<score:basicChord
+					msDuration="72"
+					notes="121"
+					velocities="120" />
+				<score:basicChord
+					msDuration="72"
+					notes="113"
+					velocities="120" />
+				<score:basicChord
+					msDuration="72"
+					notes="117"
+					velocities="120" />
+				<score:basicChord
+					msDuration="48"
+					notes="119"
+					velocities="120" />
+				<score:basicChord
+					msDuration="48"
+					notes="115"
+					velocities="120" />
+				<score:basicChord
+					msDuration="72"
+					notes="117"
+					velocities="120" />
+				<score:basicChord
+					msDuration="72"
+					notes="117"
+					velocities="120" />
+				<score:basicChord
+					msDuration="48"
+					notes="119"
+					velocities="120" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="0 127 127 127 127 127 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette3_chord11"
+			patch="122"
+			pitchWheelDeviation="12">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="65"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="65"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="98"
+					notes="114"
+					velocities="120" />
+				<score:basicChord
+					msDuration="65"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="98"
+					notes="118"
+					velocities="120" />
+				<score:basicChord
+					msDuration="66"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="65"
+					notes="112"
+					velocities="120" />
+				<score:basicChord
+					msDuration="98"
+					notes="118"
+					velocities="120" />
+				<score:basicChord
+					msDuration="65"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="66"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="97"
+					notes="114"
+					velocities="120" />
+				<score:basicChord
+					msDuration="66"
+					notes="120"
+					velocities="120" />
+				<score:basicChord
+					msDuration="65"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="98"
+					notes="118"
+					velocities="120" />
+				<score:basicChord
+					msDuration="65"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="66"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="98"
+					notes="118"
+					velocities="120" />
+				<score:basicChord
+					msDuration="65"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="65"
+					notes="116"
+					velocities="120" />
+				<score:basicChord
+					msDuration="98"
+					notes="114"
+					velocities="120" />
+				<score:basicChord
+					msDuration="66"
+					notes="112"
+					velocities="120" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="0 127 127 127 127 127 0" />
+		</score:midiChord>
+		<score:midiChord
+			id="palette3_chord12"
+			patch="122"
+			pitchWheelDeviation="12">
+			<score:basicChords>
+				<score:basicChord
+					msDuration="25"
+					notes="117"
+					velocities="120" />
+				<score:basicChord
+					msDuration="25"
+					notes="113"
+					velocities="120" />
+				<score:basicChord
+					msDuration="25"
+					notes="125"
+					velocities="120" />
+				<score:basicChord
+					msDuration="25"
+					notes="121"
+					velocities="120" />
+				<score:basicChord
+					msDuration="37"
+					notes="115"
+					velocities="120" />
+				<score:basicChord
+					msDuration="38"
+					notes="123"
+					velocities="120" />
+				<score:basicChord
+					msDuration="37"
+					notes="119"
+					velocities="120" />
+				<score:basicChord
+					msDuration="25"
+					notes="117"
+					velocities="120" />
+				<score:basicChord
+					msDuration="26"
+					notes="113"
+					velocities="120" />
+				<score:basicChord
+					msDuration="25"
+					notes="125"
+					velocities="120" />
+				<score:basicChord
+					msDuration="25"
+					notes="121"
+					velocities="120" />
+				<score:basicChord
+					msDuration="37"
+					notes="115"
+					velocities="120" />
+				<score:basicChord
+					msDuration="38"
+					notes="123"
+					velocities="120" />
+				<score:basicChord
+					msDuration="37"
+					notes="119"
+					velocities="120" />
+				<score:basicChord
+					msDuration="25"
+					notes="117"
+					velocities="120" />
+				<score:basicChord
+					msDuration="25"
+					notes="113"
+					velocities="120" />
+				<score:basicChord
+					msDuration="25"
+					notes="125"
+					velocities="120" />
+				<score:basicChord
+					msDuration="26"
+					notes="121"
+					velocities="120" />
+				<score:basicChord
+					msDuration="37"
+					notes="115"
+					velocities="120" />
+				<score:basicChord
+					msDuration="38"
+					notes="123"
+					velocities="120" />
+				<score:basicChord
+					msDuration="37"
+					notes="119"
+					velocities="120" />
+				<score:basicChord
+					msDuration="25"
+					notes="125"
+					velocities="120" />
+				<score:basicChord
+					msDuration="38"
+					notes="123"
+					velocities="120" />
+				<score:basicChord
+					msDuration="25"
+					notes="125"
+					velocities="120" />
+				<score:basicChord
+					msDuration="25"
+					notes="121"
+					velocities="120" />
+				<score:basicChord
+					msDuration="38"
+					notes="115"
+					velocities="120" />
+				<score:basicChord
+					msDuration="37"
+					notes="123"
+					velocities="120" />
+				<score:basicChord
+					msDuration="38"
+					notes="119"
+					velocities="120" />
+				<score:basicChord
+					msDuration="25"
+					notes="117"
+					velocities="120" />
+				<score:basicChord
+					msDuration="25"
+					notes="113"
+					velocities="120" />
+				<score:basicChord
+					msDuration="25"
+					notes="125"
+					velocities="120" />
+				<score:basicChord
+					msDuration="25"
+					notes="121"
+					velocities="120" />
+				<score:basicChord
+					msDuration="38"
+					notes="115"
+					velocities="120" />
+				<score:basicChord
+					msDuration="37"
+					notes="123"
+					velocities="120" />
+				<score:basicChord
+					msDuration="38"
+					notes="119"
+					velocities="120" />
+				<score:basicChord
+					msDuration="25"
+					notes="117"
+					velocities="120" />
+				<score:basicChord
+					msDuration="25"
+					notes="113"
+					velocities="120" />
+				<score:basicChord
+					msDuration="25"
+					notes="125"
+					velocities="120" />
+				<score:basicChord
+					msDuration="25"
+					notes="121"
+					velocities="120" />
+				<score:basicChord
+					msDuration="37"
+					notes="115"
+					velocities="120" />
+				<score:basicChord
+					msDuration="38"
+					notes="123"
+					velocities="120" />
+				<score:basicChord
+					msDuration="38"
+					notes="119"
+					velocities="120" />
+				<score:basicChord
+					msDuration="25"
+					notes="117"
+					velocities="120" />
+				<score:basicChord
+					msDuration="25"
+					notes="113"
+					velocities="120" />
+				<score:basicChord
+					msDuration="25"
+					notes="125"
+					velocities="120" />
+				<score:basicChord
+					msDuration="25"
+					notes="121"
+					velocities="120" />
+				<score:basicChord
+					msDuration="37"
+					notes="115"
+					velocities="120" />
+				<score:basicChord
+					msDuration="38"
+					notes="123"
+					velocities="120" />
+				<score:basicChord
+					msDuration="38"
+					notes="119"
+					velocities="120" />
+			</score:basicChords>
+			<score:sliders
+				expressionSlider="0 127 127 127 127 127 0" />
+		</score:midiChord>
+	</score:midiDefs>
+	<rect
+		id="frame"
+		x="0"
+		y="0"
+		width="8080"
+		height="9888"
+		stroke="#CCCCCC"
+		stroke-width="1"
+		fill="white" />
+	<style>text:hover{cursor:default;}</style>
+	<text
+		x="80"
+		y="80"
+		font-size="72"
+		font-family="Arial">Song Six: page 9, Sunday 01.12.2013, 12:04:30</text>
+	<g
+		id="page9_system1"
+		score:object="system">
+		<g
+			id="markers1638">
+			<g
+				id="startMarker">
+				<line
+					x1="0"
+					y1="0"
+					x2="0"
+					y2="0"
+					stroke="#009900"
+					stroke-width="1" />
+				<ellipse
+					cx="0"
+					cy="0"
+					rx="0"
+					ry="0"
+					stroke-width="1"
+					fill="#009900" />
+			</g>
+			<g
+				id="runningMarker">
+				<line
+					x1="0"
+					y1="0"
+					x2="0"
+					y2="0"
+					stroke="#888888"
+					stroke-width="1" />
+			</g>
+			<g
+				id="endMarker">
+				<line
+					x1="0"
+					y1="0"
+					x2="0"
+					y2="0"
+					stroke="#FF0000"
+					stroke-width="1" />
+				<rect
+					x="0"
+					y="0"
+					width="0"
+					height="0"
+					stroke-width="1"
+					fill="#FF0000" />
+			</g>
+		</g>
+		<g
+			id="p9_sys1_staff1"
+			score:object="staff"
+			score:staffName="F 1"
+			score:stafflines="5"
+			score:gap="32">
+			<g
+				id="stafflines1639">
+				<line
+					x1="400"
+					y1="426.6667"
+					x2="7680"
+					y2="426.6667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="458.6667"
+					x2="7680"
+					y2="458.6667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="490.6667"
+					x2="7680"
+					y2="490.6667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="522.6666"
+					x2="7680"
+					y2="522.6666"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="554.6666"
+					x2="7680"
+					y2="554.6666"
+					stroke="black"
+					stroke-width="4" />
+			</g>
+			<g
+				id="voice1640"
+				score:object="voice"
+				score:midiChannel="0">
+				<use
+					xlink:href="#trebleClef"
+					x="0"
+					y="0"
+					transform="translate(400,522.6666) scale(125.44)" />
+				<text
+					x="232"
+					y="516.2667"
+					text-anchor="middle"
+					font-size="80"
+					font-family="Times New Roman">F 1</text>
+				<g
+					id="barnumber1641">
+					<text
+						x="503.2"
+						y="234.6667"
+						text-anchor="middle"
+						font-size="64"
+						font-family="Arial">96</text>
+					<rect
+						x="445.712"
+						y="167.2267"
+						width="114.976"
+						height="89.44"
+						stroke="black"
+						stroke-width="4.8"
+						fill="none" />
+				</g>
+				<g
+					id="rest1642"
+					score:object="rest"
+					score:alignmentX="568.5304"
+					score:msDuration="29607">
+					<text
+						x="550.2512"
+						y="490.6667"
+						font-size="125.44"
+						font-family="CLicht">∑</text>
+				</g>
+			</g>
+		</g>
+		<g
+			id="p9_sys1_staff2"
+			score:object="staff"
+			score:staffName="F 2"
+			score:stafflines="5"
+			score:gap="32">
+			<g
+				id="stafflines1643">
+				<line
+					x1="400"
+					y1="714.6666"
+					x2="7680"
+					y2="714.6666"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="746.6666"
+					x2="7680"
+					y2="746.6666"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="778.6666"
+					x2="7680"
+					y2="778.6666"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="810.6666"
+					x2="7680"
+					y2="810.6666"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="842.6666"
+					x2="7680"
+					y2="842.6666"
+					stroke="black"
+					stroke-width="4" />
+			</g>
+			<g
+				id="voice1644"
+				score:object="voice"
+				score:midiChannel="1">
+				<use
+					xlink:href="#trebleClef"
+					x="0"
+					y="0"
+					transform="translate(400,810.6666) scale(125.44)" />
+				<text
+					x="232"
+					y="804.2667"
+					text-anchor="middle"
+					font-size="80"
+					font-family="Times New Roman">F 2</text>
+				<g
+					id="rest1645"
+					score:object="rest"
+					score:alignmentX="568.5304"
+					score:msDuration="29607">
+					<text
+						x="550.2512"
+						y="778.6666"
+						font-size="125.44"
+						font-family="CLicht">∑</text>
+				</g>
+			</g>
+		</g>
+		<g
+			id="p9_sys1_staff3"
+			score:object="staff"
+			score:staffName="F 3"
+			score:stafflines="5"
+			score:gap="32">
+			<g
+				id="stafflines1646">
+				<line
+					x1="400"
+					y1="970.6666"
+					x2="7680"
+					y2="970.6666"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="1002.667"
+					x2="7680"
+					y2="1002.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="1034.667"
+					x2="7680"
+					y2="1034.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="1066.667"
+					x2="7680"
+					y2="1066.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="1098.667"
+					x2="7680"
+					y2="1098.667"
+					stroke="black"
+					stroke-width="4" />
+			</g>
+			<g
+				id="voice1647"
+				score:object="voice"
+				score:midiChannel="2">
+				<use
+					xlink:href="#bassClef2x8"
+					x="0"
+					y="0"
+					transform="translate(400,1002.667) scale(125.44)" />
+				<text
+					x="232"
+					y="1060.267"
+					text-anchor="middle"
+					font-size="80"
+					font-family="Times New Roman">F 3</text>
+				<g
+					id="rest1648"
+					score:object="rest"
+					score:alignmentX="568.5304"
+					score:msDuration="29607">
+					<text
+						x="550.2512"
+						y="1034.667"
+						font-size="125.44"
+						font-family="CLicht">∑</text>
+				</g>
+			</g>
+		</g>
+		<g
+			id="p9_sys1_staff4"
+			score:object="staff"
+			score:staffName="F 4"
+			score:stafflines="5"
+			score:gap="32">
+			<g
+				id="stafflines1649">
+				<line
+					x1="400"
+					y1="1226.667"
+					x2="7680"
+					y2="1226.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="1258.667"
+					x2="7680"
+					y2="1258.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="1290.667"
+					x2="7680"
+					y2="1290.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="1322.667"
+					x2="7680"
+					y2="1322.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="1354.667"
+					x2="7680"
+					y2="1354.667"
+					stroke="black"
+					stroke-width="4" />
+			</g>
+			<g
+				id="voice1650"
+				score:object="voice"
+				score:midiChannel="3">
+				<use
+					xlink:href="#bassClef3x8"
+					x="0"
+					y="0"
+					transform="translate(400,1258.667) scale(125.44)" />
+				<text
+					x="232"
+					y="1316.267"
+					text-anchor="middle"
+					font-size="80"
+					font-family="Times New Roman">F 4</text>
+				<g
+					id="rest1651"
+					score:object="rest"
+					score:alignmentX="568.5304"
+					score:msDuration="29607">
+					<text
+						x="550.2512"
+						y="1290.667"
+						font-size="125.44"
+						font-family="CLicht">∑</text>
+				</g>
+			</g>
+		</g>
+		<g
+			id="p9_sys1_staff5"
+			score:object="staff"
+			score:staffName="R2M"
+			score:stafflines="5"
+			score:gap="32">
+			<g
+				id="stafflines1652">
+				<line
+					x1="400"
+					y1="1514.667"
+					x2="7680"
+					y2="1514.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="1546.667"
+					x2="7680"
+					y2="1546.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="1578.667"
+					x2="7680"
+					y2="1578.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="1610.667"
+					x2="7680"
+					y2="1610.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="1642.667"
+					x2="7680"
+					y2="1642.667"
+					stroke="black"
+					stroke-width="4" />
+			</g>
+			<g
+				id="voice1653"
+				score:object="voice"
+				score:midiChannel="4">
+				<use
+					xlink:href="#trebleClef"
+					x="0"
+					y="0"
+					transform="translate(400,1610.667) scale(125.44)" />
+				<text
+					x="232"
+					y="1604.267"
+					text-anchor="middle"
+					font-size="80"
+					font-family="Times New Roman">R2M</text>
+				<g
+					id="rest1654"
+					score:object="rest"
+					score:alignmentX="568.5304"
+					score:msDuration="29607">
+					<text
+						x="550.2512"
+						y="1578.667"
+						font-size="125.44"
+						font-family="CLicht">∑</text>
+				</g>
+			</g>
+		</g>
+		<g
+			id="p9_sys1_staff6"
+			score:object="staff"
+			score:staffName="Clyt."
+			score:stafflines="5"
+			score:gap="32">
+			<g
+				id="stafflines1655">
+				<line
+					x1="400"
+					y1="1802.667"
+					x2="7680"
+					y2="1802.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="1834.667"
+					x2="7680"
+					y2="1834.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="1866.667"
+					x2="7680"
+					y2="1866.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="1898.667"
+					x2="7680"
+					y2="1898.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="1930.667"
+					x2="7680"
+					y2="1930.667"
+					stroke="black"
+					stroke-width="4" />
+			</g>
+			<g
+				id="voice1656"
+				score:object="voice"
+				score:midiChannel="5">
+				<use
+					xlink:href="#trebleClef"
+					x="0"
+					y="0"
+					transform="translate(400,1898.667) scale(125.44)" />
+				<text
+					x="232"
+					y="1892.267"
+					text-anchor="middle"
+					font-size="80"
+					font-family="Times New Roman">Clyt.</text>
+				<g
+					id="rest1657"
+					score:object="rest"
+					score:alignmentX="568.5304"
+					score:msDuration="29607">
+					<text
+						x="550.2512"
+						y="1866.667"
+						font-size="125.44"
+						font-family="CLicht">∑</text>
+				</g>
+			</g>
+		</g>
+		<g
+			id="p9_sys1_staff7"
+			score:object="staff"
+			score:staffName="W 1"
+			score:stafflines="5"
+			score:gap="32">
+			<g
+				id="stafflines1658">
+				<line
+					x1="400"
+					y1="2090.667"
+					x2="7680"
+					y2="2090.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="2122.667"
+					x2="7680"
+					y2="2122.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="2154.667"
+					x2="7680"
+					y2="2154.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="2186.667"
+					x2="7680"
+					y2="2186.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="2218.667"
+					x2="7680"
+					y2="2218.667"
+					stroke="black"
+					stroke-width="4" />
+			</g>
+			<g
+				id="voice1659"
+				score:object="voice"
+				score:midiChannel="6">
+				<use
+					xlink:href="#bassClef8"
+					x="0"
+					y="0"
+					transform="translate(400,2122.667) scale(125.44)" />
+				<text
+					x="232"
+					y="2180.267"
+					text-anchor="middle"
+					font-size="80"
+					font-family="Times New Roman">W 1</text>
+				<g
+					id="cautionaryChord1660">
+					<g
+						id="graphics1660">
+						<text
+							x="561.8003"
+							y="2154.667"
+							font-size="100.352"
+							font-family="CLicht">œ</text>
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 557.7862,2128.912 L 541.7862,2128.912 541.7862,2180.421 557.7862,2180.421" />
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 595.2746,2128.912 L 611.2746,2128.912 611.2746,2180.421 595.2746,2180.421" />
+						<line
+							x1="491.2"
+							y1="2154.667"
+							x2="541.7862"
+							y2="2154.667"
+							stroke="black"
+							stroke-width="13.6"
+							stroke-linecap="butt" />
+						<line
+							x1="611.2746"
+							y1="2154.667"
+							x2="1618.69"
+							y2="2154.667"
+							stroke="black"
+							stroke-width="13.6"
+							stroke-linecap="butt" />
+					</g>
+				</g>
+				<g
+					id="chord1661"
+					score:object="chord"
+					score:alignmentX="1676.021"
+					score:msDuration="5558">
+					<score:midiChord
+						id="midi1661"
+						patch="122"
+						pitchWheelDeviation="28">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="5720"
+								patch="122"
+								notes="41"
+								velocities="55" />
+						</score:basicChords>
+						<score:sliders
+							pitchWheel="0 105 35 70 0"
+							pan="0 88 44 127 0"
+							expressionSlider="0 81 81 102 38 38 25 127 81 64 0" />
+					</score:midiChord>
+					<g
+						id="graphics1661">
+						<text
+							x="1648.935"
+							y="2122.667"
+							font-size="125.44"
+							font-family="CLicht">w</text>
+						<text
+							x="1676.021"
+							y="2311.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">78</text>
+						<text
+							x="1622.69"
+							y="2053.082"
+							font-size="94.08"
+							font-family="CLicht">P</text>
+					</g>
+				</g>
+				<g
+					id="chord1662"
+					score:object="chord"
+					score:alignmentX="2999.313"
+					score:msDuration="6137">
+					<score:midiChord
+						id="midi1662"
+						patch="122"
+						pitchWheelDeviation="28">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="6315"
+								patch="122"
+								notes="43"
+								velocities="51" />
+						</score:basicChords>
+						<score:sliders
+							pitchWheel="64 0 96 64"
+							pan="0 50 25 100 76 127"
+							expressionSlider="0 25 64 25 102 25 0" />
+					</score:midiChord>
+					<g
+						id="graphics1662">
+						<text
+							x="2972.228"
+							y="2106.667"
+							font-size="125.44"
+							font-family="CLicht">w</text>
+						<text
+							x="2999.313"
+							y="2311.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">79</text>
+						<text
+							x="2945.983"
+							y="2053.082"
+							font-size="94.08"
+							font-family="CLicht">P</text>
+					</g>
+				</g>
+				<g
+					id="chord1663"
+					score:object="chord"
+					score:alignmentX="4460.459"
+					score:msDuration="5034">
+					<score:midiChord
+						id="midi1663"
+						patch="122"
+						pitchWheelDeviation="28">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="5181"
+								patch="122"
+								notes="38"
+								velocities="59" />
+						</score:basicChords>
+						<score:sliders
+							pitchWheel="100 60 80 20 40 0"
+							pan="65 127 0 65"
+							expressionSlider="0 25 102 25 64 25 0" />
+					</score:midiChord>
+					<g
+						id="graphics1663">
+						<text
+							x="4433.374"
+							y="2154.667"
+							font-size="125.44"
+							font-family="CLicht">w</text>
+						<text
+							x="4460.459"
+							y="2311.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">80</text>
+						<text
+							x="4407.128"
+							y="2053.082"
+							font-size="94.08"
+							font-family="CLicht">P</text>
+					</g>
+				</g>
+				<g
+					id="chord1664"
+					score:object="chord"
+					score:alignmentX="5658.994"
+					score:msDuration="8260">
+					<score:midiChord
+						id="midi1664"
+						patch="122"
+						pitchWheelDeviation="28">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="8500"
+								patch="122"
+								notes="48"
+								velocities="40" />
+						</score:basicChords>
+						<score:sliders
+							pitchWheel="0 127"
+							pan="127 0"
+							expressionSlider="0 64 127 0" />
+					</score:midiChord>
+					<g
+						id="graphics1664">
+						<text
+							x="5640.714"
+							y="2058.667"
+							font-size="125.44"
+							font-family="CLicht">›</text>
+						<line
+							x1="5602.418"
+							y1="2058.667"
+							x2="5715.569"
+							y2="2058.667"
+							stroke="black"
+							stroke-width="4" />
+						<text
+							x="5658.994"
+							y="2311.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">81</text>
+						<text
+							x="5624.056"
+							y="2007.222"
+							font-size="94.08"
+							font-family="CLicht">p</text>
+					</g>
+				</g>
+			</g>
+		</g>
+		<g
+			id="p9_sys1_staff8"
+			score:object="staff"
+			score:staffName="W 2"
+			score:stafflines="5"
+			score:gap="32">
+			<g
+				id="stafflines1665">
+				<line
+					x1="400"
+					y1="2474.667"
+					x2="7680"
+					y2="2474.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="2506.667"
+					x2="7680"
+					y2="2506.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="2538.667"
+					x2="7680"
+					y2="2538.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="2570.667"
+					x2="7680"
+					y2="2570.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="2602.667"
+					x2="7680"
+					y2="2602.667"
+					stroke="black"
+					stroke-width="4" />
+			</g>
+			<g
+				id="voice1666"
+				score:object="voice"
+				score:midiChannel="7">
+				<use
+					xlink:href="#bassClef8"
+					x="0"
+					y="0"
+					transform="translate(400,2506.667) scale(125.44)" />
+				<text
+					x="232"
+					y="2564.267"
+					text-anchor="middle"
+					font-size="80"
+					font-family="Times New Roman">W 2</text>
+				<g
+					id="cautionaryChord1667">
+					<g
+						id="graphics1667">
+						<text
+							x="561.8003"
+							y="2602.667"
+							font-size="100.352"
+							font-family="CLicht">œ</text>
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 557.7862,2576.912 L 541.7862,2576.912 541.7862,2628.421 557.7862,2628.421" />
+						<path
+							stroke="black"
+							fill="none"
+							stroke-width="4"
+							stroke-linecap="butt"
+							d="M 595.2746,2576.912 L 611.2746,2576.912 611.2746,2628.421 595.2746,2628.421" />
+						<line
+							x1="491.2"
+							y1="2602.667"
+							x2="541.7862"
+							y2="2602.667"
+							stroke="black"
+							stroke-width="13.6"
+							stroke-linecap="butt" />
+						<line
+							x1="611.2746"
+							y1="2602.667"
+							x2="1172.989"
+							y2="2602.667"
+							stroke="black"
+							stroke-width="13.6"
+							stroke-linecap="butt" />
+					</g>
+				</g>
+				<g
+					id="chord1668"
+					score:object="chord"
+					score:alignmentX="1230.32"
+					score:msDuration="6236">
+					<score:midiChord
+						id="midi1668"
+						patch="122"
+						pitchWheelDeviation="28">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="6315"
+								patch="122"
+								notes="38"
+								velocities="51" />
+						</score:basicChords>
+						<score:sliders
+							pitchWheel="64 0 96 64"
+							pan="0 50 25 100 76 127"
+							expressionSlider="0 25 64 25 102 25 0" />
+					</score:midiChord>
+					<g
+						id="graphics1668">
+						<text
+							x="1203.234"
+							y="2538.667"
+							font-size="125.44"
+							font-family="CLicht">w</text>
+						<text
+							x="1230.32"
+							y="2695.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">78</text>
+						<text
+							x="1176.989"
+							y="2437.082"
+							font-size="94.08"
+							font-family="CLicht">P</text>
+					</g>
+				</g>
+				<g
+					id="chord1669"
+					score:object="chord"
+					score:alignmentX="2715.036"
+					score:msDuration="4633">
+					<score:midiChord
+						id="midi1669"
+						patch="122"
+						pitchWheelDeviation="28">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="4692"
+								patch="122"
+								notes="35"
+								velocities="64" />
+						</score:basicChords>
+						<score:sliders
+							pitchWheel="100 100 0 85 21 64 42"
+							pan="65 127 65"
+							expressionSlider="0 38 64 38 127 127 64 0" />
+					</score:midiChord>
+					<g
+						id="graphics1669">
+						<text
+							x="2687.951"
+							y="2570.667"
+							font-size="125.44"
+							font-family="CLicht">w</text>
+						<text
+							x="2715.036"
+							y="2695.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">79</text>
+						<text
+							x="2661.706"
+							y="2437.082"
+							font-size="94.08"
+							font-family="CLicht">P</text>
+					</g>
+				</g>
+				<g
+					id="chord1670"
+					score:object="chord"
+					score:alignmentX="3818.098"
+					score:msDuration="7600">
+					<score:midiChord
+						id="midi1670"
+						patch="122"
+						pitchWheelDeviation="28">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="7699"
+								patch="122"
+								notes="46"
+								velocities="43" />
+						</score:basicChords>
+						<score:sliders
+							pitchWheel="127 0"
+							pan="0 127"
+							expressionSlider="0 64 127 0" />
+					</score:midiChord>
+					<g
+						id="graphics1670">
+						<text
+							x="3799.819"
+							y="2474.667"
+							font-size="125.44"
+							font-family="CLicht">›</text>
+						<text
+							x="3748.638"
+							y="2474.667"
+							font-size="125.44"
+							font-family="CLicht">#</text>
+						<text
+							x="3818.098"
+							y="2695.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">80</text>
+						<text
+							x="3783.16"
+							y="2423.222"
+							font-size="94.08"
+							font-family="CLicht">p</text>
+					</g>
+				</g>
+				<g
+					id="chord1671"
+					score:object="chord"
+					score:alignmentX="5627.566"
+					score:msDuration="8392">
+					<score:midiChord
+						id="midi1671"
+						patch="122"
+						pitchWheelDeviation="28">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="8500"
+								patch="122"
+								notes="48"
+								velocities="40" />
+						</score:basicChords>
+						<score:sliders
+							pitchWheel="0 127"
+							pan="127 0"
+							expressionSlider="0 64 127 0" />
+					</score:midiChord>
+					<g
+						id="graphics1671">
+						<text
+							x="5609.287"
+							y="2442.667"
+							font-size="125.44"
+							font-family="CLicht">›</text>
+						<line
+							x1="5570.991"
+							y1="2442.667"
+							x2="5684.141"
+							y2="2442.667"
+							stroke="black"
+							stroke-width="4" />
+						<text
+							x="5627.566"
+							y="2695.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">81</text>
+						<text
+							x="5592.628"
+							y="2391.222"
+							font-size="94.08"
+							font-family="CLicht">p</text>
+					</g>
+				</g>
+			</g>
+		</g>
+		<g
+			id="p9_sys1_staff9"
+			score:object="staff"
+			score:staffName="W 3"
+			score:stafflines="5"
+			score:gap="32">
+			<g
+				id="stafflines1672">
+				<line
+					x1="400"
+					y1="2762.667"
+					x2="7680"
+					y2="2762.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="2794.667"
+					x2="7680"
+					y2="2794.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="2826.667"
+					x2="7680"
+					y2="2826.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="2858.667"
+					x2="7680"
+					y2="2858.667"
+					stroke="black"
+					stroke-width="4" />
+				<line
+					x1="400"
+					y1="2890.667"
+					x2="7680"
+					y2="2890.667"
+					stroke="black"
+					stroke-width="4" />
+			</g>
+			<g
+				id="voice1673"
+				score:object="voice"
+				score:midiChannel="8">
+				<use
+					xlink:href="#bassClef2x8"
+					x="0"
+					y="0"
+					transform="translate(400,2794.667) scale(125.44)" />
+				<text
+					x="232"
+					y="2852.267"
+					text-anchor="middle"
+					font-size="80"
+					font-family="Times New Roman">W 3</text>
+				<g
+					id="chord1674"
+					score:object="chord"
+					score:alignmentX="576.5304"
+					score:msDuration="4692">
+					<score:midiChord
+						id="midi1674"
+						patch="122"
+						pitchWheelDeviation="28">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="4692"
+								patch="122"
+								notes="17"
+								velocities="64" />
+						</score:basicChords>
+						<score:sliders
+							pitchWheel="100 100 0 85 21 64 42"
+							pan="65 127 65"
+							expressionSlider="0 38 64 38 127 127 64 0" />
+					</score:midiChord>
+					<g
+						id="graphics1674">
+						<text
+							x="549.4451"
+							y="2906.667"
+							font-size="125.44"
+							font-family="CLicht">w</text>
+						<text
+							x="576.5304"
+							y="2983.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">77</text>
+						<text
+							x="523.2"
+							y="2725.082"
+							font-size="94.08"
+							font-family="CLicht">P</text>
+					</g>
+				</g>
+				<g
+					id="chord1675"
+					score:object="chord"
+					score:alignmentX="1693.639"
+					score:msDuration="5181">
+					<score:midiChord
+						id="midi1675"
+						patch="122"
+						pitchWheelDeviation="28">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="5181"
+								patch="122"
+								notes="19"
+								velocities="59" />
+						</score:basicChords>
+						<score:sliders
+							pitchWheel="100 60 80 20 40 0"
+							pan="65 127 0 65"
+							expressionSlider="0 25 102 25 64 25 0" />
+					</score:midiChord>
+					<g
+						id="graphics1675">
+						<text
+							x="1666.554"
+							y="2890.667"
+							font-size="125.44"
+							font-family="CLicht">w</text>
+						<text
+							x="1693.639"
+							y="2983.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">78</text>
+						<text
+							x="1640.309"
+							y="2725.082"
+							font-size="94.08"
+							font-family="CLicht">P</text>
+					</g>
+				</g>
+				<g
+					id="chord1676"
+					score:object="chord"
+					score:alignmentX="2927.173"
+					score:msDuration="5720">
+					<score:midiChord
+						id="midi1676"
+						patch="122"
+						pitchWheelDeviation="28">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="5720"
+								patch="122"
+								notes="24"
+								velocities="55" />
+						</score:basicChords>
+						<score:sliders
+							pitchWheel="0 105 35 70 0"
+							pan="0 88 44 127 0"
+							expressionSlider="0 81 81 102 38 38 25 127 81 64 0" />
+					</score:midiChord>
+					<g
+						id="graphics1676">
+						<text
+							x="2900.088"
+							y="2842.667"
+							font-size="125.44"
+							font-family="CLicht">w</text>
+						<text
+							x="2927.173"
+							y="2983.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">79</text>
+						<text
+							x="2873.843"
+							y="2725.082"
+							font-size="94.08"
+							font-family="CLicht">P</text>
+					</g>
+				</g>
+				<g
+					id="chord1677"
+					score:object="chord"
+					score:alignmentX="4289.036"
+					score:msDuration="6315">
+					<score:midiChord
+						id="midi1677"
+						patch="122"
+						pitchWheelDeviation="28">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="6315"
+								patch="122"
+								notes="29"
+								velocities="51" />
+						</score:basicChords>
+						<score:sliders
+							pitchWheel="64 0 96 64"
+							pan="0 50 25 100 76 127"
+							expressionSlider="0 25 64 25 102 25 0" />
+					</score:midiChord>
+					<g
+						id="graphics1677">
+						<text
+							x="4261.95"
+							y="2794.667"
+							font-size="125.44"
+							font-family="CLicht">w</text>
+						<text
+							x="4289.036"
+							y="2983.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">80</text>
+						<text
+							x="4235.705"
+							y="2725.082"
+							font-size="94.08"
+							font-family="CLicht">P</text>
+					</g>
+				</g>
+				<g
+					id="chord1678"
+					score:object="chord"
+					score:alignmentX="5792.561"
+					score:msDuration="7699">
+					<score:midiChord
+						id="midi1678"
+						patch="122"
+						pitchWheelDeviation="28">
+						<score:basicChords>
+							<score:basicChord
+								msDuration="7699"
+								patch="122"
+								notes="36"
+								velocities="43" />
+						</score:basicChords>
+						<score:sliders
+							pitchWheel="127 0"
+							pan="0 127"
+							expressionSlider="0 64 127 0" />
+					</score:midiChord>
+					<g
+						id="graphics1678">
+						<text
+							x="5774.282"
+							y="2730.667"
+							font-size="125.44"
+							font-family="CLicht">›</text>
+						<line
+							x1="5735.986"
+							y1="2730.667"
+							x2="5849.136"
+							y2="2730.667"
+							stroke="black"
+							stroke-width="4" />
+						<text
+							x="5792.561"
+							y="2983.198"
+							text-anchor="middle"
+							font-size="62.72"
+							font-family="Arial">81</text>
+						<text
+							x="5757.623"
+							y="2679.222"
+							font-size="94.08"
+							font-family="CLicht">p</text>
+					</g>
+				</g>
+			</g>
+		</g>
+		<g
+			id="barlines1679">
+			<line
+				x1="503.2"
+				y1="426.6667"
+				x2="503.2"
+				y2="554.6666"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7656"
+				y1="424.6667"
+				x2="7656"
+				y2="556.6666"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7680"
+				y1="424.6667"
+				x2="7680"
+				y2="556.6666"
+				stroke="#000000"
+				stroke-width="16" />
+			<line
+				x1="503.2"
+				y1="554.6666"
+				x2="503.2"
+				y2="714.6666"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7656"
+				y1="554.6666"
+				x2="7656"
+				y2="714.6666"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7680"
+				y1="554.6666"
+				x2="7680"
+				y2="714.6666"
+				stroke="#000000"
+				stroke-width="16" />
+			<line
+				x1="503.2"
+				y1="714.6666"
+				x2="503.2"
+				y2="842.6666"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7656"
+				y1="712.6666"
+				x2="7656"
+				y2="844.6666"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7680"
+				y1="712.6666"
+				x2="7680"
+				y2="844.6666"
+				stroke="#000000"
+				stroke-width="16" />
+			<line
+				x1="503.2"
+				y1="842.6666"
+				x2="503.2"
+				y2="970.6666"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7656"
+				y1="842.6666"
+				x2="7656"
+				y2="970.6666"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7680"
+				y1="842.6666"
+				x2="7680"
+				y2="970.6666"
+				stroke="#000000"
+				stroke-width="16" />
+			<line
+				x1="503.2"
+				y1="970.6666"
+				x2="503.2"
+				y2="1098.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7656"
+				y1="968.6666"
+				x2="7656"
+				y2="1100.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7680"
+				y1="968.6666"
+				x2="7680"
+				y2="1100.667"
+				stroke="#000000"
+				stroke-width="16" />
+			<line
+				x1="503.2"
+				y1="1098.667"
+				x2="503.2"
+				y2="1226.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7656"
+				y1="1098.667"
+				x2="7656"
+				y2="1226.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7680"
+				y1="1098.667"
+				x2="7680"
+				y2="1226.667"
+				stroke="#000000"
+				stroke-width="16" />
+			<line
+				x1="503.2"
+				y1="1226.667"
+				x2="503.2"
+				y2="1354.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7656"
+				y1="1224.667"
+				x2="7656"
+				y2="1356.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7680"
+				y1="1224.667"
+				x2="7680"
+				y2="1356.667"
+				stroke="#000000"
+				stroke-width="16" />
+			<line
+				x1="503.2"
+				y1="1354.667"
+				x2="503.2"
+				y2="1514.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="503.2"
+				y1="1514.667"
+				x2="503.2"
+				y2="1642.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7656"
+				y1="1512.667"
+				x2="7656"
+				y2="1644.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7680"
+				y1="1512.667"
+				x2="7680"
+				y2="1644.667"
+				stroke="#000000"
+				stroke-width="16" />
+			<line
+				x1="503.2"
+				y1="1642.667"
+				x2="503.2"
+				y2="1802.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="503.2"
+				y1="1802.667"
+				x2="503.2"
+				y2="1930.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7656"
+				y1="1800.667"
+				x2="7656"
+				y2="1932.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7680"
+				y1="1800.667"
+				x2="7680"
+				y2="1932.667"
+				stroke="#000000"
+				stroke-width="16" />
+			<line
+				x1="503.2"
+				y1="1930.667"
+				x2="503.2"
+				y2="2090.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7656"
+				y1="2088.667"
+				x2="7656"
+				y2="2220.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7680"
+				y1="2088.667"
+				x2="7680"
+				y2="2220.667"
+				stroke="#000000"
+				stroke-width="16" />
+			<line
+				x1="503.2"
+				y1="2218.667"
+				x2="503.2"
+				y2="2474.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7656"
+				y1="2218.667"
+				x2="7656"
+				y2="2474.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7680"
+				y1="2218.667"
+				x2="7680"
+				y2="2474.667"
+				stroke="#000000"
+				stroke-width="16" />
+			<line
+				x1="7656"
+				y1="2472.667"
+				x2="7656"
+				y2="2604.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7680"
+				y1="2472.667"
+				x2="7680"
+				y2="2604.667"
+				stroke="#000000"
+				stroke-width="16" />
+			<line
+				x1="503.2"
+				y1="2602.667"
+				x2="503.2"
+				y2="2762.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7656"
+				y1="2602.667"
+				x2="7656"
+				y2="2762.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7680"
+				y1="2602.667"
+				x2="7680"
+				y2="2762.667"
+				stroke="#000000"
+				stroke-width="16" />
+			<line
+				x1="503.2"
+				y1="2762.667"
+				x2="503.2"
+				y2="2890.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7656"
+				y1="2760.667"
+				x2="7656"
+				y2="2892.667"
+				stroke="#000000"
+				stroke-width="8" />
+			<line
+				x1="7680"
+				y1="2760.667"
+				x2="7680"
+				y2="2892.667"
+				stroke="#000000"
+				stroke-width="16" />
+		</g>
+	</g>
+</svg>

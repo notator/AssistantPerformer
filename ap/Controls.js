@@ -1257,7 +1257,11 @@ _AP.controls = (function(document, window)
                             }
                         }
 
-                        if(optionString.slice(0, 6) === "track=")
+                        if(optionString.slice(0, 28) === "trackSelector.selectedIndex=")
+                        {
+                            defaultPerformanceOptions.assistantsTrackIndex = parseInt(optionString.slice(28), 10);
+                        }
+                        else if(optionString.slice(0, 6) === "track=")
                         {
                             defaultPerformanceOptions.track = parseInt(optionString.slice(6), 10);
                         }
@@ -1395,8 +1399,9 @@ _AP.controls = (function(document, window)
 
             // removes existing mo.trackSelector.ChildNodes
             // adds nTracks new child nodes
-            // enables mo.trackSelector 
-            function setPerformersTrackSelector(nTracks)
+            // enables mo.trackSelector
+            // Selects assistantsTrackIndex if it is defined.
+            function setPerformersTrackSelector(nTracks, assistantsTrackIndex)
             {
                 var i, optionElem, textElem, sibling,
                 firstChildNode;
@@ -1418,6 +1423,10 @@ _AP.controls = (function(document, window)
                     textElem = document.createTextNode((i + 1).toString());
                     optionElem.appendChild(textElem);
                     mo.trackSelector.appendChild(optionElem);
+                }
+                if(assistantsTrackIndex !== undefined)
+                {
+                    mo.trackSelector.selectedIndex = assistantsTrackIndex;
                 }
             }
 
@@ -1593,7 +1602,7 @@ _AP.controls = (function(document, window)
             setScoreDefaultOptions(scoreInfo);
 
             setPages(scoreInfo);
-            setPerformersTrackSelector(scoreInfo.nTracks);
+            setPerformersTrackSelector(scoreInfo.nTracks, scoreInfo.defaultPerformanceOptions.assistantsTrackIndex);
 
             tracksControl.setNumberOfTracks(scoreInfo.nTracks);
 
