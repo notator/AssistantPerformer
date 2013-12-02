@@ -1174,9 +1174,9 @@ _AP.controls = (function(document, window)
                     for(i = 0 ; i < scoreSelectorElem.childNodes.length; ++i)
                     {
                         childNode = scoreSelectorElem.childNodes[i];
-                        if(childNode.id !== undefined)
+                        if(childNode.value !== undefined)
                         {
-                            scoreInfoStrings.push(childNode.id);
+                            scoreInfoStrings.push(childNode.value);
                         }
                     }
                     return scoreInfoStrings;
