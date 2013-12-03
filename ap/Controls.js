@@ -244,7 +244,7 @@ _AP.controls = (function(document, window)
 
     setControlVisibilityStates = function()
     {
-        function volumeDivVisibility()
+        function minimumPressureDivVisibility()
         {
             var returnValue = "hidden";
 
@@ -304,7 +304,7 @@ _AP.controls = (function(document, window)
             mo.speedControllerMaxSpeedDiv.style.visibility = "hidden";
         }
 
-        mo.minVolumeDiv.style.visibility = volumeDivVisibility();
+        mo.minimumPressureDiv.style.visibility = minimumPressureDivVisibility();
     },
 
     setMainOptionsState = function(mainOptionsState)
@@ -927,7 +927,7 @@ _AP.controls = (function(document, window)
         mo.speedControllerSelector.selectedIndex = 0;
         mo.speedControllerMaxSpeedInputText.value = 2;
 
-        mo.minVolumeInputText.value = 64;  // default value. Only used in assisted performances.
+        mo.minimumPressureInputText.value = 64;  // default value. Only used in assisted performances.
     },
 
     // Defines the window.svgLoaded(...) function.
@@ -969,8 +969,8 @@ _AP.controls = (function(document, window)
             mo.speedControllerMaxSpeedDiv = document.getElementById("speedControllerMaxSpeedDiv");
             mo.speedControllerMaxSpeedInputText = document.getElementById("speedControllerMaxSpeedInputText");
 
-            mo.minVolumeDiv = document.getElementById("minVolumeDiv");
-            mo.minVolumeInputText = document.getElementById("minVolumeInputText");
+            mo.minimumPressureDiv = document.getElementById("minimumPressureDiv");
+            mo.minimumPressureInputText = document.getElementById("minimumPressureInputText");
             
             mo.startRuntimeButton = document.getElementById("startRuntimeButton");
         }
@@ -1616,7 +1616,7 @@ _AP.controls = (function(document, window)
                     }
                     if(dpo.minimumVolume !== undefined)
                     {
-                        mo.minVolumeInputText.value = dpo.minimumVolume;
+                        mo.minimumPressureInputText.value = dpo.minimumVolume;
                     }
                 }
 
@@ -1900,7 +1900,7 @@ _AP.controls = (function(document, window)
 
             function checkMinVolumeInput()
             {
-                var volume = parseFloat(mo.minVolumeInputText.value), success;
+                var volume = parseInt(mo.minimumPressureInputText.value, 10), success;
 
                 if(isNaN(volume) || Math.floor(volume) !== volume || volume < 0 || volume > 127)
                 {
@@ -1984,7 +1984,7 @@ _AP.controls = (function(document, window)
                 {
                     options.runtimeOptions = {};
                     options.runtimeOptions.track = {};
-                    options.runtimeOptions.track.minVolumes = getMinVolumes(options.trackMaxVolumes, parseInt(mo.minVolumeInputText.value, 10));
+                    options.runtimeOptions.track.minVolumes = getMinVolumes(options.trackMaxVolumes, parseInt(mo.minimumPressureInputText.value, 10));
                     options.runtimeOptions.track.scales = getScales(options.trackMaxVolumes, options.runtimeOptions.track.minVolumes);
 
                     options.runtimeOptions.speed = {};
@@ -2038,6 +2038,8 @@ _AP.controls = (function(document, window)
                 }
 
                 options.assistantsSpeed = parseFloat(mo.speedPercentInputText.value) / 100.0;
+
+                options.minimumInputPressure = parseInt(mo.minimumPressureInputText.value, 10);
 
                 success = true;
             }

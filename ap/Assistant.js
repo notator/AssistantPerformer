@@ -83,7 +83,7 @@ _AP.assistant = (function ()
     // b) assumes that RealTime messages will not interrupt the messages being received.    
     handleMIDIInputEvent = function (msg)
     {
-        var inputEvent, command,
+        var inputEvent, command, inputPressure,
             localOptions = options, trackOptions = localOptions.runtimeOptions.track;
 
         // The returned object is either empty, or has .data and .receivedTime attributes,
@@ -661,16 +661,18 @@ _AP.assistant = (function ()
             switch(command)
             {
                 case CMD.CHANNEL_PRESSURE: // produced by both R2M and E-MU XBoard49 when using "aftertouch"
+                    inputPressure = (inputEvent.data[1] > options.minimumInputPressure) ? inputEvent.data[1] : options.minimumInputPressure;
                     setSpeedFactor(3, inputEvent.data[1]);
                     //console.log("ChannelPressure, data[1]:", inputEvent.data[1].toString());  // CHANNEL_PRESSURE control has no data[2]
                     if(localOptions.pressureSubstituteControlData !== null)
                     {
                         // CHANNEL_PRESSURE.data[1] is the amount of pressure 0..127.
-                        handleController(trackOptions, localOptions.pressureSubstituteControlData, inputEvent.data[1],
+                        handleController(trackOptions, localOptions.pressureSubstituteControlData, inputPressure,
                                                     localOptions.usesPressureSolo, localOptions.usesPressureOtherTracks);
                     }
                     break;
                 case CMD.AFTERTOUCH: // produced by the EWI breath controller
+                    inputPressure = (inputEvent.data[2] > options.minimumInputPressure) ? inputEvent.data[2] : options.minimumInputPressure;
                     setSpeedFactor(3, inputEvent.data[2]);
                     //console.log("Aftertouch input, key:" + inputEvent.data[1].toString() + " value:", inputEvent.data[2].toString()); 
                     if (localOptions.pressureSubstituteControlData !== null)
@@ -678,7 +680,7 @@ _AP.assistant = (function ()
                         // AFTERTOUCH.data[1] is the MIDIpitch to which to apply the aftertouch, but I dont need that
                         // because the current pitch is kept in currentLivePerformersKeyPitch (in the closure).
                         // AFTERTOUCH.data[2] is the amount of pressure 0..127.
-                        handleController(trackOptions, localOptions.pressureSubstituteControlData, inputEvent.data[2],
+                        handleController(trackOptions, localOptions.pressureSubstituteControlData, inputPressure,
                                                     localOptions.usesPressureSolo, localOptions.usesPressureOtherTracks);
                     }
                     break;
@@ -817,7 +819,6 @@ _AP.assistant = (function ()
             function resetTimestamps(sequences)
             {
                 var
-                sequenceMsPosition = sequence.msPositionInScore,
                 nTracks = sequence.tracks.length, moment,
                 i, j, k, track, trackLength;
 
