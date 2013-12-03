@@ -327,7 +327,7 @@ _AP.assistant = (function ()
         {
             // currentIndex is the index of the currently playing sequence
             // (which should be silently completed when a noteOn arrives).
-            if (currentIndex >= 0 && currentIndex < performedSequences.length)
+            if(currentIndex >= 0 && currentIndex < performedSequences.length)
             {
                 performedSequences[currentIndex].finishSilently();
             }
@@ -614,7 +614,13 @@ _AP.assistant = (function ()
 
             currentLivePerformersKeyPitch = inputEvent.data[1];
 
-            if (inputEvent.data[2] > 0)
+            if(currentIndex === (performedSequences.length - 1))
+            {
+                // If the final sequence is playing and a noteOn is received, the performance stops immediately.
+                // In this case the final sequence must be a restSequence (otherwise a noteOn can't be received).
+                stop(); 
+            }
+            else if (inputEvent.data[2] > 0)
             {
                 silentlyCompleteCurrentlyPlayingSequence();
 
