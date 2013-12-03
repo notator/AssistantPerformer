@@ -73,18 +73,25 @@ _AP.controls = (function(document, window)
     deleteSaveMIDIFileButton = function()
     {
         var
-        downloadLinkDiv,
-        downloadLink = document.getElementById("downloadLink");
+        downloadLinkDiv = document.getElementById("downloadLinkDiv"), // the Element which will contain the link
+        downloadLink, i;
 
-        if(downloadLink)
+        for(i = 0; i < downloadLinkDiv.childNodes.length; ++i)
         {
-            downloadLinkDiv = document.getElementById("downloadLinkDiv");
-            downloadLinkDiv.innerHTML = '';
+            if(downloadLinkDiv.childNodes[i].id === "downloadLink")
+            {
+                downloadLink = downloadLinkDiv.childNodes[i];
+                break;
+            }
+        }
 
+        if(downloadLink !== undefined)
+        {
             // Need a small delay for the revokeObjectURL to work properly.
-            window.setTimeout(function()
+            window.setTimeout(function ()
             {
                 window.URL.revokeObjectURL(downloadLink.href); // window.URL is set in Main.js
+                downloadLinkDiv.removeChild(downloadLink);
             }, 1500);
         }
     },
@@ -155,41 +162,57 @@ _AP.controls = (function(document, window)
         var
         standardMIDIFile,
         downloadName,
-        downloadLinkDiv, a,
+        downloadLinkDiv, downloadLinkFound = false, i, a,
         nTracks = sequence.tracks.length;
 
         if(hasData(nTracks, sequence.tracks))
         {
-            downloadLinkDiv = document.getElementById("downloadLinkDiv"); // the empty Element which will contain the link
-            downloadName = getMIDIFileName(scoreName);
+            downloadLinkDiv = document.getElementById("downloadLinkDiv"); // the Element which will contain the link
 
-            standardMIDIFile = sequenceToSMF(sequence, sequenceMsDuration);
-
-            a = document.createElement('a');
-            a.id = "downloadLink";
-            a.download = downloadName;
-            a.href = window.URL.createObjectURL(standardMIDIFile); // window.URL is set in Main.js
-            a.innerHTML = '<img id="saveImg" border="0" src="images/saveMouseOut.png" alt="saveMouseOutImage" width="56" height="31">';
-
-            a.onmouseover = function(e)
+            if(downloadLinkDiv !== undefined)
             {
-                var img = document.getElementById("saveImg");
-                img.src = "images/saveMouseOver.png";
-                a.style.cursor = 'default';
-            };
+                for(i = 0; i < downloadLinkDiv.childNodes.length; ++i)
+                {
+                    if(downloadLinkDiv.childNodes[i].id === "downloadLink")
+                    {
+                        downloadLinkFound = true;
+                    }
+                }
 
-            a.onmouseout = function(e)
-            {
-                var img = document.getElementById("saveImg");
-                img.src = "images/saveMouseOut.png";
-            };
+                if(downloadLinkFound === false)
+                {
 
-            a.onclick = function(e)
-            {
-                deleteSaveMIDIFileButton();
-            };
+                    downloadName = getMIDIFileName(scoreName);
 
-            downloadLinkDiv.appendChild(a);
+                    standardMIDIFile = sequenceToSMF(sequence, sequenceMsDuration);
+
+                    a = document.createElement('a');
+                    a.id = "downloadLink";
+                    a.download = downloadName;
+                    a.href = window.URL.createObjectURL(standardMIDIFile); // window.URL is set in Main.js
+                    a.innerHTML = '<img id="saveImg" border="0" src="images/saveMouseOut.png" alt="saveMouseOutImage" width="56" height="31">';
+
+                    a.onmouseover = function (e)
+                    {
+                        var img = document.getElementById("saveImg");
+                        img.src = "images/saveMouseOver.png";
+                        a.style.cursor = 'default';
+                    };
+
+                    a.onmouseout = function (e)
+                    {
+                        var img = document.getElementById("saveImg");
+                        img.src = "images/saveMouseOut.png";
+                    };
+
+                    a.onclick = function (e)
+                    {
+                        deleteSaveMIDIFileButton();
+                    };
+
+                    downloadLinkDiv.appendChild(a);
+                }
+            }
         }
     },
 
@@ -1088,10 +1111,13 @@ _AP.controls = (function(document, window)
                     {
                         subdoc = embedded_element.getSVGDocument();
                     }
-                    catch(e) { }
+                    catch(e)
+                    {
+                        alert("Exception thrown: Could not get embedded SVG document.");
+                    }
                 }
                 return subdoc;
-            }
+            };
         }
         else
         {
