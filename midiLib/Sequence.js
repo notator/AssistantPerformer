@@ -546,13 +546,15 @@ MIDILib.sequence = (function (window)
             run();
         },
 
-        // When called, immediately sends all the sequence's unsent messages, except noteOns,
-        // and then calls stop(). The sent messages are not recorded.
-        finishSilently = function ()
-        {
-            var
-            i, nMessages, messages, message,
-            moment = nextMoment(),
+        // When called, immediately sends all the sequence's unsent NOTE_OFF commands
+        // and then calls stop(). Other commands (NOTE_ON, AFTERTOUCH, CONTROL_CHANGE,
+        // PROGRAM_CHANGE, CHANNEL_PRESSURE, PITCH_WHEEL) are NOT sent.
+        // The sent messages are not recorded.
+        finishSilently = function ()                                                        
+        {                                                                                   
+            var                                                                             
+            i, nMessages, messages, message, command,                                       
+            moment = nextMoment(),                                                          
             now = performance.now();
 
             while (moment !== null)
@@ -562,10 +564,16 @@ MIDILib.sequence = (function (window)
                 for (i = 0; i < nMessages; ++i)
                 {
                     message = messages[i];
-                    if (!(message.command() === CMD.NOTE_ON && message.data[2] > 0))
+                    command = message.command();
+                    if(command === CMD.NOTE_OFF || (command === CMD.NOTE_ON && message.data[2] === 0))
                     {
                         midiOutputDevice.send(message.data, now);
                     }
+
+                    //if(!(message.command() === CMD.NOTE_ON && message.data[2] > 0))
+                    //{
+                    //    midiOutputDevice.send(message.data, now);
+                    //}
                 }
                 moment = nextMoment();
             }
