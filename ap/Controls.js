@@ -1628,7 +1628,14 @@ _AP.controls = (function(document, window)
             setScoreDefaultOptions(scoreInfo);
 
             setPages(scoreInfo);
-            setPerformersTrackSelector(scoreInfo.nTracks, scoreInfo.defaultPerformanceOptions.assistantsTrackIndex);
+            if(scoreInfo.defaultPerformanceOptions != undefined)
+            {
+                setPerformersTrackSelector(scoreInfo.nTracks, scoreInfo.defaultPerformanceOptions.assistantsTrackIndex);
+            }
+            else
+            {
+                setPerformersTrackSelector(scoreInfo.nTracks, 0);
+            }
 
             tracksControl.setNumberOfTracks(scoreInfo.nTracks);
 
