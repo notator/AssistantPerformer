@@ -2106,6 +2106,10 @@ _AP.controls = (function(document, window)
 
             setSvgControlsState('stopped');
 
+            if(options.assistedPerformance === true)
+            {
+                setSvgControlsState('playing');
+            }
         }
     },
 
