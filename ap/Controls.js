@@ -681,7 +681,7 @@ _AP.controls = (function(document, window)
                     }
                     sequence.sendSetPitchWheelDeviationMessageNow(options.outputDevice, trackIndex, value);
 
-                    if(isAssistedPerformance && options.pressureSubstituteControlData.midiControl === CONTROL.VOLUME)
+                    if(isAssistedPerformance && options.pressureSubstituteControlData !== null && options.pressureSubstituteControlData.midiControl === CONTROL.VOLUME)
                     {
                         value = options.runtimeOptions.track.minVolumes[trackIndex];
                     }
@@ -695,7 +695,7 @@ _AP.controls = (function(document, window)
                     }
                     sequence.sendControlMessageNow(options.outputDevice, trackIndex, CONTROL.VOLUME, value);
 
-                    if(isAssistedPerformance && options.pressureSubstituteControlData.midiControl !== CONTROL.VOLUME)
+                    if(isAssistedPerformance && options.pressureSubstituteControlData !== null && options.pressureSubstituteControlData.midiControl !== CONTROL.VOLUME)
                     {
                         sequence.sendControlMessageNow(options.outputDevice, trackIndex, options.pressureSubstituteControlData.midiControl,
                             options.performersMinimumPressure);
