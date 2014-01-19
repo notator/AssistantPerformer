@@ -1754,7 +1754,7 @@ _AP.controls = (function(document, window)
 
         if(controlID === "midiOutputDeviceSelector")
         {
-            setMIDIDevices(midiAccess);
+            setMIDIDevices();
         }
 
         if(controlID === "trackSelector")
