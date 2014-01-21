@@ -200,7 +200,7 @@ _AP.midiChord = (function ()
                 return msDurations;
             }
 
-            // Chord Bank, Patch and PitchwheelDeviation messages
+            // Chord PitchwheelDeviation messages
             // Returns undefined if there are no attributes
             function attributesMoment(channel, chordDef, msPosition)
             {
@@ -230,16 +230,7 @@ _AP.midiChord = (function ()
 
                     // the id, and minBasicChordMsDuration attributes are not midi messages
                     // the hasChordOff attribute is dealt with later.
-                    if (attributes.bank !== undefined)
-                    {
-                        msg = new Message(CMD.CONTROL_CHANGE + channel, 0, attributes.bank); // 0 is bank control
-                        attrMoment.messages.push(msg);
-                    }
-                    if (attributes.patch !== undefined)
-                    {
-                        msg = new Message(CMD.PROGRAM_CHANGE + channel, attributes.patch, 0);
-                        attrMoment.messages.push(msg);
-                    }
+
                     if (attributes.pitchWheelDeviation !== undefined)
                     {
                         setPitchwheelDeviation(attrMoment, attributes.pitchWheelDeviation, channel);
@@ -259,18 +250,24 @@ _AP.midiChord = (function ()
                     bcoMoment = new Moment(msPosition),
                     i;
 
-                if (basicChordDef.bank !== undefined) // default is dont send a bank change
+                if(basicChordDef.bank !== undefined && basicChordDef.bank !== channel.bank) // default is dont send a bank change
                 {
                     message = new Message(CMD.CONTROL_CHANGE + channel, basicChordDef.bank, 0);
                     bcoMoment.messages.push(message);
-
-                    message = new Message(CMD.PROGRAM_CHANGE + channel, basicChordDef.patch, 0);
+                    // set patch to 0
+                    message = new Message(CMD.PROGRAM_CHANGE + channel, 0, 0);
                     bcoMoment.messages.push(message);
+
+                    channel.bank = basicChordDef.bank;
+                    channel.patch = 0;
                 }
-                else if (basicChordDef.patch !== undefined) // default is dont send a patch change
+
+                if(basicChordDef.patch !== undefined && basicChordDef.patch !== channel.patch) // default is dont send a patch change
                 {
                     message = new Message(CMD.PROGRAM_CHANGE + channel, basicChordDef.patch, 0);
                     bcoMoment.messages.push(message);
+
+                    channel.patch = basicChordDef.patch;
                 }
 
                 for (i = 0; i < len; ++i)

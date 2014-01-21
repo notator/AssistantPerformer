@@ -70,12 +70,6 @@ _AP.palettes = (function (document)
                 case "id":
                     attributes.id = a.value; // a string
                     break;
-                case "bank":
-                    attributes.bank = parseInt(a.value, 10);
-                    break;
-                case "patch":
-                    attributes.patch = parseInt(a.value, 10);
-                    break;
                 case "volume":
                     attributes.volume = parseInt(a.value, 10);
                     break;
@@ -97,8 +91,6 @@ _AP.palettes = (function (document)
             }
         }
         // the following attributes can be undefined
-        //  bank
-        //  patch
         //  volume
         //  hasChordOff (true by default)
         //  pitchWheelDeviation (default is 2 or unchanged)
@@ -283,8 +275,6 @@ _AP.palettes = (function (document)
     //
     // chord.attributes can be:
     //       chord.attributes.id (compulsory string)
-    //       chord.attributes.bank (optional int)
-    //       chord.attributes.patch (optional int)
     //       chord.attributes.volume (optional int)
     //       chord.attributes.hasChordOff (optional boolean)
     //       chord.attributes.pitchWheelDeviation (optional int)
@@ -337,62 +327,62 @@ _AP.palettes = (function (document)
         return this;
     },
 
-    // public Palettes() constructor. Returns an empty array if there are no palettes in the score.
-    // Gets the palettes defined in a "midiDefs" element in the first SVG page embedded in the HTML.
-    // Palettes is an array of palette. Each palette is an array of ChordDef.
-    Palettes = function (svg)
-    {
-        if (!(this instanceof Palettes))
-        {
-            return new Palettes();
-        }
+    //// public Palettes() constructor. Returns an empty array if there are no palettes in the score.
+    //// Gets the palettes defined in a "midiDefs" element in the first SVG page embedded in the HTML.
+    //// Palettes is an array of palette. Each palette is an array of ChordDef.
+    //Palettes = function (svg)
+    //{
+    //    if (!(this instanceof Palettes))
+    //    {
+    //        return new Palettes();
+    //    }
 
-        var embeddedSvgPages, svgPage1,
-            midiDefs, defNodes, defNode,
-            id,
-            defsArray = [],
-            palettes = [],
-            currentPaletteNumber = 1,
-            i, chordDef, restDef;
+    //    var embeddedSvgPages, svgPage1,
+    //        midiDefs, defNodes, defNode,
+    //        id,
+    //        defsArray = [],
+    //        palettes = [],
+    //        currentPaletteNumber = 1,
+    //        i, chordDef, restDef;
 
-        // Note that document has been passed as a local variable to this namespace.
-        embeddedSvgPages = document.querySelectorAll(".svgPage");
-        svgPage1 = svg.getSVGDocument(embeddedSvgPages[0]); // public function (see above)
-        midiDefs = svgPage1.getElementsByTagName("midiDefs");
-        if(midiDefs.length > 0)
-        {
-            defNodes = midiDefs[0].childNodes;
+    //    // Note that document has been passed as a local variable to this namespace.
+    //    embeddedSvgPages = document.querySelectorAll(".svgPage");
+    //    svgPage1 = svg.getSVGDocument(embeddedSvgPages[0]); // public function (see above)
+    //    midiDefs = svgPage1.getElementsByTagName("midiDefs");
+    //    if(midiDefs.length > 0)
+    //    {
+    //        defNodes = midiDefs[0].childNodes;
 
-            for (i = 0; i < defNodes.length; ++i)
-            {
-                defNode = defNodes[i];
-                if(defNodes[i].nodeName !== '#text' && defNodes[i].nodeName !== '#comment' && defNodes[i].nodeName !== 'script')
-                {
-                    id = defNode.getAttribute("id");
+    //        for (i = 0; i < defNodes.length; ++i)
+    //        {
+    //            defNode = defNodes[i];
+    //            if(defNodes[i].nodeName !== '#text' && defNodes[i].nodeName !== '#comment' && defNodes[i].nodeName !== 'script')
+    //            {
+    //                id = defNode.getAttribute("id");
 
-                    if (paletteNumber(id) !== currentPaletteNumber)
-                    {
-                        palettes.push(defsArray);
-                        defsArray = [];
-                        currentPaletteNumber++;
-                    }
+    //                if (paletteNumber(id) !== currentPaletteNumber)
+    //                {
+    //                    palettes.push(defsArray);
+    //                    defsArray = [];
+    //                    currentPaletteNumber++;
+    //                }
 
-                    if (id.indexOf("chord") > 0)
-                    {
-                        chordDef = new ChordDef(defNode);
-                        defsArray.push(chordDef);
-                    }
-                    else if (id.indexOf("rest") > 0)
-                    {
-                        restDef = new RestDef(defNode);
-                        defsArray.push(restDef);
-                    }
-                }
-            }
-            palettes.push(defsArray);
-        }
-        return palettes;
-    },
+    //                if (id.indexOf("chord") > 0)
+    //                {
+    //                    chordDef = new ChordDef(defNode);
+    //                    defsArray.push(chordDef);
+    //                }
+    //                else if (id.indexOf("rest") > 0)
+    //                {
+    //                    restDef = new RestDef(defNode);
+    //                    defsArray.push(restDef);
+    //                }
+    //            }
+    //        }
+    //        palettes.push(defsArray);
+    //    }
+    //    return palettes;
+    //},
 
     // public API
     publicAPI =
@@ -407,7 +397,7 @@ _AP.palettes = (function (document)
         // Palettes is an array of palette. Each palette is an array of ChordDef and RestDef.
         // Note that RestDefs are placeholders in palettes. They are never actually referred to outside this namespace,
         // so their definition is not public.
-        Palettes: Palettes
+        //Palettes: Palettes
     };
 
     return publicAPI;

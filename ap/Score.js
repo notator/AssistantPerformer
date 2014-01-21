@@ -827,16 +827,16 @@ _AP.score = (function (document)
             }
         }
 
-        function getPalettes(svg)
-        {
-            var i, pals;
+        //function getPalettes(svg)
+        //{
+        //    var i, pals;
 
-            pals = new Palettes.Palettes(svg);
-            for (i = 0; i < pals.length; ++i)
-            {
-                palettes.push(pals[i]);
-            }
-        }
+        //    pals = new Palettes.Palettes(svg);
+        //    for (i = 0; i < pals.length; ++i)
+        //    {
+        //        palettes.push(pals[i]);
+        //    }
+        //}
 
         function getEmptySystem(viewBoxOriginY, viewBoxScale, systemNode)
         {
@@ -1019,7 +1019,7 @@ _AP.score = (function (document)
 
         resetContent();
 
-        getPalettes(svg);
+        //getPalettes(svg);
 
         embeddedSvgPages = document.querySelectorAll(".svgPage");
         nPages = embeddedSvgPages.length;
@@ -1513,7 +1513,7 @@ _AP.score = (function (document)
             voiceIndex, nVoices, voice,
             staffIndex, nStaves, staff,
             sysIndex, nSystems = systems.length, system,
-            channel, chordDef, midiChord, midiRest;
+            channels = [], channel, chordDef, midiChord, midiRest;
 
         function numberOfVoices()
         {
@@ -1529,6 +1529,11 @@ _AP.score = (function (document)
 
         sequence = new Sequence(numberOfVoices());
         tracks = sequence.tracks;
+        for(trackIndex = 0; trackIndex < tracks.length; ++trackIndex)
+        {
+            channels.push(new Number(trackIndex)); // channels are Number objects (to which bank and patch attributes can be added).
+        }
+
         if(isAssistedPerformance === true)
         {
             livePerformersSilentTrack = new Track();
@@ -1554,7 +1559,7 @@ _AP.score = (function (document)
                     voice = staff.voices[voiceIndex];
                     nTimeObjects = voice.timeObjects.length;
                     track = tracks[trackIndex];
-                    channel = trackIndex;
+                    channel = channels[trackIndex]; // a channel is a Number object (to which bank and patch attributes can be added).
                     for (timeObjectIndex = 0; timeObjectIndex < nTimeObjects; ++timeObjectIndex)
                     {
                         timeObject = voice.timeObjects[timeObjectIndex];
