@@ -26,8 +26,9 @@ _AP.score = (function (document)
     Track = MIDILib.track.Track,
 
     Markers = _AP.markers,
-    Palettes = _AP.palettes,
-    MIDIChord = _AP.midiChord,
+    ChordDef = _AP.chordDef.ChordDef,
+    MIDIChord = _AP.midiChord.MIDIChord,
+    MIDIRest = _AP.midiChord.MIDIRest,
 
     MAX_MIDI_CHANNELS = 16,
 
@@ -35,8 +36,6 @@ _AP.score = (function (document)
     svgFrames = [],
 
     viewBoxScale,
-
-    palettes = [],
 
     // See comments in the publicAPI definition at the bottom of this file.
     systems = [], // an array of all the systems
@@ -798,7 +797,6 @@ _AP.score = (function (document)
 
     // The svg argument contains pointers to functions that work on the SVG score.
     // Constructs all pages, complete except for the timeObjects.
-    // Palettes are also loaded. If the score does not contain any palettes, Palettes will be an empty array.
     // Each page has a frame and the correct number of empty systems.
     // Each system has the correct number of empty staves and barlines, it also has
     // a startMarker, a runningMarker and an endMarker.
@@ -821,22 +819,7 @@ _AP.score = (function (document)
             {
                 systems.pop();
             }
-            while (palettes.length > 0)
-            {
-                palettes.pop();
-            }
         }
-
-        //function getPalettes(svg)
-        //{
-        //    var i, pals;
-
-        //    pals = new Palettes.Palettes(svg);
-        //    for (i = 0; i < pals.length; ++i)
-        //    {
-        //        palettes.push(pals[i]);
-        //    }
-        //}
 
         function getEmptySystem(viewBoxOriginY, viewBoxScale, systemNode)
         {
@@ -1019,8 +1002,6 @@ _AP.score = (function (document)
 
         resetContent();
 
-        //getPalettes(svg);
-
         embeddedSvgPages = document.querySelectorAll(".svgPage");
         nPages = embeddedSvgPages.length;
         viewBoxOriginY = 0; // absolute coordinates
@@ -1081,17 +1062,12 @@ _AP.score = (function (document)
 
             // A timeObject is either a chord or a rest.
             // Both chords and rests have alignmentX and msDuration fields.
-            // Chords additionally have paletteIndex and chordIndex fields for retrieving
-            // a chord definition.
-            // Chords might, at some time, contain the chord definitions themselves (when
-            // they have no 'use' element).
             // Later in this program (as soon as all systems have been read), the msPosition
             // of all timeObjects will appended to them.
             function getTimeObjects(noteObjects, speed)
             {
                 var timeObjects = [], id,
-                    timeObject, i, j, k, length, noteObject, chordChildren, midiChildren,
-                    chordAddressString, subStrings;
+                    timeObject, i, j, k, length, noteObject, chordChildren, midiChildren;
 
                 // timeObjects is an array of timeObject.
                 // speed is a floating point number, greater than zero.
@@ -1120,6 +1096,20 @@ _AP.score = (function (document)
                     return msPositions[nMsPositions - 1];
                 }
 
+                function getMsDuration(chordDef)
+                {
+                    var i,
+                        msDuration = 0,
+                        basicChordsArray = chordDef.basicChordsArray;
+
+                    for(i = 0; i < basicChordsArray.length; ++i)
+                    {
+                        msDuration += basicChordsArray[i].msDuration;
+                    }
+
+                    return msDuration;
+                }
+
                 length = noteObjects.length;
                 for (i = 0; i < length; ++i)
                 {
@@ -1132,7 +1122,6 @@ _AP.score = (function (document)
                             //console.log("*** chord found, i= " + i);
                             timeObject = {};
                             timeObject.alignmentX = parseFloat(noteObject.getAttribute('score:alignmentX')) / viewBoxScale;
-                            timeObject.msDuration = parseFloat(noteObject.getAttribute('score:msDuration'));
                             chordChildren = noteObject.childNodes;
                             for (j = 0; j < chordChildren.length; ++j)
                             {
@@ -1144,30 +1133,17 @@ _AP.score = (function (document)
                                         midiChildren = chordChildren[j].childNodes;
                                         for (k = 0; k < midiChildren.length; ++k)
                                         {
-                                            if (midiChildren[k].nodeName === 'use')
-                                            {
-                                                chordAddressString = midiChildren[k].getAttribute('xlink:href');
-                                                // chordAddressString is of the form '#palette3_chord9'
-                                                subStrings = chordAddressString.split('_');
-                                                subStrings[0] = subStrings[0].substr(8);
-                                                timeObject.paletteIndex = parseInt(subStrings[0], 10) - 1;
-
-                                                subStrings[1] = subStrings[1].substr(5);
-                                                timeObject.chordIndex = parseInt(subStrings[1], 10) - 1;
-                                                break;
-                                            }
-
                                             if(midiChildren[k].nodeName === 'score:basicChords')
                                             {
-                                                timeObject.chordDef = new Palettes.ChordDef(chordChildren[j]);
+                                                timeObject.chordDef = new ChordDef(chordChildren[j]);
                                                 break;
                                             }
                                         }
                                         break;
                                     }
                                 }
-
                             }
+                            timeObject.msDuration = getMsDuration(timeObject.chordDef);
                             timeObjects.push(timeObject);
                         }
                         else if (id.indexOf('rest') >= 0)
@@ -1564,16 +1540,16 @@ _AP.score = (function (document)
                     {
                         timeObject = voice.timeObjects[timeObjectIndex];
 
-                        if(timeObject.paletteIndex === undefined && timeObject.chordDef === undefined)
+                        if(timeObject.chordDef === undefined)
                         {
                             if(timeObjectIndex < (nTimeObjects - 1))
                             {
                                 // A real rest. All barlines on the right ends of staves are ignored.
-                                midiRest = new MIDIChord.MIDIRest(timeObject);
+                                midiRest = new MIDIRest(timeObject);
                                 midiRest.addToTrack(track);
                                 if(isAssistedPerformance === true && trackIndex === livePerformersTrackIndex)
                                 {
-                                    midiRest = new MIDIChord.MIDIRest(timeObject);
+                                    midiRest = new MIDIRest(timeObject);
                                     midiRest.addToTrack(livePerformersSilentTrack);
                                 }
                                 //console.log("midiRest added at sysIndex=", +sysIndex + ", staffIndex=", +staffIndex + ", timeObjectIndex=" + timeObjectIndex);
@@ -1581,23 +1557,15 @@ _AP.score = (function (document)
                         }
                         else
                         {
-                            // A chord
-                            if (timeObject.paletteIndex !== undefined)
-                            {
-                                chordDef = palettes[timeObject.paletteIndex][timeObject.chordIndex];
-                            }
-                            else
-                            {
-                                chordDef = timeObject.chordDef;
-                            }
+                            chordDef = timeObject.chordDef;
                             chordIsSilent = false;
-                            midiChord = new MIDIChord.MIDIChord(channel, chordDef, timeObject, chordIsSilent);
+                            midiChord = new MIDIChord(channel, chordDef, timeObject, chordIsSilent);
                             midiChord.addToTrack(track);
                             //console.log("midiChord added at sysIndex=", +sysIndex + ", staffIndex=", +staffIndex + ", timeObjectIndex=" + timeObjectIndex);
                             if(isAssistedPerformance === true && trackIndex === livePerformersTrackIndex)
                             {
                                 chordIsSilent = true;
-                                midiChord = new MIDIChord.MIDIChord(channel, chordDef, timeObject, chordIsSilent);
+                                midiChord = new MIDIChord(channel, chordDef, timeObject, chordIsSilent);
                                 midiChord.addToTrack(livePerformersSilentTrack);
                             }
                         }
@@ -1623,7 +1591,6 @@ _AP.score = (function (document)
         }
 
         svgFrames = [];
-        palettes = [];
         systems = [];
 
         runningMarkerHeightChanged = callback;

@@ -5,36 +5,20 @@
  *  Code licensed under MIT
  *  https://github.com/notator/assistant-performer/blob/master/License.md
  *
- *  ap/Palettes.js
+ *  ap/ChordDef.js
  *  Public interface contains:
- *     Palettes() // constructor. Gets the palettes defined in a "midiDefs" element in the first
- *                // SVG page embedded in the HTML. Palettes is an array of palette. Each palette
- *                // is an array of ChordDef and RestDef. Note that RestDefs are placeholders in
- *                // palettes. They are never actually referred to outside this namespace, so
- *                // their definition is not public.
  *     ChordDef(chordDefNode) // Chord definition constructor. Reads the XML in the chordDefNode. 
  *  
  */
 
 /*jslint bitwise: false, nomen: false, plusplus: true, white: true */
 
-_AP.namespace('_AP.palettes');
+_AP.namespace('_AP.chordDef');
 
-_AP.palettes = (function (document)
+_AP.chordDef = (function (document)
 {
     "use strict";
-    // begin var
-    // module dependencies (see Javascript Patterns p.98)
     var
-    // private properties (see Javascript Patterns p.98)
-    // private methods (see Javascript Patterns p.98)
-    paletteNumber = function (id)
-    {
-        var str = id;
-        str = id.replace("palette", "");
-        return parseInt(str, 10);
-    },
-
     // The argument is a string containing a list of integers separated by single spaces
     // This function returns the corresponding array of numbers.
     numberArray = function (numberList)
@@ -228,44 +212,6 @@ _AP.palettes = (function (document)
         return sliders;
     },
 
-    restAttributes = function (restDefNode)
-    {
-        var attr,
-            attributes = {},
-            attributesLength = restDefNode.attributes.length,
-            i;
-
-        for (i = 0; i < attributesLength; ++i)
-        {
-            attr = restDefNode.attributes[i];
-
-            // console.log(attr.name + " = " + attr.value);
-
-            switch (attr.name)
-            {
-                case "id":
-                    attributes.id = attr.value; // a string
-                    break;
-                case "msDuration":
-                    attributes.msDuration = parseInt(attr.value, 10);
-                    break;
-                default:
-                    throw (">>>>>>>>>> Illegal midiChord attribute  <<<<<<<<<<");
-            }
-        }
-        if (attributes.id === undefined)
-        {
-            throw ("Error: rests must have an id!");
-        }
-
-        if (attributes.msDuration === undefined)
-        {
-            throw ("Error: rests must have an msDuration!");
-        }
-
-        return attributes;
-    },
-
     // ChordDef constructor
     // The chord contains the chordDef information from the XML in a form that is easier to program with.
     // The ChordDef has the following fields:
@@ -307,97 +253,11 @@ _AP.palettes = (function (document)
         return this;
     },
 
-    // RestDef constructor
-    // The RestDef contains the restDef information from the XML in a form that is easier to program with.
-    // The RestDef has the following field:
-    //    rest.attributes
-    //
-    // rest.attributes are:
-    //    rest.attributes.id (compulsory string)
-    //    rest.attributes.msDuration (compulsory int)
-    RestDef = function (restDefNode)
-    {
-        if (!(this instanceof RestDef))
-        {
-            return new RestDef(restDefNode);
-        }
-
-        this.attributes = restAttributes(restDefNode);
-
-        return this;
-    },
-
-    //// public Palettes() constructor. Returns an empty array if there are no palettes in the score.
-    //// Gets the palettes defined in a "midiDefs" element in the first SVG page embedded in the HTML.
-    //// Palettes is an array of palette. Each palette is an array of ChordDef.
-    //Palettes = function (svg)
-    //{
-    //    if (!(this instanceof Palettes))
-    //    {
-    //        return new Palettes();
-    //    }
-
-    //    var embeddedSvgPages, svgPage1,
-    //        midiDefs, defNodes, defNode,
-    //        id,
-    //        defsArray = [],
-    //        palettes = [],
-    //        currentPaletteNumber = 1,
-    //        i, chordDef, restDef;
-
-    //    // Note that document has been passed as a local variable to this namespace.
-    //    embeddedSvgPages = document.querySelectorAll(".svgPage");
-    //    svgPage1 = svg.getSVGDocument(embeddedSvgPages[0]); // public function (see above)
-    //    midiDefs = svgPage1.getElementsByTagName("midiDefs");
-    //    if(midiDefs.length > 0)
-    //    {
-    //        defNodes = midiDefs[0].childNodes;
-
-    //        for (i = 0; i < defNodes.length; ++i)
-    //        {
-    //            defNode = defNodes[i];
-    //            if(defNodes[i].nodeName !== '#text' && defNodes[i].nodeName !== '#comment' && defNodes[i].nodeName !== 'script')
-    //            {
-    //                id = defNode.getAttribute("id");
-
-    //                if (paletteNumber(id) !== currentPaletteNumber)
-    //                {
-    //                    palettes.push(defsArray);
-    //                    defsArray = [];
-    //                    currentPaletteNumber++;
-    //                }
-
-    //                if (id.indexOf("chord") > 0)
-    //                {
-    //                    chordDef = new ChordDef(defNode);
-    //                    defsArray.push(chordDef);
-    //                }
-    //                else if (id.indexOf("rest") > 0)
-    //                {
-    //                    restDef = new RestDef(defNode);
-    //                    defsArray.push(restDef);
-    //                }
-    //            }
-    //        }
-    //        palettes.push(defsArray);
-    //    }
-    //    return palettes;
-    //},
-
     // public API
     publicAPI =
     {
         // public ChordDef(chordDefNode) constructor.
-        // This constructor is public, so that it can also be used when loading chords which are defined locally
-        // in scores rather than in a palette (when the ChordDef is not being 'used').
         ChordDef: ChordDef,
-
-        // public Palettes() constructor.
-        // Gets the palettes defined in a "midiDefs" element in the first SVG page embedded in the HTML.
-        // Palettes is an array of palette. Each palette is an array of ChordDef and RestDef.
-        // Note that RestDefs are placeholders in palettes. They are never actually referred to outside this namespace,
-        // so their definition is not public.
-        //Palettes: Palettes
     };
 
     return publicAPI;
