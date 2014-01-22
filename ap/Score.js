@@ -1119,7 +1119,6 @@ _AP.score = (function (document)
                         id = noteObject.getAttribute('id');
                         if (id.indexOf('chord') >= 0)
                         {
-                            //console.log("*** chord found, i= " + i);
                             timeObject = {};
                             timeObject.alignmentX = parseFloat(noteObject.getAttribute('score:alignmentX')) / viewBoxScale;
                             chordChildren = noteObject.childNodes;
