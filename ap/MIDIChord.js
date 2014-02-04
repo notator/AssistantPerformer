@@ -131,7 +131,7 @@ _AP.midiChord = (function ()
                 notesLength,
                 basicChordDef,
                 msPos = Number(timeObject.msPosition),
-                endOfChordNoteOffs = [],
+                allNoteOffs = [],
                 chordMoments = [],
                 noteNumber,
                 moment,
@@ -204,7 +204,9 @@ _AP.midiChord = (function ()
             // Returns undefined if there are no attributes
             function attributesMoment(channel, chordDef, msPosition)
             {
-                var attrMoment, attributes;
+                var attrMoment,
+                    msg,
+                    attributes;
 
                 /// Sets both RegisteredParameter controls to 0 (zero). This is standard MIDI for selecting the
                 /// pitch wheel so that it can be set by the subsequent DataEntry messages.
@@ -299,13 +301,30 @@ _AP.midiChord = (function ()
                 return bcoffMoment;
             }
 
-            // uniqueNoteNumbers contains unique noteNumbers that need to be sent a noteOff,
-            function chordOffMoment(channel, uniqueNoteNumbers, msPosition)
+            // noteOffs contains all the noteNumbers that need to be sent a noteOff,
+            // noteOffs contains duplicates. Avoid creating duplicate noteOffs in this function.
+            function chordOffMoment(channel, noteOffs, msPosition)
             {
-                var nnIndex, noteNumber,
+                var uniqueNoteNumbers = [], nnIndex, noteNumber,
                     velocity = 127,
                     cOffMoment = new Moment(msPosition),
                     message;
+
+                function getUniqueNoteNumbers(noteOffs)
+{
+                    var unique = [], i, length = noteOffs.length, val;
+                    for(i = 0; i < length; ++i)
+{
+                        val = noteOffs[i];
+                        if(unique.indexOf(val) === -1)
+{
+                            unique.push(val);
+                        }
+                    }
+                    return unique;
+                }
+
+                uniqueNoteNumbers = getUniqueNoteNumbers(noteOffs);
 
                 for (nnIndex = 0; nnIndex < uniqueNoteNumbers.length; ++nnIndex)
                 {
@@ -332,20 +351,15 @@ _AP.midiChord = (function ()
             {
                 basicChordDef = chordDef.basicChordsArray[i];
 
-                if ((chordDef.attributes.hasChordOff === undefined || chordDef.attributes.hasChordOff === true)
-                    && basicChordDef.hasChordOff === false)
+                if(chordDef.attributes.hasChordOff === undefined || chordDef.attributes.hasChordOff === true)
                 {
                     notes = basicChordDef.notes;
                     notesLength = notes.length;
                     for (j = 0; j < notesLength; ++j)
                     {
                         noteNumber = notes[j];
-                        if(endOfChordNoteOffs.indexOf(noteNumber) === -1)
-                        {
-                            endOfChordNoteOffs.push(noteNumber);
-                        }
-                        // endOfChordNoteOffs contains unique noteNumbers.
-                        // These are sent noteOffs at the end of the ornament.
+                        allNoteOffs.push(noteNumber);
+                        // allNoteOffs is used at the end of the ornament to turn notes off that were turned on during the ornament.
                     }
                 }
 
@@ -378,11 +392,11 @@ _AP.midiChord = (function ()
                 }
             }
 
-            if ((chordDef.attributes.hasChordOff === undefined || chordDef.attributes.hasChordOff === true)
-            &&   endOfChordNoteOffs.length > 0 )
+            // final ChordOffMoment
+            // (Contains a noteOFF for each note that has been sent a noteON during the BasicChordMoments.)
+            if (chordDef.attributes.hasChordOff === undefined || chordDef.attributes.hasChordOff === true)
             {
-                // final ChordOff
-                moment = chordOffMoment(channel, endOfChordNoteOffs, msPos);
+                moment = chordOffMoment(channel, allNoteOffs, msPos);
                 currentMoment.mergeMoment(moment);
             }
 
