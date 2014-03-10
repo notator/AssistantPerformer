@@ -1,8 +1,9 @@
+
 Introduction
 ------------
-This is a web MIDI application, which gives a single performer control over the performance of a music score displayed in a browser. A stable, public version can be tried out at<br />
+This is a web MIDI application, which gives a single performer control over the performance of a music score displayed in a browser. A stable, public version (the master branch) can be tried out at<br />
 http://james-ingram-act-two.de/open-source/publicAssistantPerformer/assistantPerformer.html<br />
-This has only been tested on the latest version of Chrome, and is not guaranteed to work in other browsers.
+This has only been tested on the latest versions of Chrome and Firefox, and is not guaranteed to work in other browsers.
 
 The project is written in HTML5 and Javascript. It uses MIDI input and output devices, and scores stored in an SVG format which has been enhanced to contain MIDI information. See:<br />
 http://james-ingram-act-two.de/open-source/svgScoreExtensions.html<br />
@@ -12,39 +13,28 @@ https://github.com/cwilso/WebMIDIAPIShim<br />
 This code supplies MIDI support in browsers, and requires the <b>Jazz plugin</b> (http://jazz-soft.net) to be installed on the user's computer. Both the Jazz plugin and Chris Wilson's polyfill will become obsolete as soon as the Web MIDI API is actually implemented in browsers. For more details on the Web MIDI API, see: <br />
 http://www.w3.org/2011/audio/.
 
- 
-
 Monophonic input, such as produced by an EWI (http://www.akaipro.com/ewiseries), or R2M (http://www.doepfer.de/R2M.htm) is currently assumed. A MIDI keyboard can be used, but only one key at a time (incoming noteOffs are matched to noteOns, so playing legato is no problem). Timing is related to the times of single noteOns and noteOffs. In addition to noteOn/Off, pitch and velocity information, the performance can also be affected by the instrument's continuous controllers - modulation-wheel, pitch-wheel and aftertouch or channel-pressure.
-
-Future directions: I am currently working on the creation of more scores in the necessary format. Clearly, more examples are needed. New scores could be created in several ways:
-
-<ol>
-<li>
-with my existing desktop (C#) Assistant Composer software<br />
-http://james-ingram-act-two.de/moritz2/assistantComposer/assistantComposer.html
-</li>
-<li>
-with a web site for transcribing standard MIDI files.<br />
-This would work rather like the Assistant Composer, and have a similar GUI but without the choice of chord symbol type, and without the krystals and palettes. The Assistant Composer already creates scores from abstract MIDI information, without further human intervention, so this problem has already been solved in principle. I, or someone else, would just have to translate the relevant parts of the (C#) program to JavaScript.
-</li>
-<li>
-with Finale/Sibelius plugins, etc.
-</li>
-</ol>
 
 A more general description of this Assistant Performer, including its rationale, can be found at<br />
 http://james-ingram-act-two.de/open-source/assistantPerformer/aboutAssistantPerformer.html
 
-====
+========
 
-Code
-----
+The Code
+--------
 
-This project is a work-in-progress having two main branches: 'master', and 'dev'. The code in the 'master' branch defines an appplication which can be tried out publicly at<br />
-http://james-ingram-act-two.de/open-source/publicAssistantPerformer/assistantPerformer.html
+This project is a work-in-progress, and currently has three branches: 'master', 'SongSixNoWorkers', and 'dev'.<br />
+<br />
+The '<b>master</b>' branch defines an appplication which can be tried out publicly at<br />
+http://james-ingram-act-two.de/open-source/publicAssistantPerformer/assistantPerformer.html<br />
+This 'master' version is stable, but is not the latest version of this project. It can play the scores 'Study 2c3.1' and 'Study 3 sketch', neither of which were designed specifically to be performed live.<br />
+<br />
+The '<b>SongSixNoWorkers</b>' branch is also stable (March 2014), and was designed for live performance of the score '<em>Song Six</em>' (which <b>was</b> designed for interaction with a live performer). When performing live, in concert, one can't rely on having a stable web connection, so the program in this branch can also be used off-line, using only local files on the user's computer. Unfortunately, '<em>Song Six</em>' requires the installation of a special soundFont, making it awkward for visitors to a public website to play correctly. The 'SongSixNoWorkers' branch therefore has no public website. The score, and a Flash/mp3 recording can however be found at<br />
+http://james-ingram-act-two.de/compositions/songSix/setting1Score/Song%20Six.html<br />
+<br />
+The '<b>dev</b>' branch is volatile, and currently contains a development of the 'SongSixNoWorkers' branch that uses <b>web workers</b> to play the individual tracks of a score. This paradigm means that the number of MIDI events to be played need not be fixed before a live performance begins. This, in turn, means that the score can react more flexibly to the live performer's input timings. This 'dev' branch changes quite a lot, and is used for testing possibly buggy code, so it does not have a public test site.<br />
 
-The 'master' version is stable, but is probably not the latest version of this project.<br />
-The 'dev' branch is the latest, development version of this project. It can now (November 2013) run either on the web or from a server on the user's computer. The 'dev' branch is quite volatile, and is used for testing possibly buggy code, so it does not have a public test site.<br />
+Future directions: When the web workers version of this program is working, I need to solve the problem of getting soundFonts working online. Hopefully, other people will find this (or an equivalent solution) useful, and it will be possible to cooperate...
 
 The folders contain code and code documentation as follows: 
 
@@ -101,5 +91,7 @@ A Sequence to Standard MIDI File conversion function.
 <br />
 <strong>scores</strong> - scores used by the files in the ap folder.<br />
 <br />
+
+
 
 
