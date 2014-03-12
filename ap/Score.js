@@ -1502,6 +1502,32 @@ _AP.score = (function (document)
             return nVoices;
         }
 
+        // inserts each midiChord's finalChordOffMoment.messages in the first moment in the following midiObject.
+        function transferFinalChordOffMoments(tracks)
+        {
+            var trackIndex, midiObjectIndex, finalChordOffMessages, nextObjectMessages, i;
+
+            for(trackIndex = 0; trackIndex < tracks.length; ++trackIndex)
+            {
+                track = tracks[trackIndex];
+                if(track.midiObjects.length > 1)
+                {
+                    for(midiObjectIndex = 1; midiObjectIndex < track.midiObjects.length; ++midiObjectIndex)
+                    {
+                        if(track.midiObjects[midiObjectIndex - 1].finalChordOffMoment !== undefined)
+                        {
+                            finalChordOffMessages = track.midiObjects[midiObjectIndex - 1].finalChordOffMoment.messages;
+                            nextObjectMessages = track.midiObjects[midiObjectIndex].moments[0].messages;
+                            for(i = 0; i < finalChordOffMessages.length; ++i)
+                            {
+                                nextObjectMessages.splice(0, 0, finalChordOffMessages[i]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         sequence = new Sequence(numberOfVoices());
         tracks = sequence.tracks;
         for(trackIndex = 0; trackIndex < tracks.length; ++trackIndex)
@@ -1545,11 +1571,11 @@ _AP.score = (function (document)
                             {
                                 // A real rest. All barlines on the right ends of staves are ignored.
                                 midiRest = new MIDIRest(timeObject);
-                                midiRest.addToTrack(track);
+                                track.midiObjects.push(midiRest);
                                 if(isAssistedPerformance === true && trackIndex === livePerformersTrackIndex)
                                 {
                                     midiRest = new MIDIRest(timeObject);
-                                    midiRest.addToTrack(livePerformersSilentTrack);
+                                    livePerformersSilentTrack.midiObjects.push(midiRest);
                                 }
                                 //console.log("midiRest added at sysIndex=", +sysIndex + ", staffIndex=", +staffIndex + ", timeObjectIndex=" + timeObjectIndex);
                             }
@@ -1559,13 +1585,13 @@ _AP.score = (function (document)
                             chordDef = timeObject.chordDef;
                             chordIsSilent = false;
                             midiChord = new MIDIChord(channel, chordDef, timeObject, chordIsSilent);
-                            midiChord.addToTrack(track);
+                            track.midiObjects.push(midiChord);
                             //console.log("midiChord added at sysIndex=", +sysIndex + ", staffIndex=", +staffIndex + ", timeObjectIndex=" + timeObjectIndex);
                             if(isAssistedPerformance === true && trackIndex === livePerformersTrackIndex)
                             {
                                 chordIsSilent = true;
                                 midiChord = new MIDIChord(channel, chordDef, timeObject, chordIsSilent);
-                                midiChord.addToTrack(livePerformersSilentTrack);
+                                livePerformersSilentTrack.midiObjects.push(midiChord);
                             }
                         }
                     }
@@ -1577,6 +1603,8 @@ _AP.score = (function (document)
                 }
             }
         }
+
+        transferFinalChordOffMoments(tracks);
 
         return sequence;
     },

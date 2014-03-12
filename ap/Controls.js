@@ -24,7 +24,7 @@ _AP.controls = (function(document, window)
     Score = _AP.score.Score,
     Assistant = _AP.assistant.Assistant,
 
-    Sequence = MIDILib.sequence.Sequence,
+    SequenceRecording = MIDILib.sequenceRecording.SequenceRecording,
     COMMAND = MIDILib.constants.COMMAND,
     CONTROL = MIDILib.constants.CONTROL,
     sequenceToSMF = MIDILib.standardMIDIFile.sequenceToSMF,
@@ -96,14 +96,14 @@ _AP.controls = (function(document, window)
         }
     },
 
-    // Returns true if any of the tracks contain moments, otherwise false.
+    // Returns true if any of the trackRecordings contain moments, otherwise false.
     // Used to prevent the creation of a 'save' button when there is nothing to save.
-    hasData = function(nTracks, tracks)
+    hasData = function(nTracks, trackRecordings)
     {
         var i, has = false;
         for(i = 0; i < nTracks; ++i)
         {
-            if(tracks[i].moments.length > 0)
+            if(trackRecordings[i].moments.length > 0)
             {
                 has = true;
                 break;
@@ -141,7 +141,7 @@ _AP.controls = (function(document, window)
     },
 
     // Creates a button which, when clicked, downloads a standard MIDI file recording
-    // of the sequence which has just stopped playing.
+    // of the sequenceRecording which has just stopped being recorded.
     // The performance may have ended by reaching the stop marker, or by the user clicking
     // the 'stop' button.
     // The 'save' button (and its associated recording) are deleted
@@ -153,19 +153,19 @@ _AP.controls = (function(document, window)
     //     The name of the downloaded file is:
     //         scoreName + '_' + the current date (format:year-month-day) + '.mid'.
     //         (e.g. "Study 2c3.1_2013-01-08.mid")
-    // sequence is a MIDILib.sequence.Sequence object.
-    // sequenceMsDuration is the total duration of the sequence in milliseconds (an integer).
-    //      and determines the timing of the end-of-track events. When this is a recorded sequence,
+    // sequenceRecording is a MIDILib.sequenceRecording.SequenceRecording object.
+    // sequenceMsDuration is the total duration of the sequenceRecording in milliseconds (an integer).
+    //      and determines the timing of the end-of-track events. When this is a recorded sequenceRecording,
     //      this value is simply the duration between the start and end markers.
-    createSaveMIDIFileButton = function(scoreName, sequence, sequenceMsDuration)
+    createSaveMIDIFileButton = function(scoreName, sequenceRecording, sequenceMsDuration)
     {
         var
         standardMIDIFile,
         downloadName,
         downloadLinkDiv, downloadLinkFound = false, i, a,
-        nTracks = sequence.tracks.length;
+        nTracks = sequenceRecording.trackRecordings.length;
 
-        if(hasData(nTracks, sequence.tracks))
+        if(hasData(nTracks, sequenceRecording.trackRecordings))
         {
             downloadLinkDiv = document.getElementById("downloadLinkDiv"); // the Element which will contain the link
 
@@ -184,7 +184,7 @@ _AP.controls = (function(document, window)
 
                     downloadName = getMIDIFileName(scoreName);
 
-                    standardMIDIFile = sequenceToSMF(sequence, sequenceMsDuration);
+                    standardMIDIFile = sequenceToSMF(sequenceRecording, sequenceMsDuration);
 
                     a = document.createElement('a');
                     a.id = "downloadLink";
@@ -505,39 +505,39 @@ _AP.controls = (function(document, window)
         }
     },
 
-    // callback called when a performing sequence is stopped or has played its last message,
+    // callback called when a performing sequenceRecording is stopped or has played its last message,
     // or when the assistant is stopped or has played its last subsequence.
-    reportEndOfPerformance = function(recordedSequence, performanceMsDuration)
+    reportEndOfPerformance = function(sequenceRecording, performanceMsDuration)
     {
         var
         scoreName = mo.scoreSelector.options[mo.scoreSelector.selectedIndex].text;
 
         // Moment timestamps in the recording are shifted so as to be relative to the beginning of the
-        // recording. Returns false if the if the recorded sequence is undefined, null or has no moments.
-        function setTimestampsRelativeToSequence(recordedSequence)
+        // recording. Returns false if the if the sequenceRecording is undefined, null or has no moments.
+        function setTimestampsRelativeToSequenceRecording(sequenceRecording)
         {
-            var i, nTracks = sequence.tracks.length, track,
-                j, nMoments, moment,
+            var i, nTracks = sequenceRecording.trackRecordings.length, trackRecording,
+                j, nMoments, moment, 
                 offset, success = true;
 
-            // Returns the earliest moment.timestamp in the recordedSequence.
-            // Returns Number.MAX_VALUE if recordedSequence is undefined, null or has no moments.
-            function findOffset(recordedSequence)
+            // Returns the earliest moment.timestamp in the sequenceRecording.
+            // Returns Number.MAX_VALUE if sequenceRecording is undefined, null or has no moments.
+            function findOffset(sequenceRecording)
             {
                 var
-                i, nTracks, track,
+                i, nTracks, trackRecording,
                 timestamp,
                 offset = Number.MAX_VALUE;
 
-                if(recordedSequence !== undefined && recordedSequence !== null)
+                if(sequenceRecording !== undefined && sequenceRecording !== null)
                 {
-                    nTracks = recordedSequence.tracks.length;
+                    nTracks = sequenceRecording.trackRecordings.length;
                     for(i = 0; i < nTracks; ++i)
                     {
-                        track = recordedSequence.tracks[i];
-                        if(track.moments.length > 0)
+                        trackRecording = sequenceRecording.trackRecordings[i];
+                        if(trackRecording.moments.length > 0)
                         {
-                            timestamp = track.moments[0].timestamp;
+                            timestamp = trackRecording.moments[0].timestamp;
                             offset = (offset < timestamp) ? offset : timestamp;
                         }
                     }
@@ -546,7 +546,7 @@ _AP.controls = (function(document, window)
                 return offset;
             }
 
-            offset = findOffset(recordedSequence);
+            offset = findOffset(sequenceRecording);
 
             if(offset === Number.MAX_VALUE)
             {
@@ -556,11 +556,11 @@ _AP.controls = (function(document, window)
             {
                 for(i = 0; i < nTracks; ++i)
                 {
-                    track = recordedSequence.tracks[i];
-                    nMoments = track.moments.length;
+                    trackRecording = sequenceRecording.trackRecordings[i];
+                    nMoments = trackRecording.moments.length;
                     for(j = 0; j < nMoments; ++j)
                     {
-                        moment = track.moments[j];
+                        moment = trackRecording.moments[j];
                         moment.timestamp -= offset;
                     }
                 }
@@ -568,13 +568,13 @@ _AP.controls = (function(document, window)
             return success;
         }
 
-        if(setTimestampsRelativeToSequence(recordedSequence))
+        if(setTimestampsRelativeToSequenceRecording(sequenceRecording))
         {
-            createSaveMIDIFileButton(scoreName, recordedSequence, performanceMsDuration);
+            createSaveMIDIFileButton(scoreName, sequenceRecording, performanceMsDuration);
         }
 
         // The moment.timestamps do not need to be restored to their original values here
-        // because they will be re-assigned next time sequence.nextMoment() is called.
+        // because they will be re-assigned next time sequenceRecording.nextMoment() is called.
 
         setStopped();
         // the following line is important, because the stop button is also the pause button.
@@ -662,7 +662,8 @@ _AP.controls = (function(document, window)
         {
             var
             trackIsOnArray = tracksControl.getTrackIsOnArray(),
-            nTracks = trackIsOnArray.length, recordingSequence;
+            nTracks = trackIsOnArray.length,
+            sequenceRecording;
 
             function sendTrackInitializationMessages(options, isAssistedPerformance)
             {
@@ -709,7 +710,7 @@ _AP.controls = (function(document, window)
             {
                 if(assistant.isStopped())
                 {
-                    recordingSequence = new Sequence(nTracks);
+                    sequenceRecording = new SequenceRecording(nTracks);
 
                     // the running marker is at its correct position:
                     // either at the start marker, or somewhere paused.
@@ -719,7 +720,7 @@ _AP.controls = (function(document, window)
                     sendTrackInitializationMessages(options, options.assistedPerformance);
 
                     assistant.perform(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
-                        options.runtimeOptions.speed, trackIsOnArray, recordingSequence);
+                        options.runtimeOptions.speed, trackIsOnArray, sequenceRecording);
 
                     cl.pauseUnselected.setAttribute("opacity", GLASS);
                     cl.pauseSelected.setAttribute("opacity", GLASS);
@@ -734,7 +735,7 @@ _AP.controls = (function(document, window)
                 }
                 else if(sequence.isStopped())
                 {
-                    recordingSequence = new Sequence(nTracks);
+                    sequenceRecording = new SequenceRecording(nTracks);
 
                     // the running marker is at its correct position:
                     // either at the start marker, or somewhere paused.
@@ -748,7 +749,7 @@ _AP.controls = (function(document, window)
                     sequence.setSpeedFactor(1); // just in case... (The speedFactor should always be constant 1 in non-assisted performances.)
 
                     sequence.play(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
-                        trackIsOnArray, recordingSequence, reportEndOfPerformance, reportMsPos);
+                        trackIsOnArray, sequenceRecording, reportEndOfPerformance, reportMsPos);
                 }
 
                 cl.pauseUnselected.setAttribute("opacity", METAL);
@@ -1628,7 +1629,7 @@ _AP.controls = (function(document, window)
             setScoreDefaultOptions(scoreInfo);
 
             setPages(scoreInfo);
-            if(scoreInfo.defaultPerformanceOptions != undefined)
+            if(scoreInfo.defaultPerformanceOptions !== undefined)
             {
                 setPerformersTrackSelector(scoreInfo.nTracks, scoreInfo.defaultPerformanceOptions.assistantsTrackIndex);
             }

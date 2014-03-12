@@ -10,32 +10,13 @@
  *      Track() empty Track constructor.
  *
  *  Public Interface:
- *      moments             // a temporally sorted array of Moments
+ *      midiObjects // a temporally sorted array of MidiChords and midiRests
  *
  *      The following public attributes should not need to be used by this
  *      library's clients. They are used by Sequence while performing:
  *          fromIndex
  *          currentIndex
  *          toIndex
- *
- *      // functions (defined on the prototype):
- *
- *          // Adds a moment to the track.
- *          // Used when constructing a track from information in a file
- *          // (such as a score or standard MIDI file).
- *          addMoment(moment)   
- *          
- *          // Adds a moment to the track.
- *          // Used in Sequence.tick() to record a moment (originally in the
- *          // score) being played live by the Assistant.
- *          addLiveScoreMoment(moment)
- *          
- *          // Adds a moment to the track.
- *          // Used to record a moment (not originally in the score) containing
- *          // control information being added by the live performer.
- *          // Currently (1st March 2013), it is not possible to add noteOns
- *          // and/or noteOffs. That is something that could be developed...
- *          addLivePerformersControlMoment(moment)
  *      
  */
 
@@ -46,11 +27,8 @@ MIDILib.namespace('MIDILib.track');
 MIDILib.track = (function ()
 {
     "use strict";
-
     var
-    UNDEFINED_TIMESTAMP = MIDILib.moment.UNDEFINED_TIMESTAMP,
-
-    // An empty track is created. It contains an empty moments array.
+    // An empty track is created. It contains an empty midiObjects array.
     Track = function ()
     {
         if (!(this instanceof Track))
@@ -58,45 +36,12 @@ MIDILib.track = (function ()
             return new Track();
         }
 
-        this.moments = []; // an array of Moments
-        this.fromIndex = -1;
-        this.currentIndex = -1;
-        this.toIndex = -1;
-    },
-
-    // Add a moment to the end of this Track using the moment's (absolute) timestamp
-    // field to determine whether or not to merge the moment with the current last
-    // moment in the track.
-    // Note that, contrary to Track.prototype.addMoment(), the newMoment is merged
-    // with the current last moment if its timestamp is _less_than_or_equal_ to the
-    // last moment's timestamp, and merging means _inserting_ the new messages
-    // _before_ the current last moment's messages.
-    // A new live moment's timestamp can be slightly unreliable with respect to
-    // existing timestamps, owing to thread switching between the score playback and
-    // the live performer. If the new messages are simply appended to the existing
-    // messages, they can override already existing noteOffs, and notes begin to hang
-    // in the recording (even though they may not in the live performance).
-    _addLiveMoment = function (newMoment, moments)
-    {
-        var
-        timestamp = newMoment.timestamp,
-        lastMoment = moments[moments.length - 1],
-        lastMomentTimestamp = lastMoment.timestamp;
-
-        if (timestamp === UNDEFINED_TIMESTAMP || lastMomentTimestamp === UNDEFINED_TIMESTAMP)
-        {
-            throw "Error: timestamps must be defined here.";
-        }
-
-        if (timestamp > lastMomentTimestamp)
-        {
-            moments.push(newMoment); // can be a rest, containing one 'empty message'
-        }
-        else if (timestamp <= lastMomentTimestamp)
-        {
-            // See the comment above.
-            lastMoment.messages = newMoment.messages.concat(lastMoment.messages);
-        }
+        this.midiObjects = []; // a temporally sorted array of MidiChords and MidiRests
+        this.fromIndex = -1; // the fromIndex in this track's midiObjects array
+        this.currentIndex = -1; // the current index in this track's midiObjects array
+        this.toIndex = -1; // the toIndex in this track's midiObjects array. This object is never played.
+        this.currentMidiObject = null; // The MidiChord or MidiRest currently being played by this track.
+        this.nextMoment = null; // the moment which is about to be played by the currentMidiObject.
     },
 
     publicTrackAPI =
@@ -106,99 +51,89 @@ MIDILib.track = (function ()
     };
     // end var
 
-    // Add a moment to the end of this Track using the moment's msPositionInScore
-    // field to determine whether or not to merge the moment with the current last
-    // moment in the track.
-    // An exception is thrown if the new moment's msPositionInScore is
-    // UNDEFINED_TIMESTAMP or less than that of the current last moment in the Track.
-    Track.prototype.addMoment = function (moment)
+    // Sets both the this.currentMidiObject and this.nextMoment attributes.
+    // this.currentMidiObject is the MidiChord or MidiRest containing the next non-empty moment in this track.
+    // this.nextMoment is set to the first moment in this.currentMidiObject. This moment contains at least one MIDI message.
+    // If there are no more moments to play, both this.currentMidiObject and this.nextMoment are set to null. 
+    Track.prototype.getNextMidiObject = function()
     {
-        var
-        moments = this.moments,
-        lastMoment = null,
-        lastMomentMsPos,
-        msPos = moment.msPositionInScore;
+        var midiObject = null;
 
-        if (msPos === UNDEFINED_TIMESTAMP)
+        if(this.fromIndex === -1 || this.toIndex === -1)
         {
-            throw "Error: msPositionInScore error.";
+            throw "this.fromIndex and this.toIndex must be set here!";
         }
 
-        if (moments.length === 0)
+        if(this.midiObjects.length < this.toIndex)
         {
-            moments.push(moment); // can be a rest, containing one 'empty message'
+            throw "Error: this.midiObjects.length < this.toIndex.";
+        }
+
+        if(this.currentIndex === -1)
+        {
+            this.currentIndex = this.fromIndex;
         }
         else
         {
-            lastMoment = moments[moments.length - 1];
-            lastMomentMsPos = lastMoment.msPositionInScore;
+            this.currentIndex++;
+        }
 
-            if ((lastMomentMsPos === UNDEFINED_TIMESTAMP)
-            || (msPos < lastMomentMsPos))
+        while(midiObject === null && this.currentIndex < this.toIndex)
+        {
+            midiObject = this.midiObjects[this.currentIndex];
+            midiObject.getFirstMoment(); // sets midiObject.nextMoment to the midiObject's first moment, initialises indices etc...
+            if(midiObject.nextMoment.messages.length === 0)
             {
-                throw "Error: msPos error.";
-            }
-
-            if (msPos > lastMomentMsPos)
-            {
-                moments.push(moment); // can be a rest, containing one 'empty message'
-            }
-            else if (msPos === lastMomentMsPos)
-            {
-                lastMoment.mergeMoment(moment);
+                midiObject = null;
+                this.currentIndex++;
             }
         }
-    };
 
-    // Add a moment to the end of this Track using the moment's (absolute) timestamp
-    // field to determine whether or not to merge the moment with the current last
-    // moment in the track.
-    // An exception is thrown if either the current last moment's or the new moment's
-    // timestamp has the value UNDEFINED_TIMESTAMP.
-    // This function defines and undefines an isInChord attribute for this track when
-    // the moment argument has a .chordStart or .restStart attribute respectively.
-    // .isInChord is used to decide whether or not to record controller information 
-    // being created by a live performer. See addLivePerformersControlMoment() below.
-    Track.prototype.addLiveScoreMoment = function (moment)
-    {
-        var moments = this.moments;
-
-        if (moments.length === 0)
+        if(this.currentIndex < this.toIndex)
         {
-            moments.push(moment); // can be a rest, containing one 'empty message'
+            this.currentMidiObject = midiObject;
+            this.nextMoment = this.currentMidiObject.nextMoment;
         }
         else
         {
-            _addLiveMoment(moment, moments);
-        }
-
-        if (moment.restStart !== undefined && this.isInChord !== undefined)
-        {
-            delete this.isInChord;
-        }
-        else if (moment.chordStart !== undefined)
-        {
-            this.isInChord = true;            
+            this.currentMidiObject = null;
+            this.nextMoment = null;
         }
     };
 
-    // Add a moment to the end of this Track using the moment's (absolute) timestamp
-    // field to determine whether or not to merge the moment with the current last
-    // moment in the track.
-    // This function should only be called if this track's .isInChord attribute is
-    // defined. It therefore throws an exception if it is not.
-    // An exception is also thrown if either the current last moment's or the new
-    // moment's timestamp has the value UNDEFINED_TIMESTAMP.
-    Track.prototype.addLivePerformersControlMoment = function (moment)
+    // Sets this.nextMoment to the result of calling this.currentMidiObject.getNextMoment().
+    // If this.currentMidiObject.getNextMoment() sets currentMidiObject.nextMoment to null,
+    // this.currentMidiObject is updated by calling this.getNextMidiObject().
+
+    // Both track.currentMidiObject and track.nextMoment are null if there are no more moments in the track.
+    // Otherwise, both are non-null.
+    Track.prototype.getNextMoment = function()
     {
-        if (this.isInChord === undefined)
+        if(this.currentIndex === -1)
         {
-            throw "Error: this.isInChord must be defined here.";
+            throw "this.currentMidiObject must have been initialised!";
         }
 
-        _addLiveMoment(moment, this.moments);
+        if(this.currentMidiObject !== null) // is null when there are no more midiObjects
+        {
+            // midiObject.getNextMoment() sets midiObject.nextMoment to the midiObject's next non-empty moment, updates indices etc...
+            // If the midiObject's moments repeat, this function never sets midiObject.nextMoment to null.
+            // The function sets midiObject.nextMoment to null after returning all the non-repeated moments.
+            // MidiRests never repeat their single moment (which is returned by getFirstMoment()),
+            // so MIDIRest.getNextMoment() always sets midiObject.nextMoment to null.
+            this.currentMidiObject.getNextMoment();
+
+            if(this.currentMidiObject.nextMoment === null || this.currentMidiObject.nextMoment.messages.length === 0)
+            {
+                this.getNextMidiObject();
+            }
+            else
+            {
+                this.nextMoment = this.currentMidiObject.nextMoment;
+            }
+        }
     };
 
     return publicTrackAPI;
 
-} ());
+}());

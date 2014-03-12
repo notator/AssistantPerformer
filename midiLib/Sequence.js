@@ -123,7 +123,7 @@ MIDILib.sequence = (function (window)
 
         sequenceStartTime = -1,  // set in play(), used by stop(), run()
 
-        recordingSequence, // the sequence being recorded. set in play() and resume(), used by tick()
+        sequenceRecording, // the sequence being recorded. set in play() and resume(), used by tick()
 
         setState = function (state)
         {
@@ -190,41 +190,49 @@ MIDILib.sequence = (function (window)
                 setState("stopped");
                 if (reportEndOfSpan !== undefined && reportEndOfSpan !== null)
                 {
-                    reportEndOfSpan(recordingSequence, performanceMsDuration);
+                    reportEndOfSpan(sequenceRecording, performanceMsDuration);
                 }
             }
         },
 
-        // used by tick(), resume(), play(), finishSilently()
-        // Returns either the next moment in the sequence, or null.
+        // Used by tick(), resume(), play(), finishSilently().
+        // Returns the earliest track.nextMoment or null.
         // Null is returned if there are no more moments or if the sequence is paused or stopped.
-        // The next moment in the sequence is the earliest moment indexed by any of the
-        // track.currentIndex indices, or null if track.currentIndex > track.toIndex in all tracks.
         nextMoment = function ()
         {
             var
             the = that, // that is set in play(). Maybe using a local variable is faster...
             nTracks = the.tracks.length,
-            track, i, currentTrack,
-            moment, minMsPositionInScore = Number.MAX_VALUE,
+            track, i, currentTrack = null,
+            momentMsPositionInScore, nextMomtMsPositionInScore = Number.MAX_VALUE,
             nextMomt = null;
 
             if (!stopped && !paused)
             {
-                // first find nextMomentTrackIndex
+                // first find the track having the earliest nextMoment and nextMomtMsPositionInScore.
                 for (i = 0; i < nTracks; ++i)
                 {
                     track = the.tracks[i];
-                    if(track.isPerforming && track.currentIndex <= track.toIndex)
+                    if(track.isPerforming)
                     {
-                        moment = track.moments[track.currentIndex];
-                        if (moment.msPositionInScore < minMsPositionInScore)
+                        // Both track.currentMidiObject and track.nextMoment are null if there are no more moments in the track.
+                        // Otherwise, both are non-null.
+                        if(track.currentMidiObject !== null && track.nextMoment !== null)
                         {
-                            currentTrack = track;
-                            nextMomt = moment;
-                            minMsPositionInScore = moment.msPositionInScore;
+                            momentMsPositionInScore = track.currentMidiObject.msPositionInScore + track.nextMoment.msPositionInChord;
+                            if(momentMsPositionInScore < nextMomtMsPositionInScore)
+                            {
+                                currentTrack = track;
+                                nextMomtMsPositionInScore = momentMsPositionInScore;
+                            }
                         }
                     }
+                }
+
+                if(currentTrack !== null)
+                {
+                    nextMomt = currentTrack.nextMoment;
+                    currentTrack.getNextMoment();
                 }
 
                 // nextMomt is now either null (= end of span) or the next moment.
@@ -237,10 +245,10 @@ MIDILib.sequence = (function (window)
                 {
                     if (reportMsPositionInScore !== undefined && reportMsPositionInScore !== null
                     && (nextMomt.chordStart || nextMomt.restStart) // These attributes are set when loading a score.
-                    && (nextMomt.msPositionInScore > lastReportedMsPosition))
+                    && (nextMomtMsPositionInScore > lastReportedMsPosition))
                     {
                         // the position will be reported by tick() when nextMomt is sent.
-                        msPositionToReport = nextMomt.msPositionInScore;
+                        msPositionToReport = nextMomtMsPositionInScore;
                         //console.log("msPositionToReport=" + msPositionToReport);
                     }
 
@@ -250,7 +258,7 @@ MIDILib.sequence = (function (window)
                     }
                     else
                     {
-                        nextMomt.timestamp = ((nextMomt.msPositionInScore - previousMoment.msPositionInScore) * speedFactor) + previousMoment.timestamp;
+                        nextMomt.timestamp = ((nextMomt.msPositionInChord - previousMoment.msPositionInChord) * speedFactor) + previousMoment.timestamp;
                     }
 
                     previousMoment = nextMomt;
@@ -348,14 +356,14 @@ MIDILib.sequence = (function (window)
                 {
                     sendMessages(currentMoment);
 
-                    if (recordingSequence !== undefined && recordingSequence !== null)
+                    if (sequenceRecording !== undefined && sequenceRecording !== null)
                     {
                         // The moments are recorded with their current (absolute DOMHRT) timestamp values.
                         // These values are adjusted relative to the first moment.timestamp
                         // before saving them in a Standard MIDI File.
                         // (i.e. the value of the earliest timestamp in the recording is
                         // subtracted from all the timestamps in the recording) 
-                        recordingSequence.tracks[currentMoment.messages[0].channel()].addLiveScoreMoment(currentMoment);
+                        sequenceRecording.trackRecordings[currentMoment.messages[0].channel()].addLiveScoreMoment(currentMoment);
                     }
                 }
 
@@ -438,7 +446,7 @@ MIDILib.sequence = (function (window)
         // performance stops -- either because the end of the span has been reached, or when the
         // user stops the performance prematurely. Can be undefined or null.
         // It is called here as:
-        //      reportEndOfSpan(recordingSequence, performanceMsDuration);
+        //      reportEndOfSpan(sequenceRecording, performanceMsDuration);
         // The arguments are a Sequence containing a recording of the (timestamped) messages
         // which have been sent, and the total duration of the performance (in milliseconds). 
         //
@@ -457,21 +465,21 @@ MIDILib.sequence = (function (window)
             // Sets each track's isPerforming attribute.
             // If the track is set to perform (in the trackIsOnArray -- the trackControl settings),
             // an attempt is made to set its fromIndex, currentIndex and toIndex attributes such that
-            //     fromIndex is the index of the first moment at or after startMarkerMsPosition
-            //     toIndex is the index of the last moment before endMarkerMsPosition.
+            //     fromIndex is the index of the first midiObject at or after startMarkerMsPosition
+            //     toIndex is the index of the last midiObject before endMarkerMsPosition.
             //     currentIndex is set to fromIndex
             // If, however, the track contains no such moments, track.isPerforming is set to false. 
             function setTrackAttributes(tracks, trackIsOnArray, startMarkerMsPosition, endMarkerMsPosition)
             {
                 var
                 i, nTracks = tracks.length, track,
-                j, trackMoments, trackLength;
+                j, trackMidiObjects, trackLength;
 
                 for (i = 0; i < nTracks; ++i)
                 {
                     track = tracks[i];
-                    trackMoments = track.moments;
-                    trackLength = trackMoments.length;
+                    trackMidiObjects = track.midiObjects;
+                    trackLength = trackMidiObjects.length;
 
                     // trackLength can be 0, if nothing happens during
                     // the track (maybe during a during a subsequence)
@@ -488,7 +496,7 @@ MIDILib.sequence = (function (window)
                     {
                         for (j = 0; j < trackLength; ++j)
                         {
-                            if (trackMoments[j].msPositionInScore >= startMarkerMsPosition)
+                            if (trackMidiObjects[j].msPositionInScore >= startMarkerMsPosition)
                             {
                                 track.fromIndex = j;
                                 break;
@@ -501,7 +509,7 @@ MIDILib.sequence = (function (window)
                                 // endMarkerMsPosition is the position of the endMarker.
                                 // moments at the endMarker's msPosition should not be played.
                                 // track.toIndex is the index of the last performed moment.
-                                if(trackMoments[j].msPositionInScore < endMarkerMsPosition)
+                                if(trackMidiObjects[j].msPositionInScore < endMarkerMsPosition)
                                 {
                                     track.toIndex = j;
                                 }
@@ -511,6 +519,11 @@ MIDILib.sequence = (function (window)
                                 }
                             }
                             track.currentIndex = track.fromIndex;
+                            if(track.currentIndex < track.toIndex)
+                            {
+                                track.currentMidiObject = trackMidiObjects[track.currentIndex];
+                                track.nextMoment = track.currentMidiObject.getFirstMoment();
+                            }
                         }
                         else
                         {
@@ -524,7 +537,7 @@ MIDILib.sequence = (function (window)
 
             setState("stopped");
 
-            recordingSequence = recording; // can be undefined or null
+            sequenceRecording = recording; // can be undefined or null
 
             if (midiOutDevice === undefined || midiOutDevice === null)
             {

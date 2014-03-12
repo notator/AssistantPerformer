@@ -8,21 +8,11 @@
  *  midiLib/StandardMIDIFile.js
  *  The MIDILib.standardMIDIFile namespace which exposes the functions
  *
- *      // Convert a Sequence to a Standard MIDI File (actually a Blob).
+ *      // Convert a SequenceRecording to a Standard MIDI File (actually a Blob).
  *      // The SMF can be made downloadable by connecting it to a document link element.
  *      // When the user clicks the link, the browser saves the file on the user's
  *      // computer. See https://developer.mozilla.org/en/docs/DOM/Blob.
  *      standardMIDIFile = sequenceToSMF(sequence);
- *
- *      // TODO (1st March 2013)
- *      // Convert a Standard MIDI File to a Sequence
- *      // sequence = smfToSequence(standardMIDIFile);
- *      // This function is currently not needed, but it would be interesting
- *      // to implement it, and use standard MIDI Files as the input to the
- *      // Assistant Performer. It should also be possible to create scores
- *      // automatically from SMFs, using software similar to my
- *      // Assistant Composer (which currently exists only in C#). See
- *      // http://james-ingram-act-two.de/moritz2/assistantComposer/assistantComposer.html
  */
 
 /*jslint bitwise: true, nomen: true, plusplus: true, white: true */
@@ -112,7 +102,7 @@ MIDILib.standardMIDIFile = (function ()
         return returnValue;
     },
 
-    // Returns the sequence argument converted to a standard MIDI File
+    // Returns the sequenceRecording argument converted to a standard MIDI File
     // This function stores the timings in milliseconds (packed into a small number of bytes,
     // according to the standard MIDI packing algorithm).
     // The returned object is actually a Blob. See https://developer.mozilla.org/en/docs/DOM/Blob.
@@ -123,9 +113,9 @@ MIDILib.standardMIDIFile = (function ()
     // It is otherwise the responsibility of the calling code to design and create the link element.
     // It could be a simple text link, or be something more elaborate using images etc. 
     // Arguments:        
-    // sequence contains a Sequence.
-    //      Sequence.tracks is an array of Track (tracks are parallel in time) (see Sequence.js)
-    //      Track.moments is an array of Moment (moments are sequential in the track) (see Track.js)
+    // sequenceRecording contains a SequenceRecording.
+    //      SequenceRecording.trackRecordings is an array of TrackRecording (which are parallel in time) (see Sequence.js)
+    //      TrackRecording.moments is an array of Moment (moments are sequential in the track) (see TrackRecording.js)
     //          Tracks do not include the messages which are automatically written into
     //          the file at the end of each track (after sequenceMsDuration). These messages, which
     //          all happen "synchronously", are AllControllersOff, AllSoundOff and EndOfTrack.
@@ -133,31 +123,31 @@ MIDILib.standardMIDIFile = (function ()
     //          All the messages in a moment are sent with no delay between them. The time
     //          at which they are sent is determined by the moment's timestamp attribute.
     //          When sequenceToSMF() is called, moment.timestamp is the (whole) number of
-    //          milliseconds between the moment and the beginning of the sequence (=file).
+    //          milliseconds between the moment and the beginning of the sequenceRecording (=file).
     //      Message.data is a Uint8Array (an array of byte). (see Message.js)
     //          The proposed Web MIDI API calls a "Message" an "Event" but, for me, an "Event" is
     //          a temporal entity, and Messages have no temporal attribute. An "Event" is, for me,
     //          the temporal equivalent of an "Object", and I need the word elsewhere.          
-    // sequenceMsDuration is the total duration of the sequence in (whole) milliseconds. It determines
+    // sequenceMsDuration is the total duration of the sequenceRecording in (whole) milliseconds. It determines
     //      the timing of the end-of-track messages.
-    sequenceToSMF = function (sequence, sequenceMsDuration)
+    sequenceToSMF = function (sequenceRecording, sequenceMsDuration)
     {
         var
         midiArray,
         smf = null,
-        tracks = sequence.tracks;
+        trackRecordings = sequenceRecording.trackRecordings;
 
-        // Returns true if any of the tracks contain moments, otherwise false.
+        // Returns true if any of the trackRecordings contain moments, otherwise false.
         // Used to prevent the creation of a 'save' button when there is nothing to save.
-        function hasData(tracks)
+        function hasData(trackRecordings)
         {
             var
             i, has = false,
-            nTracks = tracks.length;
+            nTracks = trackRecordings.length;
 
             for (i = 0; i < nTracks; ++i)
             {
-                if (tracks[i].moments.length > 0)
+                if (trackRecordings[i].moments.length > 0)
                 {
                     has = true;
                     break;
@@ -167,17 +157,17 @@ MIDILib.standardMIDIFile = (function ()
         }
 
         // Returns a Uint8Array containing the complete standard MIDI file.
-        // Moment timestamps are currently relative to the start of the tracks, so the
+        // Moment timestamps are currently relative to the start of the trackRecordings, so the
         // earliest moment timestamp is 0.
         // Moment.msPositionInScore is always ignored.
-        function sequenceToUint8Array(tracks, sequenceMsDuration)
+        function sequenceToUint8Array(trackRecordings, sequenceMsDuration)
         {
             var i, trackChunk, trackChunks = [], trackChunksLength = 0,
             nPerformingTracks,
             midiHeaderChunk,
             offset,
             midiFileArrayBuffer, midiFileArray,
-            nTracks = tracks.length;
+            nTracks = trackRecordings.length;
 
             // Returns a UintArray containing a track chunk (track header + data)
             function getTrackChunk(trackMoments, sequenceMsDuration)
@@ -185,7 +175,7 @@ MIDILib.standardMIDIFile = (function ()
                 var
                 trackData, trackHeader, trackChunk, trackMessages;
 
-                // The other midiLib functions should create tracks containing moments having unique timestamps in ascending order,
+                // The other midiLib functions should create trackRecordings containing moments having unique timestamps in ascending order,
                 // but I have (very seldom) experienced exceptions being thrown at the beginning of the function
                 // _variableLengthValueLength(value) above, showing that this is not always the case.
                 // Probably, the moment.timestamps sometimes get slightly out of order as a result of awkward thread switching.
@@ -458,8 +448,8 @@ MIDILib.standardMIDIFile = (function ()
 
                 dv.setUint32(4, 0x6); // data length (big endian)
 
-                dv.setUint16(8, 0x1); // MIDI File type 1, multiple tracks (big endain)
-                dv.setUint16(10, nTracks); // number of tracks (big endain)
+                dv.setUint16(8, 0x1); // MIDI File type 1, multiple trackRecordings (big endain)
+                dv.setUint16(10, nTracks); // number of trackRecordings (big endain)
 
                 dv.setUint8(12, 0xE7); // division -- time is measured in milliseconds
                 dv.setUint8(13, 0x28); // division -- time is measured in milliseconds
@@ -469,9 +459,9 @@ MIDILib.standardMIDIFile = (function ()
 
             for (i = 0; i < nTracks; ++i)
             {
-                if (tracks[i].moments.length > 0)
+                if (trackRecordings[i].moments.length > 0)
                 {
-                    trackChunk = getTrackChunk(tracks[i].moments, sequenceMsDuration);
+                    trackChunk = getTrackChunk(trackRecordings[i].moments, sequenceMsDuration);
                     trackChunksLength += trackChunk.length;
                     trackChunks.push(trackChunk);
                 }
@@ -495,9 +485,9 @@ MIDILib.standardMIDIFile = (function ()
             return midiFileArray;
         }
 
-        if (hasData(tracks))
+        if (hasData(trackRecordings))
         {
-            midiArray = sequenceToUint8Array(tracks, sequenceMsDuration);
+            midiArray = sequenceToUint8Array(trackRecordings, sequenceMsDuration);
             smf = new Blob([midiArray], { type: 'audio/midi' });
         }
 
