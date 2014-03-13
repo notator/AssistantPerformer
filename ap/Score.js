@@ -1514,8 +1514,12 @@ _AP.score = (function (document)
                 {
                     for(midiObjectIndex = 1; midiObjectIndex < track.midiObjects.length; ++midiObjectIndex)
                     {
-                        if(track.midiObjects[midiObjectIndex - 1].finalChordOffMoment !== undefined)
+                        if(track.midiObjects[midiObjectIndex - 1] instanceof MIDIChord)
                         {
+                            if(track.midiObjects[midiObjectIndex - 1].finalChordOffMoment === undefined)
+                            {
+                                throw "Error: finalChordOffMoment must be defined (but it can be empty).";
+                            }
                             finalChordOffMessages = track.midiObjects[midiObjectIndex - 1].finalChordOffMoment.messages;
                             nextObjectMessages = track.midiObjects[midiObjectIndex].moments[0].messages;
                             for(i = 0; i < finalChordOffMessages.length; ++i)

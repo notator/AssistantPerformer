@@ -47,6 +47,7 @@ _AP.midiChord = (function()
             throw "Error: the chord definition must contain a basicChordsArray!";
         }
 
+        // The timeObject takes the global speed option into account.
         Object.defineProperty(this, "msPositionInScore", { value: timeObject.msPosition, writable: false });
         Object.defineProperty(this, "msDurationInScore", { value: timeObject.msDuration, writable: false });
 
@@ -67,7 +68,8 @@ _AP.midiChord = (function()
         }
         else
         {
-            rval = this.getMoments(channel, chordDef); // defined in prototype below
+            // The timeObject takes the global speed option into account.
+            rval = this.getMoments(channel, chordDef, timeObject.msDuration); // defined in prototype below
 
             // moments is an ordered array of moments (containing messages for sequential chords and slider messages).
             // A Moment is a list of logically synchronous MIDI messages.  
@@ -124,7 +126,7 @@ _AP.midiChord = (function()
     };
     // end var
 
-    MIDIChord.prototype.getMoments = function(channel, chordDef)
+    MIDIChord.prototype.getMoments = function(channel, chordDef, msDurationInScore)
     {
         var
         basicChordMsDurations,
@@ -137,7 +139,7 @@ _AP.midiChord = (function()
         // An array of moments whose msPositionInChord has been set.
         // The moments contain all the non-slider components of the chordDef.
         // The msPositionInChord of the first Moment is 0.
-        function getChordMoments(channel, chordDef)
+        function getChordMoments(channel, chordDef, msDurationInScore)
         {
             var i, j,
                 len = chordDef.basicChordsArray.length,
@@ -375,7 +377,15 @@ _AP.midiChord = (function()
             // finalChordOffMoment contains a noteOFF for each note that has been sent a noteON during the BasicChordMoments.
             if(chordDef.attributes.hasChordOff === undefined || chordDef.attributes.hasChordOff === true)
             {
-                finalChordOffMoment = chordOffMoment(channel, allNoteOffs, msPositionInChord);
+                if(allNoteOffs.length === 0)
+                {
+                    throw "Error: this chord must have sent at least one note!";
+                }
+                finalChordOffMoment = chordOffMoment(channel, allNoteOffs, msDurationInScore);
+            }
+            else
+            {
+                finalChordOffMoment = new Moment(msDurationInScore);
             }
 
             return {"chordMoments" : chordMoments,
@@ -698,12 +708,12 @@ _AP.midiChord = (function()
             return momentsArray;
         }
 
-        rval = getChordMoments(channel, chordDef);
+        rval = getChordMoments(channel, chordDef, msDurationInScore);
         chordMoments = rval.chordMoments;
         msDurationOfBasicChords = rval.msDurationOfBasicChords;
         // The finalChordOffMoment is inserted into, and sent from, the first moment in the following midiObject.
         // i.e. when the performance or live performer reaches the msPositionInChord of the following midiObject.
-        // rval.finalChordOffMoment has also been set (may be null or empty?);
+        // rval.finalChordOffMoment has also been defined (is always a Moment, but may be empty.)
 
         if(chordDef.sliders !== undefined)
         {
