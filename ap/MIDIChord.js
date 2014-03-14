@@ -765,7 +765,7 @@ _AP.midiChord = (function()
     // The function sets MIDIChord.nextMoment to null after returning all the non-repeated moments.
     MIDIChord.prototype.getNextMoment = function()
     {
-        var originalNextMoment, msPosInChord, newMoment;
+        var originalNextMoment;
 
         this.indexOfNextMoment++;
 
@@ -787,12 +787,9 @@ _AP.midiChord = (function()
         {
             if(this.offsetMsDurationForRepeatedMoments > 0)
             {
-                // make a shallow clone of the originalNextMoment at a new msPositionInChord. 
+                // make a deep clone of the originalNextMoment at msPosReChord.
                 originalNextMoment = this.moments[this.indexOfNextMoment];
-                msPosInChord = originalNextMoment.msPositionInChord + this.offsetMsDurationForRepeatedMoments;
-                newMoment = new Moment(msPosInChord);
-                newMoment.messages = originalNextMoment.messages;
-                this.nextMoment = newMoment;
+                this.nextMoment = originalNextMoment.getCloneAtOffset(this.offsetMsDurationForRepeatedMoments);
             }
             else
             {

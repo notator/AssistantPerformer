@@ -245,9 +245,29 @@ MIDILib.message = (function ()
         return this.data[0] & 0xF0;
     };
 
-    Message.prototype.channel = function ()
+    Message.prototype.channel = function()
     {
         return this.data[0] & 0xF;
+    };
+
+    Message.prototype.clone = function()
+    {
+        var clone;
+        switch(this.data.length)
+        {
+            case 1:
+                clone = new Message(this.data[0]);; // runtime messages
+                break;
+            case 2:
+                clone = new Message(this.data[0], this.data[1]);
+                break;
+            case 3:
+                clone = new Message(this.data[0], this.data[1], this.data[2]);
+                break;
+            default:
+                throw "Error: cannot clone messages with more than 3 data bytes.";
+        }
+        return clone;
     };
 
     Message.prototype.toString = function ()

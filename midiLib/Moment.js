@@ -104,6 +104,22 @@ MIDILib.moment = (function ()
         this.messages = this.messages.concat(moment2.messages);
     };
 
+    // return a deep clone of this moment at a new msPositionReChord
+    Moment.prototype.getCloneAtOffset = function(offset)
+    {
+        var
+        i, originalMsg,
+        msPositionReChord = this.msPositionInChord + offset,
+        clone = new Moment(msPositionReChord);
+
+        for(i = 0; i < this.messages.length; ++i)
+        {
+            originalMsg = this.messages[i];
+            clone.messages.push(originalMsg.clone());
+        }
+        return clone;
+    };
+
     return publicAPI;
 
 } ());

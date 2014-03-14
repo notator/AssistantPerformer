@@ -187,7 +187,7 @@ MIDILib.standardMIDIFile = (function ()
                 function validateMomentTimestamps(trackMoments)
                 {
                     var
-                    i, nMoments = trackMoments.length, moment, previousMoment, diff;
+                    i, nMoments = trackMoments.length, moment, previousMoment;
 
                     if (nMoments > 1)
                     {
@@ -197,8 +197,10 @@ MIDILib.standardMIDIFile = (function ()
                             previousMoment = trackMoments[i-1];
                             if (previousMoment.timestamp > moment.timestamp)
                             {
-                                diff = Math.ceil(previousMoment.timestamp - moment.timestamp);
-                                //console.log("moment.timestamp out of order (now corrected). Time difference re previous was: " + diff + "ms");
+                                //diff = Math.ceil(previousMoment.timestamp - moment.timestamp);
+                                //console.log("Correction: moment.timestamp out of order (now corrected). Time difference re previous was: " + diff + "ms");
+
+                                console.log("Correction: moment.timestamp out of order (has now been corrected).");
                                 moment.timestamp = previousMoment.timestamp;
                             }
                         }
@@ -213,7 +215,7 @@ MIDILib.standardMIDIFile = (function ()
                     var
                     isRealTimeStatus = MIDILib.constants.isRealTimeStatus,
                     i, nMoments = trackMoments.length, moment,
-                    j, nMessages, timestamp, previousTimestamp = -1, message;
+                    j, nMessages, timestamp, message;
 
                     for (i = 0; i < nMoments; ++i)
                     {
@@ -229,7 +231,6 @@ MIDILib.standardMIDIFile = (function ()
                             }
                             message.timestamp = timestamp;
                         }
-                        previousTimestamp = timestamp;
                     }
                 }
 
@@ -277,9 +278,24 @@ MIDILib.standardMIDIFile = (function ()
                 {
                     var i, nMessages = trackMessages.length, msg,
                     dataLength, buffer, trackData,
-                    previousTimestamp = startOfTrackTimeOffset, timeOffset,
+                    previousTimestamp = parseInt(startOfTrackTimeOffset, 10), timeOffset,
                     variableLengthTime, j, variableLengthTimeLength,
                     dv, offset = 0, controlChange;
+
+                    function getTimeOffset(msgTimestamp, previousTimestamp)
+                    {
+                        var timestamp = parseInt(msgTimestamp, 10);
+
+                        if(timestamp > previousTimestamp)
+                        {
+                            timeOffset = timestamp - previousTimestamp;
+                        }
+                        else
+                        {
+                            timeOffset = parseInt(0, 10);
+                        }
+                        return timeOffset;
+                    }
 
                     // Returns the length of the track's data, in bytes.
                     // messages contains the sequence of messages for a single track.
@@ -294,14 +310,21 @@ MIDILib.standardMIDIFile = (function ()
                         for (i = 0; i < nMessages; ++i)
                         {
                             msg = trackMessages[i];
-                            timeOffset = msg.timestamp - previousTimestamp;
-                            previousTimestamp = msg.timestamp;
-
+                            timeOffset = getTimeOffset(msg.timestamp, previousTimestamp);
+                            previousTimestamp = parseInt(msg.timestamp, 10);
+                            if(timeOffset < 0)
+                            {
+                                throw "Error: line 315.";
+                            }
                             dataLength += _variableLengthValueLength(timeOffset);
                             dataLength += msg.data.length;
                         }
 
                         timeOffset = endOfTrackTimestamp - previousTimestamp;
+                        if(timeOffset < 0)
+                        {
+                            throw "Error: line 324.";
+                        }
                         dataLength += _variableLengthValueLength(timeOffset);
                         dataLength += 3; // all sound off ( Bx 78 00 )
                         dataLength += 4; // time + all controllers off ( 00 Bx 79 00 ) 
@@ -318,17 +341,21 @@ MIDILib.standardMIDIFile = (function ()
                     for (i = 0; i < nMessages; ++i)
                     {
                         msg = trackMessages[i];
-                        if(msg.timestamp > previousTimestamp)
+
+                        //console.log("StandardMIDIfile.js 345: msg.timestamp=" + msg.timestamp + " previousTimestamp=" + previousTimestamp + " startOfTrackTimeOffset=" + startOfTrackTimeOffset);
+
+                        timeOffset = getTimeOffset(msg.timestamp, previousTimestamp);
+                        previousTimestamp = parseInt(msg.timestamp, 10);
+
+                        //console.log("StandardMIDIfile.js 350: timeOffset=" + timeOffset);
+
+                        if(timeOffset < 0)
                         {
-                            timeOffset = msg.timestamp - previousTimestamp;
-                            previousTimestamp = msg.timestamp;
-                        }
-                        else
-                        {
-                            timeOffset = 0;
+                            throw "Error: line 352.";
                         }
 
                         variableLengthTime = _getVariableLengthValue(timeOffset);
+
                         variableLengthTimeLength = variableLengthTime.length;
                         for (j = 0; j < variableLengthTimeLength; ++j)
                         {

@@ -101,6 +101,26 @@ MIDILib.track = (function ()
         }
     };
 
+    // Sets this.currentIndex, this.currentMidiObject and this.nextMoment
+    // such that this.nextMoment is the first non-empty moment after (including) the midiObject at fromIndex.
+    Track.prototype.setFirstNextMoment = function(fromIndex)
+    {
+        var
+        index = fromIndex, midiObject;
+
+        for(index = 0; index < this.midiObjects.length; ++index)
+        {
+            midiObject = this.midiObjects[index];
+            if(midiObject.moments[0].messages.length > 0)
+            {
+                break;
+            }
+        }
+        this.currentIndex = index;
+        this.currentMidiObject = midiObject;
+        this.nextMoment = this.currentMidiObject.moments[0];
+    };
+
     // Sets this.nextMoment to the result of calling this.currentMidiObject.getNextMoment().
     // If this.currentMidiObject.getNextMoment() sets currentMidiObject.nextMoment to null,
     // this.currentMidiObject is updated by calling this.getNextMidiObject().
