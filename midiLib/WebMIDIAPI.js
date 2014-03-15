@@ -124,7 +124,7 @@
 
     // API Methods
 
-    function MIDIAccess()
+    MIDIAccess = function ()
     {
         this._jazzInstances = new Array();
         var instance = new _JazzInstance();
