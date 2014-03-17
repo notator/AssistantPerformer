@@ -86,7 +86,11 @@ MIDILib.sequence = (function (window)
             return new Sequence(nTracks);
         }
 
+        this.midiObjectMsPositionsInScoreIndex = 0; // the current index in the following array
+        this.midiObjectMsPositionsInScore = []; // a flat, ordered array of msPositions
+
         this.tracks = []; // an array of Tracks
+
         for (i = 0; i < nTracks; ++i)
         {
             this.tracks.push(new Track());
@@ -205,13 +209,97 @@ MIDILib.sequence = (function (window)
             nTracks = the.tracks.length,
             track, i, currentTrack = null,
             momentMsPositionInScore, nextMomtMsPositionInScore = Number.MAX_VALUE,
-            nextMomt = null;
+            nextMomt = null,
+            scoreMsPosition;
+
+            // Sets scoreMsPosition to a value that is less than or equal to any moment.msPositionInScore that can be played.
+            // Uses performance.now() to take running time into account.
+            function getScoreMsPosition()
+            {
+                var
+                performedMsDuration = performance.now() - sequenceStartTime,
+                currentIndex = the.midiObjectMsPositionsInScoreIndex,
+                midiObjectMsPositionsInScore = the.midiObjectMsPositionsInScore;
+
+                if(currentIndex < midiObjectMsPositionsInScore.length - 1
+                && midiObjectMsPositionsInScore[currentIndex + 1] <= performedMsDuration)
+                {
+                    the.midiObjectMsPositionsInScoreIndex++;
+                    currentIndex = the.midiObjectMsPositionsInScoreIndex;
+                    if(currentIndex < midiObjectMsPositionsInScore.length)
+                    {
+                        scoreMsPosition = midiObjectMsPositionsInScore[currentIndex];
+                        //console.log("new scoreMsPosition=" + scoreMsPosition);
+                        //  *** for(i=0; i < nTracks; ++i)
+                        //  *** {
+                        //  ***      track = tracks[i];
+                        //  ***      track.worker.start() // the worker stops itself when done
+                        //  *** 
+                        //  ***      // The worker owns the track while executing the following.
+                        //  ***      // The function is like the following getNextMomentPositionInScore,
+                        //  ***      // (It sets track.nextMomentMsPositionInScore, and, if necessary, 
+                        //  ***      // updates track.currentMidiObject (and track.nextMoment),
+                        //  ***      // so that track.currentMidiObject.msPositionInScore is greater than or 
+                        //  ***      // equal to scoreMsPosition.)
+                        //  ***      // Finally, it returns control of the track to this main thread.
+                        //  *** 
+                        //  ***      track.worker.getNextMoment(track, scoreMsPosition);
+                        //  *** 
+                        //  ***      // Execution should continue here without waiting for the above function to return.
+                        //  ***      // The following call should throw an exception, because this thread does not
+                        //  ***      // currently own tracks[i].
+                        //  *** 
+                        //  ***      // console.log("track.currentIndex" + tracks[i].currentIndex);
+                        //  *** 
+                        //  ***      // possibly introduce a short delay  here, to give the workers time.
+                        //  *** }
+                    } 
+                }
+                
+                if(currentIndex < midiObjectMsPositionsInScore.length)
+                {
+                    scoreMsPosition = midiObjectMsPositionsInScore[currentIndex];
+                }
+
+                return scoreMsPosition;
+            }
+
+            // If necessary, updates track.currentMidiObject (and track.nextMoment),
+            // so that track.currentMidiObject.msPositionInScore is greater than or equal to the current msPosition re the score.
+            function getNextMomentPositionInScore(track, scoreMsPosition)
+            {
+                var nextMomentMsPositionInScore;
+
+                //console.log("track.currentIndex=" + track.currentIndex + "  track.toIndex=" + track.toIndex);
+                while(track.currentIndex < track.toIndex - 1)
+                {
+                    nextMomentMsPositionInScore = track.currentMidiObject.msPositionInScore + track.nextMoment.msPositionInChord;
+                    //console.log("scoreMsPosition=" + scoreMsPosition + "  nextMomentMsPositionInScore=" + nextMomentMsPositionInScore);
+                    if(track.currentMidiObject.msPositionInScore < scoreMsPosition && nextMomentMsPositionInScore > scoreMsPosition)
+                    {
+                        track.getNextMidiObject();
+                        if(track.currentMidiObject === null)
+                        {
+                            //console.log("scoreMsPosition=" + scoreMsPosition);
+                        }
+                    }
+                    else break;
+                }
+                nextMomentMsPositionInScore = track.currentMidiObject.msPositionInScore + track.nextMoment.msPositionInChord;
+
+                return nextMomentMsPositionInScore;
+            }
+
+
+            scoreMsPosition = getScoreMsPosition(); // *** possibly waits a short time (if scoreMsPosition changes) for workers to do their work.
 
             if (!stopped && !paused)
             {
-                // first find the track having the earliest nextMoment and nextMomtMsPositionInScore.
-                for (i = 0; i < nTracks; ++i)
+                /****************************************************/
+                // find the track having the earliest nextMoment and nextMomtMsPositionInScore.
+                for(i = 0; i < nTracks; ++i)
                 {
+                    // *** check that track is valid here! *** 
                     track = the.tracks[i];
                     if(track.isPerforming)
                     {
@@ -219,7 +307,13 @@ MIDILib.sequence = (function (window)
                         // Otherwise, both are non-null.
                         if(track.currentMidiObject !== null && track.nextMoment !== null)
                         {
-                            momentMsPositionInScore = track.currentMidiObject.msPositionInScore + track.nextMoment.msPositionInChord;
+                            // *** replace the following lines by
+                            // *** if(track.nextMomentMsPositionInScore < nextMomtMsPositionInScore)
+                            // *** {
+                            // ***     currentTrack = track;
+                            // ***     nextMomtMsPositionInScore = track.nextMomentMsPositionInScore;
+                            // *** }
+                            momentMsPositionInScore = getNextMomentPositionInScore(track, scoreMsPosition);
                             if(momentMsPositionInScore < nextMomtMsPositionInScore)
                             {
                                 currentTrack = track;
@@ -234,6 +328,11 @@ MIDILib.sequence = (function (window)
                     nextMomt = currentTrack.nextMoment;
                     currentTrack.getNextMoment();
                 }
+                /****************************************************/
+                /**********************
+                // *** nextMomt = this.nextMoment;
+                // *** this.nextMoment = this.worker.GetNextMoment();
+                ***********************/
 
                 // nextMomt is now either null (= end of span) or the next moment.
 
@@ -266,7 +365,8 @@ MIDILib.sequence = (function (window)
                     //console.log("currentIndex=" + currentTrack.currentIndex +
                     //            "toIndex=" + currentTrack.toIndex +
                     //            "totalMoments=" + currentTrack.moments.length);
-                    currentTrack.currentIndex++;
+                    //currentTrack.currentIndex++;
+                    currentTrack.getNextMoment()
                 }
             }
 
@@ -475,11 +575,65 @@ MIDILib.sequence = (function (window)
                 i, nTracks = tracks.length, track,
                 j, trackMidiObjects, trackLength;
 
+                function getToIndex(track, endMarkerMsPosition)
+                {
+                    var toIndex = -1,
+                        trackMidiObjects = track.midiObjects,
+                        trackLength = trackMidiObjects.length;
+
+                    if(track.fromIndex < 0)
+                    {
+                        throw "error: track.fromIndex should be >= 0 here.";
+                    }
+
+                    track.toIndex = -1;
+                    for(j = track.fromIndex; j < trackLength; ++j)
+                    {
+                        // endMarkerMsPosition is the position of the endMarker.
+                        // moments at the endMarker's msPosition should not be played.
+                        // track.toIndex is the index of the last performed moment.
+                        if(trackMidiObjects[j].msPositionInScore < endMarkerMsPosition)
+                        {
+                            toIndex = j + 1; // the last midiObject to be played is trackMidiObjects[track.toIndex - 1]
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    return toIndex;
+                }
+
+                function hasMessages(track)
+                {
+                    var has = false;
+
+                    if(track.fromIndex < 0 || track.toIndex <= track.fromIndex)
+                    {
+                        throw "error: track.fromIndex must be >= 0, and track.toIndex must be > track.fromIndex here.";
+                    }
+
+                    // set track.isPerforming = true if the track is going to send at least one message.
+                    for(j = track.fromIndex; j < track.toIndex; ++j)
+                    {
+                        if(trackMidiObjects[j].moments[0].messages.length > 0)
+                        {
+                            has = true;
+                            break;
+                        }
+                    }
+
+                    return has;
+                }
+
                 for (i = 0; i < nTracks; ++i)
                 {
                     track = tracks[i];
                     trackMidiObjects = track.midiObjects;
                     trackLength = trackMidiObjects.length;
+                    track.fromIndex = -1;
+                    track.toIndex = -1;
 
                     // trackLength can be 0, if nothing happens during
                     // the track (maybe during a during a subsequence)
@@ -502,35 +656,69 @@ MIDILib.sequence = (function (window)
                                 break;
                             }
                         }
-                        if(track.fromIndex >= 0) // is -1 if not set
+
+                        track.isPerforming = false;
+                        if(track.fromIndex >= 0)
                         {
-                            for(j = track.fromIndex; j < trackLength; ++j)
+                            track.toIndex = getToIndex(track, endMarkerMsPosition);
+                            if(track.toIndex > track.fromIndex)
                             {
-                                // endMarkerMsPosition is the position of the endMarker.
-                                // moments at the endMarker's msPosition should not be played.
-                                // track.toIndex is the index of the last performed moment.
-                                if(trackMidiObjects[j].msPositionInScore < endMarkerMsPosition)
+                                if(hasMessages(track))
                                 {
-                                    track.toIndex = j;
-                                }
-                                else
-                                {
-                                    break;
+                                    track.isPerforming = true;
+                                    // Sets track.currentIndex, track.currentMidiObject and track.nextMoment
+                                    // such that track.nextMoment is the first non-empty moment in or after after the midiObject at fromIndex.
+                                    track.setFirstNextMoment(track.fromIndex, track.toIndex);
                                 }
                             }
-                            track.currentIndex = track.fromIndex;
-                            if(track.currentIndex < track.toIndex)
-                            {
-                                track.currentMidiObject = trackMidiObjects[track.currentIndex];
-                                track.nextMoment = track.currentMidiObject.getFirstMoment();
-                            }
-                        }
-                        else
-                        {
-                            track.isPerforming = false;
                         }
                     }
                 }
+            }
+
+            // Returns a flat, ordered list of unique msPositions that contains
+            // all the midiObject.msPositionInScore values that are >= startMarkerMsPosition and < endMarkerMsPosition.
+            function getMidiObjectMsPositionsInScore(tracks, startMarkerMsPosition, endMarkerMsPosition)
+            {
+                var positions = [], newPosition, trackIndices = [], i, nTracks = tracks.length, track;
+
+                for(i = 0; i < nTracks; ++i)
+                {
+                    trackIndices.push(tracks[i].fromIndex);
+                }
+
+                while(true)
+                {
+                    // Find the earliest position in any track, greater than positions[positions.length-1].
+                    newPosition = Number.MAX_VALUE;
+                    for(i = 0; i < nTracks; ++i)
+                    {
+                        track = tracks[i];
+                        if(track.isPerforming)
+                        {
+                            if(trackIndices[i] < track.midiObjects.length
+                            && track.midiObjects[trackIndices[i]].msPositionInScore === positions[positions.length - 1])
+                            {
+                                trackIndices[i]++;
+                            }
+                            if(trackIndices[i] < track.midiObjects.length
+                            && track.midiObjects[trackIndices[i]].msPositionInScore < newPosition)
+                            {
+                                newPosition = track.midiObjects[trackIndices[i]].msPositionInScore;
+                            }
+                        }
+                    }
+                    if(newPosition === Number.MAX_VALUE || newPosition >= endMarkerMsPosition)
+                    {
+                        break;
+                    }
+                    if(newPosition >= startMarkerMsPosition)
+                    {
+                        positions.push(newPosition);
+                    }
+                }
+
+                return positions;
             }
 
             that = this;
@@ -553,6 +741,9 @@ MIDILib.sequence = (function (window)
             maxDeviation = 0; // for console.log
 
             setTrackAttributes(that.tracks, trackIsOnArray, startMarkerMsPosition, endMarkerMsPosition);
+
+            this.midiObjectMsPositionsInScore = getMidiObjectMsPositionsInScore(that.tracks, startMarkerMsPosition, endMarkerMsPosition);
+            this.midiObjectMsPositionsInScoreIndex = 0;
 
             sequenceStartTime = performance.now();
 

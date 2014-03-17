@@ -42,6 +42,7 @@ MIDILib.track = (function ()
         this.toIndex = -1; // the toIndex in this track's midiObjects array. This object is never played.
         this.currentMidiObject = null; // The MidiChord or MidiRest currently being played by this track.
         this.nextMoment = null; // the moment which is about to be played by the currentMidiObject.
+        // *** this.worker = new WebWorker(TrackWebWorker.js);
     },
 
     publicTrackAPI =
@@ -57,7 +58,7 @@ MIDILib.track = (function ()
     // If there are no more moments to play, both this.currentMidiObject and this.nextMoment are set to null. 
     Track.prototype.getNextMidiObject = function()
     {
-        var midiObject = null;
+        var midiObject = null, firstMoment = null;
 
         if(this.fromIndex === -1 || this.toIndex === -1)
         {
@@ -81,8 +82,8 @@ MIDILib.track = (function ()
         while(midiObject === null && this.currentIndex < this.toIndex)
         {
             midiObject = this.midiObjects[this.currentIndex];
-            midiObject.getFirstMoment(); // sets midiObject.nextMoment to the midiObject's first moment, initialises indices etc...
-            if(midiObject.nextMoment.messages.length === 0)
+            firstMoment = midiObject.getFirstMoment(); // sets midiObject.nextMoment to the midiObject's first moment, initialises indices etc...
+            if(firstMoment === null)
             {
                 midiObject = null;
                 this.currentIndex++;
@@ -101,30 +102,36 @@ MIDILib.track = (function ()
         }
     };
 
-    // Sets this.currentIndex, this.currentMidiObject and this.nextMoment
-    // such that this.nextMoment is the first non-empty moment after (including) the midiObject at fromIndex.
-    Track.prototype.setFirstNextMoment = function(fromIndex)
+    // Sets track.currentIndex, track.currentMidiObject and track.nextMoment
+    // such that track.nextMoment is the first non-empty moment in or after after the midiObject at fromIndex.
+    // The last midiObject to be played is at toIndex-1.
+    Track.prototype.setFirstNextMoment = function(fromIndex, toIndex)
     {
         var
-        index = fromIndex, midiObject;
+        index, midiObject;
 
-        for(index = 0; index < this.midiObjects.length; ++index)
+        this.currentIndex = -1;
+        for(index = fromIndex; index < toIndex; ++index)
         {
             midiObject = this.midiObjects[index];
             if(midiObject.moments[0].messages.length > 0)
             {
+                this.currentIndex = index;
+                this.currentMidiObject = midiObject;
+                this.nextMoment = midiObject.moments[0];
+
                 break;
             }
         }
-        this.currentIndex = index;
-        this.currentMidiObject = midiObject;
-        this.nextMoment = this.currentMidiObject.moments[0];
+        if(this.currentIndex === -1)
+        {
+            throw "Error: This track.isPerforming should have been set to false.";
+        }
     };
 
     // Sets this.nextMoment to the result of calling this.currentMidiObject.getNextMoment().
     // If this.currentMidiObject.getNextMoment() sets currentMidiObject.nextMoment to null,
     // this.currentMidiObject is updated by calling this.getNextMidiObject().
-
     // Both track.currentMidiObject and track.nextMoment are null if there are no more moments in the track.
     // Otherwise, both are non-null.
     Track.prototype.getNextMoment = function()
