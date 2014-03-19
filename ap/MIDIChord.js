@@ -752,6 +752,7 @@ _AP.midiChord = (function()
     MIDIChord.prototype.getFirstMoment = function()
     {
         this.indexOfNextMoment = 0;
+        this.offsetMsDurationForRepeatedMoments = 0;
         this.nextMoment = this.moments[0];
         if(this.nextMoment.messages.length === 0)
         {
@@ -763,7 +764,7 @@ _AP.midiChord = (function()
     // MIDIChord.getNextMoment() sets MIDIChord.nextMoment to the MIDIChord's next non-empty moment, updates indices etc...
     // If the MIDIChord's moments repeat, this function never sets MIDIChord.nextMoment to null.
     // The function sets MIDIChord.nextMoment to null after returning all the non-repeated moments.
-    MIDIChord.prototype.getNextMoment = function()
+    MIDIChord.prototype.advanceNextMoment = function()
     {
         var originalNextMoment;
 

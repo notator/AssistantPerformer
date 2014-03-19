@@ -108,7 +108,8 @@ MIDILib.sequence = (function (window)
     {
         var
         speedFactor = 1.0, // nextMoment()
-        previousMoment = null, // nextMoment()
+        previousTimestamp = null, // nextMoment()
+        previousMomentMsPositionInChord = 0, // nextMoment()
         currentMoment = null, // nextMoment(), resume(), tick()
 
         // used by setState()
@@ -125,7 +126,7 @@ MIDILib.sequence = (function (window)
         lastReportedMsPosition = -1, // set by tick() used by nextMoment()
         msPositionToReport = -1,   // set in nextMoment() and used/reset by tick()
 
-        sequenceStartTime = -1,  // set in play(), used by stop(), run()
+        performanceStartTime = -1,  // set in play(), used by stop(), run()
 
         sequenceRecording, // the sequence being recorded. set in play() and resume(), used by tick()
 
@@ -137,7 +138,8 @@ MIDILib.sequence = (function (window)
                     stopped = true;
                     paused = false;
                     pausedMoment = null;
-                    previousMoment = null;
+                    previousTimestamp = null;
+                    previousMomentMsPositionInChord = 0;
                     break;
                 case "paused":
                     stopped = false;
@@ -189,7 +191,7 @@ MIDILib.sequence = (function (window)
 
             if (!isStopped())
             {
-                performanceMsDuration = Math.ceil(performance.now() - sequenceStartTime);
+                performanceMsDuration = Math.ceil(performance.now() - performanceStartTime);
                 currentMoment = null;
                 setState("stopped");
                 if (reportEndOfSpan !== undefined && reportEndOfSpan !== null)
@@ -208,7 +210,7 @@ MIDILib.sequence = (function (window)
             the = that, // that is set in play(). Maybe using a local variable is faster...
             nTracks = the.tracks.length,
             track, i, currentTrack = null,
-            momentMsPositionInScore, nextMomtMsPositionInScore = Number.MAX_VALUE,
+            trackNextMomtMsPosInScore, nextMomtMsPosInScore = Number.MAX_VALUE,
             nextMomt = null,
             scoreMsPosition;
 
@@ -217,108 +219,88 @@ MIDILib.sequence = (function (window)
             function getScoreMsPosition()
             {
                 var
-                performedMsDuration = performance.now() - sequenceStartTime,
                 currentIndex = the.midiObjectMsPositionsInScoreIndex,
-                midiObjectMsPositionsInScore = the.midiObjectMsPositionsInScore;
+                midiObjectMsPositionsInScore = the.midiObjectMsPositionsInScore,
+                scoreMsPosition;
 
-                if(currentIndex < midiObjectMsPositionsInScore.length - 1
-                && midiObjectMsPositionsInScore[currentIndex + 1] <= performedMsDuration)
+                if(currentIndex < midiObjectMsPositionsInScore.length - 1)
                 {
-                    the.midiObjectMsPositionsInScoreIndex++;
-                    currentIndex = the.midiObjectMsPositionsInScoreIndex;
-                    if(currentIndex < midiObjectMsPositionsInScore.length)
+                    // (performance.now() - performanceStartTime) is the time elapsed since the start of the performance;
+                    if((performance.now() - performanceStartTime) < (midiObjectMsPositionsInScore[currentIndex + 1] - midiObjectMsPositionsInScore[0]))
                     {
-                        scoreMsPosition = midiObjectMsPositionsInScore[currentIndex];
-                        //console.log("new scoreMsPosition=" + scoreMsPosition);
-                        //  *** for(i=0; i < nTracks; ++i)
-                        //  *** {
-                        //  ***      track = tracks[i];
-                        //  ***      track.worker.start() // the worker stops itself when done
-                        //  *** 
-                        //  ***      // The worker owns the track while executing the following.
-                        //  ***      // The function is like the following getNextMomentPositionInScore,
-                        //  ***      // (It sets track.nextMomentMsPositionInScore, and, if necessary, 
-                        //  ***      // updates track.currentMidiObject (and track.nextMoment),
-                        //  ***      // so that track.currentMidiObject.msPositionInScore is greater than or 
-                        //  ***      // equal to scoreMsPosition.)
-                        //  ***      // Finally, it returns control of the track to this main thread.
-                        //  *** 
-                        //  ***      track.worker.getNextMoment(track, scoreMsPosition);
-                        //  *** 
-                        //  ***      // Execution should continue here without waiting for the above function to return.
-                        //  ***      // The following call should throw an exception, because this thread does not
-                        //  ***      // currently own tracks[i].
-                        //  *** 
-                        //  ***      // console.log("track.currentIndex" + tracks[i].currentIndex);
-                        //  *** 
-                        //  ***      // possibly introduce a short delay  here, to give the workers time.
-                        //  *** }
-                    } 
+                        scoreMsPosition = midiObjectMsPositionsInScore[currentIndex]; // the usual value
+                    }
+                    else
+                    {
+                        the.midiObjectMsPositionsInScoreIndex++;
+                        currentIndex = the.midiObjectMsPositionsInScoreIndex;
+                        if(currentIndex < midiObjectMsPositionsInScore.length)
+                        {
+                            scoreMsPosition = midiObjectMsPositionsInScore[currentIndex];
+                            previousMomentMsPositionInChord = 0;
+                            console.log("new scoreMsPosition=" + scoreMsPosition);
+                            //  *** for(i=0; i < nTracks; ++i)
+                            //  *** {
+                            //  ***      track = tracks[i];
+                            //  ***      track.worker.start() // the worker stops itself when done
+                            //  *** 
+                            //  ***      // The worker owns the track while executing the following.
+                            //  ***      // The function is like the following getNextMomentPositionInScore,
+                            //  ***      // (It sets track.nextMomentMsPositionInScore, and, if necessary, 
+                            //  ***      // updates track._currentMidiObject (and track.nextMoment),
+                            //  ***      // so that track._currentMidiObject.msPositionInScore is greater than or 
+                            //  ***      // equal to scoreMsPosition.)
+                            //  ***      // Finally, it returns control of the track to this main thread.
+                            //  *** 
+                            //  ***      track.worker.getNextMoment(track, scoreMsPosition);
+                            //  *** 
+                            //  ***      // Execution should continue here without waiting for the above function to return.
+                            //  ***      // The following call should throw an exception, because this thread does not
+                            //  ***      // currently own tracks[i].
+                            //  *** 
+                            //  ***      // console.log("track.currentIndex" + tracks[i].currentIndex);
+                            //  *** 
+                            //  ***      // possibly introduce a short delay  here, to give the workers time.
+                            //  *** }
+                        }
+                    }
                 }
-                
-                if(currentIndex < midiObjectMsPositionsInScore.length)
+                else if(currentIndex === midiObjectMsPositionsInScore.length - 1)
                 {
-                    scoreMsPosition = midiObjectMsPositionsInScore[currentIndex];
+                    scoreMsPosition = midiObjectMsPositionsInScore[currentIndex]; // the final barline msPosition
+                }
+                else if(currentIndex === midiObjectMsPositionsInScore.length)
+                {
+                    // we have reached the end of the performance
+                    scoreMsPosition = null;
+                    console.log("End of performance.");
                 }
 
                 return scoreMsPosition;
             }
 
-            // If necessary, updates track.currentMidiObject (and track.nextMoment),
-            // so that track.currentMidiObject.msPositionInScore is greater than or equal to the current msPosition re the score.
-            function getNextMomentPositionInScore(track, scoreMsPosition)
-            {
-                var nextMomentMsPositionInScore;
-
-                //console.log("track.currentIndex=" + track.currentIndex + "  track.toIndex=" + track.toIndex);
-                while(track.currentIndex < track.toIndex - 1)
-                {
-                    nextMomentMsPositionInScore = track.currentMidiObject.msPositionInScore + track.nextMoment.msPositionInChord;
-                    //console.log("scoreMsPosition=" + scoreMsPosition + "  nextMomentMsPositionInScore=" + nextMomentMsPositionInScore);
-                    if(track.currentMidiObject.msPositionInScore < scoreMsPosition && nextMomentMsPositionInScore > scoreMsPosition)
-                    {
-                        track.getNextMidiObject();
-                        if(track.currentMidiObject === null)
-                        {
-                            //console.log("scoreMsPosition=" + scoreMsPosition);
-                        }
-                    }
-                    else break;
-                }
-                nextMomentMsPositionInScore = track.currentMidiObject.msPositionInScore + track.nextMoment.msPositionInChord;
-
-                return nextMomentMsPositionInScore;
-            }
-
-
             scoreMsPosition = getScoreMsPosition(); // *** possibly waits a short time (if scoreMsPosition changes) for workers to do their work.
 
             if (!stopped && !paused)
             {
-                /****************************************************/
-                // find the track having the earliest nextMoment and nextMomtMsPositionInScore.
-                for(i = 0; i < nTracks; ++i)
+                if(scoreMsPosition === null)
                 {
-                    // *** check that track is valid here! *** 
+                    stop(); // calls reportEndOfSpan()
+                }
+
+                /****************************************************/
+                // find the track having the earliest nextMoment and nextMomtMsPosInScore.
+                for(i = 0; i < nTracks; ++i)
+                { 
                     track = the.tracks[i];
                     if(track.isPerforming)
                     {
-                        // Both track.currentMidiObject and track.nextMoment are null if there are no more moments in the track.
-                        // Otherwise, both are non-null.
-                        if(track.currentMidiObject !== null && track.nextMoment !== null)
+                        trackNextMomtMsPosInScore = track.nextMomentPositionInScore(scoreMsPosition);
+                        //  trackNextMomtMsPosInScore is null when the track has no more moments
+                        if(trackNextMomtMsPosInScore !== null && trackNextMomtMsPosInScore < nextMomtMsPosInScore)
                         {
-                            // *** replace the following lines by
-                            // *** if(track.nextMomentMsPositionInScore < nextMomtMsPositionInScore)
-                            // *** {
-                            // ***     currentTrack = track;
-                            // ***     nextMomtMsPositionInScore = track.nextMomentMsPositionInScore;
-                            // *** }
-                            momentMsPositionInScore = getNextMomentPositionInScore(track, scoreMsPosition);
-                            if(momentMsPositionInScore < nextMomtMsPositionInScore)
-                            {
-                                currentTrack = track;
-                                nextMomtMsPositionInScore = momentMsPositionInScore;
-                            }
+                            currentTrack = track;
+                            nextMomtMsPosInScore = trackNextMomtMsPosInScore;
                         }
                     }
                 }
@@ -326,7 +308,7 @@ MIDILib.sequence = (function (window)
                 if(currentTrack !== null)
                 {
                     nextMomt = currentTrack.nextMoment;
-                    currentTrack.getNextMoment();
+                    currentTrack.advanceNextMoment();
                 }
                 /****************************************************/
                 /**********************
@@ -344,29 +326,25 @@ MIDILib.sequence = (function (window)
                 {
                     if (reportMsPositionInScore !== undefined && reportMsPositionInScore !== null
                     && (nextMomt.chordStart || nextMomt.restStart) // These attributes are set when loading a score.
-                    && (nextMomtMsPositionInScore > lastReportedMsPosition))
+                    && (nextMomtMsPosInScore > lastReportedMsPosition))
                     {
                         // the position will be reported by tick() when nextMomt is sent.
-                        msPositionToReport = nextMomtMsPositionInScore;
+                        msPositionToReport = nextMomtMsPosInScore;
                         //console.log("msPositionToReport=" + msPositionToReport);
                     }
 
-                    if(previousMoment === null)
+                    if(previousTimestamp === null)
                     {
-                        nextMomt.timestamp = sequenceStartTime;
+                        nextMomt.timestamp = performanceStartTime;
                     }
                     else
                     {
-                        nextMomt.timestamp = ((nextMomt.msPositionInChord - previousMoment.msPositionInChord) * speedFactor) + previousMoment.timestamp;
+                        // previousMomentMsPositionInChord is set to 0 at every new scoreMsPosition
+                        nextMomt.timestamp = ((nextMomt.msPositionInChord - previousMomentMsPositionInChord) * speedFactor) + previousTimestamp;
                     }
 
-                    previousMoment = nextMomt;
-
-                    //console.log("currentIndex=" + currentTrack.currentIndex +
-                    //            "toIndex=" + currentTrack.toIndex +
-                    //            "totalMoments=" + currentTrack.moments.length);
-                    //currentTrack.currentIndex++;
-                    currentTrack.getNextMoment()
+                    previousTimestamp = nextMomt.timestamp;
+                    previousMomentMsPositionInChord = nextMomt.msPositionInChord;
                 }
             }
 
@@ -666,9 +644,10 @@ MIDILib.sequence = (function (window)
                                 if(hasMessages(track))
                                 {
                                     track.isPerforming = true;
-                                    // Sets track.currentIndex, track.currentMidiObject and track.nextMoment
+                                    // Sets track.currentIndex, track._currentMidiObject and track.nextMoment
                                     // such that track.nextMoment is the first non-empty moment in or after after the midiObject at fromIndex.
-                                    track.setFirstNextMoment(track.fromIndex, track.toIndex);
+                                    // Also initializes the MDIChords and MIDIRests.
+                                    track.init(track.fromIndex, track.toIndex);
                                 }
                             }
                         }
@@ -677,7 +656,7 @@ MIDILib.sequence = (function (window)
             }
 
             // Returns a flat, ordered list of unique msPositions that contains
-            // all the midiObject.msPositionInScore values that are >= startMarkerMsPosition and < endMarkerMsPosition.
+            // all the midiObject.msPositionInScore values that are >= startMarkerMsPosition and <= endMarkerMsPosition.
             function getMidiObjectMsPositionsInScore(tracks, startMarkerMsPosition, endMarkerMsPosition)
             {
                 var positions = [], newPosition, trackIndices = [], i, nTracks = tracks.length, track;
@@ -718,6 +697,8 @@ MIDILib.sequence = (function (window)
                     }
                 }
 
+                positions.push(endMarkerMsPosition);
+
                 return positions;
             }
 
@@ -745,7 +726,7 @@ MIDILib.sequence = (function (window)
             this.midiObjectMsPositionsInScore = getMidiObjectMsPositionsInScore(that.tracks, startMarkerMsPosition, endMarkerMsPosition);
             this.midiObjectMsPositionsInScoreIndex = 0;
 
-            sequenceStartTime = performance.now();
+            performanceStartTime = performance.now();
 
             run();
         },
