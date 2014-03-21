@@ -27,8 +27,8 @@ _AP.score = (function (document)
 
     Markers = _AP.markers,
     ChordDef = _AP.chordDef.ChordDef,
-    MIDIChord = _AP.midiChord.MIDIChord,
-    MIDIRest = _AP.midiChord.MIDIRest,
+    MidiChord = _AP.midiChord.MidiChord,
+    MidiRest = _AP.midiRest.MidiRest,
 
     MAX_MIDI_CHANNELS = 16,
 
@@ -1514,7 +1514,7 @@ _AP.score = (function (document)
                 {
                     for(midiObjectIndex = 1; midiObjectIndex < track.midiObjects.length; ++midiObjectIndex)
                     {
-                        if(track.midiObjects[midiObjectIndex - 1] instanceof MIDIChord)
+                        if(track.midiObjects[midiObjectIndex - 1] instanceof MidiChord)
                         {
                             if(track.midiObjects[midiObjectIndex - 1].finalChordOffMoment === undefined)
                             {
@@ -1574,11 +1574,11 @@ _AP.score = (function (document)
                             if(timeObjectIndex < (nTimeObjects - 1))
                             {
                                 // A real rest. All barlines on the right ends of staves are ignored.
-                                midiRest = new MIDIRest(timeObject);
+                                midiRest = new MidiRest(timeObject);
                                 track.midiObjects.push(midiRest);
                                 if(isAssistedPerformance === true && trackIndex === livePerformersTrackIndex)
                                 {
-                                    midiRest = new MIDIRest(timeObject);
+                                    midiRest = new MidiRest(timeObject);
                                     livePerformersSilentTrack.midiObjects.push(midiRest);
                                 }
                                 //console.log("midiRest added at sysIndex=", +sysIndex + ", staffIndex=", +staffIndex + ", timeObjectIndex=" + timeObjectIndex);
@@ -1588,13 +1588,13 @@ _AP.score = (function (document)
                         {
                             chordDef = timeObject.chordDef;
                             chordIsSilent = false;
-                            midiChord = new MIDIChord(channel, chordDef, timeObject, chordIsSilent);
+                            midiChord = new MidiChord(channel, chordDef, timeObject, chordIsSilent);
                             track.midiObjects.push(midiChord);
                             //console.log("midiChord added at sysIndex=", +sysIndex + ", staffIndex=", +staffIndex + ", timeObjectIndex=" + timeObjectIndex);
                             if(isAssistedPerformance === true && trackIndex === livePerformersTrackIndex)
                             {
                                 chordIsSilent = true;
-                                midiChord = new MIDIChord(channel, chordDef, timeObject, chordIsSilent);
+                                midiChord = new MidiChord(channel, chordDef, timeObject, chordIsSilent);
                                 livePerformersSilentTrack.midiObjects.push(midiChord);
                             }
                         }

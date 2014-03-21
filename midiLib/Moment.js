@@ -19,7 +19,7 @@
  *      // an array of temporally ordered Messages.
  *      messages
  *
- *      // the msPosition of the Moment in the score, relative to the beginning of its MIDIChord.
+ *      // the msPosition of the Moment in the score, relative to the beginning of its MidiChord.
  *      msPositionInChord;
  *      
  *      // The time at which the moment is actually sent. Initially UNDEFINED_TIMESTAMP.
@@ -45,8 +45,8 @@ MIDILib.moment = (function ()
     UNDEFINED_TIMESTAMP = -1,
 
     // Moment constructor
-    // The moment.msPositionInChord is the (read only) position of the moment wrt its MIDIChord in the score.
-    // It is used to set moment.timestamp, taking the position of the MIDIChord and the speed of performance into account,
+    // The moment.msPositionInChord is the (read only) position of the moment wrt its MidiChord in the score.
+    // It is used to set moment.timestamp, taking the position of the MidiChord and the speed of performance into account,
     // when the absolute DOMHRT time is known. 
     Moment = function (msPositionInChord)
     {
@@ -98,7 +98,7 @@ MIDILib.moment = (function ()
         {
             Object.defineProperty(this, "restStart", { value: true, writable: false });
             //moment2.messages is always empty here...
-            //console.log("RestStart: nMessages=" + moment2.messages.length);
+            ////console.log("RestStart: nMessages=" + moment2.messages.length);
         }
 
         this.messages = this.messages.concat(moment2.messages);

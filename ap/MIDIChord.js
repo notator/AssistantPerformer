@@ -5,11 +5,9 @@
  *  Code licensed under MIT
  *  https://github.com/notator/assistant-performer/blob/master/License.md
  *
- *  ap/MIDIChord.js
+ *  ap/MidiChord.js
  *  Public interface:
- *      newAllSoundOffMessage() // returns a new AllSoundOffMessage
- *      MIDIChord(channel, chordDef, timeObject, chordIsSilent) // MIDIChord constructor
- *      MIDIRest(timeObject) // MIDIRest constructor  
+ *      MidiChord(channel, chordDef, timeObject, chordIsSilent) // MidiChord constructor 
  */
 
 /*jslint bitwise: false, nomen: true, plusplus: true, white: true */
@@ -29,17 +27,17 @@ _AP.midiChord = (function()
     // The rate (milliseconds) at which slider messages are sent.
     SLIDER_MILLISECONDS = 10,
 
-    // public MIDIChord constructor
-    // A MIDIChord contains all the midi messages required for playing an (ornamented) chord.
+    // public MidiChord constructor
+    // A MidiChord contains all the midi messages required for playing an (ornamented) chord.
     // If chordisSilent == true, this is a chord being played by a silent soloist (=conductor),
-    // and the chord is given an empty message (like a MIDIRest).
-    MIDIChord = function(channel, chordDef, timeObject, chordIsSilent)
+    // and the chord is given an empty message (like a MidiRest).
+    MidiChord = function(channel, chordDef, timeObject, chordIsSilent)
     {
         var rval = {};
 
-        if(!(this instanceof MIDIChord))
+        if(!(this instanceof MidiChord))
         {
-            return new MIDIChord(channel, chordDef, timeObject, chordIsSilent);
+            return new MidiChord(channel, chordDef, timeObject, chordIsSilent);
         }
 
         if(chordDef.basicChordsArray === undefined)
@@ -53,28 +51,29 @@ _AP.midiChord = (function()
 
         // initialised below, not changed at runtime.
         Object.defineProperty(this, "moments", { value: null, writable: true });
-        Object.defineProperty(this, "msDurationOfBasicChords", { value: 0, writable: true });
+        Object.defineProperty(this, "_msDurationOfBasicChords", { value: 0, writable: true });
         Object.defineProperty(this, "finalChordOffMoment", { value: null, writable: true });
-        Object.defineProperty(this, "repeatMoments", { value: true, writable: true });
+        Object.defineProperty(this, "_repeatMoments", { value: true, writable: true });
 
         // used at runtime
-        Object.defineProperty(this, "offsetMsDurationForRepeatedMoments", { value: 0, writable: true });
-        Object.defineProperty(this, "indexOfNextMoment", { value: 0, writable: true });
-        Object.defineProperty(this, "nextMoment", { value: null, writable: true });
+        Object.defineProperty(this, "currentMoment", { value: null, writable: true });
+        Object.defineProperty(this, "_offsetMsDurationForRepeatedMoments", { value: 0, writable: true });
+        Object.defineProperty(this, "_currentMomentIndex", { value: 0, writable: true });
+        Object.defineProperty(this, "_nextMoment", { value: null, writable: true });
 
         if(chordIsSilent === true)
         {
-            this.moments = this.getSilentMoment(); // like rest.getMoments()
+            this.moments = this._getSilentMoment(); // like rest._getMoments()
         }
         else
         {
             // The timeObject takes the global speed option into account.
-            rval = this.getMoments(channel, chordDef, timeObject.msDuration); // defined in prototype below
+            rval = this._getMoments(channel, chordDef, timeObject.msDuration); // defined in prototype below
 
             // moments is an ordered array of moments (containing messages for sequential chords and slider messages).
             // A Moment is a list of logically synchronous MIDI messages.  
             this.moments = rval.moments;
-            this.msDurationOfBasicChords = rval.msDurationOfBasicChords;
+            this._msDurationOfBasicChords = rval.msDurationOfBasicChords;
 
             // When completing Tracks, each MidiChord's finalChordOffMoment messages are inserted into the first moment
             // in the following midiObject. i.e. they are sent when the performance or live performer reaches the following midiObject.
@@ -83,50 +82,26 @@ _AP.midiChord = (function()
 
             if(chordDef.repeatMoments !== undefined && chordDef.repeatMoments === false)
             {
-                this.repeatMoments = false; // default is true (see above)
+                this._repeatMoments = false; // default is true (see above)
             }
 
-            this.nextMoment = this.moments[0];
+            this.currentMoment = this.moments[0];
         }
 
         return this;
     },
 
-    // a MIDIRest has the same structure as a MIDIChord, but it
-    // has a single Moment containing a single, empty message. 
-    MIDIRest = function(timeObject)
+    publicChordAPI =
     {
-        if(!(this instanceof MIDIRest))
-        {
-            return new MIDIRest(timeObject);
-        }
-        Object.defineProperty(this, "msPositionInScore", { value: timeObject.msPosition, writable: false });
-        Object.defineProperty(this, "msDurationInScore", { value: timeObject.msDuration, writable: false });
-
-        Object.defineProperty(this, "moments", { value: null, writable: true });
-        Object.defineProperty(this, "nextMoment", { value: null, writable: true });
-
-        this.moments = this.getMoments(); // defined in prototype
-
-        return this;
-    },
-
-    publicChordRestAPI =
-    {
-        // public MIDIChord constructor
-        // A MIDIChord contains a private array of Moments containing all
+        // public MidiChord constructor
+        // A MidiChord contains a private array of Moments containing all
         // the midi messages required for playing an (ornamented) chord.
         // A Moment is a collection of logically synchronous MIDI messages.
-        MIDIChord: MIDIChord,
-
-        // A MIDIRest is like a MIDIChord which has a single, empty Moment.
-        // MIDIRests are necessary so that running cursors can be moved to their
-        // symbol, when sequences call reportMsPositionInScore(msPositionInScore).
-        MIDIRest: MIDIRest
+        MidiChord: MidiChord
     };
     // end var
 
-    MIDIChord.prototype.getMoments = function(channel, chordDef, msDurationInScore)
+    MidiChord.prototype._getMoments = function(channel, chordDef, msDurationInScore)
     {
         var
         basicChordMsDurations,
@@ -158,7 +133,7 @@ _AP.midiChord = (function()
             // taking no account of the global speed option.
             // Replaces:
             //     function bcMsDurations(basicChords, totalMsDuration), which adjusted the durations to the duration
-            //     of the MIDIChord in the score, taking the global speed option into account.
+            //     of the MidiChord in the score, taking the global speed option into account.
             function bcMsDurations(basicChords)
             {
                 var msDurations = [], i, basicChordsLength = basicChords.length;
@@ -399,7 +374,7 @@ _AP.midiChord = (function()
         // 50ms is the default, but other values are possible.
         // None of the returned sliderMoments has 0 messages.
         // This function is only called if sliders are defined, so the length of the returned array
-        // can either be 1 (i.e. none of the sliders' values changes during this MIDIChord)
+        // can either be 1 (i.e. none of the sliders' values changes during this MidiChord)
         // or a value calculated from SLIDER_MILLISECONDS and msDuration. In the latter case, the
         // msPositionInChord of the final sliderMoment is less than msDuration.
         function getSliderMoments(channel, sliders, msDuration, sliderMilliseconds)
@@ -732,7 +707,7 @@ _AP.midiChord = (function()
 
     // returns an array containing a single empty moment having a "chordStart" attribute.
     // The moment's messages array is empty.
-    MIDIChord.prototype.getSilentMoment = function()
+    MidiChord.prototype._getSilentMoment = function()
     {
         var
         moments = [],
@@ -746,95 +721,77 @@ _AP.midiChord = (function()
         return moments;
     };
 
-    // Set this.indexOfNextMoment to 0, and this.nextMoment to the first moment that would be played by this MIDIChord.
-    // The chord's moments array does not contain the final chordOffMoment
-    // MIDIChord.currentIndex is NOT updated.
-    MIDIChord.prototype.getFirstMoment = function()
+    /******  Runtime functions ******/
+
+    // Sets
+    //     this._currentMomentIndex = 0,
+    //     this.currentMoment = this.moments[0] or null if the moment is empty
+    //     this._nextMoment = this.moments[1] or null if the moment is empty or does not exist
+    MidiChord.prototype._init = function()
     {
-        this.indexOfNextMoment = 0;
-        this.offsetMsDurationForRepeatedMoments = 0;
-        this.nextMoment = this.moments[0];
-        if(this.nextMoment.messages.length === 0)
+        this._currentMomentIndex = 0;
+        this.currentMoment = this.moments[0];
+        if(this.currentMoment.messages.length === 0)
         {
-            this.nextMoment = null;
+            throw "MidiChords always have a first moment containing messages!";
         }
-        return this.nextMoment;
+        if(this.moments.length > 1)
+        {
+            this._nextMoment = this.moments[1];
+            if(this._nextMoment.messages.length === 0)
+            {
+                this._nextMoment = null;
+            }
+        }
+        else
+        {
+            this._nextMoment = null;
+        }
     };
 
-    // MIDIChord.getNextMoment() sets MIDIChord.nextMoment to the MIDIChord's next non-empty moment, updates indices etc...
-    // If the MIDIChord's moments repeat, this function never sets MIDIChord.nextMoment to null.
-    // The function sets MIDIChord.nextMoment to null after returning all the non-repeated moments.
-    MIDIChord.prototype.advanceNextMoment = function()
+    MidiChord.prototype.runtimeInit = function()
     {
-        var originalNextMoment;
+        this._init();
+        this._offsetMsDurationForRepeatedMoments = 0;
+    };
 
-        this.indexOfNextMoment++;
-
-        if(this.indexOfNextMoment === this.moments.length)
+    // Sets this.currentMoment to the next moment or to null.
+    // this.currentMoment is never set to null if this._repeatMoments is true. 
+    MidiChord.prototype.advanceMoment = function()
+    {
+        if(this._currentMomentIndex < 0)
         {
-            if(this.repeatMoments)
+            throw "this.runtimeInit() must be called first!";
+        }
+
+        this._currentMomentIndex++;
+
+        if(this._currentMomentIndex < this.moments.length)
+        {
+            this.currentMoment = this.moments[this._currentMomentIndex];
+
+            if(this._offsetMsDurationForRepeatedMoments > 0)
             {
-                this.indexOfNextMoment = 0;
-                this.offsetMsDurationForRepeatedMoments += this.msDurationOfBasicChords;
+                // make a deep clone of the original this.currentMoment
+                this.currentMoment = this.currentMoment.getCloneAtOffset(this._offsetMsDurationForRepeatedMoments);
+            }
+        }
+        else // this._currentMomentIndex === this.moments.length
+        {            
+            if(this._repeatMoments)
+            {
+                this._init();
+                this._offsetMsDurationForRepeatedMoments += this._msDurationOfBasicChords;
             }
             else
             {
-                this.indexOfNextMoment = -1;
-                this.nextMoment = null;
+                this._currentMomentIndex = -1;
+                this._offsetMsDurationForRepeatedMoments = 0;
+                this.currentMoment = null;
+                this._nextMoment = null;
             }
         }
-        
-        if(this.indexOfNextMoment >= 0)
-        {
-            if(this.offsetMsDurationForRepeatedMoments > 0)
-            {
-                // make a deep clone of the originalNextMoment at msPosReChord.
-                originalNextMoment = this.moments[this.indexOfNextMoment];
-                this.nextMoment = originalNextMoment.getCloneAtOffset(this.offsetMsDurationForRepeatedMoments);
-            }
-            else
-            {
-                this.nextMoment = this.moments[this.indexOfNextMoment];
-            }
-        }
-
-        return this.nextMoment;
     };
 
-    // returns an array containing a single empty moment having a "restStart" attribute.
-    // The moment's messages array is empty.
-    MIDIRest.prototype.getMoments = function()
-    {
-        var
-        moments = [],
-        restMoment;
-
-        restMoment = new Moment(0);
-        Object.defineProperty(restMoment, "restStart", { value: true, writable: false });
-
-        moments.push(restMoment); // an empty moment.
-
-        return moments;
-    };
-
-    // Set this.nextMoment to the first moment that would be played by this MIDIRest.
-    // Sets this.nextMoment to null if the moment.messages.length === 0.
-    MIDIRest.prototype.getFirstMoment = function()
-    {
-        this.nextMoment = this.moments[0];
-        if(this.nextMoment.messages.length === 0)
-        {
-            this.nextMoment = null;
-        }
-        return this.nextMoment;
-    };
-
-    // MidiRests never repeat their single moment (which is returned by getFirstMoment()),
-    // so MIDIRest.getNextMoment() always sets midiObject.nextMoment to null.
-    MIDIRest.prototype.getNextMoment = function()
-    {
-        this.nextMoment = null;
-    };
-
-    return publicChordRestAPI;
+    return publicChordAPI;
 }());
