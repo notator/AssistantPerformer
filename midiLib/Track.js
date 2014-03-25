@@ -41,7 +41,6 @@ MIDILib.track = (function ()
         this.toIndex = -1; // the toIndex in this track's midiObjects array. This object is never played.
         this.currentMidiObject = null; // The MidiChord or MidiRest currently being played by this track.
         this.currentMoment = null; // the moment which is about to be played by the currentMidiObject.
-        this._nextMidiObject = null; // The MidiChord or MidiRest following this.currentMidiObject in this track.
     },
 
     publicTrackAPI =
@@ -51,7 +50,7 @@ MIDILib.track = (function ()
     };
     // end var
 
-    // Sets track._currentMidiObjectIndex, track.currentMidiObject, track.currentMoment and track._nextMidiObject
+    // Sets track._currentMidiObjectIndex, track.currentMidiObject and track.currentMoment
     // (The last midiObject to be played is at toIndex-1.)
     Track.prototype.runtimeInit = function(fromIndex, toIndex)
     {
@@ -65,42 +64,29 @@ MIDILib.track = (function ()
         this._currentMidiObjectIndex = this.fromIndex;
         this.currentMidiObject = this.midiObjects[this._currentMidiObjectIndex];
         this.currentMoment = this.currentMidiObject.currentMoment; // is either null or has messages
-        if(this._currentMidiObjectIndex < this.toIndex - 1)
-        {
-            this._nextMidiObject = this.midiObjects[this._currentMidiObjectIndex + 1];
-        }
-        else
-        {
-            this._nextMidiObject = null;
-        }
     };
 
     // This function is called when the running scoreMsPosition changes.
-    // It does nothing, if:
-    //      this._nextMidiObject === null (there are no more midiObjects to play) or
-    //      this._nextMidiObject.msPositionInScore !== scoreMsPosition.
-    // Otherwise it sets track._currentMidiObjectIndex, track.currentMidiObject, track.currentMoment and track._nextMidiObject
+    // It advances track.currentMidiObject if there is a following MidiObject at scoreMsPosition
+    // Otherwise it does nothing.    
     Track.prototype.advanceMidiObject = function(scoreMsPosition)
     {
-        if(this._nextMidiObject !== null && this._nextMidiObject.msPositionInScore === scoreMsPosition)
+        var nextIndex;
+        if(this._currentMidiObjectIndex < this.toIndex - 1)
         {
-            this.currentMidiObject = this._nextMidiObject;
-            this.currentMoment = this.currentMidiObject.currentMoment; // can be null if currentMidiObject is an empty rest
-
-            this._currentMidiObjectIndex++;
-            if(this._currentMidiObjectIndex < this.toIndex - 1)
+            nextIndex = this._currentMidiObjectIndex + 1;
+            if(this.midiObjects[nextIndex].msPositionInScore === scoreMsPosition)
             {
-                this._nextMidiObject = this.midiObjects[this._currentMidiObjectIndex + 1];
-            }
-            else
-            {
-                this._nextMidiObject = null;
+                this._currentMidiObjectIndex++;
+                this.currentMidiObject = this.midiObjects[this._currentMidiObjectIndex];
+                this.currentMoment = this.currentMidiObject.currentMoment; // can be null if currentMidiObject is an empty rest
             }
         }
     };
 
     // Calls this.currentMidiObject.advanceMoment(), then sets this.currentMoment
-    // to this.currentMidiObject.currentMoment, which is either null or has messages  
+    // to this.currentMidiObject.currentMoment, which is either null or has messages
+    // This function does not advance track.currentMidiObject.
     Track.prototype.advanceMoment = function()
     {
         if(this._currentMidiObjectIndex === -1)

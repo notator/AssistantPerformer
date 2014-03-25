@@ -53,13 +53,12 @@ _AP.midiChord = (function()
         Object.defineProperty(this, "moments", { value: null, writable: true });
         Object.defineProperty(this, "_msDurationOfBasicChords", { value: 0, writable: true });
         Object.defineProperty(this, "finalChordOffMoment", { value: null, writable: true });
-        Object.defineProperty(this, "_repeatMoments", { value: true, writable: true });
+        Object.defineProperty(this, "_repeatMoments", { value: chordDef.attributes.repeatMoments, writable: false });
 
         // used at runtime
         Object.defineProperty(this, "currentMoment", { value: null, writable: true });
         Object.defineProperty(this, "_offsetMsDurationForRepeatedMoments", { value: 0, writable: true });
         Object.defineProperty(this, "_currentMomentIndex", { value: 0, writable: true });
-        Object.defineProperty(this, "_nextMoment", { value: null, writable: true });
 
         if(chordIsSilent === true)
         {
@@ -79,11 +78,6 @@ _AP.midiChord = (function()
             // in the following midiObject. i.e. they are sent when the performance or live performer reaches the following midiObject.
             // The finalChordOffMoment is always a valid moment, at the msPositionInScore of the following midiObject, but it may have no messages.
             this.finalChordOffMoment = rval.finalChordOffMoment;
-
-            if(chordDef.repeatMoments !== undefined && chordDef.repeatMoments === false)
-            {
-                this._repeatMoments = false; // default is true (see above)
-            }
 
             this.currentMoment = this.moments[0];
         }
@@ -315,7 +309,7 @@ _AP.midiChord = (function()
             {
                 basicChordDef = chordDef.basicChordsArray[i];
 
-                if(chordDef.attributes.hasChordOff === undefined || chordDef.attributes.hasChordOff === true)
+                if(chordDef.attributes.hasChordOff === true)
                 {
                     notes = basicChordDef.notes;
                     notesLength = notes.length;
@@ -726,7 +720,6 @@ _AP.midiChord = (function()
     // Sets
     //     this._currentMomentIndex = 0,
     //     this.currentMoment = this.moments[0] or null if the moment is empty
-    //     this._nextMoment = this.moments[1] or null if the moment is empty or does not exist
     MidiChord.prototype._init = function()
     {
         this._currentMomentIndex = 0;
@@ -734,18 +727,6 @@ _AP.midiChord = (function()
         if(this.currentMoment.messages.length === 0)
         {
             throw "MidiChords always have a first moment containing messages!";
-        }
-        if(this.moments.length > 1)
-        {
-            this._nextMoment = this.moments[1];
-            if(this._nextMoment.messages.length === 0)
-            {
-                this._nextMoment = null;
-            }
-        }
-        else
-        {
-            this._nextMoment = null;
         }
     };
 
@@ -777,18 +758,19 @@ _AP.midiChord = (function()
             }
         }
         else // this._currentMomentIndex === this.moments.length
-        {            
+        {
+            this._init();
+
             if(this._repeatMoments)
-            {
-                this._init();
+            {   
                 this._offsetMsDurationForRepeatedMoments += this._msDurationOfBasicChords;
+                // make a deep clone of the original this.currentMoment
+                this.currentMoment = this.currentMoment.getCloneAtOffset(this._offsetMsDurationForRepeatedMoments);
             }
             else
             {
-                this._currentMomentIndex = -1;
                 this._offsetMsDurationForRepeatedMoments = 0;
                 this.currentMoment = null;
-                this._nextMoment = null;
             }
         }
     };

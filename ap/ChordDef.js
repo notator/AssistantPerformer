@@ -15,7 +15,7 @@
 
 _AP.namespace('_AP.chordDef');
 
-_AP.chordDef = (function (document)
+_AP.chordDef = (function ()
 {
     "use strict";
     var
@@ -42,7 +42,9 @@ _AP.chordDef = (function (document)
             attributesLength = chordDefNode.attributes.length,
             i;
 
+        attributes.repeatMoments = true; // default value
         attributes.hasChordOff = true; // default value
+
         for (i = 0; i < attributesLength; ++i)
         {
             a = chordDefNode.attributes[i];
@@ -57,8 +59,15 @@ _AP.chordDef = (function (document)
                 case "volume":
                     attributes.volume = parseInt(a.value, 10);
                     break;
+                case "repeatMoments":
+                    if(a.value === "0")
+                    {
+                        attributes.repeatMoments = false;
+                    }
+                    // if repeatMoments is undefined, it is true
+                    break;
                 case "hasChordOff":
-                    if (a.value === "0")
+                    if(a.value === "0")
                     {
                         attributes.hasChordOff = false;
                     }
@@ -257,10 +266,10 @@ _AP.chordDef = (function (document)
     publicAPI =
     {
         // public ChordDef(chordDefNode) constructor.
-        ChordDef: ChordDef,
+        ChordDef: ChordDef
     };
 
     return publicAPI;
 
-} (document));
+} ());
 
