@@ -42,7 +42,7 @@ _AP.chordDef = (function ()
             attributesLength = chordDefNode.attributes.length,
             i;
 
-        attributes.repeatMoments = true; // default value
+        attributes.repeat = true; // default value
         attributes.hasChordOff = true; // default value
 
         for (i = 0; i < attributesLength; ++i)
@@ -59,12 +59,12 @@ _AP.chordDef = (function ()
                 case "volume":
                     attributes.volume = parseInt(a.value, 10);
                     break;
-                case "repeatMoments":
+                case "repeat":
                     if(a.value === "0")
                     {
-                        attributes.repeatMoments = false;
+                        attributes.repeat = false;
                     }
-                    // if repeatMoments is undefined, it is true
+                    // if repeat is undefined, it is true
                     break;
                 case "hasChordOff":
                     if(a.value === "0")

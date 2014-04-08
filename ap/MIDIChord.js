@@ -53,7 +53,7 @@ _AP.midiChord = (function()
         Object.defineProperty(this, "moments", { value: null, writable: true });
         Object.defineProperty(this, "_msDurationOfBasicChords", { value: 0, writable: true });
         Object.defineProperty(this, "finalChordOffMoment", { value: null, writable: true });
-        Object.defineProperty(this, "_repeatMoments", { value: chordDef.attributes.repeatMoments, writable: false });
+        Object.defineProperty(this, "_repeat", { value: chordDef.attributes.repeat, writable: false });
 
         // used at runtime
         Object.defineProperty(this, "currentMoment", { value: null, writable: true });
@@ -737,7 +737,7 @@ _AP.midiChord = (function()
     };
 
     // Sets this.currentMoment to the next moment or to null.
-    // this.currentMoment is never set to null if this._repeatMoments is true. 
+    // this.currentMoment is never set to null if this._repeat is true. 
     MidiChord.prototype.advanceMoment = function()
     {
         if(this._currentMomentIndex < 0)
@@ -761,7 +761,7 @@ _AP.midiChord = (function()
         {
             this._init();
 
-            if(this._repeatMoments)
+            if(this._repeat)
             {   
                 this._offsetMsDurationForRepeatedMoments += this._msDurationOfBasicChords;
                 // make a deep clone of the original this.currentMoment
