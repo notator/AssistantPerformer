@@ -1815,7 +1815,7 @@ _AP.controls = (function(document, window)
                     tracksControl.refreshDisplay();
                 }
 
-                sequence = score.createSequence(options.assistantsSpeed);
+                sequence = score.createSequence(options.assistedPerformance, options.livePerformersTrackIndex);
 
                 if(options.assistedPerformance === true)
                 {
