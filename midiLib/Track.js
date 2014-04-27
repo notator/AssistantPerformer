@@ -63,7 +63,7 @@ MIDILib.track = (function ()
 
         this._currentMidiObjectIndex = this.fromIndex;
         this.currentMidiObject = this.midiObjects[this._currentMidiObjectIndex];
-        this.currentMoment = this.currentMidiObject.currentMoment; // is either null or has messages
+        this.currentMoment = this.currentMidiObject.currentMoment; // has zero or messages
     };
 
     // This function is called when the running scoreMsPosition changes.
@@ -79,7 +79,7 @@ MIDILib.track = (function ()
             {
                 this._currentMidiObjectIndex++;
                 this.currentMidiObject = this.midiObjects[this._currentMidiObjectIndex];
-                this.currentMoment = this.currentMidiObject.currentMoment; // can be null if currentMidiObject is an empty rest
+                this.currentMoment = this.currentMidiObject.currentMoment;  // has zero or messages
             }
         }
     };
@@ -97,7 +97,9 @@ MIDILib.track = (function ()
         if(this.currentMidiObject !== null) // is null when there are no more midiObjects
         {
             this.currentMidiObject.advanceMoment();
-            this.currentMoment = this.currentMidiObject.currentMoment; // is either null or has messages
+            this.currentMoment = this.currentMidiObject.currentMoment;
+            // this.currentMoment has no messages if the currentMidiObject is a MidiRest or
+            // is a non-repeating MidiChord whose moments have all been played.
         }
     };
 

@@ -70,17 +70,11 @@ _AP.midiRest = (function()
     MidiRest.prototype.runtimeInit = function()
     {
         this.currentMoment = this.moments[0];
-        if(this.currentMoment.messages.length === 0)
-        {
-            this.currentMoment = null;
-        }
     };
 
-    // MidiRests never repeat their single moment,
-    // so MidiRest.advanceMoment() always sets midiObject.currentMoment to null.
     MidiRest.prototype.advanceMoment = function()
     {
-        this.currentMoment = null;
+        this.currentMoment = new Moment(this.msDurationInScore);
     };
 
     return publicRestAPI;

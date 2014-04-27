@@ -736,8 +736,9 @@ _AP.midiChord = (function()
         this._offsetMsDurationForRepeatedMoments = 0;
     };
 
-    // Sets this.currentMoment to the next moment or to null.
-    // this.currentMoment is never set to null if this._repeat is true. 
+    // Sets this.currentMoment to the following moment.
+    // If this._repeat is false, and all the moments have been played, an empty moment is returned.
+    // this.currentMoment is never empty if this._repeat is true. 
     MidiChord.prototype.advanceMoment = function()
     {
         if(this._currentMomentIndex < 0)
@@ -761,16 +762,16 @@ _AP.midiChord = (function()
         {
             this._init();
 
+            this._offsetMsDurationForRepeatedMoments += this._msDurationOfBasicChords;
             if(this._repeat)
             {   
-                this._offsetMsDurationForRepeatedMoments += this._msDurationOfBasicChords;
                 // make a deep clone of the original this.currentMoment
                 this.currentMoment = this.currentMoment.getCloneAtOffset(this._offsetMsDurationForRepeatedMoments);
             }
             else
             {
-                this._offsetMsDurationForRepeatedMoments = 0;
-                this.currentMoment = null;
+                // return an empty moment
+                this.currentMoment = new Moment(this._offsetMsDurationForRepeatedMoments);
             }
         }
     };
