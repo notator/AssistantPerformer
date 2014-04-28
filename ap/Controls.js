@@ -748,7 +748,7 @@ _AP.controls = (function(document, window)
 
                     sequence.setSpeedFactor(1); // just in case... (The speedFactor should always be constant 1 in non-assisted performances.)
 
-                    sequence.play(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
+                    sequence.play(null, options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
                         trackIsOnArray, sequenceRecording, reportEndOfPerformance, reportMsPos);
                 }
 

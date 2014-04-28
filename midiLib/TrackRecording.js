@@ -27,7 +27,7 @@
  *          
  *          // Adds a moment to the trackRecording.
  *          // Used in Sequence.tick() to record a moment (originally in the
- *          // score) being played live by the Assistant.
+ *          // score) being played live by the Performer.
  *          addLiveScoreMoment(moment)
  *          
  *          // Adds a moment to the trackRecording.
