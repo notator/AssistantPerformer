@@ -89,6 +89,11 @@ MIDILib.sequence = (function (window)
         this.midiObjectMsPositionsInScoreIndex = 0; // the current index in the following array
         this.midiObjectMsPositionsInScore = []; // a flat, ordered array of msPositions
 
+        this.performersMsPositionsInScoreIndex = 0; // the current index in the following array
+        this.performersMsPositionsInScore = []; // a flat, ordered array of msPositions
+
+        this.currentSegmentMsStartPositionInScore = 0;
+
         this.tracks = []; // an array of Tracks
 
         for (i = 0; i < nTracks; ++i)
@@ -126,7 +131,10 @@ MIDILib.sequence = (function (window)
         lastReportedMsPosition = -1, // set by tick() used by nextMoment()
         msPositionToReport = -1,   // set in nextMoment() and used/reset by tick()
 
+        // (performance.now() - performanceStartTime) is the time elapsed since the start of the performance.
+        // (performance.now() - segmentStartTime) is the time elapsed since the start of the performance or the last NoteOn in a live performance.
         performanceStartTime = -1,  // set in play(), used by stop(), run()
+        segmentStartTime = -1, // set in play() and while performing live. Used in NextMoment
 
         sequenceRecording, // the sequence being recorded. set in play() and resume(), used by tick()
 
@@ -216,13 +224,13 @@ MIDILib.sequence = (function (window)
             endMarkerPosition = the.midiObjectMsPositionsInScore[the.midiObjectMsPositionsInScore.length - 1];
 
             // Sets scoreMsPosition to one of the midiObjectMsPositionsInScore.
-            // Uses performance.now() to take running time into account.
-            function getScoreMsPosition(tracks)
+            function getScoreMsPosition(the)
             {
                 var
                 currentIndex = the.midiObjectMsPositionsInScoreIndex,
                 midiObjectMsPositionsInScore = the.midiObjectMsPositionsInScore,
-                scoreMsPosition;
+                scoreMsPosition = midiObjectMsPositionsInScore[currentIndex], // The usual value
+                performersSegmentBounds;
 
                 function advanceTrackMidiObjects(tracks, scoreMsPosition)
                 {
@@ -236,26 +244,57 @@ MIDILib.sequence = (function (window)
                     
                 }
 
-                // (performance.now() - performanceStartTime) is the time elapsed since the start of the performance;
-                if((performance.now() - performanceStartTime) < (midiObjectMsPositionsInScore[currentIndex + 1] - midiObjectMsPositionsInScore[0]))
+                function advanceScoreMsPosition(the)
                 {
-                    scoreMsPosition = midiObjectMsPositionsInScore[currentIndex]; // the usual value
-                }
-                else
-                {
+                    var currentIndex, newScoreMsPosition;
+
                     the.midiObjectMsPositionsInScoreIndex++;
                     currentIndex = the.midiObjectMsPositionsInScoreIndex;
-                    if(currentIndex < midiObjectMsPositionsInScore.length)
+                    if(currentIndex < the.midiObjectMsPositionsInScore.length)
                     {
-                        scoreMsPosition = midiObjectMsPositionsInScore[currentIndex];
-                        advanceTrackMidiObjects(tracks, scoreMsPosition);
+                        newScoreMsPosition = the.midiObjectMsPositionsInScore[currentIndex];
+                        advanceTrackMidiObjects(the.tracks, newScoreMsPosition);
                     }
+                    return newScoreMsPosition;
                 }
+
+                // temporary function. Should be moved to Performer.js later...
+                function getPerformersSegmentBounds(the)
+                {
+                    var bounds = { "msStartPositionInScore": the.performersMsPositionsInScore[0], "msEndPositionInScore": the.performersMsPositionsInScore[1] };
+                    return bounds;
+                }
+
+                // Advances scoreMsPosition until it is equal to toMsPositionInScore.
+                function setScoreMsPosition(the, toMsPositionInScore)
+                {
+                    while(scoreMsPosition !== toMsPositionInScore)
+                    {
+                        scoreMsPosition = advanceScoreMsPosition(the);
+                    }
+                    return scoreMsPosition;
+                }
+
+                performersSegmentBounds = getPerformersSegmentBounds(the);
+                if(performersSegmentBounds.msStartPositionInScore !==  the.currentSegmentMsStartPositionInScore)
+                {
+                    // A live performer has moved to the next segment
+                    scoreMsPosition = setScoreMsPosition(performersSegmentBounds.msStartPositionInScore);
+                    segmentStartTime = performance.now();
+                }          
+                else if((scoreMsPosition < performersSegmentBounds.msEndPositionInScore)
+                     && (performance.now() - segmentStartTime) >= (midiObjectMsPositionsInScore[currentIndex + 1] - performersSegmentBounds.msStartPositionInScore))
+                {
+                    // The scoreMsPosition is moved to that of the next MidiObject (in this segment).
+                     scoreMsPosition = advanceScoreMsPosition(the);     
+                }
+
+                the.currentSegmentMsStartPositionInScore = performersSegmentBounds.msStartPositionInScore;
 
                 return scoreMsPosition;
             }
 
-            scoreMsPosition = getScoreMsPosition(the.tracks);
+            scoreMsPosition = getScoreMsPosition(the);
 
             if (!stopped && !paused)
             {
@@ -306,7 +345,7 @@ MIDILib.sequence = (function (window)
 
                     if(previousTimestamp === null)
                     {
-                        nextMomt.timestamp = performanceStartTime;
+                        nextMomt.timestamp = segmentStartTime;
                     }
                     else
                     {
@@ -510,6 +549,8 @@ MIDILib.sequence = (function (window)
         play = function (midiOutDevice, startMarkerMsPosition, endMarkerMsPosition, trackIsOnArray,
                                 recording, reportEndOfSpanCallback, reportMsPositionInScoreCallback)
         {
+            var performersTrackIndex; // *************** temp here...
+
             // Sets each track's isPerforming attribute.
             // If the track is set to perform (in the trackIsOnArray -- the trackControl settings),
             // an attempt is made to set its fromIndex, currentIndex and toIndex attributes such that
@@ -595,7 +636,7 @@ MIDILib.sequence = (function (window)
                 }
             }
 
-            // Returns a flat, ordered list of unique msPositions that contains
+            // Returns a flat, ordered array of unique msPositions that contains
             // all the midiObject.msPositionInScore values that are >= startMarkerMsPosition and <= endMarkerMsPosition.
             function getMidiObjectMsPositionsInScore(tracks, startMarkerMsPosition, endMarkerMsPosition)
             {
@@ -642,6 +683,46 @@ MIDILib.sequence = (function (window)
                 return positions;
             }
 
+            // Returns a flat, ordered array of unique msPositions.
+            // If there is no live performer (i.e. performersTrackIndex is undefined), the returned array contains just the
+            // startMarkerMsPosition and endMarkerMsPosition.
+            // Otherwise the returned array contains all the performer's midiObject.msPositionInScore values that are
+            // >= startMarkerMsPosition and <= endMarkerMsPosition.
+            function getPerformersMsPositionsInScore(performersTrackIndex, tracks, startMarkerMsPosition, endMarkerMsPosition)
+            {
+                var
+                i,
+                midiObjects,
+                positions = [];
+
+                if(performersTrackIndex === undefined)
+                {
+                    // There is no live performer
+                    positions.push(startMarkerMsPosition);
+                    positions.push(endMarkerMsPosition);
+                }
+                else if(performersTrackIndex >= 0 && performersTrackIndex < tracks.length)
+                {
+                    midiObjects = tracks[performersTrackIndex].midiObjects;
+                    for(i = 0; i < midiObjects.length; ++i)
+                    {
+                        if(midiObjects[i].msPositionInScore >= startMarkerMsPosition)
+                        {
+                            positions.push(midiObjects[i].msPositionInScore);
+                        }
+                        if(midiObjects[i].msPositionInScore === endMarkerMsPosition)
+                        {
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    throw "Error: Illegal performer's track index!";
+                }
+                return positions;
+            }
+
             that = this;
 
             setState("stopped");
@@ -666,7 +747,13 @@ MIDILib.sequence = (function (window)
             this.midiObjectMsPositionsInScore = getMidiObjectMsPositionsInScore(that.tracks, startMarkerMsPosition, endMarkerMsPosition);
             this.midiObjectMsPositionsInScoreIndex = 0;
 
+            this.performersMsPositionsInScore = getPerformersMsPositionsInScore(performersTrackIndex, that.tracks, startMarkerMsPosition, endMarkerMsPosition);
+            this.performersMsPositionsInScoreIndex = 0;
+
+            this.currentSegmentMsStartPositionInScore = startMarkerMsPosition;
+
             performanceStartTime = performance.now();
+            segmentStartTime = performanceStartTime;
 
             run();
         },
