@@ -22,7 +22,8 @@ _AP.controls = (function(document, window)
     var
     tracksControl = _AP.tracksControl,
     Score = _AP.score.Score,
-    Assistant = _AP.assistant.Assistant,
+    sequence = MIDILib.sequence,
+    performer = MIDILib.performer,
 
     SequenceRecording = MIDILib.sequenceRecording.SequenceRecording,
     COMMAND = MIDILib.constants.COMMAND,
@@ -32,8 +33,6 @@ _AP.controls = (function(document, window)
     midiAccess,
     score,
     svg = {}, // an object containing pointers to functions defined in SVG files
-    assistant,
-    sequence,
     livePerformerIsSilent = false,
     svgControlsState = 'stopped', //svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd'.
     svgPagesDiv,
@@ -445,14 +444,7 @@ _AP.controls = (function(document, window)
 
     setStopped = function()
     {
-        if(options.assistedPerformance === true)
-        {
-            assistant.stop();
-        }
-        else
-        {
-            sequence.stop();
-        }
+        sequence.stop();
 
         score.moveRunningMarkerToStartMarker();
 
@@ -501,12 +493,12 @@ _AP.controls = (function(document, window)
 
         if(options.assistedPerformance === true)
         {
-            options.inputDevice.removeEventListener("midimessage", _AP.assistant.handleMIDIInputEvent);
+            options.inputDevice.removeEventListener("midimessage", performer.handleMIDIInputEvent);
         }
     },
 
     // callback called when a performing sequenceRecording is stopped or has played its last message,
-    // or when the assistant is stopped or has played its last subsequence.
+    // or when the performer is stopped or has played its last subsequence.
     reportEndOfPerformance = function(sequenceRecording, performanceMsDuration)
     {
         var
@@ -616,7 +608,7 @@ _AP.controls = (function(document, window)
 
             if(options.assistedPerformance === true)
             {
-                options.inputDevice.removeEventListener("midimessage", _AP.assistant.handleMIDIInputEvent);
+                options.inputDevice.removeEventListener("midimessage", performer.handleMIDIInputEvent);
             }
         }
 
@@ -629,7 +621,7 @@ _AP.controls = (function(document, window)
                 throw "Error: Assisted performances are never paused.";
             }
 
-            if(sequence !== undefined && sequence.isRunning())
+            if(sequence.isRunning())
             {
                 sequence.pause();
             }
@@ -640,7 +632,7 @@ _AP.controls = (function(document, window)
 
             if(options.assistedPerformance === true)
             {
-                options.inputDevice.removeEventListener("midimessage", _AP.assistant.handleMIDIInputEvent);
+                options.inputDevice.removeEventListener("midimessage", performer.handleMIDIInputEvent);
             }
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
@@ -706,28 +698,7 @@ _AP.controls = (function(document, window)
 
             deleteSaveMIDIFileButton();
 
-            if(options.assistedPerformance === true && assistant !== undefined)
-            {
-                if(assistant.isStopped())
-                {
-                    sequenceRecording = new SequenceRecording(nTracks);
-
-                    // the running marker is at its correct position:
-                    // either at the start marker, or somewhere paused.
-                    score.setRunningMarkers();
-                    score.moveStartMarkerToTop(svgPagesDiv);
-
-                    sendTrackInitializationMessages(options, options.assistedPerformance);
-
-                    assistant.perform(options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
-                        options.runtimeOptions.speed, trackIsOnArray, sequenceRecording);
-
-                    cl.pauseUnselected.setAttribute("opacity", GLASS);
-                    cl.pauseSelected.setAttribute("opacity", GLASS);
-                    cl.goDisabled.setAttribute("opacity", SMOKE);
-                }
-            }
-            else if(sequence !== undefined) // playing score (main sequence)
+            if(sequence.tracks.length > 0)
             {
                 if(sequence.isPaused())
                 {
@@ -746,9 +717,7 @@ _AP.controls = (function(document, window)
 
                     sequence.sendControlMessageNow(options.outputDevice, CONTROL.VOLUME, 127);
 
-                    sequence.setSpeedFactor(1); // just in case... (The speedFactor should always be constant 1 in non-assisted performances.)
-
-                    sequence.play(null, options.outputDevice, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
+                    sequence.play(options, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
                         trackIsOnArray, sequenceRecording, reportEndOfPerformance, reportMsPos);
                 }
 
@@ -761,7 +730,7 @@ _AP.controls = (function(document, window)
 
             if(options.assistedPerformance === true)
             {
-                options.inputDevice.addEventListener("midimessage", _AP.assistant.handleMIDIInputEvent);
+                options.inputDevice.addEventListener("midimessage", performer.handleMIDIInputEvent);
             }
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
@@ -995,7 +964,7 @@ _AP.controls = (function(document, window)
                 option = document.createElement("option");
                 option.inputDevice = inputs[i];
                 option.text = inputs[i].name;
-                //option.inputDevice.addEventListener("midimessage", _AP.assistant.handleMIDIInputEvent);
+                //option.inputDevice.addEventListener("midimessage", performer.handleMIDIInputEvent);
                 is.add(option, null);
             }
 
@@ -1806,22 +1775,25 @@ _AP.controls = (function(document, window)
 
                 if(options.assistedPerformance)
                 {
-                    tracksControl.setInitialTracksControlState(true, options.livePerformersTrackIndex);
+                    tracksControl.setInitialTracksControlState(true, options.performersTrackSelectorIndex);
                     tracksControl.refreshDisplay();
                 }
                 else
                 {
-                    tracksControl.setInitialTracksControlState(false, options.livePerformersTrackIndex);
+                    tracksControl.setInitialTracksControlState(false, options.performersTrackSelectorIndex);
                     tracksControl.refreshDisplay();
                 }
 
-                sequence = score.createSequence(options.assistedPerformance, options.livePerformersTrackIndex);
+                // score.createSequence(...) sets sequence.tracks
+                score.createSequence(options.assistedPerformance, options.performersTrackSelectorIndex);
 
                 if(options.assistedPerformance === true)
                 {
-                    // this constructor consumes sequence, resetting moment timestamps
-                    // relative to the start of their subsection.
-                    assistant = new Assistant(sequence, options, reportEndOfPerformance, reportMsPos);
+                    options.performersTrackIndex = options.performersTrackSelectorIndex;
+                }
+                else
+                {
+                    options.performersTrackIndex = null;
                 }
             }
         }
@@ -1886,12 +1858,19 @@ _AP.controls = (function(document, window)
 
     trackToggled = function(soloistIsSilent)
     {
-        score.refreshDisplay(sequence, options.assistedPerformance, options.livePerformersTrackIndex, soloistIsSilent);
-        // score.refreshDisplay() sets sequence.tracks[livePerformersTrackIndex] to a silent track, if necessary.
-        if(options.assistedPerformance === true && livePerformerIsSilent !== soloistIsSilent)
+        score.refreshDisplay(sequence, options.assistedPerformance, options.performersTrackSelectorIndex, soloistIsSilent);
+        // score.refreshDisplay() sets sequence.tracks[performersTrackSelectorIndex] to a silent track, if necessary.
+        if(options.assistedPerformance === true)
         {
-            livePerformerIsSilent = soloistIsSilent;
-            assistant = new Assistant(sequence, options, reportEndOfPerformance, reportMsPos);
+            options.performersTrackIndex = options.performersTrackSelectorIndex;
+            if(livePerformerIsSilent !== soloistIsSilent)
+            {
+                livePerformerIsSilent = soloistIsSilent;
+            }
+        }
+        else
+        {
+            options.performersTrackIndex = null;
         }
 
     },
@@ -2008,7 +1987,7 @@ _AP.controls = (function(document, window)
 
                 options.trackPitchWheelDeviations = mo.trackPitchWheelDeviations;
 
-                options.livePerformersTrackIndex = mo.trackSelector.selectedIndex;
+                options.performersTrackSelectorIndex = mo.trackSelector.selectedIndex;
 
                 options.overrideSoloVelocity = mo.soloVelocityOptionCheckbox.checked;
                 options.overrideOtherTracksVelocity = mo.otherTracksVelocityOptionCheckbox.checked;
@@ -2080,11 +2059,12 @@ _AP.controls = (function(document, window)
 
             score.getTimeObjects(svg, options.assistantsSpeed);
 
-            sequence = score.createSequence(options.assistedPerformance, options.livePerformersTrackIndex);
+            // score.createSequence(...) sets sequence.tracks
+            score.createSequence(options.assistedPerformance, options.performersTrackSelectorIndex);
 
             // The tracksControl is in charge of refreshing the entire display, including both itself and the score.
             // TracksControl.refreshDisplay() calls
-            //     score.refreshDisplay(isAssistedPerformance, livePerformersTrackIndex, livePerformerisSilent)
+            //     score.refreshDisplay(isAssistedPerformance, performersTrackSelectorIndex, livePerformerisSilent)
             // to tell the score to repaint itself. The score may also update the position of the start marker (which
             // always starts on a chord) if a track becomes disabled.
             tracksControl.getTrackToggledCallback(trackToggled);
@@ -2092,15 +2072,17 @@ _AP.controls = (function(document, window)
             // tracksControl.trackIsOn(trackIndex) returns a boolean which is the on/off status of its trackIndex argument
             score.getTrackIsOnCallback(tracksControl.trackIsOn);
 
-            tracksControl.setInitialTracksControlState(options.assistedPerformance, options.livePerformersTrackIndex);
+            tracksControl.setInitialTracksControlState(options.assistedPerformance, options.performersTrackSelectorIndex);
 
-            score.refreshDisplay(sequence, options.assistedPerformance, options.livePerformersTrackIndex, false);
+            score.refreshDisplay(sequence, options.assistedPerformance, options.performersTrackSelectorIndex, false);
 
             if(options.assistedPerformance === true)
             {
-                // This constructor sets each moment.timestamp to UNDEFINED_TIMESTAMP, and each moment.msPositionReSubsequence
-                // to moment.msPositionInScore - subsequence.msPositionInScore.    
-                assistant = new Assistant(sequence, options, reportEndOfPerformance, reportMsPos);
+                options.performersTrackIndex = options.performersTrackSelectorIndex;
+            }
+            else
+            {
+                options.performersTrackIndex = null;
             }
 
             score.moveStartMarkerToTop(svgPagesDiv);

@@ -22,8 +22,8 @@ _AP.score = (function (document)
     var 
     CMD = MIDILib.constants.COMMAND,
     Message = MIDILib.message.Message,
-    Sequence = MIDILib.sequence.Sequence,
     Track = MIDILib.track.Track,
+    sequence = MIDILib.sequence,
 
     Markers = _AP.markers,
     ChordDef = _AP.chordDef.ChordDef,
@@ -1473,7 +1473,7 @@ _AP.score = (function (document)
         }
     },
 
-    // In a completed Sequence, the tracks array contains one track per channel (ordered by channel).
+    // In a completed sequence, the tracks array contains one track per channel (ordered by channel).
     // Each track is an array of moments ordered in time (see apTrack.js and apMoment.js).
     // If this is an assisted performance, the livePerformersSilentTrack is also filled with rests
     // and silent chords. Then, when score.redrawDisplay() is called (on toggling a trackContol),
@@ -1482,13 +1482,13 @@ _AP.score = (function (document)
     createSequence = function(isAssistedPerformance, livePerfTrackIndex)
     {
         // systems->staves->voices->timeObjects
-        var sequence,
-            trackIndex, track, tracks,
-            timeObjectIndex, nTimeObjects, timeObject, chordIsSilent,
-            voiceIndex, nVoices, voice,
-            staffIndex, nStaves, staff,
-            sysIndex, nSystems = systems.length, system,
-            channels = [], channel, chordDef, midiChord, midiRest;
+        var 
+        trackIndex, track, tracks,
+        timeObjectIndex, nTimeObjects, timeObject, chordIsSilent,
+        voiceIndex, nVoices, voice,
+        staffIndex, nStaves, staff,
+        sysIndex, nSystems = systems.length, system,
+        channels = [], channel, chordDef, midiChord, midiRest;
 
         function numberOfVoices()
         {
@@ -1532,7 +1532,7 @@ _AP.score = (function (document)
             }
         }
 
-        sequence = new Sequence(numberOfVoices());
+        sequence.init(numberOfVoices());
         tracks = sequence.tracks;
         for(trackIndex = 0; trackIndex < tracks.length; ++trackIndex)
         {
