@@ -444,7 +444,7 @@ _AP.controls = (function(document, window)
 
     setStopped = function()
     {
-        sequence.stop();
+        performer.stop();
 
         score.moveRunningMarkerToStartMarker();
 
@@ -621,9 +621,9 @@ _AP.controls = (function(document, window)
                 throw "Error: Assisted performances are never paused.";
             }
 
-            if(sequence.isRunning())
+            if(performer.isRunning())
             {
-                sequence.pause();
+                performer.pause();
             }
 
             score.allNotesOff(options.outputDevice);
@@ -672,7 +672,7 @@ _AP.controls = (function(document, window)
                     {
                         value = 2;
                     }
-                    sequence.sendSetPitchWheelDeviationMessageNow(options.outputDevice, trackIndex, value);
+                    performer.sendSetPitchWheelDeviationMessageNow(options.outputDevice, trackIndex, value);
 
                     if(isAssistedPerformance && options.pressureSubstituteControlData !== null && options.pressureSubstituteControlData.midiControl === CONTROL.VOLUME)
                     {
@@ -686,11 +686,11 @@ _AP.controls = (function(document, window)
                     {
                         value = 127; // default
                     }
-                    sequence.sendControlMessageNow(options.outputDevice, trackIndex, CONTROL.VOLUME, value);
+                    performer.sendControlMessageNow(options.outputDevice, trackIndex, CONTROL.VOLUME, value);
 
                     if(isAssistedPerformance && options.pressureSubstituteControlData !== null && options.pressureSubstituteControlData.midiControl !== CONTROL.VOLUME)
                     {
-                        sequence.sendControlMessageNow(options.outputDevice, trackIndex, options.pressureSubstituteControlData.midiControl,
+                        performer.sendControlMessageNow(options.outputDevice, trackIndex, options.pressureSubstituteControlData.midiControl,
                             options.performersMinimumPressure);
                     }
                 }
@@ -700,11 +700,11 @@ _AP.controls = (function(document, window)
 
             if(sequence.tracks.length > 0)
             {
-                if(sequence.isPaused())
+                if(performer.isPaused())
                 {
-                    sequence.resume();
+                    performer.resume();
                 }
-                else if(sequence.isStopped())
+                else if(performer.isStopped())
                 {
                     sequenceRecording = new SequenceRecording(nTracks);
 
@@ -715,9 +715,9 @@ _AP.controls = (function(document, window)
 
                     sendTrackInitializationMessages(options, options.assistedPerformance);
 
-                    sequence.sendControlMessageNow(options.outputDevice, CONTROL.VOLUME, 127);
+                    performer.sendControlMessageNow(options.outputDevice, CONTROL.VOLUME, 127);
 
-                    sequence.play(options, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
+                    performer.play(options, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
                         trackIsOnArray, sequenceRecording, reportEndOfPerformance, reportMsPos);
                 }
 
@@ -1786,6 +1786,7 @@ _AP.controls = (function(document, window)
 
                 // score.createSequence(...) sets sequence.tracks
                 score.createSequence(options.assistedPerformance, options.performersTrackSelectorIndex);
+                performer.init(options, sequence.tracks, score.startMarkerMsPosition(), score.endMarkerMsPosition());
 
                 if(options.assistedPerformance === true)
                 {
@@ -2061,6 +2062,7 @@ _AP.controls = (function(document, window)
 
             // score.createSequence(...) sets sequence.tracks
             score.createSequence(options.assistedPerformance, options.performersTrackSelectorIndex);
+            performer.init(options, sequence.tracks, score.startMarkerMsPosition(), score.endMarkerMsPosition());
 
             // The tracksControl is in charge of refreshing the entire display, including both itself and the score.
             // TracksControl.refreshDisplay() calls
