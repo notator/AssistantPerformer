@@ -105,6 +105,7 @@ MIDILib.sequence = (function (window)
     // (performance.now() - segmentStartTime) is the time elapsed since the start of the performance or the last NoteOn in a live performance.
     performanceStartTime = -1,  // set in play(), used by stop(), run()
     segmentStartTime = -1, // set in play() and while performing live. Used in NextMoment
+    pauseStartTime = -1, // the performance.now() time at which the performance was paused.
 
     sequenceRecording, // the sequence being recorded. set in play() and resume(), used by tick()
 
@@ -166,6 +167,7 @@ MIDILib.sequence = (function (window)
         if (isRunning())
         {
             setState("paused");
+            pauseStartTime = performance.now();
         }
         else
         {
@@ -469,11 +471,18 @@ MIDILib.sequence = (function (window)
     // So the messages in pausedMoment (set to the last non-null currentMoment) have already been sent.
     resume = function()
     {
+        var
+        pauseMsDuration = performance.now() - pauseStartTime;
+
         if(isPaused())
         {
             currentMoment = pausedMoment; // the last moment whose messages were sent.
 
-            setState("running");
+            setState("running"); // sets pausedMoment to null.
+
+            currentMoment.timestamp += pauseMsDuration;
+            previousTimestamp += pauseMsDuration;
+            segmentStartTime += pauseMsDuration;
 
             currentMoment = nextMoment();
             if(currentMoment === null)
