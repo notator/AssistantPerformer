@@ -5,8 +5,8 @@
 *  Code licensed under MIT
 *  https://github.com/notator/assistant-performer/blob/master/License.md
 *
-*  midiLib/Sequence.js
-*  The MIDILib.sequence namespace which defines the
+*  ap/Sequence.js
+*  The _AP.sequence namespace which defines the
 *
 *       // The namespace variable tracks is set to contain nTracks empty tracks.
 *       init(nTracks) sequence constructor. 
@@ -19,17 +19,17 @@
 
 /*jslint bitwise: false, nomen: false, plusplus: true, white: true */
 
-MIDILib.namespace('MIDILib.sequence');
+_AP.namespace('_AP.sequence');
 
-MIDILib.sequence = (function (window)
+_AP.sequence = (function (window)
 {
     "use strict";
     var
-    Track = MIDILib.track.Track,
+    Track = _AP.track.Track,
 
     tracks = [], // an array of Tracks
 
-    // An empty sequence is created. It contains an empty array of MIDILib.track.Tracks.
+    // An empty sequence is created. It contains an empty array of _AP.track.Tracks.
     init = function (nTracks)
     {
         var i;

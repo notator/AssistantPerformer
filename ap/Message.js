@@ -5,8 +5,8 @@
  *  Code licensed under MIT
  *  https://github.com/notator/assistant-performer/blob/master/License.md
  *
- *  midiLib/Message.js
- *  The MIDILib.message namespace which defines the following constructors:
+ *  ap/Message.js
+ *  The _AP.message namespace which defines the following constructors:
  *
  *      // Constructs 1- 2- or 3-byte MIDI messages which are not SysExMessages.
  *      // 1-byte Messages are "real time".
@@ -35,15 +35,15 @@
 
 /*jslint bitwise: true, nomen: true, plusplus: true, white: true */
 
-MIDILib.namespace('MIDILib.message');
+_AP.namespace('_AP.message');
 
-MIDILib.message = (function ()
+_AP.message = (function ()
 {
     "use strict";
     var
-    COMMAND = MIDILib.constants.COMMAND,
-    REAL_TIME = MIDILib.constants.REAL_TIME,
-    SYSTEM_EXCLUSIVE = MIDILib.constants.SYSTEM_EXCLUSIVE,
+    COMMAND = _AP.constants.COMMAND,
+    REAL_TIME = _AP.constants.REAL_TIME,
+    SYSTEM_EXCLUSIVE = _AP.constants.SYSTEM_EXCLUSIVE,
 
     _length,
 
@@ -198,7 +198,7 @@ MIDILib.message = (function ()
     SysExMessage = function (data)
     {
         var i, dataLength = data.length,
-            isRealTimeStatus = MIDILib.constants.isRealTimeStatus;
+            isRealTimeStatus = _AP.constants.isRealTimeStatus;
 
         if (!(this instanceof SysExMessage))
         {

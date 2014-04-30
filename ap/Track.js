@@ -5,8 +5,8 @@
  *  Code licensed under MIT
  *  https://github.com/notator/assistant-performer/blob/master/License.md
  *
- *  midiLib/Track.js
- *  The MIDILib.track namespace which defines the
+ *  ap/Track.js
+ *  The _AP.track namespace which defines the
  *      Track() empty Track constructor.
  *
  *  Public Interface:
@@ -21,9 +21,9 @@
 
 /*jslint bitwise: false, nomen: true, plusplus: true, white: true */
 
-MIDILib.namespace('MIDILib.track');
+_AP.namespace('_AP.track');
 
-MIDILib.track = (function ()
+_AP.track = (function ()
 {
     "use strict";
     var

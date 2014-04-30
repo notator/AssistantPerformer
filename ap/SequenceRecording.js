@@ -5,8 +5,8 @@
 *  Code licensed under MIT
 *  https://github.com/notator/assistant-performer/blob/master/License.md
 *
-*  midiLib/SequenceRecording.js
-*  The MIDILib.sequence namespace which defines the
+*  ap/SequenceRecording.js
+*  The _AP.sequence namespace which defines
 *
 *       // The new sequenceRecording contains nTracks empty trackRecordings.
 *       SequenceRecording(nTracks) sequence constructor. 
@@ -20,15 +20,15 @@
 /*jslint bitwise: false, nomen: false, plusplus: true, white: true */
 
 
-MIDILib.namespace('MIDILib.sequenceRecording');
+_AP.namespace('_AP.sequenceRecording');
 
-MIDILib.sequenceRecording = (function ()
+_AP.sequenceRecording = (function ()
 {
     "use strict";
     var
-    TrackRecording = MIDILib.trackRecording.TrackRecording,
+    TrackRecording = _AP.trackRecording.TrackRecording,
 
-    // An empty sequenceRecording is created. It contains an empty array of MIDILib.trackRecording.TrackRecordings.
+    // An empty sequenceRecording is created. It contains an empty array of _AP.trackRecording.TrackRecordings.
     SequenceRecording = function (nTracks)
     {
         var i;

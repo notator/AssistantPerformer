@@ -5,8 +5,8 @@
  *  Code licensed under MIT
  *  https://github.com/notator/assistant-performer/blob/master/License.md
  *
- *  midiLib/Moment.js
- *  The MIDILib.moment namespace which defines
+ *  ap/Moment.js
+ *  The _AP.moment namespace which defines
  *
  *      // A read-only constant (-1), used by Moments
  *      UNDEFINED_TIMESTAMP
@@ -35,9 +35,9 @@
 
 /*jslint bitwise: false, nomen: false, plusplus: true, white: true */
 
-MIDILib.namespace('MIDILib.moment');
+_AP.namespace('_AP.moment');
 
-MIDILib.moment = (function ()
+_AP.moment = (function ()
 {
     "use strict";
 

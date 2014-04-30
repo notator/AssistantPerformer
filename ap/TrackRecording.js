@@ -5,8 +5,8 @@
  *  Code licensed under MIT
  *  https://github.com/notator/assistant-performer/blob/master/License.md
  *
- *  midiLib/TrackRecording.js
- *  The MIDILib.trackRecording namespace which defines the
+ *  ap/TrackRecording.js
+ *  The _AP.trackRecording namespace which defines the
  *      TrackRecording() empty TrackRecording constructor.
  *
  *  Public Interface:
@@ -41,14 +41,14 @@
 
 /*jslint bitwise: false, nomen: true, plusplus: true, white: true */
 
-MIDILib.namespace('MIDILib.trackRecording');
+_AP.namespace('_AP.trackRecording');
 
-MIDILib.trackRecording = (function ()
+_AP.trackRecording = (function ()
 {
     "use strict";
 
     var
-    UNDEFINED_TIMESTAMP = MIDILib.moment.UNDEFINED_TIMESTAMP,
+    UNDEFINED_TIMESTAMP = _AP.moment.UNDEFINED_TIMESTAMP,
 
     // An empty trackRecording is created. It contains an empty moments array.
     TrackRecording = function ()

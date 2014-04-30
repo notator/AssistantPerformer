@@ -20,10 +20,10 @@ _AP.score = (function (document)
     "use strict";
 
     var 
-    CMD = MIDILib.constants.COMMAND,
-    Message = MIDILib.message.Message,
-    Track = MIDILib.track.Track,
-    sequence = MIDILib.sequence,
+    CMD = _AP.constants.COMMAND,
+    Message = _AP.message.Message,
+    Track = _AP.track.Track,
+    sequence = _AP.sequence,
 
     Markers = _AP.markers,
     ChordDef = _AP.chordDef.ChordDef,

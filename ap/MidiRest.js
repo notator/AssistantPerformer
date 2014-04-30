@@ -19,7 +19,7 @@ _AP.midiRest = (function()
     "use strict";
     // begin var
     var
-    Moment = MIDILib.moment.Moment, // constructor
+    Moment = _AP.moment.Moment, // constructor
 
     // a MidiRest has the same structure as a MidiChord, but it
     // has a single Moment containing a single, empty message. 

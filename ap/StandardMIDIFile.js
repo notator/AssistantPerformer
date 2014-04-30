@@ -5,21 +5,21 @@
  *  Code licensed under MIT
  *  https://github.com/notator/assistant-performer/blob/master/License.md
  *
- *  midiLib/StandardMIDIFile.js
- *  The MIDILib.standardMIDIFile namespace which exposes the functions
+ *  ap/StandardMIDIFile.js
+ *  The _AP.standardMIDIFile namespace which exposes the functions
  *
  *      // Convert a SequenceRecording to a Standard MIDI File (actually a Blob).
  *      // The SMF can be made downloadable by connecting it to a document link element.
  *      // When the user clicks the link, the browser saves the file on the user's
  *      // computer. See https://developer.mozilla.org/en/docs/DOM/Blob.
- *      standardMIDIFile = sequenceToSMF(sequence);
+ *      standardMIDIFile = sequenceToSMF(sequenceRecording, sequenceMsDuration);
  */
 
 /*jslint bitwise: true, nomen: true, plusplus: true, white: true */
 
-MIDILib.namespace('MIDILib.standardMIDIFile');
+_AP.namespace('_AP.standardMIDIFile');
 
-MIDILib.standardMIDIFile = (function ()
+_AP.standardMIDIFile = (function ()
 {
     "use strict";
 
@@ -175,14 +175,14 @@ MIDILib.standardMIDIFile = (function ()
                 var
                 trackData, trackHeader, trackChunk, trackMessages;
 
-                // The other midiLib functions should create trackRecordings containing moments having unique timestamps in ascending order,
+                // The other ap functions should create trackRecordings containing moments having unique timestamps in ascending order,
                 // but I have (very seldom) experienced exceptions being thrown at the beginning of the function
                 // _variableLengthValueLength(value) above, showing that this is not always the case.
                 // Probably, the moment.timestamps sometimes get slightly out of order as a result of awkward thread switching.
                 // This anomalous state should, however, not lead to the loss of an otherwise good recording, so I have added
                 // this function to force a solution:
                 // If a moment's timestamp is less than its predecessor's, moment.timestamp is set to the predecessor's timestamp.
-                // Equal timestamps should not be produced by the other midiLib code, but this state does not actually lead to a broken,
+                // Equal timestamps should not be produced by the other ap code, but this state does not actually lead to a broken,
                 // unplayable Standard MIDI File. 
                 function validateMomentTimestamps(trackMoments)
                 {
@@ -213,7 +213,7 @@ MIDILib.standardMIDIFile = (function ()
                 function createMessageTimestamps(trackMoments)
                 {
                     var
-                    isRealTimeStatus = MIDILib.constants.isRealTimeStatus,
+                    isRealTimeStatus = _AP.constants.isRealTimeStatus,
                     i, nMoments = trackMoments.length, moment,
                     j, nMessages, timestamp, message;
 

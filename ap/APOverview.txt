@@ -1,0 +1,271 @@
+﻿
+copyright 2013 James Ingram
+http://james-ingram-act-two.de/
+
+**************************************************************************
+ The file ap/WebMIDIAPI.js is Chris Wilson's code for polyfilling the
+ Web MIDI API currently in development at
+ http://lists.w3.org/Archives/Public/public-audio/
+ It was copied from
+ https://github.com/cwilso/WebMIDIAPIShim/tree/master/lib on 19.06.2013
+ and is released under the following licence:
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ The other code in this ap folder is licenced under MIT:
+ https://github.com/notator/assistant-performer/blob/master/License.md
+**************************************************************************
+
+This file is intended to provide a quick overview of the files in the ap folder.
+For more detailed information, see the comments in the individual files.
+
+The Javascript files in this directory (ap) together define the Assistant
+Performer application. They use (are dependent on) the files in the other
+parallel folders.
+
+The following list of files is in order of dependency (see the loading order in
+../assistantPerformer.html).
+
+ap/Namespace.js
+	Defines the _AP namespace. _AP is the namespace containing all
+	the other code in this folder except (ap).
+
+ap/Constants.js
+	The _AP.constants namespace, which exposes
+	four objects containing	standard MIDI constant definitions:
+        COMMAND
+        REAL_TIME
+        CONTROL
+        SYSTEM_EXCLUSIVE
+	and a function
+		isRealTimeStatus(statusByte)
+			for testing if a status byte is for a realTime message.
+
+ap/Message.js
+	The _AP.message namespace which exposes	two constructors:
+
+		Message(status, data1, data2)
+			for constructing 1- 2- or 3-byte MIDI messages which are
+			not SysExMessages.
+
+		SysExMessage(data)
+			for explicitly constructing system exclusive messages.
+
+ap/Moment.js
+	The _AP.moment namespace which exposes a single constructor:
+
+		Moment(msPositionInScore)
+
+	A moment contains an array of messages, all of which are to	be sent
+	at the same time on the same channel.
+	This constructor is used when creating Moments from files such as
+	scores or Standard MIDI Files. Empty Moments having no relation to
+	such files, can be constructed with an empty argument list.
+	The moment.messages array contains the messages themselves. They are
+	always sent 'at the same time' (in the order in which they occur
+	in the array).
+
+ap/Track.js
+	The _AP.track namespace which exposes a single constructor:
+
+		Track()
+
+	A track is conceptually a temporally ordered list of Moments, all of
+	which share the same channel, and none of which is synchronous with any
+	of the others. Moments are, if necessary, merged when added to the track.
+	Tracks correspond to voices in scores and channels in both scores and
+	Standard MIDI Files. There may be 1 or 2 voices per	staff in a score.
+
+ap/Performer.js -----------------******************* TODO
+
+ap/Sequence.js
+	The _AP.sequence namespace which exposes a single constructor:
+
+		// Create nTracks empty tracks in the _AP.sequence.tracks array
+		init(nTracks)
+
+		// An array of tracks. These are filled by calling score.createSequence(...)
+		// The Tracks in the array are in order of voice (i.e. channel) from top to
+		// bottom in a score.system.
+		// When loaded from a score,
+		// tracks[0] contains all the moments for voices[0] (on channel 0) on all
+		// systems in the score,
+		// tracks[1] contains all the moments for voices[1] (on channel 1) on all
+		// systems in the score,
+		// etc.
+		tracks 
+
+ap/TrackRecording.js
+	The _AP.trackRecording namespace which exposes
+	
+		// empty TrackRecording constructor.
+		TrackRecording() 
+	
+		// a temporally sorted array of Moments
+		moments             
+
+		// Adds a moment to the trackRecording.
+		// Used when constructing a trackRecording from information in a file
+		// (such as a score or standard MIDI file).
+		addMoment(moment)   
+		
+		// Adds a moment to the trackRecording.
+		// Used in Sequence.tick() to record a moment (originally in the
+		// score) being played live by the Performer.
+		addLiveScoreMoment(moment)
+		
+		// Adds a moment to the trackRecording.
+		// Used to record a moment (not originally in the score) containing
+		// control information being added by the live performer.
+		// Currently (1st March 2013), it is not possible to add noteOns
+		// and/or noteOffs. That is something that could be developed...
+		addLivePerformersControlMoment(moment)
+ 	    
+		The following public attributes should not need to be used by this
+		library's clients. They are used while performing:
+			fromIndex
+			currentIndex
+			toIndex
+
+ap/SequenceRecording.js
+		The _AP.sequence namespace which defines
+		
+		     // The new sequenceRecording contains nTracks empty trackRecordings.
+		     SequenceRecording(nTracks) sequence constructor. 
+		
+		     // an array of TrackRecordings
+		     trackRecordings
+
+ap/StandardMIDIFile.js
+	The _AP.standardMIDIFile namespace which exposes the function
+		standardMIDIFile = sequenceToSMF(sequenceRecording, sequenceMsDuration);
+	This function converts a SequenceRecording to a Standard MIDI File (actually a Blob).
+    The SMF can be made downloadable by connecting it to a document link element.
+	When the user clicks the link, the browser saves the file on the user's
+	computer. See https://developer.mozilla.org/en/docs/DOM/Blob.
+	
+ap/Markers.js
+	The _AP.markers namespace. Defines constructors for the
+
+		StartMarker,
+		EndMarker and 
+		RunningMarker objects.
+
+	The StartMarker and EndMarker are the objects in the user interface
+	which determine	where a performance begins and ends.
+	The RunningMarker is the line which shows the current position during
+	a performance.
+
+ap/ChordDef.js
+	The _AP.chordDef namespace. Defines constructors for
+	
+		ChordDef(chordDefNode)
+			This constructor reads an XML node into a ChordDef.
+			A ChordDef is a data structure containing the definition of a
+			MIDIChord (see below).
+     
+ap/MidiChord.js
+	The _AP.midiChord namespace. Defines the following constructor, which is used
+	when reading the score (see Score.js below):
+		
+		// Arguments:
+		// channel: the MIDI channel on which to send this MIDIChord
+		// chordDef: the chord definition (see above)
+		// timeObject: the chord symbol's temporal and spatial position (see below)
+		// speed: a factor by which the default durations in the score can be
+		// divided. Higher speed means shorter durations inside the MIDIChord. 
+		MIDIChord(channel, chordDef, timeObject, speed)
+			A MIDIChord contains a private array of Moments containing all
+			the MIDI messages required for playing an (ornamented) chord.
+			A Moment is a collection of logically synchronous MIDI messages.
+			(see _AP/Moment.js).
+			A MIDIChord has one public function:
+				addToTrack(track)
+					which moves the midiChord's Moments onto the track.
+
+ ap/MidiRest.js
+	The _AP.midiChord namespace. Defines the following constructor, which is used
+	when reading the score (see Score.js below):
+
+		// Argument:
+		// timeObject: the rest symbol's temporal and spatial position (see below)
+		MIDIRest(timeObject)
+			A MIDIRest is like a MIDIChord having a single, empty Moment.
+			MIDIRests are necessary so that running cursors can be moved to rest
+			symbols. In some circumstances, a rest moment can also contain MIDI
+			note off messages.
+
+ap/Score.js
+	The _AP.score namespace containing a single constructor:
+
+		// Argument:
+		// runningMarkerHeightChanged: a callback function, called when the running
+		//     marker moves to a new system.
+		Score(runningMarkerHeightChanged);
+			A Score is created and displayed when the user selects one in the
+			score drop down menu in the options panel.
+			The Score object is responsible for the graphic appearance and user
+			interaction with the score's symbols. In particular, it is responsible
+			for moving the running marker during performance. The score is not
+			responsible for its containing environment, so the
+			runningMarkerHeightChanged callback is used to move the whole
+			display, when necessary, to keep the marker in view.
+
+ap/SVG.js
+	Workaround to avoid throwing cross-protocol exceptions when accessing SVG files
+	from an HTML environment.
+	This file defines an onLoad() function which is called by the first page of each
+	score when it has loaded. This function sets a local pointer to
+	getSVGDocument(embedded_element) [which is also also defined in ap/SVG.js].
+	This is a function which returns the xml of the embedded_element, and can be
+	called without throwing	a cross-protocol exception.
+
+ap/TracksControl.js
+	The tracksControl object. This is the control which appears at the top left of
+	the user's score controls. It can be used to turn the performance of tracks
+	(voices) on and off. There can be 1 or 2 voices per staff in the score.
+	Tracks are ordered by channel, from top to bottom in the score, with channel 0
+	being the top voice in each system.
+
+ap/Controls.js
+	The functionality for the main user controls panel which appears when the
+	Assistant Performer is first loaded into a browser. Contains the functions
+	called when clicking on the browser page.
+	Has the following API:
+
+		init()
+			initialises the controls. In particular, sets up the drop-down
+			menues containing MIDI input and output devices, and the available
+			scores. This function is called from Main.js (see below).
+
+		doControl(controlID)
+			reacts to the corresponding control clicked in the HTML.
+
+		showOverRect(overRectName, disabledName)
+		hideOverRect(overRectName)
+			these functions change the appearance of score option buttons
+			when hovering the mouse over/out of them.
+
+		beginRuntime()
+			Called when the "Start" button is clicked.
+			The Start button is enabled when both a score and a MIDI output
+			device have been selected. If no MIDI input is selected, the
+			score can be played back using the other available options
+			(speed etc.).
+
+ap/Main.js
+	The main entry point to the Assistant Performer's code. Calls
+	
+		window.addEventListener("load", func, false),
+
+	func, which is defined inline:
+	1.	calls _AP.jazzWebMIDIAPI.init(window) to ensure that the relevant
+		window interfaces are set correctly.
+		It should be fairly trivial to adapt the current code to the final
+		version of the Web MIDI API, when it is finalised and implemented
+		natively in browsers. This call, the file ap/JazzWebMIDIAPI.js,
+		and the Jazz plug-in can then be removed.
+	2.	Retrieves the midiAccess object, currently using the Jazz plugin v1.2
+		http://jazz-soft.net/
+	3.	Calls _AP.controls.init(midiAccess) to set the contents of the
+		device selector menus.
+

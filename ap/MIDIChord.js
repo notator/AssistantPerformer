@@ -19,10 +19,10 @@ _AP.midiChord = (function()
     "use strict";
     // begin var
     var
-    CMD = MIDILib.constants.COMMAND,
-    CTL = MIDILib.constants.CONTROL,
-    Message = MIDILib.message.Message,
-    Moment = MIDILib.moment.Moment, // constructor
+    CMD = _AP.constants.COMMAND,
+    CTL = _AP.constants.CONTROL,
+    Message = _AP.message.Message,
+    Moment = _AP.moment.Moment, // constructor
 
     // The rate (milliseconds) at which slider messages are sent.
     SLIDER_MILLISECONDS = 10,

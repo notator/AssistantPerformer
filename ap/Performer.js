@@ -58,20 +58,20 @@
 
 /*jslint bitwise: true, nomen: true, plusplus: true, white: true */
 
-MIDILib.namespace('MIDILib.performer');
+_AP.namespace('_AP.performer');
 
-MIDILib.performer = (function()
+_AP.performer = (function()
 {
     "use strict";
 
     // begin var
     var
-    Message = MIDILib.message.Message,
-    CMD = MIDILib.constants.COMMAND,
-    CTL = MIDILib.constants.CONTROL,
-    Track = MIDILib.track.Track,
+    Message = _AP.message.Message,
+    CMD = _AP.constants.COMMAND,
+    CTL = _AP.constants.CONTROL,
+    Track = _AP.track.Track,
 
-    //Moment = MIDILib.moment.Moment,
+    //Moment = _AP.moment.Moment,
 
     // the following are set in init() (used by Sequence.play())
     options, // the options set in Controls.js and passed as the first argument to Sequence.play(...)
@@ -199,15 +199,15 @@ MIDILib.performer = (function()
         // The returned object is either empty, or has .data and .receivedTime attributes,
         // and so constitutes a timestamped Message. (Web MIDI API simply calls this an Event)
         // The Assistant ignores both realTime and SysEx messages, even though these are
-        // defined (untested 8.3.2013) in the midiLib library, so this function only returns
+        // defined (untested 8.3.2013) in the ap library, so this function only returns
         // the other types of message (having 2 or 3 data bytes).
         // If the input data is undefined, an empty object is returned, otherwise data must
         // be an array of numbers in range 0..0xF0. An exception is thrown if the data is illegal.
         function getInputEvent(data, now)
         {
             var
-            SYSTEM_EXCLUSIVE = MIDILib.constants.SYSTEM_EXCLUSIVE,
-            isRealTimeStatus = MIDILib.constants.isRealTimeStatus,
+            SYSTEM_EXCLUSIVE = _AP.constants.SYSTEM_EXCLUSIVE,
+            isRealTimeStatus = _AP.constants.isRealTimeStatus,
             inputEvent = {};
 
             if(data !== undefined)
@@ -320,13 +320,13 @@ MIDILib.performer = (function()
             //        function newControlMessage(runtimeTrackOptions, controlData, value, trackIndex)
             //        {
             //            var
-            //            CMD = MIDILib.constants.COMMAND,
+            //            CMD = _AP.constants.COMMAND,
             //            message = null,
             //            minVolume, scale;
 
             //            if(controlData.midiControl !== undefined) // a normal control
             //            {
-            //                if(controlData.midiControl === MIDILib.constants.CONTROL.VOLUME)
+            //                if(controlData.midiControl === _AP.constants.CONTROL.VOLUME)
             //                {
             //                    minVolume = runtimeTrackOptions.minVolumes[trackIndex];
             //                    scale = runtimeTrackOptions.scales[trackIndex];
@@ -363,7 +363,7 @@ MIDILib.performer = (function()
             //        message = newControlMessage(runtimeTrackOptions, controlData, value, trackIndex);
             //        if(message !== null)
             //        {
-            //            moment = new Moment(MIDILib.moment.UNDEFINED_TIMESTAMP);  // moment.msPositionInScore becomes UNDEFINED_TIMESTAMP
+            //            moment = new Moment(_AP.moment.UNDEFINED_TIMESTAMP);  // moment.msPositionInScore becomes UNDEFINED_TIMESTAMP
             //            moment.messages.push(message);
             //            trackMoment = {};
             //            trackMoment.moment = moment;
@@ -450,8 +450,8 @@ MIDILib.performer = (function()
             //{
             //    var
             //    subsequence = allSubsequences[currentSubsequenceIndex],
-            //    NOTE_ON_CMD = MIDILib.constants.COMMAND.NOTE_ON,
-            //    NOTE_OFF_CMD = MIDILib.constants.COMMAND.NOTE_OFF,
+            //    NOTE_ON_CMD = _AP.constants.COMMAND.NOTE_ON,
+            //    NOTE_OFF_CMD = _AP.constants.COMMAND.NOTE_OFF,
             //    track = subsequence.tracks[soloTrackIndex], message, lowestNoteOnEvt, pitchDelta, velocityDelta,
             //    hangingScorePitchesPerTrack;
 
@@ -765,7 +765,7 @@ MIDILib.performer = (function()
                     }
                     break;
                 case CMD.CONTROL_CHANGE: // sent when the input device's mod wheel changes.
-                    if(inputEvent.data[1] === MIDILib.constants.CONTROL.MODWHEEL)
+                    if(inputEvent.data[1] === _AP.constants.CONTROL.MODWHEEL)
                     {
                         setSpeedFactor(5, inputEvent.data[2]);
                         // (EWI bite, EMU modulation wheel (CC 1, Coarse Modulation))
@@ -1392,7 +1392,7 @@ MIDILib.performer = (function()
     {
         var msg;
 
-        msg = new MIDILib.message.Message(CMD.CONTROL_CHANGE + trackIndex, controller, midiValue); // controller 7 is volume control
+        msg = new _AP.message.Message(CMD.CONTROL_CHANGE + trackIndex, controller, midiValue); // controller 7 is volume control
         outputDevice.send(msg.data, 0);
     },
 
@@ -1404,14 +1404,14 @@ MIDILib.performer = (function()
     sendSetPitchWheelDeviationMessageNow = function(outputDevice, track, value)
     {
         var msg;
-        msg = new MIDILib.message.Message(CMD.CONTROL_CHANGE + track, CTL.REGISTERED_PARAMETER_COARSE, 0);
+        msg = new _AP.message.Message(CMD.CONTROL_CHANGE + track, CTL.REGISTERED_PARAMETER_COARSE, 0);
         outputDevice.send(msg.data, 0);
-        msg = new MIDILib.message.Message(CMD.CONTROL_CHANGE + track, CTL.REGISTERED_PARAMETER_FINE, 0);
+        msg = new _AP.message.Message(CMD.CONTROL_CHANGE + track, CTL.REGISTERED_PARAMETER_FINE, 0);
         outputDevice.send(msg.data, 0);
-        msg = new MIDILib.message.Message(CMD.CONTROL_CHANGE + track, CTL.DATA_ENTRY_COARSE, value);
+        msg = new _AP.message.Message(CMD.CONTROL_CHANGE + track, CTL.DATA_ENTRY_COARSE, value);
         outputDevice.send(msg.data, 0);
 
-        msg = new MIDILib.message.Message(CMD.PITCH_WHEEL + track, 0, 64); // centre the pitch wheel
+        msg = new _AP.message.Message(CMD.PITCH_WHEEL + track, 0, 64); // centre the pitch wheel
         outputDevice.send(msg.data, 0);
     },
 

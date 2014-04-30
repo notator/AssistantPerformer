@@ -5,8 +5,8 @@
  *  Code licensed under MIT
  *  https://github.com/notator/assistant-performer/blob/master/License.md
  *
- *  midiLib/Constants.js
- *  The MIDILib.constants namespace which defines read-only MIDI constants
+ *  ap/Constants.js
+ *  The _AP.constants namespace which defines read-only MIDI constants
  *  in the following categories:
  *      COMMAND
  *      REAL_TIME
@@ -16,9 +16,9 @@
 
 /*jslint bitwise: false, nomen: false, plusplus: false, white: true */
 
-MIDILib.namespace('MIDILib.constants');
+_AP.namespace('_AP.constants');
 
-MIDILib.constants = (function ()
+_AP.constants = (function ()
 {
     "use strict";
     var 

@@ -6,10 +6,10 @@
  *  https://github.com/notator/assistant-performer/blob/master/License.md
  *
  *  ap/Main.js
- *  Chris Wilson's midiLib/WebMIDIAPI.js has been included as a script in
+ *  Chris Wilson's ap/WebMIDIAPI.js has been included as a script in
  *  ../assistantPerformer.html, so the Web MIDI API is available.
  *  When browsers implement the Web MIDI API natively, the code in
- *  midiLib/WebMIDIAPI.js is ignored (does nothing). In this function,
+ *  ap/WebMIDIAPI.js is ignored (does nothing). In this function,
  *  1. The midiAccess object is first retrieved by calling
  *       window.navigator.requestMIDIAccess(onSuccessCallback, onErrorCallback);
  *  2. onSuccessCallback calls _AP.controls.init(midiAccess) which saves the

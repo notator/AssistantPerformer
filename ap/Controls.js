@@ -22,13 +22,13 @@ _AP.controls = (function(document, window)
     var
     tracksControl = _AP.tracksControl,
     Score = _AP.score.Score,
-    sequence = MIDILib.sequence,
-    performer = MIDILib.performer,
+    sequence = _AP.sequence,
+    performer = _AP.performer,
 
-    SequenceRecording = MIDILib.sequenceRecording.SequenceRecording,
-    COMMAND = MIDILib.constants.COMMAND,
-    CONTROL = MIDILib.constants.CONTROL,
-    sequenceToSMF = MIDILib.standardMIDIFile.sequenceToSMF,
+    SequenceRecording = _AP.sequenceRecording.SequenceRecording,
+    COMMAND = _AP.constants.COMMAND,
+    CONTROL = _AP.constants.CONTROL,
+    sequenceToSMF = _AP.standardMIDIFile.sequenceToSMF,
 
     midiAccess,
     score,
@@ -152,7 +152,7 @@ _AP.controls = (function(document, window)
     //     The name of the downloaded file is:
     //         scoreName + '_' + the current date (format:year-month-day) + '.mid'.
     //         (e.g. "Study 2c3.1_2013-01-08.mid")
-    // sequenceRecording is a MIDILib.sequenceRecording.SequenceRecording object.
+    // sequenceRecording is a _AP.sequenceRecording.SequenceRecording object.
     // sequenceMsDuration is the total duration of the sequenceRecording in milliseconds (an integer).
     //      and determines the timing of the end-of-track events. When this is a recorded sequenceRecording,
     //      this value is simply the duration between the start and end markers.
