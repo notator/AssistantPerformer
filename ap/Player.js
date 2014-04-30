@@ -6,12 +6,12 @@
 *  https://github.com/notator/assistant-performer/blob/master/License.md
 *
 *  ap/Performer.js
-*  The _AP.performer namespace which defines
+*  The _AP.player namespace which defines
 *
 *    // initialization
 *    init()
 *
-*    //  returns an object contining the start and end positions of the performer's current segment
+*    //  returns an object contining the start and end positions of the player's current segment
 *    currentSegmentBounds()
 *
 *    // message handler for input devices
@@ -58,9 +58,9 @@
 
 /*jslint bitwise: true, nomen: true, plusplus: true, white: true */
 
-_AP.namespace('_AP.performer');
+_AP.namespace('_AP.player');
 
-_AP.performer = (function()
+_AP.player = (function()
 {
     "use strict";
 
@@ -80,7 +80,7 @@ _AP.performer = (function()
     performersSpeedOptions, // is undefined in performerless performances
 
     segmentStartIndex = 0, // an index in the performersMsPositionsInScore array (updated when a NoteOn is received)
-    performersMsPositionsInScore, // a flat, ordered array containing the msPositions of the performer's MidiObjects -- set in init(...).
+    performersMsPositionsInScore, // a flat, ordered array containing the msPositions of the live performer's MidiObjects -- set in init(...).
 
     /******************************/
     /* from old Sequence file     */
@@ -116,12 +116,11 @@ _AP.performer = (function()
     /******************************/
     /* functions                  */
 
-    // This function is ALWAYS called (by Sequence.play()), even if there is no input device set in
-    // the input device selector. If there is no live performer (apOptions.performersTrackIndex is then null),
+    // This function is ALWAYS called, even if there is no input device set in the input device selector.
+    // If there is no live performer (apOptions.performersTrackIndex is then null),
     // performersMsPositionsInScore will contains just two values: the startMarkerMsPosition
-    // and endMarkerMsPosition. Otherwise it contains all the performer's midiObject.msPositionInScore
+    // and endMarkerMsPosition. Otherwise it contains all the live performer's midiObject.msPositionInScore
     // values that are >= startMarkerMsPosition and <= endMarkerMsPosition.
-    // setSequencePlaybackSpeedFactor is a callback defined in Sequence.js
     init = function(apOptions, sequenceTracks, startMarkerMsPosition, endMarkerMsPosition)
     {
         var
@@ -164,7 +163,7 @@ _AP.performer = (function()
         }
         else
         {
-            throw "Error: Illegal performer's track index!";
+            throw "Error: Illegal live performer's track index!";
         }
 
         performersMsPositionsInScore = positions;
@@ -1427,7 +1426,7 @@ _AP.performer = (function()
         isStopped: isStopped,
         isPaused: isPaused,
         isRunning: isRunning,
-        //finishSilently: finishSilently, is not used
+
         sendControlMessageNow: sendControlMessageNow,
         sendSetPitchWheelDeviationMessageNow: sendSetPitchWheelDeviationMessageNow
     };

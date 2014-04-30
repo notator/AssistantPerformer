@@ -23,7 +23,7 @@ _AP.controls = (function(document, window)
     tracksControl = _AP.tracksControl,
     Score = _AP.score.Score,
     sequence = _AP.sequence,
-    performer = _AP.performer,
+    player = _AP.player,
 
     SequenceRecording = _AP.sequenceRecording.SequenceRecording,
     COMMAND = _AP.constants.COMMAND,
@@ -444,7 +444,7 @@ _AP.controls = (function(document, window)
 
     setStopped = function()
     {
-        performer.stop();
+        player.stop();
 
         score.moveRunningMarkerToStartMarker();
 
@@ -493,12 +493,12 @@ _AP.controls = (function(document, window)
 
         if(options.assistedPerformance === true)
         {
-            options.inputDevice.removeEventListener("midimessage", performer.handleMIDIInputEvent);
+            options.inputDevice.removeEventListener("midimessage", player.handleMIDIInputEvent);
         }
     },
 
     // callback called when a performing sequenceRecording is stopped or has played its last message,
-    // or when the performer is stopped or has played its last subsequence.
+    // or when the player is stopped or has played its last subsequence.
     reportEndOfPerformance = function(sequenceRecording, performanceMsDuration)
     {
         var
@@ -608,7 +608,7 @@ _AP.controls = (function(document, window)
 
             if(options.assistedPerformance === true)
             {
-                options.inputDevice.removeEventListener("midimessage", performer.handleMIDIInputEvent);
+                options.inputDevice.removeEventListener("midimessage", player.handleMIDIInputEvent);
             }
         }
 
@@ -621,9 +621,9 @@ _AP.controls = (function(document, window)
                 throw "Error: Assisted performances are never paused.";
             }
 
-            if(performer.isRunning())
+            if(player.isRunning())
             {
-                performer.pause();
+                player.pause();
             }
 
             score.allNotesOff(options.outputDevice);
@@ -632,7 +632,7 @@ _AP.controls = (function(document, window)
 
             if(options.assistedPerformance === true)
             {
-                options.inputDevice.removeEventListener("midimessage", performer.handleMIDIInputEvent);
+                options.inputDevice.removeEventListener("midimessage", player.handleMIDIInputEvent);
             }
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
@@ -672,7 +672,7 @@ _AP.controls = (function(document, window)
                     {
                         value = 2;
                     }
-                    performer.sendSetPitchWheelDeviationMessageNow(options.outputDevice, trackIndex, value);
+                    player.sendSetPitchWheelDeviationMessageNow(options.outputDevice, trackIndex, value);
 
                     if(isAssistedPerformance && options.pressureSubstituteControlData !== null && options.pressureSubstituteControlData.midiControl === CONTROL.VOLUME)
                     {
@@ -686,11 +686,11 @@ _AP.controls = (function(document, window)
                     {
                         value = 127; // default
                     }
-                    performer.sendControlMessageNow(options.outputDevice, trackIndex, CONTROL.VOLUME, value);
+                    player.sendControlMessageNow(options.outputDevice, trackIndex, CONTROL.VOLUME, value);
 
                     if(isAssistedPerformance && options.pressureSubstituteControlData !== null && options.pressureSubstituteControlData.midiControl !== CONTROL.VOLUME)
                     {
-                        performer.sendControlMessageNow(options.outputDevice, trackIndex, options.pressureSubstituteControlData.midiControl,
+                        player.sendControlMessageNow(options.outputDevice, trackIndex, options.pressureSubstituteControlData.midiControl,
                             options.performersMinimumPressure);
                     }
                 }
@@ -700,11 +700,11 @@ _AP.controls = (function(document, window)
 
             if(sequence.tracks.length > 0)
             {
-                if(performer.isPaused())
+                if(player.isPaused())
                 {
-                    performer.resume();
+                    player.resume();
                 }
-                else if(performer.isStopped())
+                else if(player.isStopped())
                 {
                     sequenceRecording = new SequenceRecording(nTracks);
 
@@ -715,9 +715,9 @@ _AP.controls = (function(document, window)
 
                     sendTrackInitializationMessages(options, options.assistedPerformance);
 
-                    performer.sendControlMessageNow(options.outputDevice, CONTROL.VOLUME, 127);
+                    player.sendControlMessageNow(options.outputDevice, CONTROL.VOLUME, 127);
 
-                    performer.play(options, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
+                    player.play(options, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
                         trackIsOnArray, sequenceRecording, reportEndOfPerformance, reportMsPos);
                 }
 
@@ -730,7 +730,7 @@ _AP.controls = (function(document, window)
 
             if(options.assistedPerformance === true)
             {
-                options.inputDevice.addEventListener("midimessage", performer.handleMIDIInputEvent);
+                options.inputDevice.addEventListener("midimessage", player.handleMIDIInputEvent);
             }
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
@@ -964,7 +964,7 @@ _AP.controls = (function(document, window)
                 option = document.createElement("option");
                 option.inputDevice = inputs[i];
                 option.text = inputs[i].name;
-                //option.inputDevice.addEventListener("midimessage", performer.handleMIDIInputEvent);
+                //option.inputDevice.addEventListener("midimessage", player.handleMIDIInputEvent);
                 is.add(option, null);
             }
 
@@ -1141,7 +1141,7 @@ _AP.controls = (function(document, window)
             //    nameString followed by the separator 
             //    "nPages="  followed by the number of pages (an integer of any length) followed by the separator followed by
             //    "nTracks="  followed by the number of tracks (an integer of any length)  followed by the separator followed by
-            //    zero or more performer's options separated by the separator (see setDefaultPerformanceOptions() below)
+            //    zero or more player's options separated by the separator (see setDefaultPerformanceOptions() below)
             // for example:
             //    "Song Six, nPages=7, nTracks=6, po.pitchWheel.otherTracks"
             // The nameString is used (twice) to construct the URLs for the score pages, for example:
@@ -1221,7 +1221,7 @@ _AP.controls = (function(document, window)
                         }
                     }
 
-                    // Default performer's options are all optional. Each begins with the string "po." followed by any of the following:
+                    // Default player's options are all optional. Each begins with the string "po." followed by any of the following:
                     // (CheckBoxes are unchecked by default, they are checked if defined here.)
                     //    "track=" followed by the default track number (1..nTracks)
                     //    "pitch.soloTrack" and/or "pitch.otherTracks"
@@ -1233,7 +1233,7 @@ _AP.controls = (function(document, window)
                     //    "minimumVolume=" followed by the minimum MIDI volume to be sent in a live performance.
                     //        minimumVolume is the volume used for restSequences. It is the minimum volume of any track whose maximum volume is 127.
                     //        minimumVolume defaults to 127, meaning that the associated performers control will have no effect.
-                    //    Note that, in performances without a live performer, tracks are always sent at their maxVolume (see above)(for maximum
+                    //    Note that, in performances without a live player, tracks are always sent at their maxVolume (see above)(for maximum
                     //    expressivity). The minVolumes of individual tracks are set programmatically using this minimumVolume and their maxVolumes
                     //    values (see above).
                     //
@@ -1784,9 +1784,8 @@ _AP.controls = (function(document, window)
                     tracksControl.refreshDisplay();
                 }
 
-                // score.createSequence(...) sets sequence.tracks
-                score.createSequence(options.assistedPerformance, options.performersTrackSelectorIndex);
-                performer.init(options, sequence.tracks, score.startMarkerMsPosition(), score.endMarkerMsPosition());
+                // score.initializePlayer(options) sets sequence.tracks, and calls player.init(...)
+                score.initializePlayer(options);
 
                 if(options.assistedPerformance === true)
                 {
@@ -2060,9 +2059,8 @@ _AP.controls = (function(document, window)
 
             score.getTimeObjects(svg, options.assistantsSpeed);
 
-            // score.createSequence(...) sets sequence.tracks
-            score.createSequence(options.assistedPerformance, options.performersTrackSelectorIndex);
-            performer.init(options, sequence.tracks, score.startMarkerMsPosition(), score.endMarkerMsPosition());
+            // score.initializePlayer(options) sets sequence.tracks and calls player.init(...)
+            score.initializePlayer(options);
 
             // The tracksControl is in charge of refreshing the entire display, including both itself and the score.
             // TracksControl.refreshDisplay() calls

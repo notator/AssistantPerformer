@@ -24,6 +24,7 @@ _AP.score = (function (document)
     Message = _AP.message.Message,
     Track = _AP.track.Track,
     sequence = _AP.sequence,
+    player = _AP.player,
 
     Markers = _AP.markers,
     ChordDef = _AP.chordDef.ChordDef,
@@ -1473,16 +1474,19 @@ _AP.score = (function (document)
         }
     },
 
-    // In a completed sequence, the tracks array contains one track per channel (ordered by channel).
-    // Each track is an array of moments ordered in time (see apTrack.js and apMoment.js).
-    // If this is an assisted performance, the livePerformersSilentTrack is also filled with rests
-    // and silent chords. Then, when score.redrawDisplay() is called (on toggling a trackContol),
-    // the live performer's track is set to livePerformersSoundingTrack or livePerformersSilentTrack
+    // First creates sequence.tracks, then calls player.init(...) so that player.play(...) can be called.
+    // sequence.tracks is an array containing one track per channel (ordered by channel).
+    // Each track is an array of moments ordered in time (see ap/Track.js and ap/Moment.js).
+    // If this is a live performance (as opposed to a score playback), the livePerformersSilentTrack
+    // is also filled with rests and silent chords. Then, when score.redrawDisplay() is called (on toggling
+    // a trackContol), the live performer's track is set to livePerformersSoundingTrack or livePerformersSilentTrack
     // as necessary.
-    createSequence = function(isAssistedPerformance, livePerfTrackIndex)
+    initializePlayer = function(options)
     {
         // systems->staves->voices->timeObjects
-        var 
+        var
+        isAssistedPerformance = options.assistedPerformance,
+        livePerfTrackIndex = options.performersTrackSelectorIndex,
         trackIndex, track, tracks,
         timeObjectIndex, nTimeObjects, timeObject, chordIsSilent,
         voiceIndex, nVoices, voice,
@@ -1610,7 +1614,8 @@ _AP.score = (function (document)
 
         transferFinalChordOffMoments(tracks);
 
-        return sequence;
+        player.init(options, sequence.tracks, startMarkerMsPosition(), endMarkerMsPosition());
+
     },
 
     // an empty score
@@ -1665,8 +1670,8 @@ _AP.score = (function (document)
         // loads timeObjects
         this.getTimeObjects = getTimeObjects;
 
-        // Returns the score's content as a midi sequence
-        this.createSequence = createSequence;
+        // sets sequence.tracks and calls player.init(...)
+        this.initializePlayer = initializePlayer;
 
         // Loads the trackIsOn callback.
         this.getTrackIsOnCallback = getTrackIsOnCallback;
