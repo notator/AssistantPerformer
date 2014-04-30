@@ -1485,7 +1485,7 @@ _AP.score = (function (document)
     {
         // systems->staves->voices->timeObjects
         var
-        isAssistedPerformance = options.assistedPerformance,
+        isAssistedPerformance = options.livePerformance,
         livePerfTrackIndex = options.performersTrackSelectorIndex,
         trackIndex, track, tracks,
         timeObjectIndex, nTimeObjects, timeObject, chordIsSilent,

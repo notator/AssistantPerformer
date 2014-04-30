@@ -76,7 +76,7 @@ _AP.assistant = (function ()
         }
     },
 
-    // If options.assistedPerformance === true, this is where input
+    // If options.livePerformance === true, this is where input
     // MIDIEvents arrive, and where processing is going to be done.
     // The Assistant
     // a) ignores both RealTime and SysEx messages in its input, and
@@ -800,8 +800,8 @@ _AP.assistant = (function ()
         return paused === true;
     },
 
-    // This function is called when options.assistedPerformance === true and the Go button is clicked (in the performance controls).
-    // If options.assistedPerformance === false, the main sequence.play(...) is called instead.
+    // This function is called when options.livePerformance === true and the Go button is clicked (in the performance controls).
+    // If options.livePerformance === false, the main sequence.play(...) is called instead.
     // The assistant's allSequences array (set in the assistant's constructor), contains the whole piece as an array of sequence,
     // with one sequence per performer's rest or chord, whereby consecutive rests in the performer's track have been merged.
     // This function sets the performedSequences array, which is the section of the allSequences array between startMarkerMsPosition and
@@ -875,7 +875,7 @@ _AP.assistant = (function ()
     },
 
     // creats an Assistant, complete with private sequences
-    // called when the Start button is clicked, and options.assistedPerformance === true
+    // called when the Start button is clicked, and options.livePerformance === true
     Assistant = function (sequence, apControlOptions, reportEndOfWholePerformance, reportMillisecondPosition)
     {
         // Returns an array of Sequence.
@@ -1066,7 +1066,7 @@ _AP.assistant = (function ()
             return new Assistant(sequence, apControlOptions, reportEndOfWholePerformance, reportMillisecondPosition);
         }
 
-        if (apControlOptions === undefined || apControlOptions.assistedPerformance !== true)
+        if (apControlOptions === undefined || apControlOptions.livePerformance !== true)
         {
             throw ("Error creating Assistant.");
         }

@@ -138,7 +138,7 @@ _AP.player = (function()
 
         segmentStartIndex = 0;
 
-        if(!options.assistedPerformance)
+        if(!options.livePerformance)
         {
             // There is no live performer
             positions.push(startMarkerMsPosition);

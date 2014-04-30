@@ -491,7 +491,7 @@ _AP.controls = (function(document, window)
 
         tracksControl.setDisabled(false);
 
-        if(options.assistedPerformance === true)
+        if(options.livePerformance === true)
         {
             options.inputDevice.removeEventListener("midimessage", player.handleMIDIInputEvent);
         }
@@ -606,7 +606,7 @@ _AP.controls = (function(document, window)
 
             tracksControl.setDisabled(true);
 
-            if(options.assistedPerformance === true)
+            if(options.livePerformance === true)
             {
                 options.inputDevice.removeEventListener("midimessage", player.handleMIDIInputEvent);
             }
@@ -616,7 +616,7 @@ _AP.controls = (function(document, window)
 
         function setPaused()
         {
-            if(options.assistedPerformance === true)
+            if(options.livePerformance === true)
             {
                 throw "Error: Assisted performances are never paused.";
             }
@@ -630,7 +630,7 @@ _AP.controls = (function(document, window)
 
             tracksControl.setDisabled(true);
 
-            if(options.assistedPerformance === true)
+            if(options.livePerformance === true)
             {
                 options.inputDevice.removeEventListener("midimessage", player.handleMIDIInputEvent);
             }
@@ -713,7 +713,7 @@ _AP.controls = (function(document, window)
                     score.setRunningMarkers();
                     score.moveStartMarkerToTop(svgPagesDiv);
 
-                    sendTrackInitializationMessages(options, options.assistedPerformance);
+                    sendTrackInitializationMessages(options, options.livePerformance);
 
                     player.sendControlMessageNow(options.outputDevice, CONTROL.VOLUME, 127);
 
@@ -728,7 +728,7 @@ _AP.controls = (function(document, window)
 
             tracksControl.setDisabled(true);
 
-            if(options.assistedPerformance === true)
+            if(options.livePerformance === true)
             {
                 options.inputDevice.addEventListener("midimessage", player.handleMIDIInputEvent);
             }
@@ -849,7 +849,7 @@ _AP.controls = (function(document, window)
                 setStopped();
                 break;
             case 'paused':
-                if(options.assistedPerformance === false)
+                if(options.livePerformance === false)
                 {
                     setPaused();
                 }
@@ -1771,9 +1771,9 @@ _AP.controls = (function(document, window)
         {
             if(cl.livePerformerOnOffDisabled.getAttribute("opacity") !== SMOKE)
             {
-                options.assistedPerformance = !(options.assistedPerformance);
+                options.livePerformance = !(options.livePerformance);
 
-                if(options.assistedPerformance)
+                if(options.livePerformance)
                 {
                     tracksControl.setInitialTracksControlState(true, options.performersTrackSelectorIndex);
                     tracksControl.refreshDisplay();
@@ -1787,7 +1787,7 @@ _AP.controls = (function(document, window)
                 // score.initializePlayer(options) sets sequence.tracks, and calls player.init(...)
                 score.initializePlayer(options);
 
-                if(options.assistedPerformance === true)
+                if(options.livePerformance === true)
                 {
                     options.performersTrackIndex = options.performersTrackSelectorIndex;
                 }
@@ -1825,7 +1825,7 @@ _AP.controls = (function(document, window)
             if(overRectID === 'overLivePerformerOnOffFrame')
             {
                 livePerformerOffLayer = document.getElementById('livePerformerOff');
-                if(options.assistedPerformance === true)
+                if(options.livePerformance === true)
                 {
                     livePerformerOffLayer.setAttribute("opacity", METAL);
                 }
@@ -1845,7 +1845,7 @@ _AP.controls = (function(document, window)
         if(overRectID === 'overLivePerformerOnOffFrame')
         {
             livePerformerOffLayer = document.getElementById('livePerformerOff');
-            if(options.assistedPerformance === true)
+            if(options.livePerformance === true)
             {
                 livePerformerOffLayer.setAttribute("opacity", GLASS);
             }
@@ -1858,9 +1858,9 @@ _AP.controls = (function(document, window)
 
     trackToggled = function(soloistIsSilent)
     {
-        score.refreshDisplay(sequence, options.assistedPerformance, options.performersTrackSelectorIndex, soloistIsSilent);
+        score.refreshDisplay(sequence, options.livePerformance, options.performersTrackSelectorIndex, soloistIsSilent);
         // score.refreshDisplay() sets sequence.tracks[performersTrackSelectorIndex] to a silent track, if necessary.
-        if(options.assistedPerformance === true)
+        if(options.livePerformance === true)
         {
             options.performersTrackIndex = options.performersTrackSelectorIndex;
             if(livePerformerIsSilent !== soloistIsSilent)
@@ -1963,11 +1963,11 @@ _AP.controls = (function(document, window)
 
             if(checkMinVolumeInput() && checkSpeedInput())
             {
-                // options.assistedPerformance is kept up to date by the livePerformerOnOffButton.
-                options.assistedPerformance = (cl.livePerformerOff.getAttribute("opacity") === "0");
+                // options.livePerformance is kept up to date by the livePerformerOnOffButton.
+                options.livePerformance = (cl.livePerformerOff.getAttribute("opacity") === "0");
 
                 options.trackMaxVolumes = mo.trackMaxVolumes;
-                if(options.assistedPerformance)
+                if(options.livePerformance)
                 {
                     options.runtimeOptions = {};
                     options.runtimeOptions.track = {};
@@ -2072,11 +2072,11 @@ _AP.controls = (function(document, window)
             // tracksControl.trackIsOn(trackIndex) returns a boolean which is the on/off status of its trackIndex argument
             score.getTrackIsOnCallback(tracksControl.trackIsOn);
 
-            tracksControl.setInitialTracksControlState(options.assistedPerformance, options.performersTrackSelectorIndex);
+            tracksControl.setInitialTracksControlState(options.livePerformance, options.performersTrackSelectorIndex);
 
-            score.refreshDisplay(sequence, options.assistedPerformance, options.performersTrackSelectorIndex, false);
+            score.refreshDisplay(sequence, options.livePerformance, options.performersTrackSelectorIndex, false);
 
-            if(options.assistedPerformance === true)
+            if(options.livePerformance === true)
             {
                 options.performersTrackIndex = options.performersTrackSelectorIndex;
             }
@@ -2089,7 +2089,7 @@ _AP.controls = (function(document, window)
 
             setSvgControlsState('stopped');
 
-            if(options.assistedPerformance === true)
+            if(options.livePerformance === true)
             {
                 setSvgControlsState('playing');
             }
