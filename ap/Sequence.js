@@ -32,8 +32,10 @@ _AP.sequence = (function (window)
     // An empty sequence is created. It contains an empty array of _AP.track.Tracks.
     init = function (nTracks)
     {
-        var i;
+        var
+        i;
 
+        tracks.length = 0; // empty the tracks array without creating a new one!
         for(i = 0; i < nTracks; ++i)
         {
             tracks.push(new Track());

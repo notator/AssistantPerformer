@@ -1121,6 +1121,31 @@ _AP.controls = (function(document, window)
         setSvgControlsState('disabled');
     },
 
+    initTracksPlayerAndPerformer = function (score, options)
+    {
+        if(scoreHasJustBeenSelected)
+        {
+            score.getEmptyPagesAndSystems(svg); // everything except the timeObjects (which have to take account of speed)
+        }
+
+        score.setSequenceTracks(svg, options);
+        player.init(options.outputDevice, sequence.tracks); // sets player.nextMoment to simple no inputDevice version.
+
+        if(options.livePerformance === true)
+        {
+            throw "not implemented exception!";
+            // TODO: performer.init(player, score.performerOptions)
+
+
+            // old...............
+            // options.performersTrackIndex = options.performersTrackSelectorIndex;
+        }
+        else
+        {
+            options.performersTrackIndex = null;
+        }
+    },
+
     // called when the user clicks a control in the GUI
     doControl = function(controlID)
     {
@@ -1784,17 +1809,7 @@ _AP.controls = (function(document, window)
                     tracksControl.refreshDisplay();
                 }
 
-                // score.initializePlayer(options) sets sequence.tracks, and calls player.init(...)
-                score.initializePlayer(options);
-
-                if(options.livePerformance === true)
-                {
-                    options.performersTrackIndex = options.performersTrackSelectorIndex;
-                }
-                else
-                {
-                    options.performersTrackIndex = null;
-                }
+                initTracksPlayerAndPerformer(score, options);
             }
         }
 
@@ -2024,7 +2039,7 @@ _AP.controls = (function(document, window)
                     options.modSubstituteControlData = controlOptions[mo.modSustituteControlSelector.selectedIndex];
                 }
 
-                options.assistantsSpeed = parseFloat(mo.speedPercentInputText.value) / 100.0;
+                options.globalSpeed = parseFloat(mo.speedPercentInputText.value) / 100.0;
 
                 options.minimumInputPressure = parseInt(mo.minimumPressureInputText.value, 10);
 
@@ -2052,15 +2067,7 @@ _AP.controls = (function(document, window)
 
         if(getOptions())
         {
-            if(scoreHasJustBeenSelected)
-            {
-                score.getEmptyPagesAndSystems(svg); // everything except the timeObjects (which have to take account of speed)
-            }
-
-            score.getTimeObjects(svg, options.assistantsSpeed);
-
-            // score.initializePlayer(options) sets sequence.tracks and calls player.init(...)
-            score.initializePlayer(options);
+            initTracksPlayerAndPerformer(score, options);
 
             // The tracksControl is in charge of refreshing the entire display, including both itself and the score.
             // TracksControl.refreshDisplay() calls
