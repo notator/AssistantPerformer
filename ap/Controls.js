@@ -24,6 +24,7 @@ _AP.controls = (function(document, window)
     Score = _AP.score.Score,
     sequence = _AP.sequence,
     player = _AP.player,
+    performer = _AP.performer,
 
     SequenceRecording = _AP.sequenceRecording.SequenceRecording,
     COMMAND = _AP.constants.COMMAND,
@@ -493,7 +494,7 @@ _AP.controls = (function(document, window)
 
         if(options.livePerformance === true)
         {
-            options.inputDevice.removeEventListener("midimessage", player.handleMIDIInputEvent);
+            options.inputDevice.removeEventListener("midimessage", performer.handleMIDIInputEvent);
         }
     },
 
@@ -608,7 +609,7 @@ _AP.controls = (function(document, window)
 
             if(options.livePerformance === true)
             {
-                options.inputDevice.removeEventListener("midimessage", player.handleMIDIInputEvent);
+                options.inputDevice.removeEventListener("midimessage", performer.handleMIDIInputEvent);
             }
         }
 
@@ -632,7 +633,7 @@ _AP.controls = (function(document, window)
 
             if(options.livePerformance === true)
             {
-                options.inputDevice.removeEventListener("midimessage", player.handleMIDIInputEvent);
+                options.inputDevice.removeEventListener("midimessage", performer.handleMIDIInputEvent);
             }
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
@@ -730,7 +731,7 @@ _AP.controls = (function(document, window)
 
             if(options.livePerformance === true)
             {
-                options.inputDevice.addEventListener("midimessage", player.handleMIDIInputEvent);
+                options.inputDevice.addEventListener("midimessage", performer.handleMIDIInputEvent);
             }
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
@@ -964,7 +965,7 @@ _AP.controls = (function(document, window)
                 option = document.createElement("option");
                 option.inputDevice = inputs[i];
                 option.text = inputs[i].name;
-                //option.inputDevice.addEventListener("midimessage", player.handleMIDIInputEvent);
+                //option.inputDevice.addEventListener("midimessage", performer.handleMIDIInputEvent);
                 is.add(option, null);
             }
 
@@ -1121,6 +1122,15 @@ _AP.controls = (function(document, window)
         setSvgControlsState('disabled');
     },
 
+    // If this is a live performance (options.livePerformance === true), display the options in a panel
+    // like the current one. Otherwise either delete the performer's options display panel or grey it out.
+    // (In contrast to previous versions of the AP, these options will be fixed in the score, and cant be
+    // changed in a dialog.)
+    displayPerformerOptions = function(islivePerformance, performerOptions)
+    {
+        console.log("controls.displayPerformanceOptions() still needs to be written.");
+    },
+
     initTracksPlayerAndPerformer = function (score, options)
     {
         if(scoreHasJustBeenSelected)
@@ -1128,22 +1138,14 @@ _AP.controls = (function(document, window)
             score.getEmptyPagesAndSystems(svg); // everything except the timeObjects (which have to take account of speed)
         }
 
-        score.setSequenceTracks(svg, options);
+        score.setPerformerOptions(svg, options); // sets options.performerOptions
+        score.setSequenceTracks(svg, options); // sets sequence.tracks
+
         player.init(options.outputDevice, sequence.tracks); // sets player.nextMoment to simple no inputDevice version.
 
-        if(options.livePerformance === true)
-        {
-            throw "not implemented exception!";
-            // TODO: performer.init(player, score.performerOptions)
+        displayPerformerOptions(options.livePerformance, options.performerOptions);
 
-
-            // old...............
-            // options.performersTrackIndex = options.performersTrackSelectorIndex;
-        }
-        else
-        {
-            options.performersTrackIndex = null;
-        }
+        // If this is a live performance, performer.runtimeInit(...) will be called from player.play(...).
     },
 
     // called when the user clicks a control in the GUI

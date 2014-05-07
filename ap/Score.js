@@ -1129,6 +1129,13 @@ _AP.score = (function (document)
         }
     },
 
+    // Creates the options.performerOptions containing the performer options defined in the score.
+    setPerformerOptions = function(svg, options)
+    {
+        console.log("score.setPerformerOptions() still needs to be written");
+        options.performerOptions = {};
+    },
+
     // Creates sequence.tracks, which is an array containing one track per channel (ordered by channel).
     // Each track is an array of moments ordered in time (see ap/Track.js and ap/Moment.js).
     // If this is a live performance (as opposed to a score playback), the livePerformersSilentTrack
@@ -1741,7 +1748,10 @@ _AP.score = (function (document)
 
         this.getEmptyPagesAndSystems = getEmptyPagesAndSystems;
 
-        // sets sequence.tracks and calls player.init(...) and performer.init(...)
+        // sets options.performerOptions
+        this.setPerformerOptions = setPerformerOptions;
+
+        // sets sequence.tracks
         this.setSequenceTracks = setSequenceTracks;
 
         // Loads the trackIsOn callback.

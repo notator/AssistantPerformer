@@ -662,8 +662,16 @@ _AP.player = (function()
         midiObjectMsPositionsInScore = getMidiObjectMsPositionsInScore(tracks, startMarkerMsPosition, endMarkerMsPosition);
         midiObjectMsPositionsInScoreIndex = 0;
 
-        performanceStartTime = performance.now();
-        startTimeAdjustedForPauses = performanceStartTime;
+        if(options.livePerformance)
+        {
+            _AP.performer.runtimeInit(options.outputDevice, tracks[options.performerOptions.trackIndex],
+                    midiObjectMsPositionsInScore, options.performerOptions, usePerformersNextMomentFunction);
+        }
+        else
+        {
+            performanceStartTime = performance.now();
+            startTimeAdjustedForPauses = performanceStartTime;
+        }
 
         run();
     },
