@@ -664,8 +664,17 @@ _AP.player = (function()
 
         if(options.livePerformance)
         {
-            _AP.performer.runtimeInit(options.outputDevice, tracks[options.performerOptions.trackIndex],
-                    midiObjectMsPositionsInScore, options.performerOptions, usePerformersNextMomentFunction);
+            switch(options.performerOptions.inputDeviceType)
+            {
+                case 'monoInput':
+                    _AP.monoInput.runtimeInit(options.outputDevice, tracks[options.performerOptions.trackIndex],
+                        midiObjectMsPositionsInScore, options.performerOptions, usePerformersNextMomentFunction);
+                    break;
+                case 'polyInput': // The _AP.polyInput namespace is currently just a stub. It might work like a prepared piano.
+                    _AP.polyInput.runtimeInit(options.outputDevice, tracks[options.performerOptions.trackIndex],
+                        midiObjectMsPositionsInScore, options.performerOptions, usePerformersNextMomentFunction);
+                    break;
+            }
         }
         else
         {

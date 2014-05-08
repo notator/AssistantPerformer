@@ -5,8 +5,8 @@
 *  Code licensed under MIT
 *  https://github.com/notator/assistant-performer/blob/master/License.md
 *
-*  ap/Performer.js
-*  The _AP.performer namespace which defines
+*  ap/MonoInput.js
+*  The _AP.monoInput namespace which defines
 *
 *    // initialization
 *    init(player, score.performerOptions)
@@ -20,9 +20,9 @@
 
 /*jslint bitwise: true, nomen: true, plusplus: true, white: true */
 
-_AP.namespace('_AP.performer');
+_AP.namespace('_AP.monoInput');
 
-_AP.performer = (function()
+_AP.monoInput = (function()
 {
     "use strict";
 
@@ -53,7 +53,7 @@ _AP.performer = (function()
     // Maybe delete startTimeAdjustedForPauses and disable the pause button in live performances.
     startTimeAdjustedForPauses,
 
-    // This is where input MIDIEvents arrive, and where processing is going to be done.
+    // This is where input MIDIEvents arrive, and where processing of the monoInput's input is going to be done.
     // Both RealTime and SysEx messages are ignored.
     // it is assumed that RealTime messages will not interrupt the messages being received.    
     handleMIDIInputEvent = function(msg)
@@ -730,14 +730,15 @@ _AP.performer = (function()
         console.log("nextMoment() needs completing.");
     },
 
-    // runtimeInit() is called from player.play() if there is an input device set in the input device selector. 
+    // monoInput.runtimeInit() is called from player.play() if options.livePerformance is true, and
+    // options.performerOptions.inputDeviceType === 'monoInput'.
     // Arguments:
     //      outputDevice: the midiOutputDevice.
     //      allTracks: all the tracks, complete from the beginning to the end of the piece.
     //      moMsPositionsInScore: a flat, ordered array containing all the unique msPositions of midiObjects in the performance.
     //          The first value in this array is the position of the startMarker, the last value is the position of the endMarker.
-    //      scorePerformerOptions: the performer options retrieved from the score.
-    //      usePerformersNextMomentFunction: a callback function that sets the player to use the performer's nextMoment function
+    //      scorePerformerOptions: the monoInput options retrieved from the score.
+    //      usePerformersNextMomentFunction: a callback function that sets the player to use the monoInput's nextMoment function
     //          which is defined in this namespace and uses variables local to this namespace.
     runtimeInit = function(outputDevice, allTracks, moMsPositionsInScore, scorePerformerOptions, usePerformersNextMomentFunction)
     {
@@ -774,7 +775,7 @@ _AP.performer = (function()
 
         getPerformersMsPositions(allTracks[scorePerformerOptions.trackIndex], moMsPositionsInScore);
 
-        // set the player to use the above, performer.nextMoment() function
+        // set the player to use the above, monoInput.nextMoment() function
         usePerformersNextMomentFunction(nextMoment);
 
         performanceStartTime = performance.now();

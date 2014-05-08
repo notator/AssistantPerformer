@@ -7,8 +7,7 @@
 *
 *  ap/Controls.js
 *  The _AP.controls namespace which defines the
-*  _AP Performer's Graphic User Interface.
-*  
+*  Assistant Performer's Graphic User Interface. 
 */
 
 /*jslint bitwise: false, nomen: true, plusplus: true, white: true */
@@ -24,7 +23,6 @@ _AP.controls = (function(document, window)
     Score = _AP.score.Score,
     sequence = _AP.sequence,
     player = _AP.player,
-    performer = _AP.performer,
 
     SequenceRecording = _AP.sequenceRecording.SequenceRecording,
     COMMAND = _AP.constants.COMMAND,
@@ -443,6 +441,44 @@ _AP.controls = (function(document, window)
         setControlVisibilityStates();
     },
 
+    // start or stop listening to the input device.
+    doInputEventListener = function(options, addOrRemoveEventListener)
+    {
+        if(options.livePerformance === false)
+        {
+            throw "This function should only be called when a midi input device is in use.";
+        }
+
+        /*********************/
+        // Just testing. Delete these lines when options.performerOptions is complete and working.
+        if(options.performerOptions === undefined)
+        {
+            options.performerOptions = {};
+        }
+        options.performerOptions.inputDeviceType = 'monoInput';
+        /*********************/
+
+        switch(options.performerOptions.inputDeviceType)
+        {
+            case 'monoInput':
+                addOrRemoveEventListener("midimessage", _AP.monoInput.handleMIDIInputEvent);
+                break;
+            case 'polyInput': // The _AP.polyInput namespace is currently just a stub. It might work like a prepared piano.
+                addOrRemoveEventListener("midimessage", _AP.polyInput.handleMIDIInputEvent);
+                break;
+        }
+    },
+
+    addInputEventListener = function(options)
+    {
+        doInputEventListener(options, options.inputDevice.addEventListener);
+    },
+
+    removeInputEventListener = function(options)
+    {
+        doInputEventListener(options, options.inputDevice.removeEventListener);
+    },
+
     setStopped = function()
     {
         player.stop();
@@ -494,7 +530,7 @@ _AP.controls = (function(document, window)
 
         if(options.livePerformance === true)
         {
-            options.inputDevice.removeEventListener("midimessage", performer.handleMIDIInputEvent);
+            removeInputEventListener(options);
         }
     },
 
@@ -609,7 +645,7 @@ _AP.controls = (function(document, window)
 
             if(options.livePerformance === true)
             {
-                options.inputDevice.removeEventListener("midimessage", performer.handleMIDIInputEvent);
+                removeInputEventListener(options);
             }
         }
 
@@ -633,7 +669,7 @@ _AP.controls = (function(document, window)
 
             if(options.livePerformance === true)
             {
-                options.inputDevice.removeEventListener("midimessage", performer.handleMIDIInputEvent);
+                removeInputEventListener(options);
             }
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
@@ -731,7 +767,7 @@ _AP.controls = (function(document, window)
 
             if(options.livePerformance === true)
             {
-                options.inputDevice.addEventListener("midimessage", performer.handleMIDIInputEvent);
+                addInputEventListener(options);
             }
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
@@ -965,7 +1001,6 @@ _AP.controls = (function(document, window)
                 option = document.createElement("option");
                 option.inputDevice = inputs[i];
                 option.text = inputs[i].name;
-                //option.inputDevice.addEventListener("midimessage", performer.handleMIDIInputEvent);
                 is.add(option, null);
             }
 
@@ -978,7 +1013,6 @@ _AP.controls = (function(document, window)
                 option = document.createElement("option");
                 option.outputDevice = outputs[i];
                 option.text = outputs[i].name;
-                //option.outputDevice = midiAccess.getOutput(i);  // WebMIDIAPI creates a new OutputDevice
                 os.add(option, null);
             }
         }
@@ -1122,10 +1156,14 @@ _AP.controls = (function(document, window)
         setSvgControlsState('disabled');
     },
 
-    // If this is a live performance (options.livePerformance === true), display the options in a panel
-    // like the current one. Otherwise either delete the performer's options display panel or grey it out.
+    // If this is a live performance, display the options in a panel like the current one. Otherwise
+    // either delete the performer's options display panel or grey it out.
     // (In contrast to previous versions of the AP, these options will be fixed in the score, and cant be
     // changed in a dialog.)
+    // There will be (at least) two live performance modes, having possibly different sets of options:
+    //      options.performerOptions.inputDeviceType === 'monoInput' and
+    //      options.performerOptions.inputDeviceType === 'polyInput'
+    // See player.play().
     displayPerformerOptions = function(islivePerformance, performerOptions)
     {
         console.log("controls.displayPerformanceOptions() still needs to be written.");
@@ -1145,7 +1183,7 @@ _AP.controls = (function(document, window)
 
         displayPerformerOptions(options.livePerformance, options.performerOptions);
 
-        // If this is a live performance, performer.runtimeInit(...) will be called from player.play(...).
+        // If this is a live performance, _AP.monoInput.runtimeInit(...) or _AP.polyInput.runtimeInit() will be called from player.play(...).
     },
 
     // called when the user clicks a control in the GUI
