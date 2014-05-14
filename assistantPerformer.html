@@ -305,7 +305,12 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
                     </select>
                     <select id="scoreSelector" name="scoreSelector"
                         class="deviceSelector" onchange="_AP.controls.doControl('scoreSelector')">
-                        <option value="choose a score, nPages=0, nTracks=0">choose a score</option>
+                        <option>choose a score</option>
+                        <option>Study 2c3.1</option>
+                        <option>Study 3 sketch 1</option>
+                        <option>Song Six</option>
+                        <!--***************************************************************************************************************
+                        *** old (with option values set) -- The score options are now set from values in their .mkss files.
                         <option value="Study 2c3.1, nPages=3, nTracks=3, track.maxVolumes=100 100 100">Study 2c3.1</option>
                         <option value="Study 3 sketch 1, nPages=2, nTracks=8, track.maxVolumes=100 100 100 100 100 100 100 100">Study 3 sketch 1</option>
                         <option value="Song Six, nPages=13, nTracks=9,
@@ -315,7 +320,7 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
                             po.speedControl.maximumFactor=400, po.speedControl.selectedIndex=1,
                             po.minimumVolume=50,
                             po.trackSelector.selectedIndex=4">Song Six</option>
-                        <!--***************************************************************************************************************
+                        ******************************************************************************************************************
                             See getScoreInfo() in Controls.js. for a description of what these id string options mean and how to set them.
                             The first three options (name, nPages and nTracks) are compulsory, all the others are optional.
                             Here is an example, using the complete set:
