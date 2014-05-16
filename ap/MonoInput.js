@@ -53,6 +53,36 @@ _AP.monoInput = (function()
     // Maybe delete startTimeAdjustedForPauses and disable the pause button in live performances.
     startTimeAdjustedForPauses,
 
+    doControl = function(controlID)
+    {
+        /*******************
+        controlIDs are:
+            mpoTrackSelect
+
+            mpoNoteOnPitchTrackSelect
+            mpoNOPCheckBoxTrack1 // 1..16
+
+            mpoNoteOnVelocityTrackSelect
+            mpoNOVCheckBoxTrack1 // 1..16
+
+            mpoPressureMidiSelect
+            mpoPressureTrackSelect
+            mpoPressureCheckBoxTrack1 // 1..16
+
+            mpoPitchWheelMidiSelect
+            mpoPitchWheelTrackSelect
+            mpoPitchWheelCheckBoxTrack1 // 1..16
+
+            mpoModWheelMidiSelect
+            mpoModWheelTrackSelect
+            mpoModWheelCheckBoxTrack1 // 1..16
+
+            mpoMaxSpeedControllerSelect
+            mpoMaxSpeedInput // number
+            mpoMinVolumeInput // number        
+        /*******************/
+    }
+
     // This is where input MIDIEvents arrive, and where processing of the monoInput's input is going to be done.
     // Both RealTime and SysEx messages are ignored.
     // it is assumed that RealTime messages will not interrupt the messages being received.    
@@ -786,6 +816,7 @@ _AP.monoInput = (function()
     {
         runtimeInit: runtimeInit,
         handleMIDIInputEvent: handleMIDIInputEvent,
+        doControl: doControl
     };
     // end var
 

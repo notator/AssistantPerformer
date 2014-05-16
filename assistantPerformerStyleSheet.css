@@ -80,13 +80,14 @@ div.options
     margin-left:100px;
     margin-right:100px;
     padding: 10px;
-    text-align:center;
+    text-align:match-parent;
 }
 div.optionsPanel
 {
+    width:636px;
     margin-top: 8px;
     margin-bottom:2px;
-    margin-left:28px;
+    margin-left:103px;
     margin-right:28px;
     padding-top: 4px;
     padding-right: 12px;
@@ -97,7 +98,7 @@ div.optionsPanel
     background-color: #FCFCFC;
     border: 1px solid #008000; 
 }
-div.checkBoxCell
+div.mpoCheckBoxCell
 {
      display:table-cell;
      font-size: 9px;
@@ -106,11 +107,7 @@ div.checkBoxCell
      padding-left: 3px;
      padding-right: 3px;
 }
-input.standardCheckBox14px
-{
-    vertical-align: middle;
-    margin: 0px 3px -2px 0px;
-}          
+        
 img.performanceControl
 {  
     width: 21px;
@@ -138,4 +135,157 @@ img.channelControl
     padding: 0px; 
     margin: 0px;  
     width: 1027px; 
+}
+
+/*** new 15.05.2014 for monoPerformerOptions***/
+
+div.mpoColumn1Cell
+{
+    display:table-cell;
+    text-align:right;
+    width: 140px;
+    /*background-color: #C0C0C0;*/
+    padding-left: 4px;
+    padding-right:4px;
+}
+div.mpoColumn2Cell
+{
+    display:table-cell;
+    text-align:right;
+    width: 124px;
+    /*background-color: #FF6666;*/
+}
+div.mpoColumn3Cell
+{
+    display:table-cell;
+    text-align:center;
+    width: 100px;
+    /*background-color: #99FFCC;*/
+}
+div.mpoCheckBoxCell
+{
+    display:table-cell;
+    width: 16px;
+    /*background-color: #99CCFF;*/
+    padding:0px;
+    margin:0px;
+}
+
+div.mpoRow9Cell1 
+{
+    display:table-cell;
+    width: 126px;
+    /*background-color: #C0C0C0;*/
+    padding-left:4px;
+    padding-right:4px;
+    margin:0px;
+}
+div.mpoRow9Cell2 
+{
+    display:table-cell;
+    width: 98px;
+    /*background-color: #FF6666;*/
+    padding:0px;
+    margin:0px;
+    text-align:right;
+}
+div.mpoRow9Cell3 
+{
+    display:table-cell;
+    width: 50px;
+    /*background-color: #99FFCC;*/
+    padding-left:4px;
+    padding-right:3px;
+    padding-top:0px;
+    padding-bottom:0px;
+    margin:0px;
+}
+div.mpoRow9Cell4 
+{
+    display:table-cell;
+    width: 10px;
+    /*background-color: #99CCFF;*/
+    padding:0px;
+    margin:0px;
+}
+div.mpoRow9Cell5 
+{
+    display:table-cell;
+    width: 330px;
+    font-size: 10px;
+    line-height: 14px; 
+    color: #3399FF;
+    /*background-color: #C0C0C0;*/
+    padding-left:6px;
+    padding-bottom:0px;
+    padding-top:0px;
+    padding-right:0px;
+    margin:0px;
+    vertical-align: middle;
+}
+
+div.mpoRow10Cell1
+{
+    display:table-cell;
+    width: 50px;
+    /*background-color: #C0C0C0;*/
+    padding-left:4px;
+    padding-right:4px;
+    margin:0px;
+    vertical-align:middle;
+}
+
+div.mpoRow10Cell2
+{
+    display:table-cell;
+    width: 50px;
+    font-size:11px;
+    /*background-color: #FF6666;*/
+    padding:0px;
+    margin:0px;
+    text-align:left;
+    vertical-align:middle;
+}
+
+div.mpoRow10Cell3
+{
+    display:table-cell;
+    width: 400px;
+    font-size: 10px;
+    line-height: 14px; 
+    color: #3399FF;
+    /*background-color: #C0C0C0;*/
+    padding-left:2px;
+    margin:0px;
+    vertical-align: middle;
+}
+
+input.mpoCheckBox
+{
+    vertical-align: middle;
+    margin-left: 1px;
+    margin-right: 1px;
+    padding:0px;
+}
+
+select.mpoTrackSelect 
+{
+    font-size:11px;
+    padding:0px;
+    margin:0px;
+    width:90px;
+} 
+select.mpoMidiControllerSelect 
+{
+    font-size:11px;
+    padding:0px;
+    margin:0px;
+    width:120px;
+}
+
+input.mpoNumberInput
+{
+    padding: 0px;
+    margin: 0px;
+    width: 50px;
 }
