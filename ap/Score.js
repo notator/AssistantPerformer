@@ -454,22 +454,22 @@ _AP.score = (function (document)
         // on the value of the returnStaffIndex argument.
         function livePerformersIndex(system, livePerformersTrackIndex, returnStaffIndex)
         {
-            var staff, staffIndex, voiceIndex, trackIndex = 0, returnIndex = -1;
+            var staff, rStaffIndex, rVoiceIndex, trackIndex = 0, returnIndex = -1;
 
-            for(staffIndex = 0; staffIndex < system.staves.length; ++staffIndex)
+            for(rStaffIndex = 0; rStaffIndex < system.staves.length; ++rStaffIndex)
             {
-                staff = system.staves[staffIndex];
-                for(voiceIndex = 0; voiceIndex < staff.voices.length; ++voiceIndex)
+                staff = system.staves[rStaffIndex];
+                for(rVoiceIndex = 0; rVoiceIndex < staff.voices.length; ++rVoiceIndex)
                 {
                     if(trackIndex === livePerformersTrackIndex)
                     {
                         if(returnStaffIndex)
                         {
-                            returnIndex = staffIndex;
+                            returnIndex = rStaffIndex;
                         }
                         else
                         {
-                            returnIndex = voiceIndex;
+                            returnIndex = rVoiceIndex;
                         }
                         break;
                     }
@@ -501,11 +501,11 @@ _AP.score = (function (document)
         // Returns the system having stafflines closest to y.
         function findSystemIndex(y)
         {
-            var i, topLimit, bottomLimit, systemIndex;
+            var i, topLimit, bottomLimit, systemIndex1;
 
             if (systems.length === 1)
             {
-                systemIndex = 0;
+                systemIndex1 = 0;
             }
             else
             {
@@ -515,32 +515,32 @@ _AP.score = (function (document)
                     bottomLimit = (systems[i].bottomLineY + systems[i + 1].topLineY) / 2;
                     if (y >= topLimit && y < bottomLimit)
                     {
-                        systemIndex = i;
+                        systemIndex1 = i;
                         break;
                     }
                     topLimit = bottomLimit;
                 }
 
-                if (systemIndex === undefined)
+                if (systemIndex1 === undefined)
                 {
-                    systemIndex = systems.length - 1; // last system
+                    systemIndex1 = systems.length - 1; // last system
                 }
             }
-            return systemIndex;
+            return systemIndex1;
         }
 
         // Returns the index of the staff having stafflines closest to y
         function findStaffIndex(y, staves)
         {
-            var staffIndex, i, nStaves, topLimit, bottomLimit;
+            var rStaffIndex, i, nStaves, topLimit, bottomLimit;
 
             if (y <= staves[0].bottomLineY)
             {
-                staffIndex = 0;
+                rStaffIndex = 0;
             }
             else if (y >= staves[staves.length - 1].topLineY)
             {
-                staffIndex = staves.length - 1;
+                rStaffIndex = staves.length - 1;
             }
             else
             {
@@ -551,18 +551,18 @@ _AP.score = (function (document)
                     bottomLimit = staves[i].topLineY;
                     if (y >= topLimit && y <= bottomLimit)
                     {
-                        staffIndex = ((y - topLimit) < (bottomLimit - y)) ? i - 1 : i;
+                        rStaffIndex = ((y - topLimit) < (bottomLimit - y)) ? i - 1 : i;
                         break;
                     }
 
                     if (y >= staves[i].topLineY && y <= staves[i].bottomLineY)
                     {
-                        staffIndex = i;
+                        rStaffIndex = i;
                         break;
                     }
                 }
             }
-            return staffIndex;
+            return rStaffIndex;
         }
 
         // Returns the index of the voice closest to y
@@ -585,17 +585,17 @@ _AP.score = (function (document)
         // if x is greater than all alignmentXs, returns undefined
         function findTimeObject(x, timeObjects)
         {
-            var i, timeObject, nTimeObjects = timeObjects.length;
+            var i, rTimeObject, nTimeObjects = timeObjects.length;
             for (i = 0; i < nTimeObjects; ++i)
             {
                 if (timeObjects[i].alignmentX >= x)
                 {
-                    timeObject = timeObjects[i];
+                    rTimeObject = timeObjects[i];
                     break;
                 }
             }
 
-            return timeObject;
+            return rTimeObject;
         }
 
         function isChord(timeObject)
@@ -830,7 +830,7 @@ _AP.score = (function (document)
             // returns an info object containing left, right and stafflineYs
             function getStafflineInfo(stafflines)
             {
-                var i, stafflineInfo = {}, stafflineYs = [], left, right, stafflineY,
+                var i, rStafflineInfo = {}, stafflineYs = [], left, right, stafflineY,
                 svgStaffline, svgStafflines = [];
 
                 for (i = 0; i < stafflines.length; ++i)
@@ -847,12 +847,12 @@ _AP.score = (function (document)
                         right /= viewBoxScale;
                     }
                 }
-                stafflineInfo.left = left;
-                stafflineInfo.right = right;
-                stafflineInfo.stafflineYs = stafflineYs;
-                stafflineInfo.svgStafflines = svgStafflines;
+                rStafflineInfo.left = left;
+                rStafflineInfo.right = right;
+                rStafflineInfo.stafflineYs = stafflineYs;
+                rStafflineInfo.svgStafflines = svgStafflines;
 
-                return stafflineInfo;
+                return rStafflineInfo;
             }
 
             function getGap(gap, stafflineYs)
@@ -1129,13 +1129,6 @@ _AP.score = (function (document)
         }
     },
 
-    // Creates the options.performerOptions containing the performer options defined in the score.
-    setPerformerOptions = function(svg, options)
-    {
-        console.log("score.setPerformerOptions() still needs to be written");
-        options.performerOptions = {};
-    },
-
     // Creates sequence.tracks, which is an array containing one track per channel (ordered by channel).
     // Each track is an array of moments ordered in time (see ap/Track.js and ap/Moment.js).
     // If this is a live performance (as opposed to a score playback), the livePerformersSilentTrack
@@ -1164,11 +1157,11 @@ _AP.score = (function (document)
         {
             var embeddedSvgPages, nPages,
                 i, j,
-                systemIndex, sysNumber, svgPage, svgElem, viewBoxScale, svgChildren, systemID,
+                systemIndex, sysNumber, svgPage, svgElem, viewBoxScale2, svgChildren, systemID,
                 childID,
                 lastSystemTimeObjects, finalBarlineMsPosition;
 
-            function getSystemTimeObjects(system, viewBoxScale, systemNode, speed)
+            function getSystemTimeObjects(system, viewBoxScale1, systemNode, speed)
             {
                 var i, j, systemChildren, systemChildID,
                     staff, staffChildren, staffChildID,
@@ -1221,8 +1214,7 @@ _AP.score = (function (document)
                             {
                                 var i, nBasicChords = basicChords.length, msFPDuration,
                                 msFPPositions = [], totalBasicMsDurations = 0,
-                                excessDuration, corrected = true,
-                                errorReduction;
+                                excessDuration;
 
                                 function correctRoundingError(basicChords, excessDuration)
                                 {
@@ -1312,7 +1304,7 @@ _AP.score = (function (document)
                             if(id.indexOf('chord') >= 0)
                             {
                                 timeObject = {};
-                                timeObject.alignmentX = parseFloat(noteObject.getAttribute('score:alignmentX')) / viewBoxScale;
+                                timeObject.alignmentX = parseFloat(noteObject.getAttribute('score:alignmentX')) / viewBoxScale1;
                                 chordChildren = noteObject.childNodes;
                                 for(j = 0; j < chordChildren.length; ++j)
                                 {
@@ -1340,7 +1332,7 @@ _AP.score = (function (document)
                             else if(id.indexOf('rest') >= 0)
                             {
                                  timeObject = {};
-                                timeObject.alignmentX = parseFloat(noteObject.getAttribute('score:alignmentX') / viewBoxScale);
+                                timeObject.alignmentX = parseFloat(noteObject.getAttribute('score:alignmentX') / viewBoxScale1);
                                 timeObject.msDuration = parseFloat(noteObject.getAttribute('score:msDuration'));
                                 timeObjects.push(timeObject);
                             }
@@ -1544,7 +1536,7 @@ _AP.score = (function (document)
                 svgPage = svg.getSVGDocument(embeddedSvgPages[i]);
 
                 svgElem = svgPage.childNodes[1];
-                viewBoxScale = getViewBoxScale(svgElem); // a float >= 1 (currently, usually 8.0)
+                viewBoxScale2 = getViewBoxScale(svgElem); // a float >= 1 (currently, usually 8.0)
                 svgChildren = svgElem.childNodes;
                 systemID = "page" + (i + 1).toString() + "_system" + (sysNumber++).toString();
                 for(j = 0; j < svgChildren.length; ++j)
@@ -1558,7 +1550,7 @@ _AP.score = (function (document)
                             {
                                 delete systems[systemIndex].msDuration; // is reset in the following function
                             }
-                            getSystemTimeObjects(systems[systemIndex], viewBoxScale, svgChildren[j], speed);
+                            getSystemTimeObjects(systems[systemIndex], viewBoxScale2, svgChildren[j], speed);
                             systemIndex++;
                             systemID = "page" + (i + 1).toString() + "_system" + (sysNumber++).toString();
                         }
@@ -1747,9 +1739,6 @@ _AP.score = (function (document)
         this.svgFrames = svgFrames;
 
         this.getEmptyPagesAndSystems = getEmptyPagesAndSystems;
-
-        // sets options.performerOptions
-        this.setPerformerOptions = setPerformerOptions;
 
         // sets sequence.tracks
         this.setSequenceTracks = setSequenceTracks;

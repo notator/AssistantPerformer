@@ -23,6 +23,8 @@ _AP.controls = (function(document, window)
     Score = _AP.score.Score,
     sequence = _AP.sequence,
     player = _AP.player,
+    scoreInfo, // set when a score is loaded
+    performer, // set in doControl() when the input device, score and output device have been set.
 
     SequenceRecording = _AP.sequenceRecording.SequenceRecording,
     COMMAND = _AP.constants.COMMAND,
@@ -35,32 +37,13 @@ _AP.controls = (function(document, window)
     livePerformerIsSilent = false,
     svgControlsState = 'stopped', //svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd'.
     svgPagesDiv,
-    mo = {}, // main option panel elements
+    globalElements = {}, // assistantPerformer.html elements (but not performerOptions) 
     cl = {}, // control layers
 
     // constants for control layer opacity values
     METAL = "1", // control layer is completely opaque
     SMOKE = "0.7", // control layer is smoky (semi-transparent)
     GLASS = "0", // control layer is completely transparent
-
-    // Options set in the pop-up menues in the main options dialog
-    controlOptions =
-    [
-        { name: "aftertouch", command: COMMAND.AFTERTOUCH },
-        { name: "channel pressure", command: COMMAND.CHANNEL_PRESSURE },
-        { name: "pitch wheel", command: COMMAND.PITCH_WHEEL },
-        { name: "modulation (1)", midiControl: CONTROL.MODWHEEL },
-        { name: "volume (7)", midiControl: CONTROL.VOLUME },
-        { name: "pan (10)", midiControl: CONTROL.PAN },
-        { name: "expression (11)", midiControl: CONTROL.EXPRESSION },
-        { name: "timbre (71)", midiControl: CONTROL.TIMBRE },
-        { name: "brightness (74)", midiControl: CONTROL.BRIGHTNESS },
-        { name: "effects (91)", midiControl: CONTROL.EFFECTS },
-        { name: "tremolo (92)", midiControl: CONTROL.TREMOLO },
-        { name: "chorus (93)", midiControl: CONTROL.CHORUS },
-        { name: "celeste (94)", midiControl: CONTROL.CELESTE },
-        { name: "phaser (95)", midiControl: CONTROL.PHASER }
-    ],
 
     // options set in the top dialog
     options = {},
@@ -86,7 +69,7 @@ _AP.controls = (function(document, window)
         if(downloadLink !== undefined)
         {
             // Need a small delay for the revokeObjectURL to work properly.
-            window.setTimeout(function ()
+            window.setTimeout(function()
             {
                 window.URL.revokeObjectURL(downloadLink.href); // window.URL is set in Main.js
                 downloadLinkDiv.removeChild(downloadLink);
@@ -190,20 +173,20 @@ _AP.controls = (function(document, window)
                     a.href = window.URL.createObjectURL(standardMIDIFile); // window.URL is set in Main.js
                     a.innerHTML = '<img id="saveImg" border="0" src="images/saveMouseOut.png" alt="saveMouseOutImage" width="56" height="31">';
 
-                    a.onmouseover = function (e)
+                    a.onmouseover = function(e)
                     {
                         var img = document.getElementById("saveImg");
                         img.src = "images/saveMouseOver.png";
                         a.style.cursor = 'default';
                     };
 
-                    a.onmouseout = function (e)
+                    a.onmouseout = function(e)
                     {
                         var img = document.getElementById("saveImg");
                         img.src = "images/saveMouseOut.png";
                     };
 
-                    a.onclick = function (e)
+                    a.onclick = function(e)
                     {
                         deleteSaveMIDIFileButton();
                     };
@@ -218,8 +201,8 @@ _AP.controls = (function(document, window)
     setMIDIDevices = function()
     {
         var
-        inSelector = document.getElementById("midiInputDeviceSelector"),
-        outSelector = document.getElementById("midiOutputDeviceSelector");
+        inSelector = document.getElementById("inputDeviceSelect"),
+        outSelector = document.getElementById("outputDeviceSelect");
 
         if(inSelector.selectedIndex === 0)
         {
@@ -240,205 +223,52 @@ _AP.controls = (function(document, window)
         }
     },
 
-    setControlVisibilityStates = function()
-    {
-        function minimumPressureDivVisibility()
-        {
-            var returnValue = "hidden";
-
-            function isVisibleAndMappedToVolume(selector)
-            {
-                var rval = false;
-                if(selector.style.visibility === "visible" && selector.selectedIndex === 4) // 4 is volume
-                {
-                    rval = true;
-                }
-                return rval;
-            }
-
-            if(isVisibleAndMappedToVolume(mo.pressureSubstituteControlDataSelector)
-                || isVisibleAndMappedToVolume(mo.pitchBendSubstituteControlDataSelector)
-                || isVisibleAndMappedToVolume(mo.modSustituteControlSelector))
-            {
-                return "visible";
-            }
-            
-            return returnValue;
-        }
-
-        if(mo.usesPressureSoloCheckbox.disabled === false && (mo.usesPressureSoloCheckbox.checked === true || mo.usesPressureOtherTracksCheckbox.checked === true))
-        {
-            mo.pressureSubstituteControlDataSelector.style.visibility = "visible";
-        }
-        else
-        {
-            mo.pressureSubstituteControlDataSelector.style.visibility = "hidden";
-        }
-
-        if(mo.usesPitchBendSoloCheckbox.disabled === false && (mo.usesPitchBendSoloCheckbox.checked === true || mo.usesPitchBendOtherTracksCheckbox.checked === true))
-        {
-            mo.pitchBendSubstituteControlDataSelector.style.visibility = "visible";
-        }
-        else
-        {
-            mo.pitchBendSubstituteControlDataSelector.style.visibility = "hidden";
-        }
-
-        if(mo.usesModSoloCheckbox.disabled === false && (mo.usesModSoloCheckbox.checked === true || mo.usesModOtherTracksCheckbox.checked === true))
-        {
-            mo.modSustituteControlSelector.style.visibility = "visible";
-        }
-        else
-        {
-            mo.modSustituteControlSelector.style.visibility = "hidden";
-        }
-
-        if(mo.speedControllerSelector.disabled === false && mo.speedControllerSelector.selectedIndex > 0)
-        {
-            mo.speedControllerMaxSpeedDiv.style.visibility = "visible";
-        }
-        else
-        {
-            mo.speedControllerMaxSpeedDiv.style.visibility = "hidden";
-        }
-
-        mo.minimumPressureDiv.style.visibility = minimumPressureDivVisibility();
-    },
-
     setMainOptionsState = function(mainOptionsState)
     {
-        var inputDeviceIndex, scoreIndex, outputDeviceIndex;
+        var
+        inputDeviceIndex = globalElements.inputDeviceSelect.selectedIndex,
+        scoreIndex = globalElements.scoreSelect.selectedIndex,
+        outputDeviceIndex = globalElements.outputDeviceSelect.selectedIndex;
 
         switch(mainOptionsState)
         {
-            case "enable":
-                mo.controlPanel.style.visibility = "hidden";
-                mo.svgPages.style.visibility = "hidden";
-                mo.titleOptionsDiv.style.visibility = "visible";
+            case "toFront": // set main options visible with the appropriate controls enabled/disabled
+                globalElements.titleOptionsDiv.style.visibility = "visible";
+                globalElements.globalSpeedDiv.style.display = "none";
+                globalElements.startRuntimeButton.style.display = "none";
+                globalElements.svgRuntimeControls.style.visibility = "hidden";
+                globalElements.svgPages.style.visibility = "hidden";
 
-                inputDeviceIndex = mo.midiInputDeviceSelector.selectedIndex;
-                scoreIndex = mo.scoreSelector.selectedIndex;
-                outputDeviceIndex = mo.midiOutputDeviceSelector.selectedIndex;
-
-                mo.midiInputDeviceSelector.disabled = false;
-                mo.scoreSelector.disabled = false;
-                mo.midiOutputDeviceSelector.disabled = false;
-
-                if(scoreIndex === 0)
+                if(outputDeviceIndex === 0)
                 {
-                    mo.speedPercentInputText.disabled = true;
-                    mo.trackSelector.disabled = true;
-
-                    mo.soloVelocityOptionCheckbox.disabled = true;
-                    mo.otherTracksVelocityOptionCheckbox.disabled = true;
-                    mo.soloPitchOptionCheckbox.disabled = true;
-                    mo.otherTracksPitchOptionCheckbox.disabled = true;
-
-                    mo.usesPressureSoloCheckbox.disabled = true;
-                    mo.usesPressureOtherTracksCheckbox.disabled = true;
-
-                    mo.usesModSoloCheckbox.disabled = true;
-                    mo.usesModOtherTracksCheckbox.disabled = true;
-
-                    mo.usesPitchBendSoloCheckbox.disabled = true;
-                    mo.usesPitchBendOtherTracksCheckbox.disabled = true;
-
-                    mo.speedControllerSelector.disabled = true;
+                    _AP.monoInput.hidden(true);
+                    _AP.polyInput.hidden(true);
                 }
-                else if(inputDeviceIndex > 0) // && scoreIndex > 0
+                else if(scoreIndex > 0)
                 {
-                    // The speed option can be used with or without a midi input device.
-                    mo.speedPercentInputText.disabled = false;
-                    mo.trackSelector.disabled = false;
+                    globalElements.globalSpeedDiv.style.display = "block";
+                    // Note that the midi input device does not have to be set in order to enable the start button.
+                    globalElements.startRuntimeButton.style.display = "initial";
 
-                    mo.soloVelocityOptionCheckbox.disabled = false;
-                    mo.otherTracksVelocityOptionCheckbox.disabled = false;
-                    mo.soloPitchOptionCheckbox.disabled = false;
-                    mo.otherTracksPitchOptionCheckbox.disabled = false;
-
-                    mo.usesPressureSoloCheckbox.disabled = false;
-                    mo.usesPressureOtherTracksCheckbox.disabled = false;
-
-                    mo.usesPitchBendSoloCheckbox.disabled = false;
-                    mo.usesPitchBendOtherTracksCheckbox.disabled = false;
-
-                    mo.usesModSoloCheckbox.disabled = false;
-                    mo.usesModOtherTracksCheckbox.disabled = false;
-
-                    mo.speedControllerSelector.disabled = false;
-                }
-                else // inputDevice === 0, scoreIndex > 0 (The speed option can be used with or without a midi input device).
-                {
-                    // The speed option can be used with or without a midi input device.
-                    mo.speedPercentInputText.disabled = false;
-                    mo.trackSelector.disabled = true;
-
-                    mo.soloVelocityOptionCheckbox.disabled = true;
-                    mo.otherTracksVelocityOptionCheckbox.disabled = true;
-                    mo.soloPitchOptionCheckbox.disabled = true;
-                    mo.otherTracksPitchOptionCheckbox.disabled = true;
-
-                    mo.usesPressureSoloCheckbox.disabled = true;
-                    mo.usesPressureOtherTracksCheckbox.disabled = true;
-
-                    mo.usesModSoloCheckbox.disabled = true;
-                    mo.usesModOtherTracksCheckbox.disabled = true;
-
-                    mo.usesPitchBendSoloCheckbox.disabled = true;
-                    mo.usesPitchBendOtherTracksCheckbox.disabled = true;
-
-                    mo.speedControllerSelector.disabled = true;
-                }
-
-                // Note that the midi input device does not have to be set in order to
-                // enable the start button.
-                if(scoreIndex !== 0 && outputDeviceIndex !== 0)
-                {
-                    mo.startRuntimeButton.setAttribute('value', 'Start');
-                    mo.startRuntimeButton.disabled = false;
-                }
-                else
-                {
-                    mo.startRuntimeButton.setAttribute('value', 'not ready');
-                    mo.startRuntimeButton.disabled = true;
+                    if(inputDeviceIndex > 0)
+                    {
+                        performer = scoreInfo.performer();
+                        performer.hidden(false);
+                    }
+                    else if(performer !== undefined)
+                    {
+                        performer.hidden(true);
+                    }
                 }
                 break;
-            case "disabled":
-                mo.controlPanel.style.visibility = "visible";
-                mo.svgPages.style.visibility = "visible";
-                mo.titleOptionsDiv.style.visibility = "hidden";
-
-                mo.midiInputDeviceSelector.disabled = true;
-                mo.scoreSelector.disabled = true;
-                mo.midiOutputDeviceSelector.disabled = true;
-
-                mo.speedPercentInputText.disabled = true;
-
-                mo.trackSelector.disabled = true;
-
-                mo.soloVelocityOptionCheckbox.disabled = true;
-                mo.otherTracksVelocityOptionCheckbox.disabled = true;
-                mo.soloPitchOptionCheckbox.disabled = true;
-                mo.otherTracksPitchOptionCheckbox.disabled = true;
-
-                mo.usesPressureSoloCheckbox.disabled = true;
-                mo.usesPressureOtherTracksCheckbox.disabled = true;
-
-                mo.usesModSoloCheckbox.disabled = true;
-                mo.usesModOtherTracksCheckbox.disabled = true;
-
-                mo.usesPitchBendSoloCheckbox.disabled = true;
-                mo.usesPitchBendOtherTracksCheckbox.disabled = true;
-
-                mo.speedControllerSelector.disabled = true;
-
-                mo.startRuntimeButton.disabled = true;
+            case "toBack": // set svg controls and score visible
+                globalElements.titleOptionsDiv.style.visibility = "hidden";
+                globalElements.svgRuntimeControls.style.visibility = "visible";
+                globalElements.svgPages.style.visibility = "visible";
                 break;
             default:
-                throw "Unknown svgControlsState";
+                throw "Unknown program state.";
         }
-
-        setControlVisibilityStates();
     },
 
     // start or stop listening to the input device.
@@ -451,21 +281,20 @@ _AP.controls = (function(document, window)
 
         /*********************/
         // Just testing. Delete these lines when options.performerOptions is complete and working.
-        if(options.performerOptions === undefined)
+        if(options.performer === undefined)
         {
-            options.performerOptions = {};
+            options.performer = _AP.monoInput;
         }
-        options.performerOptions.inputDeviceType = 'monoInput';
         /*********************/
 
-        switch(options.performerOptions.inputDeviceType)
+        if(performer === _AP.monoInput)
         {
-            case 'monoInput':
-                addOrRemoveEventListener("midimessage", _AP.monoInput.handleMIDIInputEvent);
-                break;
-            case 'polyInput': // The _AP.polyInput namespace is currently just a stub. It might work like a prepared piano.
-                addOrRemoveEventListener("midimessage", _AP.polyInput.handleMIDIInputEvent);
-                break;
+            addOrRemoveEventListener("midimessage", _AP.monoInput.handleMIDIInputEvent);
+        }
+        else if(performer === _AP.polyInput) 
+        {
+            // The _AP.polyInput namespace is currently just a stub. It might work like a prepared piano.
+            addOrRemoveEventListener("midimessage", _AP.polyInput.handleMIDIInputEvent);
         }
     },
 
@@ -487,11 +316,11 @@ _AP.controls = (function(document, window)
 
         score.allNotesOff(options.outputDevice);
 
-        setMainOptionsState("disabled");
+        setMainOptionsState("toBack");
 
         cl.gotoOptionsDisabled.setAttribute("opacity", GLASS);
 
-        if(document.getElementById("midiInputDeviceSelector").selectedIndex === 0)
+        if(document.getElementById("inputDeviceSelect").selectedIndex === 0)
         {
             cl.livePerformerOnOffDisabled.setAttribute("opacity", SMOKE);
         }
@@ -539,14 +368,15 @@ _AP.controls = (function(document, window)
     reportEndOfPerformance = function(sequenceRecording, performanceMsDuration)
     {
         var
-        scoreName = mo.scoreSelector.options[mo.scoreSelector.selectedIndex].text;
+        scoreName = globalElements.scoreSelect.value;
+        
 
         // Moment timestamps in the recording are shifted so as to be relative to the beginning of the
         // recording. Returns false if the if the sequenceRecording is undefined, null or has no moments.
         function setTimestampsRelativeToSequenceRecording(sequenceRecording)
         {
             var i, nTracks = sequenceRecording.trackRecordings.length, trackRecording,
-                j, nMoments, moment, 
+                j, nMoments, moment,
                 offset, success = true;
 
             // Returns the earliest moment.timestamp in the sequenceRecording.
@@ -554,25 +384,25 @@ _AP.controls = (function(document, window)
             function findOffset(sequenceRecording)
             {
                 var
-                i, nTracks, trackRecording,
+                i, nTrks, trackRec,
                 timestamp,
-                offset = Number.MAX_VALUE;
+                rOffset = Number.MAX_VALUE;
 
                 if(sequenceRecording !== undefined && sequenceRecording !== null)
                 {
-                    nTracks = sequenceRecording.trackRecordings.length;
-                    for(i = 0; i < nTracks; ++i)
+                    nTrks = sequenceRecording.trackRecordings.length;
+                    for(i = 0; i < nTrks; ++i)
                     {
-                        trackRecording = sequenceRecording.trackRecordings[i];
-                        if(trackRecording.moments.length > 0)
+                        trackRec = sequenceRecording.trackRecordings[i];
+                        if(trackRec.moments.length > 0)
                         {
-                            timestamp = trackRecording.moments[0].timestamp;
-                            offset = (offset < timestamp) ? offset : timestamp;
+                            timestamp = trackRec.moments[0].timestamp;
+                            rOffset = (rOffset < timestamp) ? rOffset : timestamp;
                         }
                     }
                 }
 
-                return offset;
+                return rOffset;
             }
 
             offset = findOffset(sequenceRecording);
@@ -626,7 +456,7 @@ _AP.controls = (function(document, window)
     {
         function setDisabled()
         {
-            setMainOptionsState("enable");
+            setMainOptionsState("toFront");
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
             cl.livePerformerOnOffDisabled.setAttribute("opacity", SMOKE);
@@ -694,42 +524,31 @@ _AP.controls = (function(document, window)
             nTracks = trackIsOnArray.length,
             sequenceRecording;
 
-            function sendTrackInitializationMessages(options, isAssistedPerformance)
+            function sendTrackInitializationMessages(options, trackInitialisationValues)
             {
-                var nTracks = trackIsOnArray.length,
-                    trackIndex, value;
+                var rNTracks = trackIsOnArray.length,
+                    trackIndex, value,
+                    tiv = trackInitialisationValues;
 
-                for(trackIndex = 0; trackIndex < nTracks; ++trackIndex)
-                { 
-                    if(options.trackPitchWheelDeviations.length > 0)
-                    {
-                        value = options.trackPitchWheelDeviations[trackIndex];
-                    }
-                    else
-                    {
-                        value = 2;
-                    }
-                    player.sendSetPitchWheelDeviationMessageNow(options.outputDevice, trackIndex, value);
-
-                    if(isAssistedPerformance && options.pressureSubstituteControlData !== null && options.pressureSubstituteControlData.midiControl === CONTROL.VOLUME)
-                    {
-                        value = options.runtimeOptions.track.minVolumes[trackIndex];
-                    }
-                    else if(options.trackMaxVolumes !== undefined && options.trackMaxVolumes.length > 0)
-                    {
-                        value = options.trackMaxVolumes[trackIndex];
-                    }
-                    else
-                    {
-                        value = 127; // default
-                    }
+                for(trackIndex = 0; trackIndex < rNTracks; ++trackIndex)
+                {
+                    value = (tiv.volumes.length > 0) ? tiv.volumes[trackIndex] : 100; // default 100
                     player.sendControlMessageNow(options.outputDevice, trackIndex, CONTROL.VOLUME, value);
 
-                    if(isAssistedPerformance && options.pressureSubstituteControlData !== null && options.pressureSubstituteControlData.midiControl !== CONTROL.VOLUME)
-                    {
-                        player.sendControlMessageNow(options.outputDevice, trackIndex, options.pressureSubstituteControlData.midiControl,
-                            options.performersMinimumPressure);
-                    }
+                    value = (tiv.pwDeviations.length > 0) ? tiv.pwDeviations[trackIndex] : 2; // default 2
+                    player.sendSetPitchWheelDeviationMessageNow(options.outputDevice, trackIndex, value);
+                 
+                    value = (tiv.pitchWheels.length > 0) ? tiv.pitchWheels[trackIndex] : 64; // default 64
+                    player.sendCommandMessageNow(options.outputDevice, trackIndex, COMMAND.PITCH_WHEEL, value);
+
+                    value = (tiv.expressions.length > 0) ? tiv.expressions[trackIndex] : 127; // default 127
+                    player.sendControlMessageNow(options.outputDevice, trackIndex, CONTROL.EXPRESSION, value);
+                    
+                    value = (tiv.pans.length > 0) ? tiv.pans[trackIndex] : 64; // default 64
+                    player.sendControlMessageNow(options.outputDevice, trackIndex, CONTROL.PAN, value);
+                                        
+                    value = (tiv.modulations.length > 0) ? tiv.modulations[trackIndex] : 0; // default 0
+                    player.sendControlMessageNow(options.outputDevice, trackIndex, CONTROL.MODWHEEL, value);
                 }
             }
 
@@ -750,9 +569,7 @@ _AP.controls = (function(document, window)
                     score.setRunningMarkers();
                     score.moveStartMarkerToTop(svgPagesDiv);
 
-                    sendTrackInitializationMessages(options, options.livePerformance);
-
-                    player.sendControlMessageNow(options.outputDevice, CONTROL.VOLUME, 127);
+                    sendTrackInitializationMessages(options, scoreInfo.trackInitialisationValues);
 
                     player.play(options, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
                         trackIsOnArray, sequenceRecording, reportEndOfPerformance, reportMsPos);
@@ -903,83 +720,20 @@ _AP.controls = (function(document, window)
         }
     },
 
-    // Sets the states of the main options to the states they have when no score is selected.
-    // This function is called by both init() and setDefaultRuntimeOptions() below.
-    setMainOptionsDefaultStates = function()
-    {
-        mo.trackMaxVolumes = [];
-        mo.trackPitchWheelDeviations = [];
-
-        mo.speedPercentInputText.value = "100";
-
-        mo.trackSelector.selectedIndex = 0;
-
-        mo.soloPitchOptionCheckbox.checked = false;
-        mo.otherTracksPitchOptionCheckbox.checked = false;
-        mo.soloVelocityOptionCheckbox.checked = false;
-        mo.otherTracksVelocityOptionCheckbox.checked = false;
-
-        mo.usesPressureSoloCheckbox.checked = false;
-        mo.usesPressureOtherTracksCheckbox.checked = false;
-        mo.pressureSubstituteControlDataSelector.selectedIndex = 4;
-
-        mo.usesPitchBendSoloCheckbox.checked = false;
-        mo.usesPitchBendOtherTracksCheckbox.checked = false;
-        mo.pitchBendSubstituteControlDataSelector.selectedIndex = 2;
-
-        mo.usesModSoloCheckbox.checked = false;
-        mo.usesModOtherTracksCheckbox.checked = false;
-        mo.modSustituteControlSelector.selectedIndex = 3;
-
-        mo.speedControllerSelector.selectedIndex = 0;
-        mo.speedControllerMaxSpeedInputText.value = 2;
-
-        mo.minimumPressureInputText.value = 64;  // default value. Only used in assisted performances.
-    },
-
     // Defines the window.svgLoaded(...) function.
     // Sets up the pop-up menues for scores and MIDI input and output devices.
     init = function(mAccess)
     {
-        function getMainOptionElements()
+        function getGlobalElements()
         {
-            mo.titleOptionsDiv = document.getElementById("titleOptionsDiv");
-            mo.controlPanel = document.getElementById("controlPanel");
-            mo.svgPages = document.getElementById("svgPages");
-
-            mo.midiInputDeviceSelector = document.getElementById("midiInputDeviceSelector");
-            mo.scoreSelector = document.getElementById("scoreSelector");
-            mo.midiOutputDeviceSelector = document.getElementById("midiOutputDeviceSelector");
-
-            mo.speedPercentInputText = document.getElementById("speedPercentInputText");
-
-            mo.trackSelector = document.getElementById("trackSelector");
-
-            mo.soloVelocityOptionCheckbox = document.getElementById("soloVelocityOptionCheckbox");
-            mo.otherTracksVelocityOptionCheckbox = document.getElementById("otherTracksVelocityOptionCheckbox");
-            mo.soloPitchOptionCheckbox = document.getElementById("soloPitchOptionCheckbox");
-            mo.otherTracksPitchOptionCheckbox = document.getElementById("otherTracksPitchOptionCheckbox");
-
-            mo.usesPressureSoloCheckbox = document.getElementById("usesPressureSoloCheckbox");
-            mo.usesPressureOtherTracksCheckbox = document.getElementById("usesPressureOtherTracksCheckbox");
-            mo.pressureSubstituteControlDataSelector = document.getElementById("pressureSubstituteControlDataSelector");
-
-            mo.usesModSoloCheckbox = document.getElementById("usesModSoloCheckbox");
-            mo.usesModOtherTracksCheckbox = document.getElementById("usesModOtherTracksCheckbox");
-            mo.modSustituteControlSelector = document.getElementById("modSustituteControlSelector");
-
-            mo.usesPitchBendSoloCheckbox = document.getElementById("usesPitchBendSoloCheckbox");
-            mo.usesPitchBendOtherTracksCheckbox = document.getElementById("usesPitchBendOtherTracksCheckbox");
-            mo.pitchBendSubstituteControlDataSelector = document.getElementById("pitchBendSubstituteControlDataSelector");
-
-            mo.speedControllerSelector = document.getElementById("speedControllerSelector");
-            mo.speedControllerMaxSpeedDiv = document.getElementById("speedControllerMaxSpeedDiv");
-            mo.speedControllerMaxSpeedInputText = document.getElementById("speedControllerMaxSpeedInputText");
-
-            mo.minimumPressureDiv = document.getElementById("minimumPressureDiv");
-            mo.minimumPressureInputText = document.getElementById("minimumPressureInputText");
-            
-            mo.startRuntimeButton = document.getElementById("startRuntimeButton");
+            globalElements.inputDeviceSelect = document.getElementById("inputDeviceSelect");
+            globalElements.scoreSelect = document.getElementById("scoreSelect");
+            globalElements.outputDeviceSelect = document.getElementById("outputDeviceSelect");
+            globalElements.globalSpeedDiv = document.getElementById("globalSpeedDiv");
+            globalElements.titleOptionsDiv = document.getElementById("titleOptionsDiv");
+            globalElements.startRuntimeButton = document.getElementById("startRuntimeButton");
+            globalElements.svgRuntimeControls = document.getElementById("svgRuntimeControls");
+            globalElements.svgPages = document.getElementById("svgPages");
         }
 
         // sets the options in the device selectors' menus
@@ -987,8 +741,8 @@ _AP.controls = (function(document, window)
         {
             var
             i, nItems, option,
-            is = mo.midiInputDeviceSelector, // = document.getElementById("midiInputDeviceSelector")
-            os = mo.midiOutputDeviceSelector, // = document.getElementById("midiOutputDeviceSelector")
+            is = globalElements.inputDeviceSelect,
+            os = globalElements.outputDeviceSelect, // document.getElementById("outputDeviceSelect")
             inputs = midiAccess.inputs(),
             outputs = midiAccess.outputs(); // WebMIDIAPI creates new OutputDevices
 
@@ -1020,30 +774,8 @@ _AP.controls = (function(document, window)
         // resets the score selector in case the browser has cached the last value
         function initScoreSelector(runningMarkerHeightChanged)
         {
-            mo.scoreSelector.selectedIndex = 0;
+            globalElements.scoreSelect.selectedIndex = 0;
             score = new Score(runningMarkerHeightChanged); // an empty score, with callback function
-        }
-
-        function setControlOptionSelectors()
-        {
-            function populate(selector)
-            {
-                var
-                i, nOptions = controlOptions.length,
-                    element, textNode;
-
-                for(i = 0; i < nOptions; ++i)
-                {
-                    element = document.createElement("option");
-                    textNode = document.createTextNode(controlOptions[i].name);
-                    element.appendChild(textNode);
-                    selector.add(element, null);
-                }
-            }
-
-            populate(mo.pressureSubstituteControlDataSelector);
-            populate(mo.pitchBendSubstituteControlDataSelector);
-            populate(mo.modSustituteControlSelector);
         }
 
         function getControlLayers(document)
@@ -1101,7 +833,7 @@ _AP.controls = (function(document, window)
 
         if(document.URL.search("file://") === 0)
         {
-            svg.getSVGDocument = function (embedded_element)
+            svg.getSVGDocument = function(embedded_element)
             {
                 var subdoc;
 
@@ -1131,7 +863,7 @@ _AP.controls = (function(document, window)
             // The first SVG page in each score contains the line
             //     <script type="text/javascript" xlink:href="../SVG.js"/>
             // Each argument function is added to the local svg object (which only exists for that purpose).
-            window._JI_SVGLoaded = function (getSVGDocument)
+            window._JI_SVGLoaded = function(getSVGDocument)
             {
                 svg.getSVGDocument = getSVGDocument;
             };
@@ -1139,15 +871,13 @@ _AP.controls = (function(document, window)
 
         midiAccess = mAccess;
 
-        getMainOptionElements();
+        performer = _AP.monoInput; // default
+
+        getGlobalElements();
 
         setMIDIDeviceSelectors(midiAccess);
 
         initScoreSelector(runningMarkerHeightChanged);
-
-        setControlOptionSelectors();
-
-        setMainOptionsDefaultStates();
 
         setSvgPagesDivHeight();
 
@@ -1156,32 +886,16 @@ _AP.controls = (function(document, window)
         setSvgControlsState('disabled');
     },
 
-    // If this is a live performance, display the options in a panel like the current one. Otherwise
-    // either delete the performer's options display panel or grey it out.
-    // (In contrast to previous versions of the AP, these options will be fixed in the score, and cant be
-    // changed in a dialog.)
-    // There will be (at least) two live performance modes, having possibly different sets of options:
-    //      options.performerOptions.inputDeviceType === 'monoInput' and
-    //      options.performerOptions.inputDeviceType === 'polyInput'
-    // See player.play().
-    displayPerformerOptions = function(islivePerformance, performerOptions)
-    {
-        console.log("controls.displayPerformanceOptions() still needs to be written.");
-    },
-
-    initTracksPlayerAndPerformer = function (score, options)
+    initTracksAndPlayer = function(score, options)
     {
         if(scoreHasJustBeenSelected)
         {
             score.getEmptyPagesAndSystems(svg); // everything except the timeObjects (which have to take account of speed)
         }
 
-        score.setPerformerOptions(svg, options); // sets options.performerOptions
         score.setSequenceTracks(svg, options); // sets sequence.tracks
 
         player.init(options.outputDevice, sequence.tracks); // sets player.nextMoment to simple no inputDevice version.
-
-        displayPerformerOptions(options.livePerformance, options.performerOptions);
 
         // If this is a live performance, _AP.monoInput.runtimeInit(...) or _AP.polyInput.runtimeInit() will be called from player.play(...).
     },
@@ -1198,21 +912,18 @@ _AP.controls = (function(document, window)
         // The score is actually analysed when the Start button is clicked.
         function setScore()
         {
-            var scoreInfo;
-
-            // Returns a scoreInfo object constructed from the runtimeOptions defined in the score's .mkss file
+            // If the score selector's index is 0, this function returns undefined, otherwise it returns
+            // a scoreInfo object constructed from the runtimeOptions defined in the score's .mkss file
             // The scoreInfo object returned by this function has the following attributes:
             //      scoreInfo.name (e.g. "Song Six")
             //      scoreInfo.nPages (e.g. 7)
             //      scoreInfo.nTracks (e.g. 8)
+            //      scoreInfo.performer() (returns the performer)
             // and optionally (if present)
-            //      scoreInfo.trackInitialisationValues (optional maxVolumes and pitchWheelDeviations.)
-            // and optionally (if present)
-            //      scoreInfo.defaultPerformanceOptions (see below)
+            //      scoreInfo.trackInitialisationValues
             function getScoreRuntimeInfo()
             {
-                var scoreSelectorElem = document.getElementById("scoreSelector"),
-                    scoreInfo = {}, 
+                var rScoreInfo,
                     runtimeInfoString, trackInitString, mPerformerOptionsString, pPerformerOptionsString;
 
                 function getRuntimeInfoString(scoreName)
@@ -1221,8 +932,8 @@ _AP.controls = (function(document, window)
                     scorePath = "scores/" + scoreName + "/" + scoreName + ".mkss",
                     xhr = new XMLHttpRequest(),
                     scoreMkssString,
-                    index1, index2,
-                    runtimeInfoString;
+                    index,
+                    rRuntimeInfoString;
 
                     xhr.open('GET', scorePath, false); // asynch used to be true
                     xhr.setRequestHeader("Content-Type", "text/xml");
@@ -1230,11 +941,45 @@ _AP.controls = (function(document, window)
 
                     scoreMkssString = xhr.responseText;
 
-                    index1 = scoreMkssString.indexOf("<runtimeInfo");
-                    index2 = scoreMkssString.indexOf("</runtimeInfo>");
-                    runtimeInfoString = scoreMkssString.substr(index1, index2 - index1);
+                    index = scoreMkssString.search("<runtimeInfo");
+                    rRuntimeInfoString = scoreMkssString.substr(index);
+                    index = rRuntimeInfoString.search("</runtimeInfo>");
+                    if(index < 0)
+                    {
+                        index = rRuntimeInfoString.search("/>");
+                    }
+                    rRuntimeInfoString = rRuntimeInfoString.substr(0, index);
 
-                    return runtimeInfoString;
+                    return rRuntimeInfoString;
+                }
+
+                // Returns the single int attribute value corresponding to the attrName
+                // The attrName argument must end with a '=' character.
+                function intAttribute(optsString, attrName)
+                {
+                    var index,
+                        valStr,
+                        rvalString,
+                        rval = -1;
+
+                    if(attrName[attrName.length - 1] !== '=')
+                    {
+                        throw "The attrName argument must end with a '=' character.";
+                    }
+
+                    index = optsString.search(attrName);
+                    if(index !== -1)
+                    {
+                        valStr = optsString.substr(index + attrName.length + 1);
+                        index = valStr.search("\"");
+                        rvalString = valStr.substr(0, index);
+                        rval = parseInt(rvalString, 10);
+                    }
+                    if(rval <= 0)
+                    {
+                        throw "Error getting int attribute.";
+                    }
+                    return rval;
                 }
 
                 // Returns null if the optionsTypeString element does not exist in the runtimeInfoString.
@@ -1256,254 +1001,127 @@ _AP.controls = (function(document, window)
                     return optsString;
                 }
 
-                // Returns the attribute value string corresponding to the attrName.
-                // or null if attrName does not exist in allOpts.
-                // The attrName argument must end with a '=' character.
-                function attributeValueString(optsString, attrName)
+                function getTrackInitValues(nTracks, trackOpts)
                 {
-                    var index,
-                        valStr,
-                        rval = null;
+                    var tio = {};
 
-                    if(attrName[attrName.length - 1] !== '=')
+                    // Returns the attribute value array corresponding to the attrName in trackOpts.
+                    // if trackOpts is null or the attrName does not exist in trackOpts, an array
+                    // containing nTracks cpoies of the default value is returned.
+                    // The attrName argument must end with a '=' character.
+                    function intArrayAttribute(nTracks, trackOpts, attrName, defaultValue)
                     {
-                        throw "The attrName argument must end with a '=' character.";
-                    }
+                        var index,
+                            valStr,
+                            rvalString,
+                            rvalArray;
 
-                    index = optsString.search(attrName);
-                    if(index !== -1)
-                    {
-                        valStr = optsString.substr(index + attrName.length + 1);
-                        index = valStr.search("\"");
-                        rval = valStr.substr(0, index);
-                    }
-                    return rval;
-                }
-
-                function getTrackInitOptions(trackOpts)
-                {
-                    var tio = {},
-                        str;
-
-                    function stringToTrackIntArray(str)
-                    {
-                        var strArray = str.split(','),
-                            intArray = [],
-                            i;
-
-                        for(i = 0; i < strArray.length; ++i)
+                        function defaultArray(nTracks, defaultValue)
                         {
-                            intArray.push(parseInt(strArray[i], 10));
+                            var i, rval = [];
+                            for(i = 0; i < nTracks; ++i)
+                            {
+                                rval.push(defaultValue);
+                            }
+                            return rval;
                         }
-                        return intArray;
+
+                        function stringToIntArray(str)
+                        {
+                            var strArray = str.split(','),
+                                intArray = [],
+                                i;
+
+                            for(i = 0; i < strArray.length; ++i)
+                            {
+                                intArray.push(parseInt(strArray[i], 10));
+                            }
+                            return intArray;
+                        }
+
+                        if(attrName[attrName.length - 1] !== '=')
+                        {
+                            throw "The attrName argument must end with a '=' character.";
+                        }
+
+                        if(trackOpts === null)
+                        {
+                            rvalArray = defaultArray(nTracks, defaultValue);
+                        }
+                        else
+                        {
+                            index = trackOpts.search(attrName);
+                            if(index !== -1)
+                            {
+                                valStr = trackOpts.substr(index + attrName.length + 1);
+                                index = valStr.search("\"");
+                                rvalString = valStr.substr(0, index);
+                                rvalArray = stringToIntArray(rvalString);
+                            }
+                        }
+
+                        if(rvalArray === undefined || rvalArray.length !== nTracks)
+                        {
+                            throw "Error getting int array attribute.";
+                        }
+
+                        return rvalArray;
                     }
 
-                    str = attributeValueString(trackOpts, "maxVolume=");
-                    if(str !== null)
-                    {
-                        tio.maxVolumes = stringToTrackIntArray(str);
-                    }
-
-                    str = attributeValueString(trackOpts, "volume=");
-                    if(str !== null)
-                    {
-                        tio.volumes = stringToTrackIntArray(str);
-                    }
-
-                    str = attributeValueString(trackOpts, "pwDeviation=");
-                    if(str !== null)
-                    {
-                        tio.pwDeviations = stringToTrackIntArray(str);
-                    }
-
-                    str = attributeValueString(trackOpts, "pitchWheel=");
-                    if(str !== null)
-                    {
-                        tio.pitchWheels = stringToTrackIntArray(str);
-                    }
-
-                    str = attributeValueString(trackOpts, "expression=");
-                    if(str !== null)
-                    {
-                        tio.expressions = stringToTrackIntArray(str);
-                    }
-
-                    str = attributeValueString(trackOpts, "pan=");
-                    if(str !== null)
-                    {
-                        tio.pans = stringToTrackIntArray(str);
-                    }
-
-                    str = attributeValueString(trackOpts, "modulation=");
-                    if(str !== null)
-                    {
-                        tio.modulations = stringToTrackIntArray(str);
-                    }
+                    tio.volumes = intArrayAttribute(nTracks, trackOpts, "volume=", 100);
+                    tio.pwDeviations = intArrayAttribute(nTracks, trackOpts, "pwDeviation=", 2);
+                    tio.pitchWheels = intArrayAttribute(nTracks, trackOpts, "pitchWheel=", 64);
+                    tio.expressions = intArrayAttribute(nTracks, trackOpts, "expression=", 127);
+                    tio.pans = intArrayAttribute(nTracks, trackOpts, "pan=", 64);
+                    tio.modulations = intArrayAttribute(nTracks, trackOpts, "modulation=", 0);
 
                     return tio;
                 }
-                function getMonoPerformerOptions(mPerfOpts)
+
+                if(globalElements.scoreSelect.selectedIndex > 0)
                 {
-                    var mpo = {},
-                        str;
+                    rScoreInfo = {};
 
-                    // str is a string containing nTracks characters that are '0's and '1's.
-                    function stringToTrackBoolArray(str)
-                    {
-                        var boolArray = [],
-                            i;
+                    rScoreInfo.name = globalElements.scoreSelect.value;
+                    runtimeInfoString = getRuntimeInfoString(rScoreInfo.name);
 
-                        for(i = 0; i < str.length; ++i)
+                    rScoreInfo.nPages = intAttribute(runtimeInfoString, "nPages=");
+                    rScoreInfo.nTracks = intAttribute(runtimeInfoString, "nTracks=");
+
+                    trackInitString = getPerformanceOptionsString(runtimeInfoString, "trackInit");
+                    rScoreInfo.trackInitialisationValues = getTrackInitValues(rScoreInfo.nTracks, trackInitString);
+
+                    // this is defined as a function to make keeping track of the
+                    // performer easy when selectors are being juggled at the top level.
+                    rScoreInfo.performer = function()
                         {
-                            if(str[i] === '0')
+                            var rPerformer;
+
+                            mPerformerOptionsString = getPerformanceOptionsString(runtimeInfoString, "monoPerformerOptions");
+                            if(mPerformerOptionsString !== null)
                             {
-                                boolArray.push(true);
+                                rPerformer = _AP.monoInput;
+                                rPerformer.setControlsFromString(mPerformerOptionsString, rScoreInfo.nTracks);
                             }
                             else
                             {
-                                boolArray.push(false);
-                            }    
-                        }
-                        return boolArray;
-                    }
-
-                    str = attributeValueString(mPerfOpts, "noteOnPitchTracks=");
-                    if(str !== null)
-                    {
-                        mpo.noteOnPitchTracks = stringToTrackBoolArray(str);
-                    }
-
-                    str = attributeValueString(mPerfOpts, "noteOnVelocityTracks=");
-                    if(str !== null)
-                    {
-                        mpo.noteOnVelocityTracks = stringToTrackBoolArray(str);
-                    }
-
-                    if(mPerfOpts.search("pressureController=") !== -1)
-                    {
-                        mpo.pressureController = attributeValueString(mPerfOpts, "pressureController=");
-                    }
-
-                    str = attributeValueString(mPerfOpts, "pressureTracks=");
-                    if(str !== null)
-                    {
-                        mpo.pressureTracks = stringToTrackBoolArray(str);
-                    }
-
-                    if(mPerfOpts.search("pitchWheelController=") !== -1)
-                    {
-                        mpo.pitchWheelController = attributeValueString(mPerfOpts, "pitchWheelController=");
-                    }
-
-                    str = attributeValueString(mPerfOpts, "pitchWheelTracks=");
-                    if(str !== null)
-                    {
-                        mpo.pitchWheelTracks = stringToTrackBoolArray(str);
-                    }
-
-                    if(mPerfOpts.search("modWheelController=") !== -1)
-                    {
-                        mpo.modWheelController = attributeValueString(mPerfOpts, "modWheelController=");
-                    }
-
-                    str = attributeValueString(mPerfOpts, "modWheelTracks=");
-                    if(str !== null)
-                    {
-                        mpo.modWheelTracks = stringToTrackBoolArray(str);
-                    }
-
-                    if(mPerfOpts.search("speedController=") !== -1)
-                    {
-                        mpo.speedController = attributeValueString(mPerfOpts, "speedController=");
-                    }
-
-                    str = attributeValueString(mPerfOpts, "speedMaxPercent=");
-                    if(str !== null)
-                    {
-                        mpo.speedMaxPercent = parseFloat(attributeValueString(mPerfOpts, "speedMaxPercent="));
-                    }
-
-                    str = attributeValueString(mPerfOpts, "minVolume=");
-                    if(str !== null)
-                    {
-                        mpo.minVolume = parseInt(attributeValueString(mPerfOpts, "minVolume="), 10);
-                    }
-
-                    str = attributeValueString(mPerfOpts, "trackIndex=");
-                    if(str !== null)
-                    {
-                        mpo.trackIndex = parseInt(attributeValueString(mPerfOpts, "trackIndex="), 10);
-                    }
-                                    
-                    return mpo;
-                }
-                function getPolyPerformerOptions(pPerfOpts)
-                {
-                    var ppo = {},
-                        str;
-                    return ppo;
-                }
-                
-                scoreInfo.name = scoreSelectorElem.value;
-                runtimeInfoString = getRuntimeInfoString(scoreInfo.name);
-
-                scoreInfo.nPages = parseInt(attributeValueString(runtimeInfoString, "nPages="), 10);
-                scoreInfo.nTracks = parseInt(attributeValueString(runtimeInfoString, "nTracks="), 10);
-
-                trackInitString = getPerformanceOptionsString(runtimeInfoString, "trackInit");
-                if(trackInitString !== null)
-                {
-                    scoreInfo.trackInitialisationValues = getTrackInitOptions(trackInitString);
+                                pPerformerOptionsString = getPerformanceOptionsString(runtimeInfoString, "polyPerformerOptions");
+                                if(pPerformerOptionsString !== null)
+                                {
+                                    rPerformer = _AP.polyInput;
+                                    rPerformer.setControlsFromString(pPerformerOptionsString, rScoreInfo.nTracks);
+                                }
+                                else
+                                {
+                                    rPerformer = _AP.monoInput;
+                                    rPerformer.setDefaultControls(rScoreInfo.nTracks);
+                                }
+                            }
+                            return rPerformer;
+                        };
                 }
 
-                mPerformerOptionsString = getPerformanceOptionsString(runtimeInfoString, "monoPerformerOptions");
-                if(mPerformerOptionsString !== null)
-                {
-                    scoreInfo.monoPerformerOptions = getMonoPerformerOptions(mPerformerOptionsString);
-                }
-                else
-                {
-                    pPerformerOptionsString = getPerformanceOptionsString(runtimeInfoString, "polyPerformerOptions");
-                    if(pPerformerOptionsString !== null)
-                    {
-                        scoreInfo.polyPerformerOptions = getMonoPerformerOptions(pPerformerOptionsString);
-                    }
-                }
-
-                return scoreInfo;
-            }
-
-            // removes existing mo.trackSelector.ChildNodes
-            // adds nTracks new child nodes
-            // enables mo.trackSelector
-            // Selects assistantsTrackIndex if it is defined.
-            function setPerformersTrackSelector(nTracks, assistantsTrackIndex)
-            {
-                var i, optionElem, textElem, sibling,
-                firstChildNode;
-
-                if(mo.trackSelector.childNodes.length > 0)
-                {
-                    firstChildNode = mo.trackSelector.childNodes[0];
-                    sibling = firstChildNode.nextSibling;
-                    while(sibling !== null)
-                    {
-                        mo.trackSelector.removeChild(sibling);
-                        sibling = firstChildNode.nextSibling;
-                    }
-                    mo.trackSelector.removeChild(firstChildNode);
-                }
-                for(i = 0; i < nTracks; ++i)
-                {
-                    optionElem = document.createElement("option");
-                    textElem = document.createTextNode((i + 1).toString());
-                    optionElem.appendChild(textElem);
-                    mo.trackSelector.appendChild(optionElem);
-                }
-                if(assistantsTrackIndex !== undefined)
-                {
-                    mo.trackSelector.selectedIndex = assistantsTrackIndex;
-                }
+                return rScoreInfo;
             }
 
             function setPages(scoreName, nPages)
@@ -1558,133 +1176,9 @@ _AP.controls = (function(document, window)
                 svgPagesFrame.innerHTML = embedCode;
             }
 
-            function setDefaultRuntimeOptions(scoreInfo)
-            {
-                var
-                tid = scoreInfo.trackInitialisationValues,
-                dpo = scoreInfo.defaultPerformanceOptions;
-
-                setMainOptionsDefaultStates(); // also called by init() above
-
-                if(tid !== undefined)
-                {
-                    if(tid.maxVolumes !== undefined)
-                    {
-                        mo.trackMaxVolumes = tid.maxVolumes; // default is empty array
-                    }
-                    if(tid.pitchWheelDeviations !== undefined)
-                    {
-                        mo.trackPitchWheelDeviations = tid.pitchWheelDeviations; // default is empty array
-                    }
-                }
-
-                if(dpo !== undefined)
-                {
-                    if(dpo.track !== undefined)
-                    {
-                        mo.trackSelector.selectedIndex = dpo.track - 1;
-                    }
-                    if(dpo.pitch !== undefined)
-                    {
-                        if(dpo.pitch.soloTrack !== undefined)
-                        {
-                            mo.soloPitchOptionCheckbox.checked = true;
-                        }
-                        if(dpo.pitch.otherTracks !== undefined)
-                        {
-                            mo.otherTracksPitchOptionCheckbox.checked = true;
-                        }
-                    }
-                    if(dpo.velocity !== undefined)
-                    {
-                        if(dpo.velocity.soloTrack !== undefined)
-                        {
-                            mo.soloVelocityOptionCheckbox.checked = true;
-                        }
-                        if(dpo.velocity.otherTracks !== undefined)
-                        {
-                            mo.otherTracksVelocityOptionCheckbox.checked = true;
-                        }
-                    }
-                    if(dpo.pressure !== undefined)
-                    {
-                        if(dpo.pressure.soloTrack !== undefined)
-                        {
-                            mo.usesPressureSoloCheckbox.checked = true;
-                        }
-                        if(dpo.pressure.otherTracks !== undefined)
-                        {
-                            mo.usesPressureOtherTracksCheckbox.checked = true;
-                        }
-                        if(dpo.pressure.selectedIndex !== undefined)
-                        {
-                            mo.pressureSubstituteControlDataSelector.selectedIndex = dpo.pressure.selectedIndex;
-                        }
-                    }
-                    if(dpo.pitchWheel !== undefined)
-                    {
-                        if(dpo.pitchWheel.soloTrack !== undefined)
-                        {
-                            mo.usesPitchBendSoloCheckbox.checked = true;
-                        }
-                        if(dpo.pitchWheel.otherTracks !== undefined)
-                        {
-                            mo.usesPitchBendOtherTracksCheckbox.checked = true;
-                        }
-                        if(dpo.pitchWheel.selectedIndex !== undefined)
-                        {
-                            mo.pitchBendSubstituteControlDataSelector.selectedIndex = dpo.pitchWheel.selectedIndex;
-                        }
-                    }
-                    if(dpo.modWheel !== undefined)
-                    {
-                        if(dpo.modWheel.soloTrack !== undefined)
-                        {
-                            mo.usesModSoloCheckbox.checked = true;
-                        }
-                        if(dpo.modWheel.otherTracks !== undefined)
-                        {
-                            mo.usesModOtherTracksCheckbox.checked = true;
-                        }
-                        if(dpo.modWheel.selectedIndex !== undefined)
-                        {
-                            mo.modSustituteControlSelector.selectedIndex = dpo.modWheel.selectedIndex;
-                        }
-                    }
-                    if(dpo.speedControl !== undefined)
-                    {
-                        if(dpo.speedControl.selectedIndex !== undefined)
-                        {
-                            mo.speedControllerSelector.selectedIndex = dpo.speedControl.selectedIndex;
-                        }
-                        if(dpo.speedControl.maximumFactor !== undefined)
-                        {
-                            mo.speedControllerMaxSpeedInputText.value = dpo.speedControl.maximumFactor;
-                        }
-                    }
-                    if(dpo.minimumVolume !== undefined)
-                    {
-                        mo.minimumPressureInputText.value = dpo.minimumVolume;
-                    }
-                }
-
-                setControlVisibilityStates();
-            }
-
-            scoreInfo = getScoreRuntimeInfo();
-
-            setDefaultRuntimeOptions(scoreInfo);
+            scoreInfo = getScoreRuntimeInfo(); // sets performer (to monoInput if not defined in the score's .mkss file.
 
             setPages(scoreInfo.name, scoreInfo.nPages);
-
-            if(scoreInfo.defaultPerformanceOptions !== undefined)
-            {
-                setPerformersTrackSelector(scoreInfo.nTracks, scoreInfo.defaultPerformanceOptions.assistantsTrackIndex);
-            }
-            else
-            {
-                setPerformersTrackSelector(scoreInfo.nTracks, 0);
-            }
 
             tracksControl.setNumberOfTracks(scoreInfo.nTracks);
 
@@ -1774,48 +1268,35 @@ _AP.controls = (function(document, window)
             }
         }
 
-        /**** controls in options panel ***/
-        if(controlID === "midiInputDeviceSelector"
-        || controlID === "scoreSelector"
-        || controlID === "midiOutputDeviceSelector"
-        || controlID === "usesPressureSoloCheckbox"
-        || controlID === "usesPressureOtherTracksCheckbox"
-        || controlID === "usesModSoloCheckbox"
-        || controlID === "usesModOtherTracksCheckbox"
-        || controlID === "usesPitchBendSoloCheckbox"
-        || controlID === "usesPitchBendOtherTracksCheckbox"
-        || controlID === "speedControllerSelector")
-        {
-            setMainOptionsState("enable"); // enables only the appropriate controls
-        }
-
-        if(controlID === "midiInputDeviceSelector")
+        if(controlID === "inputDeviceSelect")
         {
             setMIDIDevices();
-            tracksControl.setInitialTracksControlState(mo.midiInputDeviceSelector.selectedIndex > 0, mo.trackSelector.selectedIndex);
+            if(scoreInfo !== undefined)
+            {
+                performer = scoreInfo.performer();
+                tracksControl.setInitialTracksControlState(performer.trackSelect().selectedIndex > 0, performer.trackSelect().selectedIndex);
+            }
         }
 
-        if(controlID === "scoreSelector")
+        if(controlID === "scoreSelect")
         {
             setScore();
-            tracksControl.setInitialTracksControlState(mo.trackSelector.selectedIndex >= 0, mo.trackSelector.selectedIndex);
+            performer = scoreInfo.performer();
+            tracksControl.setInitialTracksControlState(performer.trackSelect().selectedIndex >= 0, performer.trackSelect().selectedIndex);
         }
 
-        if(controlID === "midiOutputDeviceSelector")
+        if(controlID === "outputDeviceSelect")
         {
             setMIDIDevices();
         }
 
-        if(controlID === "trackSelector")
+        /**** controls in options panel ***/
+        if(controlID === "inputDeviceSelect"
+        || controlID === "scoreSelect"
+        || controlID === "outputDeviceSelect"
+        || controlID === "globalSpeedInput")
         {
-            tracksControl.setInitialTracksControlState(mo.trackSelector.selectedIndex >= 0, mo.trackSelector.selectedIndex);
-        }
-
-        if (controlID === "pressureSubstituteControlDataSelector"
-            || controlID === "pitchBendSubstituteControlDataSelector"
-            || controlID === "modSustituteControlSelector")
-        {
-            setControlVisibilityStates(); // here just sets the visibility of the minimum volume div.
+            setMainOptionsState("toFront"); // enables only the appropriate controls
         }
 
         /*** SVG controls ***/
@@ -1863,7 +1344,7 @@ _AP.controls = (function(document, window)
                     tracksControl.refreshDisplay();
                 }
 
-                initTracksPlayerAndPerformer(score, options);
+                initTracksAndPlayer(score, options);
             }
         }
 
@@ -1944,216 +1425,54 @@ _AP.controls = (function(document, window)
 
     },
 
-    // Called when the Start button is clicked in the top options dialog.
+    // Called when the Start button is clicked.
     // The score selector sets the array of svgScorePage urls.
     // The Start button is enabled when a score and MIDI output have been selected.
     // It does not require a MIDI input.
     beginRuntime = function()
-    {
-        function getOptions()
-        {
-            var success, speedRoots;
-
-            function checkMinVolumeInput()
-            {
-                var volume = parseInt(mo.minimumPressureInputText.value, 10), success;
-
-                if(isNaN(volume) || Math.floor(volume) !== volume || volume < 0 || volume > 127)
-                {
-                    alert("Illegal minimum volume.\n\nThe value must be an integer in the range 0..127.");
-                    success = false;
-                }
-                else
-                {
-                    success = true;
-                }
-
-                return success;
-            }
-
-            function checkSpeedInput()
-            {
-                var inputText = mo.speedPercentInputText,
-                speed = parseFloat(inputText.value), success;
-
-                if(isNaN(speed) || speed <= 0)
-                {
-                    alert("Illegal standard speed percentage.\n\n" +
-                          "The value must be an integer or\n" +
-                          "floating point number greater than 0.");
-                    success = false;
-                }
-                else
-                {
-                    success = true;
-                }
-
-                return success;
-            }
-
-            // minVolumes are integers in range 0..127
-            function getMinVolumes(maxVolumes, restPressure)
-            {
-                var minVolumes = [],
-                    i;
-
-                for(i = 0; i < maxVolumes.length; ++i)
-                {
-                    minVolumes.push(Math.floor(maxVolumes[i] * restPressure / 127));
-                }
-
-                return minVolumes;
-            }
-
-            // scales are floating point values in range 0.0..1.0
-            function getScales(maxVolumes, minVolumes)
-            {
-                var scales = [], i;
-
-                for(i = 0; i < maxVolumes.length; ++i)
-                {
-                    scales.push((maxVolumes[i] - minVolumes[i]) / 127);
-                }
-
-                return scales;
-            }
-
-            function getSpeedRoots(speedControllerMaxSpeedInputText)
-            {
-                var speedRoots = {},
-                    maxSpeedFactor = parseFloat(speedControllerMaxSpeedInputText.value) / 100,
-                    minSpeedFactor = 1 / maxSpeedFactor;
-
-                speedRoots.faster = 1 / Math.pow(maxSpeedFactor, (1 / 63));
-                speedRoots.slower = 1 / Math.pow(minSpeedFactor, (1 / 64));
-
-                return speedRoots;
-            }
-
-            if(checkMinVolumeInput() && checkSpeedInput())
-            {
-                // options.livePerformance is kept up to date by the livePerformerOnOffButton.
-                options.livePerformance = (cl.livePerformerOff.getAttribute("opacity") === "0");
-
-                options.trackMaxVolumes = mo.trackMaxVolumes;
-                if(options.livePerformance)
-                {
-                    options.runtimeOptions = {};
-                    options.runtimeOptions.track = {};
-                    options.runtimeOptions.track.minVolumes = getMinVolumes(options.trackMaxVolumes, parseInt(mo.minimumPressureInputText.value, 10));
-                    options.runtimeOptions.track.scales = getScales(options.trackMaxVolumes, options.runtimeOptions.track.minVolumes);
-
-                    options.runtimeOptions.speed = {};
-                    options.runtimeOptions.speed.controllerIndex = mo.speedControllerSelector.selectedIndex;
-                    speedRoots = getSpeedRoots(mo.speedControllerMaxSpeedInputText);
-                    options.runtimeOptions.speed.fasterRoot = speedRoots.faster;
-                    options.runtimeOptions.speed.slowerRoot = speedRoots.slower;
-                    // If the controller's value (cv, in range 0..127) is >= 64, the factor which is passed to tick() will be
-                    //     factor = fasterRoot ^ (cv - 64) -- if cv = 64, factor is 1, if cv is 127, factor is maximumFactor
-                    // If the controller's value is < 64, the factor which is passed to tick() will be
-                    //     factor = slowerRoot ^ (64 - cv) -- if cv = 0, factor will is 1/maximumFactor
-                }
-
-                options.trackPitchWheelDeviations = mo.trackPitchWheelDeviations;
-
-                options.performersTrackSelectorIndex = mo.trackSelector.selectedIndex;
-
-                options.overrideSoloVelocity = mo.soloVelocityOptionCheckbox.checked;
-                options.overrideOtherTracksVelocity = mo.otherTracksVelocityOptionCheckbox.checked;
-                options.overrideSoloPitch = mo.soloPitchOptionCheckbox.checked;
-                options.overrideOtherTracksPitch = mo.otherTracksPitchOptionCheckbox.checked;
-
-                // EWI: breath control (=aftertouch)
-                // E-MU keyboard: key pressure (=channel pressure)
-                options.usesPressureSolo = mo.usesPressureSoloCheckbox.checked;
-                options.usesPressureOtherTracks = mo.usesPressureOtherTracksCheckbox.checked;
-                options.pressureSubstituteControlData = null;
-                if(options.usesPressureSolo || options.usesPressureOtherTracks)
-                {
-                    options.pressureSubstituteControlData = controlOptions[mo.pressureSubstituteControlDataSelector.selectedIndex];
-                }
-
-                // EWI: pitch-bend controls (=pitch-bend)
-                // E-MU keyboard: pitch wheel (=pitch-bend)
-                options.usesPitchBendSolo = mo.usesPitchBendSoloCheckbox.checked;
-                options.usesPitchBendOtherTracks = mo.usesPitchBendOtherTracksCheckbox.checked;
-                options.pitchBendSubstituteControlData = null;
-                if(options.usesPitchBendSolo || options.usesPitchBendOtherTracks)
-                {
-                    options.pitchBendSubstituteControlData = controlOptions[mo.pitchBendSubstituteControlDataSelector.selectedIndex];
-                }
-
-                // EWI: bite control (=modulation)
-                // E-MU keyboard: modulation wheel (=modulation)
-                options.usesModSolo = mo.usesModSoloCheckbox.checked;
-                options.usesModOtherTracks = mo.usesModOtherTracksCheckbox.checked;
-                options.modSubstituteControlData = null;
-                if(options.usesModSolo || options.usesModOtherTracks)
-                {
-                    options.modSubstituteControlData = controlOptions[mo.modSustituteControlSelector.selectedIndex];
-                }
-
-                options.globalSpeed = parseFloat(mo.speedPercentInputText.value) / 100.0;
-
-                options.minimumInputPressure = parseInt(mo.minimumPressureInputText.value, 10);
-
-                success = true;
-            }
-            else
-            {
-                success = false;
-            }
-
-            return success;
-        }
-
-        if(document.getElementById("midiInputDeviceSelector").selectedIndex === 0)
+    { 
+        if(document.getElementById("inputDeviceSelect").selectedIndex === 0)
         {
             // alert("Warning: A MIDI input device has not been selected");
             cl.livePerformerOff.setAttribute("opacity", METAL);
             cl.livePerformerOnOffDisabled.setAttribute("opacity", SMOKE);
+            options.livePerformance = false;
+            options.performersTrackIndex = null;
         }
         else
         {
             cl.livePerformerOff.setAttribute("opacity", GLASS);
             cl.livePerformerOnOffDisabled.setAttribute("opacity", SMOKE);
+            options.livePerformance = true;
+            options.performersTrackIndex = performer.trackSelect().selectedIndex;
+            performer.runtimeInit(scoreInfo.nTracks);
         }
 
-        if(getOptions())
+        options.globalSpeed = document.getElementById("globalSpeedInput").value / 100;
+
+        initTracksAndPlayer(score, options);
+
+        // The tracksControl is in charge of refreshing the entire display, including both itself and the score.
+        // TracksControl.refreshDisplay() calls
+        //     score.refreshDisplay(isAssistedPerformance, performersTrackSelectorIndex, livePerformerisSilent)
+        // to tell the score to repaint itself. The score may also update the position of the start marker (which
+        // always starts on a chord) if a track becomes disabled.
+        tracksControl.getTrackToggledCallback(trackToggled);
+
+        // tracksControl.trackIsOn(trackIndex) returns a boolean which is the on/off status of its trackIndex argument
+        score.getTrackIsOnCallback(tracksControl.trackIsOn);
+
+        tracksControl.setInitialTracksControlState(options.livePerformance, options.performersTrackIndex);
+
+        score.refreshDisplay(sequence, options.livePerformance, options.performersTrackIndex, false);
+
+        score.moveStartMarkerToTop(svgPagesDiv);
+
+        setSvgControlsState('stopped');
+
+        if(options.livePerformance === true)
         {
-            initTracksPlayerAndPerformer(score, options);
-
-            // The tracksControl is in charge of refreshing the entire display, including both itself and the score.
-            // TracksControl.refreshDisplay() calls
-            //     score.refreshDisplay(isAssistedPerformance, performersTrackSelectorIndex, livePerformerisSilent)
-            // to tell the score to repaint itself. The score may also update the position of the start marker (which
-            // always starts on a chord) if a track becomes disabled.
-            tracksControl.getTrackToggledCallback(trackToggled);
-
-            // tracksControl.trackIsOn(trackIndex) returns a boolean which is the on/off status of its trackIndex argument
-            score.getTrackIsOnCallback(tracksControl.trackIsOn);
-
-            tracksControl.setInitialTracksControlState(options.livePerformance, options.performersTrackSelectorIndex);
-
-            score.refreshDisplay(sequence, options.livePerformance, options.performersTrackSelectorIndex, false);
-
-            if(options.livePerformance === true)
-            {
-                options.performersTrackIndex = options.performersTrackSelectorIndex;
-            }
-            else
-            {
-                options.performersTrackIndex = null;
-            }
-
-            score.moveStartMarkerToTop(svgPagesDiv);
-
-            setSvgControlsState('stopped');
-
-            if(options.livePerformance === true)
-            {
-                setSvgControlsState('playing');
-            }
+            setSvgControlsState('playing');
         }
     },
 

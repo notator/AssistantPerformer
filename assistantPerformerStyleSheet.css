@@ -59,17 +59,7 @@ select.deviceSelector
     margin-left: 8px;
     margin-right: 8px; 
 }
-select.midiControlSelector
-{
-    font-family: Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif;
-    font-size: 11px;
-    width: 115px;
-    margin-top: 2.5px;
-    margin-bottom: 1.5px;
-    margin-left: 3px;
-    vertical-align:middle;
-    visibility: hidden;
-}
+
 div.options
 {
     font-size: 12px;
@@ -162,14 +152,77 @@ div.mpoColumn3Cell
     width: 100px;
     /*background-color: #99FFCC;*/
 }
+div.mpoTrackNumberCell
+{
+    display:table-cell;
+    font-size:10px;
+    text-align:center;
+    width: 15px;
+    /*background-color: #99CCFF;*/
+    padding-left:1px;
+    padding-right:0px;
+    padding-top:0px;
+    padding-bottom:0px;
+    margin:0px;
+}
+
 div.mpoCheckBoxCell
 {
     display:table-cell;
-    width: 16px;
+    width: 15px;
     /*background-color: #99CCFF;*/
-    padding:0px;
+    padding-left:1px;
+    padding-right:0px;
+    padding-top:0px;
+    padding-bottom:0px;
     margin:0px;
 }
+
+/* for track numbers */
+
+div.mpoPerformerCapBorderCheckBoxCell
+{
+    display:table-cell;
+    width: 14px;
+    /*background-color: #99CCFF;*/
+    padding-left:2px;
+    padding-right:0px;
+    padding-top:0px;
+    padding-bottom:0px;
+    margin:0px;
+    border-style: solid solid none solid;
+    border-width: 1px; 
+    border-color: #008000;
+}
+div.mpoPerformerSidesBorderCheckBoxCell
+{
+    display:table-cell;
+    width: 14px;
+    /*background-color: #99CCFF;*/
+    padding-left:2px;
+    padding-right:0px;
+    padding-top:0px;
+    padding-bottom:0px;
+    margin:0px;
+    border-style: none solid none solid;
+    border-width: 1px; 
+    border-color: #008000;
+}
+div.mpoPerformerCupBorderCheckBoxCell
+{
+    display:table-cell;
+    width: 14px;
+    /*background-color: #99CCFF;*/
+    padding-left:2px;
+    padding-right:0px;
+    padding-top:0px;
+    padding-bottom:3px;
+    margin:0px;
+    border-style: none solid solid solid;
+    border-width: 1px; 
+    border-color: #008000;
+}
+
 
 div.mpoRow9Cell1 
 {
@@ -260,12 +313,12 @@ div.mpoRow10Cell3
     vertical-align: middle;
 }
 
-input.mpoCheckBox
+select.mpoPerformersTrackSelect
 {
-    vertical-align: middle;
-    margin-left: 1px;
-    margin-right: 1px;
+    font-size:11px;
     padding:0px;
+    margin:0px;
+    width:40px;
 }
 
 select.mpoTrackSelect 
@@ -274,8 +327,17 @@ select.mpoTrackSelect
     padding:0px;
     margin:0px;
     width:90px;
-} 
-select.mpoMidiControllerSelect 
+}
+
+
+input.mpoCheckBox
+{
+    vertical-align: middle;
+    margin:0px;
+    padding:0px;
+}
+
+select.mpoMidiControlSelect 
 {
     font-size:11px;
     padding:0px;
@@ -285,6 +347,7 @@ select.mpoMidiControllerSelect
 
 input.mpoNumberInput
 {
+    font-size:11px;
     padding: 0px;
     margin: 0px;
     width: 50px;

@@ -272,7 +272,7 @@ _AP.tracksControl = (function (document)
     setNumberOfTracks = function (nTracks)
     {
         var trackControlsSvgElem,
-            controlPanel = document.getElementById("controlPanel"),
+            controlPanel = document.getElementById("svgRuntimeControls"),
             firstControlPanelChild,
             groupElem, i, parentElem;
 

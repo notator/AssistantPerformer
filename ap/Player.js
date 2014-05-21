@@ -667,11 +667,11 @@ _AP.player = (function()
             switch(options.performerOptions.inputDeviceType)
             {
                 case 'monoInput':
-                    _AP.monoInput.runtimeInit(options.outputDevice, tracks[options.performerOptions.trackIndex],
+                    _AP.monoInput.playtimeInit(options.outputDevice, tracks[options.performerOptions.trackIndex],
                         midiObjectMsPositionsInScore, options.performerOptions, usePerformersNextMomentFunction);
                     break;
                 case 'polyInput': // The _AP.polyInput namespace is currently just a stub. It might work like a prepared piano.
-                    _AP.polyInput.runtimeInit(options.outputDevice, tracks[options.performerOptions.trackIndex],
+                    _AP.polyInput.playtimeInit(options.outputDevice, tracks[options.performerOptions.trackIndex],
                         midiObjectMsPositionsInScore, options.performerOptions, usePerformersNextMomentFunction);
                     break;
             }
@@ -683,6 +683,15 @@ _AP.player = (function()
         }
 
         run();
+    },
+
+    sendCommandMessageNow = function(outputDevice, trackIndex, command, midiValue)
+    {
+        var
+        msg;
+
+        msg = new _AP.message.Message(command + trackIndex, 0, midiValue); // controller 7 is volume control
+        outputDevice.send(msg.data, 0);
     },
 
     sendControlMessageNow = function(outputDevice, trackIndex, controller, midiValue)
@@ -732,6 +741,7 @@ _AP.player = (function()
         isPaused: isPaused,
         isRunning: isRunning,
 
+        sendCommandMessageNow: sendCommandMessageNow,
         sendControlMessageNow: sendControlMessageNow,
         sendSetPitchWheelDeviationMessageNow: sendSetPitchWheelDeviationMessageNow
     };

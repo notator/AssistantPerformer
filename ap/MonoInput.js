@@ -8,8 +8,6 @@
 *  ap/MonoInput.js
 *  The _AP.monoInput namespace which defines
 *
-*    // initialization
-*    init(player, score.performerOptions)
 *
 *    //  returns an object contining the start and end positions of the player's current segment
 *    currentSegmentBounds()
@@ -28,15 +26,16 @@ _AP.monoInput = (function()
 
     // begin var
     var
-    //Message = _AP.message.Message,
-    //CMD = _AP.constants.COMMAND,
-    //CTL = _AP.constants.CONTROL,
+    Message = _AP.message.Message,
+    COMMAND = _AP.constants.COMMAND,
+    CONTROL = _AP.constants.CONTROL,
     //Track = _AP.track.Track,
-
+    runtimeTracksControl = _AP.tracksControl, // The control on the left of the SVG controls above the score.
     midiOutputDevice,
 
-    tracks, // sequence.tracks. All the tracks, complete from the beginning to the end of the piece.
-    performersOptions, // retrieved from the score
+    tracks = [], // sequence.tracks. All the tracks, complete from the beginning to the end of the piece.
+    controls = {}, // the control elements in the monoPerformersOptions div in assistantPerformer.html
+    options = {}, // this variable is set at runtime (when the Start button is clicked)
 
     // A flat, ordered array containing all the unique msPositions of midiObjects in the performance.
     // The first value in this array is the position of the startMarker, the last value is the position of the endMarker.
@@ -53,35 +52,414 @@ _AP.monoInput = (function()
     // Maybe delete startTimeAdjustedForPauses and disable the pause button in live performances.
     startTimeAdjustedForPauses,
 
+    hidden = function(isHidden)
+    {
+        var optionsDiv = document.getElementById("monoPerformersOptions");
+
+        if(isHidden === false)
+        {
+            optionsDiv.style.display = "block";
+        }
+        else
+        {
+            optionsDiv.style.display = "none";
+        }
+    },
+
+    // If disabled === true, disable all controls, else enable the controls that should be enabled.
+    setDisabled = function(disabled)
+    {
+        throw "Not yet implemented.";
+    },
+
+    // Gets all the controls in monoInput html, disables them all, and
+    // sets them to the default values they have when no score is selected.
+    initControls = function(nTracks)
+    {
+        function getControls(controls)
+        {
+            function getCheckBoxArray(controlString)
+            {
+                var i, checkBox, checkBoxes = [];
+
+                for(i = 1; i < 17; ++i)
+                {
+                    checkBox = document.getElementById(controlString + i.toString(10));
+                    checkBoxes.push(checkBox);
+                }
+
+                if(checkBoxes.length !== 16)
+                {
+                    throw "There must be 16 checkboxes in the array!";
+                }
+
+                return checkBoxes;
+            }
+            controls.trackSelect = document.getElementById("mpoPerformersTrackSelect");
+
+            controls.noteOnPitchTrackSelect = document.getElementById("mpoNoteOnPitchTrackSelect");
+            controls.noteOnPitchCheckBoxes = getCheckBoxArray("mpoNOPCheckBoxTrack"); // 16 check boxes
+
+            controls.noteOnVelocityTrackSelect = document.getElementById("mpoNoteOnVelocityTrackSelect");
+            controls.noteOnVelocityCheckBoxes = getCheckBoxArray("mpoNOVCheckBoxTrack"); // 16 check boxes
+
+            controls.pressureMidiSelect = document.getElementById("mpoPressureMidiSelect");
+            controls.pressureTrackSelect = document.getElementById("mpoPressureTrackSelect");
+            controls.pressureCheckBoxes = getCheckBoxArray("mpoPressureCheckBoxTrack"); // 16 check boxes
+
+            controls.pitchWheelMidiSelect = document.getElementById("mpoPitchWheelMidiSelect");
+            controls.pitchWheelTrackSelect = document.getElementById("mpoPitchWheelTrackSelect");
+            controls.pitchWheelCheckBoxes = getCheckBoxArray("mpoPitchWheelCheckBoxTrack"); // 16 check boxes
+
+            controls.modWheelMidiSelect = document.getElementById("mpoModWheelMidiSelect");
+            controls.modWheelTrackSelect = document.getElementById("mpoModWheelTrackSelect");
+            controls.modWheelCheckBoxes = getCheckBoxArray("mpoModWheelCheckBoxTrack"); // 16 check boxes
+
+            controls.speedControllerSelect = document.getElementById("mpoSpeedControllerSelect");
+            controls.maxSpeedInput = document.getElementById("mpoMaxSpeedInput"); // number
+            controls.minVolumeInput = document.getElementById("mpoMinVolumeInput"); // number
+        }
+
+        // Disables all the controls, and sets them to the default values they have when no score is selected.
+        // Sets all select control contents and their selectedIndex to 0. (empties the track select).
+        function setDefaultControlState()
+        {
+            function emptyTrackSelect(trackSelect)
+            {
+                var i;
+                for(i = trackSelect.options.length - 1; i >= 0; --i)
+                {
+                    trackSelect.remove(i);
+                }
+            }
+            function setControlOptionSelectors(controls)
+            {
+                function populate(selector)
+                {
+                    var controlOptions =
+                    [
+                        { name: "aftertouch", command: COMMAND.AFTERTOUCH },
+                        { name: "channel pressure", command: COMMAND.CHANNEL_PRESSURE },
+                        { name: "pitch wheel", command: COMMAND.PITCH_WHEEL },
+                        { name: "modulation (1)", midiControl: CONTROL.MODWHEEL },
+                        { name: "volume (7)", midiControl: CONTROL.VOLUME },
+                        { name: "pan (10)", midiControl: CONTROL.PAN },
+                        { name: "expression (11)", midiControl: CONTROL.EXPRESSION },
+                        { name: "timbre (71)", midiControl: CONTROL.TIMBRE },
+                        { name: "brightness (74)", midiControl: CONTROL.BRIGHTNESS },
+                        { name: "effects (91)", midiControl: CONTROL.EFFECTS },
+                        { name: "tremolo (92)", midiControl: CONTROL.TREMOLO },
+                        { name: "chorus (93)", midiControl: CONTROL.CHORUS },
+                        { name: "celeste (94)", midiControl: CONTROL.CELESTE },
+                        { name: "phaser (95)", midiControl: CONTROL.PHASER }
+                    ],
+                    i, nOptions = controlOptions.length,
+                        element, textNode;
+
+                    for(i = 0; i < nOptions; ++i)
+                    {
+                        element = document.createElement("option");
+                        textNode = document.createTextNode(controlOptions[i].name);
+                        element.appendChild(textNode);
+                        selector.add(element, null);
+                    }
+                }
+
+                populate(controls.pressureMidiSelect);
+                populate(controls.pitchWheelMidiSelect);
+                populate(controls.modWheelMidiSelect);
+            }
+            function clearAndDisableCheckBoxes(checkBoxes)
+            {
+                var i;
+                for(i = 0; i < 16; ++i)
+                {
+                    checkBoxes[i].checked = false;
+                    checkBoxes[i].disabled = true;
+                }
+            }
+
+            emptyTrackSelect(controls.trackSelect);
+            setControlOptionSelectors(controls);
+
+            controls.trackSelect.disabled = true;
+
+            controls.noteOnPitchTrackSelect.selectedIndex = 0; // none;
+            controls.noteOnPitchTrackSelect.disabled = true;
+            clearAndDisableCheckBoxes(controls.noteOnPitchCheckBoxes); // 16 check boxes
+
+            controls.noteOnVelocityTrackSelect.selectedIndex = 0; // none;
+            controls.noteOnVelocityTrackSelect.disabled = true;
+            clearAndDisableCheckBoxes(controls.noteOnVelocityCheckBoxes); // 16 check boxes
+
+            controls.pressureMidiSelect.selectedIndex = 0; // aftertouch
+            controls.pressureMidiSelect.disabled = true;
+            controls.pressureTrackSelect.selectedIndex = 0; // none;
+            controls.pressureTrackSelect.disabled = true;
+            clearAndDisableCheckBoxes(controls.pressureCheckBoxes); // 16 check boxes
+
+            controls.pitchWheelMidiSelect.selectedIndex = 2; // pitch wheel
+            controls.pitchWheelMidiSelect.disabled = true;
+            controls.pitchWheelTrackSelect.selectedIndex = 0; // none;
+            controls.pitchWheelTrackSelect.disabled = true;
+            clearAndDisableCheckBoxes(controls.pitchWheelCheckBoxes); // 16 check boxes
+
+            controls.modWheelMidiSelect.selectedIndex = 3; // modulation
+            controls.modWheelMidiSelect.disabled = true;
+            controls.modWheelTrackSelect.selectedIndex = 0; // none;
+            controls.modWheelTrackSelect.disabled = true;
+            clearAndDisableCheckBoxes(controls.modWheelCheckBoxes); // 16 check boxes
+
+            controls.speedControllerSelect.selectedIndex = 0;
+            controls.speedControllerSelect.disabled = true;
+            controls.maxSpeedInput.value = 100; // number input
+            controls.maxSpeedInput.disabled = true;
+            controls.minVolumeInput.value = 64; // number input
+            controls.minVolumeInput.disabled = true;
+        }
+
+        getControls(controls);
+        setDefaultControlState(); // disables all controls, sets all select control contents (empties the track select)
+    },
+
+    // The number of tracks in the score is always controls.trackSelect.size
+    // When there is no score, there are no tracks!
+    setTrackSelect = function(nTracks)
+    {
+        var
+        i, optionElem,
+        ts = controls.trackSelect;
+
+        if(ts.options.length > 0)
+        {
+            throw "The track select control must be empty here.";
+        }
+
+        if(nTracks > 0)
+        {
+            for(i = 1; i <= nTracks; ++i)
+            {
+                optionElem = document.createElement("option");
+                optionElem.text = i.toString(10);
+                ts.add(optionElem, null);
+            }
+        }
+    },
+
+    // Sets the monoInput dialog from the mPerformerOptionsString in the score's .mkss file.
+    // The values of the controls will be used by the event handler. 
+    setControlsFromString = function(mPerformerOptionsString, nTracks)
+    {
+        var str, trackBoolArray, trackIndex;
+
+        // Returns the attribute value string corresponding to the attrName.
+        // or null if attrName does not exist in allOpts.
+        // The attrName argument must end with a '=' character.
+        function attributeValueString(optsString, attrName)
+        {
+            var index,
+                valStr,
+                rval = null;
+
+            if(attrName[attrName.length - 1] !== '=')
+            {
+                throw "The attrName argument must end with a '=' character.";
+            }
+
+            index = optsString.search(attrName);
+            if(index !== -1)
+            {
+                valStr = optsString.substr(index + attrName.length + 1);
+                index = valStr.search("\"");
+                rval = valStr.substr(0, index);
+            }
+            return rval;
+        }
+
+        // str is a string containing nTracks characters that are '0's and '1's.
+        function stringToTrackBoolArray(str)
+        {
+            var boolArray = [],
+                i;
+
+            for(i = 0; i < str.length; ++i)
+            {
+                if(str[i] === '0')
+                {
+                    boolArray.push(true);
+                }
+                else
+                {
+                    boolArray.push(false);
+                }
+            }
+
+            if(boolArray.length !== nTracks)
+            {
+                throw "Error in monoPerformanceOptions.";
+            }
+            return boolArray;
+        }
+
+        function setTrackCheckBoxesSelect(trackCBSelect, trackBoolArray, trackIndex)
+        {
+            console.log("Not yet implemented.");
+            //throw "Not yet implemented.";
+        }
+
+        function setCheckBoxes(checkBoxes, boolArray)
+        {
+            var i;
+            for(i = 0; i < 16; ++i)
+            {
+                if(checkBoxes[i].checked || !checkBoxes[i].disabled)
+                {
+                    throw "Error: all check boxes must be cleared and disabled here.";
+                }
+            }
+            for(i = 0; i < boolArray.length; ++i)
+            {
+                checkBoxes[i].checked = boolArray[i];
+                checkBoxes[i].disabled = false;
+            }
+        }
+
+        initControls(nTracks);
+
+        str = attributeValueString(mPerformerOptionsString, "trackIndex=");
+        if(str !== null)
+        {
+            setTrackSelect(nTracks);
+            controls.trackSelect.selectedIndex = parseInt(attributeValueString(mPerformerOptionsString, "trackIndex="), 10);
+            trackIndex = controls.trackSelect.selectedIndex;
+            controls.trackSelect.disabled = false;
+        }
+
+        if(trackIndex === undefined)
+        {
+            throw "track index must be defined!";
+        }
+        str = attributeValueString(mPerformerOptionsString, "noteOnPitchTracks=");
+        if(str !== null)
+        {
+            trackBoolArray = stringToTrackBoolArray(str);
+            setTrackCheckBoxesSelect(controls.noteOnPitchTrackSelect, trackBoolArray, trackIndex);
+            setCheckBoxes(controls.noteOnPitchCheckBoxes, trackBoolArray);
+        }
+
+        str = attributeValueString(mPerformerOptionsString, "noteOnVelocityTracks=");
+        if(str !== null)
+        {
+            trackBoolArray = stringToTrackBoolArray(str);
+            setTrackCheckBoxesSelect(controls.noteOnVelocityTrackSelect, trackBoolArray, trackIndex);
+            setCheckBoxes(controls.noteOnVelocityCheckBoxes, trackBoolArray);
+        }
+
+        if(mPerformerOptionsString.search("pressureController=") !== -1)
+        {
+            controls.pressureMidiSelect.text = attributeValueString(mPerformerOptionsString, "pressureController=");
+        }
+
+        str = attributeValueString(mPerformerOptionsString, "pressureTracks=");
+        if(str !== null)
+        {
+            trackBoolArray = stringToTrackBoolArray(str);
+            setTrackCheckBoxesSelect(controls.pressureTrackSelect, trackBoolArray, trackIndex);
+            setCheckBoxes(controls.pressureCheckBoxes, trackBoolArray);
+        }
+
+        if(mPerformerOptionsString.search("pitchWheelController=") !== -1)
+        {
+            controls.pitchWheelMidiSelect.text = attributeValueString(mPerformerOptionsString, "pitchWheelController=");
+        }
+
+        str = attributeValueString(mPerformerOptionsString, "pitchWheelTracks=");
+        if(str !== null)
+        {
+            trackBoolArray = stringToTrackBoolArray(str);
+            setTrackCheckBoxesSelect(controls.pitchWheelTrackSelect, trackBoolArray, trackIndex);
+            setCheckBoxes(controls.pitchWheelCheckBoxes, trackBoolArray);
+        }
+
+        if(mPerformerOptionsString.search("modWheelController=") !== -1)
+        {
+            controls.modWheelMidiSelect.text = attributeValueString(mPerformerOptionsString, "modWheelController=");
+        }
+
+        str = attributeValueString(mPerformerOptionsString, "modWheelTracks=");
+        if(str !== null)
+        {
+            trackBoolArray = stringToTrackBoolArray(str);
+            setTrackCheckBoxesSelect(controls.modWheelTrackSelect, trackBoolArray, trackIndex);
+            setCheckBoxes(controls.modWheelCheckBoxes, trackBoolArray);
+        }
+
+        if(mPerformerOptionsString.search("speedController=") !== -1)
+        {
+            controls.speedControllerSelect.text = attributeValueString(mPerformerOptionsString, "speedController=");
+        }
+
+        str = attributeValueString(mPerformerOptionsString, "speedMaxPercent=");
+        if(str !== null)
+        {
+            controls.maxSpeedInput.value = parseFloat(attributeValueString(mPerformerOptionsString, "speedMaxPercent="));
+        }
+
+        str = attributeValueString(mPerformerOptionsString, "minVolume=");
+        if(str !== null)
+        {
+            controls.minVolumeInput.value = parseInt(attributeValueString(mPerformerOptionsString, "minVolume="), 10);
+        }
+
+        console.log("monoInput.setControlsFromString()");
+    },
+
+    // Sets the controls to the state they have when a score
+    // is loaded but has no performance options.
+    setDefaultControls = function(nTracks)
+    {
+        var i;
+
+        initControls(nTracks);
+
+        setTrackSelect(nTracks);
+
+        controls.trackSelect.disabled = false;
+        controls.trackSelect.selectedIndex = 0;
+
+        controls.noteOnPitchTrackSelect.disabled = false;
+        controls.noteOnVelocityTrackSelect.disabled = false;
+        controls.pressureTrackSelect.disabled = false;
+        controls.pitchWheelTrackSelect.disabled = false;
+        controls.modWheelTrackSelect.disabled = false;
+       
+        for(i = 0; i < nTracks; ++i)
+        {
+            controls.noteOnPitchCheckBoxes[i].disabled = false;
+            controls.noteOnVelocityCheckBoxes[i].disabled = false;
+            controls.pressureCheckBoxes[i].disabled = false;
+            controls.pitchWheelCheckBoxes[i].disabled = false;
+            controls.modWheelCheckBoxes[i].disabled = false;
+        }
+        controls.speedControllerSelect.disabled = false;
+    },
+
+    trackSelect = function()
+    {
+        return controls.trackSelect;
+    },
+
     doControl = function(controlID)
     {
-        /*******************
-        controlIDs are:
-            mpoTrackSelect
+        console.log("monoInput.doControl() has not yet been written.");
+    },
 
-            mpoNoteOnPitchTrackSelect
-            mpoNOPCheckBoxTrack1 // 1..16
+    /******************* runtime ********************************/
 
-            mpoNoteOnVelocityTrackSelect
-            mpoNOVCheckBoxTrack1 // 1..16
-
-            mpoPressureMidiSelect
-            mpoPressureTrackSelect
-            mpoPressureCheckBoxTrack1 // 1..16
-
-            mpoPitchWheelMidiSelect
-            mpoPitchWheelTrackSelect
-            mpoPitchWheelCheckBoxTrack1 // 1..16
-
-            mpoModWheelMidiSelect
-            mpoModWheelTrackSelect
-            mpoModWheelCheckBoxTrack1 // 1..16
-
-            mpoMaxSpeedControllerSelect
-            mpoMaxSpeedInput // number
-            mpoMinVolumeInput // number        
-        /*******************/
-    }
+    trackIndex = function()
+    {
+        return controls.trackSelect.selectedIndex;
+    },
 
     // This is where input MIDIEvents arrive, and where processing of the monoInput's input is going to be done.
     // Both RealTime and SysEx messages are ignored.
@@ -103,7 +481,7 @@ _AP.monoInput = (function()
             var
             SYSTEM_EXCLUSIVE = _AP.constants.SYSTEM_EXCLUSIVE,
             isRealTimeStatus = _AP.constants.isRealTimeStatus,
-            inputEvent = {};
+            rInputEvent = {};
 
             if(data !== undefined)
             {
@@ -128,22 +506,22 @@ _AP.monoInput = (function()
                 }
                 else if(data.length === 2)
                 {
-                    inputEvent = new Message(data[0], data[1], 0);
+                    rInputEvent = new Message(data[0], data[1], 0);
                 }
                 else if(data.length === 3)
                 {
-                    inputEvent = new Message(data[0], data[1], data[2]);
+                    rInputEvent = new Message(data[0], data[1], data[2]);
                 }
 
                 // other data is simply ignored
 
-                if(inputEvent.data !== undefined)
+                if(rInputEvent.data !== undefined)
                 {
-                    inputEvent.receivedTime = now;
+                    rInputEvent.receivedTime = now;
                 }
             }
 
-            return inputEvent;
+            return rInputEvent;
         }
 
         function setSpeedFactor(receivedCommandIndexInHTMLMenu, controllerValue)
@@ -170,172 +548,180 @@ _AP.monoInput = (function()
                 return factor;
             }
 
-            if(performersSpeedOptions !== undefined && currentIndex >= 0
-                && performersSpeedOptions.controllerIndex !== undefined && performersSpeedOptions.controllerIndex === receivedCommandIndexInHTMLMenu
-                && performersSpeedOptions.fasterRoot !== undefined && performersSpeedOptions.slowerRoot !== undefined)
-            {
-                speedFactor = getSpeedFactor(performersSpeedOptions.fasterRoot, performersSpeedOptions.slowerRoot, controllerValue);
-                performedSequences[currentIndex].setSpeedFactor(speedFactor);
-            }
+            console.log("monoInput.setSpeedFactor() has not yet been written.");
+            throw "Not yet implemented.";
+
+            //if(performersSpeedOptions !== undefined && currentIndex >= 0
+            //    && performersSpeedOptions.controllerIndex !== undefined && performersSpeedOptions.controllerIndex === receivedCommandIndexInHTMLMenu
+            //    && performersSpeedOptions.fasterRoot !== undefined && performersSpeedOptions.slowerRoot !== undefined)
+            //{
+            //    speedFactor = getSpeedFactor(performersSpeedOptions.fasterRoot, performersSpeedOptions.slowerRoot, controllerValue);
+            //    performedSequences[currentIndex].setSpeedFactor(speedFactor);
+            //}
         }
 
         function handleController(runtimeTrackOptions, controlData, value, usesSoloTrack, usesOtherTracks)
         {
-            var
-            i,
-            nTracks = allSequences[0].tracks.length,
-            now = performance.now(),
-            trackMoments, nMoments, moment, track;
+            console.log("monoInput.handleController() has not yet been written.");
+            throw "Not yet implemented.";
 
-            // Returns a new array of (synchronous) trackMoments.
-            // Each trackMoment.moment is a Moment whose .messages attribute contains one message,
-            // trackMoment.trackIndex is the moment's track index (=channel).
-            function getTrackMoments(runtimeTrackOptions, nTracks, controlData, value, usesSoloTrack, usesOtherTracks)
-            {
-                var
-                i, trackMoments = [], trackMoment,
-                livePerformersTrackIndex = runtimeTrackOptions.livePerformersTrackIndex;
+            //var
+            //i,
+            //nTracks = allSequences[0].tracks.length,
+            //now = performance.now(),
+            //trackMoments, nMoments, moment, track;
 
-                // returns null if no new trackMoment is created.
-                function newTrackMoment(runtimeTrackOptions, controlData, trackIndex, value)
-                {
-                    var message, moment = null, trackMoment = null;
+            //// Returns a new array of (synchronous) trackMoments.
+            //// Each trackMoment.moment is a Moment whose .messages attribute contains one message,
+            //// trackMoment.trackIndex is the moment's track index (=channel).
+            //function getTrackMoments(runtimeTrackOptions, nTracks, controlData, value, usesSoloTrack, usesOtherTracks)
+            //{
+            //    var
+            //    i, trackMoments = [], trackMoment,
+            //    livePerformersTrackIndex = runtimeTrackOptions.livePerformersTrackIndex;
 
-                    // runtimeTrackOptions is a pointer to the runtimeTrackOptions attribute of the global options object.
-                    // The runtimeTrackOptions has the following attributes:
-                    //      trackMinVolumes -- an array of integers in the range 0..127, one value per track.
-                    //      trackScales -- an array of floats in the range 0.0..1.0, one value per track.
-                    // controlData is the controlData received from the live performer (via the controlSelector pop-ups).
-                    // value is the control value received from the live performer.
-                    // trackIndex is the new message's trackIndex (is used to index the arrays in runtimeTrackOptions).
-                    // Returns null if no message is created for some reason.
-                    function newControlMessage(runtimeTrackOptions, controlData, value, trackIndex)
-                    {
-                        var
-                        CMD = _AP.constants.COMMAND,
-                        message = null,
-                        minVolume, scale;
+            //    // returns null if no new trackMoment is created.
+            //    function newTrackMoment(runtimeTrackOptions, controlData, trackIndex, value)
+            //    {
+            //        var message, moment = null, trackMoment = null;
 
-                        if(controlData.midiControl !== undefined) // a normal control
-                        {
-                            if(controlData.midiControl === _AP.constants.CONTROL.VOLUME)
-                            {
-                                minVolume = runtimeTrackOptions.minVolumes[trackIndex];
-                                scale = runtimeTrackOptions.scales[trackIndex];
-                                value = Math.floor(minVolume + (value * scale));
-                            }
-                            // for other controls, value is unchanged
-                            message = new Message(CMD.CONTROL_CHANGE + trackIndex, controlData.midiControl, value);
-                        }
-                        else if(controlData.command !== undefined)
-                        {
-                            switch(controlData.command)
-                            {
-                                case CMD.AFTERTOUCH:
-                                    if(currentLivePerformersKeyPitch >= 0)  // is -1 when no note is playing
-                                    {
-                                        message = new Message(CMD.AFTERTOUCH + trackIndex, currentLivePerformersKeyPitch, value);
-                                    }
-                                    break;
-                                case CMD.CHANNEL_PRESSURE:
-                                    message = new Message(CMD.CHANNEL_PRESSURE + trackIndex, value, 0);
-                                    break;
-                                case CMD.PITCH_WHEEL:
-                                    // value is inputEvent.data[2]
-                                    message = new Message(CMD.PITCH_WHEEL + trackIndex, 0, value);
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
+            //        // runtimeTrackOptions is a pointer to the runtimeTrackOptions attribute of the global options object.
+            //        // The runtimeTrackOptions has the following attributes:
+            //        //      trackMinVolumes -- an array of integers in the range 0..127, one value per track.
+            //        //      trackScales -- an array of floats in the range 0.0..1.0, one value per track.
+            //        // controlData is the controlData received from the live performer (via the controlSelector pop-ups).
+            //        // value is the control value received from the live performer.
+            //        // trackIndex is the new message's trackIndex (is used to index the arrays in runtimeTrackOptions).
+            //        // Returns null if no message is created for some reason.
+            //        function newControlMessage(runtimeTrackOptions, controlData, value, trackIndex)
+            //        {
+            //            var
+            //            COMMAND = _AP.constants.COMMAND,
+            //            message = null,
+            //            minVolume, scale;
 
-                        return message;
-                    }
+            //            if(controlData.midiControl !== undefined) // a normal control
+            //            {
+            //                if(controlData.midiControl === _AP.constants.CONTROL.VOLUME)
+            //                {
+            //                    minVolume = runtimeTrackOptions.minVolumes[trackIndex];
+            //                    scale = runtimeTrackOptions.scales[trackIndex];
+            //                    value = Math.floor(minVolume + (value * scale));
+            //                }
+            //                // for other controls, value is unchanged
+            //                message = new Message(COMMAND.CONTROL_CHANGE + trackIndex, controlData.midiControl, value);
+            //            }
+            //            else if(controlData.command !== undefined)
+            //            {
+            //                switch(controlData.command)
+            //                {
+            //                    case COMMAND.AFTERTOUCH:
+            //                        if(currentLivePerformersKeyPitch >= 0)  // is -1 when no note is playing
+            //                        {
+            //                            message = new Message(COMMAND.AFTERTOUCH + trackIndex, currentLivePerformersKeyPitch, value);
+            //                        }
+            //                        break;
+            //                    case COMMAND.CHANNEL_PRESSURE:
+            //                        message = new Message(COMMAND.CHANNEL_PRESSURE + trackIndex, value, 0);
+            //                        break;
+            //                    case COMMAND.PITCH_WHEEL:
+            //                        // value is inputEvent.data[2]
+            //                        message = new Message(COMMAND.PITCH_WHEEL + trackIndex, 0, value);
+            //                        break;
+            //                    default:
+            //                        break;
+            //                }
+            //            }
 
-                    message = newControlMessage(runtimeTrackOptions, controlData, value, trackIndex);
-                    if(message !== null)
-                    {
-                        moment = new Moment(_AP.moment.UNDEFINED_TIMESTAMP);  // moment.msPositionInScore becomes UNDEFINED_TIMESTAMP
-                        moment.messages.push(message);
-                        trackMoment = {};
-                        trackMoment.moment = moment;
-                        trackMoment.trackIndex = trackIndex;
-                    }
-                    return trackMoment;
-                }
+            //            return message;
+            //        }
 
-                if(usesSoloTrack && usesOtherTracks)
-                {
-                    for(i = 0; i < nTracks; ++i)
-                    {
-                        if(trackIsOnArray[i])
-                        {
-                            trackMoment = newTrackMoment(runtimeTrackOptions, controlData, i, value);
-                            if(trackMoment !== null)
-                            {
-                                trackMoments.push(trackMoment);
-                            }
-                        }
-                    }
-                }
-                else if(usesSoloTrack)
-                {
-                    trackMoment = newTrackMoment(runtimeTrackOptions, controlData, livePerformersTrackIndex, value);
-                    if(trackMoment !== null)
-                    {
-                        trackMoments.push(trackMoment);
-                    }
-                }
-                else if(usesOtherTracks)
-                {
-                    for(i = 0; i < nTracks; ++i)
-                    {
-                        if(trackIsOnArray[i] && i !== livePerformersTrackIndex)
-                        {
-                            trackMoment = newTrackMoment(runtimeTrackOptions, controlData, i, value);
-                            if(trackMoment !== null)
-                            {
-                                trackMoments.push(trackMoment);
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    throw "Either usesSoloTrack or usesOtherTracks must be set here.";
-                }
+            //        message = newControlMessage(runtimeTrackOptions, controlData, value, trackIndex);
+            //        if(message !== null)
+            //        {
+            //            moment = new Moment(_AP.moment.UNDEFINED_TIMESTAMP);  // moment.msPositionInScore becomes UNDEFINED_TIMESTAMP
+            //            moment.messages.push(message);
+            //            trackMoment = {};
+            //            trackMoment.moment = moment;
+            //            trackMoment.trackIndex = trackIndex;
+            //        }
+            //        return trackMoment;
+            //    }
 
-                return trackMoments;
-            }
+            //    if(usesSoloTrack && usesOtherTracks)
+            //    {
+            //        for(i = 0; i < nTracks; ++i)
+            //        {
+            //            if(trackIsOnArray[i])
+            //            {
+            //                trackMoment = newTrackMoment(runtimeTrackOptions, controlData, i, value);
+            //                if(trackMoment !== null)
+            //                {
+            //                    trackMoments.push(trackMoment);
+            //                }
+            //            }
+            //        }
+            //    }
+            //    else if(usesSoloTrack)
+            //    {
+            //        trackMoment = newTrackMoment(runtimeTrackOptions, controlData, livePerformersTrackIndex, value);
+            //        if(trackMoment !== null)
+            //        {
+            //            trackMoments.push(trackMoment);
+            //        }
+            //    }
+            //    else if(usesOtherTracks)
+            //    {
+            //        for(i = 0; i < nTracks; ++i)
+            //        {
+            //            if(trackIsOnArray[i] && i !== livePerformersTrackIndex)
+            //            {
+            //                trackMoment = newTrackMoment(runtimeTrackOptions, controlData, i, value);
+            //                if(trackMoment !== null)
+            //                {
+            //                    trackMoments.push(trackMoment);
+            //                }
+            //            }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        throw "Either usesSoloTrack or usesOtherTracks must be set here.";
+            //    }
 
-            trackMoments = getTrackMoments(runtimeTrackOptions, nTracks, controlData, value, usesSoloTrack, usesOtherTracks);
-            nMoments = trackMoments.length;
-            for(i = 0; i < nMoments; ++i)
-            {
-                track = recordingSequence.tracks[trackMoments[i].trackIndex];
+            //    return trackMoments;
+            //}
 
-                if(track.isInChord !== undefined) // track.isInChord is defined in track.addLiveScoreMoment()
-                {
-                    moment = trackMoments[i].moment;
-                    if(recordingSequence !== undefined && recordingSequence !== null)
-                    {
-                        moment.timestamp = now;
-                        track.addLivePerformersControlMoment(moment);
-                    }
+            //trackMoments = getTrackMoments(runtimeTrackOptions, nTracks, controlData, value, usesSoloTrack, usesOtherTracks);
+            //nMoments = trackMoments.length;
+            //for(i = 0; i < nMoments; ++i)
+            //{
+            //    track = recordingSequence.tracks[trackMoments[i].trackIndex];
 
-                    outputDevice.send(moment.messages[0].data, now);
-                }
-            }
+            //    if(track.isInChord !== undefined) // track.isInChord is defined in track.addLiveScoreMoment()
+            //    {
+            //        moment = trackMoments[i].moment;
+            //        if(recordingSequence !== undefined && recordingSequence !== null)
+            //        {
+            //            moment.timestamp = now;
+            //            track.addLivePerformersControlMoment(moment);
+            //        }
+
+            //        outputDevice.send(moment.messages[0].data, now);
+            //    }
+            //}
         }
 
         function silentlyCompleteCurrentlyPlayingSequence()
         {
-            // currentIndex is the index of the currently playing sequence
-            // (which should be silently completed when a noteOn arrives).
-            if(currentIndex >= 0 && currentIndex < performedSequences.length)
-            {
-                performedSequences[currentIndex].finishSilently();
-            }
+            throw "Not yet implemented.";
+
+            //// currentIndex is the index of the currently playing sequence
+            //// (which should be silently completed when a noteOn arrives).
+            //if(currentIndex >= 0 && currentIndex < performedSequences.length)
+            //{
+            //    performedSequences[currentIndex].finishSilently();
+            //}
         }
 
         // Each performedSequence calls this function (with two arguments) when
@@ -349,313 +735,318 @@ _AP.monoInput = (function()
         //      reportEndOfPerformance(recordingSequence, performanceMsDuration);
         function reportEndOfSequence()
         {
-            if(endOfPerformance)
-            {
-                stop();
-            }
-            else
-            {
-                reportMsPosition(performedSequences[nextIndex].msPositionInScore);
-            }
+            throw "Not yet implemented.";
+
+            //if(endOfPerformance)
+            //{
+            //    stop();
+            //}
+            //else
+            //{
+            //    reportMsPosition(performedSequences[nextIndex].msPositionInScore);
+            //}
         }
 
         function playSequence(sequence)
         {
-            // The durations will be related to the moment.msPositionReSubsequence attrbutes (which have been
-            // set relative to the start of each subsequence), and to speedFactorObject argument.
-            sequence.play(outputDevice, 0, Number.MAX_VALUE, trackIsOnArray, recordingSequence, reportEndOfSequence, reportMsPosition);
+            throw "Not yet implemented.";
+            //// The durations will be related to the moment.msPositionReSubsequence attrbutes (which have been
+            //// set relative to the start of each subsequence), and to speedFactorObject argument.
+            //sequence.play(outputDevice, 0, Number.MAX_VALUE, trackIsOnArray, recordingSequence, reportEndOfSequence, reportMsPosition);
         }
 
         function handleNoteOff(inputEvent)
         {
-            if(inputEvent.data[1] === currentLivePerformersKeyPitch)
-            {
-                currentLivePerformersKeyPitch = -1;
+            throw "Not yet implemented.";
+            //if(inputEvent.data[1] === currentLivePerformersKeyPitch)
+            //{
+            //    currentLivePerformersKeyPitch = -1;
 
-                silentlyCompleteCurrentlyPlayingSequence();
+            //    silentlyCompleteCurrentlyPlayingSequence();
 
-                if(endOfPerformance) // see reportEndOfPerformance() above 
-                {
-                    stop();
-                }
-                else if(performedSequences[nextIndex].restSequence !== undefined) // only play the next sequence if it is a restSequence
-                {
-                    currentIndex = nextIndex++;
-                    endOfPerformance = (currentIndex === endIndex);
-                    sequenceStartNow = inputEvent.receivedTime;
-                    playSequence(performedSequences[currentIndex]);
-                }
-                else if(nextIndex <= endIndex)
-                {
-                    endOfPerformance = (nextIndex === endIndex);
-                    reportMsPosition(performedSequences[nextIndex].msPositionInScore);
-                }
-            }
+            //    if(endOfPerformance) // see reportEndOfPerformance() above 
+            //    {
+            //        stop();
+            //    }
+            //    else if(performedSequences[nextIndex].restSequence !== undefined) // only play the next sequence if it is a restSequence
+            //    {
+            //        currentIndex = nextIndex++;
+            //        endOfPerformance = (currentIndex === endIndex);
+            //        sequenceStartNow = inputEvent.receivedTime;
+            //        playSequence(performedSequences[currentIndex]);
+            //    }
+            //    else if(nextIndex <= endIndex)
+            //    {
+            //        endOfPerformance = (nextIndex === endIndex);
+            //        reportMsPosition(performedSequences[nextIndex].msPositionInScore);
+            //    }
+            //}
         }
 
         function handleNoteOn(inputEvent, overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity)
         {
-            var
-            allSubsequences = performedSequences;
+            throw "Not yet implemented.";
+            //var
+            //allSubsequences = performedSequences;
 
-            // Shifts the pitches in the subsequence up or down so that the lowest pitch in the
-            // first noteOn moment is newPitch. Similarly with velocity.
-            function overridePitchAndOrVelocity(allSubsequences, currentSubsequenceIndex, soloTrackIndex, newPitch, newVelocity,
-                overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity)
-            {
-                var
-                subsequence = allSubsequences[currentSubsequenceIndex],
-                NOTE_ON_CMD = _AP.constants.COMMAND.NOTE_ON,
-                NOTE_OFF_CMD = _AP.constants.COMMAND.NOTE_OFF,
-                track = subsequence.tracks[soloTrackIndex], message, lowestNoteOnEvt, pitchDelta, velocityDelta,
-                hangingScorePitchesPerTrack;
+            //// Shifts the pitches in the subsequence up or down so that the lowest pitch in the
+            //// first noteOn moment is newPitch. Similarly with velocity.
+            //function overridePitchAndOrVelocity(allSubsequences, currentSubsequenceIndex, soloTrackIndex, newPitch, newVelocity,
+            //    overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity)
+            //{
+            //    var
+            //    subsequence = allSubsequences[currentSubsequenceIndex],
+            //    NOTE_ON_COMMAND = _AP.constants.COMMAND.NOTE_ON,
+            //    NOTE_OFF_COMMAND = _AP.constants.COMMAND.NOTE_OFF,
+            //    track = subsequence.tracks[soloTrackIndex], message, lowestNoteOnEvt, pitchDelta, velocityDelta,
+            //    hangingScorePitchesPerTrack;
 
-                // Returns the lowest NoteOn message in the first moment in the track to contain a NoteOnMessage.
-                // Returns null if there is no such message.
-                function findLowestNoteOnEvt(NOTE_ON_CMD, track)
-                {
-                    var i, j, message, moment, nEvents, nMoments = track.moments.length, lowestNoteOnMessage = null;
+            //    // Returns the lowest NoteOn message in the first moment in the track to contain a NoteOnMessage.
+            //    // Returns null if there is no such message.
+            //    function findLowestNoteOnEvt(NOTE_ON_COMMAND, track)
+            //    {
+            //        var i, j, message, moment, nEvents, nMoments = track.moments.length, lowestNoteOnMessage = null;
 
-                    for(i = 0; i < nMoments; ++i)
-                    {
-                        moment = track.moments[i];
-                        nEvents = moment.messages.length;
-                        for(j = 0; j < nEvents; ++j)
-                        {
-                            message = moment.messages[j];
-                            if((message.command() === NOTE_ON_CMD)
-                            && (lowestNoteOnMessage === null || message.data[1] < lowestNoteOnMessage.data[1]))
-                            {
-                                lowestNoteOnMessage = message;
-                            }
-                        }
-                        if(lowestNoteOnMessage !== null)
-                        {
-                            break;
-                        }
-                    }
-                    return lowestNoteOnMessage;
-                }
+            //        for(i = 0; i < nMoments; ++i)
+            //        {
+            //            moment = track.moments[i];
+            //            nEvents = moment.messages.length;
+            //            for(j = 0; j < nEvents; ++j)
+            //            {
+            //                message = moment.messages[j];
+            //                if((message.command() === NOTE_ON_COMMAND)
+            //                && (lowestNoteOnMessage === null || message.data[1] < lowestNoteOnMessage.data[1]))
+            //                {
+            //                    lowestNoteOnMessage = message;
+            //                }
+            //            }
+            //            if(lowestNoteOnMessage !== null)
+            //            {
+            //                break;
+            //            }
+            //        }
+            //        return lowestNoteOnMessage;
+            //    }
 
-                function midiValue(value)
-                {
-                    var result = (value >= 0) ? value : 0;
-                    result = (value <= 127) ? value : 127;
-                    return result;
-                }
+            //    function midiValue(value)
+            //    {
+            //        var result = (value >= 0) ? value : 0;
+            //        result = (value <= 127) ? value : 127;
+            //        return result;
+            //    }
 
-                // Adjusts the noteOn and noteOff messages inside this subsequence
-                // Either returns an array of arrays, or null.
-                // The returned array[track] is an array containing the score pitches which have not been turned off in each track.
-                // null is returned if all the pitches which are turned on inside the subsequence are also turned off inside the subsequence.
-                function adjustTracks(NOTE_ON_CMD, NOTE_OFF_CMD, soloTrackIndex, pitchDelta, velocityDelta,
-                    overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity)
-                {
-                    var nTracks = subsequence.tracks.length, i, j, k, nMoments, moment, nEvents, index, nPitches,
-                        pendingScorePitchesPerTrack = [], returnPendingScorePitchesPerTrack = [], pendingPitches = false;
+            //    // Adjusts the noteOn and noteOff messages inside this subsequence
+            //    // Either returns an array of arrays, or null.
+            //    // The returned array[track] is an array containing the score pitches which have not been turned off in each track.
+            //    // null is returned if all the pitches which are turned on inside the subsequence are also turned off inside the subsequence.
+            //    function adjustTracks(NOTE_ON_COMMAND, NOTE_OFF_COMMAND, soloTrackIndex, pitchDelta, velocityDelta,
+            //        overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity)
+            //    {
+            //        var nTracks = subsequence.tracks.length, i, j, k, nMoments, moment, nEvents, index, nPitches,
+            //            pendingScorePitchesPerTrack = [], returnPendingScorePitchesPerTrack = [], pendingPitches = false;
 
-                    for(i = 0; i < nTracks; ++i)
-                    {
-                        pendingScorePitchesPerTrack.push([]);
+            //        for(i = 0; i < nTracks; ++i)
+            //        {
+            //            pendingScorePitchesPerTrack.push([]);
 
-                        if((i === soloTrackIndex && (overrideSoloPitch || overrideSoloVelocity))
-                        || (i !== soloTrackIndex && (overrideOtherTracksPitch || overrideOtherTracksVelocity)))
-                        {
-                            track = subsequence.tracks[i];
-                            nMoments = track.moments.length;
+            //            if((i === soloTrackIndex && (overrideSoloPitch || overrideSoloVelocity))
+            //            || (i !== soloTrackIndex && (overrideOtherTracksPitch || overrideOtherTracksVelocity)))
+            //            {
+            //                track = subsequence.tracks[i];
+            //                nMoments = track.moments.length;
 
-                            for(j = 0; j < nMoments; ++j)
-                            {
-                                moment = track.moments[j];
-                                nEvents = moment.messages.length;
-                                for(k = 0; k < nEvents; ++k)
-                                {
-                                    message = moment.messages[k];
-                                    if(message.command() === NOTE_ON_CMD)
-                                    {
-                                        index = pendingScorePitchesPerTrack[i].indexOf(message.data[1]);
-                                        if(index === -1)
-                                        {
-                                            pendingScorePitchesPerTrack[i].push(message.data[1]);
-                                        }
+            //                for(j = 0; j < nMoments; ++j)
+            //                {
+            //                    moment = track.moments[j];
+            //                    nEvents = moment.messages.length;
+            //                    for(k = 0; k < nEvents; ++k)
+            //                    {
+            //                        message = moment.messages[k];
+            //                        if(message.command() === NOTE_ON_COMMAND)
+            //                        {
+            //                            index = pendingScorePitchesPerTrack[i].indexOf(message.data[1]);
+            //                            if(index === -1)
+            //                            {
+            //                                pendingScorePitchesPerTrack[i].push(message.data[1]);
+            //                            }
 
-                                        message.data[1] = midiValue(message.data[1] + pitchDelta);
-                                        message.data[2] = midiValue(message.data[2] + velocityDelta);
-                                    }
-                                    if(message.command() === NOTE_OFF_CMD)
-                                    {
-                                        index = pendingScorePitchesPerTrack[i].indexOf(message.data[1]);
-                                        if(index !== -1) // ignore noteOffs which are not related to noteOns in this subsequence.
-                                        {
-                                            delete pendingScorePitchesPerTrack[i][index];
-                                            message.data[1] = midiValue(message.data[1] + pitchDelta);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+            //                            message.data[1] = midiValue(message.data[1] + pitchDelta);
+            //                            message.data[2] = midiValue(message.data[2] + velocityDelta);
+            //                        }
+            //                        if(message.command() === NOTE_OFF_COMMAND)
+            //                        {
+            //                            index = pendingScorePitchesPerTrack[i].indexOf(message.data[1]);
+            //                            if(index !== -1) // ignore noteOffs which are not related to noteOns in this subsequence.
+            //                            {
+            //                                delete pendingScorePitchesPerTrack[i][index];
+            //                                message.data[1] = midiValue(message.data[1] + pitchDelta);
+            //                            }
+            //                        }
+            //                    }
+            //                }
+            //            }
+            //        }
 
-                    for(i = 0; i < nTracks; ++i)
-                    {
-                        returnPendingScorePitchesPerTrack.push([]);
-                        nPitches = pendingScorePitchesPerTrack[i].length;
-                        for(j = 0; j < nPitches; j++)
-                        {
-                            if(pendingScorePitchesPerTrack[i][j] !== undefined)
-                            {
-                                pendingPitches = true;
-                                returnPendingScorePitchesPerTrack[i].push(pendingScorePitchesPerTrack[i][j]);
-                            }
-                        }
-                    }
-                    if(pendingPitches === false)
-                    {
-                        returnPendingScorePitchesPerTrack = null;
-                    }
+            //        for(i = 0; i < nTracks; ++i)
+            //        {
+            //            returnPendingScorePitchesPerTrack.push([]);
+            //            nPitches = pendingScorePitchesPerTrack[i].length;
+            //            for(j = 0; j < nPitches; j++)
+            //            {
+            //                if(pendingScorePitchesPerTrack[i][j] !== undefined)
+            //                {
+            //                    pendingPitches = true;
+            //                    returnPendingScorePitchesPerTrack[i].push(pendingScorePitchesPerTrack[i][j]);
+            //                }
+            //            }
+            //        }
+            //        if(pendingPitches === false)
+            //        {
+            //            returnPendingScorePitchesPerTrack = null;
+            //        }
 
-                    return returnPendingScorePitchesPerTrack;
-                }
+            //        return returnPendingScorePitchesPerTrack;
+            //    }
 
-                // In each following subsequence and track, looks for the first noteOff corresponding to a hanging note, and adds pitchDelta to its pitch.
-                function adjustSubsequentNoteOffs(NOTE_OFF_CMD, allSubsequences, currentSubsequenceIndex, pitchDelta, hangingScorePitchesPerTrack)
-                {
-                    var trackIndex, nTracks = hangingScorePitchesPerTrack.length, hangingPitches,
-                        i, nHangingPitches, hangingPitch, nextNoteOffMessage;
+            //    // In each following subsequence and track, looks for the first noteOff corresponding to a hanging note, and adds pitchDelta to its pitch.
+            //    function adjustSubsequentNoteOffs(NOTE_OFF_COMMAND, allSubsequences, currentSubsequenceIndex, pitchDelta, hangingScorePitchesPerTrack)
+            //    {
+            //        var trackIndex, nTracks = hangingScorePitchesPerTrack.length, hangingPitches,
+            //            i, nHangingPitches, hangingPitch, nextNoteOffMessage;
 
-                    // returns the first noteOff message corresponding to the hanging Pitch in any of the following subsequences.
-                    function findNextNoteOffMessage(NOTE_OFF_CMD, allSubsequences, currentSubsequenceIndex, trackIndex, hangingPitch)
-                    {
-                        var
-                        nextSubsequenceIndex = currentSubsequenceIndex + 1,
-                        i, nSubsequences = allSubsequences.length, track,
-                        j, nMoments, moment,
-                        k, nMessages, message, returnMessage = null;
+            //        // returns the first noteOff message corresponding to the hanging Pitch in any of the following subsequences.
+            //        function findNextNoteOffMessage(NOTE_OFF_COMMAND, allSubsequences, currentSubsequenceIndex, trackIndex, hangingPitch)
+            //        {
+            //            var
+            //            nextSubsequenceIndex = currentSubsequenceIndex + 1,
+            //            i, nSubsequences = allSubsequences.length, track,
+            //            j, nMoments, moment,
+            //            k, nMessages, message, returnMessage = null;
 
-                        for(i = nextSubsequenceIndex; i < nSubsequences; ++i)
-                        {
-                            track = allSubsequences[i].tracks[trackIndex];
-                            nMoments = track.moments.length;
-                            for(j = 0; j < nMoments; ++j)
-                            {
-                                moment = track.moments[j];
-                                nMessages = moment.messages.length;
-                                for(k = 0; k < nMessages; ++k)
-                                {
-                                    message = moment.messages[k];
-                                    if(message.data[1] === hangingPitch)
-                                    {
-                                        if(message.command() === NOTE_OFF_CMD)
-                                        {
-                                            returnMessage = message;
-                                            break;
-                                        }
-                                    }
-                                }
-                                if(returnMessage !== null)
-                                {
-                                    break;
-                                }
-                            }
-                            if(returnMessage !== null)
-                            {
-                                break;
-                            }
-                        }
-                        return returnMessage;
-                    }
+            //            for(i = nextSubsequenceIndex; i < nSubsequences; ++i)
+            //            {
+            //                track = allSubsequences[i].tracks[trackIndex];
+            //                nMoments = track.moments.length;
+            //                for(j = 0; j < nMoments; ++j)
+            //                {
+            //                    moment = track.moments[j];
+            //                    nMessages = moment.messages.length;
+            //                    for(k = 0; k < nMessages; ++k)
+            //                    {
+            //                        message = moment.messages[k];
+            //                        if(message.data[1] === hangingPitch)
+            //                        {
+            //                            if(message.command() === NOTE_OFF_COMMAND)
+            //                            {
+            //                                returnMessage = message;
+            //                                break;
+            //                            }
+            //                        }
+            //                    }
+            //                    if(returnMessage !== null)
+            //                    {
+            //                        break;
+            //                    }
+            //                }
+            //                if(returnMessage !== null)
+            //                {
+            //                    break;
+            //                }
+            //            }
+            //            return returnMessage;
+            //        }
 
-                    for(trackIndex = 0; trackIndex < nTracks; trackIndex++)
-                    {
-                        hangingPitches = hangingScorePitchesPerTrack[trackIndex];
-                        nHangingPitches = hangingPitches.length;
-                        for(i = 0; i < nHangingPitches; i++)
-                        {
-                            hangingPitch = hangingPitches[i];
-                            nextNoteOffMessage = findNextNoteOffMessage(NOTE_OFF_CMD, allSubsequences, currentSubsequenceIndex, trackIndex, hangingPitch);
-                            if(nextNoteOffMessage !== null)
-                            {
-                                nextNoteOffMessage.data[1] = hangingPitch + pitchDelta;
-                            }
-                        }
-                    }
+            //        for(trackIndex = 0; trackIndex < nTracks; trackIndex++)
+            //        {
+            //            hangingPitches = hangingScorePitchesPerTrack[trackIndex];
+            //            nHangingPitches = hangingPitches.length;
+            //            for(i = 0; i < nHangingPitches; i++)
+            //            {
+            //                hangingPitch = hangingPitches[i];
+            //                nextNoteOffMessage = findNextNoteOffMessage(NOTE_OFF_COMMAND, allSubsequences, currentSubsequenceIndex, trackIndex, hangingPitch);
+            //                if(nextNoteOffMessage !== null)
+            //                {
+            //                    nextNoteOffMessage.data[1] = hangingPitch + pitchDelta;
+            //                }
+            //            }
+            //        }
 
-                }
+            //    }
 
-                lowestNoteOnEvt = findLowestNoteOnEvt(NOTE_ON_CMD, track);
-                if(lowestNoteOnEvt !== null)
-                {
-                    pitchDelta = (overrideSoloPitch || overrideOtherTracksPitch) ? (newPitch - lowestNoteOnEvt.data[1]) : 0;
-                    velocityDelta = (overrideSoloVelocity || overrideOtherTracksVelocity) ? (newVelocity - lowestNoteOnEvt.data[2]) : 0;
+            //    lowestNoteOnEvt = findLowestNoteOnEvt(NOTE_ON_COMMAND, track);
+            //    if(lowestNoteOnEvt !== null)
+            //    {
+            //        pitchDelta = (overrideSoloPitch || overrideOtherTracksPitch) ? (newPitch - lowestNoteOnEvt.data[1]) : 0;
+            //        velocityDelta = (overrideSoloVelocity || overrideOtherTracksVelocity) ? (newVelocity - lowestNoteOnEvt.data[2]) : 0;
 
-                    if(pitchDelta !== 0 || velocityDelta !== 0)
-                    {
-                        hangingScorePitchesPerTrack =
-                            adjustTracks(NOTE_ON_CMD, NOTE_OFF_CMD, soloTrackIndex, pitchDelta, velocityDelta,
-                            overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity);
+            //        if(pitchDelta !== 0 || velocityDelta !== 0)
+            //        {
+            //            hangingScorePitchesPerTrack =
+            //                adjustTracks(NOTE_ON_COMMAND, NOTE_OFF_COMMAND, soloTrackIndex, pitchDelta, velocityDelta,
+            //                overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity);
 
-                        if(hangingScorePitchesPerTrack !== null)
-                        {
-                            adjustSubsequentNoteOffs(NOTE_OFF_CMD, allSubsequences, currentSubsequenceIndex, pitchDelta, hangingScorePitchesPerTrack);
-                        }
-                    }
-                }
-            }
+            //            if(hangingScorePitchesPerTrack !== null)
+            //            {
+            //                adjustSubsequentNoteOffs(NOTE_OFF_COMMAND, allSubsequences, currentSubsequenceIndex, pitchDelta, hangingScorePitchesPerTrack);
+            //            }
+            //        }
+            //    }
+            //}
 
-            function setSpeed(inputEventData)
-            {
-                if(performersSpeedOptions.controllerIndex === 1)
-                {
-                    setSpeedFactor(1, inputEventData[1]);
-                }
-                else if(performersSpeedOptions.controllerIndex === 2)
-                {
-                    setSpeedFactor(2, inputEventData[2]);
-                }
-            }
+            //function setSpeed(inputEventData)
+            //{
+            //    if(performersSpeedOptions.controllerIndex === 1)
+            //    {
+            //        setSpeedFactor(1, inputEventData[1]);
+            //    }
+            //    else if(performersSpeedOptions.controllerIndex === 2)
+            //    {
+            //        setSpeedFactor(2, inputEventData[2]);
+            //    }
+            //}
 
-            //console.log("NoteOn, pitch:", inputEvent.data[1].toString(), " velocity:", inputEvent.data[2].toString());
+            ////console.log("NoteOn, pitch:", inputEvent.data[1].toString(), " velocity:", inputEvent.data[2].toString());
 
-            sequenceStartNow = inputEvent.receivedTime;
+            //sequenceStartNow = inputEvent.receivedTime;
 
-            currentLivePerformersKeyPitch = inputEvent.data[1];
+            //currentLivePerformersKeyPitch = inputEvent.data[1];
 
-            if(currentIndex === (performedSequences.length - 1))
-            {
-                // If the final sequence is playing and a noteOn is received, the performance stops immediately.
-                // In this case the final sequence must be a restSequence (otherwise a noteOn can't be received).
-                stop();
-            }
-            else if(inputEvent.data[2] > 0)
-            {
-                silentlyCompleteCurrentlyPlayingSequence();
+            //if(currentIndex === (performedSequences.length - 1))
+            //{
+            //    // If the final sequence is playing and a noteOn is received, the performance stops immediately.
+            //    // In this case the final sequence must be a restSequence (otherwise a noteOn can't be received).
+            //    stop();
+            //}
+            //else if(inputEvent.data[2] > 0)
+            //{
+            //    silentlyCompleteCurrentlyPlayingSequence();
 
-                if(nextIndex === 0)
-                {
-                    performanceStartNow = sequenceStartNow;
-                }
+            //    if(nextIndex === 0)
+            //    {
+            //        performanceStartNow = sequenceStartNow;
+            //    }
 
-                if(nextIndex === 0 || (nextIndex <= endIndex && allSubsequences[nextIndex].chordSequence !== undefined))
-                {
-                    currentIndex = nextIndex++;
-                    endOfPerformance = (currentIndex === endIndex);
+            //    if(nextIndex === 0 || (nextIndex <= endIndex && allSubsequences[nextIndex].chordSequence !== undefined))
+            //    {
+            //        currentIndex = nextIndex++;
+            //        endOfPerformance = (currentIndex === endIndex);
 
-                    if(overrideSoloPitch || overrideOtherTracksPitch || overrideSoloVelocity || overrideOtherTracksVelocity)
-                    {
-                        overridePitchAndOrVelocity(allSubsequences, currentIndex, options.livePerformersTrackIndex,
-                            inputEvent.data[1], inputEvent.data[2],
-                            overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity);
-                    }
+            //        if(overrideSoloPitch || overrideOtherTracksPitch || overrideSoloVelocity || overrideOtherTracksVelocity)
+            //        {
+            //            overridePitchAndOrVelocity(allSubsequences, currentIndex, options.livePerformersTrackIndex,
+            //                inputEvent.data[1], inputEvent.data[2],
+            //                overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity);
+            //        }
 
-                    setSpeed(inputEvent.data);
+            //        setSpeed(inputEvent.data);
 
-                    playSequence(allSubsequences[currentIndex]);
-                }
-            }
-            else // velocity 0 is "noteOff"
-            {
-                handleNoteOff(inputEvent);
-            }
+            //        playSequence(allSubsequences[currentIndex]);
+            //    }
+            //}
+            //else // velocity 0 is "noteOff"
+            //{
+            //    handleNoteOff(inputEvent);
+            //}
         }
 
         inputEvent = getInputEvent(msg.data, performance.now());
@@ -666,7 +1057,7 @@ _AP.monoInput = (function()
 
             switch(command)
             {
-                case CMD.CHANNEL_PRESSURE: // produced by both R2M and E-MU XBoard49 when using "aftertouch"
+                case COMMAND.CHANNEL_PRESSURE: // produced by both R2M and E-MU XBoard49 when using "aftertouch"
                     inputPressure = (inputEvent.data[1] > options.minimumInputPressure) ? inputEvent.data[1] : options.minimumInputPressure;
                     setSpeedFactor(3, inputEvent.data[1]);
                     //console.log("ChannelPressure, data[1]:", inputEvent.data[1].toString());  // CHANNEL_PRESSURE control has no data[2]
@@ -677,7 +1068,7 @@ _AP.monoInput = (function()
                                                     localOptions.usesPressureSolo, localOptions.usesPressureOtherTracks);
                     }
                     break;
-                case CMD.AFTERTOUCH: // produced by the EWI breath controller
+                case COMMAND.AFTERTOUCH: // produced by the EWI breath controller
                     inputPressure = (inputEvent.data[2] > options.minimumInputPressure) ? inputEvent.data[2] : options.minimumInputPressure;
                     setSpeedFactor(3, inputEvent.data[2]);
                     //console.log("Aftertouch input, key:" + inputEvent.data[1].toString() + " value:", inputEvent.data[2].toString()); 
@@ -690,7 +1081,7 @@ _AP.monoInput = (function()
                                                     localOptions.usesPressureSolo, localOptions.usesPressureOtherTracks);
                     }
                     break;
-                case CMD.CONTROL_CHANGE: // sent when the input device's mod wheel changes.
+                case COMMAND.CONTROL_CHANGE: // sent when the input device's mod wheel changes.
                     if(inputEvent.data[1] === _AP.constants.CONTROL.MODWHEEL)
                     {
                         setSpeedFactor(5, inputEvent.data[2]);
@@ -703,7 +1094,7 @@ _AP.monoInput = (function()
                         }
                     }
                     break;
-                case CMD.PITCH_WHEEL: // EWI pitch bend up/down controllers, EMU pitch wheel
+                case COMMAND.PITCH_WHEEL: // EWI pitch bend up/down controllers, EMU pitch wheel
                     setSpeedFactor(4, inputEvent.data[2]);
                     //console.log("Pitch Wheel, data[1]:", inputEvent.data[1].toString() + " data[2]:", inputEvent.data[2].toString());
                     // by experiment: inputEvent.data[2] is the "high byte" and has a range 0..127. 
@@ -715,7 +1106,7 @@ _AP.monoInput = (function()
                                                     localOptions.usesPitchBendSolo, localOptions.usesPitchBendOtherTracks);
                     }
                     break;
-                case CMD.NOTE_ON:
+                case COMMAND.NOTE_ON:
                     if(inputEvent.data[2] !== 0)
                     {
                         // setSpeedFactor is called inside handleNoteOn(...) because currentIndex needs to be >= 0.
@@ -728,7 +1119,7 @@ _AP.monoInput = (function()
                         handleNoteOff(inputEvent);
                     }
                     break;
-                case CMD.NOTE_OFF:
+                case COMMAND.NOTE_OFF:
                     handleNoteOff(inputEvent);
                     break;
                 default:
@@ -739,29 +1130,44 @@ _AP.monoInput = (function()
 
     currentSegmentBounds = function()
     {
-        var
-        bounds = {},
-        startIndex = performersMsPositionsInScoreIndex,
-        endIndex = startIndex + 1;
+        throw "Not yet implemented.";
+        //var
+        //bounds = {},
+        //startIndex = performersMsPositionsInScoreIndex,
+        //endIndex = startIndex + 1;
 
-        if(startIndex < performersMsPositionsInScore.length)
-        {
-            bounds.msStartPositionInScore = performersMsPositionsInScore[startIndex];
-        }
-        if(endIndex < performersMsPositionsInScore.length)
-        {
-            bounds.msEndPositionInScore = performersMsPositionsInScore[endIndex];
-        }
-        return bounds;
+        //if(startIndex < performersMsPositionsInScore.length)
+        //{
+        //    bounds.msStartPositionInScore = performersMsPositionsInScore[startIndex];
+        //}
+        //if(endIndex < performersMsPositionsInScore.length)
+        //{
+        //    bounds.msEndPositionInScore = performersMsPositionsInScore[endIndex];
+        //}
+        //return bounds;
     },
 
     nextMoment = function()
     {
-        console.log("nextMoment() needs completing.");
+        throw "Not yet implemented.";
     },
 
-    // monoInput.runtimeInit() is called from player.play() if options.livePerformance is true, and
-    // options.performerOptions.inputDeviceType === 'monoInput'.
+    // Called from controls.beginRuntime() if this is an assisted performance and performer is monoInput.
+    // Sets the internal monoInput.options variable, designed for speed of execution by the event handler. 
+    runtimeInit = function(nTracks)
+    {
+        var i;
+
+        // Sets the options variable from the state of the controls.
+        function getOptionsfromDialog(nTracks)
+        {
+            throw "Not yet implemented.";
+        }
+
+        options = getOptionsfromDialog(nTracks);
+    },
+
+    // Called from player.play() if this is an assisted performance and performer is monoInput.
     // Arguments:
     //      outputDevice: the midiOutputDevice.
     //      allTracks: all the tracks, complete from the beginning to the end of the piece.
@@ -770,7 +1176,7 @@ _AP.monoInput = (function()
     //      scorePerformerOptions: the monoInput options retrieved from the score.
     //      usePerformersNextMomentFunction: a callback function that sets the player to use the monoInput's nextMoment function
     //          which is defined in this namespace and uses variables local to this namespace.
-    runtimeInit = function(outputDevice, allTracks, moMsPositionsInScore, scorePerformerOptions, usePerformersNextMomentFunction)
+    playtimeInit = function(outputDevice, allTracks, moMsPositionsInScore, scorePerformerOptions, usePerformersNextMomentFunction)
     {
         function getPerformersMsPositions(performersTrack, moMsPositionsInScore)
         {
@@ -782,13 +1188,15 @@ _AP.monoInput = (function()
             performersMsPositionsInScore.length = 0;
             for(i = 0; i < performersTrack.length; ++i)
             {
-                if(performersTrack[i].msPositionInScore < startMarkerPosition)
-                    continue;
-
                 if(performersTrack[i].msPositionInScore > endMarkerPosition)
+                {
                     break;
+                }
 
-                performersMsPositionsInScore.push(performersTrack[i].msPositionInScore);
+                if(performersTrack[i].msPositionInScore >= startMarkerPosition)
+                {
+                    performersMsPositionsInScore.push(performersTrack[i].msPositionInScore);
+                }
             }
 
             if((performersMsPositionsInScore[0] !== moMsPositionsInScore[0])
@@ -798,10 +1206,8 @@ _AP.monoInput = (function()
             }
         }
 
-        performersOptions = scorePerformerOptions;
-
         // a flat, ordered array of all msPositions in the performance
-        midiObjectMsPositionsInScore = moMsPositionsInScore,
+        midiObjectMsPositionsInScore = moMsPositionsInScore;
 
         getPerformersMsPositions(allTracks[scorePerformerOptions.trackIndex], moMsPositionsInScore);
 
@@ -814,9 +1220,24 @@ _AP.monoInput = (function()
 
     publicAPI =
     {
+        hidden: hidden,
+        setDisabled: setDisabled,
+        setControlsFromString: setControlsFromString,
+        setDefaultControls: setDefaultControls,
+        trackSelect: trackSelect, // function that returns the track selector element
+        doControl: doControl,
+
+        // ********* runtime ************
+        // called in Controls.js.beginRuntime().
+
+        // Sets the local 'options' variable -- which is constant for all performances.
+        // The options variable is designed to optimize the use
+        // of the options (set in the dialog) during performances.
         runtimeInit: runtimeInit,
-        handleMIDIInputEvent: handleMIDIInputEvent,
-        doControl: doControl
+
+        // Takes account of startMarker and endMarker positions etc.
+        playtimeInit: playtimeInit, // called in player.play()
+        handleMIDIInputEvent: handleMIDIInputEvent
     };
     // end var
 
