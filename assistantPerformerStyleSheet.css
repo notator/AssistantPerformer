@@ -62,27 +62,34 @@ select.deviceSelector
 
 div.options
 {
+    width: 800px;
+    padding: 10px;
+    margin: 10px 100px 10px 100px; 
     font-size: 12px;
     background-color: #F6F6F6;
     border: 1px solid #008000;
-    margin-top: 10px;
-    margin-bottom:0px;
-    margin-left:100px;
-    margin-right:100px;
-    padding: 10px;
-    text-align:match-parent;
+    text-align: match-parent;
 }
-div.optionsPanel
+div.globalSpeedPanel
 {
-    width:636px;
-    margin-top: 8px;
-    margin-bottom:2px;
-    margin-left:103px;
-    margin-right:28px;
-    padding-top: 4px;
-    padding-right: 12px;
-    padding-bottom: 12px;
-    padding-left: 12px;                
+    width:500px;
+    padding: 5px 0px 5px 0px;
+    margin:8px auto 8px auto;    
+    background-color: #FCFCFC;
+    border: 1px solid #008000;
+}
+input.startRuntimeButton
+{
+    width: 200px;
+    font-size: 13px;
+    margin: 0px;
+    padding: 4px 0px 4px 0px;  
+}
+div.performersOptionsPanel
+{
+    width:672px;
+    margin: 8px auto 8px auto;
+    padding: 4px 12px 12px 12px;               
     text-align: left;
     line-height: 18px; 
     background-color: #FCFCFC;
@@ -129,11 +136,27 @@ img.channelControl
 
 /*** new 15.05.2014 for monoPerformerOptions***/
 
+input.mpoNumberInput
+{
+    width: 40px;
+    margin:0px 3px 0px 4px;
+    padding: 0px;
+    font-size:11px;
+}
+input.mpoMasterVolumeNumberInputCell
+{
+    display:table-cell;
+    width: 40px;
+    margin:0px 1px 0px 1px;
+    padding: 0px;
+    font-size:11px;
+}
+
 div.mpoColumn1Cell
 {
     display:table-cell;
     text-align:right;
-    width: 140px;
+    width: 151px; /*was 140*/
     /*background-color: #C0C0C0;*/
     padding-left: 4px;
     padding-right:4px;
@@ -152,6 +175,7 @@ div.mpoColumn3Cell
     width: 100px;
     /*background-color: #99FFCC;*/
 }
+
 div.mpoTrackNumberCell
 {
     display:table-cell;
@@ -163,6 +187,35 @@ div.mpoTrackNumberCell
     padding-right:0px;
     padding-top:0px;
     padding-bottom:0px;
+    margin:0px;
+}
+div.mpoMasterVolumeTrackNumberCell
+{
+    display:table-cell;
+    width: 42px;
+    margin:0px 1px 0px 1px;
+    font-size:10px;
+    line-height:13px;
+    text-align:center;
+    /*background-color: #99CCFF;*/
+}
+
+div.mpoTitleCell
+{
+    display:table-cell;
+    text-align:left;
+    /*background-color: #C0C0C0;*/
+    padding-left:4px;
+    margin:0px 4px 0px 4px;
+    color: #0000FF;
+}
+div.row11HelpCell 
+{
+    display:table-cell;
+    font-size: 10px;
+    color: #8888FF;
+    /*background-color: #C0C0C0;*/
+    padding: 0px 0px 0px 6px;
     margin:0px;
 }
 
@@ -223,17 +276,7 @@ div.mpoPerformerCupBorderCheckBoxCell
     border-color: #008000;
 }
 
-
-div.mpoRow9Cell1 
-{
-    display:table-cell;
-    width: 126px;
-    /*background-color: #C0C0C0;*/
-    padding-left:4px;
-    padding-right:4px;
-    margin:0px;
-}
-div.mpoRow9Cell2 
+div.mpoRow15Cell2 
 {
     display:table-cell;
     width: 98px;
@@ -242,7 +285,7 @@ div.mpoRow9Cell2
     margin:0px;
     text-align:right;
 }
-div.mpoRow9Cell3 
+div.mpoRow15Cell3 
 {
     display:table-cell;
     width: 50px;
@@ -253,7 +296,7 @@ div.mpoRow9Cell3
     padding-bottom:0px;
     margin:0px;
 }
-div.mpoRow9Cell4 
+div.mpoRow15Cell4 
 {
     display:table-cell;
     width: 10px;
@@ -261,56 +304,46 @@ div.mpoRow9Cell4
     padding:0px;
     margin:0px;
 }
-div.mpoRow9Cell5 
+div.mpoRow15Cell5 
 {
     display:table-cell;
-    width: 330px;
+    margin:0px;
+    padding: 0px 0px 0px 4px;
     font-size: 10px;
     line-height: 14px; 
-    color: #3399FF;
+    color: #8888FF;
     /*background-color: #C0C0C0;*/
-    padding-left:6px;
-    padding-bottom:0px;
-    padding-top:0px;
-    padding-right:0px;
-    margin:0px;
-    vertical-align: middle;
 }
 
-div.mpoRow10Cell1
+div.mpoRow8Cell2
 {
     display:table-cell;
-    width: 50px;
+    width: 42px;
     /*background-color: #C0C0C0;*/
-    padding-left:4px;
-    padding-right:4px;
+    padding:0px;
     margin:0px;
-    vertical-align:middle;
 }
 
-div.mpoRow10Cell2
+div.mpoRow8Cell3
 {
     display:table-cell;
     width: 50px;
     font-size:11px;
     /*background-color: #FF6666;*/
     padding:0px;
-    margin:0px;
-    text-align:left;
-    vertical-align:middle;
+    margin:0px 0px 0px 3px;
 }
 
-div.mpoRow10Cell3
+div.mpoRow8Cell4
 {
     display:table-cell;
     width: 400px;
     font-size: 10px;
     line-height: 14px; 
-    color: #3399FF;
+    color: #8888FF;
     /*background-color: #C0C0C0;*/
     padding-left:2px;
     margin:0px;
-    vertical-align: middle;
 }
 
 select.mpoPerformersTrackSelect
@@ -345,10 +378,5 @@ select.mpoMidiControlSelect
     width:120px;
 }
 
-input.mpoNumberInput
-{
-    font-size:11px;
-    padding: 0px;
-    margin: 0px;
-    width: 50px;
-}
+
+

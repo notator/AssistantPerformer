@@ -324,6 +324,22 @@ _AP.monoInput = (function()
             }
         }
 
+        function setNumberInputs(numberInputs, intArray)
+        {
+            var i, nTracks = intArray.length;
+            for(i = 0; i < 16; ++i)
+            {
+                if(i < nTracks)
+                {
+                    numberInputs[i].value = intArray[i];
+                }
+                else
+                {
+                    numberInputs[i].value = undefined;
+                }
+            }
+        }
+
         initControls(nTracks);
 
         str = attributeValueString(mPerformerOptionsString, "trackIndex=");
@@ -393,6 +409,10 @@ _AP.monoInput = (function()
             setTrackCheckBoxesSelect(controls.modWheelTrackSelect, trackBoolArray, trackIndex);
             setCheckBoxes(controls.modWheelCheckBoxes, trackBoolArray);
         }
+
+        //trackintArray = _AP.controls.intArrayFromAttribute(nTracks, str, "masterVolumes=", 127);
+        //// controls.masterVolumesInputs needs to have been set here.
+        //setNumberInputs(controls.masterVolumesInputs, trackintArray);
 
         if(mPerformerOptionsString.search("speedController=") !== -1)
         {
