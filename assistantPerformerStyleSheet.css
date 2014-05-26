@@ -138,24 +138,19 @@ img.channelControl
 
 input.mpoNumberInput
 {
-    width: 40px;
-    margin:0px 3px 0px 4px;
-    padding: 0px;
-    font-size:11px;
-}
-input.mpoMasterVolumeNumberInputCell
-{
     display:table-cell;
     width: 40px;
-    margin:0px 1px 0px 1px;
+    height: 20px;
+    margin: 0px;
     padding: 0px;
-    font-size:11px;
+    font-size: 11px;
+    color: black;
 }
 
 div.mpoColumn1Cell
 {
-    display:table-cell;
-    text-align:right;
+    display: table-cell;
+    text-align: right;
     width: 151px; /*was 140*/
     /*background-color: #C0C0C0;*/
     padding-left: 4px;
@@ -163,8 +158,8 @@ div.mpoColumn1Cell
 }
 div.mpoColumn2Cell
 {
-    display:table-cell;
-    text-align:right;
+    display: table-cell;
+    text-align: right;
     width: 124px;
     /*background-color: #FF6666;*/
 }
@@ -176,29 +171,31 @@ div.mpoColumn3Cell
     /*background-color: #99FFCC;*/
 }
 
+/*
 div.mpoTrackNumberCell
 {
     display:table-cell;
     font-size:10px;
     text-align:center;
     width: 15px;
-    /*background-color: #99CCFF;*/
-    padding-left:1px;
-    padding-right:0px;
-    padding-top:0px;
-    padding-bottom:0px;
+    padding:0px 1px 0px 1px;
     margin:0px;
 }
-div.mpoMasterVolumeTrackNumberCell
+***/
+div.mpoMasterVolumeCell
 {
     display:table-cell;
     width: 42px;
     margin:0px 1px 0px 1px;
+    padding: 1px 1px 3px 1px;
     font-size:10px;
     line-height:13px;
     text-align:center;
     /*background-color: #99CCFF;*/
+    border-width:thin;
+    border-color:transparent;
 }
+
 
 div.mpoTitleCell
 {
@@ -209,7 +206,7 @@ div.mpoTitleCell
     margin:0px 4px 0px 4px;
     color: #0000FF;
 }
-div.row11HelpCell 
+div.row9HelpCell 
 {
     display:table-cell;
     font-size: 10px;
@@ -222,61 +219,18 @@ div.row11HelpCell
 div.mpoCheckBoxCell
 {
     display:table-cell;
-    width: 15px;
+    width: 16px;
     /*background-color: #99CCFF;*/
-    padding-left:1px;
-    padding-right:0px;
-    padding-top:0px;
-    padding-bottom:0px;
-    margin:0px;
+    padding:0px 1px 3px 1px;
+    margin:0px 1px 0px 1px;
+    border-width:thin;
+    border-color:transparent;
+
+    font-size:10px;
+    text-align:center;
 }
 
-/* for track numbers */
-
-div.mpoPerformerCapBorderCheckBoxCell
-{
-    display:table-cell;
-    width: 14px;
-    /*background-color: #99CCFF;*/
-    padding-left:2px;
-    padding-right:0px;
-    padding-top:0px;
-    padding-bottom:0px;
-    margin:0px;
-    border-style: solid solid none solid;
-    border-width: 1px; 
-    border-color: #008000;
-}
-div.mpoPerformerSidesBorderCheckBoxCell
-{
-    display:table-cell;
-    width: 14px;
-    /*background-color: #99CCFF;*/
-    padding-left:2px;
-    padding-right:0px;
-    padding-top:0px;
-    padding-bottom:0px;
-    margin:0px;
-    border-style: none solid none solid;
-    border-width: 1px; 
-    border-color: #008000;
-}
-div.mpoPerformerCupBorderCheckBoxCell
-{
-    display:table-cell;
-    width: 14px;
-    /*background-color: #99CCFF;*/
-    padding-left:2px;
-    padding-right:0px;
-    padding-top:0px;
-    padding-bottom:3px;
-    margin:0px;
-    border-style: none solid solid solid;
-    border-width: 1px; 
-    border-color: #008000;
-}
-
-div.mpoRow15Cell2 
+div.mpoRow13Cell2 
 {
     display:table-cell;
     width: 98px;
@@ -285,7 +239,7 @@ div.mpoRow15Cell2
     margin:0px;
     text-align:right;
 }
-div.mpoRow15Cell3 
+div.mpoRow13Cell3 
 {
     display:table-cell;
     width: 50px;
@@ -296,7 +250,7 @@ div.mpoRow15Cell3
     padding-bottom:0px;
     margin:0px;
 }
-div.mpoRow15Cell4 
+div.mpoRow13Cell3 
 {
     display:table-cell;
     width: 10px;
@@ -304,7 +258,7 @@ div.mpoRow15Cell4
     padding:0px;
     margin:0px;
 }
-div.mpoRow15Cell5 
+div.mpoRow13Cell4 
 {
     display:table-cell;
     margin:0px;
@@ -313,15 +267,6 @@ div.mpoRow15Cell5
     line-height: 14px; 
     color: #8888FF;
     /*background-color: #C0C0C0;*/
-}
-
-div.mpoRow8Cell2
-{
-    display:table-cell;
-    width: 42px;
-    /*background-color: #C0C0C0;*/
-    padding:0px;
-    margin:0px;
 }
 
 div.mpoRow8Cell3
@@ -377,6 +322,4 @@ select.mpoMidiControlSelect
     margin:0px;
     width:120px;
 }
-
-
 

@@ -252,7 +252,6 @@ _AP.controls = (function(document, window)
 
                     if(inputDeviceIndex > 0)
                     {
-                        performer = scoreInfo.performer();
                         performer.hidden(false);
                     }
                     else if(performer !== undefined)
