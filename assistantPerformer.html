@@ -58,9 +58,10 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
                             speed:
                         </label>
                         <input type="number" id="globalSpeedInput" value="100"
-                            style="margin: 0px 0px 3px 0px; width: 40px; vertical-align: middle;" />
+                            onblur ="_AP.controls.doControl('globalSpeedInput')"
+                            style="margin: 0px 0px 3px 0px; width: 65px; vertical-align: middle;" />
                         <label id="globalSpeedInputNumberLabel2" for="globalSpeedInput">
-                            % (must be greater than 0 &mdash; higher values lead to higher speed)
+                            % [Greater than 0%] Higher values lead to higher speed.
                         </label>
                     </div>
                 </div>
@@ -532,12 +533,9 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
                             minimum volume
                         </div>
                         <input type="number" class="mpoNumberInput" style="margin:0px 2px 0px 3px;" id="mpoMinVolumeInput" value="50"
-                                onchange="_AP.monoInput.doControl('mpoMinVolumeInput')" />                            
+                                onblur="_AP.monoInput.doControl('mpoMinVolumeInput')" />                            
                         <div class="mpoRow8Cell3">
-                            ( 0..127 )
-                        </div>
-                        <div class="mpoRow8Cell4">
-                            The minimum volume needs to be set if the performer is controlling the volume.
+                            [0..127] The minimum volume needs to be set if the performer is controlling the volume.
                         </div>                                             
                     </div>
                     <div id="row9" style="display: table; margin: 10px 0px 0px 0px;">
@@ -545,89 +543,89 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
                             master volume
                         </div>
                         <div class="row9HelpCell">
-                            These values are used both to initialize the tracks and if/while the performer is controlling the volume.
+                            [0..127] These values are used to initialize the tracks and, if the performer is controlling the volume, during performances.
                         </div>
                     </div>
                     <div id="row10" style="display: table; margin:0px;">
                         <div class="mpoMasterVolumeCell" id="mpoMasterVolume1">
                             1<br />
                             <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput1" value=""
-                                onchange="_AP.monoInput.doControl('mpoMaxSpeedInput')" />
+                               onblur ="_AP.monoInput.doControl('mpoMasterVolumeInput1')" />
                         </div>
                         <div class="mpoMasterVolumeCell" id="mpoMasterVolume2">
                             2<br />
                             <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput2" value=""
-                                onchange="_AP.monoInput.doControl('mpoMaxSpeedInput')" />
+                                onblur="_AP.monoInput.doControl('mpoMasterVolumeInput2')" />
                         </div>
                         <div class="mpoMasterVolumeCell" id="mpoMasterVolume3">
                             3<br />
                             <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput3" value=""
-                                onchange="_AP.monoInput.doControl('mpoMaxSpeedInput')" />
+                                onblur="_AP.monoInput.doControl('mpoMasterVolumeInput3')" />
                         </div>
                         <div class="mpoMasterVolumeCell" id="mpoMasterVolume4">
                             4<br />
                             <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput4" value=""
-                                onchange="_AP.monoInput.doControl('mpoMaxSpeedInput')" />
+                                onblur="_AP.monoInput.doControl('mpoMasterVolumeInput4')" />
                         </div>
                         <div class="mpoMasterVolumeCell" id="mpoMasterVolume5">
                             5<br />
                             <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput5" value=""
-                                onchange="_AP.monoInput.doControl('mpoMaxSpeedInput')" />
+                                onblur="_AP.monoInput.doControl('mpoMasterVolumeInput5')" />
                         </div>
                         <div class="mpoMasterVolumeCell" id="mpoMasterVolume6">
                             6<br />
                             <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput6" value=""
-                                onchange="_AP.monoInput.doControl('mpoMaxSpeedInput')" />
+                                onblur="_AP.monoInput.doControl('mpoMasterVolumeInput6')" />
                         </div>
                         <div class="mpoMasterVolumeCell" id="mpoMasterVolume7">
                             7<br />
                             <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput7" value=""
-                                onchange="_AP.monoInput.doControl('mpoMaxSpeedInput')" />
+                                onblur="_AP.monoInput.doControl('mpoMasterVolumeInput7')" />
                         </div>
                         <div class="mpoMasterVolumeCell" id="mpoMasterVolume8">
                             8<br />
                             <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput8" value=""
-                                onchange="_AP.monoInput.doControl('mpoMaxSpeedInput')" />
+                                onblur="_AP.monoInput.doControl('mpoMasterVolumeInput8')" />
                         </div>
                         <div class="mpoMasterVolumeCell" id="mpoMasterVolume9">
                             9<br />
                             <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput9" value=""
-                                onchange="_AP.monoInput.doControl('mpoMaxSpeedInput')" />
+                                onblur="_AP.monoInput.doControl('mpoMasterVolumeInput9')" />
                         </div>
                         <div class="mpoMasterVolumeCell" id="mpoMasterVolume10">
                             10<br />
                             <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput10" value=""
-                                onchange="_AP.monoInput.doControl('mpoMaxSpeedInput')" />
+                                onblur="_AP.monoInput.doControl('mpoMasterVolumeInput10')" />
                         </div>
                         <div class="mpoMasterVolumeCell" id="mpoMasterVolume11">
                             11<br />
                             <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput11" value=""
-                                onchange="_AP.monoInput.doControl('mpoMaxSpeedInput')" />
+                                onblur="_AP.monoInput.doControl('mpoMasterVolumeInput11')" />
                         </div>
                         <div class="mpoMasterVolumeCell" id="mpoMasterVolume12">
                             12<br />
                             <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput12" value=""
-                                onchange="_AP.monoInput.doControl('mpoMaxSpeedInput')" />
+                                onblur="_AP.monoInput.doControl('mpoMasterVolumeInput12')" />
                         </div>
                         <div class="mpoMasterVolumeCell" id="mpoMasterVolume13">
                             13<br />
                             <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput13" value=""
-                                onchange="_AP.monoInput.doControl('mpoMaxSpeedInput')" />
+                                onblur="_AP.monoInput.doControl('mpoMasterVolumeInput13')" />
                         </div>
                         <div class="mpoMasterVolumeCell" id="mpoMasterVolume14">
                             14<br />
                             <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput14" value=""
-                                onchange="_AP.monoInput.doControl('mpoMaxSpeedInput')" />
+                                onblur="_AP.monoInput.doControl('mpoMasterVolumeInput14')" />
                         </div>
                         <div class="mpoMasterVolumeCell" id="mpoMasterVolume15">
                             15<br />
                             <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput15" value=""
-                                onchange="_AP.monoInput.doControl('mpoMaxSpeedInput')" />
+                                onblur="_AP.monoInput.doControl('mpoMasterVolumeInput15')" />
                         </div>
                         <div class="mpoMasterVolumeCell" id="mpoMasterVolume16">
                             16<br />
                             <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput16" value=""
-                                onchange="_AP.monoInput.doControl('mpoMaxSpeedInput')" />
+                                onblur="_AP.monoInput.doControl('mpoMasterVolumeInput16')" />
                         </div>
                     </div>
                     <div id="row11" style="display: table; margin: 10px 0px 0px 0px;">
@@ -650,15 +648,15 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
                         <div class="mpoColumn1Cell">
                             maximum speed
                         </div>
-                        <input type="number" class="mpoNumberInput" style="margin:2px 2px 0px 4px;" id="mpoMaxSpeedInput" value="400"
-                            onchange="_AP.monoInput.doControl('mpoMaxSpeedInput')" />                            
-                        <div class="mpoRow13Cell3">
+                        <input type="number" class="mpoNumberInput" style="width:60px; margin:2px 2px 0px 4px;" id="mpoMaxSpeedInput" value="400"
+                            onblur="_AP.monoInput.doControl('mpoMaxSpeedInput')" />                            
+                        <label class="mpoRow13Cell3" for="mpoMaxSpeedInput">
                             %
-                        </div>
-                       <div class="mpoRow13Cell4">
-                           The maximum speed happens when the controller sends a value of 127.<br />
+                        </label>
+                       <label class="mpoRow13Cell4" for="mpoMaxSpeedInput">
+                           [Greater than 100%] The maximum speed happens when the controller sends a value of 127.<br />
                            The minimum speed (the reciprocal factor) happens when the controller sends a value of 0.
-                        </div>                                             
+                        </label>                                             
                     </div>
                 </div>
                 <div id="polyPerformersOptions" class="optionsPanel"  style="display:none;">
@@ -934,6 +932,7 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
     
     <script src="ap/Namespace.js" type="text/javascript"></script>
     <script src="ap/Constants.js" type="text/javascript"></script>
+    <script src="ap/Utilities.js" type="text/javascript"></script>
     <script src="ap/Message.js" type="text/javascript"></script>
     <script src="ap/Moment.js" type="text/javascript"></script>
     <script src="ap/Track.js" type="text/javascript"></script>

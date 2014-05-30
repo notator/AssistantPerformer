@@ -26,9 +26,11 @@ _AP.monoInput = (function()
 
     // begin var
     var
+    U = _AP.utilities,
     Message = _AP.message.Message,
     COMMAND = _AP.constants.COMMAND,
     CONTROL = _AP.constants.CONTROL,
+
     //Track = _AP.track.Track,
     runtimeTracksControl = _AP.tracksControl, // The control on the left of the SVG controls above the score.
     midiOutputDevice,
@@ -66,6 +68,32 @@ _AP.monoInput = (function()
         }
     },
 
+    showOrHideMinimumVolumeRowDiv = function()
+    {
+        if(controls.pressureMidiSelect.selectedIndex === 5 // volume
+        || controls.pitchWheelMidiSelect.selectedIndex === 5 // volume
+        || controls.modWheelMidiSelect.selectedIndex === 5 ) // volume
+        {
+            controls.minimumVolumeRowDiv.show();
+        }
+        else
+        {
+            controls.minimumVolumeRowDiv.hide();
+        }
+    },
+
+    showOrHideMaximumSpeedRowDiv = function()
+    {
+        if(controls.speedControllerSelect.selectedIndex > 0)
+        {
+            controls.maximumSpeedRowDiv.show();
+        }
+        else
+        {
+            controls.maximumSpeedRowDiv.hide();
+        }
+    },
+
     setDisplayForPerformer = function(performersTrackIndex)
     {
         controls.trackSelect.selectedIndex = performersTrackIndex;
@@ -77,26 +105,29 @@ _AP.monoInput = (function()
         controls.modWheelCheckBoxDivs.SetDisplayForPerformersTrack(controls.modWheelCheckBoxDivs, performersTrackIndex);
         controls.masterVolumeDivs.SetDisplayForPerformersTrack(controls.masterVolumeDivs, performersTrackIndex);
 
-        if(controls.pressureMidiSelect.selectedIndex === 4 // volume
-        || controls.pitchWheelMidiSelect.selectedIndex === 4 // volume
-        || controls.modWheelMidiSelect.selectedIndex === 4 ) // volume
-        {
-            controls.minimumVolumeRowDiv.show();
-        }
-        else
-        {
-            controls.minimumVolumeRowDiv.hide();
-        }
+        showOrHideMinimumVolumeRowDiv();
 
-        if(controls.speedControllerSelect.selectedindex > 0)
-        {
-            controls.maximumSpeedRowDiv.show();
-        }
-        else
-        {
-            controls.maximumSpeedRowDiv.hide();
-        }
+        showOrHideMaximumSpeedRowDiv();
     },
+
+    controlOptions =
+    [
+        { name: "none" }, // The command/midiControl attribute is undefined. No attempt should be made to use it!
+        { name: "aftertouch", command: COMMAND.AFTERTOUCH },
+        { name: "channel pressure", command: COMMAND.CHANNEL_PRESSURE },
+        { name: "pitch wheel", command: COMMAND.PITCH_WHEEL },
+        { name: "modulation (1)", midiControl: CONTROL.MODWHEEL },
+        { name: "volume (7)", midiControl: CONTROL.VOLUME }, // index 5 is used for volume elsewhere in this code
+        { name: "pan (10)", midiControl: CONTROL.PAN },
+        { name: "expression (11)", midiControl: CONTROL.EXPRESSION },
+        { name: "timbre (71)", midiControl: CONTROL.TIMBRE },
+        { name: "brightness (74)", midiControl: CONTROL.BRIGHTNESS },
+        { name: "effects (91)", midiControl: CONTROL.EFFECTS },
+        { name: "tremolo (92)", midiControl: CONTROL.TREMOLO },
+        { name: "chorus (93)", midiControl: CONTROL.CHORUS },
+        { name: "celeste (94)", midiControl: CONTROL.CELESTE },
+        { name: "phaser (95)", midiControl: CONTROL.PHASER }
+    ],
 
     // Gets all the controls in monoInput html, disables them all, and
     // sets them to the default values they have when no score is selected.
@@ -125,6 +156,11 @@ _AP.monoInput = (function()
             function setDivsBorderStyle(divs, performersTrackIndex, performersBorderStyle)
             {
                 var i;
+
+                for(i = 0; i < 16; ++i)
+                {
+                    divs[i].style.borderStyle = performersBorderStyle;
+                }
 
                 for(i = 0; i < 16; ++i)
                 {
@@ -251,27 +287,11 @@ _AP.monoInput = (function()
                 setDisplayForPerformer(0);
             }
 
-            function setControlOptionSelectors(controls)
+            function populateControlOptionSelectors(controls)
             {
                 function populate(selector)
                 {
-                    var controlOptions =
-                    [
-                        { name: "aftertouch", command: COMMAND.AFTERTOUCH },
-                        { name: "channel pressure", command: COMMAND.CHANNEL_PRESSURE },
-                        { name: "pitch wheel", command: COMMAND.PITCH_WHEEL },
-                        { name: "modulation (1)", midiControl: CONTROL.MODWHEEL },
-                        { name: "volume (7)", midiControl: CONTROL.VOLUME }, // index 4 is used for volume elsewhere in this code
-                        { name: "pan (10)", midiControl: CONTROL.PAN },
-                        { name: "expression (11)", midiControl: CONTROL.EXPRESSION },
-                        { name: "timbre (71)", midiControl: CONTROL.TIMBRE },
-                        { name: "brightness (74)", midiControl: CONTROL.BRIGHTNESS },
-                        { name: "effects (91)", midiControl: CONTROL.EFFECTS },
-                        { name: "tremolo (92)", midiControl: CONTROL.TREMOLO },
-                        { name: "chorus (93)", midiControl: CONTROL.CHORUS },
-                        { name: "celeste (94)", midiControl: CONTROL.CELESTE },
-                        { name: "phaser (95)", midiControl: CONTROL.PHASER }
-                    ],
+                    var
                     i, nOptions = controlOptions.length,
                         element, textNode;
 
@@ -318,7 +338,7 @@ _AP.monoInput = (function()
 
             setNoPerformer();
 
-            setControlOptionSelectors(controls);
+            populateControlOptionSelectors(controls);
 
             disableControls(controls.controllerTrackNumberLabels);
             controls.trackSelect.disabled = true;
@@ -331,19 +351,19 @@ _AP.monoInput = (function()
             controls.noteOnVelocityTrackSelect.disabled = true;
             clearAndDisableCheckBoxes(controls.noteOnVelocityCheckBoxes); // 16 check boxes
 
-            controls.pressureMidiSelect.selectedIndex = 0; // aftertouch
+            controls.pressureMidiSelect.selectedIndex = 0; // none
             controls.pressureMidiSelect.disabled = true;
             controls.pressureTrackSelect.selectedIndex = 0; // none;
             controls.pressureTrackSelect.disabled = true;
             clearAndDisableCheckBoxes(controls.pressureCheckBoxes); // 16 check boxes
 
-            controls.pitchWheelMidiSelect.selectedIndex = 2; // pitch wheel
+            controls.pitchWheelMidiSelect.selectedIndex = 0; // none
             controls.pitchWheelMidiSelect.disabled = true;
             controls.pitchWheelTrackSelect.selectedIndex = 0; // none;
             controls.pitchWheelTrackSelect.disabled = true;
             clearAndDisableCheckBoxes(controls.pitchWheelCheckBoxes); // 16 check boxes
 
-            controls.modWheelMidiSelect.selectedIndex = 3; // modulation
+            controls.modWheelMidiSelect.selectedIndex = 0; // none
             controls.modWheelMidiSelect.disabled = true;
             controls.modWheelTrackSelect.selectedIndex = 0; // none;
             controls.modWheelTrackSelect.disabled = true;
@@ -419,23 +439,105 @@ _AP.monoInput = (function()
         controls.trackSelect.disabled = false;
         controls.noteOnPitchTrackSelect.disabled = false;
         controls.noteOnVelocityTrackSelect.disabled = false;
-        controls.pressureMidiSelect.disabled = false;
+        //controls.pressureMidiSelect.disabled = false;
         controls.pressureTrackSelect.disabled = false;
-        controls.pitchWheelMidiSelect.disabled = false;
+        //controls.pitchWheelMidiSelect.disabled = false;
         controls.pitchWheelTrackSelect.disabled = false;
-        controls.minVolumeInput.disabled = false;
-        controls.modWheelMidiSelect.disabled = false;
+        //controls.modWheelMidiSelect.disabled = false;
         controls.modWheelTrackSelect.disabled = false;
+        controls.minVolumeInput.disabled = false;
         controls.speedControllerSelect.disabled = false;
         controls.maxSpeedInput.disabled = false;
         controls.maximumSpeedRowDiv.disabled = false;
+    },
+
+    // sets one of the following options in the trackCBselect from the trackBoolArray and performersTrackIndex
+    //      none
+    //      all
+    //      performer
+    //      other
+    //      custom
+    // Note that checkBoxes.length is always 16.
+    setTrackCheckBoxesSelect = function (trackCBSelect, checkBoxes, performersTrackIndex)
+    {
+        var found, i,
+        nTracks = controls.trackSelect.length;
+
+        trackCBSelect.selectedIndex = 0; // 'none';
+        found = true;
+        for(i = 0; i < nTracks; ++i)
+        {
+            if(checkBoxes[i].checked === true)
+            {
+                found = false;
+                break;
+            }
+        }
+        if(!found)
+        {                
+            trackCBSelect.selectedIndex = 1; // 'all';
+            found = true;
+            for(i = 0; i < nTracks; ++i)
+            {
+                if(checkBoxes[i].checked === false)
+                {
+                    found = false;
+                    break;
+                }
+            }
+        }
+        if(!found)
+        {
+            trackCBSelect.selectedIndex = 2; // 'performer';
+            found = true;
+            for(i = 0; i < nTracks; ++i)
+            {
+                if((checkBoxes[i].checked === false && i === performersTrackIndex)
+                || (checkBoxes[i].checked === true && i !== performersTrackIndex))
+                {
+                    found = false;
+                    break;
+                }
+            }
+        }
+        if(!found)
+        {
+            trackCBSelect.selectedIndex = 3; // 'other';
+            found = true;
+            for(i = 0; i < nTracks; ++i)
+            {
+                if((checkBoxes[i].checked === true && i === performersTrackIndex)
+                || (checkBoxes[i].checked === false && i !== performersTrackIndex))
+                {
+                    found = false;
+                    break;
+                }
+            }
+        }
+        if(!found)
+        {
+            trackCBSelect.selectedIndex = 4; // 'custom';
+        }
+    },
+
+    setMidiSelect = function(controlTrackSelect, controlMidiSelect)
+    {
+        if(controlTrackSelect.selectedIndex === 0) // 'none'
+        {
+            controlMidiSelect.selectedIndex = 0; // 'none'
+            controlMidiSelect.disabled = true;
+        }
+        else
+        {
+            controlMidiSelect.disabled = false;
+        }
     },
 
     // Sets the monoInput dialog from the mPerformerOptionsString in the score's .mkss file.
     // The values of the controls will be used by the event handler. 
     setControlsFromString = function(mPerformerOptionsString, nTracks)
     {
-        var str, trackBoolArray, trackIntArray, peformersTrackIndex;
+        var str, trackBoolArray, trackIntArray, performersTrackIndex, attrValueString;
 
         // Returns the attribute value string corresponding to the attrName.
         // or null if attrName does not exist in allOpts.
@@ -471,11 +573,11 @@ _AP.monoInput = (function()
             {
                 if(str[i] === '0')
                 {
-                    boolArray.push(true);
+                    boolArray.push(false);
                 }
                 else
                 {
-                    boolArray.push(false);
+                    boolArray.push(true);
                 }
             }
 
@@ -484,73 +586,6 @@ _AP.monoInput = (function()
                 throw "Error in monoPerformanceOptions.";
             }
             return boolArray;
-        }
-
-        // sets one of the following options in the trackCBselect from the trackBoolArray and peformersTrackIndex
-        //      none
-        //      all
-        //      performer
-        //      other
-        //      custom
-        function setTrackCheckBoxesSelect(trackCBSelect, trackBoolArray, peformersTrackIndex)
-        {
-            var found, i;
-
-            trackCBSelect.selectedIndex = 0; // 'none';
-            found = true;
-            for(i = 0; i < trackBoolArray.length; ++i)
-            {
-                if(trackBoolArray[i] === true)
-                {
-                    found = false;
-                    break;
-                }
-            }
-            if(!found)
-            {                
-                trackCBSelect.selectedIndex = 1; // 'all';
-                found = true;
-                for(i = 0; i < trackBoolArray.length; ++i)
-                {
-                    if(trackBoolArray[i] === false)
-                    {
-                        found = false;
-                        break;
-                    }
-                }
-            }
-            if(!found)
-            {
-                trackCBSelect.selectedIndex = 2; // 'performer';
-                found = true;
-                for(i = 0; i < trackBoolArray.length; ++i)
-                {
-                    if((trackBoolArray[i] === false && i === peformersTrackIndex)
-                    || (trackBoolArray[i] === true && i !== peformersTrackIndex))
-                    {
-                        found = false;
-                        break;
-                    }
-                }
-            }
-            if(!found)
-            {
-                trackCBSelect.selectedIndex = 3; // 'other';
-                found = true;
-                for(i = 0; i < trackBoolArray.length; ++i)
-                {
-                    if((trackBoolArray[i] === true && i === peformersTrackIndex)
-                    || (trackBoolArray[i] === false && i !== peformersTrackIndex))
-                    {
-                        found = false;
-                        break;
-                    }
-                }
-            }
-            if(!found)
-            {
-                trackCBSelect.selectedIndex = 4; // 'custom';
-            }          
         }
 
         function setCheckBoxesFromBoolArray(checkBoxes, boolArray)
@@ -571,6 +606,28 @@ _AP.monoInput = (function()
             }
         }
 
+        function indexOfControlOption(optionStr)
+        {
+            var i, rval = -1;
+
+            for(i = 0; i < controlOptions.length; ++i)
+            {
+                if(controlOptions[i].name === optionStr)
+                {
+                    rval = i;
+                    break;
+                }
+            }
+            
+            if(rval === -1)
+            {
+                throw "Error: Unknown control type.";
+            }
+
+            return rval;
+
+        }
+
         initControls();
 
         enablePerformersControls(nTracks);
@@ -578,10 +635,10 @@ _AP.monoInput = (function()
         str = attributeValueString(mPerformerOptionsString, "trackIndex=");
         if(str !== null)
         {
-            peformersTrackIndex = parseInt(str, 10);
+            performersTrackIndex = parseInt(str, 10);
         }
 
-        if(peformersTrackIndex === undefined)
+        if(performersTrackIndex === undefined)
         {
             throw "track index must be defined!";
         }
@@ -590,55 +647,61 @@ _AP.monoInput = (function()
         if(str !== null)
         {
             trackBoolArray = stringToTrackBoolArray(str);
-            setTrackCheckBoxesSelect(controls.noteOnPitchTrackSelect, trackBoolArray, peformersTrackIndex);
             setCheckBoxesFromBoolArray(controls.noteOnPitchCheckBoxes, trackBoolArray);
+            setTrackCheckBoxesSelect(controls.noteOnPitchTrackSelect, controls.noteOnPitchCheckBoxes, performersTrackIndex);
         }
 
         str = attributeValueString(mPerformerOptionsString, "noteOnVelocityTracks=");
         if(str !== null)
         {
             trackBoolArray = stringToTrackBoolArray(str);
-            setTrackCheckBoxesSelect(controls.noteOnVelocityTrackSelect, trackBoolArray, peformersTrackIndex);
             setCheckBoxesFromBoolArray(controls.noteOnVelocityCheckBoxes, trackBoolArray);
+            setTrackCheckBoxesSelect(controls.noteOnVelocityTrackSelect, controls.noteOnVelocityCheckBoxes, performersTrackIndex);
         }
 
         if(mPerformerOptionsString.search("pressureController=") !== -1)
         {
-            controls.pressureMidiSelect.text = attributeValueString(mPerformerOptionsString, "pressureController=");
+            attrValueString = attributeValueString(mPerformerOptionsString, "pressureController=");
+            controls.pressureMidiSelect.selectedIndex = indexOfControlOption(attrValueString);
         }
 
         str = attributeValueString(mPerformerOptionsString, "pressureTracks=");
         if(str !== null)
         {
             trackBoolArray = stringToTrackBoolArray(str);
-            setTrackCheckBoxesSelect(controls.pressureTrackSelect, trackBoolArray, peformersTrackIndex);
             setCheckBoxesFromBoolArray(controls.pressureCheckBoxes, trackBoolArray);
+            setTrackCheckBoxesSelect(controls.pressureTrackSelect, controls.pressureCheckBoxes, performersTrackIndex);
+            setMidiSelect(controls.pressureTrackSelect, controls.pressureMidiSelect);
         }
 
         if(mPerformerOptionsString.search("pitchWheelController=") !== -1)
         {
-            controls.pitchWheelMidiSelect.text = attributeValueString(mPerformerOptionsString, "pitchWheelController=");
+            attrValueString = attributeValueString(mPerformerOptionsString, "pitchWheelController=");
+            controls.pitchWheelMidiSelect.selectedIndex = indexOfControlOption(attrValueString);
         }
 
         str = attributeValueString(mPerformerOptionsString, "pitchWheelTracks=");
         if(str !== null)
         {
             trackBoolArray = stringToTrackBoolArray(str);
-            setTrackCheckBoxesSelect(controls.pitchWheelTrackSelect, trackBoolArray, peformersTrackIndex);
             setCheckBoxesFromBoolArray(controls.pitchWheelCheckBoxes, trackBoolArray);
+            setTrackCheckBoxesSelect(controls.pitchWheelTrackSelect, controls.pitchWheelCheckBoxes, performersTrackIndex);
+            setMidiSelect(controls.pitchWheelTrackSelect, controls.pitchWheelMidiSelect);
         }
 
         if(mPerformerOptionsString.search("modWheelController=") !== -1)
         {
-            controls.modWheelMidiSelect.text = attributeValueString(mPerformerOptionsString, "modWheelController=");
+            attrValueString = attributeValueString(mPerformerOptionsString, "modWheelController=");
+            controls.modWheelMidiSelect.selectedIndex = indexOfControlOption(attrValueString);
         }
 
         str = attributeValueString(mPerformerOptionsString, "modWheelTracks=");
         if(str !== null)
         {
             trackBoolArray = stringToTrackBoolArray(str);
-            setTrackCheckBoxesSelect(controls.modWheelTrackSelect, trackBoolArray, peformersTrackIndex);
             setCheckBoxesFromBoolArray(controls.modWheelCheckBoxes, trackBoolArray);
+            setTrackCheckBoxesSelect(controls.modWheelTrackSelect, controls.modWheelCheckBoxes, performersTrackIndex);
+            setMidiSelect(controls.modWheelTrackSelect, controls.modWheelMidiSelect);
         }
 
         str = attributeValueString(mPerformerOptionsString, "minVolume=");
@@ -671,7 +734,7 @@ _AP.monoInput = (function()
             controls.maximumSpeedRowDiv.hide();
         }
 
-        setDisplayForPerformer(peformersTrackIndex);
+        setDisplayForPerformer(performersTrackIndex);
     },
 
     // Sets the controls to the state they have when a score
@@ -694,7 +757,191 @@ _AP.monoInput = (function()
 
     doControl = function(controlID)
     {
-        console.log("monoInput.doControl() has not yet been written.");
+        var
+        performersTrackIndex = controls.trackSelect.selectedIndex;
+        
+        // sets the checkBoxes corresponding to a trackSelect control
+        function handleTrackSelect(tracksSelectID)
+        {
+            function setCheckBoxRow(select, checkBoxes)
+            {
+                var i, nTracks = controls.trackSelect.length;
+
+                switch(select.selectedIndex)
+                {
+                    case 0: // none
+                        for(i = 0; i < nTracks; ++i)
+                        {
+                            checkBoxes[i].checked = false;
+                        }
+                        break;
+                    case 1: // all
+                        for(i = 0; i < nTracks; ++i)
+                        {
+                            checkBoxes[i].checked = true;
+                        }
+                        break;
+                    case 2: // performer
+                        for(i = 0; i < nTracks; ++i)
+                        {
+                            if(i === performersTrackIndex)
+                            {
+                                checkBoxes[i].checked = true;
+                            }
+                            else
+                            {
+                                checkBoxes[i].checked = false;
+                            }
+                        }
+                        break;
+                    case 3: // other
+                        for(i = 0; i < nTracks; ++i)
+                        {
+                            if(i === performersTrackIndex)
+                            {
+                                checkBoxes[i].checked = false;
+                            }
+                            else
+                            {
+                                checkBoxes[i].checked = true;
+                            }
+                        }
+                        break;
+                    case 4: // custom: selecting custom resets the select according to the checkBoxes
+                        setTrackCheckBoxesSelect(select, checkBoxes, performersTrackIndex);
+                        break;
+                }
+            }
+
+            switch(tracksSelectID)
+            {
+                case "mpoNoteOnPitchTrackSelect": // controls.noteOnPitchTrackSelect
+                    setCheckBoxRow(controls.noteOnPitchTrackSelect, controls.noteOnPitchCheckBoxes);
+                    break;
+                case "mpoNoteOnVelocityTrackSelect": // controls.noteOnVelocityTrackSelect
+                    setCheckBoxRow(controls.noteOnVelocityTrackSelect, controls.noteOnVelocityCheckBoxes);
+                    break;
+                case "mpoPressureTrackSelect": // okay controls.pressureTrackSelect
+                    setCheckBoxRow(controls.pressureTrackSelect, controls.pressureCheckBoxes);
+                    setMidiSelect(controls.pressureTrackSelect, controls.pressureMidiSelect);
+                    break;
+                case "mpoPitchWheelTrackSelect": // okay controls.pitchWheelTrackSelect
+                    setCheckBoxRow(controls.pitchWheelTrackSelect, controls.pitchWheelCheckBoxes);
+                    setMidiSelect(controls.pitchWheelTrackSelect, controls.pitchWheelMidiSelect);
+                    break;
+                case "mpoModWheelTrackSelect":// okay controls.modWheelTrackSelect
+                    setCheckBoxRow(controls.modWheelTrackSelect, controls.modWheelCheckBoxes);
+                    setMidiSelect(controls.modWheelTrackSelect, controls.modWheelMidiSelect);
+                    break;
+            }
+        }
+
+        // handles checkBoxIDs of the form:
+        // mpoNOPCheckBoxTrack1-16 // controls.noteOnPitchCheckBoxes[i]
+        // mpoNOVCheckBoxTrack1-16 // controls.noteOnVelocityCheckBoxes[i]
+        // mpoPressureCheckBoxTrack1-16 // controls.pressureCheckBoxes[i]
+        // mpoPitchWheelCheckBoxTrack1-16 // controls.pitchWheelCheckBoxes[i]
+        // mpoModWheelCheckBoxTrack1-16 // controls.modWheelCheckBoxes[i]
+        // and
+        // mpoMasterVolumeInput1-16 // controls.masterVolumeInputs[i]
+        function handleMultiInput(ctlID)
+        {
+            // a master volume value must be an integer in range 0..127
+            function checkMasterVolumes()
+            {
+                var i, ntracks = controls.trackSelect.length;
+                for(i = 0; i < ntracks; ++i)
+                {
+                    U.checkIntRange(controls.masterVolumeInputs[i], 0, 127);
+                }      
+            }
+
+            if(ctlID.search("mpoNOPCheckBoxTrack") === 0)
+            {
+                setTrackCheckBoxesSelect(controls.noteOnPitchTrackSelect, controls.noteOnPitchCheckBoxes, performersTrackIndex);
+            }
+            else if(ctlID.search("mpoNOVCheckBoxTrack") === 0)
+            {
+                setTrackCheckBoxesSelect(controls.noteOnVelocityTrackSelect, controls.noteOnVelocityCheckBoxes, performersTrackIndex);
+            }
+            else if(ctlID.search("mpoPressureCheckBoxTrack") === 0)
+            {
+                setTrackCheckBoxesSelect(controls.pressureTrackSelect, controls.pressureCheckBoxes, performersTrackIndex);
+                setMidiSelect(controls.pressureTrackSelect, controls.pressureMidiSelect);
+            }
+            else if(ctlID.search("mpoPitchWheelCheckBoxTrack") === 0)
+            {
+                setTrackCheckBoxesSelect(controls.pitchWheelTrackSelect, controls.pitchWheelCheckBoxes, performersTrackIndex);
+                setMidiSelect(controls.pitchWheelTrackSelect, controls.pitchWheelMidiSelect);
+            }
+            else if(ctlID.search("mpoModWheelCheckBoxTrack") === 0)
+            {
+                setTrackCheckBoxesSelect(controls.modWheelTrackSelect, controls.modWheelCheckBoxes, performersTrackIndex);
+                setMidiSelect(controls.modWheelTrackSelect, controls.modWheelMidiSelect);
+            }
+            else if(ctlID.search("mpoMasterVolumeInput") === 0)
+            {
+                checkMasterVolumes();
+            }
+        }
+
+        /**************************************/
+
+        switch(controlID)
+        {
+            case "mpoPerformersTrackSelect": //controls.trackSelect
+                setDisplayForPerformer(performersTrackIndex);
+                setTrackCheckBoxesSelect(controls.noteOnPitchTrackSelect, controls.noteOnPitchCheckBoxes, performersTrackIndex);
+                setTrackCheckBoxesSelect(controls.noteOnVelocityTrackSelect, controls.noteOnVelocityCheckBoxes, performersTrackIndex);
+                setTrackCheckBoxesSelect(controls.pressureTrackSelect, controls.pressureCheckBoxes, performersTrackIndex);
+                setMidiSelect(controls.pressureTrackSelect, controls.pressureMidiSelect);
+                setTrackCheckBoxesSelect(controls.pitchWheelTrackSelect, controls.pitchWheelCheckBoxes, performersTrackIndex);
+                setMidiSelect(controls.pitchWheelTrackSelect, controls.pitchWheelMidiSelect);
+                setTrackCheckBoxesSelect(controls.modWheelTrackSelect, controls.modWheelCheckBoxes, performersTrackIndex);
+                setMidiSelect(controls.modWheelTrackSelect, controls.modWheelMidiSelect);
+                break;
+
+            case "mpoPressureMidiSelect": // okay controls.pressureMidiSelect
+                showOrHideMinimumVolumeRowDiv();
+                break
+            case "mpoPitchWheelMidiSelect": // okay controls.pitchWheelMidiSelect
+                showOrHideMinimumVolumeRowDiv();
+                break
+            case "mpoModWheelMidiSelect": // okay controls.modWheelMidiSelect
+                showOrHideMinimumVolumeRowDiv();
+                break
+
+            case "mpoNoteOnPitchTrackSelect": // okay controls.noteOnPitchTrackSelect
+                handleTrackSelect("mpoNoteOnPitchTrackSelect");
+                break;
+            case "mpoNoteOnVelocityTrackSelect": // okay controls.noteOnVelocityTrackSelect
+                handleTrackSelect("mpoNoteOnVelocityTrackSelect");
+                break;
+            case "mpoPressureTrackSelect": // okay controls.pressureTrackSelect
+                handleTrackSelect("mpoPressureTrackSelect");
+                break;
+            case "mpoPitchWheelTrackSelect": // okay controls.pitchWheelTrackSelect
+                handleTrackSelect("mpoPitchWheelTrackSelect");
+                break;
+            case "mpoModWheelTrackSelect": // okay controls.modWheelTrackSelect
+                handleTrackSelect("mpoModWheelTrackSelect");
+                break;
+
+            case "mpoMinVolumeInput": // okay controls.minVolumeInput
+                break;
+
+            case "mpoSpeedControllerSelect": // okay controls.speedControllerSelect
+                showOrHideMaximumSpeedRowDiv();
+                break;
+
+            case "mpoMaxSpeedInput": // okay controls.maxSpeedInput
+                U.checkFloatRange(controls.maxSpeedInput, 100, 800000);
+                break;
+
+            default:
+                handleMultiInput(controlID); // handles individual checkBox and masterVolume inputs 
+                break;
+        }
     },
 
     /******************* runtime ********************************/

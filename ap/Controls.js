@@ -19,6 +19,7 @@ _AP.controls = (function(document, window)
     "use strict";
 
     var
+    U = _AP.utilities,
     tracksControl = _AP.tracksControl,
     Score = _AP.score.Score,
     sequence = _AP.sequence,
@@ -1298,6 +1299,11 @@ _AP.controls = (function(document, window)
         if(controlID === "outputDeviceSelect")
         {
             setMIDIDevices();
+        }
+
+        if(controlID === "globalSpeedInput")
+        {
+            U.checkFloatRange(document.getElementById("globalSpeedInput"), 0.001, 800000);
         }
 
         /**** controls in options panel ***/

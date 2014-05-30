@@ -26,6 +26,7 @@ _AP.constants = (function ()
     REAL_TIME = {},
     CONTROL = {},
     SYSTEM_EXCLUSIVE = {},
+    INPUT_ERROR_COLOR = "#FFDCDC", // the colour to which an input's background is set when there is an error.
 
     // True if constant is one of the REAL_TIME status bytes, otherwise false
     isRealTimeStatus = function(constant)
@@ -55,7 +56,8 @@ _AP.constants = (function ()
         REAL_TIME: REAL_TIME,
         CONTROL: CONTROL,
         SYSTEM_EXCLUSIVE: SYSTEM_EXCLUSIVE,
-        isRealTimeStatus: isRealTimeStatus
+        isRealTimeStatus: isRealTimeStatus,
+        INPUT_ERROR_COLOR: INPUT_ERROR_COLOR
     };
 
     Object.defineProperty(COMMAND, "NOTE_OFF", { value: 0x80, writable: false });

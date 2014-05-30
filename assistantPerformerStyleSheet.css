@@ -72,7 +72,7 @@ div.options
 }
 div.globalSpeedPanel
 {
-    width:500px;
+    width:520px;
     padding: 5px 0px 5px 0px;
     margin:8px auto 8px auto;    
     background-color: #FCFCFC;
@@ -87,22 +87,13 @@ input.startRuntimeButton
 }
 div.performersOptionsPanel
 {
-    width:672px;
+    width:704px;
     margin: 8px auto 8px auto;
     padding: 4px 12px 12px 12px;               
     text-align: left;
     line-height: 18px; 
     background-color: #FCFCFC;
     border: 1px solid #008000; 
-}
-div.mpoCheckBoxCell
-{
-     display:table-cell;
-     font-size: 9px;
-     text-align: center;
-     line-height: 10px;
-     padding-left: 3px;
-     padding-right: 3px;
 }
         
 img.performanceControl
@@ -239,18 +230,17 @@ div.mpoRow13Cell2
     margin:0px;
     text-align:right;
 }
-div.mpoRow13Cell3 
+/*div.mpoRow13Cell3 
 {
     display:table-cell;
     width: 50px;
-    /*background-color: #99FFCC;*/
     padding-left:4px;
     padding-right:3px;
     padding-top:0px;
     padding-bottom:0px;
     margin:0px;
-}
-div.mpoRow13Cell3 
+}*/
+label.mpoRow13Cell3 
 {
     display:table-cell;
     width: 10px;
@@ -258,7 +248,7 @@ div.mpoRow13Cell3
     padding:0px;
     margin:0px;
 }
-div.mpoRow13Cell4 
+label.mpoRow13Cell4 
 {
     display:table-cell;
     margin:0px;
@@ -272,17 +262,7 @@ div.mpoRow13Cell4
 div.mpoRow8Cell3
 {
     display:table-cell;
-    width: 50px;
-    font-size:11px;
-    /*background-color: #FF6666;*/
-    padding:0px;
-    margin:0px 0px 0px 3px;
-}
-
-div.mpoRow8Cell4
-{
-    display:table-cell;
-    width: 400px;
+    width: 450px;
     font-size: 10px;
     line-height: 14px; 
     color: #8888FF;
