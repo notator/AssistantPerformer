@@ -311,28 +311,30 @@ _AP.monoInput = (function()
 
             function disableControls(labels)
             {
-                var i, nTracks = labels.length;
+                var i;
                 for(i = 0; i < 16; ++i)
                 {
                     labels[i].disabled = true;
                 }
             }
-            function clearAndDisableCheckBoxes(checkBoxes)
+            function clearAndHideCheckBoxes(checkBoxes)
             {
                 var i;
                 for(i = 0; i < 16; ++i)
                 {
                     checkBoxes[i].checked = false;
-                    checkBoxes[i].disabled = true;
+                    //checkBoxes[i].disabled = true;
+                    checkBoxes[i].style.visibility = "hidden";
                 }
             }
-            function clearAndDisableInputs(inputs)
+            function clearAndHideInputs(inputs)
             {
                 var i;
                 for(i = 0; i < 16; ++i)
                 {
                     inputs[i].value = "";
-                    inputs[i].disabled = true;
+                    //inputs[i].disabled = true;
+                    inputs[i].style.visibility = "hidden";
                 }
             }
 
@@ -345,35 +347,35 @@ _AP.monoInput = (function()
 
             controls.noteOnPitchTrackSelect.selectedIndex = 0; // none;
             controls.noteOnPitchTrackSelect.disabled = true;
-            clearAndDisableCheckBoxes(controls.noteOnPitchCheckBoxes); // 16 check boxes
+            clearAndHideCheckBoxes(controls.noteOnPitchCheckBoxes); // 16 check boxes
 
             controls.noteOnVelocityTrackSelect.selectedIndex = 0; // none;
             controls.noteOnVelocityTrackSelect.disabled = true;
-            clearAndDisableCheckBoxes(controls.noteOnVelocityCheckBoxes); // 16 check boxes
+            clearAndHideCheckBoxes(controls.noteOnVelocityCheckBoxes); // 16 check boxes
 
             controls.pressureMidiSelect.selectedIndex = 0; // none
             controls.pressureMidiSelect.disabled = true;
             controls.pressureTrackSelect.selectedIndex = 0; // none;
             controls.pressureTrackSelect.disabled = true;
-            clearAndDisableCheckBoxes(controls.pressureCheckBoxes); // 16 check boxes
+            clearAndHideCheckBoxes(controls.pressureCheckBoxes); // 16 check boxes
 
             controls.pitchWheelMidiSelect.selectedIndex = 0; // none
             controls.pitchWheelMidiSelect.disabled = true;
             controls.pitchWheelTrackSelect.selectedIndex = 0; // none;
             controls.pitchWheelTrackSelect.disabled = true;
-            clearAndDisableCheckBoxes(controls.pitchWheelCheckBoxes); // 16 check boxes
+            clearAndHideCheckBoxes(controls.pitchWheelCheckBoxes); // 16 check boxes
 
             controls.modWheelMidiSelect.selectedIndex = 0; // none
             controls.modWheelMidiSelect.disabled = true;
             controls.modWheelTrackSelect.selectedIndex = 0; // none;
             controls.modWheelTrackSelect.disabled = true;
-            clearAndDisableCheckBoxes(controls.modWheelCheckBoxes); // 16 check boxes
+            clearAndHideCheckBoxes(controls.modWheelCheckBoxes); // 16 check boxes
 
             controls.minVolumeInput.value = 64; // number input
             controls.minimumVolumeRowDiv.hide();
 
             disableControls(controls.masterVolumeDivs);
-            clearAndDisableInputs(controls.masterVolumeInputs);
+            clearAndHideInputs(controls.masterVolumeInputs);
 
             controls.speedControllerSelect.selectedIndex = 0;
             controls.speedControllerSelect.disabled = true;
@@ -384,6 +386,19 @@ _AP.monoInput = (function()
 
         getControls(controls);
         setDefaultControlState(); // disables all controls, sets all select control contents (empties the track select) 
+    },
+
+    // Call this whenever the master volumes have changed. 
+    // A master volume value must be an integer in range 0..127.
+    // Default values (100) are displayed in blue.
+    checkMasterVolumes = function()
+    {
+        var i, ntracks = controls.trackSelect.length;
+        for(i = 0; i < ntracks; ++i)
+        {
+            U.checkIntRange(controls.masterVolumeInputs[i], 0, 127);
+            U.setDefaultValueToBlue(controls.masterVolumeInputs[i], 100);
+        }
     },
 
     // Enables all the performers controls.
@@ -422,19 +437,21 @@ _AP.monoInput = (function()
         {
             controls.controllerTrackNumberLabels[i].disabled = false;
             controls.noteOnPitchCheckBoxDivs[i].disabled = false;
-            controls.noteOnPitchCheckBoxes[i].disabled = false;
+            controls.noteOnPitchCheckBoxes[i].style.visibility = "visible";
             controls.noteOnVelocityCheckBoxDivs[i].disabled = false;
-            controls.noteOnVelocityCheckBoxes[i].disabled = false;
+            controls.noteOnVelocityCheckBoxes[i].style.visibility = "visible";
             controls.pressureCheckBoxDivs[i].disabled = false;
-            controls.pressureCheckBoxes[i].disabled = false;
+            controls.pressureCheckBoxes[i].style.visibility = "visible";
             controls.pitchWheelCheckBoxDivs[i].disabled = false;
-            controls.pitchWheelCheckBoxes[i].disabled = false;
+            controls.pitchWheelCheckBoxes[i].style.visibility = "visible";
             controls.modWheelCheckBoxDivs[i].disabled = false;
-            controls.modWheelCheckBoxes[i].disabled = false;
+            controls.modWheelCheckBoxes[i].style.visibility = "visible";
             controls.masterVolumeDivs[i].disabled = false;
-            controls.masterVolumeInputs[i].disabled = false;
-            controls.masterVolumeInputs[i].value = 100; // default volume is 100
+            controls.masterVolumeInputs[i].style.visibility = "visible";
+            controls.masterVolumeInputs[i].value = 100; // default master volume is 100
         }
+
+        checkMasterVolumes();
 
         controls.trackSelect.disabled = false;
         controls.noteOnPitchTrackSelect.disabled = false;
@@ -715,8 +732,9 @@ _AP.monoInput = (function()
             controls.minimumVolumeRowDiv.hide();
         }
 
-        trackIntArray = _AP.controls.intArrayFromAttribute(nTracks, mPerformerOptionsString, "masterVolumes=", 127);
+        trackIntArray = U.intArrayFromAttribute(nTracks, mPerformerOptionsString, "masterVolumes=", 100);
         setInputsFromIntArray(controls.masterVolumeInputs, trackIntArray);
+        checkMasterVolumes(); // sets default colours
 
         if(mPerformerOptionsString.search("speedController=") !== -1)
         {
@@ -846,16 +864,6 @@ _AP.monoInput = (function()
         // mpoMasterVolumeInput1-16 // controls.masterVolumeInputs[i]
         function handleMultiInput(ctlID)
         {
-            // a master volume value must be an integer in range 0..127
-            function checkMasterVolumes()
-            {
-                var i, ntracks = controls.trackSelect.length;
-                for(i = 0; i < ntracks; ++i)
-                {
-                    U.checkIntRange(controls.masterVolumeInputs[i], 0, 127);
-                }      
-            }
-
             if(ctlID.search("mpoNOPCheckBoxTrack") === 0)
             {
                 setTrackCheckBoxesSelect(controls.noteOnPitchTrackSelect, controls.noteOnPitchCheckBoxes, performersTrackIndex);

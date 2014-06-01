@@ -900,80 +900,6 @@ _AP.controls = (function(document, window)
         // If this is a live performance, _AP.monoInput.runtimeInit(...) or _AP.polyInput.runtimeInit() will be called from player.play(...).
     },
 
-    // Returns an array of nTracks ints corresponding to the attrName in the optsString.
-    // if optsString is null or the attrName does not exist in trackOpts, an array
-    // containing nTracks cpoies of the default value is returned.
-    // The attrName argument must end with a '=' character.
-    intArrayFromAttribute = function(nTracks, optsString, attrName, defaultValue)
-    {
-        var index,
-            valStr,
-            rvalString,
-            rvalArray;
-
-        function defaultArray(nTracks, defaultValue)
-        {
-            var i, rval = [];
-            for(i = 0; i < nTracks; ++i)
-            {
-                rval.push(defaultValue);
-            }
-            return rval;
-        }
-
-        function stringToIntArray(str, defaultValue)
-        {
-            var strArray = str.split(','),
-                intArray = [],
-                i;
-
-            for(i = 0; i < strArray.length; ++i)
-            {
-                if(strArray[i] === "")
-                {
-                    intArray.push(defaultValue);
-                }
-                else
-                {
-                    intArray.push(parseInt(strArray[i], 10));
-                }
-            }
-            return intArray;
-        }
-
-        if(attrName[attrName.length - 1] !== '=')
-        {
-            throw "The attrName argument must end with a '=' character.";
-        }
-
-        if(optsString === null)
-        {
-            rvalArray = defaultArray(nTracks, defaultValue);
-        }
-        else
-        {
-            index = optsString.search(attrName);
-            if(index !== -1)
-            {
-                valStr = optsString.substr(index + attrName.length + 1);
-                index = valStr.search("\"");
-                rvalString = valStr.substr(0, index);
-                rvalArray = stringToIntArray(rvalString, defaultValue);
-            }
-            else
-            {
-                rvalArray = defaultArray(nTracks, defaultValue);
-            }
-        }
-
-        if(rvalArray === undefined || rvalArray.length !== nTracks)
-        {
-            throw "Error getting int array attribute.";
-        }
-
-        return rvalArray;
-    },
-
     // called when the user clicks a control in the GUI
     doControl = function(controlID)
     {
@@ -1075,16 +1001,17 @@ _AP.controls = (function(document, window)
                     return optsString;
                 }
 
+                // If the score is being performed live, masterVolume values override these volume settings.
                 function getTrackInitValues(nTracks, trackOpts)
                 {
                     var tio = {};
 
-                    tio.volumes = intArrayFromAttribute(nTracks, trackOpts, "volume=", 100);
-                    tio.pwDeviations = intArrayFromAttribute(nTracks, trackOpts, "pwDeviation=", 2);
-                    tio.pitchWheels = intArrayFromAttribute(nTracks, trackOpts, "pitchWheel=", 64);
-                    tio.expressions = intArrayFromAttribute(nTracks, trackOpts, "expression=", 127);
-                    tio.pans = intArrayFromAttribute(nTracks, trackOpts, "pan=", 64);
-                    tio.modulations = intArrayFromAttribute(nTracks, trackOpts, "modulation=", 0);
+                    tio.volumes = U.intArrayFromAttribute(nTracks, trackOpts, "volume=", 100);
+                    tio.pwDeviations = U.intArrayFromAttribute(nTracks, trackOpts, "pwDeviation=", 2);
+                    tio.pitchWheels = U.intArrayFromAttribute(nTracks, trackOpts, "pitchWheel=", 64);
+                    tio.expressions = U.intArrayFromAttribute(nTracks, trackOpts, "expression=", 127);
+                    tio.pans = U.intArrayFromAttribute(nTracks, trackOpts, "pan=", 64);
+                    tio.modulations = U.intArrayFromAttribute(nTracks, trackOpts, "modulation=", 0);
 
                     return tio;
                 }
@@ -1501,9 +1428,6 @@ _AP.controls = (function(document, window)
         hideOverRect: hideOverRect,
 
         beginRuntime: beginRuntime,
-
-        // utilities
-        intArrayFromAttribute: intArrayFromAttribute
     };
     // end var
 

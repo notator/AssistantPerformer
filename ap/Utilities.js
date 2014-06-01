@@ -42,7 +42,7 @@ _AP.utilities = (function()
     checkIntRange = function(numberInput, min, max)
     {
         var
-        intValue = parseInt(numberInput.value),
+        intValue = parseInt(numberInput.value, 10),
         floatValue = parseFloat(numberInput.value);
 
         if(intValue < min || intValue > max || intValue !== floatValue || numberInput.value === "")
@@ -55,13 +55,107 @@ _AP.utilities = (function()
         }
     },
 
+    // If the numberInput's int value === defaultIntValue, its color is set to blue,
+    // otherwise its color is set to black.
+    setDefaultValueToBlue = function(numberInput, defaultIntValue)
+    {
+        if(parseInt(numberInput.value) === defaultIntValue)
+        {
+            numberInput.style.color = "#8888FF"; // help colour
+        }
+        else
+        {
+            numberInput.style.color = "#000000";
+        }
+    },
+
+    // Returns an array of nTracks ints corresponding to the attrName in the optsString.
+    // If optsString is null or the attrName does not exist in optsString,
+    // an array containing nTracks copies of the defaultIntValue is returned.
+    // If the attrName exists, its corresponding value must be a string of nTracks integers
+    // each separated by a ',' character (otherwise an exception is thrown).
+    // The attrName argument must end with a '=' character.
+    intArrayFromAttribute = function(nTracks, optsString, attrName, defaultIntValue)
+    {
+        var index,
+            valStr,
+            rvalString,
+            rIntArray;
+
+        function defaultArray(nTracks, defaultIntValue)
+        {
+            var i, rval = [];
+            for(i = 0; i < nTracks; ++i)
+            {
+                rval.push(defaultIntValue);
+            }
+            return rval;
+        }
+
+        function stringToIntArray(str)
+        {
+            var strArray = str.split(','),
+                intArray = [],
+                i, num;
+
+            for(i = 0; i < strArray.length; ++i)
+            {
+                num = parseInt(strArray[i], 10);
+                if(isNaN(num) === false)
+                {
+                    intArray.push(num);
+                }
+                else
+                {
+                    throw "Error parsing integer.";
+                }
+            }
+            return intArray;
+        }
+
+        if(attrName[attrName.length - 1] !== '=')
+        {
+            throw "The attrName argument must end with a '=' character.";
+        }
+
+        if(optsString === null)
+        {
+            rIntArray = defaultArray(nTracks, defaultIntValue);
+        }
+        else
+        {
+            index = optsString.search(attrName);
+            if(index !== -1)
+            {
+                valStr = optsString.substr(index + attrName.length + 1);
+                index = valStr.search("\"");
+                rvalString = valStr.substr(0, index);
+                rIntArray = stringToIntArray(rvalString);
+            }
+            else
+            {
+                rIntArray = defaultArray(nTracks, defaultIntValue);
+            }
+        }
+
+        if(rIntArray === undefined || rIntArray.length !== nTracks)
+        {
+            throw "Error getting int array attribute.";
+        }
+
+        return rIntArray;
+    },
+
+
     publicAPI =
     {
         checkFloatRange: checkFloatRange,
-        checkIntRange: checkIntRange
+        checkIntRange: checkIntRange,
+        setDefaultValueToBlue: setDefaultValueToBlue,
+        intArrayFromAttribute: intArrayFromAttribute
     };
     // end var
 
     return publicAPI;
 
-}(document));
+}());
