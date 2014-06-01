@@ -242,7 +242,7 @@ _AP.controls = (function(document, window)
 
                 if(outputDeviceIndex === 0)
                 {
-                    _AP.monoInput.hidden(true);
+                    _AP.monoInputDialog.hidden(true);
                     _AP.polyInput.hidden(true);
                 }
                 else if(scoreIndex > 0)
@@ -283,13 +283,13 @@ _AP.controls = (function(document, window)
         // Just testing. Delete these lines when options.performerOptions is complete and working.
         if(options.performer === undefined)
         {
-            options.performer = _AP.monoInput;
+            options.performer = _AP.monoInputDialog;
         }
         /*********************/
 
-        if(performer === _AP.monoInput)
+        if(performer === _AP.monoInputDialog)
         {
-            addOrRemoveEventListener("midimessage", _AP.monoInput.handleMIDIInputEvent);
+            addOrRemoveEventListener("midimessage", _AP.monoInputDialog.handleMIDIInputEvent);
         }
         else if(performer === _AP.polyInput) 
         {
@@ -871,7 +871,7 @@ _AP.controls = (function(document, window)
 
         midiAccess = mAccess;
 
-        performer = _AP.monoInput; // default
+        performer = _AP.monoInputDialog; // default
 
         getGlobalElements();
 
@@ -897,7 +897,7 @@ _AP.controls = (function(document, window)
 
         player.init(options.outputDevice, sequence.tracks); // sets player.nextMoment to simple no inputDevice version.
 
-        // If this is a live performance, _AP.monoInput.runtimeInit(...) or _AP.polyInput.runtimeInit() will be called from player.play(...).
+        // If this is a live performance, _AP.monoInputDialog.runtimeInit(...) or _AP.polyInput.runtimeInit() will be called from player.play(...).
     },
 
     // called when the user clicks a control in the GUI
@@ -1038,7 +1038,7 @@ _AP.controls = (function(document, window)
                             mPerformerOptionsString = getPerformanceOptionsString(runtimeInfoString, "monoPerformerOptions");
                             if(mPerformerOptionsString !== null)
                             {
-                                rPerformer = _AP.monoInput;
+                                rPerformer = _AP.monoInputDialog;
                                 rPerformer.setControlsFromString(mPerformerOptionsString, rScoreInfo.nTracks);
                             }
                             else
@@ -1051,7 +1051,7 @@ _AP.controls = (function(document, window)
                                 }
                                 else
                                 {
-                                    rPerformer = _AP.monoInput;
+                                    rPerformer = _AP.monoInputDialog;
                                     rPerformer.setDefaultControls(rScoreInfo.nTracks);
                                 }
                             }
@@ -1212,7 +1212,7 @@ _AP.controls = (function(document, window)
             if(scoreInfo !== undefined)
             {
                 performer = scoreInfo.performer();
-                tracksControl.setInitialTracksControlState(performer.trackSelect().selectedIndex > 0, performer.trackSelect().selectedIndex);
+                tracksControl.setInitialTracksControlState(performer.trackIndex() > 0, performer.trackIndex());
             }
         }
 
@@ -1220,7 +1220,7 @@ _AP.controls = (function(document, window)
         {
             setScore();
             performer = scoreInfo.performer();
-            tracksControl.setInitialTracksControlState(performer.trackSelect().selectedIndex >= 0, performer.trackSelect().selectedIndex);
+            tracksControl.setInitialTracksControlState(performer.trackIndex() >= 0, performer.trackIndex());
         }
 
         if(controlID === "outputDeviceSelect")
@@ -1387,7 +1387,7 @@ _AP.controls = (function(document, window)
             cl.livePerformerOff.setAttribute("opacity", GLASS);
             cl.livePerformerOnOffDisabled.setAttribute("opacity", SMOKE);
             options.livePerformance = true;
-            options.performersTrackIndex = performer.trackSelect().selectedIndex;
+            options.performersTrackIndex = performer.trackIndex();
             performer.runtimeInit(scoreInfo.nTracks);
         }
 

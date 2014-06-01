@@ -667,7 +667,7 @@ _AP.player = (function()
             switch(options.performerOptions.inputDeviceType)
             {
                 case 'monoInput':
-                    _AP.monoInput.playtimeInit(options.outputDevice, tracks[options.performerOptions.trackIndex],
+                    _AP.monoInputDialog.playtimeInit(options.outputDevice, tracks[options.performerOptions.trackIndex],
                         midiObjectMsPositionsInScore, options.performerOptions, usePerformersNextMomentFunction);
                     break;
                 case 'polyInput': // The _AP.polyInput namespace is currently just a stub. It might work like a prepared piano.
