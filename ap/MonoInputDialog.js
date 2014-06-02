@@ -27,6 +27,7 @@
 *     // ********* runtime ************
 *     // called by Controls.js.beginRuntime().
 *     // Gets the local 'options' from the dialog then calls _AP.MonoInputHandler.Init(options).
+*     // Returns false if there are errors in the values in this dialog.
 *     runtimeInit: runtimeInit,  
 */
 
@@ -43,6 +44,7 @@ _AP.monoInputDialog = (function()
     U = _AP.utilities,
     COMMAND = _AP.constants.COMMAND,
     CONTROL = _AP.constants.CONTROL,
+    tracksControl = _AP.tracksControl, // The SVG tracksControl at the top of the score.
 
     controls = {}, // the control elements in the monoPerformersOptions div in assistantPerformer.html
 
@@ -404,20 +406,20 @@ _AP.monoInputDialog = (function()
         function setTrackSelect(nTracks)
         {
             var
-            i, optionElem,
+            j, optionElem,
             ts = controls.trackSelect;
 
-            for(i = ts.options.length - 1; i >= 0; --i)
+            for(j = ts.options.length - 1; j >= 0; --j)
             {
-                ts.remove(i);
+                ts.remove(j);
             }
 
             if(nTracks > 0)
             {
-                for(i = 1; i <= nTracks; ++i)
+                for(j = 1; j <= nTracks; ++j)
                 {
                     optionElem = document.createElement("option");
-                    optionElem.text = i.toString(10);
+                    optionElem.text = j.toString(10);
                     ts.add(optionElem, null);
                 }
             }
@@ -751,8 +753,6 @@ _AP.monoInputDialog = (function()
     // is loaded but has no performance options.
     setDefaultControls = function(nTracks)
     {
-        var i;
-
         initControls();
 
         enablePerformersControls(nTracks);
@@ -903,13 +903,13 @@ _AP.monoInputDialog = (function()
 
             case "mpoPressureMidiSelect": // okay controls.pressureMidiSelect
                 showOrHideMinimumVolumeRowDiv();
-                break
+                break;
             case "mpoPitchWheelMidiSelect": // okay controls.pitchWheelMidiSelect
                 showOrHideMinimumVolumeRowDiv();
-                break
+                break;
             case "mpoModWheelMidiSelect": // okay controls.modWheelMidiSelect
                 showOrHideMinimumVolumeRowDiv();
-                break
+                break;
 
             case "mpoNoteOnPitchTrackSelect": // okay controls.noteOnPitchTrackSelect
                 handleTrackSelect("mpoNoteOnPitchTrackSelect");
@@ -928,6 +928,7 @@ _AP.monoInputDialog = (function()
                 break;
 
             case "mpoMinVolumeInput": // okay controls.minVolumeInput
+                U.checkIntRange(controls.minVolumeInput, 0, 127);
                 break;
 
             case "mpoSpeedControllerSelect": // okay controls.speedControllerSelect
@@ -945,26 +946,125 @@ _AP.monoInputDialog = (function()
     },
 
     // Called by controls.beginRuntime() if this is an assisted performance and performer is monoInput.
-    // Gets the options from the monoInput dialog then calls _AP.MonoInputHandler.Init(options). 
+    // Sets the SVG tracks control to its initial state, then gets the options from the monoInput dialog
+    // and calls _AP.MonoInputHandler.Init(options) so that MIDI Event handling can begin. 
+    // Returns false if there are errors in the values in the dialog.
     runtimeInit = function(nTracks)
     {
-        var i, options;
+        var opts, okayToRun = true;
 
-        trackIndex = function()
+        // If there are one or more illegal values in the dialog,
+        // This function puts up an alert message and returns false.
+        // Otherwise it returns true.
+        function checkDialogForIllegalValues(nTracks)
         {
-            return controls.trackSelect.selectedIndex;
-        },
+            var i,
+                rval = true;
+
+            if(controls.minimumVolumeRowDiv.style.display === "table" // controls.minVolumeInput is visible 
+            && controls.minVolumeInput.jiError !== undefined)
+                rval = false;
+
+            for(i = 0; i < nTracks; ++i)
+            { 
+                if(controls.masterVolumeInputs[i].jiError !== undefined)
+                {
+                    rval = false;
+                }
+            }
+
+            if(controls.speedControllerSelect.selectedIndex > 0 // controls.minVolumeInput is visible 
+            && controls.maxSpeedInput.jiError !== undefined)
+                rval = false;
+
+            if(rval === false)
+            {
+                alert("Cannot start: illegal value in performer's options dialog");
+            }
+
+            return rval;
+        }
 
         // Sets the options variable from the state of this dialog.
         // Passes the options to the monoInputHandler.
         function getOptionsfromDialog(nTracks)
         {
-            throw "Not yet implemented.";
+            var options = {};
+
+            function boolArrayFromCheckBoxes(nTracks, checkBoxes)
+            {
+                var i, rArray = [];
+
+                for(i = 0; i < nTracks; ++i)
+                {
+                    rArray.push(checkBoxes[i].checked);
+                }
+
+                return rArray;
+            }
+
+            function intArrayFromNumberInputs(nTracks, numberInputs)
+            {
+                var i, rArray = [];
+                for(i = 0; i < nTracks; ++i)
+                {
+                    rArray.push(parseInt(numberInputs[i].value, 10));
+                }
+                return rArray;
+            }
+
+            options.nTracks = nTracks;
+            options.performersTrackIndex = controls.trackSelect.selectedIndex;
+            if(controls.noteOnPitchTrackSelect.selectedIndex > 0)
+            {
+                options.noteOnPitchTracks = boolArrayFromCheckBoxes(nTracks, controls.noteOnPitchCheckBoxes);
+            }
+            if(controls.noteOnVelocityTrackSelect.selectedIndex > 0)
+            {
+                options.noteOnVelocityTracks = boolArrayFromCheckBoxes(nTracks, controls.noteOnVelocityCheckBoxes);
+            }
+            if(controls.pressureMidiSelect.selectedIndex > 0)
+            {
+                options.pressureSubstituteControlData = controlOptions[controls.pressureMidiSelect.selectedIndex];
+                options.pressureTracks = boolArrayFromCheckBoxes(nTracks, controls.pressureCheckBoxes);
+            }
+            if(controls.pitchWheelMidiSelect.selectedIndex > 0)
+            {
+                options.pitchWheelSubstituteControlData = controlOptions[controls.pitchWheelMidiSelect.selectedIndex];
+                options.pitchWheelTracks = boolArrayFromCheckBoxes(nTracks, controls.pitchWheelCheckBoxes);
+            }
+            if(controls.modWheelMidiSelect.selectedIndex > 0)
+            {
+                options.modWheelSubstituteControlData = controlOptions[controls.modWheelMidiSelect.selectedIndex];
+                options.modWheelTracks = boolArrayFromCheckBoxes(nTracks, controls.modWheelCheckBoxes);
+            }
+
+            if(controls.minimumVolumeRowDiv.style.display === "table") // controls.minVolumeInput is visible
+            {
+                options.minVolume = parseInt(controls.minVolumeInput.value, 10);
+            }
+
+            options.masterVolumes = intArrayFromNumberInputs(nTracks, controls.masterVolumeInputs);
+
+            if(controls.speedControllerSelect.selectedIndex > 0)
+            {
+                options.speedControllerName = controls.speedControllerSelect.options[controls.speedControllerSelect].name;
+                options.speedMaxFactor = parseFloat(controls.maxSpeedInput.value) / 100;
+            }
+            
+            return options;
         }
 
-        options = getOptionsfromDialog(nTracks);
+        okayToRun = checkDialogForIllegalValues(nTracks)
+        if(okayToRun)
+        {
+            tracksControl.setInitialTracksControlState(true, trackIndex());
 
-        _AP.monoInputHandler.init(options);
+            opts = getOptionsfromDialog(nTracks);
+
+            _AP.monoInputHandler.init(opts);
+        }
+        return okayToRun;
     },
 
     publicAPI =
@@ -978,7 +1078,8 @@ _AP.monoInputDialog = (function()
         // ********* runtime ************
         // called by Controls.js.beginRuntime().
         // Gets the local 'options' from the dialog then calls _AP.MonoInputHandler.Init(options).
-        runtimeInit: runtimeInit,
+        // Returns false if there are errors in the values in this dialog.
+        runtimeInit: runtimeInit
     };
     // end var
 

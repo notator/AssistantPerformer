@@ -1212,7 +1212,7 @@ _AP.controls = (function(document, window)
             if(scoreInfo !== undefined)
             {
                 performer = scoreInfo.performer();
-                tracksControl.setInitialTracksControlState(performer.trackIndex() > 0, performer.trackIndex());
+                tracksControl.setInitialTracksControlState(globalElements.inputDeviceSelect.selectedIndex >= 0, performer.trackIndex());
             }
         }
 
@@ -1220,7 +1220,7 @@ _AP.controls = (function(document, window)
         {
             setScore();
             performer = scoreInfo.performer();
-            tracksControl.setInitialTracksControlState(performer.trackIndex() >= 0, performer.trackIndex());
+            tracksControl.setInitialTracksControlState(globalElements.inputDeviceSelect.selectedIndex >= 0, performer.trackIndex());
         }
 
         if(controlID === "outputDeviceSelect")
@@ -1373,7 +1373,9 @@ _AP.controls = (function(document, window)
     // The Start button is enabled when a score and MIDI output have been selected.
     // It does not require a MIDI input.
     beginRuntime = function()
-    { 
+    {
+        var okayToRun = true;
+
         if(document.getElementById("inputDeviceSelect").selectedIndex === 0)
         {
             // alert("Warning: A MIDI input device has not been selected");
@@ -1388,34 +1390,37 @@ _AP.controls = (function(document, window)
             cl.livePerformerOnOffDisabled.setAttribute("opacity", SMOKE);
             options.livePerformance = true;
             options.performersTrackIndex = performer.trackIndex();
-            performer.runtimeInit(scoreInfo.nTracks);
+            okayToRun = performer.runtimeInit(scoreInfo.nTracks);
         }
 
-        options.globalSpeed = document.getElementById("globalSpeedInput").value / 100;
-
-        initTracksAndPlayer(score, options);
-
-        // The tracksControl is in charge of refreshing the entire display, including both itself and the score.
-        // TracksControl.refreshDisplay() calls
-        //     score.refreshDisplay(isAssistedPerformance, performersTrackSelectorIndex, livePerformerisSilent)
-        // to tell the score to repaint itself. The score may also update the position of the start marker (which
-        // always starts on a chord) if a track becomes disabled.
-        tracksControl.getTrackToggledCallback(trackToggled);
-
-        // tracksControl.trackIsOn(trackIndex) returns a boolean which is the on/off status of its trackIndex argument
-        score.getTrackIsOnCallback(tracksControl.trackIsOn);
-
-        tracksControl.setInitialTracksControlState(options.livePerformance, options.performersTrackIndex);
-
-        score.refreshDisplay(sequence, options.livePerformance, options.performersTrackIndex, false);
-
-        score.moveStartMarkerToTop(svgPagesDiv);
-
-        setSvgControlsState('stopped');
-
-        if(options.livePerformance === true)
+        if(okayToRun)
         {
-            setSvgControlsState('playing');
+            options.globalSpeed = document.getElementById("globalSpeedInput").value / 100;
+
+            initTracksAndPlayer(score, options);
+
+            // The tracksControl is in charge of refreshing the entire display, including both itself and the score.
+            // TracksControl.refreshDisplay() calls
+            //     score.refreshDisplay(isAssistedPerformance, performersTrackSelectorIndex, livePerformerisSilent)
+            // to tell the score to repaint itself. The score may also update the position of the start marker (which
+            // always starts on a chord) if a track becomes disabled.
+            tracksControl.getTrackToggledCallback(trackToggled);
+
+            // tracksControl.trackIsOn(trackIndex) returns a boolean which is the on/off status of its trackIndex argument
+            score.getTrackIsOnCallback(tracksControl.trackIsOn);
+
+            tracksControl.setInitialTracksControlState(options.livePerformance, options.performersTrackIndex);
+
+            score.refreshDisplay(sequence, options.livePerformance, options.performersTrackIndex, false);
+
+            score.moveStartMarkerToTop(svgPagesDiv);
+
+            setSvgControlsState('stopped');
+
+            if(options.livePerformance === true)
+            {
+                setSvgControlsState('playing');
+            }
         }
     },
 

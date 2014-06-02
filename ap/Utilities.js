@@ -22,36 +22,40 @@ _AP.utilities = (function()
     INPUT_ERROR_COLOR = _AP.constants.INPUT_ERROR_COLOR,
     // The numberInput argument is an html5 input element of type 'number'.
     // If the element's value is empty, not a number, less than min or greater than max,
-    // its background colour is set to INPUT_ERROR_COLOR.
+    // its background colour is set to INPUT_ERROR_COLOR and it is given a jiError attribute.
     checkFloatRange = function (numberInput, min, max)
     {
         var floatValue = parseFloat(numberInput.value);
-        if(floatValue < min || floatValue >  max || numberInput.value === "")
+        if(isNaN(floatValue) || floatValue < min || floatValue > max || numberInput.value === "")
         {
             numberInput.style.backgroundColor = INPUT_ERROR_COLOR;
+            numberInput.jiError = true;
         }
         else
         {
             numberInput.style.backgroundColor = "#FFFFFF";
+            numberInput.jiError = undefined;
         }
     },
 
     // The numberInput argument is an html5 input element of type 'number'.
     // If the element's value is empty, not an integer, less than min or greater than max,
-    // its background colour is set to INPUT_ERROR_COLOR.
+    // its background colour is set to INPUT_ERROR_COLOR and it is given a jiError attribute.
     checkIntRange = function(numberInput, min, max)
     {
         var
         intValue = parseInt(numberInput.value, 10),
         floatValue = parseFloat(numberInput.value);
 
-        if(intValue < min || intValue > max || intValue !== floatValue || numberInput.value === "")
+        if(isNaN(intValue) || intValue < min || intValue > max || intValue !== floatValue || numberInput.value === "")
         {
             numberInput.style.backgroundColor = INPUT_ERROR_COLOR;
+            numberInput.jiError = true;
         }
         else
         {
             numberInput.style.backgroundColor = "#FFFFFF";
+            numberInput.jiError = undefined;
         }
     },
 
