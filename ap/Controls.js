@@ -888,16 +888,22 @@ _AP.controls = (function(document, window)
 
     initTracksAndPlayer = function(score, options)
     {
+        var trackIndex = -1;
+
+        if(options.livePerformance)
+        {
+            trackIndex = options.performersOptions.trackIndex;
+        }
+
         if(scoreHasJustBeenSelected)
         {
             score.getEmptyPagesAndSystems(svg); // everything except the timeObjects (which have to take account of speed)
         }
 
-        score.setSequenceTracks(svg, options); // sets sequence.tracks
+        // sets sequence.tracks
+        score.setSequenceTracks(svg, options.livePerformance, trackIndex, options.globalSpeed);
 
-        player.init(options.outputDevice, sequence.tracks); // sets player.nextMoment to simple no inputDevice version.
-
-        // If this is a live performance, _AP.monoInputDialog.runtimeInit(...) or _AP.polyInput.runtimeInit() will be called from player.play(...).
+        player.init(options, sequence.tracks); // sets player.nextMoment to simple no inputDevice version.
     },
 
     // called when the user clicks a control in the GUI
@@ -1351,21 +1357,20 @@ _AP.controls = (function(document, window)
 
     trackToggled = function(soloistIsSilent)
     {
-        score.refreshDisplay(sequence, options.livePerformance, options.performersTrackSelectorIndex, soloistIsSilent);
-        // score.refreshDisplay() sets sequence.tracks[performersTrackSelectorIndex] to a silent track, if necessary.
+        var trackIndex = -1;
+
         if(options.livePerformance === true)
         {
-            options.performersTrackIndex = options.performersTrackSelectorIndex;
+            options.performersOptions = performer.getPerformersOptions();
+            trackIndex = options.performersOptions.trackIndex;
             if(livePerformerIsSilent !== soloistIsSilent)
             {
                 livePerformerIsSilent = soloistIsSilent;
             }
         }
-        else
-        {
-            options.performersTrackIndex = null;
-        }
 
+        score.refreshDisplay(sequence, options.livePerformance, trackIndex, soloistIsSilent);
+        // score.refreshDisplay() sets sequence.tracks[performersTrackSelectorIndex] to a silent track, if necessary.
     },
 
     // Called when the Start button is clicked.
@@ -1374,7 +1379,8 @@ _AP.controls = (function(document, window)
     // It does not require a MIDI input.
     beginRuntime = function()
     {
-        var okayToRun = true;
+        var okayToRun = true,
+            performersTrackIndex = -1; // when there is no performer
 
         if(document.getElementById("inputDeviceSelect").selectedIndex === 0)
         {
@@ -1382,15 +1388,19 @@ _AP.controls = (function(document, window)
             cl.livePerformerOff.setAttribute("opacity", METAL);
             cl.livePerformerOnOffDisabled.setAttribute("opacity", SMOKE);
             options.livePerformance = false;
-            options.performersTrackIndex = null;
+            options.performersOptions = undefined;
         }
         else
         {
             cl.livePerformerOff.setAttribute("opacity", GLASS);
             cl.livePerformerOnOffDisabled.setAttribute("opacity", SMOKE);
             options.livePerformance = true;
-            options.performersTrackIndex = performer.trackIndex();
-            okayToRun = performer.runtimeInit(scoreInfo.nTracks);
+            options.performersOptions = performer.getPerformersOptions();
+            performersTrackIndex = options.performersOptions.trackIndex;
+            if(options.performersOptions === undefined)
+            {
+                okayToRun = false;
+            }
         }
 
         if(okayToRun)
@@ -1409,9 +1419,9 @@ _AP.controls = (function(document, window)
             // tracksControl.trackIsOn(trackIndex) returns a boolean which is the on/off status of its trackIndex argument
             score.getTrackIsOnCallback(tracksControl.trackIsOn);
 
-            tracksControl.setInitialTracksControlState(options.livePerformance, options.performersTrackIndex);
+            tracksControl.setInitialTracksControlState(options.livePerformance, performersTrackIndex);
 
-            score.refreshDisplay(sequence, options.livePerformance, options.performersTrackIndex, false);
+            score.refreshDisplay(sequence, options.livePerformance, performersTrackIndex, false);
 
             score.moveStartMarkerToTop(svgPagesDiv);
 

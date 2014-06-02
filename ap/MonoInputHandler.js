@@ -8,19 +8,16 @@
 *  ap/MonoInputHandler.js
 *  The _AP.monoInputHandler namespace which defines
 *
-*    // message handler for input devices
-*    handleMIDIInputEvent(msg)  
-*
-*    // Sets the internal options object to the options that are set in the monoInputDialog.
-*    // Called when the "start" button is clicked and the dialog is hidden.
-*    init: init,
-*    
-*    // Takes account of startMarker and endMarker positions etc.
-*    // Throws an exception if the options are undefined.
-*    playtimeInit: playtimeInit, // called by player.play()
-*    
-*    // MIDI input message handler
-*    handleMIDIInputEvent: handleMIDIInputEvent
+*       // message handler for input devices
+*       handleMIDIInputEvent(msg)  
+*       
+*       // called by player.play()
+*       // Throws an exception if the options are undefined.
+*       // Sets the internal options object to the options that are set in the monoInputDialog.
+*       init: init, 
+*       
+*       // MIDI input message handler
+*       handleMIDIInputEvent: handleMIDIInputEvent
 */
 
 /*jslint bitwise: true, nomen: true, plusplus: true, white: true */
@@ -37,14 +34,10 @@ _AP.monoInputHandler = (function()
     COMMAND = _AP.constants.COMMAND,
     CONTROL = _AP.constants.CONTROL,
 
-    //Track = _AP.track.Track,
-    runtimeTracksControl = _AP.tracksControl, // The control on the left of the SVG controls above the score.
+    // set in init()
     outputDevice,
-
     tracks = [], // sequence.tracks. All the tracks, complete from the beginning to the end of the piece.
-    controls = {}, // the control elements in the monoPerformersOptions div in assistantPerformer.html
-    options, // this object is set at runtime (when the Start button is clicked)
-
+    options, // the performersOptions
     // A flat, ordered array containing all the unique msPositions of midiObjects in the performance.
     // The first value in this array is the position of the startMarker, the last value is the position of the endMarker.
     midiObjectMsPositionsInScore = [],
@@ -60,46 +53,9 @@ _AP.monoInputHandler = (function()
     // Maybe delete startTimeAdjustedForPauses and disable the pause button in live performances.
     startTimeAdjustedForPauses,
 
-    // init(options) simply gets the options that are set in the monoInputDialog.
-    // This function is called when the "start" button is clicked and the dialog is hidden.
-    // The dialogOptions object has the following attributes:
-    //
-    //      nTracks -- the number of tracks in the score
-    //      performersTrackIndex -- the performer's trackIndex
-    //      noteOnPitchTracks -- undefined or array of bool, length nTracks
-    //      noteOnVelocityTracks -- undefined or array of bool, length nTracks
-    //      pressureSubstituteControlData -- undefined or a controlData object (see below)
-    //      pressureTracks -- undefined or array of bool, length nTracks
-    //      pitchWheelSubstituteControlData -- undefined or a controlData object (see below)
-    //      pitchWheelTracks -- undefined or array of bool, length nTracks
-    //      modWheelSubstituteControlData -- undefined or a controlData object (see below)
-    //      modWheelTracks -- undefined or array of bool, length nTracks
-    //      minVolume -- undefined (if volume is not being contrlled) or int in range 0..127
-    //      masterVolumes -- array of int, range 0..127, length nTracks
-    //      speedControllerName -- undefined, or one of the effective mpoSpeedControllerSelect option strings (see below)
-    //      speedMaxFactor -- undefined (if speed is not being controlled) or a float greater or equal to 1. (not a percent)
-    //
-    // A controlData object is set from the dialog's current controlOptions settings.
-    // It has one of the following attributes:
-    //      command
-    //      midiControl
-    // If the controlData object is undefined, then so is the corresponding ...Tracks array.
-    //
-    // The effective mpoSpeedControllerSelect option strings are: (see speedController above):
-    //      "noteOn: pitch"
-    //      "noteOn: velocity"
-    //      "pressure"
-    //      "pitch wheel"
-    //      "modulation wheel"
-    // If the speedController is undefined, then so is the corresponding speedMaxFactor.
-    init = function(dialogOptions)
-    {
-        options = dialogOptions;
-    },
-
     // This is where input MIDIEvents arrive, and where processing of the monoInput's input is going to be done.
     // Both RealTime and SysEx messages are ignored.
-    // it is assumed that RealTime messages will not interrupt the messages being received.    
+    // It is assumed that RealTime messages will not interrupt the messages being received.    
     handleMIDIInputEvent = function(msg)
     {
         var inputEvent, command, inputPressure,
@@ -784,16 +740,48 @@ _AP.monoInputHandler = (function()
         throw "Not yet implemented.";
     },
 
-    // Called from player.play() if this is an assisted performance and performer is monoInput.
+    // init() is called from player.play() if this is an assisted performance and performer is monoInput.
     // Arguments:
     //      outputDevice: the midiOutputDevice.
     //      allTracks: all the tracks, complete from the beginning to the end of the piece.
     //      moMsPositionsInScore: a flat, ordered array containing all the unique msPositions of midiObjects in the performance.
     //          The first value in this array is the position of the startMarker, the last value is the position of the endMarker.
-    //      scorePerformerOptions: the monoInput options retrieved from the score.
+    //      performersOptions: the monoInput options from the dialog (see below).
     //      usePerformersNextMomentFunction: a callback function that sets the player to use the monoInput's nextMoment function
     //          which is defined in this namespace and uses variables local to this namespace.
-    playtimeInit = function(midiOutputDevice, allTracks, moMsPositionsInScore, scorePerformerOptions, usePerformersNextMomentFunction)
+    //
+    // The performersOptions object has the following attributes:
+    //
+    //      nTracks -- the number of tracks in the score
+    //      trackIndex -- the performer's trackIndex
+    //      midiEventHandler -- the namespace, in this case _AP.monoInputHandler
+    //      noteOnPitchTracks -- undefined or array of bool, length nTracks
+    //      noteOnVelocityTracks -- undefined or array of bool, length nTracks
+    //      pressureSubstituteControlData -- undefined or a controlData object (see below)
+    //      pressureTracks -- undefined or array of bool, length nTracks
+    //      pitchWheelSubstituteControlData -- undefined or a controlData object (see below)
+    //      pitchWheelTracks -- undefined or array of bool, length nTracks
+    //      modWheelSubstituteControlData -- undefined or a controlData object (see below)
+    //      modWheelTracks -- undefined or array of bool, length nTracks
+    //      minVolume -- undefined (if volume is not being contrlled) or int in range 0..127
+    //      masterVolumes -- array of int, range 0..127, length nTracks
+    //      speedControllerName -- undefined, or one of the effective mpoSpeedControllerSelect option strings (see below)
+    //      speedMaxFactor -- undefined (if speed is not being controlled) or a float greater or equal to 1. (not a percent)
+    //
+    // A controlData object is set from the dialog's current controlOptions settings.
+    // It has one of the following attributes:
+    //      command
+    //      midiControl
+    // If the controlData object is undefined, then so is the corresponding ...Tracks array.
+    //
+    // The effective mpoSpeedControllerSelect option strings are: (see speedController above):
+    //      "noteOn: pitch"
+    //      "noteOn: velocity"
+    //      "pressure"
+    //      "pitch wheel"
+    //      "modulation wheel"
+    // If the speedController is undefined, then so is the corresponding speedMaxFactor.
+    init = function(midiOutputDevice, allTracks, moMsPositionsInScore, performersOptions, usePerformersNextMomentFunction)
     {
         function getPerformersMsPositions(performersTrack, moMsPositionsInScore)
         {
@@ -823,20 +811,18 @@ _AP.monoInputHandler = (function()
             }
         }
 
-        outputDevice = midiOutputDevice;
-
-        if(options === undefined)
-        {
-            throw "Error: Init() must be called to set the options before calling playTimeInit()!";
-        }
-
-        // a flat, ordered array of all msPositions in the performance
-        midiObjectMsPositionsInScore = moMsPositionsInScore;
-
-        getPerformersMsPositions(allTracks[scorePerformerOptions.trackIndex], moMsPositionsInScore);
+        outputDevice = midiOutputDevice; // the output device
+        tracks = allTracks;   
+        midiObjectMsPositionsInScore = moMsPositionsInScore; // a flat, ordered array of all msPositions in the performance
+        options = performersOptions;
 
         // set the player to use the above, monoInput.nextMoment() function
         usePerformersNextMomentFunction(nextMoment);
+
+
+        getPerformersMsPositions(allTracks[options.trackIndex], moMsPositionsInScore);
+
+
 
         performanceStartTime = performance.now();
         startTimeAdjustedForPauses = performanceStartTime;
@@ -844,12 +830,10 @@ _AP.monoInputHandler = (function()
 
     publicAPI =
     {
-        // Called from monoInputDialog when the "start" button is clicked and the dialog is hidden.
-        // Receives the options that are set in the monoInputDialog.
-        init: init,
-
         // Called in player.play(). Takes account of startMarker and endMarker positions etc.
-        playtimeInit: playtimeInit,
+        // Receives the options that are set in the performers options dialog.
+        // See detailed comment above.
+        init: init,
 
         handleMIDIInputEvent: handleMIDIInputEvent
     };

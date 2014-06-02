@@ -302,10 +302,10 @@ _AP.player = (function()
 
     // This function is called, even if there is no input device set in the input device selector.
     // it sets player.nextMoment to playerNextMoment by default.
-    init = function(outputDevice, sequenceTracks)
+    init = function(options, sequenceTracks)
     {
         // namespace variables
-        midiOutputDevice = outputDevice;
+        midiOutputDevice = options.outputDevice;
         tracks = sequenceTracks;
         nextMoment = playerNextMoment; 
     },
@@ -664,17 +664,8 @@ _AP.player = (function()
 
         if(options.livePerformance)
         {
-            switch(options.performerOptions.inputDeviceType)
-            {
-                case 'monoInput':
-                    _AP.monoInputDialog.playtimeInit(options.outputDevice, tracks[options.performerOptions.trackIndex],
-                        midiObjectMsPositionsInScore, options.performerOptions, usePerformersNextMomentFunction);
-                    break;
-                case 'polyInput': // The _AP.polyInput namespace is currently just a stub. It might work like a prepared piano.
-                    _AP.polyInput.playtimeInit(options.outputDevice, tracks[options.performerOptions.trackIndex],
-                        midiObjectMsPositionsInScore, options.performerOptions, usePerformersNextMomentFunction);
-                    break;
-            }
+            options.performersOptions.midiEventHandler.init(options.outputDevice, tracks,
+                        midiObjectMsPositionsInScore, options.performersOptions, usePerformersNextMomentFunction);
         }
         else
         {

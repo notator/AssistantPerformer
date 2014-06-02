@@ -1135,12 +1135,10 @@ _AP.score = (function (document)
     // is also filled with rests and silent chords. Then, when score.redrawDisplay() is called (on toggling
     // a trackContol), the live performer's track is set to livePerformersSoundingTrack or livePerformersSilentTrack
     // as necessary.
-    setSequenceTracks = function (svg, options)
+    setSequenceTracks = function(svg, isAssistedPerformance, livePerfTrackIndex, globalSpeed)
     {
         // systems->staves->voices->timeObjects
         var
-        isAssistedPerformance = options.livePerformance,
-        livePerfTrackIndex = options.performersTrackSelectorIndex,
         trackIndex, track, tracks,
         timeObjectIndex, nTimeObjects, timeObject, chordIsSilent,
         voiceIndex, nVoices, voice,
@@ -1609,7 +1607,7 @@ _AP.score = (function (document)
             }
         }
 
-        getTimeObjects(svg, options.globalSpeed);
+        getTimeObjects(svg, globalSpeed);
 
         // sets sequence to contain numberOfVoices() empty tracks.
         sequence.init(numberOfVoices());
