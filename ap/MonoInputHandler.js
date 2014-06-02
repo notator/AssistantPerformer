@@ -743,9 +743,9 @@ _AP.monoInputHandler = (function()
     // init() is called from player.play() if this is an assisted performance and performer is monoInput.
     // Arguments:
     //      outputDevice: the midiOutputDevice.
-    //      allTracks: all the tracks, complete from the beginning to the end of the piece.
+    //      allTracks: all the tracks, complete from the beginning to the end of the piece (not including the final barline).
     //      moMsPositionsInScore: a flat, ordered array containing all the unique msPositions of midiObjects in the performance.
-    //          The first value in this array is the position of the startMarker, the last value is the position of the endMarker.
+    //          The first value in this array is the position of the startMarker, the last value is final position before the endMarker.
     //      performersOptions: the monoInput options from the dialog (see below).
     //      usePerformersNextMomentFunction: a callback function that sets the player to use the monoInput's nextMoment function
     //          which is defined in this namespace and uses variables local to this namespace.
@@ -783,7 +783,9 @@ _AP.monoInputHandler = (function()
     // If the speedController is undefined, then so is the corresponding speedMaxFactor.
     init = function(midiOutputDevice, allTracks, moMsPositionsInScore, performersOptions, usePerformersNextMomentFunction)
     {
-        function getPerformersMsPositions(performersTrack, moMsPositionsInScore)
+        // Sets the global performersMsPositionsInScore to contain the positions of all the performer's midiObjects
+        // These positions are greater than or equal to the startMarker position, and less than the endMarkerPosition.
+        function getPerformersMsPositions(performersMidiObjects, moMsPositionsInScore)
         {
             var
             i,
@@ -791,21 +793,21 @@ _AP.monoInputHandler = (function()
             endMarkerPosition = moMsPositionsInScore[moMsPositionsInScore.length - 1];
 
             performersMsPositionsInScore.length = 0;
-            for(i = 0; i < performersTrack.length; ++i)
+            for(i = 0; i < performersMidiObjects.length; ++i)
             {
-                if(performersTrack[i].msPositionInScore > endMarkerPosition)
+                if(performersMidiObjects[i].msPositionInScore >= endMarkerPosition)
                 {
                     break;
                 }
 
-                if(performersTrack[i].msPositionInScore >= startMarkerPosition)
+                if(performersMidiObjects[i].msPositionInScore >= startMarkerPosition)
                 {
-                    performersMsPositionsInScore.push(performersTrack[i].msPositionInScore);
+                    performersMsPositionsInScore.push(performersMidiObjects[i].msPositionInScore);
                 }
             }
 
             if((performersMsPositionsInScore[0] !== moMsPositionsInScore[0])
-            || (performersMsPositionsInScore[performersMsPositionsInScore.length - 1] !== moMsPositionsInScore[moMsPositionsInScore.length - 1]))
+            || (performersMsPositionsInScore[performersMsPositionsInScore.length - 1] >= endMarkerPosition))
             {
                 throw "Error constructing performersMsPositionsInScore array.";
             }
@@ -819,10 +821,9 @@ _AP.monoInputHandler = (function()
         // set the player to use the above, monoInput.nextMoment() function
         usePerformersNextMomentFunction(nextMoment);
 
-
-        getPerformersMsPositions(allTracks[options.trackIndex], moMsPositionsInScore);
-
-
+        // Sets the global performersMsPositionsInScore to contain values which are
+        // greater than or equal to the startMarkerPosition, and less than the endMarkerPosition.
+        getPerformersMsPositions(allTracks[options.trackIndex].midiObjects, moMsPositionsInScore);
 
         performanceStartTime = performance.now();
         startTimeAdjustedForPauses = performanceStartTime;
