@@ -271,41 +271,14 @@ _AP.controls = (function(document, window)
         }
     },
 
-    // start or stop listening to the input device.
-    doInputEventListener = function(options, addOrRemoveEventListener)
-    {
-        if(options.livePerformance === false)
-        {
-            throw "This function should only be called when a midi input device is in use.";
-        }
-
-        /*********************/
-        // Just testing. Delete these lines when options.performerOptions is complete and working.
-        if(options.performer === undefined)
-        {
-            options.performer = _AP.monoInputDialog;
-        }
-        /*********************/
-
-        if(performer === _AP.monoInputDialog)
-        {
-            addOrRemoveEventListener("midimessage", _AP.monoInputDialog.handleMIDIInputEvent);
-        }
-        else if(performer === _AP.polyInput) 
-        {
-            // The _AP.polyInput namespace is currently just a stub. It might work like a prepared piano.
-            addOrRemoveEventListener("midimessage", _AP.polyInput.handleMIDIInputEvent);
-        }
-    },
-
     addInputEventListener = function(options)
     {
-        doInputEventListener(options, options.inputDevice.addEventListener);
+        options.inputDevice.addEventListener("midimessage", options.performersOptions.midiEventHandler.handleMIDIInputEvent);
     },
 
     removeInputEventListener = function(options)
     {
-        doInputEventListener(options, options.inputDevice.removeEventListener);
+        options.inputDevice.removeEventListener("midimessage", options.performersOptions.midiEventHandler.handleMIDIInputEvent);
     },
 
     setStopped = function()
@@ -575,17 +548,17 @@ _AP.controls = (function(document, window)
                         trackIsOnArray, sequenceRecording, reportEndOfPerformance, reportMsPos);
                 }
 
+                if(options.livePerformance === true)
+                {
+                    addInputEventListener(options);
+                }
+
                 cl.pauseUnselected.setAttribute("opacity", METAL);
                 cl.pauseSelected.setAttribute("opacity", GLASS);
                 cl.goDisabled.setAttribute("opacity", GLASS);
             }
 
             tracksControl.setDisabled(true);
-
-            if(options.livePerformance === true)
-            {
-                addInputEventListener(options);
-            }
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
             cl.livePerformerOnOffDisabled.setAttribute("opacity", SMOKE);

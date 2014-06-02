@@ -671,9 +671,8 @@ _AP.player = (function()
         {
             performanceStartTime = performance.now();
             startTimeAdjustedForPauses = performanceStartTime;
+            run();
         }
-
-        run();
     },
 
     sendCommandMessageNow = function(outputDevice, trackIndex, command, midiValue)
