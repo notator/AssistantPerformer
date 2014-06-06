@@ -83,13 +83,47 @@ _AP.tracksControl = (function (document)
     // called by user by clicking on screen
     trackOnOff = function (elemID, elemDisabledLayerID, trackIndexStr)
     {
-        var elem = document.getElementById(elemID),
-                elemDisabledLayer = document.getElementById(elemDisabledLayerID),
-                trackIndex = parseInt(trackIndexStr, 10);
+        var
+        elem = document.getElementById(elemID),
+        elemDisabledLayer = document.getElementById(elemDisabledLayerID),
+        trackIndex = parseInt(trackIndexStr, 10),
+        thisIsTheLastPlayingTrack;
+
+        function isTheLastPlayingTrack(trackIndex)
+        {
+            var
+            i,
+            rVal = true;
+
+            if(trackIsOnStatus[trackIndex] === true) // about to toggle it off
+            {
+                for(i = 0; i < trackIsOnStatus.length; ++i)
+                {
+                    if(i !== trackIndex && trackIsOnStatus[i] === true)
+                    {
+                        rVal = false;
+                        break;
+                    }
+                }
+            }
+            else // about to toggle it on
+            {
+                rVal = false;
+            }
+
+            if(rVal === true)
+            {
+                alert("Can't turn off the last playing track!");
+            }
+
+            return rVal;
+        }
+
+        thisIsTheLastPlayingTrack = isTheLastPlayingTrack(trackIndex);
 
         disabled = (elemDisabledLayer.getAttribute("opacity") !== "0");
 
-        if (!disabled && !trackIsDisabledStatus[trackIndex])
+        if (!thisIsTheLastPlayingTrack && !disabled && !trackIsDisabledStatus[trackIndex])
         {
             if (isAssistedPerformance)
             {
@@ -136,9 +170,9 @@ _AP.tracksControl = (function (document)
                     trackIsOnStatus[trackIndex] = true;
                 }
             }
-        }
 
-        trackHasBeenToggled();
+            trackHasBeenToggled();
+        }
     },
 
     setTrackOn = function (trackIndex)

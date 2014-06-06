@@ -1246,13 +1246,11 @@ _AP.controls = (function(document, window)
 
                 if(options.livePerformance)
                 {
-                    tracksControl.setInitialTracksControlState(true, options.performersTrackSelectorIndex);
-                    tracksControl.refreshDisplay();
+                    tracksControl.setInitialTracksControlState(true, options.performersOptions.trackIndex);
                 }
                 else
                 {
-                    tracksControl.setInitialTracksControlState(false, options.performersTrackSelectorIndex);
-                    tracksControl.refreshDisplay();
+                    tracksControl.setInitialTracksControlState(false, options.performersOptions.trackIndex);
                 }
 
                 initTracksAndPlayer(score, options);
