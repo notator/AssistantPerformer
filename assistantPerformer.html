@@ -65,226 +65,72 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
                         </label>
                     </div>
                 </div>
-                <div id="monoPerformersOptions" class="performersOptionsPanel" style="display:none;">
+
+                <div id="performersOptions" class="performersOptionsPanel" style="display:none;">
                     <div>
-                        Performer's Options (mono)
+                        Performer's Options
                     </div>
-                    <div id="row1" style="display: table;">
-                        <div class="mpoColumn1Cell" style="color: #0000FF; text-align: center;">
+                    <div id="row1" style="display: table; margin-top: 4px;">
+                        <div class="poColumn1Cell" style="color:blue">
                             track
-                        </div>
-                        <div class="mpoColumn2Cell">
-                            &nbsp;
-                        </div>
-                        <div class="mpoColumn3Cell" style="color: #0000FF; text-align: center;">
-                            override
-                        </div>          
-                        <div class="mpoCheckBoxCell" id="mpoControllerTrackNumber1">1</div>
-                        <div class="mpoCheckBoxCell" id="mpoControllerTrackNumber2">2</div>
-                        <div class="mpoCheckBoxCell" id="mpoControllerTrackNumber3">3</div>
-                        <div class="mpoCheckBoxCell" id="mpoControllerTrackNumber4">4</div>
-                        <div class="mpoCheckBoxCell" id="mpoControllerTrackNumber5">5</div>
-                        <div class="mpoCheckBoxCell" id="mpoControllerTrackNumber6">6</div>
-                        <div class="mpoCheckBoxCell" id="mpoControllerTrackNumber7">7</div>
-                        <div class="mpoCheckBoxCell" id="mpoControllerTrackNumber8">8</div>
-                        <div class="mpoCheckBoxCell" id="mpoControllerTrackNumber9">9</div>
-                        <div class="mpoCheckBoxCell" id="mpoControllerTrackNumber10">10</div>
-                        <div class="mpoCheckBoxCell" id="mpoControllerTrackNumber11">11</div>
-                        <div class="mpoCheckBoxCell" id="mpoControllerTrackNumber12">12</div>
-                        <div class="mpoCheckBoxCell" id="mpoControllerTrackNumber13">13</div>
-                        <div class="mpoCheckBoxCell" id="mpoControllerTrackNumber14">14</div>
-                        <div class="mpoCheckBoxCell" id="mpoControllerTrackNumber15">15</div>
-                        <div class="mpoCheckBoxCell" id="mpoControllerTrackNumber16">16</div>                                               
+                        </div> 
+                        <div class="poColumn2Cell" style="text-align: left">
+                            <select class="poPerformersTrackSelect" id="poPerformersTrackSelect"
+                                onchange="_AP.performersOptionsDialog.doControl('poPerformersTrackSelect')">
+                            </select>
+                        </div>                                           
                     </div>
-                    <div id="row2" style="display: table">
-                        <div class="mpoColumn1Cell" style="text-align: center">
-                            <select class="mpoPerformersTrackSelect" id="mpoPerformersTrackSelect"
-                                onchange="_AP.monoInputDialog.doControl('mpoPerformersTrackSelect')">
+                    <div id="row2" style="display: table; margin-top: 4px;">
+                        <div class="poColumn1Cell" style="color:blue;">
+                            event handler
+                        </div>
+                        <div class="poColumn2Cell">
+                           <select class="poMidiControlSelect" id="poEventHandlerSelect"
+                                onchange="_AP.performersOptionsDialog.doControl('poEventHandlerSelect')">
+                               <option value="mono1">mono1</option>
+                               <option value="keyboard1">keyboard1</option>
                             </select>
                         </div>
-                        <div class="mpoColumn2Cell">
-                            noteOn: pitch
-                        </div>
-                        <div class="mpoColumn3Cell" style="color: #0000FF">
-                            <select class="mpoTrackSelect" id="mpoNoteOnPitchTrackSelect"
-                                onchange="_AP.monoInputDialog.doControl('mpoNoteOnPitchTrackSelect')">
-                                <option>none</option>
-                                <option>all</option>
-                                <option>performer</option>
-                                <option>other</option>
-                                <option>custom</option>
-                            </select>
-                        </div>
-                        <div class="mpoCheckBoxCell" id="mpoNOPCheckBoxDiv1">
-                            <input type="checkbox" id="mpoNOPCheckBoxTrack1" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOPCheckBoxTrack1')" />
-                        </div>                                               
-                        <div class="mpoCheckBoxCell" id="mpoNOPCheckBoxDiv2">
-                            <input type="checkbox" id="mpoNOPCheckBoxTrack2" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOPCheckBoxTrack2')" />
-                        </div>                                               
-                        <div class="mpoCheckBoxCell" id="mpoNOPCheckBoxDiv3">
-                            <input type="checkbox" id="mpoNOPCheckBoxTrack3" class="mpoCheckBox" 
-                                onchange="_AP.monoInputDialog.doControl('mpoNOPCheckBoxTrack3')"/>
-                        </div>                                               
-                        <div class="mpoCheckBoxCell" id="mpoNOPCheckBoxDiv4">
-                            <input type="checkbox" id="mpoNOPCheckBoxTrack4" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOPCheckBoxTrack4')" />
-                        </div>                                               
-                        <div class="mpoCheckBoxCell" id="mpoNOPCheckBoxDiv5">
-                            <input type="checkbox" id="mpoNOPCheckBoxTrack5" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOPCheckBoxTrack5')" />
-                        </div>                                               
-                        <div class="mpoCheckBoxCell" id="mpoNOPCheckBoxDiv6">
-                            <input type="checkbox" id="mpoNOPCheckBoxTrack6" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOPCheckBoxTrack6')" />
-                        </div>                                               
-                        <div class="mpoCheckBoxCell" id="mpoNOPCheckBoxDiv7">
-                            <input type="checkbox" id="mpoNOPCheckBoxTrack7" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOPCheckBoxTrack7')" />
-                        </div>                                               
-                        <div class="mpoCheckBoxCell" id="mpoNOPCheckBoxDiv8">
-                            <input type="checkbox" id="mpoNOPCheckBoxTrack8" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOPCheckBoxTrack8')" />
-                        </div>                                               
-                        <div class="mpoCheckBoxCell" id="mpoNOPCheckBoxDiv9">
-                            <input type="checkbox" id="mpoNOPCheckBoxTrack9" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOPCheckBoxTrack9')" />
-                        </div>                                               
-                        <div class="mpoCheckBoxCell" id="mpoNOPCheckBoxDiv10">
-                            <input type="checkbox" id="mpoNOPCheckBoxTrack10" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOPCheckBoxTrack10')" />
-                        </div>                                               
-                        <div class="mpoCheckBoxCell" id="mpoNOPCheckBoxDiv11">
-                            <input type="checkbox" id="mpoNOPCheckBoxTrack11" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOPCheckBoxTrack11')" />
-                        </div>                                               
-                        <div class="mpoCheckBoxCell" id="mpoNOPCheckBoxDiv12">
-                            <input type="checkbox" id="mpoNOPCheckBoxTrack12" class="mpoCheckBox" 
-                                onchange="_AP.monoInputDialog.doControl('mpoNOPCheckBoxTrack12')"/>
-                        </div>                                               
-                        <div class="mpoCheckBoxCell" id="mpoNOPCheckBoxDiv13">
-                            <input type="checkbox" id="mpoNOPCheckBoxTrack13" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOPCheckBoxTrack13')"/>
-                        </div>                                               
-                        <div class="mpoCheckBoxCell" id="mpoNOPCheckBoxDiv14">
-                            <input type="checkbox" id="mpoNOPCheckBoxTrack14" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOPCheckBoxTrack14')" />
-                        </div>                                               
-                        <div class="mpoCheckBoxCell" id="mpoNOPCheckBoxDiv15">
-                            <input type="checkbox" id="mpoNOPCheckBoxTrack15" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOPCheckBoxTrack15')" />
-                        </div>                                               
-                        <div class="mpoCheckBoxCell" id="mpoNOPCheckBoxDiv16">
-                            <input type="checkbox" id="mpoNOPCheckBoxTrack16" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOPCheckBoxTrack16')" />
-                        </div>                                               
                     </div>
-                    <div id="row3" style="display: table">
-                        <div class="mpoColumn1Cell">
-                            &nbsp;
-                        </div>
-                        <div class="mpoColumn2Cell">
-                            noteOn: velocity
-                        </div>
-                        <div class="mpoColumn3Cell" style="color: #0000FF">
-                            <select class="mpoTrackSelect" id="mpoNoteOnVelocityTrackSelect"
-                                onchange="_AP.monoInputDialog.doControl('mpoNoteOnVelocityTrackSelect')">
-                                <option>none</option>                                
-                                <option>all</option>
-                                <option>performer</option>
-                                <option>other</option>
-                                <option>custom</option>
-                            </select>
-                        </div>
-                        <div class="mpoCheckBoxCell" id="mpoNOVCheckBoxDiv1">
-                            <input type="checkbox" id="mpoNOVCheckBoxTrack1" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOVCheckBoxTrack1')" />
-                        </div>                                                
-                        <div class="mpoCheckBoxCell" id="mpoNOVCheckBoxDiv2" >
-                            <input type="checkbox" id="mpoNOVCheckBoxTrack2" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOVCheckBoxTrack2')" />
-                        </div>                                                
-                        <div class="mpoCheckBoxCell" id="mpoNOVCheckBoxDiv3">
-                            <input type="checkbox" id="mpoNOVCheckBoxTrack3" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOVCheckBoxTrack3')" />
-                        </div>                                                
-                        <div class="mpoCheckBoxCell" id="mpoNOVCheckBoxDiv4">
-                            <input type="checkbox" id="mpoNOVCheckBoxTrack4" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOVCheckBoxTrack4')" />
-                        </div>                                                
-                        <div class="mpoCheckBoxCell" id="mpoNOVCheckBoxDiv5">
-                            <input type="checkbox" id="mpoNOVCheckBoxTrack5" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOVCheckBoxTrack5')" />
-                        </div>                                                
-                        <div class="mpoCheckBoxCell" id="mpoNOVCheckBoxDiv6">
-                            <input type="checkbox" id="mpoNOVCheckBoxTrack6" class="mpoCheckBox" 
-                                onchange="_AP.monoInputDialog.doControl('mpoNOVCheckBoxTrack6')"/>
-                        </div>                                                
-                        <div class="mpoCheckBoxCell" id="mpoNOVCheckBoxDiv7">
-                            <input type="checkbox" id="mpoNOVCheckBoxTrack7" class="mpoCheckBox" 
-                                onchange="_AP.monoInputDialog.doControl('mpoNOVCheckBoxTrack7')"/>
-                        </div>                                                
-                        <div class="mpoCheckBoxCell" id="mpoNOVCheckBoxDiv8">
-                            <input type="checkbox" id="mpoNOVCheckBoxTrack8" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOVCheckBoxTrack8')" />
-                        </div>                                                
-                        <div class="mpoCheckBoxCell" id="mpoNOVCheckBoxDiv9">
-                            <input type="checkbox" id="mpoNOVCheckBoxTrack9" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOVCheckBoxTrack9')" />
-                        </div>                                                
-                        <div class="mpoCheckBoxCell" id="mpoNOVCheckBoxDiv10">
-                            <input type="checkbox" id="mpoNOVCheckBoxTrack10" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOVCheckBoxTrack10')" />
-                        </div>                                                
-                        <div class="mpoCheckBoxCell" id="mpoNOVCheckBoxDiv11">
-                            <input type="checkbox" id="mpoNOVCheckBoxTrack11" class="mpoCheckBox" 
-                                onchange="_AP.monoInputDialog.doControl('mpoNOVCheckBoxTrack11')"/>
-                        </div>                                                
-                        <div class="mpoCheckBoxCell" id="mpoNOVCheckBoxDiv12">
-                            <input type="checkbox" id="mpoNOVCheckBoxTrack12" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOVCheckBoxTrack12')" />
-                        </div>                                                
-                        <div class="mpoCheckBoxCell" id="mpoNOVCheckBoxDiv13">
-                            <input type="checkbox" id="mpoNOVCheckBoxTrack13" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOVCheckBoxTrack13')" />
-                        </div>                                                
-                        <div class="mpoCheckBoxCell" id="mpoNOVCheckBoxDiv14">
-                            <input type="checkbox" id="mpoNOVCheckBoxTrack14" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOVCheckBoxTrack14')" />
-                        </div>                                                
-                        <div class="mpoCheckBoxCell" id="mpoNOVCheckBoxDiv15">
-                            <input type="checkbox" id="mpoNOVCheckBoxTrack15" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOVCheckBoxTrack15')" />
-                        </div>                                                
-                        <div class="mpoCheckBoxCell" id="mpoNOVCheckBoxDiv16">
-                            <input type="checkbox" id="mpoNOVCheckBoxTrack16" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoNOVCheckBoxTrack16')" />
-                        </div>                                                
-                    </div>
-                    <div id="row4" style="display: table; margin-top: 4px;">
-                        <div class="mpoColumn1Cell" style="color: #0000FF">
+                    <div id="row4" style="display: table; margin-top: 7px;">
+                        <div class="poColumn1Cell" style="color: #0000FF">
                             performer's control
                         </div>
-                        <div class="mpoColumn2Cell" style="color: #0000FF; text-align: center;">
+                        <div class="poColumn2Cell" style="color: #0000FF; text-align: center;">
                             MIDI controller
                         </div>
-                        <div class="mpoColumn3Cell" style="color: #0000FF">
+                        <div class="poColumn3Cell" style="color: #0000FF">
                             add data
-                        </div>                                             
+                        </div>
+                        <div class="poCheckBoxCell" id="poControllerTrackNumber1">1</div>
+                        <div class="poCheckBoxCell" id="poControllerTrackNumber2">2</div>
+                        <div class="poCheckBoxCell" id="poControllerTrackNumber3">3</div>
+                        <div class="poCheckBoxCell" id="poControllerTrackNumber4">4</div>
+                        <div class="poCheckBoxCell" id="poControllerTrackNumber5">5</div>
+                        <div class="poCheckBoxCell" id="poControllerTrackNumber6">6</div>
+                        <div class="poCheckBoxCell" id="poControllerTrackNumber7">7</div>
+                        <div class="poCheckBoxCell" id="poControllerTrackNumber8">8</div>
+                        <div class="poCheckBoxCell" id="poControllerTrackNumber9">9</div>
+                        <div class="poCheckBoxCell" id="poControllerTrackNumber10">10</div>
+                        <div class="poCheckBoxCell" id="poControllerTrackNumber11">11</div>
+                        <div class="poCheckBoxCell" id="poControllerTrackNumber12">12</div>
+                        <div class="poCheckBoxCell" id="poControllerTrackNumber13">13</div>
+                        <div class="poCheckBoxCell" id="poControllerTrackNumber14">14</div>
+                        <div class="poCheckBoxCell" id="poControllerTrackNumber15">15</div>
+                        <div class="poCheckBoxCell" id="poControllerTrackNumber16">16</div>                                             
                     </div>
-                    <div id="row5" style="display: table">
-                        <div class="mpoColumn1Cell">
+                    <div id="row5" style="display: table;  margin-top: -4px;">
+                        <div class="poColumn1Cell">
                             pressure
                         </div>
-                        <div class="mpoColumn2Cell">
-                            <select class="mpoMidiControlSelect" id="mpoPressureMidiSelect"
-                                onchange="_AP.monoInputDialog.doControl('mpoPressureMidiSelect')" >
+                        <div class="poColumn2Cell">
+                            <select class="poMidiControlSelect" id="poPressureMidiSelect"
+                                onchange="_AP.performersOptionsDialog.doControl('poPressureMidiSelect')" >
                             </select>
                         </div>
-                        <div class="mpoColumn3Cell" style="color: #0000FF">
-                            <select class="mpoTrackSelect" id="mpoPressureTrackSelect"
-                                onchange="_AP.monoInputDialog.doControl('mpoPressureTrackSelect')">
+                        <div class="poColumn3Cell" style="color: #0000FF">
+                            <select class="poTrackSelect" id="poPressureTrackSelect"
+                                onchange="_AP.performersOptionsDialog.doControl('poPressureTrackSelect')">
                                 <option>none</option>
                                 <option>all</option>
                                 <option>performer</option>
@@ -292,83 +138,83 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
                                 <option>custom</option>
                             </select>
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPressureCheckBoxDiv1">
-                            <input type="checkbox" id="mpoPressureCheckBoxTrack1" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPressureCheckBoxTrack1')" />
+                        <div class="poCheckBoxCell" id="poPressureCheckBoxDiv1">
+                            <input type="checkbox" id="poPressureCheckBoxTrack1" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPressureCheckBoxTrack1')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPressureCheckBoxDiv2">
-                            <input type="checkbox" id="mpoPressureCheckBoxTrack2" class="mpoCheckBox" 
-                                onchange="_AP.monoInputDialog.doControl('mpoPressureCheckBoxTrack2')"/>
+                        <div class="poCheckBoxCell" id="poPressureCheckBoxDiv2">
+                            <input type="checkbox" id="poPressureCheckBoxTrack2" class="poCheckBox" 
+                                onchange="_AP.performersOptionsDialog.doControl('poPressureCheckBoxTrack2')"/>
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPressureCheckBoxDiv3">
-                            <input type="checkbox" id="mpoPressureCheckBoxTrack3" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPressureCheckBoxTrack3')" />
+                        <div class="poCheckBoxCell" id="poPressureCheckBoxDiv3">
+                            <input type="checkbox" id="poPressureCheckBoxTrack3" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPressureCheckBoxTrack3')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPressureCheckBoxDiv4">
-                            <input type="checkbox" id="mpoPressureCheckBoxTrack4" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPressureCheckBoxTrack4')" />
+                        <div class="poCheckBoxCell" id="poPressureCheckBoxDiv4">
+                            <input type="checkbox" id="poPressureCheckBoxTrack4" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPressureCheckBoxTrack4')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPressureCheckBoxDiv5">
-                            <input type="checkbox" id="mpoPressureCheckBoxTrack5" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPressureCheckBoxTrack5')" />
+                        <div class="poCheckBoxCell" id="poPressureCheckBoxDiv5">
+                            <input type="checkbox" id="poPressureCheckBoxTrack5" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPressureCheckBoxTrack5')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPressureCheckBoxDiv6">
-                            <input type="checkbox" id="mpoPressureCheckBoxTrack6" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPressureCheckBoxTrack6')" />
+                        <div class="poCheckBoxCell" id="poPressureCheckBoxDiv6">
+                            <input type="checkbox" id="poPressureCheckBoxTrack6" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPressureCheckBoxTrack6')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPressureCheckBoxDiv7">
-                            <input type="checkbox" id="mpoPressureCheckBoxTrack7" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPressureCheckBoxTrack7')" />
+                        <div class="poCheckBoxCell" id="poPressureCheckBoxDiv7">
+                            <input type="checkbox" id="poPressureCheckBoxTrack7" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPressureCheckBoxTrack7')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPressureCheckBoxDiv8">
-                            <input type="checkbox" id="mpoPressureCheckBoxTrack8" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPressureCheckBoxTrack8')" />
+                        <div class="poCheckBoxCell" id="poPressureCheckBoxDiv8">
+                            <input type="checkbox" id="poPressureCheckBoxTrack8" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPressureCheckBoxTrack8')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPressureCheckBoxDiv9">
-                            <input type="checkbox" id="mpoPressureCheckBoxTrack9" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPressureCheckBoxTrack9')" />
+                        <div class="poCheckBoxCell" id="poPressureCheckBoxDiv9">
+                            <input type="checkbox" id="poPressureCheckBoxTrack9" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPressureCheckBoxTrack9')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPressureCheckBoxDiv10">
-                            <input type="checkbox" id="mpoPressureCheckBoxTrack10" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPressureCheckBoxTrack10')" />
+                        <div class="poCheckBoxCell" id="poPressureCheckBoxDiv10">
+                            <input type="checkbox" id="poPressureCheckBoxTrack10" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPressureCheckBoxTrack10')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPressureCheckBoxDiv11">
-                            <input type="checkbox" id="mpoPressureCheckBoxTrack11" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPressureCheckBoxTrack11')" />
+                        <div class="poCheckBoxCell" id="poPressureCheckBoxDiv11">
+                            <input type="checkbox" id="poPressureCheckBoxTrack11" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPressureCheckBoxTrack11')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPressureCheckBoxDiv12">
-                            <input type="checkbox" id="mpoPressureCheckBoxTrack12" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPressureCheckBoxTrack12')" />
+                        <div class="poCheckBoxCell" id="poPressureCheckBoxDiv12">
+                            <input type="checkbox" id="poPressureCheckBoxTrack12" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPressureCheckBoxTrack12')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPressureCheckBoxDiv13">
-                            <input type="checkbox" id="mpoPressureCheckBoxTrack13" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPressureCheckBoxTrack13')" />
+                        <div class="poCheckBoxCell" id="poPressureCheckBoxDiv13">
+                            <input type="checkbox" id="poPressureCheckBoxTrack13" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPressureCheckBoxTrack13')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPressureCheckBoxDiv14">
-                            <input type="checkbox" id="mpoPressureCheckBoxTrack14" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPressureCheckBoxTrack14')" />
+                        <div class="poCheckBoxCell" id="poPressureCheckBoxDiv14">
+                            <input type="checkbox" id="poPressureCheckBoxTrack14" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPressureCheckBoxTrack14')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPressureCheckBoxDiv15">
-                            <input type="checkbox" id="mpoPressureCheckBoxTrack15" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPressureCheckBoxTrack15')" />
+                        <div class="poCheckBoxCell" id="poPressureCheckBoxDiv15">
+                            <input type="checkbox" id="poPressureCheckBoxTrack15" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPressureCheckBoxTrack15')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPressureCheckBoxDiv16">
-                            <input type="checkbox" id="mpoPressureCheckBoxTrack16" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPressureCheckBoxTrack16')" />
+                        <div class="poCheckBoxCell" id="poPressureCheckBoxDiv16">
+                            <input type="checkbox" id="poPressureCheckBoxTrack16" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPressureCheckBoxTrack16')" />
                         </div>                                                
                     </div>
                     <div id="row6" style="display: table">
-                        <div class="mpoColumn1Cell">
+                        <div class="poColumn1Cell">
                             pitch wheel
                         </div>
-                        <div class="mpoColumn2Cell">
-                            <select class="mpoMidiControlSelect" id="mpoPitchWheelMidiSelect"
-                                onchange="_AP.monoInputDialog.doControl('mpoPitchWheelMidiSelect')">
+                        <div class="poColumn2Cell">
+                            <select class="poMidiControlSelect" id="poPitchWheelMidiSelect"
+                                onchange="_AP.performersOptionsDialog.doControl('poPitchWheelMidiSelect')">
                             </select>
                         </div>
-                        <div class="mpoColumn3Cell" style="color: #0000FF">
-                            <select class="mpoTrackSelect" id="mpoPitchWheelTrackSelect"
-                                onchange="_AP.monoInputDialog.doControl('mpoPitchWheelTrackSelect')">
+                        <div class="poColumn3Cell" style="color: #0000FF">
+                            <select class="poTrackSelect" id="poPitchWheelTrackSelect"
+                                onchange="_AP.performersOptionsDialog.doControl('poPitchWheelTrackSelect')">
                                 <option>none</option>
                                 <option>all</option>
                                 <option>performer</option>
@@ -376,83 +222,83 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
                                 <option>custom</option>
                             </select>
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPitchWheelCheckBoxDiv1">
-                            <input type="checkbox" id="mpoPitchWheelCheckBoxTrack1" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPitchWheelCheckBoxTrack1')" />
+                        <div class="poCheckBoxCell" id="poPitchWheelCheckBoxDiv1">
+                            <input type="checkbox" id="poPitchWheelCheckBoxTrack1" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPitchWheelCheckBoxTrack1')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPitchWheelCheckBoxDiv2">
-                            <input type="checkbox" id="mpoPitchWheelCheckBoxTrack2" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPitchWheelCheckBoxTrack2')" />
+                        <div class="poCheckBoxCell" id="poPitchWheelCheckBoxDiv2">
+                            <input type="checkbox" id="poPitchWheelCheckBoxTrack2" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPitchWheelCheckBoxTrack2')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPitchWheelCheckBoxDiv3">
-                            <input type="checkbox" id="mpoPitchWheelCheckBoxTrack3" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPitchWheelCheckBoxTrack3')" />
+                        <div class="poCheckBoxCell" id="poPitchWheelCheckBoxDiv3">
+                            <input type="checkbox" id="poPitchWheelCheckBoxTrack3" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPitchWheelCheckBoxTrack3')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPitchWheelCheckBoxDiv4">
-                            <input type="checkbox" id="mpoPitchWheelCheckBoxTrack4" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPitchWheelCheckBoxTrack4')" />
+                        <div class="poCheckBoxCell" id="poPitchWheelCheckBoxDiv4">
+                            <input type="checkbox" id="poPitchWheelCheckBoxTrack4" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPitchWheelCheckBoxTrack4')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPitchWheelCheckBoxDiv5">
-                            <input type="checkbox" id="mpoPitchWheelCheckBoxTrack5" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPitchWheelCheckBoxTrack5')" />
+                        <div class="poCheckBoxCell" id="poPitchWheelCheckBoxDiv5">
+                            <input type="checkbox" id="poPitchWheelCheckBoxTrack5" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPitchWheelCheckBoxTrack5')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPitchWheelCheckBoxDiv6">
-                            <input type="checkbox" id="mpoPitchWheelCheckBoxTrack6" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPitchWheelCheckBoxTrack6')" />
+                        <div class="poCheckBoxCell" id="poPitchWheelCheckBoxDiv6">
+                            <input type="checkbox" id="poPitchWheelCheckBoxTrack6" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPitchWheelCheckBoxTrack6')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPitchWheelCheckBoxDiv7">
-                            <input type="checkbox" id="mpoPitchWheelCheckBoxTrack7" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPitchWheelCheckBoxTrack7')" />
+                        <div class="poCheckBoxCell" id="poPitchWheelCheckBoxDiv7">
+                            <input type="checkbox" id="poPitchWheelCheckBoxTrack7" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPitchWheelCheckBoxTrack7')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPitchWheelCheckBoxDiv8">
-                            <input type="checkbox" id="mpoPitchWheelCheckBoxTrack8" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPitchWheelCheckBoxTrack8')" />
+                        <div class="poCheckBoxCell" id="poPitchWheelCheckBoxDiv8">
+                            <input type="checkbox" id="poPitchWheelCheckBoxTrack8" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPitchWheelCheckBoxTrack8')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPitchWheelCheckBoxDiv9">
-                            <input type="checkbox" id="mpoPitchWheelCheckBoxTrack9" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPitchWheelCheckBoxTrack9')" />
+                        <div class="poCheckBoxCell" id="poPitchWheelCheckBoxDiv9">
+                            <input type="checkbox" id="poPitchWheelCheckBoxTrack9" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPitchWheelCheckBoxTrack9')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPitchWheelCheckBoxDiv10">
-                            <input type="checkbox" id="mpoPitchWheelCheckBoxTrack10" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPitchWheelCheckBoxTrack10')" />
+                        <div class="poCheckBoxCell" id="poPitchWheelCheckBoxDiv10">
+                            <input type="checkbox" id="poPitchWheelCheckBoxTrack10" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPitchWheelCheckBoxTrack10')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPitchWheelCheckBoxDiv11">
-                            <input type="checkbox" id="mpoPitchWheelCheckBoxTrack11" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPitchWheelCheckBoxTrack11')" />
+                        <div class="poCheckBoxCell" id="poPitchWheelCheckBoxDiv11">
+                            <input type="checkbox" id="poPitchWheelCheckBoxTrack11" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPitchWheelCheckBoxTrack11')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPitchWheelCheckBoxDiv12">
-                            <input type="checkbox" id="mpoPitchWheelCheckBoxTrack12" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPitchWheelCheckBoxTrack12')" />
+                        <div class="poCheckBoxCell" id="poPitchWheelCheckBoxDiv12">
+                            <input type="checkbox" id="poPitchWheelCheckBoxTrack12" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPitchWheelCheckBoxTrack12')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPitchWheelCheckBoxDiv13">
-                            <input type="checkbox" id="mpoPitchWheelCheckBoxTrack13" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPitchWheelCheckBoxTrack13')" />
+                        <div class="poCheckBoxCell" id="poPitchWheelCheckBoxDiv13">
+                            <input type="checkbox" id="poPitchWheelCheckBoxTrack13" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPitchWheelCheckBoxTrack13')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPitchWheelCheckBoxDiv14">
-                            <input type="checkbox" id="mpoPitchWheelCheckBoxTrack14" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPitchWheelCheckBoxTrack14')" />
+                        <div class="poCheckBoxCell" id="poPitchWheelCheckBoxDiv14">
+                            <input type="checkbox" id="poPitchWheelCheckBoxTrack14" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPitchWheelCheckBoxTrack14')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPitchWheelCheckBoxDiv15">
-                            <input type="checkbox" id="mpoPitchWheelCheckBoxTrack15" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPitchWheelCheckBoxTrack15')" />
+                        <div class="poCheckBoxCell" id="poPitchWheelCheckBoxDiv15">
+                            <input type="checkbox" id="poPitchWheelCheckBoxTrack15" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPitchWheelCheckBoxTrack15')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoPitchWheelCheckBoxDiv16">
-                            <input type="checkbox" id="mpoPitchWheelCheckBoxTrack16" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoPitchWheelCheckBoxTrack16')" />
+                        <div class="poCheckBoxCell" id="poPitchWheelCheckBoxDiv16">
+                            <input type="checkbox" id="poPitchWheelCheckBoxTrack16" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poPitchWheelCheckBoxTrack16')" />
                         </div>                                               
                     </div>
                     <div id="row7" style="display: table">
-                        <div class="mpoColumn1Cell">
+                        <div class="poColumn1Cell">
                             modulation wheel
                         </div>
-                        <div class="mpoColumn2Cell">
-                            <select class="mpoMidiControlSelect" id="mpoModWheelMidiSelect"
-                                onchange="_AP.monoInputDialog.doControl('mpoModWheelMidiSelect')">
+                        <div class="poColumn2Cell">
+                            <select class="poMidiControlSelect" id="poModWheelMidiSelect"
+                                onchange="_AP.performersOptionsDialog.doControl('poModWheelMidiSelect')">
                             </select>
                         </div>
-                        <div class="mpoColumn3Cell" style="color: #0000FF">
-                            <select class="mpoTrackSelect" id="mpoModWheelTrackSelect"
-                                onchange="_AP.monoInputDialog.doControl('mpoModWheelTrackSelect')">
+                        <div class="poColumn3Cell" style="color: #0000FF">
+                            <select class="poTrackSelect" id="poModWheelTrackSelect"
+                                onchange="_AP.performersOptionsDialog.doControl('poModWheelTrackSelect')">
                                 <option>none</option>
                                 <option>all</option>
                                 <option>performer</option>
@@ -460,83 +306,83 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
                                 <option>custom</option>
                             </select>
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoModWheelCheckBoxDiv1">
-                            <input type="checkbox" id="mpoModWheelCheckBoxTrack1" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoModWheelCheckBoxTrack1')" />
+                        <div class="poCheckBoxCell" id="poModWheelCheckBoxDiv1">
+                            <input type="checkbox" id="poModWheelCheckBoxTrack1" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poModWheelCheckBoxTrack1')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoModWheelCheckBoxDiv2">
-                            <input type="checkbox" id="mpoModWheelCheckBoxTrack2" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoModWheelCheckBoxTrack2')" />
+                        <div class="poCheckBoxCell" id="poModWheelCheckBoxDiv2">
+                            <input type="checkbox" id="poModWheelCheckBoxTrack2" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poModWheelCheckBoxTrack2')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoModWheelCheckBoxDiv3">
-                            <input type="checkbox" id="mpoModWheelCheckBoxTrack3" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoModWheelCheckBoxTrack3')" />
+                        <div class="poCheckBoxCell" id="poModWheelCheckBoxDiv3">
+                            <input type="checkbox" id="poModWheelCheckBoxTrack3" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poModWheelCheckBoxTrack3')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoModWheelCheckBoxDiv4">
-                            <input type="checkbox" id="mpoModWheelCheckBoxTrack4" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoModWheelCheckBoxTrack4')" />
+                        <div class="poCheckBoxCell" id="poModWheelCheckBoxDiv4">
+                            <input type="checkbox" id="poModWheelCheckBoxTrack4" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poModWheelCheckBoxTrack4')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoModWheelCheckBoxDiv5">
-                            <input type="checkbox" id="mpoModWheelCheckBoxTrack5" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoModWheelCheckBoxTrack5')" />
+                        <div class="poCheckBoxCell" id="poModWheelCheckBoxDiv5">
+                            <input type="checkbox" id="poModWheelCheckBoxTrack5" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poModWheelCheckBoxTrack5')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoModWheelCheckBoxDiv6">
-                            <input type="checkbox" id="mpoModWheelCheckBoxTrack6" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoModWheelCheckBoxTrack6')" />
+                        <div class="poCheckBoxCell" id="poModWheelCheckBoxDiv6">
+                            <input type="checkbox" id="poModWheelCheckBoxTrack6" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poModWheelCheckBoxTrack6')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoModWheelCheckBoxDiv7">
-                            <input type="checkbox" id="mpoModWheelCheckBoxTrack7" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoModWheelCheckBoxTrack7')" />
+                        <div class="poCheckBoxCell" id="poModWheelCheckBoxDiv7">
+                            <input type="checkbox" id="poModWheelCheckBoxTrack7" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poModWheelCheckBoxTrack7')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoModWheelCheckBoxDiv8">
-                            <input type="checkbox" id="mpoModWheelCheckBoxTrack8" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoModWheelCheckBoxTrack8')" />
+                        <div class="poCheckBoxCell" id="poModWheelCheckBoxDiv8">
+                            <input type="checkbox" id="poModWheelCheckBoxTrack8" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poModWheelCheckBoxTrack8')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoModWheelCheckBoxDiv9">
-                            <input type="checkbox" id="mpoModWheelCheckBoxTrack9" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoModWheelCheckBoxTrack9')" />
+                        <div class="poCheckBoxCell" id="poModWheelCheckBoxDiv9">
+                            <input type="checkbox" id="poModWheelCheckBoxTrack9" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poModWheelCheckBoxTrack9')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoModWheelCheckBoxDiv10">
-                            <input type="checkbox" id="mpoModWheelCheckBoxTrack10" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoModWheelCheckBoxTrack10')" />
+                        <div class="poCheckBoxCell" id="poModWheelCheckBoxDiv10">
+                            <input type="checkbox" id="poModWheelCheckBoxTrack10" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poModWheelCheckBoxTrack10')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoModWheelCheckBoxDiv11">
-                            <input type="checkbox" id="mpoModWheelCheckBoxTrack11" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoModWheelCheckBoxTrack11')" />
+                        <div class="poCheckBoxCell" id="poModWheelCheckBoxDiv11">
+                            <input type="checkbox" id="poModWheelCheckBoxTrack11" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poModWheelCheckBoxTrack11')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoModWheelCheckBoxDiv12">
-                            <input type="checkbox" id="mpoModWheelCheckBoxTrack12" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoModWheelCheckBoxTrack12')" />
+                        <div class="poCheckBoxCell" id="poModWheelCheckBoxDiv12">
+                            <input type="checkbox" id="poModWheelCheckBoxTrack12" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poModWheelCheckBoxTrack12')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoModWheelCheckBoxDiv13">
-                            <input type="checkbox" id="mpoModWheelCheckBoxTrack13" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoModWheelCheckBoxTrack13')" />
+                        <div class="poCheckBoxCell" id="poModWheelCheckBoxDiv13">
+                            <input type="checkbox" id="poModWheelCheckBoxTrack13" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poModWheelCheckBoxTrack13')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoModWheelCheckBoxDiv14">
-                            <input type="checkbox" id="mpoModWheelCheckBoxTrack14" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoModWheelCheckBoxTrack14')" />
+                        <div class="poCheckBoxCell" id="poModWheelCheckBoxDiv14">
+                            <input type="checkbox" id="poModWheelCheckBoxTrack14" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poModWheelCheckBoxTrack14')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoModWheelCheckBoxDiv15">
-                            <input type="checkbox" id="mpoModWheelCheckBoxTrack15" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoModWheelCheckBoxTrack15')" />
+                        <div class="poCheckBoxCell" id="poModWheelCheckBoxDiv15">
+                            <input type="checkbox" id="poModWheelCheckBoxTrack15" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poModWheelCheckBoxTrack15')" />
                         </div>
-                        <div class="mpoCheckBoxCell" id="mpoModWheelCheckBoxDiv16">
-                            <input type="checkbox" id="mpoModWheelCheckBoxTrack16" class="mpoCheckBox"
-                                onchange="_AP.monoInputDialog.doControl('mpoModWheelCheckBoxTrack16')" />
+                        <div class="poCheckBoxCell" id="poModWheelCheckBoxDiv16">
+                            <input type="checkbox" id="poModWheelCheckBoxTrack16" class="poCheckBox"
+                                onchange="_AP.performersOptionsDialog.doControl('poModWheelCheckBoxTrack16')" />
                         </div>                                              
                     </div>
                     <div id="minimumVolumeRowDiv" style="display: table;">
-                        <div class="mpoColumn1Cell">
+                        <div class="poColumn1Cell">
                             minimum volume
                         </div>
-                        <input type="number" class="mpoNumberInput" style="margin:0px 2px 0px 3px;" id="mpoMinVolumeInput" value="50"
-                                onblur="_AP.monoInputDialog.doControl('mpoMinVolumeInput')" />                            
-                        <div class="mpoRow8Cell3">
+                        <input type="number" class="poNumberInput" style="margin:0px 2px 0px 0px;" id="poMinVolumeInput" value="50"
+                                onblur="_AP.performersOptionsDialog.doControl('poMinVolumeInput')" />                            
+                        <div class="poRow8Cell3">
                             [0..127] The minimum volume needs to be set if the performer is controlling the volume.
                         </div>                                             
                     </div>
                     <div id="row9" style="display: table; margin: 10px 0px 0px 0px;">
-                        <div class="mpoTitleCell" style="width:88px;">
+                        <div class="poTitleCell" style="width:88px;">
                             master volume
                         </div>
                         <div class="row9HelpCell">
@@ -544,94 +390,94 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
                         </div>
                     </div>
                     <div id="row10" style="display: table; margin:0px;">
-                        <div class="mpoMasterVolumeCell" id="mpoMasterVolume1">
+                        <div class="poMasterVolumeCell" id="poMasterVolume1">
                             1<br />
-                            <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput1" value=""
-                               onblur ="_AP.monoInputDialog.doControl('mpoMasterVolumeInput1')" />
+                            <input type="number" class="poNumberInput" id="poMasterVolumeInput1" value=""
+                               onblur ="_AP.performersOptionsDialog.doControl('poMasterVolumeInput1')" />
                         </div>
-                        <div class="mpoMasterVolumeCell" id="mpoMasterVolume2">
+                        <div class="poMasterVolumeCell" id="poMasterVolume2">
                             2<br />
-                            <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput2" value=""
-                                onblur="_AP.monoInputDialog.doControl('mpoMasterVolumeInput2')" />
+                            <input type="number" class="poNumberInput" id="poMasterVolumeInput2" value=""
+                                onblur="_AP.performersOptionsDialog.doControl('poMasterVolumeInput2')" />
                         </div>
-                        <div class="mpoMasterVolumeCell" id="mpoMasterVolume3">
+                        <div class="poMasterVolumeCell" id="poMasterVolume3">
                             3<br />
-                            <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput3" value=""
-                                onblur="_AP.monoInputDialog.doControl('mpoMasterVolumeInput3')" />
+                            <input type="number" class="poNumberInput" id="poMasterVolumeInput3" value=""
+                                onblur="_AP.performersOptionsDialog.doControl('poMasterVolumeInput3')" />
                         </div>
-                        <div class="mpoMasterVolumeCell" id="mpoMasterVolume4">
+                        <div class="poMasterVolumeCell" id="poMasterVolume4">
                             4<br />
-                            <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput4" value=""
-                                onblur="_AP.monoInputDialog.doControl('mpoMasterVolumeInput4')" />
+                            <input type="number" class="poNumberInput" id="poMasterVolumeInput4" value=""
+                                onblur="_AP.performersOptionsDialog.doControl('poMasterVolumeInput4')" />
                         </div>
-                        <div class="mpoMasterVolumeCell" id="mpoMasterVolume5">
+                        <div class="poMasterVolumeCell" id="poMasterVolume5">
                             5<br />
-                            <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput5" value=""
-                                onblur="_AP.monoInputDialog.doControl('mpoMasterVolumeInput5')" />
+                            <input type="number" class="poNumberInput" id="poMasterVolumeInput5" value=""
+                                onblur="_AP.performersOptionsDialog.doControl('poMasterVolumeInput5')" />
                         </div>
-                        <div class="mpoMasterVolumeCell" id="mpoMasterVolume6">
+                        <div class="poMasterVolumeCell" id="poMasterVolume6">
                             6<br />
-                            <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput6" value=""
-                                onblur="_AP.monoInputDialog.doControl('mpoMasterVolumeInput6')" />
+                            <input type="number" class="poNumberInput" id="poMasterVolumeInput6" value=""
+                                onblur="_AP.performersOptionsDialog.doControl('poMasterVolumeInput6')" />
                         </div>
-                        <div class="mpoMasterVolumeCell" id="mpoMasterVolume7">
+                        <div class="poMasterVolumeCell" id="poMasterVolume7">
                             7<br />
-                            <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput7" value=""
-                                onblur="_AP.monoInputDialog.doControl('mpoMasterVolumeInput7')" />
+                            <input type="number" class="poNumberInput" id="poMasterVolumeInput7" value=""
+                                onblur="_AP.performersOptionsDialog.doControl('poMasterVolumeInput7')" />
                         </div>
-                        <div class="mpoMasterVolumeCell" id="mpoMasterVolume8">
+                        <div class="poMasterVolumeCell" id="poMasterVolume8">
                             8<br />
-                            <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput8" value=""
-                                onblur="_AP.monoInputDialog.doControl('mpoMasterVolumeInput8')" />
+                            <input type="number" class="poNumberInput" id="poMasterVolumeInput8" value=""
+                                onblur="_AP.performersOptionsDialog.doControl('poMasterVolumeInput8')" />
                         </div>
-                        <div class="mpoMasterVolumeCell" id="mpoMasterVolume9">
+                        <div class="poMasterVolumeCell" id="poMasterVolume9">
                             9<br />
-                            <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput9" value=""
-                                onblur="_AP.monoInputDialog.doControl('mpoMasterVolumeInput9')" />
+                            <input type="number" class="poNumberInput" id="poMasterVolumeInput9" value=""
+                                onblur="_AP.performersOptionsDialog.doControl('poMasterVolumeInput9')" />
                         </div>
-                        <div class="mpoMasterVolumeCell" id="mpoMasterVolume10">
+                        <div class="poMasterVolumeCell" id="poMasterVolume10">
                             10<br />
-                            <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput10" value=""
-                                onblur="_AP.monoInputDialog.doControl('mpoMasterVolumeInput10')" />
+                            <input type="number" class="poNumberInput" id="poMasterVolumeInput10" value=""
+                                onblur="_AP.performersOptionsDialog.doControl('poMasterVolumeInput10')" />
                         </div>
-                        <div class="mpoMasterVolumeCell" id="mpoMasterVolume11">
+                        <div class="poMasterVolumeCell" id="poMasterVolume11">
                             11<br />
-                            <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput11" value=""
-                                onblur="_AP.monoInputDialog.doControl('mpoMasterVolumeInput11')" />
+                            <input type="number" class="poNumberInput" id="poMasterVolumeInput11" value=""
+                                onblur="_AP.performersOptionsDialog.doControl('poMasterVolumeInput11')" />
                         </div>
-                        <div class="mpoMasterVolumeCell" id="mpoMasterVolume12">
+                        <div class="poMasterVolumeCell" id="poMasterVolume12">
                             12<br />
-                            <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput12" value=""
-                                onblur="_AP.monoInputDialog.doControl('mpoMasterVolumeInput12')" />
+                            <input type="number" class="poNumberInput" id="poMasterVolumeInput12" value=""
+                                onblur="_AP.performersOptionsDialog.doControl('poMasterVolumeInput12')" />
                         </div>
-                        <div class="mpoMasterVolumeCell" id="mpoMasterVolume13">
+                        <div class="poMasterVolumeCell" id="poMasterVolume13">
                             13<br />
-                            <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput13" value=""
-                                onblur="_AP.monoInputDialog.doControl('mpoMasterVolumeInput13')" />
+                            <input type="number" class="poNumberInput" id="poMasterVolumeInput13" value=""
+                                onblur="_AP.performersOptionsDialog.doControl('poMasterVolumeInput13')" />
                         </div>
-                        <div class="mpoMasterVolumeCell" id="mpoMasterVolume14">
+                        <div class="poMasterVolumeCell" id="poMasterVolume14">
                             14<br />
-                            <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput14" value=""
-                                onblur="_AP.monoInputDialog.doControl('mpoMasterVolumeInput14')" />
+                            <input type="number" class="poNumberInput" id="poMasterVolumeInput14" value=""
+                                onblur="_AP.performersOptionsDialog.doControl('poMasterVolumeInput14')" />
                         </div>
-                        <div class="mpoMasterVolumeCell" id="mpoMasterVolume15">
+                        <div class="poMasterVolumeCell" id="poMasterVolume15">
                             15<br />
-                            <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput15" value=""
-                                onblur="_AP.monoInputDialog.doControl('mpoMasterVolumeInput15')" />
+                            <input type="number" class="poNumberInput" id="poMasterVolumeInput15" value=""
+                                onblur="_AP.performersOptionsDialog.doControl('poMasterVolumeInput15')" />
                         </div>
-                        <div class="mpoMasterVolumeCell" id="mpoMasterVolume16">
+                        <div class="poMasterVolumeCell" id="poMasterVolume16">
                             16<br />
-                            <input type="number" class="mpoNumberInput" id="mpoMasterVolumeInput16" value=""
-                                onblur="_AP.monoInputDialog.doControl('mpoMasterVolumeInput16')" />
+                            <input type="number" class="poNumberInput" id="poMasterVolumeInput16" value=""
+                                onblur="_AP.performersOptionsDialog.doControl('poMasterVolumeInput16')" />
                         </div>
                     </div>
                     <div id="row11" style="display: table; margin: 10px 0px 0px 0px;">
-                        <div class="mpoColumn1Cell" style="color:blue">
-                            performer's speed control
+                        <div class="poColumn1Cell" style="color:blue">
+                            speed control
                         </div>
-                        <div class="mpoColumn2Cell">
-                           <select class="mpoMidiControlSelect" id="mpoSpeedControllerSelect"
-                                onchange="_AP.monoInputDialog.doControl('mpoSpeedControllerSelect')">
+                        <div class="poColumn2Cell">
+                           <select class="poMidiControlSelect" id="poSpeedControllerSelect"
+                                onchange="_AP.performersOptionsDialog.doControl('poSpeedControllerSelect')">
                                <option value="none">none</option>
                                <option value="noteOn: pitch">noteOn: pitch</option>
                                <option value="noteOn: velocity">noteOn: velocity</option>
@@ -642,25 +488,21 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
                         </div>                                            
                     </div>
                     <div id="maximumSpeedRowDiv" style="display: table;">
-                        <div class="mpoColumn1Cell">
+                        <div class="poColumn1Cell">
                             maximum speed
                         </div>
-                        <input type="number" class="mpoNumberInput" style="width:60px; margin:2px 2px 0px 4px;" id="mpoMaxSpeedInput" value="400"
-                            onblur="_AP.monoInputDialog.doControl('mpoMaxSpeedInput')" />                            
-                        <label class="mpoRow13Cell3" for="mpoMaxSpeedInput">
+                        <input type="number" class="poNumberInput" style="width:60px; margin:2px 2px 0px 0px;" id="poMaxSpeedInput" value="400"
+                            onblur="_AP.performersOptionsDialog.doControl('poMaxSpeedInput')" />                            
+                        <label class="poRow13Cell3" for="poMaxSpeedInput">
                             %
                         </label>
-                       <label class="mpoRow13Cell4" for="mpoMaxSpeedInput">
+                       <label class="poRow13Cell4" for="poMaxSpeedInput">
                            [Greater than 100%] The maximum speed happens when the controller sends a value of 127.<br />
                            The minimum speed (the reciprocal factor) happens when the controller sends a value of 0.
                         </label>                                             
                     </div>
                 </div>
-                <div id="polyPerformersOptions" class="optionsPanel"  style="display:none;">
-                    <div>
-                        Performer's Options (poly)
-                    </div>
-                </div>
+
                 <input id="startRuntimeButton" type="button" class="startRuntimeButton" value="Start"
                     onclick="_AP.controls.beginRuntime()"
                     style="display:none;" />
@@ -936,7 +778,6 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <script src="ap/Message.js" type="text/javascript"></script>
     <script src="ap/Moment.js" type="text/javascript"></script>
     <script src="ap/Track.js" type="text/javascript"></script>
-    <script src="ap/Player.js" type="text/javascript"></script>
     <script src="ap/Sequence.js" type="text/javascript"></script>
     <script src="ap/TrackRecording.js" type="text/javascript"></script>
     <script src="ap/SequenceRecording.js" type="text/javascript"></script>
@@ -947,12 +788,13 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
     <script src="ap/MidiRest.js" type="text/javascript"></script>
     <script src="ap/Score.js" type="text/javascript"></script>
     <script src="ap/TracksControl.js" type="text/javascript"></script>
+    <script src="ap/PerformersOptionsDialog.js" type="text/javascript"></script>
     <script src="ap/Controls.js" type="text/javascript"></script>
     <script src="ap/Main.js" type="text/javascript"></script>
 
     <!-- loaded here, but only referenced at play time -->
-    <script src="ap/MonoInputDialog.js" type="text/javascript"></script>
-    <script src="ap/MonoInputHandler.js" type="text/javascript"></script>
-    <script src="ap/PolyInput.js" type="text/javascript"></script> <!-- currently just a stub -->
+    <script src="ap/ScorePlayer.js" type="text/javascript"></script>
+    <script src="ap/Mono1.js" type="text/javascript"></script>
+    <script src="ap/Keyboard1.js" type="text/javascript"></script> <!-- currently just a stub -->
 </body>
 </html>

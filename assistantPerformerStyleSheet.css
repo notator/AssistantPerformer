@@ -127,7 +127,7 @@ img.channelControl
 
 /*** new 15.05.2014 for monoPerformerOptions***/
 
-input.mpoNumberInput
+input.poNumberInput
 {
     display:table-cell;
     width: 40px;
@@ -138,7 +138,7 @@ input.mpoNumberInput
     color: black;
 }
 
-div.mpoColumn1Cell
+div.poColumn1Cell
 {
     display: table-cell;
     text-align: right;
@@ -147,14 +147,14 @@ div.mpoColumn1Cell
     padding-left: 4px;
     padding-right:4px;
 }
-div.mpoColumn2Cell
+div.poColumn2Cell
 {
     display: table-cell;
     text-align: right;
-    width: 124px;
+    width: 120px;
     /*background-color: #FF6666;*/
 }
-div.mpoColumn3Cell
+div.poColumn3Cell
 {
     display:table-cell;
     text-align:center;
@@ -163,7 +163,7 @@ div.mpoColumn3Cell
 }
 
 /*
-div.mpoTrackNumberCell
+div.poTrackNumberCell
 {
     display:table-cell;
     font-size:10px;
@@ -173,7 +173,7 @@ div.mpoTrackNumberCell
     margin:0px;
 }
 ***/
-div.mpoMasterVolumeCell
+div.poMasterVolumeCell
 {
     display:table-cell;
     width: 42px;
@@ -188,7 +188,7 @@ div.mpoMasterVolumeCell
 }
 
 
-div.mpoTitleCell
+div.poTitleCell
 {
     display:table-cell;
     text-align:left;
@@ -207,7 +207,7 @@ div.row9HelpCell
     margin:0px;
 }
 
-div.mpoCheckBoxCell
+div.poCheckBoxCell
 {
     display:table-cell;
     width: 16px;
@@ -221,7 +221,7 @@ div.mpoCheckBoxCell
     text-align:center;
 }
 
-div.mpoRow13Cell2 
+div.poRow13Cell2 
 {
     display:table-cell;
     width: 98px;
@@ -230,7 +230,7 @@ div.mpoRow13Cell2
     margin:0px;
     text-align:right;
 }
-/*div.mpoRow13Cell3 
+/*div.poRow13Cell3 
 {
     display:table-cell;
     width: 50px;
@@ -240,7 +240,7 @@ div.mpoRow13Cell2
     padding-bottom:0px;
     margin:0px;
 }*/
-label.mpoRow13Cell3 
+label.poRow13Cell3 
 {
     display:table-cell;
     width: 10px;
@@ -248,7 +248,7 @@ label.mpoRow13Cell3
     padding:0px;
     margin:0px;
 }
-label.mpoRow13Cell4 
+label.poRow13Cell4 
 {
     display:table-cell;
     margin:0px;
@@ -259,7 +259,7 @@ label.mpoRow13Cell4
     /*background-color: #C0C0C0;*/
 }
 
-div.mpoRow8Cell3
+div.poRow8Cell3
 {
     display:table-cell;
     width: 450px;
@@ -271,7 +271,7 @@ div.mpoRow8Cell3
     margin:0px;
 }
 
-select.mpoPerformersTrackSelect
+select.poPerformersTrackSelect
 {
     font-size:11px;
     padding:0px;
@@ -279,7 +279,7 @@ select.mpoPerformersTrackSelect
     width:40px;
 }
 
-select.mpoTrackSelect 
+select.poTrackSelect 
 {
     font-size:11px;
     padding:0px;
@@ -288,14 +288,14 @@ select.mpoTrackSelect
 }
 
 
-input.mpoCheckBox
+input.poCheckBox
 {
     vertical-align: middle;
     margin:0px;
     padding:0px;
 }
 
-select.mpoMidiControlSelect 
+select.poMidiControlSelect 
 {
     font-size:11px;
     padding:0px;

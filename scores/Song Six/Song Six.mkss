@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!--file created: Friday 30.05.2014, 21:55:32-->
+<!--file created: Thursday 05.06.2014, 16:09:45-->
 <moritzKrystalScore xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://james-ingram-act-two.de/open-source/XMLSchemas/moritzKrystalScore.xsd">
 	<metadata>
@@ -654,7 +654,7 @@
 		nTracks="9">
 		<trackInit
 			pwDeviation="2,2,2,2,2,4,2,2,2" />
-		<monoPerformerOptions
+    <performersOptions
 			pressureController="volume (7)"
 			pressureTracks="111101111"
 			pitchWheelController="pitch wheel"
@@ -663,6 +663,7 @@
 			speedController="noteOn: pitch"
 			speedMaxPercent="400"
 			minVolume="50"
-			trackIndex="4" />
+			trackIndex="4"
+			performersEventHandler="mono1" />
 	</runtimeInfo>
 </moritzKrystalScore>

@@ -5,17 +5,8 @@
 *  Code licensed under MIT
 *  https://github.com/notator/assistant-performer/blob/master/License.md
 *
-*  ap/Player.js
-*  The _AP.player namespace which defines
-*
-*    // initialization
-*    init()
-*
-*    //  returns an object contining the start and end positions of the player's current segment
-*    currentSegmentBounds()
-*
-*    // message handler for input devices
-*    handleMIDIInputEvent(msg)
+*  ap/ScorePlayer.js
+*  The _AP.scorePlayer namespace which defines
 *
 *    // Start playing (part of) the Sequence.
 *    // Arguments:
@@ -58,18 +49,15 @@
 
 /*jslint bitwise: true, nomen: true, plusplus: true, white: true */
 
-_AP.namespace('_AP.player');
+_AP.namespace('_AP.scorePlayer');
 
-_AP.player = (function()
+_AP.scorePlayer = (function()
 {
     "use strict";
 
-    // begin var
     var
-    // the following are set in init()
     midiOutputDevice,
     tracks, // sequence.tracks
-    nextMoment, // the function that returns the next moment. Is set to playerNextMoment for simple score playback.
 
     /******************************/
     /* from old Sequence file     */
@@ -172,12 +160,10 @@ _AP.player = (function()
         }
     },
 
-    // The nextMoment function is set to playerNextMoment for simple score playback (i.e. when the input device is not being used),
-    // otherwise nextMoment is set to an inputDevice-specific function stored in a separate, inputDevice-specific file.
     // nextMoment is used by tick(), resume(), play(), finishSilently().
     // Returns the earliest track.nextMoment or null.
     // Null is returned if there are no more moments or if the sequence is paused or stopped.
-    playerNextMoment = function()
+    nextMoment = function()
     {
         var
         nTracks = tracks.length,
@@ -292,22 +278,6 @@ _AP.player = (function()
         }
 
         return nextMomt; // null stops tick().
-    },
-
-    // The function that returns the next moment for player.tick() is set to the argument.
-    usePerformersNextMomentFunction = function(performersNextMomentFunction)
-    {
-        nextMoment = performersNextMomentFunction;
-    },
-
-    // This function is called, even if there is no input device set in the input device selector.
-    // it sets player.nextMoment to playerNextMoment by default.
-    init = function(options, sequenceTracks)
-    {
-        // namespace variables
-        midiOutputDevice = options.outputDevice;
-        tracks = sequenceTracks;
-        nextMoment = playerNextMoment; 
     },
 
     // tick() function -- which ows a lot to Chris Wilson of the Web Audio Group
@@ -478,9 +448,6 @@ _AP.player = (function()
     // endMarkerMsPosition is the msPosition of the endMarker, and moments on the endMarker
     // are never performed.
     //
-    // If there is no live performer (i.e. the midiInput device is not connected),
-    // performersTrackIndex should null or undefined.
-    //
     // trackIsOnArray[trackIndex] returns a boolean which determines whether the track will
     // be played or not. This array belongs to its creator, and is read only.
     //
@@ -505,7 +472,7 @@ _AP.player = (function()
     // chord and rest symbols in the score, and so to synchronize the running cursor.
     // Moments whose msPositionInScore is to be reported are given chordStart or restStart
     // attributes before play() is called.
-    play = function(options, startMarkerMsPosition, endMarkerMsPosition, trackIsOnArray,
+    play = function(sequenceTracks, options, startMarkerMsPosition, endMarkerMsPosition, trackIsOnArray,
                             recording, reportEndOfSpanCallback, reportMsPositionInScoreCallback)
     {
         // Sets each track's isPerforming attribute.
@@ -649,7 +616,8 @@ _AP.player = (function()
             throw "The midi output device must be defined.";
         }
 
-        //midiOutputDevice = options.outputDevice;
+        midiOutputDevice = options.outputDevice;
+        tracks = sequenceTracks;
         reportEndOfSpan = reportEndOfSpanCallback; // can be null or undefined
         reportMsPositionInScore = reportMsPositionInScoreCallback; // can be null or undefined
 
@@ -662,17 +630,9 @@ _AP.player = (function()
         midiObjectMsPositionsInScore = getMidiObjectMsPositionsInScore(tracks, startMarkerMsPosition, endMarkerMsPosition);
         midiObjectMsPositionsInScoreIndex = 0;
 
-        if(options.livePerformance)
-        {
-            options.performersOptions.midiEventHandler.init(options.outputDevice, tracks,
-                        midiObjectMsPositionsInScore, options.performersOptions, usePerformersNextMomentFunction);
-        }
-        else
-        {
-            performanceStartTime = performance.now();
-            startTimeAdjustedForPauses = performanceStartTime;
-            run();
-        }
+        performanceStartTime = performance.now();
+        startTimeAdjustedForPauses = performanceStartTime;
+        run();
     },
 
     sendCommandMessageNow = function(outputDevice, trackIndex, command, midiValue)
@@ -720,9 +680,6 @@ _AP.player = (function()
 
     publicAPI =
     {
-        init: init,
-        usePerformersNextMomentFunction : usePerformersNextMomentFunction,
-
         play: play,
         pause: pause,
         resume: resume,

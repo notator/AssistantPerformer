@@ -23,16 +23,15 @@ _AP.controls = (function(document, window)
     tracksControl = _AP.tracksControl,
     Score = _AP.score.Score,
     sequence = _AP.sequence,
-    player = _AP.player,
-    scoreInfo, // set when a score is loaded
-    performer, // set in doControl() when the input device, score and output device have been set.
-
+    player = _AP.scorePlayer, // default. player can be set to MIDI input event handlers such as _AP.monoInputDevice or _AP.polyInputDevice.
+    performersOptionsDialog = _AP.performersOptionsDialog,
     SequenceRecording = _AP.sequenceRecording.SequenceRecording,
     COMMAND = _AP.constants.COMMAND,
     CONTROL = _AP.constants.CONTROL,
     sequenceToSMF = _AP.standardMIDIFile.sequenceToSMF,
 
     midiAccess,
+    scoreInfo, // set when a score is loaded
     score,
     svg = {}, // an object containing pointers to functions defined in SVG files
     livePerformerIsSilent = false,
@@ -242,8 +241,7 @@ _AP.controls = (function(document, window)
 
                 if(outputDeviceIndex === 0)
                 {
-                    _AP.monoInputDialog.hidden(true);
-                    _AP.polyInput.hidden(true);
+                    performersOptionsDialog.hidden(true);
                 }
                 else if(scoreIndex > 0)
                 {
@@ -253,11 +251,11 @@ _AP.controls = (function(document, window)
 
                     if(inputDeviceIndex > 0)
                     {
-                        performer.hidden(false);
+                        performersOptionsDialog.hidden(false);
                     }
-                    else if(performer !== undefined)
+                    else if(performersOptionsDialog !== undefined)
                     {
-                        performer.hidden(true);
+                        performersOptionsDialog.hidden(true);
                     }
                 }
                 break;
@@ -544,7 +542,7 @@ _AP.controls = (function(document, window)
 
                     sendTrackInitializationMessages(options, scoreInfo.trackInitialisationValues);
 
-                    player.play(options, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
+                    player.play(sequence.tracks, options, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
                         trackIsOnArray, sequenceRecording, reportEndOfPerformance, reportMsPos);
                 }
 
@@ -844,8 +842,6 @@ _AP.controls = (function(document, window)
 
         midiAccess = mAccess;
 
-        performer = _AP.monoInputDialog; // default
-
         getGlobalElements();
 
         setMIDIDeviceSelectors(midiAccess);
@@ -876,7 +872,14 @@ _AP.controls = (function(document, window)
         // sets sequence.tracks
         score.setSequenceTracks(svg, options.livePerformance, trackIndex, options.globalSpeed);
 
-        player.init(options, sequence.tracks); // sets player.nextMoment to simple no inputDevice version.
+        if(options.livePerformance)
+        {
+            player = options.performersOptions.midiEventHandler;
+        }
+        else
+        {
+            player = _AP.scorePlayer;
+        }
     },
 
     // called when the user clicks a control in the GUI
@@ -897,13 +900,13 @@ _AP.controls = (function(document, window)
             //      scoreInfo.name (e.g. "Song Six")
             //      scoreInfo.nPages (e.g. 7)
             //      scoreInfo.nTracks (e.g. 8)
-            //      scoreInfo.performer() (returns the performer)
+            //      scoreInfo.loadPerformersOptionsDialog()
             // and optionally (if present)
             //      scoreInfo.trackInitialisationValues
             function getScoreRuntimeInfo()
             {
                 var rScoreInfo,
-                    runtimeInfoString, trackInitString, mPerformerOptionsString, pPerformerOptionsString;
+                    runtimeInfoString, trackInitString, performersOptionsString, pPerformerOptionsString;
 
                 function getRuntimeInfoString(scoreName)
                 {
@@ -963,7 +966,7 @@ _AP.controls = (function(document, window)
 
                 // Returns null if the optionsTypeString element does not exist in the runtimeInfoString.
                 // Otherwise returns the element as a string, without its closing tag.
-                function getPerformanceOptionsString(runtimeInfoString, optionsTypeString)
+                function getPerformersOptionsString(runtimeInfoString, optionsTypeString)
                 {
                     var index, optsString = null;
                     index = runtimeInfoString.indexOf("<" + optionsTypeString);
@@ -1005,36 +1008,22 @@ _AP.controls = (function(document, window)
                     rScoreInfo.nPages = intAttribute(runtimeInfoString, "nPages=");
                     rScoreInfo.nTracks = intAttribute(runtimeInfoString, "nTracks=");
 
-                    trackInitString = getPerformanceOptionsString(runtimeInfoString, "trackInit");
+                    trackInitString = getPerformersOptionsString(runtimeInfoString, "trackInit");
                     rScoreInfo.trackInitialisationValues = getTrackInitValues(rScoreInfo.nTracks, trackInitString);
 
                     // this is defined as a function to make keeping track of the
-                    // performer easy when selectors are being juggled at the top level.
-                    rScoreInfo.performer = function()
+                    // performersOptionsDialog easy when selectors are being juggled at the top level.
+                    rScoreInfo.loadPerformersOptionsDialog = function()
                         {
-                            var rPerformer;
-
-                            mPerformerOptionsString = getPerformanceOptionsString(runtimeInfoString, "monoPerformerOptions");
-                            if(mPerformerOptionsString !== null)
+                            performersOptionsString = getPerformersOptionsString(runtimeInfoString, "performersOptions");
+                            if(performersOptionsString === null)
                             {
-                                rPerformer = _AP.monoInputDialog;
-                                rPerformer.setControlsFromString(mPerformerOptionsString, rScoreInfo.nTracks);
+                                performersOptionsDialog.resetControls(rScoreInfo.nTracks);
                             }
                             else
                             {
-                                pPerformerOptionsString = getPerformanceOptionsString(runtimeInfoString, "polyPerformerOptions");
-                                if(pPerformerOptionsString !== null)
-                                {
-                                    rPerformer = _AP.polyInput;
-                                    rPerformer.setControlsFromString(pPerformerOptionsString, rScoreInfo.nTracks);
-                                }
-                                else
-                                {
-                                    rPerformer = _AP.monoInputDialog;
-                                    rPerformer.setDefaultControls(rScoreInfo.nTracks);
-                                }
+                                performersOptionsDialog.loadControlsFromString(performersOptionsString, rScoreInfo.nTracks);
                             }
-                            return rPerformer;
                         };
                 }
 
@@ -1093,7 +1082,7 @@ _AP.controls = (function(document, window)
                 svgPagesFrame.innerHTML = embedCode;
             }
 
-            scoreInfo = getScoreRuntimeInfo(); // sets performer (to monoInput if not defined in the score's .mkss file.
+            scoreInfo = getScoreRuntimeInfo(); // loads performersOptionsDialog with values defined in the score's .mkss file.
 
             setPages(scoreInfo.name, scoreInfo.nPages);
 
@@ -1190,16 +1179,16 @@ _AP.controls = (function(document, window)
             setMIDIDevices();
             if(scoreInfo !== undefined)
             {
-                performer = scoreInfo.performer();
-                tracksControl.setInitialTracksControlState(globalElements.inputDeviceSelect.selectedIndex >= 0, performer.trackIndex());
+                scoreInfo.loadPerformersOptionsDialog();
+                tracksControl.setInitialTracksControlState(globalElements.inputDeviceSelect.selectedIndex >= 0, performersOptionsDialog.trackIndex());
             }
         }
 
         if(controlID === "scoreSelect")
         {
             setScore();
-            performer = scoreInfo.performer();
-            tracksControl.setInitialTracksControlState(globalElements.inputDeviceSelect.selectedIndex >= 0, performer.trackIndex());
+            scoreInfo.loadPerformersOptionsDialog();
+            tracksControl.setInitialTracksControlState(globalElements.inputDeviceSelect.selectedIndex >= 0, performersOptionsDialog.trackIndex());
         }
 
         if(controlID === "outputDeviceSelect")
@@ -1334,7 +1323,7 @@ _AP.controls = (function(document, window)
 
         if(options.livePerformance === true)
         {
-            options.performersOptions = performer.getPerformersOptions();
+            options.performersOptions = performersOptionsDialog.getPerformersOptions();
             trackIndex = options.performersOptions.trackIndex;
             if(livePerformerIsSilent !== soloistIsSilent)
             {
@@ -1353,7 +1342,7 @@ _AP.controls = (function(document, window)
     beginRuntime = function()
     {
         var okayToRun = true,
-            performersTrackIndex = -1; // when there is no performer
+            performersTrackIndex = -1; // when there is no performersOptions
 
         if(document.getElementById("inputDeviceSelect").selectedIndex === 0)
         {
@@ -1368,7 +1357,7 @@ _AP.controls = (function(document, window)
             cl.livePerformerOff.setAttribute("opacity", GLASS);
             cl.livePerformerOnOffDisabled.setAttribute("opacity", SMOKE);
             options.livePerformance = true;
-            options.performersOptions = performer.getPerformersOptions();
+            options.performersOptions = performersOptionsDialog.getPerformersOptions();
             performersTrackIndex = options.performersOptions.trackIndex;
             if(options.performersOptions === undefined)
             {
