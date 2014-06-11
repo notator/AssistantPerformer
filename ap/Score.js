@@ -11,6 +11,7 @@
 *  
 */
 
+
 /*jslint bitwise: false, nomen: true, plusplus: true, white: true */
 
 _AP.namespace('_AP.score');
