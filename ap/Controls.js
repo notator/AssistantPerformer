@@ -542,8 +542,12 @@ _AP.controls = (function(document, window)
 
                     sendTrackInitializationMessages(options, scoreInfo.trackInitialisationValues);
 
-                    player.play(sequence.tracks, options, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
-                        trackIsOnArray, sequenceRecording, reportEndOfPerformance, reportMsPos);
+                    // old
+                    //player.play(sequence.tracks, options, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
+                    //    trackIsOnArray, sequenceRecording);
+
+                    // new
+                    player.play(score.startMarkerMsPosition(), score.endMarkerMsPosition(), trackIsOnArray, sequenceRecording);
                 }
 
                 if(options.livePerformance === true)
@@ -880,6 +884,8 @@ _AP.controls = (function(document, window)
         {
             player = _AP.scorePlayer;
         }
+
+        player.init(sequence.tracks, options, reportEndOfPerformance, reportMsPos);
     },
 
     // called when the user clicks a control in the GUI

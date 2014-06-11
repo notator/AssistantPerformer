@@ -75,7 +75,7 @@ _AP.scorePlayer = (function()
     paused = false, // nextMoment(), pause(), isPaused()
 
     maxDeviation, // for //console.log, set to 0 when performance starts
-    reportEndOfSpan, // callback. Can be null or undefined. Set in play().
+    reportEndOfPerformance, // callback. Can be null or undefined. Set in play().
     reportMsPositionInScore,  // callback. Can be null or undefined. Set in play().
     lastReportedMsPosition = -1, // set by tick() used by nextMoment()
     msPositionToReport = -1,   // set in nextMoment() and used/reset by tick()
@@ -153,9 +153,9 @@ _AP.scorePlayer = (function()
             performanceMsDuration = Math.ceil(performance.now() - performanceStartTime);
             currentMoment = null;
             setState("stopped");
-            if(reportEndOfSpan !== undefined && reportEndOfSpan !== null)
+            if(reportEndOfPerformance !== undefined && reportEndOfPerformance !== null)
             {
-                reportEndOfSpan(sequenceRecording, performanceMsDuration);
+                reportEndOfPerformance(sequenceRecording, performanceMsDuration);
             }
         }
     },
@@ -220,7 +220,7 @@ _AP.scorePlayer = (function()
         {
             if(scoreMsPosition === endMarkerPosition)
             {
-                stop(); // calls reportEndOfSpan()
+                stop(); // calls reportEndOfPerformance()
             }
 
             // find the track having the earliest nextMoment and nextMomtMsPosInScore.
@@ -250,7 +250,7 @@ _AP.scorePlayer = (function()
 
             if(nextMomt === null)
             {
-                stop(); // calls reportEndOfSpan()
+                stop(); // calls reportEndOfPerformance()
             }
             else
             {
@@ -308,7 +308,7 @@ _AP.scorePlayer = (function()
     //          toIndex // the index of the final moment in the track (which does not play)
     //          currentIndex // = fromIndex
     //      maxDeviation = 0; // just for //console.log
-    //      reportEndOfSpan // can be null
+    //      reportEndOfPerformance // can be null
     //      reportMsPosition // can be null    
     tick = function()
     {
@@ -443,6 +443,19 @@ _AP.scorePlayer = (function()
         }
     },
 
+    init = function(sequenceTracks, options, reportEndOfPerf, reportMsPos)
+    {
+        if(options === undefined || options.outputDevice === undefined || options.outputDevice === null)
+        {
+            throw "The midi output device must be defined.";
+        }
+
+        tracks = sequenceTracks;
+        midiOutputDevice = options.outputDevice;
+        reportEndOfPerformance = reportEndOfPerf;
+        reportMsPositionInScore = reportMsPos;
+    },
+
     // play();
     // Note that the moment at endMarkerMsPosition will NOT be played as part of the span.
     // endMarkerMsPosition is the msPosition of the endMarker, and moments on the endMarker
@@ -459,7 +472,7 @@ _AP.scorePlayer = (function()
     // performance stops -- either because the end of the span has been reached, or when the
     // user stops the performance prematurely. Can be undefined or null.
     // It is called here as:
-    //      reportEndOfSpan(sequenceRecording, performanceMsDuration);
+    //      reportEndOfPerformance(sequenceRecording, performanceMsDuration);
     // The arguments are a Sequence containing a recording of the (timestamped) messages
     // which have been sent, and the total duration of the performance (in milliseconds). 
     //
@@ -472,8 +485,7 @@ _AP.scorePlayer = (function()
     // chord and rest symbols in the score, and so to synchronize the running cursor.
     // Moments whose msPositionInScore is to be reported are given chordStart or restStart
     // attributes before play() is called.
-    play = function(sequenceTracks, options, startMarkerMsPosition, endMarkerMsPosition, trackIsOnArray,
-                            recording, reportEndOfSpanCallback, reportMsPositionInScoreCallback)
+    play = function(startMarkerMsPosition, endMarkerMsPosition, trackIsOnArray, recording)
     {
         // Sets each track's isPerforming attribute.
         // If the track is set to perform (in the trackIsOnArray -- the trackControl settings),
@@ -611,16 +623,6 @@ _AP.scorePlayer = (function()
 
         sequenceRecording = recording; // can be undefined or null
 
-        if(options.outputDevice === undefined || options.outputDevice === null)
-        {
-            throw "The midi output device must be defined.";
-        }
-
-        midiOutputDevice = options.outputDevice;
-        tracks = sequenceTracks;
-        reportEndOfSpan = reportEndOfSpanCallback; // can be null or undefined
-        reportMsPositionInScore = reportMsPositionInScoreCallback; // can be null or undefined
-
         lastReportedMsPosition = -1;
 
         maxDeviation = 0; // for //console.log
@@ -680,6 +682,8 @@ _AP.scorePlayer = (function()
 
     publicAPI =
     {
+        init: init,
+
         play: play,
         pause: pause,
         resume: resume,
