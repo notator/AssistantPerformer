@@ -24,7 +24,7 @@ _AP.score = (function (document)
     CMD = _AP.constants.COMMAND,
     Message = _AP.message.Message,
     Track = _AP.track.Track,
-    sequence = _AP.sequence,
+    Sequence = _AP.sequence.Sequence,
 
     Markers = _AP.markers,
     ChordDef = _AP.chordDef.ChordDef,
@@ -1130,16 +1130,17 @@ _AP.score = (function (document)
         }
     },
 
-    // Creates sequence.tracks, which is an array containing one track per channel (ordered by channel).
+    // Returns a new Sequence. Creates sequence.tracks, which is an array containing one track per channel (ordered by channel).
     // Each track is an array of moments ordered in time (see ap/Track.js and ap/Moment.js).
     // If this is a live performance (as opposed to a score playback), the livePerformersSilentTrack
     // is also filled with rests and silent chords. Then, when score.redrawDisplay() is called (on toggling
     // a trackContol), the live performer's track is set to livePerformersSoundingTrack or livePerformersSilentTrack
     // as necessary.
-    setSequenceTracks = function(svg, isAssistedPerformance, livePerfTrackIndex, globalSpeed)
+    getSequence = function(svg, isAssistedPerformance, livePerfTrackIndex, globalSpeed)
     {
         // systems->staves->voices->timeObjects
         var
+        sequence,
         trackIndex, track, tracks,
         timeObjectIndex, nTimeObjects, timeObject, chordIsSilent,
         voiceIndex, nVoices, voice,
@@ -1611,7 +1612,7 @@ _AP.score = (function (document)
         getTimeObjects(svg, globalSpeed);
 
         // sets sequence to contain numberOfVoices() empty tracks.
-        sequence.init(numberOfVoices());
+        sequence = new Sequence(numberOfVoices());
         tracks = sequence.tracks;
         for(trackIndex = 0; trackIndex < tracks.length; ++trackIndex)
         {
@@ -1688,6 +1689,8 @@ _AP.score = (function (document)
         }
 
         transferFinalChordOffMoments(tracks);
+
+        return sequence;
     },
 
     // an empty score
@@ -1739,8 +1742,8 @@ _AP.score = (function (document)
 
         this.getEmptyPagesAndSystems = getEmptyPagesAndSystems;
 
-        // sets sequence.tracks
-        this.setSequenceTracks = setSequenceTracks;
+        // returns a new sequence
+        this.getSequence = getSequence;
 
         // Loads the trackIsOn callback.
         this.getTrackIsOnCallback = getTrackIsOnCallback;

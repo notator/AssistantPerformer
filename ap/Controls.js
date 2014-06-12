@@ -22,8 +22,8 @@ _AP.controls = (function(document, window)
     U = _AP.utilities,
     tracksControl = _AP.tracksControl,
     Score = _AP.score.Score,
-    sequence = _AP.sequence,
-    player = _AP.scorePlayer, // default. player can be set to MIDI input event handlers such as _AP.monoInputDevice or _AP.polyInputDevice.
+    sequence, // set by reading the score
+    player, // player can be set to sequence, or to MIDI input event handlers such as _AP.mono1 or _AP.keyboard1.
     performersOptionsDialog = _AP.performersOptionsDialog,
     SequenceRecording = _AP.sequenceRecording.SequenceRecording,
     COMMAND = _AP.constants.COMMAND,
@@ -873,8 +873,8 @@ _AP.controls = (function(document, window)
             score.getEmptyPagesAndSystems(svg); // everything except the timeObjects (which have to take account of speed)
         }
 
-        // sets sequence.tracks
-        score.setSequenceTracks(svg, options.livePerformance, trackIndex, options.globalSpeed);
+        // sequence is a new Sequence, whose tracks have been filled with the data from the score.
+        sequence = score.getSequence(svg, options.livePerformance, trackIndex, options.globalSpeed);
 
         if(options.livePerformance)
         {
@@ -882,9 +882,10 @@ _AP.controls = (function(document, window)
         }
         else
         {
-            player = _AP.scorePlayer;
+            player = sequence; // the playing functions are in sequence.prototype.  
         }
 
+        // The first argument has no effect if the sequence is playing itself.
         player.init(sequence.tracks, options, reportEndOfPerformance, reportMsPos);
     },
 
@@ -912,7 +913,7 @@ _AP.controls = (function(document, window)
             function getScoreRuntimeInfo()
             {
                 var rScoreInfo,
-                    runtimeInfoString, trackInitString, performersOptionsString, pPerformerOptionsString;
+                    runtimeInfoString, trackInitString, performersOptionsString;
 
                 function getRuntimeInfoString(scoreName)
                 {
@@ -1408,7 +1409,7 @@ _AP.controls = (function(document, window)
         showOverRect: showOverRect,
         hideOverRect: hideOverRect,
 
-        beginRuntime: beginRuntime,
+        beginRuntime: beginRuntime
     };
     // end var
 
