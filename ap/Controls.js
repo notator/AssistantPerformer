@@ -546,7 +546,14 @@ _AP.controls = (function(document, window)
 
                 for(trackIndex = 0; trackIndex < rNTracks; ++trackIndex)
                 {
-                    value = (tiv.volumes.length > 0) ? tiv.volumes[trackIndex] : 100; // default 100
+                    if(options.performersOptions === undefined)
+                    {
+                        value = (tiv.volumes.length > 0) ? tiv.volumes[trackIndex] : 100; // default 100
+                    }
+                    else
+                    {
+                        value = options.performersOptions.masterVolume[trackIndex];
+                    }
                     sendControlMessageNow(options.outputDevice, trackIndex, CONTROL.VOLUME, value);
 
                     value = (tiv.pwDeviations.length > 0) ? tiv.pwDeviations[trackIndex] : 2; // default 2

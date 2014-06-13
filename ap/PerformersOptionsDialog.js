@@ -911,10 +911,15 @@ _AP.performersOptionsDialog = (function()
     //      pitchWheelTracks -- undefined or array of bool, length nTracks
     //      modWheelSubstituteControlData -- undefined or a controlData object (see below)
     //      modWheelTracks -- undefined or array of bool, length nTracks
-    //      minVolume -- undefined (if volume is not being contrlled) or int in range 0..127
     //      masterVolumes -- array of int, range 0..127, length nTracks
+    //      minVolume -- int in range 0..127 (0 by default if volume is not being controlled)
+    //      volumeScale -- (performersTrackMasterVolume - options.minVolume) / 127 (see below)
     //      speedControllerName -- undefined, or one of the effective poSpeedControllerSelect option strings (see below)
     //      speedMaxFactor -- undefined (if speed is not being controlled) or a float greater or equal to 1. (not a percent)
+    //
+    // If the volume is being controlled live, the performer's volume is set as follows:     
+    //      performersRealVolume = ((receivedValue * volumeScale) + options.minVolume),
+    // and the other tracks' volumes are set to otherTrackMasterVolume * (performersRealVolume / performersTrackMasterVolume).
     //
     // A controlData object is set from the dialog's current controlOptions settings.
     // It has one of the following attributes:
@@ -1015,12 +1020,18 @@ _AP.performersOptionsDialog = (function()
                 options.modWheelTracks = boolArrayFromCheckBoxes(nTracks, controls.modWheelCheckBoxes);
             }
 
+            options.masterVolumes = intArrayFromNumberInputs(nTracks, controls.masterVolumeInputs);
+
             if(controls.minimumVolumeRowDiv.style.display === "table") // controls.minVolumeInput is visible
             {
                 options.minVolume = parseInt(controls.minVolumeInput.value, 10);
             }
+            else
+            {
+                options.minVolume = 0;
+            }
 
-            options.masterVolumes = intArrayFromNumberInputs(nTracks, controls.masterVolumeInputs);
+            options.volumeScale = (options.masterVolumes[options.trackIndex] - options.minVolume) / 127;
 
             if(controls.speedControllerSelect.selectedIndex > 0)
             {
