@@ -716,49 +716,6 @@ _AP.sequence = (function (window)
             speedFactor = factor;
         },
 
-        sendCommandMessageNow = function(outputDevice, trackIndex, command, midiValue)
-        {
-            var
-            msg;
-
-            msg = new _AP.message.Message(command + trackIndex, 0, midiValue); // controller 7 is volume control
-            outputDevice.send(msg.data, 0);
-        },
-
-        sendControlMessageNow = function(outputDevice, trackIndex, controller, midiValue)
-        {
-            var
-            msg,
-            CMD = _AP.constants.COMMAND;
-
-            msg = new _AP.message.Message(CMD.CONTROL_CHANGE + trackIndex, controller, midiValue); // controller 7 is volume control
-            outputDevice.send(msg.data, 0);
-        },
-
-        // Sets the track's pitchWheel deviation to value, and the pitchWheel to 64 (=centre position).
-        // Sets both RegisteredParameter controls to 0 (zero). This is standard MIDI for selecting the
-        // pitch wheel so that it can be set by the subsequent DataEntry messages.
-        // A DataEntryFine message is not set, because it is not needed and has no effect anyway.
-        // However, RegisteredParameterFine MUST be set, otherwise the messages as a whole have no effect!
-        sendSetPitchWheelDeviationMessageNow = function(outputDevice, track, value)
-        {
-            var
-            msg,
-            Message = _AP.message.Message,
-            CMD = _AP.constants.COMMAND,
-            CTL = _AP.constants.CONTROL;
-
-            msg = new Message(CMD.CONTROL_CHANGE + track, CTL.REGISTERED_PARAMETER_COARSE, 0);
-            outputDevice.send(msg.data, 0);
-            msg = new Message(CMD.CONTROL_CHANGE + track, CTL.REGISTERED_PARAMETER_FINE, 0);
-            outputDevice.send(msg.data, 0);
-            msg = new Message(CMD.CONTROL_CHANGE + track, CTL.DATA_ENTRY_COARSE, value);
-            outputDevice.send(msg.data, 0);
-
-            msg = new Message(CMD.PITCH_WHEEL + track, 0, 64); // centre the pitch wheel
-            outputDevice.send(msg.data, 0);
-        },
-
         publicPrototypeAPI =
         {
             init: init,
@@ -773,10 +730,6 @@ _AP.sequence = (function (window)
 
             finishSilently: finishSilently,
             setSpeedFactor: setSpeedFactor,
-
-            sendCommandMessageNow: sendCommandMessageNow,
-            sendControlMessageNow: sendControlMessageNow,
-            sendSetPitchWheelDeviationMessageNow: sendSetPitchWheelDeviationMessageNow
         };
         // end var
 

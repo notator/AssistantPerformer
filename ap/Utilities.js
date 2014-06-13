@@ -150,7 +150,6 @@ _AP.utilities = (function()
         return rIntArray;
     },
 
-
     publicAPI =
     {
         checkFloatRange: checkFloatRange,
