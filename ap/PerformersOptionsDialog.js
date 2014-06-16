@@ -913,13 +913,14 @@ _AP.performersOptionsDialog = (function()
     //      modWheelTracks -- undefined or array of bool, length nTracks
     //      masterVolumes -- array of int, range 0..127, length nTracks
     //      minVolume -- int in range 0..127 (0 by default if volume is not being controlled)
-    //      volumeScale -- (performersTrackMasterVolume - options.minVolume) / 127 (see below)
+    //      volumeScale -- (127 - options.minVolume) / 127 (see below)
     //      speedControllerName -- undefined, or one of the effective poSpeedControllerSelect option strings (see below)
-    //      speedMaxFactor -- undefined (if speed is not being controlled) or a float greater or equal to 1. (not a percent)
+    //      slowerSpeedRoot -- defined if speedControllerName is defined (see below)
+    //      fasterSpeedRoot -- defined if speedControllerName is defined (see below)
     //
-    // If the volume is being controlled live, the performer's volume is set as follows:     
-    //      performersRealVolume = ((receivedValue * volumeScale) + options.minVolume),
-    // and the other tracks' volumes are set to otherTrackMasterVolume * (performersRealVolume / performersTrackMasterVolume).
+    // If the volume is being controlled live, track volumes will be set as follows: 
+    //      abstractVolume = options.minVolume + (receivedVolumeValue * volumeScale);
+    //      trackVolume =  (trackMasterVolume / 127 ) * abstractVolume).
     //
     // A controlData object is set from the dialog's current controlOptions settings.
     // It has one of the following attributes:
@@ -933,7 +934,14 @@ _AP.performersOptionsDialog = (function()
     //      "pressure"
     //      "pitch wheel"
     //      "modulation wheel"
-    // If the speedController is undefined, then so is the corresponding speedMaxFactor.
+    // If the speedController is undefined, then so are slowerSpeedRoot and fasterSpeedRoot.
+    // The roots are calculated as follows:
+    // If the controller's value (cv, in range 0..127) is >= 64, the factor which is passed to tick() will be
+    //     factor = fasterSpeedRoot ^ (cv - 64) -- if cv = 64, factor is 1, if cv is 127, factor is maximumSpeedFactor
+    // If the controller's value is < 64, the factor which is passed to tick() will be
+    //     factor = slowerSpeedRoot ^ (64 - cv) -- if cv = 0, factor will is 1/maximumFactor
+    // fasterSpeedRoot is therefore the 63rd root of maximumSpeedFactor, and
+    // slowerSpeedRoot is the 63rd root of 1/maximumSpeedFactor.
     getPerformersOptions = function()
     {
         var
@@ -976,7 +984,10 @@ _AP.performersOptionsDialog = (function()
         // Passes the options to the monoInputHandler.
         function getOptionsfromDialog(nTracks)
         {
-            var handlers = [_AP.mono1, _AP.keyboard1], options = {};
+            var
+            speedMaxFactor,
+            handlers = [_AP.mono1, _AP.keyboard1],
+            options = {};
 
             function boolArrayFromCheckBoxes(nTracks, checkBoxes)
             {
@@ -1031,12 +1042,14 @@ _AP.performersOptionsDialog = (function()
                 options.minVolume = 0;
             }
 
-            options.volumeScale = (options.masterVolumes[options.trackIndex] - options.minVolume) / 127;
+            options.volumeScale = (127 - options.minVolume) / 127;
 
             if(controls.speedControllerSelect.selectedIndex > 0)
             {
                 options.speedControllerName = controls.speedControllerSelect.options[controls.speedControllerSelect.selectedIndex].text;
-                options.speedMaxFactor = parseFloat(controls.maxSpeedInput.value) / 100;
+                speedMaxFactor = parseFloat(controls.maxSpeedInput.value) / 100;
+                options.fasterSpeedRoot = Math.pow(speedMaxFactor, 1 / 63);
+                options.slowerSpeedRoot = Math.pow(1 / speedMaxFactor, 1 / 63);
             }
             
             return options;

@@ -55,7 +55,7 @@ _AP.moment = (function ()
             return new Moment(msPositionInChord);
         }
 
-        if(msPositionInChord === undefined || msPositionInChord < 0)
+        if(msPositionInChord === undefined || msPositionInChord < UNDEFINED_TIMESTAMP)
         {
             throw "Error: Moment.msPositionInChord must be defined.";
         }
@@ -73,6 +73,7 @@ _AP.moment = (function ()
 
     publicAPI =
     {
+        UNDEFINED_TIMESTAMP: UNDEFINED_TIMESTAMP,
         // creates an empty Moment
         Moment: Moment
     };

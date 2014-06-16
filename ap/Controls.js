@@ -552,7 +552,7 @@ _AP.controls = (function(document, window)
                     }
                     else
                     {
-                        value = options.performersOptions.masterVolume[trackIndex];
+                        value = options.performersOptions.masterVolumes[trackIndex];
                     }
                     sendControlMessageNow(options.outputDevice, trackIndex, CONTROL.VOLUME, value);
 

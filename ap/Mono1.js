@@ -36,7 +36,6 @@ _AP.mono1 = (function ()
     Moment = _AP.moment.Moment,
     Sequence = _AP.sequence.Sequence,
  
-    outputDevice,
     trackIsOnArray,
 
     currentLivePerformersKeyPitch = -1, // -1 means "no key depressed". This value is set when the live performer sends a noteOff
@@ -84,6 +83,27 @@ _AP.mono1 = (function ()
         }
     },
 
+    // Each performedSequence calls this function (with two arguments) when
+    // it stops:
+    //      reportEndOfSequence(recordingSequence, performanceMsDuration);
+    // but those arguments are ignored here. The recording continues until
+    // the end of the performance, and performanceMsDuration is the duration
+    // set by the beginning of the following performedSequence.
+    // These values are passed back to the calling environment, when the
+    // assistant stops, using the callback:
+    //      reportEndOfPerformance(recordingSequence, performanceMsDuration);
+    reportEndOfSequence = function()
+    {
+        if(endOfPerformance)
+        {
+            stop();
+        }
+        else
+        {
+            reportMsPosition(performedSequences[nextIndex].msPositionInScore);
+        }
+    },
+
     // If performersOptions.livePerformance === true, this is where input
     // MIDIEvents arrive, and where processing is going to be done.
     // The Assistant
@@ -91,7 +111,7 @@ _AP.mono1 = (function ()
     // b) assumes that RealTime messages will not interrupt the messages being received.    
     handleMIDIInputEvent = function (msg)
     {
-        var inputEvent, command, inputPressure,
+        var inputEvent, command,
             pOpts = performersOptions;
 
         // The returned object is either empty, or has .data and .receivedTime attributes,
@@ -149,14 +169,14 @@ _AP.mono1 = (function ()
             return inputEvent;
         }
 
-        function setSpeedFactor(receivedCommandIndexInHTMLMenu, controllerValue)
+        function setSpeedFactor(sequenceIndex, controllerValue, slowerRoot, fasterRoot)
         {
             var speedFactor;
             // If the controller's value (cv, in range 0..127) is >= 64, the factor which is passed to tick() will be
             //     factor = fasterRoot ^ (cv - 64) -- if cv = 64, factor is 1, if cv is 127, factor is maximumFactor
             // If the controller's value is < 64, the factor which is passed to tick() will be
-            //     factor = slowerRoot ^ (64 - cv) -- if cv = 0, factor will is 1/maximumFactor
-            function getSpeedFactor(fasterRoot, slowerRoot, controllerValue)
+            //     factor = slowerRoot ^ (64 - cv) -- if cv = 0, factor will be 1/maximumFactor
+            function getSpeedFactor(controllerValue, slowerRoot, fasterRoot)
             {
                 var factor;
                 if(controllerValue < 64) // 0..63
@@ -168,18 +188,12 @@ _AP.mono1 = (function ()
                     factor = Math.pow(fasterRoot, (controllerValue - 64));
                 }
 
-                console.log("assistant: factor=" + factor.toString(10));
-
                 return factor;
             }
 
-            if(performersSpeedOptions !== undefined && currentIndex >= 0
-                && performersSpeedOptions.controllerIndex !== undefined && performersSpeedOptions.controllerIndex === receivedCommandIndexInHTMLMenu
-                && performersSpeedOptions.fasterRoot !== undefined && performersSpeedOptions.slowerRoot !== undefined)
-            {
-                speedFactor = getSpeedFactor(performersSpeedOptions.fasterRoot, performersSpeedOptions.slowerRoot, controllerValue);
-                performedSequences[currentIndex].setSpeedFactor(speedFactor);
-            }
+            speedFactor = getSpeedFactor(controllerValue, slowerRoot, fasterRoot);
+            console.log("mono1: speedFactor=" + speedFactor.toString(10));
+            performedSequences[sequenceIndex].setSpeedFactor(speedFactor);
         }
 
         function handleController(pOpts, controlData, value, usesTracks)
@@ -253,34 +267,22 @@ _AP.mono1 = (function ()
             function getTrackVolumeMoments(pOpts, nTracks, controlData, value, controllerUsesTracks)
             {
                 var
-                i, trackMoments = [], trackMoment, performersRealVolume, othersVolumeScale;
+                i, trackMoments = [], trackMoment, abstractVolume, trackVolume;
 
                 if(controlData.midiControl !== _AP.constants.CONTROL.VOLUME)
                 {
                     throw "Error: this function only handles volume.";
                 }
 
-                performersRealVolume = ((value * pOpts.volumeScale) + pOpts.minVolume);
-                othersVolumeScale = performersRealVolume / pOpts.masterVolumes[pOpts.trackIndex]; 
-
-                if(othersVolumeScale < 0 || othersVolumeScale > 1)
-                {
-                    throw "Error: volume scale must be in range 0..1.";
-                }
+                abstractVolume = pOpts.minVolume + (value * pOpts.volumeScale);
 
                 for(i = 0; i < nTracks; ++i)
                 {
                     if(trackIsOnArray[i] && controllerUsesTracks[i])
                     {
-                        if(i === pOpts.trackIndex)
-                        {
-                            value = performersRealVolume;
-                        }
-                        else
-                        {
-                            value = pOpts.masterVolumes[i] * othersVolumeScale;
-                        }
-                        trackMoment = newTrackMoment(controlData, i, value);
+                        trackVolume = (pOpts.masterVolumes[i] / 127) * abstractVolume;
+
+                        trackMoment = newTrackMoment(controlData, i, trackVolume);
                         if(trackMoment !== null)
                         {
                             trackMoments.push(trackMoment);
@@ -290,7 +292,6 @@ _AP.mono1 = (function ()
 
                 return trackMoments;
             }
-
 
             // Returns a new array of (synchronous) trackMoments.
             // Each trackMoment.moment is a Moment whose .messages attribute contains one message,
@@ -330,7 +331,7 @@ _AP.mono1 = (function ()
             }
             for (i = 0; i < nMoments; ++i)
             {
-                track = recordingSequence.tracks[trackMoments[i].trackIndex];
+                track = recordingSequence.trackRecordings[trackMoments[i].trackIndex];
 
                 if(track.isInChord !== undefined) // track.isInChord is defined in TrackRecording.addLiveScoreMoment()
                 {
@@ -338,7 +339,7 @@ _AP.mono1 = (function ()
                     moment.timestamp = now;
                     track.addLivePerformersControlMoment(moment);
 
-                    outputDevice.send(moment.messages[0].data, now);
+                    pOpts.outputDevice.send(moment.messages[0].data, now);
                 }
             }
         }
@@ -353,32 +354,11 @@ _AP.mono1 = (function ()
             }
         }
 
-        // Each performedSequence calls this function (with two arguments) when
-        // it stops:
-        //      reportEndOfSequence(recordingSequence, performanceMsDuration);
-        // but those arguments are ignored here. The recording continues until
-        // the end of the performance, and performanceMsDuration is the duration
-        // set by the beginning of the following performedSequence.
-        // These values are passed back to the calling environment, when the
-        // assistant stops, using the callback:
-        //      reportEndOfPerformance(recordingSequence, performanceMsDuration);
-        function reportEndOfSequence()
-        {
-            if(endOfPerformance)
-            {
-                stop();
-            }
-            else
-            {
-                reportMsPosition(performedSequences[nextIndex].msPositionInScore);
-            }
-        }
-
         function playSequence(sequence)
         {
             // The durations will be related to the moment.msPositionReSubsequence attributes (which have been
-            // set relative to the start of each subsequence), and to speedFactorObject argument.
-            sequence.play(outputDevice, 0, Number.MAX_VALUE, trackIsOnArray, recordingSequence, reportEndOfSequence, reportMsPosition);
+            // set relative to the start of each subsequence), and to the speedFactor which has been set.
+            sequence.play(0, Number.MAX_VALUE, trackIsOnArray, recordingSequence);
         }
 
         function handleNoteOff(inputEvent)
@@ -408,228 +388,10 @@ _AP.mono1 = (function ()
             }
         }
 
-        //function handleNoteOn(inputEvent, overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity)
-        function handleNoteOn(pOpts, inputEvent)
+        function handleNoteOn(inputEvent)
         {
             var
             allSubsequences = performedSequences;
-
-            // Shifts the pitches in the subsequence up or down so that the lowest pitch in the
-            // first noteOn moment is newPitch. Similarly with velocity.
-            function overridePitchAndOrVelocity (allSubsequences, currentSubsequenceIndex, soloTrackIndex, newPitch, newVelocity,
-                overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity)
-            {
-                var
-                subsequence = allSubsequences[currentSubsequenceIndex],
-                NOTE_ON_CMD = _AP.constants.COMMAND.NOTE_ON,
-                NOTE_OFF_CMD = _AP.constants.COMMAND.NOTE_OFF,
-                track = subsequence.tracks[soloTrackIndex], message, lowestNoteOnEvt, pitchDelta, velocityDelta,
-                hangingScorePitchesPerTrack;
-
-                // Returns the lowest NoteOn message in the first moment in the track to contain a NoteOnMessage.
-                // Returns null if there is no such message.
-                function findLowestNoteOnEvt(NOTE_ON_CMD, track)
-                {
-                    var i, j, message, moment, nEvents, nMoments = track.moments.length, lowestNoteOnMessage = null;
-
-                    for (i = 0; i < nMoments; ++i)
-                    {
-                        moment = track.moments[i];
-                        nEvents = moment.messages.length;
-                        for (j = 0; j < nEvents; ++j)
-                        {
-                            message = moment.messages[j];
-                            if ((message.command() === NOTE_ON_CMD)
-                            && (lowestNoteOnMessage === null || message.data[1] < lowestNoteOnMessage.data[1]))
-                            {
-                                lowestNoteOnMessage = message;
-                            }
-                        }
-                        if (lowestNoteOnMessage !== null)
-                        {
-                            break;
-                        }
-                    }
-                    return lowestNoteOnMessage;
-                }
-
-                function midiValue(value)
-                {
-                    var result = (value >= 0) ? value : 0;
-                    result = (value <= 127) ? value : 127;
-                    return result;
-                }
-
-                // Adjusts the noteOn and noteOff messages inside this subsequence
-                // Either returns an array of arrays, or null.
-                // The returned array[track] is an array containing the score pitches which have not been turned off in each track.
-                // null is returned if all the pitches which are turned on inside the subsequence are also turned off inside the subsequence.
-                function adjustTracks(NOTE_ON_CMD, NOTE_OFF_CMD, soloTrackIndex, pitchDelta, velocityDelta,
-                    overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity)
-                {
-                    var nTracks = subsequence.tracks.length, i, j, k, nMoments, moment, nEvents, index, nPitches,
-                        pendingScorePitchesPerTrack = [], returnPendingScorePitchesPerTrack = [], pendingPitches = false;
-
-                    for (i = 0; i < nTracks; ++i)
-                    {
-                        pendingScorePitchesPerTrack.push([]);
-
-                        if ((i === soloTrackIndex && (overrideSoloPitch || overrideSoloVelocity))
-                        || (i !== soloTrackIndex && (overrideOtherTracksPitch || overrideOtherTracksVelocity)))
-                        {
-                            track = subsequence.tracks[i];
-                            nMoments = track.moments.length;
-
-                            for (j = 0; j < nMoments; ++j)
-                            {
-                                moment = track.moments[j];
-                                nEvents = moment.messages.length;
-                                for (k = 0; k < nEvents; ++k)
-                                {
-                                    message = moment.messages[k];
-                                    if (message.command() === NOTE_ON_CMD)
-                                    {
-                                        index = pendingScorePitchesPerTrack[i].indexOf(message.data[1]);
-                                        if(index === -1)
-                                        {
-                                            pendingScorePitchesPerTrack[i].push(message.data[1]);
-                                        }
-                                        
-                                        message.data[1] = midiValue(message.data[1] + pitchDelta);
-                                        message.data[2] = midiValue(message.data[2] + velocityDelta);
-                                    }
-                                    if(message.command() === NOTE_OFF_CMD)
-                                    {
-                                        index = pendingScorePitchesPerTrack[i].indexOf(message.data[1]);
-                                        if(index !== -1) // ignore noteOffs which are not related to noteOns in this subsequence.
-                                        {
-                                            delete pendingScorePitchesPerTrack[i][index];
-                                            message.data[1] = midiValue(message.data[1] + pitchDelta);
-                                        }                                
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    for(i = 0; i < nTracks; ++i)
-                    {
-                        returnPendingScorePitchesPerTrack.push([]);
-                        nPitches = pendingScorePitchesPerTrack[i].length; 
-                        for(j = 0; j < nPitches; j++)
-                        {
-                            if(pendingScorePitchesPerTrack[i][j] !== undefined)
-                            {
-                                pendingPitches = true;
-                                returnPendingScorePitchesPerTrack[i].push(pendingScorePitchesPerTrack[i][j]);
-                            }
-                        }
-                    }
-                    if(pendingPitches === false) {
-                        returnPendingScorePitchesPerTrack = null;
-                    }
-
-                    return returnPendingScorePitchesPerTrack;
-                }
-
-                // In each following subsequence and track, looks for the first noteOff corresponding to a hanging note, and adds pitchDelta to its pitch.
-                function adjustSubsequentNoteOffs(NOTE_OFF_CMD, allSubsequences, currentSubsequenceIndex, pitchDelta, hangingScorePitchesPerTrack)
-                {
-                    var trackIndex, nTracks = hangingScorePitchesPerTrack.length, hangingPitches,
-                        i, nHangingPitches, hangingPitch, nextNoteOffMessage;
-
-                    // returns the first noteOff message corresponding to the hanging Pitch in any of the following subsequences.
-                    function findNextNoteOffMessage(NOTE_OFF_CMD, allSubsequences, currentSubsequenceIndex, trackIndex, hangingPitch)
-                    {
-                        var
-                        nextSubsequenceIndex = currentSubsequenceIndex + 1,
-                        i, nSubsequences = allSubsequences.length, track,
-                        j, nMoments, moment,
-                        k, nMessages, message, returnMessage = null;
-                        
-                        for(i = nextSubsequenceIndex; i < nSubsequences; ++i)
-                        {
-                            track = allSubsequences[i].tracks[trackIndex];
-                            nMoments = track.moments.length;
-                            for(j = 0; j < nMoments; ++j)
-                            {
-                                moment = track.moments[j];
-                                nMessages = moment.messages.length;
-                                for(k = 0; k < nMessages; ++k)
-                                {
-                                    message = moment.messages[k];
-                                    if(message.data[1] === hangingPitch)
-                                    {
-                                        if(message.command() === NOTE_OFF_CMD)
-                                        {
-                                            returnMessage = message;
-                                            break;
-                                        }
-                                    }
-                                }
-                                if(returnMessage !== null)
-                                {
-                                    break;
-                                }
-                            }
-                            if(returnMessage !== null)
-                            {
-                                break;
-                            }
-                        }
-                        return returnMessage;
-                    }
-
-                    for(trackIndex = 0; trackIndex < nTracks; trackIndex++)
-                    {
-                        hangingPitches = hangingScorePitchesPerTrack[trackIndex];
-                        nHangingPitches = hangingPitches.length;
-                        for(i = 0; i < nHangingPitches; i++)
-                        {
-                            hangingPitch = hangingPitches[i];
-                            nextNoteOffMessage = findNextNoteOffMessage(NOTE_OFF_CMD, allSubsequences, currentSubsequenceIndex, trackIndex, hangingPitch);
-                            if(nextNoteOffMessage !== null)
-                            {
-                                nextNoteOffMessage.data[1] = hangingPitch + pitchDelta;
-                            }
-                        }
-                    }
-
-                }
-
-                lowestNoteOnEvt = findLowestNoteOnEvt(NOTE_ON_CMD, track);
-                if (lowestNoteOnEvt !== null)
-                {
-                    pitchDelta = (overrideSoloPitch || overrideOtherTracksPitch) ? (newPitch - lowestNoteOnEvt.data[1]) : 0;
-                    velocityDelta = (overrideSoloVelocity || overrideOtherTracksVelocity) ? (newVelocity - lowestNoteOnEvt.data[2]) : 0;
-
-                    if (pitchDelta !== 0 || velocityDelta !== 0)
-                    {
-                        hangingScorePitchesPerTrack =
-                            adjustTracks(NOTE_ON_CMD, NOTE_OFF_CMD, soloTrackIndex, pitchDelta, velocityDelta,
-                            overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity);
-
-                        if(hangingScorePitchesPerTrack !== null)
-                        {
-                            adjustSubsequentNoteOffs(NOTE_OFF_CMD, allSubsequences, currentSubsequenceIndex, pitchDelta, hangingScorePitchesPerTrack);
-                        }
-                    }
-                }
-            }
-
-            function setSpeed(inputEventData)
-            {
-                if(performersSpeedOptions.controllerIndex === 1)
-                {
-                    setSpeedFactor(1, inputEventData[1]);
-                }
-                else if(performersSpeedOptions.controllerIndex === 2)
-                {
-                    setSpeedFactor(2, inputEventData[2]);
-                }
-            }
-
-            //console.log("NoteOn, pitch:", inputEvent.data[1].toString(), " velocity:", inputEvent.data[2].toString());
 
             sequenceStartNow = inputEvent.receivedTime;
 
@@ -654,15 +416,6 @@ _AP.mono1 = (function ()
                 {
                     currentIndex = nextIndex++;
                     endOfPerformance = (currentIndex === endIndex);
-                    
-                    if (overrideSoloPitch || overrideOtherTracksPitch || overrideSoloVelocity || overrideOtherTracksVelocity)
-                    {
-                        overridePitchAndOrVelocity(allSubsequences, currentIndex, performersOptions.trackIndex,
-                            inputEvent.data[1], inputEvent.data[2],
-                            overrideSoloPitch, overrideOtherTracksPitch, overrideSoloVelocity, overrideOtherTracksVelocity);
-                    }
-
-                    setSpeed(inputEvent.data);
 
                     playSequence(allSubsequences[currentIndex]);
                 }
@@ -682,33 +435,41 @@ _AP.mono1 = (function ()
             switch(command)
             {
                 case CMD.CHANNEL_PRESSURE: // produced by both R2M and E-MU XBoard49 when using "aftertouch"
-                    inputPressure = (inputEvent.data[1] > performersOptions.minimumInputPressure) ? inputEvent.data[1] : performersOptions.minimumInputPressure;
-                    setSpeedFactor(3, inputEvent.data[1]);
-                    //console.log("ChannelPressure, data[1]:", inputEvent.data[1].toString());  // CHANNEL_PRESSURE control has no data[2]
-                    if(pOpts.pressureSubstituteControlData !== null)
+                    if(pOpts.speedControllerName === "pressure")
+                    {
+                        setSpeedFactor(currentIndex, inputEvent.data[1], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
+                    }
+                    console.log("ChannelPressure, data[1]:", inputEvent.data[1].toString());  // CHANNEL_PRESSURE control has no data[2]
+                    if(pOpts.pressureSubstituteControlData !== undefined)
                     {
                         // CHANNEL_PRESSURE.data[1] is the amount of pressure 0..127.
-                        handleController(pOpts, pOpts.pressureSubstituteControlData, inputPressure, pOpts.pressureTracks);
+                        handleController(pOpts, pOpts.pressureSubstituteControlData, inputEvent.data[1], pOpts.pressureTracks);
                     }
                     break;
                 case CMD.AFTERTOUCH: // produced by the EWI breath controller
-                    inputPressure = (inputEvent.data[2] > performersOptions.minimumInputPressure) ? inputEvent.data[2] : performersOptions.minimumInputPressure;
-                    setSpeedFactor(3, inputEvent.data[2]);
-                    //console.log("Aftertouch input, key:" + inputEvent.data[1].toString() + " value:", inputEvent.data[2].toString()); 
-                    if (pOpts.pressureSubstituteControlData !== null)
+                    if(pOpts.speedControllerName === "pressure")
+                    {
+                        setSpeedFactor(currentIndex, inputEvent.data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
+                    }
+                    console.log("Aftertouch input, key:" + inputEvent.data[1].toString() + " value:", inputEvent.data[2].toString()); 
+                    if (pOpts.pressureSubstituteControlData !== undefined)
                     {
                         // AFTERTOUCH.data[1] is the MIDIpitch to which to apply the aftertouch, but I dont need that
                         // because the current pitch is kept in currentLivePerformersKeyPitch (in the closure).
                         // AFTERTOUCH.data[2] is the amount of pressure 0..127.
-                        handleController(pOpts, pOpts.pressureSubstituteControlData, inputPressure, pOpts.pressureTracks);
+                        handleController(pOpts, pOpts.pressureSubstituteControlData, inputEvent.data[2], pOpts.pressureTracks);
                     }
                     break;
                 case CMD.CONTROL_CHANGE: // sent when the input device's mod wheel changes.
                     if(inputEvent.data[1] === _AP.constants.CONTROL.MODWHEEL)
                     {
-                        setSpeedFactor(5, inputEvent.data[2]);
+                        console.log("Modulation Wheel, data[1]:", inputEvent.data[1].toString() + " data[2]:", inputEvent.data[2].toString());
+                        if(pOpts.speedControllerName === "modulation wheel")
+                        {
+                            setSpeedFactor(currentIndex, inputEvent.data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
+                        }
                         // (EWI bite, EMU modulation wheel (CC 1, Coarse Modulation))
-                        if(pOpts.modWheelSubstituteControlData !== null)
+                        if(pOpts.modWheelSubstituteControlData !== undefined)
                         {
                             // inputEvent.data[2] is the value to which to set the changed control
                             handleController(pOpts, pOpts.modWheelSubstituteControlData, inputEvent.data[2], pOpts.modWheelTracks);
@@ -716,10 +477,13 @@ _AP.mono1 = (function ()
                     }
                     break;
                 case CMD.PITCH_WHEEL: // EWI pitch bend up/down controllers, EMU pitch wheel
-                    setSpeedFactor(4, inputEvent.data[2]);
-                    //console.log("Pitch Wheel, data[1]:", inputEvent.data[1].toString() + " data[2]:", inputEvent.data[2].toString());
+                    if(pOpts.speedControllerName === "pitch wheel")
+                    {
+                        setSpeedFactor(currentIndex, inputEvent.data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
+                    }
+                    console.log("Pitch Wheel, data[1]:", inputEvent.data[1].toString() + " data[2]:", inputEvent.data[2].toString());
                     // by experiment: inputEvent.data[2] is the "high byte" and has a range 0..127. 
-                    if(pOpts.pitchWheelSubstituteControlData !== null)
+                    if(pOpts.pitchWheelSubstituteControlData !== undefined)
                     {
                         // PITCH_WHEEL.data[1] is the 7-bit LSB (0..127) -- ignored here
                         // PITCH_WHEEL.data[2] is the 7-bit MSB (0..127)
@@ -727,10 +491,21 @@ _AP.mono1 = (function ()
                     }
                     break;
                 case CMD.NOTE_ON:
+                    console.log("NoteOn, pitch:", inputEvent.data[1].toString(), " velocity:", inputEvent.data[2].toString());
                     if(inputEvent.data[2] !== 0)
                     {
-                        // setSpeedFactor is called inside handleNoteOn(...) because currentIndex needs to be >= 0.
-                        handleNoteOn(pOpts, inputEvent);
+                        if(nextIndex < performedSequences.length)
+                        {
+                            if(pOpts.speedControllerName === "noteOn: pitch")
+                            {
+                                setSpeedFactor(nextIndex, inputEvent.data[1], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
+                            }
+                            else if(pOpts.speedControllerName === "noteOn: velocity")
+                            {
+                                setSpeedFactor(nextIndex, inputEvent.data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
+                            }
+                        }
+                        handleNoteOn(inputEvent);
                     }
                     else
                     {
@@ -738,6 +513,7 @@ _AP.mono1 = (function ()
                     }
                     break;
                 case CMD.NOTE_OFF:
+                    console.log("NoteOff, pitch:", inputEvent.data[1].toString(), " velocity:", inputEvent.data[2].toString());
                     handleNoteOff(inputEvent);
                     break;
                 default:
@@ -837,13 +613,13 @@ _AP.mono1 = (function ()
     //      modWheelTracks -- undefined or array of bool, length nTracks
     //      masterVolumes -- array of int, range 0..127, length nTracks
     //      minVolume -- int in range 0..127 (0 by default if volume is not being controlled)
-    //      volumeScale -- (performersTrackMasterVolume - options.minVolume) / 127 (see below)
+    //      volumeScale -- (127 - options.minVolume) / 127 (see below)
     //      speedControllerName -- undefined, or one of the effective poSpeedControllerSelect option strings (see below)
     //      speedMaxFactor -- undefined (if speed is not being controlled) or a float greater or equal to 1. (not a percent)
     //
-    // If the volume is being controlled live, the performer's volume is set as follows:     
-    //      performersRealVolume = ((receivedValue * volumeScale) + options.minVolume),
-    // and the other tracks' volumes are set to otherTrackMasterVolume * (performersRealVolume / performersTrackMasterVolume).
+    // If the volume is being controlled live, track volumes will be set as follows: 
+    //      abstractVolume = options.minVolume + (receivedVolumeValue * volumeScale);
+    //      trackVolume =  (trackMasterVolume / 127 ) * abstractVolume).
     //
     // A controlData object is set from the dialog's current controlOptions settings.
     // It has one of the following attributes:
@@ -857,7 +633,14 @@ _AP.mono1 = (function ()
     //      "pressure"
     //      "pitch wheel"
     //      "modulation wheel"
-    // If the speedController is undefined, then so is the corresponding speedMaxFactor.
+    // If the speedController is undefined, then so are slowerSpeedRoot and fasterSpeedRoot.
+    // The roots are calculated as follows:
+    // If the controller's value (cv, in range 0..127) is >= 64, the factor which is passed to tick() will be
+    //     factor = fasterSpeedRoot ^ (cv - 64) -- if cv = 64, factor is 1, if cv is 127, factor is maximumSpeedFactor
+    // If the controller's value is < 64, the factor which is passed to tick() will be
+    //     factor = slowerSpeedRoot ^ (64 - cv) -- if cv = 0, factor will is 1/maximumFactor
+    // fasterSpeedRoot is therefore the 63rd root of maximumSpeedFactor, and
+    // slowerSpeedRoot is the 63rd root of 1/maximumSpeedFactor.
     init = function(sequenceTracks, options, reportEndOfPerf, reportMsPos)
     {
         var i, sequences, nSequences, sequence;
@@ -1063,7 +846,7 @@ _AP.mono1 = (function ()
         for(i = 0; i < nSequences; ++i)
         {
             sequence = sequences[i];
-            sequence.init(sequence.tracks, options, stop, reportMsPos);
+            sequence.init(sequence.tracks, options, reportEndOfSequence, reportMsPos);
         }
 
         allSequences = sequences;
