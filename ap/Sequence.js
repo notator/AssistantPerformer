@@ -100,12 +100,13 @@ _AP.sequence = (function (window)
     {
         var
         midiOutputDevice,
-        tracks, // sequence.tracks
+        tracks, // scoreSequence.tracks
 
-        /******************************/
-        /* from old Sequence file     */
-        midiObjectMsPositionsInScoreIndex = 0, // the current index in the following array
-        midiObjectMsPositionsInScore = [], // a flat, ordered array of msPositions
+        allMsPositionsInScore, // all the unique msPositions of midiObjects, plus the position of the final barline in the score.
+        allMsPositionsInScoreStartIndex,
+        allMsPositionsInScoreIndex, // the current index in the above array
+        startMarkerMsPositionInScore,
+        endMarkerMsPositionInScore,
 
         speedFactor = 1.0, // nextMoment(), setSpeedFactor() in handleMIDIInputEvent()
         previousTimestamp = null, // nextMoment()
@@ -117,7 +118,6 @@ _AP.sequence = (function (window)
         stopped = true, // nextMoment(), stop(), pause(), resume(), isStopped()
         paused = false, // nextMoment(), pause(), isPaused()
 
-        maxDeviation, // for //console.log, set to 0 when performance starts
         reportEndOfPerformance, // callback. Can be null or undefined. Set in play().
         reportMsPositionInScore,  // callback. Can be null or undefined. Set in play().
         lastReportedMsPosition = -1, // set by tick() used by nextMoment()
@@ -214,14 +214,14 @@ _AP.sequence = (function (window)
             trackMomentMsPosInScore, nextMomtMsPosInScore = Number.MAX_VALUE,
             nextMomt = null,
             scoreMsPosition,
-            endMarkerPosition = midiObjectMsPositionsInScore[midiObjectMsPositionsInScore.length - 1];
+            endMarkerPosition = endMarkerMsPositionInScore;
 
-            // Sets scoreMsPosition to one of the midiObjectMsPositionsInScore.
+            // Sets scoreMsPosition to one of the allMsPositionsInScore.
             function getScoreMsPosition()
             {
                 var
-                currentIndex = midiObjectMsPositionsInScoreIndex,
-                scoreMsPosition = midiObjectMsPositionsInScore[currentIndex]; // The usual value
+                currentIndex = allMsPositionsInScoreIndex,
+                scoreMsPosition = allMsPositionsInScore[currentIndex]; // The usual value
 
                 function advanceTrackMidiObjects(tracks, scoreMsPosition)
                 {
@@ -238,17 +238,17 @@ _AP.sequence = (function (window)
                 {
                     var currentIndex, newScoreMsPosition;
 
-                    midiObjectMsPositionsInScoreIndex++;
-                    currentIndex = midiObjectMsPositionsInScoreIndex;
-                    if(currentIndex < midiObjectMsPositionsInScore.length)
+                    allMsPositionsInScoreIndex++;
+                    currentIndex = allMsPositionsInScoreIndex;
+                    if(currentIndex < allMsPositionsInScore.length)
                     {
-                        newScoreMsPosition = midiObjectMsPositionsInScore[currentIndex];
+                        newScoreMsPosition = allMsPositionsInScore[currentIndex];
                         advanceTrackMidiObjects(tracks, newScoreMsPosition);
                     }
                     return newScoreMsPosition;
                 }
 
-                if((performance.now() - startTimeAdjustedForPauses) >= (midiObjectMsPositionsInScore[currentIndex + 1] - midiObjectMsPositionsInScore[0]))
+                if((performance.now() - startTimeAdjustedForPauses) >= (allMsPositionsInScore[currentIndex + 1] - allMsPositionsInScore[allMsPositionsInScoreStartIndex]))
                 {
                     // The scoreMsPosition is moved to that of the next MidiObject.
                     scoreMsPosition = advanceScoreMsPosition();
@@ -350,13 +350,11 @@ _AP.sequence = (function (window)
         //          fromIndex // the index of the first moment in the track to play
         //          toIndex // the index of the final moment in the track (which does not play)
         //          currentIndex // = fromIndex
-        //      maxDeviation = 0; // just for //console.log
         //      reportEndOfPerformance // can be null
         //      reportMsPosition // can be null    
         tick = function()
         {
             var
-            deviation,
             PREQUEUE = 0, // needs to be set to a larger value later. See above.
             now = performance.now(),
             delay;
@@ -378,7 +376,6 @@ _AP.sequence = (function (window)
 
             if(currentMoment === null)
             {
-                ////console.log("Pause, or end of sequence.  maxDeviation is " + maxDeviation + "ms");
                 return;
             }
 
@@ -389,11 +386,6 @@ _AP.sequence = (function (window)
             // send all messages that are due between now and PREQUEUE ms later. 
             while(delay <= PREQUEUE)
             {
-                // these values are only used by //console.log (See end of file too!)
-                deviation = (now - currentMoment.timestamp);
-                maxDeviation = (deviation > maxDeviation) ? deviation : maxDeviation;
-                ////console.log("deviation: " + deviation + "ms");
-
                 if(msPositionToReport >= 0)
                 {
                     reportMsPositionInScore(msPositionToReport);
@@ -421,7 +413,6 @@ _AP.sequence = (function (window)
                 if(currentMoment === null)
                 {
                     // we're pausing, or have hit the end of the sequence.
-                    ////console.log("Pause, or end of sequence.  maxDeviation: " + maxDeviation + "ms");
                     return;
                 }
 
@@ -486,23 +477,90 @@ _AP.sequence = (function (window)
             }
         },
 
-        init = function(sequenceTracks, options, reportEndOfPerf, reportMsPos)
+        // The reportEndOfPerfCallback argument is a callback function which is called when performing sequence
+        // reaches the endMarkerMsPosition (see play(), or when sequence.stop() is called. Can be undefined or null.
+        // It is called in this file as:
+        //      reportEndOfPerformance(sequenceRecording, performanceMsDuration);
+        // The arguments are a Sequence containing a recording of the (timestamped) messages
+        // which have been sent, and the total duration of the performance (in milliseconds). 
+        //
+        // The reportMsPosCallback argument is a callback function which reports the current msPositionInScore back
+        // to the GUI while performing. Can be undefined or null.
+        // It is called here as:
+        //      reportMsPositionInScore(msPositionToReport);
+        // The msPosition it passes back is the original number of milliseconds from the start of
+        // the score (taking the global speed option into account). This value is used to identify
+        // chord and rest symbols in the score, and so to synchronize the running cursor.
+        // Moments whose msPositionInScore is to be reported are given chordStart or restStart
+        // attributes before play() is called.
+        init = function(scoreSequence, options, reportEndOfPerfCallback, reportMsPosCallback)
         {
+            // Returns a flat, ordered array of all the unique msPositions of midiObjects in the score,
+            // plus the position of the finalBarline.
+            function getAllMsPositionsInScore(tracks)
+            {
+                var positions = [], newPosition, trackIndices = [], i, nTracks = tracks.length, track, finalBarlineMsPosition;
+
+                function getEndMsPosition(track)
+                {
+                    var lastMidiObject = track.midiObjects[track.midiObjects.length - 1],
+                        endPos = lastMidiObject.msPositionInScore + lastMidiObject.msDurationInScore;
+
+                    return endPos;
+                }
+
+                for(i = 0; i < nTracks; ++i)
+                {
+                    tracks[i].fromIndex = 0;
+                    trackIndices.push(tracks[i].fromIndex);
+                }
+
+                finalBarlineMsPosition = getEndMsPosition(tracks[0]);
+
+                while(true)
+                {
+                    // Find the earliest position in any track, greater than positions[positions.length-1].
+                    newPosition = finalBarlineMsPosition;
+                    for(i = 0; i < nTracks; ++i)
+                    {
+                        track = tracks[i];
+                        if(trackIndices[i] < track.midiObjects.length
+                        && track.midiObjects[trackIndices[i]].msPositionInScore === positions[positions.length - 1])
+                        {
+                            trackIndices[i]++;
+                        }
+                        if(trackIndices[i] < track.midiObjects.length
+                        && track.midiObjects[trackIndices[i]].msPositionInScore < newPosition)
+                        {
+                            newPosition = track.midiObjects[trackIndices[i]].msPositionInScore;
+                        }
+                    }
+                    if(newPosition === finalBarlineMsPosition)
+                    {
+                        break;
+                    }
+                    positions.push(newPosition);
+                }
+
+                positions.push(finalBarlineMsPosition);
+
+                return positions;
+            }
+
             if(options === undefined || options.outputDevice === undefined || options.outputDevice === null)
             {
                 throw "The midi output device must be defined.";
             }
 
-            tracks = sequenceTracks;
+            tracks = scoreSequence.tracks;
             midiOutputDevice = options.outputDevice;
-            reportEndOfPerformance = reportEndOfPerf;
-            reportMsPositionInScore = reportMsPos;
+            reportEndOfPerformance = reportEndOfPerfCallback;
+            reportMsPositionInScore = reportMsPosCallback;
+
+            allMsPositionsInScore = getAllMsPositionsInScore(tracks);
         },
 
-        // play();
-        // Note that the moment at endMarkerMsPosition will NOT be played as part of the span.
-        // endMarkerMsPosition is the msPosition of the endMarker, and moments on the endMarker
-        // are never performed.
+        // play()
         //
         // trackIsOnArray[trackIndex] returns a boolean which determines whether the track will
         // be played or not. This array belongs to its creator, and is read only.
@@ -511,39 +569,22 @@ _AP.sequence = (function (window)
         // Can be undefined or null. If used, it should be an empty Sequence having the same number
         // of tracks as this (calling) sequence.
         //
-        // The reportEndOfSpanCallback argument is a callback function which is called when the
-        // performance stops -- either because the end of the span has been reached, or when the
-        // user stops the performance prematurely. Can be undefined or null.
-        // It is called here as:
-        //      reportEndOfPerformance(sequenceRecording, performanceMsDuration);
-        // The arguments are a Sequence containing a recording of the (timestamped) messages
-        // which have been sent, and the total duration of the performance (in milliseconds). 
-        //
-        // The reportMsPositionInScoreCallback argument is a callback function which reports
-        // the current msPositionInScore back to the GUI while performing. Can be undefined or null.
-        // It is called here as:
-        //      reportMsPositionInScore(msPositionToReport);
-        // The msPosition it passes back is the original number of milliseconds from the start of
-        // the score (taking the global speed option into account). This value is used to identify
-        // chord and rest symbols in the score, and so to synchronize the running cursor.
-        // Moments whose msPositionInScore is to be reported are given chordStart or restStart
-        // attributes before play() is called.
-        play = function(startMarkerMsPosition, endMarkerMsPosition, trackIsOnArray, recording)
+        play = function(startMarkerMsPosInScore, endMarkerMsPosInScore, trackIsOnArray, recording)
         {
             // Sets each track's isPerforming attribute.
             // If the track is set to perform (in the trackIsOnArray -- the trackControl settings),
             // an attempt is made to set its fromIndex, currentIndex and toIndex attributes such that
-            //     fromIndex is the index of the first midiObject at or after startMarkerMsPosition
-            //     toIndex is the index of the last midiObject before endMarkerMsPosition.
+            //     fromIndex is the index of the first midiObject at or after startMarkerMsPositionInScore
+            //     toIndex is the index of the last midiObject before endMarkerMsPositionInScore.
             //     currentIndex is set to fromIndex
             // If, however, the track contains no such moments, track.isPerforming is set to false. 
-            function setTrackAttributes(tracks, trackIsOnArray, startMarkerMsPosition, endMarkerMsPosition)
+            function setTrackAttributes(tracks, trackIsOnArray, startMarkerMsPositionInScore, endMarkerMsPositionInScore)
             {
                 var
                 i, nTracks = tracks.length, track,
                 j, trackMidiObjects, trackLength;
 
-                function getToIndex(track, endMarkerMsPosition)
+                function getToIndex(track, endMarkerMsPositionInScore)
                 {
                     var toIndex = -1,
                         trackMidiObjects = track.midiObjects,
@@ -557,10 +598,10 @@ _AP.sequence = (function (window)
                     track.toIndex = -1;
                     for(j = track.fromIndex; j < trackLength; ++j)
                     {
-                        // endMarkerMsPosition is the position of the endMarker.
+                        // endMarkerMsPositionInScore is the position of the endMarker.
                         // moments at the endMarker's msPosition should not be played.
                         // track.toIndex is the index of the last performed moment.
-                        if(trackMidiObjects[j].msPositionInScore < endMarkerMsPosition)
+                        if(trackMidiObjects[j].msPositionInScore < endMarkerMsPositionInScore)
                         {
                             toIndex = j + 1; // the last midiObject to be played is trackMidiObjects[track.toIndex - 1]
                         }
@@ -581,22 +622,17 @@ _AP.sequence = (function (window)
                     track.fromIndex = -1;
                     track.toIndex = -1;
 
-                    // trackLength can be 0, if nothing happens during
-                    // the track (maybe during a during a subsequence)
-                    if(trackLength === 0)
-                    {
-                        track.isPerforming = false;
-                    }
-                    else
-                    {
-                        track.isPerforming = trackIsOnArray[i];
-                    }
+                    track.isPerforming = trackIsOnArray[i];
 
                     if(track.isPerforming)
                     {
                         for(j = 0; j < trackLength; ++j)
                         {
-                            if(trackMidiObjects[j].msPositionInScore >= startMarkerMsPosition)
+                            if(trackMidiObjects[j].msPositionInScore >= endMarkerMsPositionInScore)
+                            {
+                                break;
+                            }
+                            if(trackMidiObjects[j].msPositionInScore >= startMarkerMsPositionInScore)
                             {
                                 track.fromIndex = j;
                                 break;
@@ -605,61 +641,18 @@ _AP.sequence = (function (window)
 
                         if(track.fromIndex >= 0)
                         {
-                            track.toIndex = getToIndex(track, endMarkerMsPosition);
+                            track.toIndex = getToIndex(track, endMarkerMsPositionInScore);
                             if(track.toIndex > track.fromIndex)
                             {
                                 track.runtimeInit(track.fromIndex, track.toIndex);
                             }
                         }
-                    }
-                }
-            }
-
-            // Returns a flat, ordered array of unique msPositions that contains
-            // all the midiObject.msPositionInScore values that are >= startMarkerMsPosition and <= endMarkerMsPosition.
-            function getMidiObjectMsPositionsInScore(tracks, startMarkerMsPosition, endMarkerMsPosition)
-            {
-                var positions = [], newPosition, trackIndices = [], i, nTracks = tracks.length, track;
-
-                for(i = 0; i < nTracks; ++i)
-                {
-                    trackIndices.push(tracks[i].fromIndex);
-                }
-
-                while(true)
-                {
-                    // Find the earliest position in any track, greater than positions[positions.length-1].
-                    newPosition = Number.MAX_VALUE;
-                    for(i = 0; i < nTracks; ++i)
-                    {
-                        track = tracks[i];
-                        if(track.isPerforming)
+                        else
                         {
-                            if(trackIndices[i] < track.midiObjects.length
-                            && track.midiObjects[trackIndices[i]].msPositionInScore === positions[positions.length - 1])
-                            {
-                                trackIndices[i]++;
-                            }
-                            if(trackIndices[i] < track.midiObjects.length
-                            && track.midiObjects[trackIndices[i]].msPositionInScore < newPosition)
-                            {
-                                newPosition = track.midiObjects[trackIndices[i]].msPositionInScore;
-                            }
+                            track.isPerforming = false;
                         }
                     }
-                    if(newPosition === Number.MAX_VALUE || newPosition >= endMarkerMsPosition)
-                    {
-                        break;
-                    }
-                    if(newPosition >= startMarkerMsPosition)
-                    {
-                        positions.push(newPosition);
-                    }
                 }
-
-                positions.push(endMarkerMsPosition);
-
-                return positions;
             }
 
             setState("stopped");
@@ -667,13 +660,13 @@ _AP.sequence = (function (window)
             sequenceRecording = recording; // can be undefined or null
 
             lastReportedMsPosition = -1;
+            startMarkerMsPositionInScore = startMarkerMsPosInScore;
+            endMarkerMsPositionInScore = endMarkerMsPosInScore;
 
-            maxDeviation = 0; // for //console.log
-
-            setTrackAttributes(tracks, trackIsOnArray, startMarkerMsPosition, endMarkerMsPosition);
-
-            midiObjectMsPositionsInScore = getMidiObjectMsPositionsInScore(tracks, startMarkerMsPosition, endMarkerMsPosition);
-            midiObjectMsPositionsInScoreIndex = 0;
+            allMsPositionsInScoreStartIndex = allMsPositionsInScore.indexOf(startMarkerMsPositionInScore);
+            allMsPositionsInScoreIndex = allMsPositionsInScoreStartIndex;
+            
+            setTrackAttributes(tracks, trackIsOnArray, startMarkerMsPositionInScore, endMarkerMsPositionInScore);
 
             performanceStartTime = performance.now();
             startTimeAdjustedForPauses = performanceStartTime;
@@ -729,7 +722,7 @@ _AP.sequence = (function (window)
             isRunning: isRunning,
 
             finishSilently: finishSilently,
-            setSpeedFactor: setSpeedFactor,
+            setSpeedFactor: setSpeedFactor
         };
         // end var
 

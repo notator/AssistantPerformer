@@ -936,7 +936,7 @@ _AP.controls = (function(document, window)
         }
 
         // The first argument has no effect if the sequence is playing itself.
-        player.init(sequence.tracks, options, reportEndOfPerformance, reportMsPos);
+        player.init(sequence, options, reportEndOfPerformance, reportMsPos);
     },
 
     // called when the user clicks a control in the GUI

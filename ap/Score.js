@@ -1131,7 +1131,7 @@ _AP.score = (function (document)
     },
 
     // Returns a new Sequence. Creates sequence.tracks, which is an array containing one track per channel (ordered by channel).
-    // Each track is an array of moments ordered in time (see ap/Track.js and ap/Moment.js).
+    // Each track is an array of midiObjects ordered in time (see ap/Track.js ap/midiChord.js, ap/midiRest.js).
     // If this is a live performance (as opposed to a score playback), the livePerformersSilentTrack
     // is also filled with rests and silent chords. Then, when score.redrawDisplay() is called (on toggling
     // a trackContol), the live performer's track is set to livePerformersSoundingTrack or livePerformersSilentTrack
