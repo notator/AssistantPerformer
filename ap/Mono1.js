@@ -21,6 +21,7 @@
 */
 
 /*jslint bitwise: true, nomen: true, plusplus: true, white: true */
+/*global _AP: false, performance: false, console: false */
 
 _AP.namespace('_AP.mono1');
 
@@ -31,41 +32,36 @@ _AP.mono1 = (function ()
     // begin var
     var
     UNDEFINED_TIMESTAMP = _AP.moment.UNDEFINED_TIMESTAMP,
-    CMD = _AP.constants.COMMAND,
     Message = _AP.message.Message,
     Moment = _AP.moment.Moment,
-    Sequence = _AP.sequence.Sequence,
- 
-    trackIsOnArray,
+
+    mainSequence, // the complete scoreSequence, all or part of which is played.
+    recordingSequence, // the sequence being recorded
+
+    midiOutputDevice,
+    performersOptions,
 
     currentLivePerformersKeyPitch = -1, // -1 means "no key depressed". This value is set when the live performer sends a noteOff
+ 
+    readOnlyTrackIsOnArray, // from the SVG track control
+    spanTrackIsOnArray = [], // used by individual spans, length initialised in init()
 
-    performersOptions,
-    reportEndOfPerformance, // callback
-    recordingSequence, // initially set by assistant.perform(...), passed repeatedly to sequence.play(...), returned by reportEndOfPerformance()
-    reportMsPosition, // callback
-
-    // An array of Sequence containing one sequence for each chord or rest
-    // symbol in the whole live performer's track (except that the sequences
-    // in consecutive rests have been concatenated to one sequence).
-    // This array is set in the Assistant constructor.
-    allSequences,
-
-    // An array containing only the sequences which are to be performed.
-    // This array is constructed in perform() from allSequences, using
-    // startMarkerMsPosition and endMarkerMsPosition.
-    performedSequences,
+    allPerformersSpansInScore,
 
     // these variables are initialized by perform() and used by handleMIDIInputEvent() 
-    endIndex = -1,
-    currentIndex = -1, // the index of the currently playing sequence (which will be stopped when a noteOn or noteOff arrives).
-    endOfPerformance = false, // flag, set to true when (currentIndex === endIndex)
-    nextIndex = 0, // the index of the sequence which will be played when a noteOn evt arrives
-    performanceStartNow, // set when the first sequence starts, used to set the reported duration of the performance 
-    sequenceStartNow, // set when a sequence starts playing 
+    performedSpans, // the spans between and including the start and end markers.
+    endOfSpansIndex = -1, // the index of the (unplayed) last span in a performance (the end chord or rest or endBarline).
+    currentSpanIndex = -1, // the index of the currently playing span (which will be stopped when a noteOn or noteOff arrives).
+    endOfPerformance = false, // flag, set to true when (currentSpanIndex === endOfSpansIndex)
+    nextSpanIndex = 0, // the index of the span which will be played when a noteOn event arrives
+    performanceStartNow, // set when the performance starts, used to set the reported duration of the performance 
+    spanStartNow, // set when a span starts playing 
 
     stopped = true,
     paused = false,
+
+    reportEndOfPerformance, // callback
+    reportMsPositionInScore, // callback
 
     forwardSetState, // forward declaration, set to setState later.
 
@@ -83,24 +79,49 @@ _AP.mono1 = (function ()
         }
     },
 
-    // Each performedSequence calls this function (with two arguments) when
-    // it stops:
-    //      reportEndOfSequence(recordingSequence, performanceMsDuration);
-    // but those arguments are ignored here. The recording continues until
-    // the end of the performance, and performanceMsDuration is the duration
-    // set by the beginning of the following performedSequence.
-    // These values are passed back to the calling environment, when the
-    // assistant stops, using the callback:
-    //      reportEndOfPerformance(recordingSequence, performanceMsDuration);
-    reportEndOfSequence = function()
+    playSpan = function(performedSpans, currentSpanIndex, nextSpanIndex)
     {
+        var
+        i,
+        roTrackIsOnArray = readOnlyTrackIsOnArray,
+        spTrackIsOnArray = spanTrackIsOnArray,
+        nTracks = roTrackIsOnArray.length,
+        trackSpanIsEmpty = performedSpans[currentSpanIndex].trackSpanIsEmpty,
+        spanStart = performedSpans[currentSpanIndex].msPosition,
+        spanEnd = performedSpans[nextSpanIndex].msPosition;
+
+        for(i = 0; i < nTracks; ++i)
+        {
+            spTrackIsOnArray[i] = (roTrackIsOnArray[i] === true && trackSpanIsEmpty[i] === false);
+        }
+
+        // The durations will be related to the current speedFactor.
+        mainSequence.play(spanStart, spanEnd, spTrackIsOnArray, recordingSequence);
+    },
+
+    // This function is called when a performing span reaches its endMsPosition.
+    // (mono1.stop() overrides sequence.stop(), so that function is never called.)
+    // This function is called with two arguments, which are however always ignored here:
+    //      reportEndOfSequence(recordingSequence, performanceMsDuration);
+    // The performance and recording continue until reportEndOfPerformance is called in mono1.stop() above.
+    reportEndOfSpanCallback = function()
+    {
+        reportMsPositionInScore(performedSpans[nextSpanIndex].msPosition);
+
+        console.log("reportEndOfSpanCallback: This function should handle spans waiting for a noteOn to start the next one.");
+
         if(endOfPerformance)
         {
             stop();
         }
-        else
+        else if(performedSpans[nextSpanIndex].restSpan && currentLivePerformersKeyPitch === -1)
         {
-            reportMsPosition(performedSequences[nextIndex].msPositionInScore);
+            currentSpanIndex = nextSpanIndex++;
+            endOfPerformance = (currentSpanIndex === endOfSpansIndex);
+            spanStartNow = performance.now();
+            playSpan(performedSpans, currentSpanIndex, nextSpanIndex);
+
+            console.log("reportEndOfSpanCallback: Playing next (rest-)Span");
         }
     },
 
@@ -111,7 +132,8 @@ _AP.mono1 = (function ()
     // b) assumes that RealTime messages will not interrupt the messages being received.    
     handleMIDIInputEvent = function (msg)
     {
-        var inputEvent, command,
+        var CMD = _AP.constants.COMMAND,
+            inputEvent, command,
             pOpts = performersOptions;
 
         // The returned object is either empty, or has .data and .receivedTime attributes,
@@ -169,7 +191,7 @@ _AP.mono1 = (function ()
             return inputEvent;
         }
 
-        function setSpeedFactor(sequenceIndex, controllerValue, slowerRoot, fasterRoot)
+        function setSpeedFactor(controllerValue, slowerRoot, fasterRoot)
         {
             var speedFactor;
             // If the controller's value (cv, in range 0..127) is >= 64, the factor which is passed to tick() will be
@@ -193,14 +215,14 @@ _AP.mono1 = (function ()
 
             speedFactor = getSpeedFactor(controllerValue, slowerRoot, fasterRoot);
             console.log("mono1: speedFactor=" + speedFactor.toString(10));
-            performedSequences[sequenceIndex].setSpeedFactor(speedFactor);
+            mainSequence.setSpeedFactor(speedFactor);
         }
 
         function handleController(pOpts, controlData, value, usesTracks)
         {
             var
             i,
-            nTracks = allSequences[0].tracks.length,
+            nTracks = mainSequence.tracks.length,
             now = performance.now(),
             trackMoments, nMoments, moment, track;
         
@@ -278,7 +300,7 @@ _AP.mono1 = (function ()
 
                 for(i = 0; i < nTracks; ++i)
                 {
-                    if(trackIsOnArray[i] && controllerUsesTracks[i])
+                    if(readOnlyTrackIsOnArray[i] && controllerUsesTracks[i])
                     {
                         trackVolume = (pOpts.masterVolumes[i] / 127) * abstractVolume;
 
@@ -303,7 +325,7 @@ _AP.mono1 = (function ()
 
                 for(i = 0; i < nTracks; ++i)
                 {
-                    if(trackIsOnArray[i] && controllerUsesTracks[i])
+                    if(readOnlyTrackIsOnArray[i] && controllerUsesTracks[i])
                     {
                         trackMoment = newTrackMoment(controlData, i, value);
                         if(trackMoment !== null)
@@ -339,26 +361,19 @@ _AP.mono1 = (function ()
                     moment.timestamp = now;
                     track.addLivePerformersControlMoment(moment);
 
-                    pOpts.outputDevice.send(moment.messages[0].data, now);
+                    midiOutputDevice.send(moment.messages[0].data, now);
                 }
             }
         }
 
-        function silentlyCompleteCurrentlyPlayingSequence()
+        function silentlyCompleteCurrentlyPlayingSpan()
         {
-            // currentIndex is the index of the currently playing sequence
+            // currentSpanIndex is the index of the currently playing span
             // (which should be silently completed when a noteOn arrives).
-            if(currentIndex >= 0 && currentIndex < performedSequences.length)
+            if(currentSpanIndex >= 0 && currentSpanIndex < performedSpans.length)
             {
-                performedSequences[currentIndex].finishSilently();
+                mainSequence.finishSpanSilently(performedSpans[nextSpanIndex].msPosition);
             }
-        }
-
-        function playSequence(sequence)
-        {
-            // The durations will be related to the moment.msPositionReSubsequence attributes (which have been
-            // set relative to the start of each subsequence), and to the speedFactor which has been set.
-            sequence.play(0, Number.MAX_VALUE, trackIsOnArray, recordingSequence);
         }
 
         function handleNoteOff(inputEvent)
@@ -367,23 +382,23 @@ _AP.mono1 = (function ()
             {
                 currentLivePerformersKeyPitch = -1;
 
-                silentlyCompleteCurrentlyPlayingSequence();
+                silentlyCompleteCurrentlyPlayingSpan();
 
                 if(endOfPerformance) // see reportEndOfPerformance() above 
                 {
                     stop();
                 }
-                else if (performedSequences[nextIndex].restSequence !== undefined) // only play the next sequence if it is a restSequence
+                else if (performedSpans[nextSpanIndex].restSpan !== undefined) // only play the next sequence if it is a restSpan
                 {
-                    currentIndex = nextIndex++;
-                    endOfPerformance = (currentIndex === endIndex);
-                    sequenceStartNow = inputEvent.receivedTime;
-                    playSequence(performedSequences[currentIndex]);
+                    currentSpanIndex = nextSpanIndex++;
+                    endOfPerformance = (currentSpanIndex === endOfSpansIndex);
+                    spanStartNow = inputEvent.receivedTime;
+                    playSpan(performedSpans, currentSpanIndex, nextSpanIndex);
                 }
-                else if (nextIndex <= endIndex)
+                else if (nextSpanIndex <= endOfSpansIndex)
                 {
-                    endOfPerformance = (nextIndex === endIndex);
-                    reportMsPosition(performedSequences[nextIndex].msPositionInScore);
+                    endOfPerformance = (nextSpanIndex === endOfSpansIndex);
+                    reportMsPositionInScore(performedSpans[nextSpanIndex].msPosition);
                 }
             }
         }
@@ -391,33 +406,33 @@ _AP.mono1 = (function ()
         function handleNoteOn(inputEvent)
         {
             var
-            allSubsequences = performedSequences;
+            allSubsequences = performedSpans;
 
-            sequenceStartNow = inputEvent.receivedTime;
+            spanStartNow = inputEvent.receivedTime;
 
             currentLivePerformersKeyPitch = inputEvent.data[1];
 
-            if(currentIndex === (performedSequences.length - 1))
+            if(currentSpanIndex === (performedSpans.length - 1))
             {
                 // If the final sequence is playing and a noteOn is received, the performance stops immediately.
-                // In this case the final sequence must be a restSequence (otherwise a noteOn can't be received).
+                // In this case the final sequence must be a restSpan (otherwise a noteOn can't be received).
                 stop(); 
             }
             else if (inputEvent.data[2] > 0)
             {
-                silentlyCompleteCurrentlyPlayingSequence();
+                silentlyCompleteCurrentlyPlayingSpan();
 
-                if (nextIndex === 0)
+                if (nextSpanIndex === 0)
                 {
-                    performanceStartNow = sequenceStartNow;
+                    performanceStartNow = spanStartNow;
                 }
 
-                if (nextIndex === 0 || (nextIndex <= endIndex && allSubsequences[nextIndex].chordSequence !== undefined))
+                if (nextSpanIndex === 0 || (nextSpanIndex <= endOfSpansIndex && allSubsequences[nextSpanIndex].chordSpan !== undefined))
                 {
-                    currentIndex = nextIndex++;
-                    endOfPerformance = (currentIndex === endIndex);
+                    currentSpanIndex = nextSpanIndex++;
+                    endOfPerformance = (currentSpanIndex === endOfSpansIndex);
 
-                    playSequence(allSubsequences[currentIndex]);
+                    playSpan(performedSpans, currentSpanIndex, nextSpanIndex);
                 }
             }
             else // velocity 0 is "noteOff"
@@ -437,7 +452,7 @@ _AP.mono1 = (function ()
                 case CMD.CHANNEL_PRESSURE: // produced by both R2M and E-MU XBoard49 when using "aftertouch"
                     if(pOpts.speedControllerName === "pressure")
                     {
-                        setSpeedFactor(currentIndex, inputEvent.data[1], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
+                        setSpeedFactor(inputEvent.data[1], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
                     }
                     console.log("ChannelPressure, data[1]:", inputEvent.data[1].toString());  // CHANNEL_PRESSURE control has no data[2]
                     if(pOpts.pressureSubstituteControlData !== undefined)
@@ -449,7 +464,7 @@ _AP.mono1 = (function ()
                 case CMD.AFTERTOUCH: // produced by the EWI breath controller
                     if(pOpts.speedControllerName === "pressure")
                     {
-                        setSpeedFactor(currentIndex, inputEvent.data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
+                        setSpeedFactor(inputEvent.data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
                     }
                     console.log("Aftertouch input, key:" + inputEvent.data[1].toString() + " value:", inputEvent.data[2].toString()); 
                     if (pOpts.pressureSubstituteControlData !== undefined)
@@ -466,7 +481,7 @@ _AP.mono1 = (function ()
                         console.log("Modulation Wheel, data[1]:", inputEvent.data[1].toString() + " data[2]:", inputEvent.data[2].toString());
                         if(pOpts.speedControllerName === "modulation wheel")
                         {
-                            setSpeedFactor(currentIndex, inputEvent.data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
+                            setSpeedFactor(inputEvent.data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
                         }
                         // (EWI bite, EMU modulation wheel (CC 1, Coarse Modulation))
                         if(pOpts.modWheelSubstituteControlData !== undefined)
@@ -479,7 +494,7 @@ _AP.mono1 = (function ()
                 case CMD.PITCH_WHEEL: // EWI pitch bend up/down controllers, EMU pitch wheel
                     if(pOpts.speedControllerName === "pitch wheel")
                     {
-                        setSpeedFactor(currentIndex, inputEvent.data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
+                        setSpeedFactor(inputEvent.data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
                     }
                     console.log("Pitch Wheel, data[1]:", inputEvent.data[1].toString() + " data[2]:", inputEvent.data[2].toString());
                     // by experiment: inputEvent.data[2] is the "high byte" and has a range 0..127. 
@@ -494,16 +509,13 @@ _AP.mono1 = (function ()
                     console.log("NoteOn, pitch:", inputEvent.data[1].toString(), " velocity:", inputEvent.data[2].toString());
                     if(inputEvent.data[2] !== 0)
                     {
-                        if(nextIndex < performedSequences.length)
+                        if(pOpts.speedControllerName === "noteOn: pitch")
                         {
-                            if(pOpts.speedControllerName === "noteOn: pitch")
-                            {
-                                setSpeedFactor(nextIndex, inputEvent.data[1], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
-                            }
-                            else if(pOpts.speedControllerName === "noteOn: velocity")
-                            {
-                                setSpeedFactor(nextIndex, inputEvent.data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
-                            }
+                            setSpeedFactor(inputEvent.data[1], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
+                        }
+                        else if(pOpts.speedControllerName === "noteOn: velocity")
+                        {
+                            setSpeedFactor(inputEvent.data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
                         }
                         handleNoteOn(inputEvent);
                     }
@@ -527,15 +539,15 @@ _AP.mono1 = (function ()
         switch (state)
         {
             case "stopped":
-                if (currentIndex >= 0 && performedSequences[currentIndex].isStopped() === false)
+                if (currentSpanIndex >= 0 && performedSpans[currentSpanIndex].isStopped() === false)
                 {
-                    performedSequences[currentIndex].stop();
+                    performedSpans[currentSpanIndex].stop();
                 }
                 // these variables are also set in perform() when the state is first set to "running"
-                endIndex = (performedSequences === undefined) ? -1 : (performedSequences.length - 1); // the index of the (unplayed) end chord or rest or endBarline
-                currentIndex = -1;
+                endOfSpansIndex = (performedSpans === undefined) ? -1 : (performedSpans.length - 1);
+                currentSpanIndex = -1;
                 endOfPerformance = false;
-                nextIndex = 0;
+                nextSpanIndex = 0;
                 stopped = true;
                 paused = false;
                 break;
@@ -559,9 +571,9 @@ _AP.mono1 = (function ()
         {
             if (performersOptions.assistantUsesAbsoluteDurations === false)
             {
-                sequenceStartNow = performance.now();
+                spanStartNow = performance.now();
             }
-            performedSequences[currentIndex].resume();
+            performedSpans[currentSpanIndex].resume();
             setState("running");
         }
     },
@@ -572,7 +584,7 @@ _AP.mono1 = (function ()
     {
         if (stopped === false && paused === false)
         {
-            performedSequences[currentIndex].pause();
+            performedSpans[currentSpanIndex].pause();
             setState("paused");
         }
         else
@@ -641,191 +653,98 @@ _AP.mono1 = (function ()
     //     factor = slowerSpeedRoot ^ (64 - cv) -- if cv = 0, factor will is 1/maximumFactor
     // fasterSpeedRoot is therefore the 63rd root of maximumSpeedFactor, and
     // slowerSpeedRoot is the 63rd root of 1/maximumSpeedFactor.
-    init = function(sequenceTracks, options, reportEndOfPerf, reportMsPos)
+    init = function(scoreSequence, options, reportEndOfPerfCallback, reportMsPosCallback)
     {
-        var i, sequences, nSequences, sequence;
+        var i, nTracks = scoreSequence.tracks.length;
 
-        // Returns an array of Sequence.
-        // Each sequence in the array contains moments from the main sequence (which contains no barlines).
-        // A sequence is first created for each chord or rest symbol. 
-        // Sequences corresponding to a live performer's chord are given a chordSequence attribute (=true).
-        // Sequences corresponding to a live performer's rest are given a restSequence attribute (=true).
-        // Consecutive restSequences are merged: When performing, consecutive rests in the performer's track are treated
-        // as one. The live performer only starts the first one (with a noteOff). Following rests play automatically until
-        // the next chord (chordSequence) in the performer's track.
-        // The msPositionReSubsequence attributes are set for all midiObjects.
-        function getSequences(sequenceTracks, livePerformersTrackIndex)
+        // A  flat array of spans in msPosition order.
+        // each span is a simple object having an msPosition, and a trackSpanIsEmptyArray attribute.
+        // The trackSpanIsEmptyArray is an array of booleans, one value per track,
+        //      true if there are no midiChords or midiRests in the track between this span and the next,
+        //      false otherwise.
+        // The final span is at the msPosition of the final barline in the score, and has no trackSpanIsEmptyArray.
+        function getAllPerformersSpansInScore(tracks, performersTrackIndex)
         {
             var
-            sequences = [],
-            nTracks = sequenceTracks.length,
-            trackIndex;
-
-            // The returned empty sequences have been given an msPositionInScore attribute,
-            // and either a restSequence or a chordSequence attribute, 
-            // depending on whether they correspond to a live player's rest or chord.
-            // They also contain the correct number of empty tracks.
-            function getEmptySequences(nTracks, livePerformersTrack)
+            i, span, spans = [],
+            performersTrack = tracks[performersTrackIndex],
+            midiObject, midiObjects = performersTrack.midiObjects;
+           
+            function getTrackSpanIsEmptyArrays(spans, tracks)
             {
-                var s, emptySequences = [],
-                    performersMIDIObjects, nPerformersMIDIObjects, i,
-                    midiObject;
+                var
+                i, t,
+                spanStart,
+                spanEnd,
+                spansLengthMinusOne = spans.length - 1,
+                nTracks = tracks.length,
+                nMidiObjects, moIndex,
+                msPosition, track;
 
-                performersMIDIObjects = livePerformersTrack.midiObjects;
-                nPerformersMIDIObjects = performersMIDIObjects.length;
-                for(i = 0; i < nPerformersMIDIObjects; ++i)
+                // the final span has msPosition, but no trackSpanIsEmptyArray
+                for(i = 0; i < spansLengthMinusOne; ++i)
                 {
-                    s = null;
-                    midiObject = performersMIDIObjects[i];
-
-                    if((midiObject.moments.length === 1 && midiObject.moments[0].restStart === true))
+                    spans[i].trackSpanIsEmpty = [];
+                    for(t = 0; t < nTracks; ++t)
                     {
-                        s = new Sequence(nTracks);
-                        Object.defineProperty(s, "restSequence", { value: true, writable: false });
-                        Object.defineProperty(s, "msPositionInScore", { value: midiObject.msPositionInScore, writable: false });
-                        //console.log("Rest Sequence: msPositionInScore=" + s.msPositionInScore.toString());
-                    }
-                    else // is Chord
-                    {
-                        s = new Sequence(nTracks);
-                        Object.defineProperty(s, "chordSequence", { value: true, writable: false });
-                        Object.defineProperty(s, "msPositionInScore", { value: midiObject.msPositionInScore, writable: false });
-                        //console.log("Chord Sequence: msPositionInScore=" + s.msPositionInScore.toString());
-                    }
-
-                    if(s !== null)
-                    {
-                        emptySequences.push(s);
+                        spans[i].trackSpanIsEmpty.push(true);
                     }
                 }
-                return emptySequences;
-            }
 
-            function fillSequences(sequences, mainSequenceTracks, trackIndex)  // 'base' function in outer scope.
-            {
-                var track, midiObjects = mainSequenceTracks[trackIndex].midiObjects,
-                    midiObject, midiObjectsIndex = 0,
-                    nMidiObjects = midiObjects.length,
-                    sequence, sequencesIndex,
-                    nSequences = sequences.length, // including the final barline
-                    nextSequenceMsPositionInScore;
-
-                function getNextSequenceMsPositionInScore(sequences, sequencesIndex, nSequences)
+                for(t = 0; t < nTracks; ++t)
                 {
-                    var nextSequenceMsPositionInScore, nextIndex = sequencesIndex + 1;
-
-                    if(nextIndex < nSequences)
+                    track = tracks[t];
+                    nMidiObjects = track.midiObjects.length;
+                    moIndex = 0;
+                    for(i = 0; i < spansLengthMinusOne; ++i)
                     {
-                        nextSequenceMsPositionInScore = sequences[nextIndex].msPositionInScore;
-                    }
-                    else
-                    {
-                        nextSequenceMsPositionInScore = Number.MAX_VALUE;
-                    }
+                        spanStart = spans[i].msPosition;
+                        spanEnd = spans[i + 1].msPosition;
 
-                    return nextSequenceMsPositionInScore;
-                }
-
-                // nSequences includes the final barline (a restSequence which may contain noteOff messages).
-                for(sequencesIndex = 0; sequencesIndex < nSequences; ++sequencesIndex)
-                {
-                    sequence = sequences[sequencesIndex];
-                    nextSequenceMsPositionInScore = getNextSequenceMsPositionInScore(sequences, sequencesIndex, nSequences);
-                    track = sequence.tracks[trackIndex];
-                    // nMidiObjects may be 0 (an empty track)
-                    if(nMidiObjects > 0 && midiObjectsIndex < nMidiObjects)
-                    {
-                        midiObject = midiObjects[midiObjectsIndex];
-
-                        while(midiObject.msPositionInScore < nextSequenceMsPositionInScore)
+                        while(moIndex < nMidiObjects)
                         {
-                            track.midiObjects.push(midiObject);
-                            ++midiObjectsIndex;
-                            if(midiObjectsIndex === nMidiObjects)
+                            msPosition = track.midiObjects[moIndex].msPositionInScore;
+                            if(msPosition >= spanStart && msPosition < spanEnd)
+                            {
+                                spans[i].trackSpanIsEmpty[t] = false;
+                            }
+                            if(msPosition >= spanEnd)
                             {
                                 break;
                             }
-                            midiObject = midiObjects[midiObjectsIndex];
+                            ++moIndex;
                         }
                     }
                 }
             }
 
-            // When performing, consecutive rests in the performer's track are treated as one.
-            // The live performer only starts the first one (with a noteOff). Following rests
-            // play automatically until the next chord in the performer's track.
-            function mergeRestSequences(sequences)
+            for(i = 0; i < midiObjects.length; ++i)
             {
-                var i, nSequences = sequences.length,
-                newSequences = [], lastNewS,
-                nTracks = sequences[0].tracks.length,
-                sequence, t, currentTrack, trackToAppend, nMidiObjects,
-                im;
-
-                newSequences.push(sequences[0]);
-
-                for(i = 1; i < nSequences; ++i)
+                midiObject = midiObjects[i];
+                span = {};
+                span.msPosition = midiObject.msPositionInScore;
+                if(midiObject.moments[0].restStart !== undefined)
                 {
-                    lastNewS = newSequences[newSequences.length - 1];
-                    if(lastNewS.restSequence !== undefined && sequences[i].restSequence !== undefined)
-                    {
-                        sequence = sequences[i];
-                        // append sequence to lastnewS
-                        for(t = 0; t < nTracks; ++t)
-                        {
-                            currentTrack = lastNewS.tracks[t];
-                            trackToAppend = sequence.tracks[t];
-                            nMidiObjects = trackToAppend.midiObjects.length;
-                            for(im = 0; im < nMidiObjects; ++im)
-                            {
-                                currentTrack.midiObjects.push(trackToAppend.midiObjects[im]);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        newSequences.push(sequences[i]);
-                    }
+                    span.restSpan = true;
                 }
-
-                return newSequences;
-            }
-
-            function setMsPositionsReSubsequences(sequences)
-            {
-                var
-                nTracks = sequences[0].tracks.length, midiObject,
-                i, j, k, track, trackLength;
-
-                for(i = 0; i < sequences.length; ++i)
+                else if(midiObject.moments[0].chordStart !== undefined)
                 {
-                    sequence = sequences[i];
-                    for(j = 0; j < nTracks; ++j)
-                    {
-                        track = sequence.tracks[j];
-                        trackLength = track.midiObjects.length;
-                        for(k = 0; k < trackLength; ++k)
-                        {
-                            midiObject = track.midiObjects[k];
-                            midiObject.msPositionReSubsequence = midiObject.msPositionInScore - sequence.msPositionInScore;
-                        }
-                    }
+                    span.chordSpan = true;
                 }
+                else
+                {
+                    throw "Error: each span must begin either with a rest or a chord in the performer's track.";
+                }
+                spans.push(span);
             }
 
-            sequences = getEmptySequences(nTracks, sequenceTracks[livePerformersTrackIndex]);
+            span = {};
+            span.msPosition = performersTrack.endMsPosition();
+            spans.push(span);
 
-            for(trackIndex = 0; trackIndex < nTracks; ++trackIndex)
-            {
-                fillSequences(sequences, sequenceTracks, trackIndex);
-                //fillSequences(sequences, sequence.tracks[trackIndex].moments);
-            }
+            getTrackSpanIsEmptyArrays(spans, tracks);
 
-            sequences = mergeRestSequences(sequences);
-
-            setMsPositionsReSubsequences(sequences);
-
-            return sequences;
+            return spans;
         }
 
         if(options === undefined || options.livePerformance !== true)
@@ -833,101 +752,133 @@ _AP.mono1 = (function ()
             throw ("Error creating mono1 player.");
         }
 
-        performersOptions = options.performersOptions;
+        mainSequence = scoreSequence;
 
-        setState("stopped");
+        // calls the prototype function
+        //      setState("stopped")
+        // and sets the prototype variables
+        //      tracks = scoreSequence.tracks;
+        //      midiOutputDevice = options.outputDevice;
+        //      reportEndOfPerformance = reportEndOfSpanCallback; // called as sequence.endOfPerformance when the span reaches its endMsPosition.
+        //      reportMsPositionInScore = reportMsPosCallback;
+        //      allMsPositionsInScore = scoreSequence.getAllMsPositionsInScore();
+        scoreSequence.init(scoreSequence, options, reportEndOfSpanCallback, reportMsPosCallback);
 
-        reportEndOfPerformance = reportEndOfPerf;
-        reportMsPosition = reportMsPos;
-
-        sequences = getSequences(sequenceTracks, performersOptions.trackIndex);
-
-        nSequences = sequences.length; 
-        for(i = 0; i < nSequences; ++i)
+        spanTrackIsOnArray.length = 0;
+        for(i = 0; i < nTracks; ++i)
         {
-            sequence = sequences[i];
-            sequence.init(sequence.tracks, options, reportEndOfSequence, reportMsPos);
+            spanTrackIsOnArray.push(true);
         }
 
-        allSequences = sequences;
+        reportEndOfPerformance = reportEndOfPerfCallback;
+        reportMsPositionInScore = reportMsPosCallback;
+
+        midiOutputDevice = options.outputDevice;
+        performersOptions = options.performersOptions;
+
+        // each span is an object having an msPosition, and a trackSpanIsEmptyArray attribute.
+        // Note that in assisted performances,
+        //      startMarkerMsPositions are only possible where there is a midiChord in the performer's track,
+        //      endMarkerMsPositions are only possible where there is a midiChord or midiRest in the performer's track.
+        // (Currently there is a bug that allows endMarkerMsPositions to be placed on the right edge of a system,
+        //  but this is going to be correctd)
+        allPerformersSpansInScore = getAllPerformersSpansInScore(scoreSequence.tracks, performersOptions.trackIndex);
+
+        // The noteOn and noteOff handlers will call
+        //      sequence.play(spanStartMsPosInScore, spanEndMsPosInScore, readOnlyTrackIsOnArray, recording)
+        // whereby the readOnlyTrackIsOnArray is used (but not changed) in combination with the span.trackSpanIsEmptyArray to
+        // set track.isPlaying for each track at the beginning of each span.
     },
 
     // Called when the Go button is clicked, performersOptions.livePerformance === true and the performersOptions.midieventhandler is Mono1.
     // If performersOptions.livePerformance === false, the main sequence.play(...) is called instead.
     // The assistant's allSequences array, which is set in init(), contains the whole piece as an array of sequence,
     // with one sequence per performer's rest or chord, whereby consecutive rests in the performer's track have been merged.
-    // This function sets the performedSequences array, which is the section of the allSequences array between startMarkerMsPosition and
-    // endMarkerMsPosition (not including moments at the endMarkerMsPosition).
-    // Creating the performedSequences array does *not* change the data in allSequences, so the start and end markers can be moved between
-    // performances.
+    // This function sets the performedSpans array, which is the section of the allSequences array between startMarkerMsPosition and
+    // endMarkerMsPosition (including moments at the endMarkerMsPosition).
+    // Except for reseting the timestamps in the moments which are about to be performed, the performedSpans array does *not* change
+    // the data in the mainSequence or the readOnlyTrackIsOnArray.
+    // The start and end markers can be moved, and tracks selected or deselected between performances.
     play = function(startMarkerMsPosition, endMarkerMsPosition, argTrackIsOnArray, recording)
     {
-        function getPerformedSequences(allSequences, startMarkerMsPosition, endMarkerMsPosition)
+        // Simply returns the section of allPerformersSpansInScore between startMarkerMsPosition and endMarkerMsPosition,
+        // including both startMarkerMsPosition and endMarkerPosition.
+        function getPerformedSpans(allPerformersSpansInScore, startMarkerMsPosition, endMarkerMsPosition)
         {
-            var sequence, i,
-                nSequences = allSequences.length,
-                performedSequences = []; // an array of sequences
+            var span, i,
+                nSpans = allPerformersSpansInScore.length,
+                performedSpans = []; // an array of spans
 
-            function resetTimestamps(sequences)
+            for(i = 0; i < nSpans; ++i)
             {
-                var
-                nTracks = sequence.tracks.length, moments, nMoments,
-                i, j, k, m, track, trackLength;
-
-                for(i = 0; i < sequences.length; ++i)
+                span = allPerformersSpansInScore[i];
+                if(span.msPosition > endMarkerMsPosition)
                 {
-                    sequence = sequences[i];
-                    for(j = 0; j < nTracks; ++j)
+                    break;
+                }
+                if(span.msPosition >= startMarkerMsPosition)
+                {
+                    performedSpans.push(span);
+                }
+            }
+
+            return performedSpans;
+        }
+
+        // Sets the timestamp of every moment that is about to be performed to UNDEFINED_TIMESTAMP.
+        // Uses both the readOnlyTrackIsOnArray and span.trackSpanIsEmpty[] flags. 
+        function resetMomentTimestamps(spans, readOnlyTrackIsOnArray)
+        {
+            var
+            nTracks = mainSequence.tracks.length, midiObject, moments, nMoments,
+            spanStart, spanEnd,
+            i, j, k, m, track, trackLength;
+
+            for(i = 1; i < spans.length; ++i)
+            {
+                spanStart = spans[i - 1].msPosition;
+                spanEnd = spans[i].msPosition;
+                for(j = 0; j < nTracks; ++j)
+                {
+                    track = mainSequence.tracks[j];
+                    if(readOnlyTrackIsOnArray[j] === true && spans[i - 1].trackSpanIsEmpty[j] === false)
                     {
-                        track = sequence.tracks[j];
                         trackLength = track.midiObjects.length;
                         for(k = 0; k < trackLength; ++k)
                         {
-                            moments = track.midiObjects[k].moments;
-                            nMoments = moments.length;
-                            for(m = 0; m < nMoments; ++m)
+                            midiObject = track.midiObjects[k];
+                            if(midiObject.msPositionInScore >= spanEnd)
                             {
-                                moments[m].timestamp = UNDEFINED_TIMESTAMP;
+                                break;
+                            }
+                            if(midiObject.msPositionInScore >= spanStart)
+                            {
+                                moments = midiObject.moments;
+                                nMoments = moments.length;
+                                for(m = 0; m < nMoments; ++m)
+                                {
+                                    moments[m].timestamp = UNDEFINED_TIMESTAMP;
+                                }
                             }
                         }
                     }
                 }
             }
-
-            for(i = 0; i < nSequences; ++i)
-            {
-                sequence = allSequences[i];
-                if(sequence.msPositionInScore >= endMarkerMsPosition)
-                {
-                    break;
-                }
-                if(sequence.msPositionInScore >= startMarkerMsPosition)
-                {
-                    performedSequences.push(sequence);
-                }
-            }
-
-            if(performedSequences[0].chordSequence === undefined || performedSequences[0].msPositionInScore !== startMarkerMsPosition)
-            {
-                throw "The performance must start with a chordSequence at the startMarker's msPosition";
-            }
-
-            resetTimestamps(performedSequences);
-
-            return performedSequences;
         }
 
         setState("running");
 
-        // trackIsOnArray is read only
-        trackIsOnArray = argTrackIsOnArray;
-        performedSequences = getPerformedSequences(allSequences, startMarkerMsPosition, endMarkerMsPosition);
+        readOnlyTrackIsOnArray = argTrackIsOnArray;
+        performedSpans = getPerformedSpans(allPerformersSpansInScore, startMarkerMsPosition, endMarkerMsPosition);
+        resetMomentTimestamps(performedSpans, argTrackIsOnArray);
+        
         recordingSequence = recording;
 
-        endIndex = performedSequences.length - 1;
-        currentIndex = -1;
+        // the index of the (unplayed) span at the endMarkerPosition (the end chord or rest or endBarline).
+        endOfSpansIndex = performedSpans.length - 1;
+        currentSpanIndex = -1;
         endOfPerformance = false;
-        nextIndex = 0;
+        nextSpanIndex = 0;
     },
 
     publicAPI =
@@ -950,3 +901,4 @@ _AP.mono1 = (function ()
     return publicAPI;
 
 }());
+

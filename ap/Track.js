@@ -50,6 +50,16 @@ _AP.track = (function ()
     };
     // end var
 
+    // Simple helper function that returns the endMsPosition of the final midiObject in the track.
+    // (Often used to find the msPosition of the final barline).
+    Track.prototype.endMsPosition = function()
+    {
+        var lastMidiObject = this.midiObjects[this.midiObjects.length - 1],
+            endPos = lastMidiObject.msPositionInScore + lastMidiObject.msDurationInScore;
+
+        return endPos;
+    };
+
     // Sets track._currentMidiObjectIndex, track.currentMidiObject and track.currentMoment
     // (The last midiObject to be played is at toIndex-1.)
     Track.prototype.runtimeInit = function(fromIndex, toIndex)

@@ -51,10 +51,9 @@
 *           // Is the performance running?
 *           isRunning()
 *
-*           // When called on a running sequence, immediately sends all its
-*           // unsent messages except noteOns, and then calls stop().
-*           // The sent messages are not recorded.
-*           finishSilently: finishSilently
+*           // Immediately sends all the sequence's NOTE_OFF commands that happen
+*           // before the endOfSpanMsPosition argument, and then calls stop().
+*           finishSpanSilently: finishSpanSilently
 *
 *           // Sends the controller message to the given track immediately.
 *           sendControlMessageNow(outputDevice, track, controller, midiValue)
@@ -65,25 +64,26 @@
 */
 
 /*jslint bitwise: false, nomen: true, plusplus: true, white: true */
+/*global _AP: false,  window: false,  performance: false, console: false */
 
 
 _AP.namespace('_AP.sequence');
 
-_AP.sequence = (function (window)
+_AP.sequence = (function(window)
 {
     "use strict";
     var
     // An empty sequence is created. It contains an empty array of _AP.track.Tracks.
-    Sequence = function (nTracks)
+    Sequence = function(nTracks)
     {
         var i;
-        if (!(this instanceof Sequence))
+        if(!(this instanceof Sequence))
         {
             return new Sequence(nTracks);
         }
 
         this.tracks = []; // an array of Tracks
-        for (i = 0; i < nTracks; ++i)
+        for(i = 0; i < nTracks; ++i)
         {
             this.tracks.push(new _AP.track.Track());
         }
@@ -96,7 +96,7 @@ _AP.sequence = (function (window)
     };
     // end var
 
-    Sequence.prototype = (function (window)
+    Sequence.prototype = (function(window)
     {
         var
         midiOutputDevice,
@@ -203,7 +203,7 @@ _AP.sequence = (function (window)
             }
         },
 
-        // nextMoment is used by tick(), resume(), play(), finishSilently().
+        // nextMoment is used by tick(), resume(), play(), finishSpanSilently().
         // Returns the earliest track.nextMoment or null.
         // Null is returned if there are no more moments or if the sequence is paused or stopped.
         nextMoment = function()
@@ -552,6 +552,8 @@ _AP.sequence = (function (window)
                 throw "The midi output device must be defined.";
             }
 
+            setState("stopped");
+
             tracks = scoreSequence.tracks;
             midiOutputDevice = options.outputDevice;
             reportEndOfPerformance = reportEndOfPerfCallback;
@@ -655,8 +657,6 @@ _AP.sequence = (function (window)
                 }
             }
 
-            setState("stopped");
-
             sequenceRecording = recording; // can be undefined or null
 
             lastReportedMsPosition = -1;
@@ -665,7 +665,7 @@ _AP.sequence = (function (window)
 
             allMsPositionsInScoreStartIndex = allMsPositionsInScore.indexOf(startMarkerMsPositionInScore);
             allMsPositionsInScoreIndex = allMsPositionsInScoreStartIndex;
-            
+
             setTrackAttributes(tracks, trackIsOnArray, startMarkerMsPositionInScore, endMarkerMsPositionInScore);
 
             performanceStartTime = performance.now();
@@ -673,21 +673,38 @@ _AP.sequence = (function (window)
             run();
         },
 
-        // When called, immediately sends all the sequence's unsent NOTE_OFF commands
-        // and then calls stop(). Other commands (NOTE_ON, AFTERTOUCH, CONTROL_CHANGE,
-        // PROGRAM_CHANGE, CHANNEL_PRESSURE, PITCH_WHEEL) are NOT sent.
-        // The sent messages are not recorded.
-        // Called in assisted performances when a NOTE_ON arrives before the sequence has finished.
-        finishSilently = function()
+        // Immediately sends all the sequence's NOTE_OFF commands that happen
+        // before endOfSpanMsPosition, and then calls stop().
+        // Other commands (NOTE_ON, AFTERTOUCH, CONTROL_CHANGE, PROGRAM_CHANGE, CHANNEL_PRESSURE, PITCH_WHEEL) are NOT sent.
+        // Called in assisted performances when a NOTE_ON arrives before a span has finished.
+        // The noteOff messages are recorded.
+        finishSpanSilently = function(endOfSpanMsPosition)
         {
             var
             CMD = _AP.constants.COMMAND,
+            Moment = _AP.moment.Moment,
             i, nMessages, messages, message, command,
+            noteOffsMoment,
             moment = nextMoment(),
             now = performance.now();
 
-            while(moment !== null)
+            function sendMessages(moment)
             {
+                var
+                messages = moment.messages,
+                i, nMessages = messages.length, timestamp = moment.timestamp;
+
+                for(i = 0; i < nMessages; ++i)
+                {
+                    midiOutputDevice.send(messages[i].data, timestamp);
+                }
+            }
+
+            while(moment !== null && moment.msPositionInScore < endOfSpanMsPosition)
+            {
+                noteOffsMoment = new Moment(0);
+                noteOffsMoment.timestamp = now;
+
                 nMessages = moment.messages.length;
                 messages = moment.messages;
                 for(i = 0; i < nMessages; ++i)
@@ -696,8 +713,15 @@ _AP.sequence = (function (window)
                     command = message.command();
                     if(command === CMD.NOTE_OFF || (command === CMD.NOTE_ON && message.data[2] === 0))
                     {
-                        midiOutputDevice.send(message.data, now);
+                        noteOffsMoment.messages.push(message);
                     }
+                }
+
+                sendMessages(noteOffsMoment);
+
+                if(sequenceRecording !== undefined && sequenceRecording !== null)
+                { 
+                    sequenceRecording.trackRecordings[noteOffsMoment.messages[0].channel()].addLiveScoreMoment(noteOffsMoment);
                 }
                 moment = nextMoment();
             }
@@ -721,18 +745,18 @@ _AP.sequence = (function (window)
             isPaused: isPaused,
             isRunning: isRunning,
 
-            finishSilently: finishSilently,
+            finishSpanSilently: finishSpanSilently,
             setSpeedFactor: setSpeedFactor
         };
         // end var
 
         return publicPrototypeAPI;
 
-    } (window));
+    }(window));
 
     return publicSequenceAPI;
 
-} (window));
+}(window));
 
 
 
