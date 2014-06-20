@@ -48,14 +48,13 @@ _AP.mono1 = (function()
 
     allPerformersSpansInScore,
 
-    // these variables are initialized by perform() and used by handleMIDIInputEvent() 
+    // these variables are initialized by play() and used by handleMIDIInputEvent() 
     performedSpans, // the spans between and including the start and end markers.
     endOfSpansIndex = -1, // the index of the (unplayed) last span in a performance (the end chord or rest or endBarline).
     currentSpanIndex = -1, // the index of the currently playing span (which will be stopped when a noteOn or noteOff arrives).
     endOfPerformance = false, // flag, set to true when (currentSpanIndex === endOfSpansIndex)
     nextSpanIndex = 0, // the index of the span which will be played when a noteOn event arrives
-    performanceStartNow, // set when the performance starts, used to set the reported duration of the performance 
-    spanStartNow, // set when a span starts playing 
+    performanceStartNow, // set when the performance starts, used to set the reported duration of the performance  
 
     stopped = true,
 
@@ -147,7 +146,6 @@ _AP.mono1 = (function()
         {
             currentSpanIndex = nextSpanIndex++;
             endOfPerformance = (currentSpanIndex === endOfSpansIndex);
-            spanStartNow = performance.now();
             playSpan(performedSpans, currentSpanIndex, nextSpanIndex);
 
             console.log("reportEndOfSpanCallback: Playing next (rest-)Span");
@@ -699,7 +697,6 @@ _AP.mono1 = (function()
                 {
                     currentSpanIndex = nextSpanIndex++;
                     endOfPerformance = (currentSpanIndex === endOfSpansIndex);
-                    spanStartNow = inputEvent.receivedTime;
                     playSpan(performedSpans, currentSpanIndex, nextSpanIndex);
                 }
                 else if(nextSpanIndex <= endOfSpansIndex)
@@ -715,8 +712,6 @@ _AP.mono1 = (function()
             var
             allSubsequences = performedSpans;
 
-            spanStartNow = inputEvent.receivedTime;
-
             currentLivePerformersKeyPitch = inputEvent.data[1];
 
             if(currentSpanIndex === (performedSpans.length - 1))
@@ -731,7 +726,7 @@ _AP.mono1 = (function()
 
                 if(nextSpanIndex === 0)
                 {
-                    performanceStartNow = spanStartNow;
+                    performanceStartNow = inputEvent.receivedTime;
                 }
 
                 if(nextSpanIndex === 0 || (nextSpanIndex <= endOfSpansIndex && allSubsequences[nextSpanIndex].chordSpan !== undefined))
