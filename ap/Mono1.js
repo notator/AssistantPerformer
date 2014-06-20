@@ -25,7 +25,7 @@
 
 _AP.namespace('_AP.mono1');
 
-_AP.mono1 = (function ()
+_AP.mono1 = (function()
 {
     "use strict";
 
@@ -42,7 +42,7 @@ _AP.mono1 = (function ()
     performersOptions,
 
     currentLivePerformersKeyPitch = -1, // -1 means "no key depressed". This value is set when the live performer sends a noteOff
- 
+
     readOnlyTrackIsOnArray, // from the SVG track control
     spanTrackIsOnArray = [], // used by individual spans, length initialised in init()
 
@@ -58,20 +58,49 @@ _AP.mono1 = (function ()
     spanStartNow, // set when a span starts playing 
 
     stopped = true,
-    paused = false,
 
     reportEndOfPerformance, // callback
     reportMsPositionInScore, // callback
 
-    forwardSetState, // forward declaration, set to setState later.
+    isStopped = function()
+    {
+        return (stopped === true);
+    },
 
-    stop = function ()
+    isRunning = function()
+    {
+        return (stopped === false);
+    },
+
+    setState = function(state)
+    {
+        switch(state)
+        {
+            case "stopped":
+                mainSequence.stop();
+                // these variables are also set in perform() when the state is first set to "running"
+                endOfSpansIndex = (performedSpans === undefined) ? -1 : (performedSpans.length - 1);
+                currentSpanIndex = -1;
+                endOfPerformance = false;
+                nextSpanIndex = 0;
+                stopped = true;
+                break;
+            case "running":
+                stopped = false;
+                break;
+            default:
+                throw "Unknown sequencer state!";
+        }
+    },
+
+    // Can be called when paused or running, but not when stopped.
+    stop = function()
     {
         var performanceMsDuration;
 
-        if (stopped === false)
+        if(stopped === false)
         {
-            forwardSetState("stopped");
+            setState("stopped");
 
             performanceMsDuration = performance.now() - performanceStartNow;
 
@@ -123,484 +152,6 @@ _AP.mono1 = (function ()
 
             console.log("reportEndOfSpanCallback: Playing next (rest-)Span");
         }
-    },
-
-    // If performersOptions.livePerformance === true, this is where input
-    // MIDIEvents arrive, and where processing is going to be done.
-    // The Assistant
-    // a) ignores both RealTime and SysEx messages in its input, and
-    // b) assumes that RealTime messages will not interrupt the messages being received.    
-    handleMIDIInputEvent = function (msg)
-    {
-        var CMD = _AP.constants.COMMAND,
-            inputEvent, command,
-            pOpts = performersOptions;
-
-        // The returned object is either empty, or has .data and .receivedTime attributes,
-        // and so constitutes a timestamped Message. (Web MIDI API simply calls this an Event)
-        // The Assistant ignores both realTime and SysEx messages, even though these are
-        // defined (untested 8.3.2013) in the ap library, so this function only returns
-        // the other types of message (having 2 or 3 data bytes).
-        // If the input data is undefined, an empty object is returned, otherwise data must
-        // be an array of numbers in range 0..0xF0. An exception is thrown if the data is illegal.
-        function getInputEvent(data, now)
-        {
-            var
-            SYSTEM_EXCLUSIVE = _AP.constants.SYSTEM_EXCLUSIVE,
-            isRealTimeStatus = _AP.constants.isRealTimeStatus,
-            inputEvent = {};
-
-            if (data !== undefined)
-            {
-                if (data[0] === SYSTEM_EXCLUSIVE.START)
-                {
-                    if (!(data.length > 2 && data[data.length - 1] === SYSTEM_EXCLUSIVE.END))
-                    {
-                        throw "Error in System Exclusive inputEvent.";
-                    }
-                    // SysExMessages are ignored by the assistant, so do nothing here.
-                    // Note that SysExMessages may contain realTime messages at this point (they
-                    // would have to be removed somehow before creating a sysEx event), but since
-                    // we are ignoring both realTime and sysEx, nothing needs doing here.
-                }
-                else if ((data[0] & 0xF0) === 0xF0)
-                {
-                    if (!(isRealTimeStatus(data[0])))
-                    {
-                        throw "Error: illegal data.";
-                    }
-                    // RealTime messages are ignored by the assistant, so do nothing here.
-                }
-                else if (data.length === 2)
-                {
-                    inputEvent = new Message(data[0], data[1], 0);
-                }
-                else if (data.length === 3)
-                {
-                    inputEvent = new Message(data[0], data[1], data[2]);
-                }
-
-                // other data is simply ignored
-
-                if (inputEvent.data !== undefined)
-                {
-                    inputEvent.receivedTime = now;
-                }
-            }
-
-            return inputEvent;
-        }
-
-        function setSpeedFactor(controllerValue, slowerRoot, fasterRoot)
-        {
-            var speedFactor;
-            // If the controller's value (cv, in range 0..127) is >= 64, the factor which is passed to tick() will be
-            //     factor = fasterRoot ^ (cv - 64) -- if cv = 64, factor is 1, if cv is 127, factor is maximumFactor
-            // If the controller's value is < 64, the factor which is passed to tick() will be
-            //     factor = slowerRoot ^ (64 - cv) -- if cv = 0, factor will be 1/maximumFactor
-            function getSpeedFactor(controllerValue, slowerRoot, fasterRoot)
-            {
-                var factor;
-                if(controllerValue < 64) // 0..63
-                {
-                    factor = Math.pow(slowerRoot, (64 - controllerValue));
-                }
-                else // 64..127
-                {
-                    factor = Math.pow(fasterRoot, (controllerValue - 64));
-                }
-
-                return factor;
-            }
-
-            speedFactor = getSpeedFactor(controllerValue, slowerRoot, fasterRoot);
-            console.log("mono1: speedFactor=" + speedFactor.toString(10));
-            mainSequence.setSpeedFactor(speedFactor);
-        }
-
-        function handleController(pOpts, controlData, value, usesTracks)
-        {
-            var
-            i,
-            nTracks = mainSequence.tracks.length,
-            now = performance.now(),
-            trackMoments, nMoments, moment, track;
-        
-            // Each trackMoment.moment is a Moment whose .messages attribute contains one message,
-            // trackMoment.trackIndex is the moment's track index (=channel).
-            // Returns null if no new trackMoment is created.
-            function newTrackMoment(controlData, trackIndex, value)
-            {
-                var message, moment = null, trackMoment = null;
-
-                // controlData is the controlData received from the live performer (via the controlSelector pop-ups).
-                // value is the control value received from the live performer (or a newly calculated volume value).
-                // trackIndex is the new message's trackIndex.
-                // Returns null if no message is created for some reason.
-                function newControlMessage(controlData, value, trackIndex)
-                {
-                    var
-                    CMD = _AP.constants.COMMAND,
-                    message = null;
-
-                    if(controlData.midiControl !== undefined) // a normal control (including volume, whose value is handled earlier)
-                    {
-                        message = new Message(CMD.CONTROL_CHANGE + trackIndex, controlData.midiControl, value);
-                    }
-                    else if(controlData.command !== undefined)
-                    {
-                        switch(controlData.command)
-                        {
-                            case CMD.AFTERTOUCH:
-                                if(currentLivePerformersKeyPitch >= 0)  // is -1 when no note is playing
-                                {
-                                    message = new Message(CMD.AFTERTOUCH + trackIndex, currentLivePerformersKeyPitch, value);
-                                }
-                                break;
-                            case CMD.CHANNEL_PRESSURE:
-                                message = new Message(CMD.CHANNEL_PRESSURE + trackIndex, value, 0);
-                                break;
-                            case CMD.PITCH_WHEEL:
-                                // value is inputEvent.data[2]
-                                message = new Message(CMD.PITCH_WHEEL + trackIndex, 0, value);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-
-                    return message;
-                }
-
-                message = newControlMessage(controlData, value, trackIndex);
-                if(message !== null)
-                {
-                    moment = new Moment(_AP.moment.UNDEFINED_TIMESTAMP);  // moment.msPositionInScore becomes UNDEFINED_TIMESTAMP
-                    moment.messages.push(message);
-                    trackMoment = {};
-                    trackMoment.moment = moment;
-                    trackMoment.trackIndex = trackIndex;
-                }
-                return trackMoment;
-            }
-
-            // Returns a new array of (synchronous) volume trackMoments.
-            // This function calculates new volume values for each track.
-            function getTrackVolumeMoments(pOpts, nTracks, controlData, value, controllerUsesTracks)
-            {
-                var
-                i, trackMoments = [], trackMoment, abstractVolume, trackVolume;
-
-                if(controlData.midiControl !== _AP.constants.CONTROL.VOLUME)
-                {
-                    throw "Error: this function only handles volume.";
-                }
-
-                abstractVolume = pOpts.minVolume + (value * pOpts.volumeScale);
-
-                for(i = 0; i < nTracks; ++i)
-                {
-                    if(readOnlyTrackIsOnArray[i] && controllerUsesTracks[i])
-                    {
-                        trackVolume = (pOpts.masterVolumes[i] / 127) * abstractVolume;
-
-                        trackMoment = newTrackMoment(controlData, i, trackVolume);
-                        if(trackMoment !== null)
-                        {
-                            trackMoments.push(trackMoment);
-                        }
-                    }
-                }
-
-                return trackMoments;
-            }
-
-            // Returns a new array of (synchronous) trackMoments.
-            // Each trackMoment.moment is a Moment whose .messages attribute contains one message,
-            // trackMoment.trackIndex is the moment's track index (=channel).
-            function getTrackMoments(nTracks, controlData, value, controllerUsesTracks)
-            {
-                var
-                i, trackMoments = [], trackMoment;
-
-                for(i = 0; i < nTracks; ++i)
-                {
-                    if(readOnlyTrackIsOnArray[i] && controllerUsesTracks[i])
-                    {
-                        trackMoment = newTrackMoment(controlData, i, value);
-                        if(trackMoment !== null)
-                        {
-                            trackMoments.push(trackMoment);
-                        }
-                    }
-                }
-
-                return trackMoments;
-            }
-
-            if(controlData.midiControl === _AP.constants.CONTROL.VOLUME)
-            {
-                trackMoments = getTrackVolumeMoments(pOpts, nTracks, controlData, value, usesTracks);
-            }
-            else
-            {
-                trackMoments = getTrackMoments(nTracks, controlData, value, usesTracks);
-            }
-            nMoments = trackMoments.length;
-            if(recordingSequence === undefined || recordingSequence === null)
-            {
-                throw "Error: a recordingSequence must be available here.";
-            }
-            for (i = 0; i < nMoments; ++i)
-            {
-                track = recordingSequence.trackRecordings[trackMoments[i].trackIndex];
-
-                if(track.isInChord !== undefined) // track.isInChord is defined in TrackRecording.addLiveScoreMoment()
-                {
-                    moment = trackMoments[i].moment;
-                    moment.timestamp = now;
-                    track.addLivePerformersControlMoment(moment);
-
-                    midiOutputDevice.send(moment.messages[0].data, now);
-                }
-            }
-        }
-
-        function silentlyCompleteCurrentlyPlayingSpan()
-        {
-            // currentSpanIndex is the index of the currently playing span
-            // (which should be silently completed when a noteOn arrives).
-            if(currentSpanIndex >= 0 && currentSpanIndex < performedSpans.length)
-            {
-                mainSequence.finishSpanSilently(performedSpans[nextSpanIndex].msPosition);
-            }
-        }
-
-        function handleNoteOff(inputEvent)
-        {
-            if (inputEvent.data[1] === currentLivePerformersKeyPitch)
-            {
-                currentLivePerformersKeyPitch = -1;
-
-                silentlyCompleteCurrentlyPlayingSpan();
-
-                if(endOfPerformance) // see reportEndOfPerformance() above 
-                {
-                    stop();
-                }
-                else if (performedSpans[nextSpanIndex].restSpan !== undefined) // only play the next sequence if it is a restSpan
-                {
-                    currentSpanIndex = nextSpanIndex++;
-                    endOfPerformance = (currentSpanIndex === endOfSpansIndex);
-                    spanStartNow = inputEvent.receivedTime;
-                    playSpan(performedSpans, currentSpanIndex, nextSpanIndex);
-                }
-                else if (nextSpanIndex <= endOfSpansIndex)
-                {
-                    endOfPerformance = (nextSpanIndex === endOfSpansIndex);
-                    reportMsPositionInScore(performedSpans[nextSpanIndex].msPosition);
-                }
-            }
-        }
-
-        function handleNoteOn(inputEvent)
-        {
-            var
-            allSubsequences = performedSpans;
-
-            spanStartNow = inputEvent.receivedTime;
-
-            currentLivePerformersKeyPitch = inputEvent.data[1];
-
-            if(currentSpanIndex === (performedSpans.length - 1))
-            {
-                // If the final sequence is playing and a noteOn is received, the performance stops immediately.
-                // In this case the final sequence must be a restSpan (otherwise a noteOn can't be received).
-                stop(); 
-            }
-            else if (inputEvent.data[2] > 0)
-            {
-                silentlyCompleteCurrentlyPlayingSpan();
-
-                if (nextSpanIndex === 0)
-                {
-                    performanceStartNow = spanStartNow;
-                }
-
-                if (nextSpanIndex === 0 || (nextSpanIndex <= endOfSpansIndex && allSubsequences[nextSpanIndex].chordSpan !== undefined))
-                {
-                    currentSpanIndex = nextSpanIndex++;
-                    endOfPerformance = (currentSpanIndex === endOfSpansIndex);
-
-                    playSpan(performedSpans, currentSpanIndex, nextSpanIndex);
-                }
-            }
-            else // velocity 0 is "noteOff"
-            {
-                handleNoteOff(inputEvent);
-            }
-        }
-
-        inputEvent = getInputEvent(msg.data, performance.now());
-
-        if (inputEvent.data !== undefined)
-        {
-            command = inputEvent.command();
-
-            switch(command)
-            {
-                case CMD.CHANNEL_PRESSURE: // produced by both R2M and E-MU XBoard49 when using "aftertouch"
-                    if(pOpts.speedControllerName === "pressure")
-                    {
-                        setSpeedFactor(inputEvent.data[1], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
-                    }
-                    console.log("ChannelPressure, data[1]:", inputEvent.data[1].toString());  // CHANNEL_PRESSURE control has no data[2]
-                    if(pOpts.pressureSubstituteControlData !== undefined)
-                    {
-                        // CHANNEL_PRESSURE.data[1] is the amount of pressure 0..127.
-                        handleController(pOpts, pOpts.pressureSubstituteControlData, inputEvent.data[1], pOpts.pressureTracks);
-                    }
-                    break;
-                case CMD.AFTERTOUCH: // produced by the EWI breath controller
-                    if(pOpts.speedControllerName === "pressure")
-                    {
-                        setSpeedFactor(inputEvent.data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
-                    }
-                    console.log("Aftertouch input, key:" + inputEvent.data[1].toString() + " value:", inputEvent.data[2].toString()); 
-                    if (pOpts.pressureSubstituteControlData !== undefined)
-                    {
-                        // AFTERTOUCH.data[1] is the MIDIpitch to which to apply the aftertouch, but I dont need that
-                        // because the current pitch is kept in currentLivePerformersKeyPitch (in the closure).
-                        // AFTERTOUCH.data[2] is the amount of pressure 0..127.
-                        handleController(pOpts, pOpts.pressureSubstituteControlData, inputEvent.data[2], pOpts.pressureTracks);
-                    }
-                    break;
-                case CMD.CONTROL_CHANGE: // sent when the input device's mod wheel changes.
-                    if(inputEvent.data[1] === _AP.constants.CONTROL.MODWHEEL)
-                    {
-                        console.log("Modulation Wheel, data[1]:", inputEvent.data[1].toString() + " data[2]:", inputEvent.data[2].toString());
-                        if(pOpts.speedControllerName === "modulation wheel")
-                        {
-                            setSpeedFactor(inputEvent.data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
-                        }
-                        // (EWI bite, EMU modulation wheel (CC 1, Coarse Modulation))
-                        if(pOpts.modWheelSubstituteControlData !== undefined)
-                        {
-                            // inputEvent.data[2] is the value to which to set the changed control
-                            handleController(pOpts, pOpts.modWheelSubstituteControlData, inputEvent.data[2], pOpts.modWheelTracks);
-                        }
-                    }
-                    break;
-                case CMD.PITCH_WHEEL: // EWI pitch bend up/down controllers, EMU pitch wheel
-                    if(pOpts.speedControllerName === "pitch wheel")
-                    {
-                        setSpeedFactor(inputEvent.data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
-                    }
-                    console.log("Pitch Wheel, data[1]:", inputEvent.data[1].toString() + " data[2]:", inputEvent.data[2].toString());
-                    // by experiment: inputEvent.data[2] is the "high byte" and has a range 0..127. 
-                    if(pOpts.pitchWheelSubstituteControlData !== undefined)
-                    {
-                        // PITCH_WHEEL.data[1] is the 7-bit LSB (0..127) -- ignored here
-                        // PITCH_WHEEL.data[2] is the 7-bit MSB (0..127)
-                        handleController(pOpts, pOpts.pitchWheelSubstituteControlData, inputEvent.data[2], pOpts.pitchWheelTracks);
-                    }
-                    break;
-                case CMD.NOTE_ON:
-                    console.log("NoteOn, pitch:", inputEvent.data[1].toString(), " velocity:", inputEvent.data[2].toString());
-                    if(inputEvent.data[2] !== 0)
-                    {
-                        if(pOpts.speedControllerName === "noteOn: pitch")
-                        {
-                            setSpeedFactor(inputEvent.data[1], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
-                        }
-                        else if(pOpts.speedControllerName === "noteOn: velocity")
-                        {
-                            setSpeedFactor(inputEvent.data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
-                        }
-                        handleNoteOn(inputEvent);
-                    }
-                    else
-                    {
-                        handleNoteOff(inputEvent);
-                    }
-                    break;
-                case CMD.NOTE_OFF:
-                    console.log("NoteOff, pitch:", inputEvent.data[1].toString(), " velocity:", inputEvent.data[2].toString());
-                    handleNoteOff(inputEvent);
-                    break;
-                default:
-                    break;
-            }
-        }
-    },
-
-    setState = function (state)
-    {
-        switch (state)
-        {
-            case "stopped":
-                if (currentSpanIndex >= 0 && performedSpans[currentSpanIndex].isStopped() === false)
-                {
-                    performedSpans[currentSpanIndex].stop();
-                }
-                // these variables are also set in perform() when the state is first set to "running"
-                endOfSpansIndex = (performedSpans === undefined) ? -1 : (performedSpans.length - 1);
-                currentSpanIndex = -1;
-                endOfPerformance = false;
-                nextSpanIndex = 0;
-                stopped = true;
-                paused = false;
-                break;
-            case "paused":
-                stopped = false;
-                paused = true;
-                break;
-            case "running":
-                stopped = false;
-                paused = false;
-                break;
-            default:
-                throw "Unknown sequencer state!";
-        }
-    },
-
-    // Can only be called when paused is true.
-    resume = function ()
-    {
-        if (paused === true)
-        {
-            if (performersOptions.assistantUsesAbsoluteDurations === false)
-            {
-                spanStartNow = performance.now();
-            }
-            performedSpans[currentSpanIndex].resume();
-            setState("running");
-        }
-    },
-
-    // Can only be called while running
-    // (stopped === false && paused === false)
-    pause = function ()
-    {
-        if (stopped === false && paused === false)
-        {
-            performedSpans[currentSpanIndex].pause();
-            setState("paused");
-        }
-        else
-        {
-            throw "Attempt to pause a stopped or paused sequence.";
-        }
-    },
-
-    isStopped = function ()
-    {
-        return stopped === true;
-    },
-
-    isPaused = function ()
-    {
-        return paused === true;
     },
 
     // mono1.init(...) is called when the Start button is clicked, options.livePerformance === true and
@@ -669,7 +220,7 @@ _AP.mono1 = (function ()
             i, span, spans = [],
             performersTrack = tracks[performersTrackIndex],
             midiObject, midiObjects = performersTrack.midiObjects;
-           
+
             function getTrackSpanIsEmptyArrays(spans, tracks)
             {
                 var
@@ -871,7 +422,7 @@ _AP.mono1 = (function ()
         readOnlyTrackIsOnArray = argTrackIsOnArray;
         performedSpans = getPerformedSpans(allPerformersSpansInScore, startMarkerMsPosition, endMarkerMsPosition);
         resetMomentTimestamps(performedSpans, argTrackIsOnArray);
-        
+
         recordingSequence = recording;
 
         // the index of the (unplayed) span at the endMarkerPosition (the end chord or rest or endBarline).
@@ -881,22 +432,426 @@ _AP.mono1 = (function ()
         nextSpanIndex = 0;
     },
 
+    // If performersOptions.livePerformance === true, this is where input
+    // MIDIEvents arrive, and where processing is going to be done.
+    // The Assistant
+    // a) ignores both RealTime and SysEx messages in its input, and
+    // b) assumes that RealTime messages will not interrupt the messages being received.    
+    handleMIDIInputEvent = function(msg)
+    {
+        var CMD = _AP.constants.COMMAND,
+            inputEvent, command,
+            pOpts = performersOptions;
+
+        // The returned object is either empty, or has .data and .receivedTime attributes,
+        // and so constitutes a timestamped Message. (Web MIDI API simply calls this an Event)
+        // The Assistant ignores both realTime and SysEx messages, even though these are
+        // defined (untested 8.3.2013) in the ap library, so this function only returns
+        // the other types of message (having 2 or 3 data bytes).
+        // If the input data is undefined, an empty object is returned, otherwise data must
+        // be an array of numbers in range 0..0xF0. An exception is thrown if the data is illegal.
+        function getInputEvent(data, now)
+        {
+            var
+            SYSTEM_EXCLUSIVE = _AP.constants.SYSTEM_EXCLUSIVE,
+            isRealTimeStatus = _AP.constants.isRealTimeStatus,
+            inputEvent = {};
+
+            if(data !== undefined)
+            {
+                if(data[0] === SYSTEM_EXCLUSIVE.START)
+                {
+                    if(!(data.length > 2 && data[data.length - 1] === SYSTEM_EXCLUSIVE.END))
+                    {
+                        throw "Error in System Exclusive inputEvent.";
+                    }
+                    // SysExMessages are ignored by the assistant, so do nothing here.
+                    // Note that SysExMessages may contain realTime messages at this point (they
+                    // would have to be removed somehow before creating a sysEx event), but since
+                    // we are ignoring both realTime and sysEx, nothing needs doing here.
+                }
+                else if((data[0] & 0xF0) === 0xF0)
+                {
+                    if(!(isRealTimeStatus(data[0])))
+                    {
+                        throw "Error: illegal data.";
+                    }
+                    // RealTime messages are ignored by the assistant, so do nothing here.
+                }
+                else if(data.length === 2)
+                {
+                    inputEvent = new Message(data[0], data[1], 0);
+                }
+                else if(data.length === 3)
+                {
+                    inputEvent = new Message(data[0], data[1], data[2]);
+                }
+
+                // other data is simply ignored
+
+                if(inputEvent.data !== undefined)
+                {
+                    inputEvent.receivedTime = now;
+                }
+            }
+
+            return inputEvent;
+        }
+
+        function setSpeedFactor(controllerValue, slowerRoot, fasterRoot)
+        {
+            var speedFactor;
+            // If the controller's value (cv, in range 0..127) is >= 64, the factor which is passed to tick() will be
+            //     factor = fasterRoot ^ (cv - 64) -- if cv = 64, factor is 1, if cv is 127, factor is maximumFactor
+            // If the controller's value is < 64, the factor which is passed to tick() will be
+            //     factor = slowerRoot ^ (64 - cv) -- if cv = 0, factor will be 1/maximumFactor
+            function getSpeedFactor(controllerValue, slowerRoot, fasterRoot)
+            {
+                var factor;
+                if(controllerValue < 64) // 0..63
+                {
+                    factor = Math.pow(slowerRoot, (64 - controllerValue));
+                }
+                else // 64..127
+                {
+                    factor = Math.pow(fasterRoot, (controllerValue - 64));
+                }
+
+                return factor;
+            }
+
+            speedFactor = getSpeedFactor(controllerValue, slowerRoot, fasterRoot);
+            console.log("mono1: speedFactor=" + speedFactor.toString(10));
+            mainSequence.setSpeedFactor(speedFactor);
+        }
+
+        function handleController(pOpts, controlData, value, usesTracks)
+        {
+            var
+            i,
+            nTracks = mainSequence.tracks.length,
+            now = performance.now(),
+            trackMoments, nMoments, moment, track;
+
+            // Each trackMoment.moment is a Moment whose .messages attribute contains one message,
+            // trackMoment.trackIndex is the moment's track index (=channel).
+            // Returns null if no new trackMoment is created.
+            function newTrackMoment(controlData, trackIndex, value)
+            {
+                var message, moment = null, trackMoment = null;
+
+                // controlData is the controlData received from the live performer (via the controlSelector pop-ups).
+                // value is the control value received from the live performer (or a newly calculated volume value).
+                // trackIndex is the new message's trackIndex.
+                // Returns null if no message is created for some reason.
+                function newControlMessage(controlData, value, trackIndex)
+                {
+                    var
+                    CMD = _AP.constants.COMMAND,
+                    message = null;
+
+                    if(controlData.midiControl !== undefined) // a normal control (including volume, whose value is handled earlier)
+                    {
+                        message = new Message(CMD.CONTROL_CHANGE + trackIndex, controlData.midiControl, value);
+                    }
+                    else if(controlData.command !== undefined)
+                    {
+                        switch(controlData.command)
+                        {
+                            case CMD.AFTERTOUCH:
+                                if(currentLivePerformersKeyPitch >= 0)  // is -1 when no note is playing
+                                {
+                                    message = new Message(CMD.AFTERTOUCH + trackIndex, currentLivePerformersKeyPitch, value);
+                                }
+                                break;
+                            case CMD.CHANNEL_PRESSURE:
+                                message = new Message(CMD.CHANNEL_PRESSURE + trackIndex, value, 0);
+                                break;
+                            case CMD.PITCH_WHEEL:
+                                // value is inputEvent.data[2]
+                                message = new Message(CMD.PITCH_WHEEL + trackIndex, 0, value);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                    return message;
+                }
+
+                message = newControlMessage(controlData, value, trackIndex);
+                if(message !== null)
+                {
+                    moment = new Moment(_AP.moment.UNDEFINED_TIMESTAMP);  // moment.msPositionInScore becomes UNDEFINED_TIMESTAMP
+                    moment.messages.push(message);
+                    trackMoment = {};
+                    trackMoment.moment = moment;
+                    trackMoment.trackIndex = trackIndex;
+                }
+                return trackMoment;
+            }
+
+            // Returns a new array of (synchronous) volume trackMoments.
+            // This function calculates new volume values for each track.
+            function getTrackVolumeMoments(pOpts, nTracks, controlData, value, controllerUsesTracks)
+            {
+                var
+                i, trackMoments = [], trackMoment, abstractVolume, trackVolume;
+
+                if(controlData.midiControl !== _AP.constants.CONTROL.VOLUME)
+                {
+                    throw "Error: this function only handles volume.";
+                }
+
+                abstractVolume = pOpts.minVolume + (value * pOpts.volumeScale);
+
+                for(i = 0; i < nTracks; ++i)
+                {
+                    if(readOnlyTrackIsOnArray[i] && controllerUsesTracks[i])
+                    {
+                        trackVolume = (pOpts.masterVolumes[i] / 127) * abstractVolume;
+
+                        trackMoment = newTrackMoment(controlData, i, trackVolume);
+                        if(trackMoment !== null)
+                        {
+                            trackMoments.push(trackMoment);
+                        }
+                    }
+                }
+
+                return trackMoments;
+            }
+
+            // Returns a new array of (synchronous) trackMoments.
+            // Each trackMoment.moment is a Moment whose .messages attribute contains one message,
+            // trackMoment.trackIndex is the moment's track index (=channel).
+            function getTrackMoments(nTracks, controlData, value, controllerUsesTracks)
+            {
+                var
+                i, trackMoments = [], trackMoment;
+
+                for(i = 0; i < nTracks; ++i)
+                {
+                    if(readOnlyTrackIsOnArray[i] && controllerUsesTracks[i])
+                    {
+                        trackMoment = newTrackMoment(controlData, i, value);
+                        if(trackMoment !== null)
+                        {
+                            trackMoments.push(trackMoment);
+                        }
+                    }
+                }
+
+                return trackMoments;
+            }
+
+            if(controlData.midiControl === _AP.constants.CONTROL.VOLUME)
+            {
+                trackMoments = getTrackVolumeMoments(pOpts, nTracks, controlData, value, usesTracks);
+            }
+            else
+            {
+                trackMoments = getTrackMoments(nTracks, controlData, value, usesTracks);
+            }
+            nMoments = trackMoments.length;
+            if(recordingSequence === undefined || recordingSequence === null)
+            {
+                throw "Error: a recordingSequence must be available here.";
+            }
+            for(i = 0; i < nMoments; ++i)
+            {
+                track = recordingSequence.trackRecordings[trackMoments[i].trackIndex];
+
+                if(track.isInChord !== undefined) // track.isInChord is defined in TrackRecording.addLiveScoreMoment()
+                {
+                    moment = trackMoments[i].moment;
+                    moment.timestamp = now;
+                    track.addLivePerformersControlMoment(moment);
+
+                    midiOutputDevice.send(moment.messages[0].data, now);
+                }
+            }
+        }
+
+        function silentlyCompleteCurrentlyPlayingSpan()
+        {
+            // currentSpanIndex is the index of the currently playing span
+            // (which should be silently completed when a noteOn arrives).
+            if(currentSpanIndex >= 0 && currentSpanIndex < performedSpans.length)
+            {
+                mainSequence.finishSpanSilently(performedSpans[nextSpanIndex].msPosition);
+            }
+        }
+
+        function handleNoteOff(inputEvent)
+        {
+            if(inputEvent.data[1] === currentLivePerformersKeyPitch)
+            {
+                currentLivePerformersKeyPitch = -1;
+
+                silentlyCompleteCurrentlyPlayingSpan();
+
+                if(endOfPerformance) // see reportEndOfPerformance() above 
+                {
+                    stop();
+                }
+                else if(performedSpans[nextSpanIndex].restSpan !== undefined) // only play the next sequence if it is a restSpan
+                {
+                    currentSpanIndex = nextSpanIndex++;
+                    endOfPerformance = (currentSpanIndex === endOfSpansIndex);
+                    spanStartNow = inputEvent.receivedTime;
+                    playSpan(performedSpans, currentSpanIndex, nextSpanIndex);
+                }
+                else if(nextSpanIndex <= endOfSpansIndex)
+                {
+                    endOfPerformance = (nextSpanIndex === endOfSpansIndex);
+                    reportMsPositionInScore(performedSpans[nextSpanIndex].msPosition);
+                }
+            }
+        }
+
+        function handleNoteOn(inputEvent)
+        {
+            var
+            allSubsequences = performedSpans;
+
+            spanStartNow = inputEvent.receivedTime;
+
+            currentLivePerformersKeyPitch = inputEvent.data[1];
+
+            if(currentSpanIndex === (performedSpans.length - 1))
+            {
+                // If the final sequence is playing and a noteOn is received, the performance stops immediately.
+                // In this case the final sequence must be a restSpan (otherwise a noteOn can't be received).
+                stop();
+            }
+            else if(inputEvent.data[2] > 0)
+            {
+                silentlyCompleteCurrentlyPlayingSpan();
+
+                if(nextSpanIndex === 0)
+                {
+                    performanceStartNow = spanStartNow;
+                }
+
+                if(nextSpanIndex === 0 || (nextSpanIndex <= endOfSpansIndex && allSubsequences[nextSpanIndex].chordSpan !== undefined))
+                {
+                    currentSpanIndex = nextSpanIndex++;
+                    endOfPerformance = (currentSpanIndex === endOfSpansIndex);
+
+                    playSpan(performedSpans, currentSpanIndex, nextSpanIndex);
+                }
+            }
+            else // velocity 0 is "noteOff"
+            {
+                handleNoteOff(inputEvent);
+            }
+        }
+
+        inputEvent = getInputEvent(msg.data, performance.now());
+
+        if(inputEvent.data !== undefined)
+        {
+            command = inputEvent.command();
+
+            switch(command)
+            {
+                case CMD.CHANNEL_PRESSURE: // produced by both R2M and E-MU XBoard49 when using "aftertouch"
+                    if(pOpts.speedControllerName === "pressure")
+                    {
+                        setSpeedFactor(inputEvent.data[1], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
+                    }
+                    console.log("ChannelPressure, data[1]:", inputEvent.data[1].toString());  // CHANNEL_PRESSURE control has no data[2]
+                    if(pOpts.pressureSubstituteControlData !== undefined)
+                    {
+                        // CHANNEL_PRESSURE.data[1] is the amount of pressure 0..127.
+                        handleController(pOpts, pOpts.pressureSubstituteControlData, inputEvent.data[1], pOpts.pressureTracks);
+                    }
+                    break;
+                case CMD.AFTERTOUCH: // produced by the EWI breath controller
+                    if(pOpts.speedControllerName === "pressure")
+                    {
+                        setSpeedFactor(inputEvent.data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
+                    }
+                    console.log("Aftertouch input, key:" + inputEvent.data[1].toString() + " value:", inputEvent.data[2].toString());
+                    if(pOpts.pressureSubstituteControlData !== undefined)
+                    {
+                        // AFTERTOUCH.data[1] is the MIDIpitch to which to apply the aftertouch, but I dont need that
+                        // because the current pitch is kept in currentLivePerformersKeyPitch (in the closure).
+                        // AFTERTOUCH.data[2] is the amount of pressure 0..127.
+                        handleController(pOpts, pOpts.pressureSubstituteControlData, inputEvent.data[2], pOpts.pressureTracks);
+                    }
+                    break;
+                case CMD.CONTROL_CHANGE: // sent when the input device's mod wheel changes.
+                    if(inputEvent.data[1] === _AP.constants.CONTROL.MODWHEEL)
+                    {
+                        console.log("Modulation Wheel, data[1]:", inputEvent.data[1].toString() + " data[2]:", inputEvent.data[2].toString());
+                        if(pOpts.speedControllerName === "modulation wheel")
+                        {
+                            setSpeedFactor(inputEvent.data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
+                        }
+                        // (EWI bite, EMU modulation wheel (CC 1, Coarse Modulation))
+                        if(pOpts.modWheelSubstituteControlData !== undefined)
+                        {
+                            // inputEvent.data[2] is the value to which to set the changed control
+                            handleController(pOpts, pOpts.modWheelSubstituteControlData, inputEvent.data[2], pOpts.modWheelTracks);
+                        }
+                    }
+                    break;
+                case CMD.PITCH_WHEEL: // EWI pitch bend up/down controllers, EMU pitch wheel
+                    if(pOpts.speedControllerName === "pitch wheel")
+                    {
+                        setSpeedFactor(inputEvent.data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
+                    }
+                    console.log("Pitch Wheel, data[1]:", inputEvent.data[1].toString() + " data[2]:", inputEvent.data[2].toString());
+                    // by experiment: inputEvent.data[2] is the "high byte" and has a range 0..127. 
+                    if(pOpts.pitchWheelSubstituteControlData !== undefined)
+                    {
+                        // PITCH_WHEEL.data[1] is the 7-bit LSB (0..127) -- ignored here
+                        // PITCH_WHEEL.data[2] is the 7-bit MSB (0..127)
+                        handleController(pOpts, pOpts.pitchWheelSubstituteControlData, inputEvent.data[2], pOpts.pitchWheelTracks);
+                    }
+                    break;
+                case CMD.NOTE_ON:
+                    console.log("NoteOn, pitch:", inputEvent.data[1].toString(), " velocity:", inputEvent.data[2].toString());
+                    if(inputEvent.data[2] !== 0)
+                    {
+                        if(pOpts.speedControllerName === "noteOn: pitch")
+                        {
+                            setSpeedFactor(inputEvent.data[1], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
+                        }
+                        else if(pOpts.speedControllerName === "noteOn: velocity")
+                        {
+                            setSpeedFactor(inputEvent.data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
+                        }
+                        handleNoteOn(inputEvent);
+                    }
+                    else
+                    {
+                        handleNoteOff(inputEvent);
+                    }
+                    break;
+                case CMD.NOTE_OFF:
+                    console.log("NoteOff, pitch:", inputEvent.data[1].toString(), " velocity:", inputEvent.data[2].toString());
+                    handleNoteOff(inputEvent);
+                    break;
+                default:
+                    break;
+            }
+        }
+    },
+
     publicAPI =
     {
-        init: init,
-        
-        play: play,
-        pause: pause,
-        resume: resume,
-        stop: stop,
         isStopped: isStopped,
-        isPaused: isPaused,
+        isRunning: isRunning,
+        stop: stop,
 
+        init: init,
+        play: play,
         handleMIDIInputEvent: handleMIDIInputEvent
     };
     // end var
-
-    forwardSetState = setState;
 
     return publicAPI;
 

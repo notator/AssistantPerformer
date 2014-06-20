@@ -1048,8 +1048,8 @@ _AP.performersOptionsDialog = (function()
             {
                 options.speedControllerName = controls.speedControllerSelect.options[controls.speedControllerSelect.selectedIndex].text;
                 speedMaxFactor = parseFloat(controls.maxSpeedInput.value) / 100;
-                options.fasterSpeedRoot = Math.pow(speedMaxFactor, 1 / 63);
-                options.slowerSpeedRoot = Math.pow(1 / speedMaxFactor, 1 / 63);
+                options.slowerSpeedRoot = Math.pow(speedMaxFactor, 1 / 63);
+                options.fasterSpeedRoot = Math.pow(1 / speedMaxFactor, 1 / 63);
             }
             
             return options;

@@ -302,6 +302,7 @@ _AP.controls = (function(document, window)
 
         /********* begin performance buttons *******************/
         cl.performanceButtonsDisabled.setAttribute("opacity", GLASS);
+
         // cl.goUnselected.setAttribute("opacity", METAL); -- never changes
         cl.pauseUnselected.setAttribute("opacity", GLASS);
         cl.pauseSelected.setAttribute("opacity", GLASS);
@@ -577,7 +578,7 @@ _AP.controls = (function(document, window)
 
             if(sequence.tracks.length > 0)
             {
-                if(player.isPaused())
+                if(options.livePerformance === false && player.isPaused())
                 {
                     player.resume();
                 }
@@ -592,22 +593,20 @@ _AP.controls = (function(document, window)
 
                     sendTrackInitializationMessages(options, scoreInfo.trackInitialisationValues);
 
-                    // old
-                    //player.play(sequence.tracks, options, score.startMarkerMsPosition(), score.endMarkerMsPosition(),
-                    //    trackIsOnArray, sequenceRecording);
-
-                    // new
                     player.play(score.startMarkerMsPosition(), score.endMarkerMsPosition(), trackIsOnArray, sequenceRecording);
                 }
 
                 if(options.livePerformance === true)
                 {
                     addInputEventListener(options);
+                    cl.goDisabled.setAttribute("opacity", SMOKE);
                 }
-
+                else
+                {
+                    cl.goDisabled.setAttribute("opacity", GLASS);
+                }
                 cl.pauseUnselected.setAttribute("opacity", METAL);
                 cl.pauseSelected.setAttribute("opacity", GLASS);
-                cl.goDisabled.setAttribute("opacity", GLASS);
             }
 
             tracksControl.setDisabled(true);
@@ -728,7 +727,7 @@ _AP.controls = (function(document, window)
                 setStopped();
                 break;
             case 'paused':
-                if(options.livePerformance === false)
+                if(options.livePerformance === false) // live performances cannot be paused
                 {
                     setPaused();
                 }
