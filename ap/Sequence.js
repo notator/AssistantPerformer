@@ -240,7 +240,7 @@ _AP.sequence = (function(window)
                         if(trk.isPerforming && trk.currentMoment !== null)
                         {
 
-                            nextMomPos = trk.currentMidiObject.msPositionInScore + trk.currentMoment.msPositionInChord;
+                            nextMomPos = trk.currentMsPosition();
                             if(nextMomPos < nextScoreMsPosition)
                             {
                                 rval = true;
@@ -291,7 +291,7 @@ _AP.sequence = (function(window)
                     // if track.currentMoment !== null then track.currentMidiObject should also be !== null!
                     if(track.isPerforming && track.currentMoment !== null)
                     {
-                        trackMomentMsPosInScore = track.currentMidiObject.msPositionInScore + track.currentMoment.msPositionInChord;
+                        trackMomentMsPosInScore = track.currentMsPosition();
                         if(trackMomentMsPosInScore < nextMomtMsPosInScore)
                         {
                             currentTrack = track;
@@ -692,40 +692,24 @@ _AP.sequence = (function(window)
             run();
         },
 
-        // Immediately sends all the sequence's NOTE_OFF commands that happen
+        // Immediately sends all the span's NOTE_OFF commands that happen
         // before endOfSpanMsPosition, and then calls stop().
         // Other commands (NOTE_ON, AFTERTOUCH, CONTROL_CHANGE, PROGRAM_CHANGE, CHANNEL_PRESSURE, PITCH_WHEEL) are NOT sent.
-        // Called in assisted performances when a NOTE_ON arrives before a span has finished.
-        // The noteOff messages are recorded.
+        // Called in assisted performances when a NOTE_OFF arrives before a span has finished.
+        // The sent noteOff messages are recorded.
         finishSpanSilently = function(endOfSpanMsPosition)
         {
             var
-            CMD = _AP.constants.COMMAND,
-            Moment = _AP.moment.Moment,
-            i, nMessages, messages, message, command,
-            noteOffsMoment,
-            moment = nextMoment(),
-            now = performance.now();
+            i, nTracks = tracks.length, track,
+            now = performance.now(),
+            noteOffsMoment;
 
-            function sendMessages(moment)
+            function addNoteOffs(moment, noteOffsMoment)
             {
-                var
-                messages = moment.messages,
-                i, nMessages = messages.length, timestamp = moment.timestamp;
+                var CMD = _AP.constants.COMMAND,
+                messages = moment.messages, 
+                i, nMessages = messages.length, message, command;
 
-                for(i = 0; i < nMessages; ++i)
-                {
-                    midiOutputDevice.send(messages[i].data, timestamp);
-                }
-            }
-
-            while(moment !== null && moment.msPositionInScore < endOfSpanMsPosition)
-            {
-                noteOffsMoment = new Moment(0);
-                noteOffsMoment.timestamp = now;
-
-                nMessages = moment.messages.length;
-                messages = moment.messages;
                 for(i = 0; i < nMessages; ++i)
                 {
                     message = messages[i];
@@ -735,15 +719,48 @@ _AP.sequence = (function(window)
                         noteOffsMoment.messages.push(message);
                     }
                 }
-
-                sendMessages(noteOffsMoment);
-
-                if(sequenceRecording !== undefined && sequenceRecording !== null)
-                { 
-                    sequenceRecording.trackRecordings[noteOffsMoment.messages[0].channel()].addLiveScoreMoment(noteOffsMoment);
-                }
-                moment = nextMoment();
             }
+
+            function sendMessages(moment)
+            {
+                var
+                messages = moment.messages,
+                i, nMessages = messages.length;
+
+                for(i = 0; i < nMessages; ++i)
+                {
+                    midiOutputDevice.send(messages[i].data, moment.timestamp);
+                }
+            }
+
+            for(i = 0; i < nTracks; ++i)
+            {
+                track = tracks[i];
+                // track.currentMoment is null when the track has no more moments
+                // if track.currentMoment !== null then track.currentMidiObject should also be !== null!
+                if(track.isPerforming)
+                {
+                    noteOffsMoment = new _AP.moment.Moment(0);
+                    noteOffsMoment.timestamp = now;
+
+                    while(track.currentMsPosition() < endOfSpanMsPosition)
+                    {
+                        addNoteOffs(track.currentMoment, noteOffsMoment);
+                        track.advanceCurrentMoment();
+                    }
+
+                    if(noteOffsMoment.messages.length > 0)
+                    {
+                        sendMessages(noteOffsMoment);
+
+                        if(sequenceRecording !== undefined && sequenceRecording !== null)
+                        {
+                            sequenceRecording.trackRecordings[noteOffsMoment.messages[0].channel()].addLiveScoreMoment(noteOffsMoment);
+                        }
+                    }
+                }
+            }
+
             stop();
         },
 

@@ -20,17 +20,18 @@
  */
 
 /*jslint bitwise: false, nomen: true, plusplus: true, white: true */
+/*global _AP: false,  window: false,  performance: false, console: false */
 
 _AP.namespace('_AP.track');
 
-_AP.track = (function ()
+_AP.track = (function()
 {
     "use strict";
     var
     // An empty track is created. It contains an empty midiObjects array.
-    Track = function ()
+    Track = function()
     {
-        if (!(this instanceof Track))
+        if(!(this instanceof Track))
         {
             return new Track();
         }
@@ -108,8 +109,57 @@ _AP.track = (function ()
         {
             this.currentMidiObject.advanceMoment();
             this.currentMoment = this.currentMidiObject.currentMoment;
-            // this.currentMoment has no messages if the currentMidiObject is a MidiRest or
-            // is a non-repeating MidiChord whose moments have all been played.
+            // this.currentMoment can either be null if it is beyond the end of a non-repeating chord or rest,
+            // or can be non-null with a messages attribute if the currentMidiObject is a chord.
+        }
+    };
+
+    // Throws an exception if either currentMidiObject or currentMoment are null.
+    Track.prototype.currentMsPosition = function()
+    {
+        var msPos;
+        if(this.currentMidiObject !== null && this.currentMoment !== null)
+        {
+            msPos = this.currentMidiObject.msPositionInScore + this.currentMoment.msPositionInChord;
+        }
+        else
+        {
+            throw "Error: this function should never be called when either currentMidiObject or currentMoment are null.";
+        }
+        return msPos;
+    };
+
+    // track.currentMoment is moved to the next moment in the track.
+    // If necessary, track.currentMidiObject is updated as well.
+    // Both track.currentMidiObject and track.currentMoment are null at the end of the track,
+    // but non-null otherwise.
+    // This function is used in sequence.finishSpanSilently().
+    Track.prototype.advanceCurrentMoment = function()
+    {
+        var nextMoment;
+
+        // Updates the currentMidiObject's internal moment index, ignoring its repeat setting.
+        // Sets currentMidiObject.currentMoment to null if out of range.
+        this.currentMidiObject.advanceCurrentMoment(); 
+
+        nextMoment = this.currentMidiObject.currentMoment;
+        if(nextMoment !== null)
+        {
+            this.currentMoment = nextMoment;
+        }
+        else
+        {
+            this._currentMidiObjectIndex++;
+            if(this._currentMidiObjectIndex < this.midiObjects.length)
+            {
+                this.currentMidiObject = this.midiObjects[this._currentMidiObjectIndex];
+                this.currentMoment = this.currentMidiObject.currentMoment;  // is non-null and has zero or more messages
+            }
+            else
+            {
+                this.currentMidiObject = null;
+                this.currentMoment = null;
+            }
         }
     };
 

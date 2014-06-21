@@ -11,6 +11,7 @@
  */
 
 /*jslint bitwise: false, nomen: true, plusplus: true, white: true */
+/*global _AP: false,  window: false,  performance: false, console: false */
 
 _AP.namespace('_AP.midiChord');
 
@@ -58,7 +59,7 @@ _AP.midiChord = (function()
         // used at runtime
         Object.defineProperty(this, "currentMoment", { value: null, writable: true });
         Object.defineProperty(this, "_offsetMsDurationForRepeatedMoments", { value: 0, writable: true });
-        Object.defineProperty(this, "_currentMomentIndex", { value: 0, writable: true });
+        Object.defineProperty(this, "_currentMomentIndex", { value: -1, writable: true });
 
         if(chordIsSilent === true)
         {
@@ -357,9 +358,11 @@ _AP.midiChord = (function()
                 finalChordOffMoment = new Moment(msDurationInScore);
             }
 
-            return {"chordMoments" : chordMoments,
-                "finalChordOffMoment" : finalChordOffMoment,
-                "msDurationOfBasicChords" : msDurationOfBasicChords};
+            return {
+                "chordMoments": chordMoments,
+                "finalChordOffMoment": finalChordOffMoment,
+                "msDurationOfBasicChords": msDurationOfBasicChords
+            };
         }
 
         // An array of moments whose msPositionInChord has been set.
@@ -705,9 +708,8 @@ _AP.midiChord = (function()
     {
         var
         moments = [],
-        silentMoment;
-
         silentMoment = new Moment(0);
+
         Object.defineProperty(silentMoment, "chordStart", { value: true, writable: false });
 
         moments.push(silentMoment); // an empty chordStart moment.
@@ -717,28 +719,25 @@ _AP.midiChord = (function()
 
     /******  Runtime functions ******/
 
-    // Sets
-    //     this._currentMomentIndex = 0,
-    //     this.currentMoment = this.moments[0] or null if the moment is empty
-    MidiChord.prototype._init = function()
-    {
-        this._currentMomentIndex = 0;
-        this.currentMoment = this.moments[0];
-        if(this.currentMoment.messages.length === 0)
-        {
-            throw "MidiChords always have a first moment containing messages!";
-        }
-    };
-
+    // Sets the chord to the state it should have before a performance starts.
+    // Called every time a performance begins.
     MidiChord.prototype.runtimeInit = function()
     {
-        this._init();
-        this._offsetMsDurationForRepeatedMoments = 0;
+        if(this.moments.length > 0 && this.moments[0].messages.length > 0)
+        {
+            this._currentMomentIndex = 0;
+            this.currentMoment = this.moments[0];
+            this._offsetMsDurationForRepeatedMoments = 0;
+        }
+        else
+        {
+            throw "MidiChords must always have a first moment containing messages!";
+        }        
     };
 
     // Sets this.currentMoment to the following moment.
-    // If this._repeat is false, and all the moments have been played, an empty moment is returned.
-    // this.currentMoment is never empty if this._repeat is true. 
+    // If this._repeat is false, and all the moments have been played, this.currentMoment is set to null.
+    // this.currentMoment is never null if this._repeat is true. 
     MidiChord.prototype.advanceMoment = function()
     {
         if(this._currentMomentIndex < 0)
@@ -760,19 +759,38 @@ _AP.midiChord = (function()
         }
         else // this._currentMomentIndex === this.moments.length
         {
-            this._init();
+            this.runtimeInit();
 
             this._offsetMsDurationForRepeatedMoments += this._msDurationOfBasicChords;
             if(this._repeat)
-            {   
+            {
                 // make a deep clone of the original this.currentMoment
                 this.currentMoment = this.currentMoment.getCloneAtOffset(this._offsetMsDurationForRepeatedMoments);
             }
             else
             {
-                // return an empty moment
-                this.currentMoment = new Moment(this._offsetMsDurationForRepeatedMoments);
+                this.currentMoment = null;
             }
+        }
+    };
+
+    // Updates the MidiChord's internal moment index, ignoring its repeat setting.
+    // Sets currentMidiObject.currentMoment to null if out of range.
+    MidiChord.prototype.advanceCurrentMoment = function()
+    {
+        if(this.currentMoment === null)
+        {
+            throw "Error: currentMoment should never be null here!";
+        }
+
+        this._currentMomentIndex++;
+        if(this._currentMomentIndex < this.moments.length)
+        {
+            this.currentMoment = this.moments[this._currentMomentIndex];
+        }
+        else
+        {
+            this.currentMoment = null;
         }
     };
 

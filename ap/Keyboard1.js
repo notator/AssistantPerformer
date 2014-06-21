@@ -48,11 +48,12 @@
 */
 
 /*jslint bitwise: true, nomen: true, plusplus: true, white: true */
+/*global _AP: false,  window: false,  performance: false, console: false */
 
 
 /*************************************************************************************************
 *
-* ACHTUNG: This file is just a placeholder. Adapt MonoInputPlayer1.js, when that file is working.
+* ACHTUNG: This file is just a placeholder. Adapt the other files they are working.
 *
 **************************************************************************************************/
 
@@ -238,7 +239,7 @@ _AP.keyboard1 = (function()
                 // if track.currentMoment !== null then track.currentMidiObject should also be !== null!
                 if(track.isPerforming && track.currentMoment !== null)
                 {
-                    trackMomentMsPosInScore = track.currentMidiObject.msPositionInScore + track.currentMoment.msPositionInChord;
+                    trackMomentMsPosInScore = track.currentMsPosition();
                     if(trackMomentMsPosInScore < nextMomtMsPosInScore)
                     {
                         currentTrack = track;
@@ -854,7 +855,7 @@ _AP.keyboard1 = (function()
                     message = newControlMessage(runtimeTrackOptions, controlData, value, trackIndex);
                     if(message !== null)
                     {
-                        moment = new Moment(_AP.moment.UNDEFINED_TIMESTAMP);  // moment.msPositionInScore becomes UNDEFINED_TIMESTAMP
+                        moment = new Moment(0);  // moment.msPositionInChord is never used (this moment is not part of the score).
                         moment.messages.push(message);
                         trackMoment = {};
                         trackMoment.moment = moment;

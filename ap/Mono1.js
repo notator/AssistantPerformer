@@ -134,7 +134,7 @@ _AP.mono1 = (function()
     // The performance and recording continue until reportEndOfPerformance is called in mono1.stop() above.
     reportEndOfSpanCallback = function()
     {
-        reportMsPositionInScore(performedSpans[nextSpanIndex].msPosition);
+        //reportMsPositionInScore(performedSpans[nextSpanIndex].msPosition);
 
         console.log("reportEndOfSpanCallback: This function should handle spans waiting for a noteOn to start the next one.");
 
@@ -430,11 +430,9 @@ _AP.mono1 = (function()
         nextSpanIndex = 0;
     },
 
-    // If performersOptions.livePerformance === true, this is where input
-    // MIDIEvents arrive, and where processing is going to be done.
-    // The Assistant
-    // a) ignores both RealTime and SysEx messages in its input, and
-    // b) assumes that RealTime messages will not interrupt the messages being received.    
+    // This is where input MIDIEvents arrive, and are processed.
+    // SysEx messages are not handled, and it is assumed that RealTime Midi messages are not going
+    // to be part of the arriving stream (so they wont be interrupting the messages being received).
     handleMIDIInputEvent = function(msg)
     {
         var CMD = _AP.constants.COMMAND,
@@ -580,7 +578,7 @@ _AP.mono1 = (function()
                 message = newControlMessage(controlData, value, trackIndex);
                 if(message !== null)
                 {
-                    moment = new Moment(_AP.moment.UNDEFINED_TIMESTAMP);  // moment.msPositionInScore becomes UNDEFINED_TIMESTAMP
+                    moment = new Moment(0);  // moment.msPositionInChord is never used (this moment is not part of the score).
                     moment.messages.push(message);
                     trackMoment = {};
                     trackMoment.moment = moment;

@@ -11,6 +11,7 @@
  */
 
 /*jslint bitwise: false, nomen: true, plusplus: true, white: true */
+/*global _AP: false,  window: false,  performance: false, console: false */
 
 _AP.namespace('_AP.midiRest');
 
@@ -19,10 +20,10 @@ _AP.midiRest = (function()
     "use strict";
     // begin var
     var
-    Moment = _AP.moment.Moment, // constructor
-
-    // a MidiRest has the same structure as a MidiChord, but it
-    // has a single Moment containing a single, empty message. 
+    // A MidiRest has the same structure as a MidiChord, but its moments array always contains a single moment.
+    // moments[0] has a restStart attribute.
+    // moments[0].messages is initially empty, but finalChordOffMessages and trackInitialisation can be added
+    // while a sequence is being created.
     MidiRest = function(timeObject)
     {
         if(!(this instanceof MidiRest))
@@ -31,11 +32,11 @@ _AP.midiRest = (function()
         }
         Object.defineProperty(this, "msPositionInScore", { value: timeObject.msPosition, writable: false });
         Object.defineProperty(this, "msDurationInScore", { value: timeObject.msDuration, writable: false });
-
-        Object.defineProperty(this, "moments", { value: null, writable: true });
-        Object.defineProperty(this, "currentMoment", { value: null, writable: true });
-
-        this.moments = this._getMoments(); // defined in prototype
+        Object.defineProperty(this, "moments", { value: [], writable: false });
+        Object.defineProperty(this, "currentMoment", { value: new _AP.moment.Moment(0), writable: true });
+ 
+        Object.defineProperty(this.currentMoment, "restStart", { value: true, writable: false });
+        this.moments.push(this.currentMoment);
 
         return this;
     },
@@ -49,32 +50,29 @@ _AP.midiRest = (function()
     };
     // end var
 
-    // returns an array containing a single empty moment having a "restStart" attribute.
-    // The moment's messages array is empty.
-    MidiRest.prototype._getMoments = function()
-    {
-        var
-        moments = [],
-        restMoment;
-
-        restMoment = new Moment(0);
-        Object.defineProperty(restMoment, "restStart", { value: true, writable: false });
-
-        moments.push(restMoment); // an empty moment.
-
-        return moments;
-    };
-
-    // Set this.currentMoment to the first moment in this MidiRest.
-    // Sets this.currentMoment to null if the moment.messages.length === 0.
+    // Sets the rest to the state it should have before a performance starts.
+    // Called every time a performance begins.
     MidiRest.prototype.runtimeInit = function()
     {
-        this.currentMoment = this.moments[0];
+        if(this.moments.length === 1)
+        {
+            this.currentMoment = this.moments[0];
+        }
+        else
+        {
+            throw "MidiRests always have a single moment!";
+        }
     };
 
+    // MidiRests never repeat. 
     MidiRest.prototype.advanceMoment = function()
     {
-        this.currentMoment = new Moment(this.msDurationInScore);
+        this.currentMoment = null;
+    };
+
+    MidiRest.prototype.advanceCurrentMoment = function()
+    {
+        this.currentMoment = null;
     };
 
     return publicRestAPI;
