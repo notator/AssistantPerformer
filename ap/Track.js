@@ -65,8 +65,6 @@ _AP.track = (function()
     // If the track has a rest at the startMarker, this.currentMoment.messages can be empty. 
     // If the track has no midiObjects at the startMarker, and the previous midiObject is a rest,
     // this.currentMoment.messages will be empty.
-    // All the midiObjects following the one at or before startMarkerMsPositionInScore are
-    // set to start at their first moment.
     Track.prototype.setToFirstStartMarker = function(startMarkerMsPositionInScore)
     {
         var i, moIndex, midiObject, nMidiObjects = this.midiObjects.length;
@@ -88,12 +86,6 @@ _AP.track = (function()
         midiObject.setToFirstStartMarker(startMarkerMsPositionInScore);
         this.currentMidiObject = midiObject;
         this.currentMoment = midiObject.currentMoment; // this.currentMoment.messages can be empty (see above)
-
-        for(i = moIndex + 1; i < nMidiObjects; ++i)
-        {
-            midiObject = this.midiObjects[i];
-            midiObject.setToStartAtBeginning();
-        }
     };
 
     // Advances the currentMidiObject if the next one is at msPosition. Stops repeating chords, if any.
@@ -152,6 +144,8 @@ _AP.track = (function()
 
         if(this.currentMoment === null)
         {
+            this.currentMidiObject.setToStartAtBeginning();
+
             this._currentMidiObjectIndex++;
             if(this._currentMidiObjectIndex < this.midiObjects.length)
             {
