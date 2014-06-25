@@ -33,7 +33,7 @@ _AP.midiRest = (function()
         Object.defineProperty(this, "msDurationInScore", { value: timeObject.msDuration, writable: false });
         Object.defineProperty(this, "moments", { value: [], writable: false });
         Object.defineProperty(this, "currentMoment", { value: new _AP.moment.Moment(0), writable: true });
- 
+
         Object.defineProperty(this.currentMoment, "restStart", { value: true, writable: false });
         this.moments.push(this.currentMoment);
 
@@ -49,23 +49,37 @@ _AP.midiRest = (function()
     };
     // end var
 
+    /***** The following functions are defined for both MidiChords and MidiRests *****************/
+
+    // The rest must be at or straddle the start marker.
     // Sets the rest to the state it should have when a performance starts.
     MidiRest.prototype.setToFirstStartMarker = function(startMarkerMsPositionInScore)
     {
+        if((this.msPositionInScore > startMarkerMsPositionInScore)
+        || (this.msPositionInScore + this.msDurationInScore < startMarkerMsPositionInScore))
+        {
+            throw "Error: this rest must be at or straddle the start marker.";
+        }
+
         if(this.msPositionInScore === startMarkerMsPositionInScore)
         {
             this.currentMoment = this.moments[0];
         }
         else
         {
-            this.currentMoment = new _AP.moment.Moment(0);
+            this.currentMoment = new _AP.moment.Moment(0); // an empty moment
         }
     };
 
     MidiRest.prototype.advanceCurrentMoment = function()
     {
         this.currentMoment = null;
-        return null;
+        return this.currentMoment;
+    };
+
+    MidiRest.prototype.setToStartAtBeginning = function()
+    {
+        this.currentMoment = this.moments[0];
     };
 
     return publicRestAPI;

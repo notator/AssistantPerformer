@@ -717,13 +717,22 @@ _AP.midiChord = (function()
         return moments;
     };
 
-    // Sets the chord to the state it should have when a performance starts.
+    /***** The following functions are defined for both MidiChords and MidiRests *****************/
+
+    // The chord must be at or straddle the start marker.
+    // This function sets the chord to the state it should have when a performance starts.
     // this.currentMoment is set to the first moment at or after startMarkerMsPositionInScore.
     MidiChord.prototype.setToFirstStartMarker = function(startMarkerMsPositionInScore)
     {
         var
         nMoments = this.moments.length,
         currentIndex, currentPosition;
+
+        if((this.msPositionInScore > startMarkerMsPositionInScore)
+        || (this.msPositionInScore + this.msDurationInScore < startMarkerMsPositionInScore))
+        {
+            throw "Error: this chord must be at or straddle the start marker.";
+        }
 
         for(currentIndex = 0; currentIndex < nMoments; ++currentIndex)
         {  
@@ -758,6 +767,13 @@ _AP.midiChord = (function()
             this.currentMoment = null;
         }
         return this.currentMoment;
+    };
+
+    MidiChord.prototype.setToStartAtBeginning = function()
+    {
+        this._currentMomentIndex = 0;
+        this.currentMoment = this.moments[0];
+        this._offsetMsDurationForRepeatedMoments = 0;
     };
 
     return publicChordAPI;

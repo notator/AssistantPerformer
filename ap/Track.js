@@ -65,6 +65,8 @@ _AP.track = (function()
     // If the track has a rest at the startMarker, this.currentMoment.messages can be empty. 
     // If the track has no midiObjects at the startMarker, and the previous midiObject is a rest,
     // this.currentMoment.messages will be empty.
+    // All the midiObjects following the one at or before startMarkerMsPositionInScore are
+    // set to start at their first moment.
     Track.prototype.setToFirstStartMarker = function(startMarkerMsPositionInScore)
     {
         var i, moIndex, midiObject, nMidiObjects = this.midiObjects.length;
@@ -86,6 +88,12 @@ _AP.track = (function()
         midiObject.setToFirstStartMarker(startMarkerMsPositionInScore);
         this.currentMidiObject = midiObject;
         this.currentMoment = midiObject.currentMoment; // this.currentMoment.messages can be empty (see above)
+
+        for(i = moIndex + 1; i < nMidiObjects; ++i)
+        {
+            midiObject = this.midiObjects[i];
+            midiObject.setToStartAtBeginning();
+        }
     };
 
     // Advances the currentMidiObject if the next one is at msPosition. Stops repeating chords, if any.
@@ -115,8 +123,13 @@ _AP.track = (function()
     Track.prototype.currentMsPosition = function()
     {
         var msPos;
+
         if(this.currentMidiObject !== null)
         {
+            if(this.currentMoment === null)
+            {
+                throw "Error: currentMoment should never be null here.";
+            }
             msPos = this.currentMidiObject.msPositionInScore + this.currentMoment.msPositionInChord;
         }
         else
@@ -127,7 +140,7 @@ _AP.track = (function()
     };
 
     // Track.currentMoment is moved to the next moment in the currentMidiObject (ignoring the midiObject's repeat attribute).
-    // If the end of the currentMidiObect.moments is reached, the currentMidiObject is advanced.
+    // If the end of the currentMidiObect.moments is reached (it set its currentMoment to null), the currentMidiObject is advanced.
     // Both track.currentMidiObject and track.currentMoment are null at the end of the track, but non-null otherwise.
     Track.prototype.advanceCurrentMoment = function()
     {
@@ -136,6 +149,7 @@ _AP.track = (function()
         // advanceCurrentMoment() updates the currentMidiObject's internal moment index, ignoring its repeat setting,
         // and sets currentMidiObject.currentMoment to null if out of range.
         this.currentMoment = this.currentMidiObject.advanceCurrentMoment();
+
         if(this.currentMoment === null)
         {
             this._currentMidiObjectIndex++;
