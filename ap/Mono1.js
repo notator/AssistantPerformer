@@ -55,11 +55,14 @@ _AP.mono1 = (function()
     endOfPerformance = false, // flag, set to true when (currentSpanIndex === endOfSpansIndex)
     nextSpanIndex = 0, // the index of the span which will be played when a noteOn event arrives
     performanceStartNow, // set when the performance starts, used to set the reported duration of the performance  
+    currentSpanIsPlaying,
 
     stopped = true,
 
     reportEndOfPerformance, // callback
     reportMsPositionInScore, // callback
+
+
 
     isStopped = function()
     {
@@ -83,6 +86,7 @@ _AP.mono1 = (function()
                 endOfPerformance = false;
                 nextSpanIndex = 0;
                 stopped = true;
+                currentSpanIsPlaying = false;
                 break;
             case "running":
                 stopped = false;
@@ -107,48 +111,52 @@ _AP.mono1 = (function()
         }
     },
 
-    playSpan = function(performedSpans, currentSpanIndex, nextSpanIndex)
+    playSpan = function(performedSpans, currentSpanIndex, nextSpanIndex, isFirstSpan)
     {
         var
         i,
-        roTrackIsOnArray = readOnlyTrackIsOnArray,
+        roTrackIsOnArray = readOnlyTrackIsOnArray, // Read only (belongs to the SVG track control at the top of the score).
         spTrackIsOnArray = spanTrackIsOnArray,
         nTracks = roTrackIsOnArray.length,
         trackSpanIsEmpty = performedSpans[currentSpanIndex].trackSpanIsEmpty,
         spanStart = performedSpans[currentSpanIndex].msPosition,
         spanEnd = performedSpans[nextSpanIndex].msPosition;
 
-        for(i = 0; i < nTracks; ++i)
+        // defined for easier debugging...
+        function setSpanTrackIsOnArray(spTrackIsOnArray, roTrackIsOnArray, trackSpanIsEmpty)
         {
-            spTrackIsOnArray[i] = (roTrackIsOnArray[i] === true && trackSpanIsEmpty[i] === false);
+            for(i = 0; i < nTracks; ++i)
+            {
+                spTrackIsOnArray[i] = (roTrackIsOnArray[i] === true && trackSpanIsEmpty[i] === false);
+            }
         }
 
+        setSpanTrackIsOnArray(spTrackIsOnArray, roTrackIsOnArray, trackSpanIsEmpty);
+
+        currentSpanIsPlaying = true;
         // The durations will be related to the current speedFactor.
-        mainSequence.play(spanStart, spanEnd, spTrackIsOnArray, recordingSequence);
+        mainSequence.play(spanStart, spanEnd, spTrackIsOnArray, recordingSequence, isFirstSpan);
     },
 
-    // This function is called when a performing span reaches its endMsPosition.
+    // This function is called when a performing span reaches its endMsPosition or is stop()ed by
+    // a noteOn or noteOff arriving while it is playing.
     // (mono1.stop() overrides sequence.stop(), so that function is never called.)
     // This function is called with two arguments, which are however always ignored here:
     //      reportEndOfSequence(recordingSequence, performanceMsDuration);
     // The performance and recording continue until reportEndOfPerformance is called in mono1.stop() above.
     reportEndOfSpanCallback = function()
     {
-        //reportMsPositionInScore(performedSpans[nextSpanIndex].msPosition);
+        console.log("reportEndOfSpanCallback: nextSpanIndex=", nextSpanIndex.toString(10));
 
-        console.log("reportEndOfSpanCallback: This function should handle spans waiting for a noteOn to start the next one.");
+        currentSpanIsPlaying = false;
 
         if(endOfPerformance)
         {
             stop();
         }
-        else if(performedSpans[nextSpanIndex].restSpan && currentLivePerformersKeyPitch === -1)
+        else
         {
-            currentSpanIndex = nextSpanIndex++;
-            endOfPerformance = (currentSpanIndex === endOfSpansIndex);
-            playSpan(performedSpans, currentSpanIndex, nextSpanIndex);
-
-            console.log("reportEndOfSpanCallback: Playing next (rest-)Span");
+            reportMsPositionInScore(performedSpans[nextSpanIndex].msPosition);
         }
     },
 
@@ -223,12 +231,53 @@ _AP.mono1 = (function()
             {
                 var
                 i, t,
-                spanStart,
-                spanEnd,
                 spansLengthMinusOne = spans.length - 1,
-                nTracks = tracks.length,
-                nMidiObjects, moIndex,
-                msPosition, track;
+                nTracks = tracks.length;
+
+                function doTrackSpanIsEmptyArray(spans, track, trackIndex)
+                {
+                    var
+                    i,
+                    spanIndex = 0, spansLengthMinusOne = spans.length - 1, // the final span has msPosition, but no trackSpanIsEmptyArray
+                    moIndex, nMidiObjects = track.midiObjects.length,
+                    span, spanStart, spanEnd,
+                    midiObject, moStart, moEnd;                    
+                    
+                    for(moIndex = 0; moIndex < nMidiObjects; ++moIndex)
+                    {
+                        midiObject = track.midiObjects[moIndex];
+                        moStart = midiObject.msPositionInScore;
+                        moEnd = moStart + midiObject.msDurationInScore;
+
+                        for(spanIndex = 0; spanIndex < spansLengthMinusOne; ++spanIndex)
+                        {
+                            spanEnd = spans[spanIndex + 1].msPosition;
+                            if(spanEnd < moStart)
+                            {
+                                continue;
+                            }
+
+                            span = spans[spanIndex];
+                            spanStart = span.msPosition;
+                            if(spanStart > moEnd)
+                            {
+                                break;
+                            }
+
+                            if(midiObject.moments[0].restStart !== undefined)
+                            {
+                                if(spanStart <= moStart && spanEnd > moStart) // a rest
+                                {
+                                    span.trackSpanIsEmpty[trackIndex] = false;
+                                }
+                            }
+                            else if(spanStart < moEnd && spanEnd > moStart) // a chord
+                            {
+                                span.trackSpanIsEmpty[trackIndex] = false;
+                            }
+                        }
+                    }
+                }
 
                 // the final span has msPosition, but no trackSpanIsEmptyArray
                 for(i = 0; i < spansLengthMinusOne; ++i)
@@ -242,28 +291,7 @@ _AP.mono1 = (function()
 
                 for(t = 0; t < nTracks; ++t)
                 {
-                    track = tracks[t];
-                    nMidiObjects = track.midiObjects.length;
-                    moIndex = 0;
-                    for(i = 0; i < spansLengthMinusOne; ++i)
-                    {
-                        spanStart = spans[i].msPosition;
-                        spanEnd = spans[i + 1].msPosition;
-
-                        while(moIndex < nMidiObjects)
-                        {
-                            msPosition = track.midiObjects[moIndex].msPositionInScore;
-                            if(msPosition >= spanStart && msPosition < spanEnd)
-                            {
-                                spans[i].trackSpanIsEmpty[t] = false;
-                            }
-                            if(msPosition >= spanEnd)
-                            {
-                                break;
-                            }
-                            ++moIndex;
-                        }
-                    }
+                    doTrackSpanIsEmptyArray(spans, tracks[t], t);
                 }
             }
 
@@ -348,7 +376,7 @@ _AP.mono1 = (function()
     // Except for reseting the timestamps in the moments which are about to be performed, the performedSpans array does *not* change
     // the data in the mainSequence or the readOnlyTrackIsOnArray.
     // The start and end markers can be moved, and tracks selected or deselected between performances.
-    play = function(startMarkerMsPosition, endMarkerMsPosition, argTrackIsOnArray, recording)
+    play = function(startMarkerMsPosition, endMarkerMsPosition, argTrackIsOnArray, recording, isFirstSpan)
     {
         // Simply returns the section of allPerformersSpansInScore between startMarkerMsPosition and endMarkerMsPosition,
         // including both startMarkerMsPosition and endMarkerPosition.
@@ -415,6 +443,11 @@ _AP.mono1 = (function()
             }
         }
 
+        if(isFirstSpan === false)
+        {
+            throw "Error: isFirstSpan should always be true here.";
+        }
+
         setState("running");
 
         readOnlyTrackIsOnArray = argTrackIsOnArray;
@@ -428,6 +461,7 @@ _AP.mono1 = (function()
         currentSpanIndex = -1;
         endOfPerformance = false;
         nextSpanIndex = 0;
+        currentSpanIsPlaying = false;
     },
 
     // This is where input MIDIEvents arrive, and are processed.
@@ -669,50 +703,54 @@ _AP.mono1 = (function()
             }
         }
 
-        function silentlyCompleteCurrentlyPlayingSpan()
-        {
-            // currentSpanIndex is the index of the currently playing span
-            // (which should be silently completed when a noteOn arrives).
-            if(currentSpanIndex >= 0 && currentSpanIndex < performedSpans.length)
-            {
-                mainSequence.finishSpanSilently(performedSpans[nextSpanIndex].msPosition);
-            }
-        }
-
         function handleNoteOff(inputEvent)
         {
             if(inputEvent.data[1] === currentLivePerformersKeyPitch)
             {
                 currentLivePerformersKeyPitch = -1;
 
-                silentlyCompleteCurrentlyPlayingSpan();
+                if(currentSpanIsPlaying === true)
+                {
+                    // finish the current span (that ends at performedSpans[nextSpanIndex].msPosition).
+                    mainSequence.finishSpanSilently(performedSpans[nextSpanIndex].msPosition);
+                }
+
+                currentSpanIndex = nextSpanIndex++;
+                endOfPerformance = (currentSpanIndex === endOfSpansIndex);
 
                 if(endOfPerformance) // see reportEndOfPerformance() above 
                 {
                     stop();
                 }
-                else if(performedSpans[nextSpanIndex].restSpan !== undefined) // only play the next sequence if it is a restSpan
+                else if(performedSpans[currentSpanIndex].restSpan === true) // if the next spans are restSpans, play them.
                 {
-                    currentSpanIndex = nextSpanIndex++;
+                    while(performedSpans[currentSpanIndex].restSpan === true && !endOfPerformance)
+                    {
+                        playSpan(performedSpans, currentSpanIndex, nextSpanIndex, false);
+                        currentSpanIndex = nextSpanIndex++;
+                        endOfPerformance = (currentSpanIndex === endOfSpansIndex);
+                    }
+                    currentSpanIndex--;
+                    nextSpanIndex--;
                     endOfPerformance = (currentSpanIndex === endOfSpansIndex);
-                    playSpan(performedSpans, currentSpanIndex, nextSpanIndex);
                 }
-                else if(nextSpanIndex <= endOfSpansIndex)
+                else
                 {
-                    endOfPerformance = (nextSpanIndex === endOfSpansIndex);
-                    reportMsPositionInScore(performedSpans[nextSpanIndex].msPosition);
+                    if(performedSpans[currentSpanIndex].chordSpan === undefined)
+                    {
+                        throw "Error: the current span must be a chordSpan here."; 
+                    }
                 }
             }
         }
 
         function handleNoteOn(inputEvent)
         {
-            var
-            allSubsequences = performedSpans;
+            var isFirstSpan = false;
 
             currentLivePerformersKeyPitch = inputEvent.data[1];
 
-            if(currentSpanIndex === (performedSpans.length - 1))
+            if(endOfPerformance)
             {
                 // If the final sequence is playing and a noteOn is received, the performance stops immediately.
                 // In this case the final sequence must be a restSpan (otherwise a noteOn can't be received).
@@ -720,20 +758,37 @@ _AP.mono1 = (function()
             }
             else if(inputEvent.data[2] > 0)
             {
-                silentlyCompleteCurrentlyPlayingSpan();
-
                 if(nextSpanIndex === 0)
                 {
+                    isFirstSpan = true;
                     performanceStartNow = inputEvent.receivedTime;
                 }
 
-                if(nextSpanIndex === 0 || (nextSpanIndex <= endOfSpansIndex && allSubsequences[nextSpanIndex].chordSpan !== undefined))
+                if(currentSpanIsPlaying === true)
+                {
+                    // finish the current span (that ends at performedSpans[nextSpanIndex].msPosition).
+                    mainSequence.finishSpanSilently(performedSpans[nextSpanIndex].msPosition);
+                }
+
+                currentSpanIndex = nextSpanIndex++;
+                endOfPerformance = (currentSpanIndex === endOfSpansIndex);
+
+                // skip to the next chordSpan
+                while(performedSpans[currentSpanIndex].restSpan === true && !endOfPerformance)
                 {
                     currentSpanIndex = nextSpanIndex++;
                     endOfPerformance = (currentSpanIndex === endOfSpansIndex);
-
-                    playSpan(performedSpans, currentSpanIndex, nextSpanIndex);
                 }
+
+                if(!endOfPerformance)
+                {
+                    if(performedSpans[currentSpanIndex].chordSpan === undefined)
+                    {
+                        throw "Error: the current span must be a chordSpan here.";
+                    }
+
+                    playSpan(performedSpans, currentSpanIndex, nextSpanIndex, isFirstSpan);
+                }             
             }
             else // velocity 0 is "noteOff"
             {
@@ -754,7 +809,7 @@ _AP.mono1 = (function()
                     {
                         setSpeedFactor(inputEvent.data[1], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
                     }
-                    console.log("ChannelPressure, data[1]:", inputEvent.data[1].toString());  // CHANNEL_PRESSURE control has no data[2]
+                    //console.log("ChannelPressure, data[1]:", inputEvent.data[1].toString());  // CHANNEL_PRESSURE control has no data[2]
                     if(pOpts.pressureSubstituteControlData !== undefined)
                     {
                         // CHANNEL_PRESSURE.data[1] is the amount of pressure 0..127.
@@ -766,7 +821,7 @@ _AP.mono1 = (function()
                     {
                         setSpeedFactor(inputEvent.data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
                     }
-                    console.log("Aftertouch input, key:" + inputEvent.data[1].toString() + " value:", inputEvent.data[2].toString());
+                    //console.log("Aftertouch input, key:" + inputEvent.data[1].toString() + " value:", inputEvent.data[2].toString());
                     if(pOpts.pressureSubstituteControlData !== undefined)
                     {
                         // AFTERTOUCH.data[1] is the MIDIpitch to which to apply the aftertouch, but I dont need that

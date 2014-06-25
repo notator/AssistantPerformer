@@ -717,65 +717,30 @@ _AP.midiChord = (function()
         return moments;
     };
 
-    /******  Runtime functions ******/
-
-    // Sets the chord to the state it should have before a performance starts.
-    // Called every time a performance begins.
-    MidiChord.prototype.runtimeInit = function()
+    // Sets the chord to the state it should have when a performance starts.
+    // this.currentMoment is set to the first moment at or after startMarkerMsPositionInScore.
+    MidiChord.prototype.setToFirstStartMarker = function(startMarkerMsPositionInScore)
     {
-        if(this.moments.length > 0 && this.moments[0].messages.length > 0)
-        {
-            this._currentMomentIndex = 0;
-            this.currentMoment = this.moments[0];
-            this._offsetMsDurationForRepeatedMoments = 0;
-        }
-        else
-        {
-            throw "MidiChords must always have a first moment containing messages!";
-        }        
-    };
+        var
+        nMoments = this.moments.length,
+        currentIndex, currentPosition;
 
-    // Sets this.currentMoment to the following moment.
-    // If this._repeat is false, and all the moments have been played, this.currentMoment is set to null.
-    // this.currentMoment is never null if this._repeat is true. 
-    MidiChord.prototype.advanceMoment = function()
-    {
-        if(this._currentMomentIndex < 0)
-        {
-            throw "this.runtimeInit() must be called first!";
-        }
-
-        this._currentMomentIndex++;
-
-        if(this._currentMomentIndex < this.moments.length)
-        {
-            this.currentMoment = this.moments[this._currentMomentIndex];
-
-            if(this._offsetMsDurationForRepeatedMoments > 0)
+        for(currentIndex = 0; currentIndex < nMoments; ++currentIndex)
+        {  
+            currentPosition = this.msPositionInScore + this.moments[currentIndex].msPositionInChord;
+            if(currentPosition >= startMarkerMsPositionInScore)
             {
-                // make a deep clone of the original this.currentMoment
-                this.currentMoment = this.currentMoment.getCloneAtOffset(this._offsetMsDurationForRepeatedMoments);
+                break;
             }
         }
-        else // this._currentMomentIndex === this.moments.length
-        {
-            this.runtimeInit();
-
-            this._offsetMsDurationForRepeatedMoments += this._msDurationOfBasicChords;
-            if(this._repeat)
-            {
-                // make a deep clone of the original this.currentMoment
-                this.currentMoment = this.currentMoment.getCloneAtOffset(this._offsetMsDurationForRepeatedMoments);
-            }
-            else
-            {
-                this.currentMoment = null;
-            }
-        }
+        this._currentMomentIndex = currentIndex;
+        this.currentMoment = this.moments[currentIndex];
+        this._offsetMsDurationForRepeatedMoments = 0;        
     };
 
     // Updates the MidiChord's internal moment index, ignoring its repeat setting.
     // Sets currentMidiObject.currentMoment to null if out of range.
+    // Returns the new currentMoment
     MidiChord.prototype.advanceCurrentMoment = function()
     {
         if(this.currentMoment === null)
@@ -792,6 +757,7 @@ _AP.midiChord = (function()
         {
             this.currentMoment = null;
         }
+        return this.currentMoment;
     };
 
     return publicChordAPI;

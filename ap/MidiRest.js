@@ -22,8 +22,7 @@ _AP.midiRest = (function()
     var
     // A MidiRest has the same structure as a MidiChord, but its moments array always contains a single moment.
     // moments[0] has a restStart attribute.
-    // moments[0].messages is initially empty, but finalChordOffMessages and trackInitialisation can be added
-    // while a sequence is being created.
+    // moments[0].messages is initially empty, but finalChordOffMessages can be added while a sequence is being created.
     MidiRest = function(timeObject)
     {
         if(!(this instanceof MidiRest))
@@ -50,29 +49,23 @@ _AP.midiRest = (function()
     };
     // end var
 
-    // Sets the rest to the state it should have before a performance starts.
-    // Called every time a performance begins.
-    MidiRest.prototype.runtimeInit = function()
+    // Sets the rest to the state it should have when a performance starts.
+    MidiRest.prototype.setToFirstStartMarker = function(startMarkerMsPositionInScore)
     {
-        if(this.moments.length === 1)
+        if(this.msPositionInScore === startMarkerMsPositionInScore)
         {
             this.currentMoment = this.moments[0];
         }
         else
         {
-            throw "MidiRests always have a single moment!";
+            this.currentMoment = new _AP.moment.Moment(0);
         }
-    };
-
-    // MidiRests never repeat. 
-    MidiRest.prototype.advanceMoment = function()
-    {
-        this.currentMoment = null;
     };
 
     MidiRest.prototype.advanceCurrentMoment = function()
     {
         this.currentMoment = null;
+        return null;
     };
 
     return publicRestAPI;

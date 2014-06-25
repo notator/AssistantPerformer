@@ -15,7 +15,6 @@
  *      The following attributes should not need to be used by track's clients:
  *          fromIndex
  *          _currentMidiObjectIndex
- *          toIndex
  *      
  */
 
@@ -39,7 +38,6 @@ _AP.track = (function()
         this.midiObjects = []; // a temporally sorted array of MidiChords and MidiRests
         this.fromIndex = -1; // the fromIndex in this track's midiObjects array
         this._currentMidiObjectIndex = -1; // the current index in this track's midiObjects array
-        this.toIndex = -1; // the toIndex in this track's midiObjects array. This object is never played.
         this.currentMidiObject = null; // The MidiChord or MidiRest currently being played by this track.
         this.currentMoment = null; // the moment which is about to be played by the currentMidiObject.
     },
@@ -61,93 +59,84 @@ _AP.track = (function()
         return endPos;
     };
 
-    // Sets track._currentMidiObjectIndex, track.currentMidiObject and track.currentMoment
-    // (The last midiObject to be played is at toIndex-1.)
-    Track.prototype.runtimeInit = function(fromIndex, toIndex)
+    // Sets track._currentMidiObjectIndex, track.currentMidiObject and track.currentMoment.
+    // track._currentMidiObjectIndex is the index of track.currentMidiObject, which is either
+    // the last midiObject before or at the startMarker, or the last midiObject in the track.
+    // If the track has a rest at the startMarker, this.currentMoment.messages can be empty. 
+    // If the track has no midiObjects at the startMarker, and the previous midiObject is a rest,
+    // this.currentMoment.messages will be empty.
+    Track.prototype.setToFirstStartMarker = function(startMarkerMsPositionInScore)
     {
-        var index;
+        var i, moIndex, midiObject, nMidiObjects = this.midiObjects.length;
 
-        for(index = fromIndex; index < toIndex; ++index)
+        for(i = 0; i < nMidiObjects; ++i)
         {
-            this.midiObjects[index].runtimeInit();
-        }
-
-        this._currentMidiObjectIndex = this.fromIndex;
-        this.currentMidiObject = this.midiObjects[this._currentMidiObjectIndex];
-        this.currentMoment = this.currentMidiObject.currentMoment; // has zero or messages
-    };
-
-    // This function is called when the running scoreMsPosition changes.
-    // It advances track.currentMidiObject if there is a following MidiObject at scoreMsPosition
-    // Otherwise it does nothing.    
-    Track.prototype.advanceMidiObject = function(scoreMsPosition)
-    {
-        var nextIndex;
-        if(this._currentMidiObjectIndex < this.toIndex - 1)
-        {
-            nextIndex = this._currentMidiObjectIndex + 1;
-            if(this.midiObjects[nextIndex].msPositionInScore === scoreMsPosition)
+            if(this.midiObjects[i].msPositionInScore > startMarkerMsPositionInScore)
             {
-                this._currentMidiObjectIndex++;
-                this.currentMidiObject = this.midiObjects[this._currentMidiObjectIndex];
-                this.currentMoment = this.currentMidiObject.currentMoment;  // has zero or messages
+                break;
             }
+            moIndex = i;
         }
+
+        this._currentMidiObjectIndex = moIndex;
+
+        // moIndex is now either the index of the last midiObject before or at startMarkerMsPositionInScore
+        // or the index of the last midiObject in the track.
+        midiObject = this.midiObjects[moIndex];
+        midiObject.setToFirstStartMarker(startMarkerMsPositionInScore);
+        this.currentMidiObject = midiObject;
+        this.currentMoment = midiObject.currentMoment; // this.currentMoment.messages can be empty (see above)
     };
 
-    // Calls this.currentMidiObject.advanceMoment(), then sets this.currentMoment
-    // to this.currentMidiObject.currentMoment, which is either null or has messages
-    // This function does not advance track.currentMidiObject.
-    Track.prototype.advanceMoment = function()
+    // Advances the currentMidiObject if the next one is at msPosition. Stops repeating chords, if any.
+    // Sets _currentMidiObjectIndex, currentMidiObject and currentMoment
+    // Sets currentMidiObject and currentMoment to null when there are no more moments.
+    Track.prototype.advanceCurrentMidiObjectIfTheNextOneIsAtMsPosition = function(msPosition)
     {
-        if(this._currentMidiObjectIndex === -1)
-        {
-            throw "this.currentMidiObject must have been initialised!";
-        }
+        var
+        nextIndex = this._currentMidiObjectIndex + 1;
 
-        if(this.currentMidiObject !== null) // is null when there are no more midiObjects
+        if(nextIndex === this.midiObjects.length)
         {
-            this.currentMidiObject.advanceMoment();
-            this.currentMoment = this.currentMidiObject.currentMoment;
-            // this.currentMoment can either be null if it is beyond the end of a non-repeating chord or rest,
-            // or can be non-null with a messages attribute if the currentMidiObject is a chord.
+            this._currentMidiObjectIndex++;
+            this.currentMidiObject = null;
+            this.currentMoment = null;
         }
+        else if(this.midiObjects[nextIndex].msPositionInChord === msPosition)
+        {
+            this._currentMidiObjectIndex = nextIndex;
+            this.currentMidiObject = this.midiObjects[nextIndex];
+            this.currentMoment = this.currentMidiObject.currentMoment;
+        }
+        // else do nothing
     };
 
-    // Throws an exception if either currentMidiObject or currentMoment are null.
+    // Returns Number.MAX_VALUE at end of track.
     Track.prototype.currentMsPosition = function()
     {
         var msPos;
-        if(this.currentMidiObject !== null && this.currentMoment !== null)
+        if(this.currentMidiObject !== null)
         {
             msPos = this.currentMidiObject.msPositionInScore + this.currentMoment.msPositionInChord;
         }
         else
         {
-            throw "Error: this function should never be called when either currentMidiObject or currentMoment are null.";
+            return Number.MAX_VALUE; // end of track
         }
         return msPos;
     };
 
-    // track.currentMoment is moved to the next moment in the track.
-    // If necessary, track.currentMidiObject is updated as well.
-    // Both track.currentMidiObject and track.currentMoment are null at the end of the track,
-    // but non-null otherwise.
-    // This function is used in sequence.finishSpanSilently().
+    // Track.currentMoment is moved to the next moment in the currentMidiObject (ignoring the midiObject's repeat attribute).
+    // If the end of the currentMidiObect.moments is reached, the currentMidiObject is advanced.
+    // Both track.currentMidiObject and track.currentMoment are null at the end of the track, but non-null otherwise.
     Track.prototype.advanceCurrentMoment = function()
     {
-        var nextMoment;
+        var nextMoIndex;
 
-        // Updates the currentMidiObject's internal moment index, ignoring its repeat setting.
-        // Sets currentMidiObject.currentMoment to null if out of range.
-        this.currentMidiObject.advanceCurrentMoment(); 
-
-        nextMoment = this.currentMidiObject.currentMoment;
-        if(nextMoment !== null)
-        {
-            this.currentMoment = nextMoment;
-        }
-        else
+        // advanceCurrentMoment() updates the currentMidiObject's internal moment index, ignoring its repeat setting,
+        // and sets currentMidiObject.currentMoment to null if out of range.
+        this.currentMoment = this.currentMidiObject.advanceCurrentMoment();
+        if(this.currentMoment === null)
         {
             this._currentMidiObjectIndex++;
             if(this._currentMidiObjectIndex < this.midiObjects.length)
@@ -155,7 +144,7 @@ _AP.track = (function()
                 this.currentMidiObject = this.midiObjects[this._currentMidiObjectIndex];
                 this.currentMoment = this.currentMidiObject.currentMoment;  // is non-null and has zero or more messages
             }
-            else
+            else // end of track
             {
                 this.currentMidiObject = null;
                 this.currentMoment = null;

@@ -11,6 +11,7 @@
 */
 
 /*jslint bitwise: false, nomen: true, plusplus: true, white: true */
+/*global _AP: false,  window: false,  document: false, performance: false, console: false, alert: false, XMLHttpRequest: false */
 
 _AP.namespace('_AP.controls');
 
@@ -593,7 +594,7 @@ _AP.controls = (function(document, window)
 
                     sendTrackInitializationMessages(options, scoreInfo.trackInitialisationValues);
 
-                    player.play(score.startMarkerMsPosition(), score.endMarkerMsPosition(), trackIsOnArray, sequenceRecording);
+                    player.play(score.startMarkerMsPosition(), score.endMarkerMsPosition(), trackIsOnArray, sequenceRecording, true);
                 }
 
                 if(options.livePerformance === true)

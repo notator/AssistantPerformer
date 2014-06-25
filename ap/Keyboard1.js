@@ -251,7 +251,7 @@ _AP.keyboard1 = (function()
             if(currentTrack !== null)
             {
                 nextMomt = currentTrack.currentMoment;
-                currentTrack.advanceMoment();
+                currentTrack.advanceCurrentMoment();
             }
 
             // nextMomt is now either null (= end of span) or the next moment.
