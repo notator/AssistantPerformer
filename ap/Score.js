@@ -13,6 +13,7 @@
 
 
 /*jslint bitwise: false, nomen: true, plusplus: true, white: true */
+/*global _AP: false,  window: false,  document: false, performance: false, console: false, alert: false, XMLHttpRequest: false */
 
 _AP.namespace('_AP.score');
 
@@ -498,7 +499,6 @@ _AP.score = (function (document)
             return livePerformersIndex(system, livePerformersTrackIndex, false);
         }
 
-
         // Returns the system having stafflines closest to y.
         function findSystemIndex(y)
         {
@@ -610,55 +610,68 @@ _AP.score = (function (document)
 
         // In a performance without live performer, returns the timeObject argument unchanged.
         // In a performance with live performer:
-        //      If the timeObject is a chord or the final barline, return it unchanged.
-        //      If the timeObject is a rest, and the previous object is also a rest,
-        //      return the following chord or final barline. 
-        function getEndMarkerTimeObject(timeObject, timeObjects)
+        //      If the timeObject is a chord or rest, or is the final barline on the final system, return it unchanged.
+        //      If the timeObject is not on the final system, and is the final barline in the voice:
+        //          If the next timeObject after the barline in the same voice has the same position, return the final barline unchanged
+        //          Else if the previous timeObject is later than the startMarker, return the previous timeObject
+        //          Else return null. 
+        function getEndMarkerTimeObject(timeObject, systems, systemIndex, staffIndex, voiceIndex)
         {
-            var returnedTimeObject = null, i, j;
+            var timeObjects, returnedTimeObject = null;
+
+            function isFinalSystem(systems, systemIndex)
+            {
+                return systemIndex === systems.length - 1;
+            }
+
+            function firstTimeObjectInNextSystemHasSameMsPos(finalBarlineMsPos, systems, nextSystemIndex, staffIndex, voiceIndex)
+            {
+                var nextSystemTimeObjects, nextSystemFirstTimeObjectPos;
+                
+                nextSystemTimeObjects = systems[nextSystemIndex].staves[staffIndex].voices[voiceIndex].timeObjects;
+                nextSystemFirstTimeObjectPos = nextSystemTimeObjects[0].msPosition;
+
+                return finalBarlineMsPos === nextSystemFirstTimeObjectPos;
+            }
+
+            // note that startMarkerMsPos can be on an earlier system
+            function penultimateTimeObjectLaterThanStartMarker(startMarkerMsPos, timeObjects)
+            {
+                var pTOROSM = null, tObj;
+
+                if(timeObjects.length > 2)
+                {
+                    tObj = timeObjects[timeObjects.length - 2];
+                    if(tObj.msPosition > startMarkerMsPos)
+                    {
+                        pTOROSM = tObj;
+                    }
+                }
+                return pTOROSM;
+            }
 
             if(livePerformersTrackIndex === -1)
             {
-                // no live performer
                 returnedTimeObject = timeObject;
             }
             else // with live performer
             {
-                if(isChord(timeObject) || (timeObject === timeObjects[timeObjects.length - 1]))
+                if(timeObject.msDuration !== 0 || isFinalSystem(systems, systemIndex))
                 {
                     returnedTimeObject = timeObject;
                 }
-                else
+                else // timeObject.msDuration === 0 && ! final system
                 {
-                    // timeObject is a rest, and
-                    // not the first timeObject in timeObjects and not the final barline
-                    for(i = 1; i < timeObjects.length - 1; ++i)
+                    if(firstTimeObjectInNextSystemHasSameMsPos(timeObject.msPosition, systems, systemIndex+1, staffIndex, voiceIndex))
                     {
-                        if(timeObject === timeObjects[i])
-                        {
-                            if(!(isChord(timeObjects[i - 1])))
-                            {
-                                for(j = i + 1; j < timeObjects.length - 1; ++j)
-                                {
-                                    if(isChord(timeObjects[j]))
-                                    {
-                                        returnedTimeObject = timeObjects[j]; // the first chord after the multiple rest
-                                        break;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                returnedTimeObject = timeObject; // return the rest
-                            }
-                            break;
-                        }
+                        returnedTimeObject = timeObject;
                     }
-                    if(returnedTimeObject === null)
+                    else
                     {
-                        // the final barline
-                        returnedTimeObject = timeObjects[timeObjects.length - 1];
+                        timeObjects = systems[systemIndex].staves[staffIndex].voices[voiceIndex].timeObjects;
+                        returnedTimeObject = penultimateTimeObjectLaterThanStartMarker(startMarker.msPosition(), timeObjects);
                     }
+                    // returnedTimeObject can be null
                 }
             }
             return returnedTimeObject;
@@ -666,7 +679,7 @@ _AP.score = (function (document)
 
         // If the timeObject is a chord, return it unchanged.
         // If the timeObject is a rest, return the following chord.
-        // If it is the final barline, or there are no chords following the rest, return null.
+        // If the timeObject is the final barline, or there are no chords following the rest, return null.
         function getStartMarkerChordObject(timeObject, timeObjects )
         {
             var returnedChord = null, found, i;
@@ -718,13 +731,7 @@ _AP.score = (function (document)
 
             if(state === "settingEnd")
             {
-
-                // If the timeObject is a chord or the final barline, return it unchanged.
-                // If the timeObject is a rest, and the previous object is also a rest,
-                // return the following chord or final barline.
-                // Returns null if the timeObject is the first timeObject in the timeObjects.
-                timeObject = getEndMarkerTimeObject(timeObject, system.staves[staffIndex].voices[voiceIndex].timeObjects);
-
+                timeObject = getEndMarkerTimeObject(timeObject, systems, systemIndex, staffIndex, voiceIndex);
             }
             if (state === "settingStart")
             {
