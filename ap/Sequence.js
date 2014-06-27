@@ -133,15 +133,21 @@ _AP.sequence = (function(window)
                 case "stopped":
                     stopped = true;
                     paused = false;
+                    pauseStartTime = performance.now();
+                    pausedMoment = currentMoment;
+                    currentMoment = null;
                     break;
                 case "paused":
                     stopped = false;
                     paused = true;
+                    pauseStartTime = performance.now();
                     pausedMoment = currentMoment;
+                    currentMoment = null;
                     break;
                 case "running":
                     stopped = false;
                     paused = false;
+                    pauseStartTime = -1;
                     pausedMoment = null;
                     break;
                 default:
@@ -164,13 +170,12 @@ _AP.sequence = (function(window)
             return (stopped === false && paused === false);
         },
 
-        // Should only be called while running
+        // Should only be called while running a non-assisted performance
         pause = function()
         {
             if(isRunning())
             {
                 setState("paused");
-                pauseStartTime = performance.now();
             }
             else
             {
@@ -186,8 +191,7 @@ _AP.sequence = (function(window)
             if(!isStopped())
             {
                 performanceMsDuration = Math.ceil(performance.now() - performanceStartTime);
-                currentMoment = null;
-                setState("stopped");
+                setState("stopped"); 
                 reportEndOfPerformance(sequenceRecording, performanceMsDuration);
             }
         },
@@ -365,11 +369,44 @@ _AP.sequence = (function(window)
             window.setTimeout(tick, delay);  // that will schedule the next tick.
         },
 
-        // Should only be called when the sequence is stopped.
+        // Public function. Should only be called when this sequence is paused (and pausedMoment is set correctly).
+        // The sequence pauses if nextMoment() sets currentMoment to null while tick() is waiting for setTimeout().
+        // So the messages in pausedMoment (set to the last non-null currentMoment) have already been sent.
+        resume = function()
+        {
+            var pauseMsDuration;
+
+            if(pausedMoment === null || pauseStartTime < 0)
+            {
+                throw "Error: pausedMoment and pauseStartTime must be defined here.";
+            }
+
+            currentMoment = pausedMoment; // the last moment whose messages were sent.
+            pauseMsDuration = performance.now() - pauseStartTime;
+
+            setState("running"); // sets pausedMoment to null.
+
+            currentMoment.timestamp += pauseMsDuration;
+            previousTimestamp += pauseMsDuration;
+            startTimeAdjustedForPauses += pauseMsDuration;
+
+            currentMoment = nextMoment();
+            if(currentMoment === null)
+            {
+                return;
+            }
+            currentMoment.timestamp = performance.now();
+            tick();
+        },
+
         run = function()
         {
-            //if(isStopped())
-            //{
+            if(pausedMoment !== null)
+            {
+                resume();
+            }
+            else
+            {
                 setState("running");
 
                 currentMoment = nextMoment();
@@ -378,42 +415,6 @@ _AP.sequence = (function(window)
                     return;
                 }
                 tick();
-            //}
-            //else
-            //{
-            //    throw "Error: run() should only be called when the sequence is stopped.";
-            //}
-        },
-
-        // Public function. Should only be called when this sequence is paused (and pausedMoment is set correctly).
-        // The sequence pauses if nextMoment() sets currentMoment to null while tick() is waiting for setTimeout().
-        // So the messages in pausedMoment (set to the last non-null currentMoment) have already been sent.
-        resume = function()
-        {
-            var
-            pauseMsDuration = performance.now() - pauseStartTime;
-
-            if(isPaused())
-            {
-                currentMoment = pausedMoment; // the last moment whose messages were sent.
-
-                setState("running"); // sets pausedMoment to null.
-
-                currentMoment.timestamp += pauseMsDuration;
-                previousTimestamp += pauseMsDuration;
-                startTimeAdjustedForPauses += pauseMsDuration;
-
-                currentMoment = nextMoment();
-                if(currentMoment === null)
-                {
-                    return;
-                }
-                currentMoment.timestamp = performance.now();
-                tick();
-            }
-            else
-            {
-                throw "Error: resume() should only be called when this sequence is paused.";
             }
         },
 
@@ -473,7 +474,7 @@ _AP.sequence = (function(window)
             //     toIndex is the index of the last midiObject before endMarkerMsPositionInScore.
             //     currentIndex is set to fromIndex
             // If, however, the track contains no such moments, track.isPerforming is set to false. 
-            function setTrackAttributes(tracks, trackIsOnArray, startMarkerMsPositionInScore, isFirstSpan)
+            function setTrackAttributes(tracks, trackIsOnArray, startMarkerMsPosInScore, isFirstSpan)
             {
                 var
                 i, nTracks = tracks.length, track;
@@ -485,12 +486,12 @@ _AP.sequence = (function(window)
 
                     if(isFirstSpan === true)
                     {
-                        track.setToFirstStartMarker(startMarkerMsPositionInScore);
+                        track.setToFirstStartMarker(startMarkerMsPosInScore);
                     }
                     else
                     {
                         // stops a repeating chord
-                        track.advanceCurrentMidiObjectIfTheNextOneIsAtMsPosition(startMarkerMsPositionInScore);
+                        track.advanceCurrentMidiObjectIfTheNextOneIsAtMsPosition(startMarkerMsPosInScore);
                     }
                 }
             }
@@ -500,17 +501,19 @@ _AP.sequence = (function(window)
             // an unassisted performance has/is a single span, so isFirstSpan will be true
             setTrackAttributes(tracks, trackIsOnArray, startMarkerMsPosInScore, isFirstSpan);
 
-            if(isFirstSpan === true) 
-            {
-                pausedMoment = null;
-                previousTimestamp = null;
-                previousMomtMsPosInScore = 0;
-                msPositionToReport = -1;
-            }
-
             performanceStartTime = performance.now();
             endMarkerMsPosition = endMarkerMsPosInScore;
             startTimeAdjustedForPauses = performanceStartTime;
+
+            if(isFirstSpan === true)
+            {
+                pausedMoment = null;
+                pauseStartTime = -1;
+                previousTimestamp = null;
+                previousMomtMsPosInScore = startMarkerMsPosInScore;
+                msPositionToReport = -1;
+            }
+            
             run();
         },
 
@@ -523,6 +526,7 @@ _AP.sequence = (function(window)
         {
             var
             i, nTracks = tracks.length, track,
+            lastMsPos, lastTrackMomentMsPositionInScore,
             now = performance.now(),
             noteOffsMoment;
 
@@ -555,30 +559,46 @@ _AP.sequence = (function(window)
                 }
             }
 
+
             for(i = 0; i < nTracks; ++i)
             {
                 track = tracks[i];
-                // track.currentMoment is null when the track has no more moments
+                // track.currentMoment is null when the complete track has no more moments
                 // if track.currentMoment !== null then track.currentMidiObject should also be !== null!
                 if(track.isPerforming)
                 {
                     noteOffsMoment = new _AP.moment.Moment(0);
-                    noteOffsMoment.timestamp = now;
+                    lastTrackMomentMsPositionInScore = Number.MAX_VALUE;
 
-                    while(track.currentMsPosition() < endOfSpanMsPosition)
+                    while(true)
                     {
+                        lastMsPos = track.currentMsPosition();
+                        if(lastMsPos >= endOfSpanMsPosition)
+                        {
+                            break;
+                        }
+                        lastTrackMomentMsPositionInScore = lastMsPos; // the last msPosition before the end marker
                         addNoteOffs(track.currentMoment, noteOffsMoment);
                         track.advanceCurrentMoment();
                     }
 
-                    if(noteOffsMoment.messages.length > 0)
+                    if(track.currentMsPosition() === endOfSpanMsPosition)
                     {
+                        addNoteOffs(track.currentMoment, noteOffsMoment);
+                    }
+
+                    if(lastTrackMomentMsPositionInScore < endOfSpanMsPosition)
+                    {
+                        noteOffsMoment.timestamp = now;
                         sendMessages(noteOffsMoment);
 
-                        if(sequenceRecording !== undefined && sequenceRecording !== null)
+                        if(sequenceRecording !== undefined && sequenceRecording !== null && noteOffsMoment.messages.length > 0)
                         {
                             sequenceRecording.trackRecordings[noteOffsMoment.messages[0].channel()].addLiveScoreMoment(noteOffsMoment);
                         }
+
+                        // previousMomtMsPosInScore is used in the next span when setting the next moment's timestamp
+                        previousMomtMsPosInScore = (previousMomtMsPosInScore > lastTrackMomentMsPositionInScore) ? previousMomtMsPosInScore : lastTrackMomentMsPositionInScore;
                     }
                 }
             }

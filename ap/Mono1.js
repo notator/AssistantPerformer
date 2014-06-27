@@ -62,8 +62,6 @@ _AP.mono1 = (function()
     reportEndOfPerformance, // callback
     reportMsPositionInScore, // callback
 
-
-
     isStopped = function()
     {
         return (stopped === true);
@@ -730,9 +728,12 @@ _AP.mono1 = (function()
                         currentSpanIndex = nextSpanIndex++;
                         endOfPerformance = (currentSpanIndex === endOfSpansIndex);
                     }
-                    currentSpanIndex--;
-                    nextSpanIndex--;
-                    endOfPerformance = (currentSpanIndex === endOfSpansIndex);
+                    if(!endOfPerformance)
+                    {
+                        currentSpanIndex--;
+                        nextSpanIndex--;
+                        endOfPerformance = (currentSpanIndex === endOfSpansIndex);
+                    }
                 }
                 else
                 {
