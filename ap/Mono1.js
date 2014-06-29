@@ -133,7 +133,7 @@ _AP.mono1 = (function()
 
         currentSpanIsPlaying = true;
         // The durations will be related to the current speedFactor.
-        mainSequence.play(spanStart, spanEnd, spTrackIsOnArray, recordingSequence, isFirstSpan);
+        mainSequence.play(spTrackIsOnArray, spanStart, spanEnd, recordingSequence, isFirstSpan, true);
     },
 
     // This function is called when a performing span reaches its endMsPosition or is stop()ed by
@@ -374,7 +374,7 @@ _AP.mono1 = (function()
     // Except for reseting the timestamps in the moments which are about to be performed, the performedSpans array does *not* change
     // the data in the mainSequence or the readOnlyTrackIsOnArray.
     // The start and end markers can be moved, and tracks selected or deselected between performances.
-    play = function(startMarkerMsPosition, endMarkerMsPosition, argTrackIsOnArray, recording, isFirstSpan)
+    play = function(argTrackIsOnArray, startMarkerMsPosition, endMarkerMsPosition, recording, isFirstSpan, isAssisted)
     {
         // Simply returns the section of allPerformersSpansInScore between startMarkerMsPosition and endMarkerMsPosition,
         // including both startMarkerMsPosition and endMarkerPosition.
@@ -441,12 +441,9 @@ _AP.mono1 = (function()
             }
         }
 
-        if(isFirstSpan === false)
-        {
-            throw "Error: isFirstSpan should always be true here.";
-        }
-
-        setState("running");
+        console.assert(isFirstSpan === true);
+        console.assert(isAssisted === true);
+        mainSequence.setTrackAttributes(argTrackIsOnArray, startMarkerMsPosition, endMarkerMsPosition, isFirstSpan, isAssisted);
 
         readOnlyTrackIsOnArray = argTrackIsOnArray;
         performedSpans = getPerformedSpans(allPerformersSpansInScore, startMarkerMsPosition, endMarkerMsPosition);
@@ -460,6 +457,8 @@ _AP.mono1 = (function()
         endOfPerformance = false;
         nextSpanIndex = 0;
         currentSpanIsPlaying = false;
+
+        setState("running");
     },
 
     // This is where input MIDIEvents arrive, and are processed.

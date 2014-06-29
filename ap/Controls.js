@@ -494,7 +494,7 @@ _AP.controls = (function(document, window)
         {
             var
             trackIsOnArray = tracksControl.getTrackIsOnArray(),
-            nTracks = trackIsOnArray.length,
+            nTracks = trackIsOnArray.length, 
             sequenceRecording;
 
             function sendTrackInitializationMessages(options, trackInitialisationValues)
@@ -594,7 +594,7 @@ _AP.controls = (function(document, window)
 
                     sendTrackInitializationMessages(options, scoreInfo.trackInitialisationValues);
 
-                    player.play(score.startMarkerMsPosition(), score.endMarkerMsPosition(), trackIsOnArray, sequenceRecording, true);
+                    player.play(trackIsOnArray, score.startMarkerMsPosition(), score.endMarkerMsPosition(), sequenceRecording, true, options.livePerformance);
                 }
 
                 if(options.livePerformance === true)
