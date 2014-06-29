@@ -450,7 +450,6 @@ _AP.sequence = (function(window)
             midiOutputDevice = options.outputDevice;
             reportEndOfPerformance = reportEndOfPerfCallback;
             reportMsPositionInScore = reportMsPosCallback;
-            lastReportedMsPosition = -1;
         },
 
         // play()
@@ -509,6 +508,7 @@ _AP.sequence = (function(window)
                 previousTimestamp = null;
                 previousMomtMsPosInScore = startMarkerMsPosInScore;
                 msPositionToReport = -1;
+                lastReportedMsPosition = -1;
             }
             
             run();
