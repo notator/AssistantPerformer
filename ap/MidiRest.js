@@ -67,18 +67,18 @@ _AP.midiRest = (function()
         }
         else
         {
-            this.currentMoment = new _AP.moment.Moment(0); // an empty moment
+            this.currentMoment = new _AP.moment.Moment(startMarkerMsPositionInScore - this.msPositionInScore); // an empty moment
         }
     };
 
     MidiRest.prototype.advanceCurrentMoment = function()
     {
-        this.currentMoment = null;
-        return this.currentMoment;
+        return null;
     };
 
     MidiRest.prototype.setToStartAtBeginning = function()
-    {
+    {     
+        // do this because this.currentMoment can be set to an empty moment at the start marker position.
         this.currentMoment = this.moments[0];
     };
 

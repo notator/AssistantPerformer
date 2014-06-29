@@ -58,7 +58,7 @@ _AP.midiChord = (function()
 
         // used at runtime
         Object.defineProperty(this, "currentMoment", { value: null, writable: true });
-        Object.defineProperty(this, "_offsetMsDurationForRepeatedMoments", { value: 0, writable: true });
+        Object.defineProperty(this, "msDurationOfRepeats", { value: 0, writable: true });
         Object.defineProperty(this, "_currentMomentIndex", { value: -1, writable: true });
 
         if(chordIsSilent === true)
@@ -744,14 +744,16 @@ _AP.midiChord = (function()
         }
         this._currentMomentIndex = currentIndex;
         this.currentMoment = this.moments[currentIndex];
-        this._offsetMsDurationForRepeatedMoments = 0;        
+        this.msDurationOfRepeats = 0;        
     };
 
     // Updates the MidiChord's internal moment index, ignoring its repeat setting.
     // Sets currentMidiObject.currentMoment to null if out of range.
-    // Returns the new currentMoment
+    // Returns the new currentMoment or null
     MidiChord.prototype.advanceCurrentMoment = function()
     {
+        var returnMoment;
+
         if(this.currentMoment === null)
         {
             throw "Error: currentMoment should never be null here!";
@@ -761,19 +763,27 @@ _AP.midiChord = (function()
         if(this._currentMomentIndex < this.moments.length)
         {
             this.currentMoment = this.moments[this._currentMomentIndex];
+            returnMoment = this.currentMoment;
+        }
+        else if(this._repeat === true)
+        {
+            this._currentMomentIndex = 0;
+            this.currentMoment = this.moments[0];
+            this.msDurationOfRepeats += this.msDurationInScore;
+            returnMoment = this.currentMoment;
         }
         else
         {
-            this.currentMoment = null;
+            returnMoment = null;
         }
-        return this.currentMoment;
+        return returnMoment;
     };
 
     MidiChord.prototype.setToStartAtBeginning = function()
     {
         this._currentMomentIndex = 0;
         this.currentMoment = this.moments[0];
-        this._offsetMsDurationForRepeatedMoments = 0;
+        this.msDurationOfRepeats = 0;
     };
 
     return publicChordAPI;

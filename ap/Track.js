@@ -65,7 +65,7 @@ _AP.track = (function()
     // If the track has a rest at the startMarker, this.currentMoment.messages can be empty. 
     // If the track has no midiObjects at the startMarker, and the previous midiObject is a rest,
     // this.currentMoment.messages will be empty.
-    Track.prototype.setToFirstStartMarker = function(startMarkerMsPositionInScore)
+    Track.prototype.setToFirstStartMarker = function(startMarkerMsPositionInScore, endMarkerMsPositionInScore)
     {
         var i, moIndex, midiObject, nMidiObjects = this.midiObjects.length;
 
@@ -86,6 +86,19 @@ _AP.track = (function()
         midiObject.setToFirstStartMarker(startMarkerMsPositionInScore);
         this.currentMidiObject = midiObject;
         this.currentMoment = midiObject.currentMoment; // this.currentMoment.messages can be empty (see above)
+
+        for(i = moIndex + 1; i < nMidiObjects; ++i)
+        {
+            midiObject = this.midiObjects[i];
+            if(midiObject.msPositionInScore < endMarkerMsPositionInScore)
+            {
+                midiObject.setToStartAtBeginning();
+            }
+            else
+            {
+                break;
+            }
+        }
     };
 
     // Advances the currentMidiObject if the next one is at msPosition. Stops repeating chords, if any.
@@ -114,15 +127,23 @@ _AP.track = (function()
     // Returns Number.MAX_VALUE at end of track.
     Track.prototype.currentMsPosition = function()
     {
-        var msPos;
+        var msPos,
+            cmObj = this.currentMidiObject,
+            cMom = this.currentMoment;
 
-        if(this.currentMidiObject !== null)
+        if(cmObj !== null)
         {
-            if(this.currentMoment === null)
+            console.assert(cMom !== null, "CurrentMoment should never be null here.");
+            if(cmObj.msDurationOfRepeats !== undefined)
             {
-                throw "Error: currentMoment should never be null here.";
+                // a chord
+                msPos = cmObj.msPositionInScore + cmObj.msDurationOfRepeats + cMom.msPositionInChord;
             }
-            msPos = this.currentMidiObject.msPositionInScore + this.currentMoment.msPositionInChord;
+            else
+            {
+                // a rest
+                msPos = cmObj.msPositionInScore + cMom.msPositionInChord;
+            }
         }
         else
         {
@@ -144,8 +165,6 @@ _AP.track = (function()
 
         if(this.currentMoment === null)
         {
-            this.currentMidiObject.setToStartAtBeginning();
-
             this._currentMidiObjectIndex++;
             if(this._currentMidiObjectIndex < this.midiObjects.length)
             {

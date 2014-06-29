@@ -460,7 +460,6 @@ _AP.sequence = (function(window)
         // recording is a Sequence to which timestamped moments are added as they are performed.
         // Can be undefined or null. If used, it should be an empty Sequence having the same number
         // of tracks as this (calling) sequence.
-        //
         play = function(startMarkerMsPosInScore, endMarkerMsPosInScore, trackIsOnArray, recording, isFirstSpan)
         {
             // Sets each track's isPerforming attribute.
@@ -470,7 +469,7 @@ _AP.sequence = (function(window)
             //     toIndex is the index of the last midiObject before endMarkerMsPositionInScore.
             //     currentIndex is set to fromIndex
             // If, however, the track contains no such moments, track.isPerforming is set to false. 
-            function setTrackAttributes(tracks, trackIsOnArray, startMarkerMsPosInScore, isFirstSpan)
+            function setTrackAttributes(tracks, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, isFirstSpan)
             {
                 var
                 i, nTracks = tracks.length, track;
@@ -482,7 +481,7 @@ _AP.sequence = (function(window)
 
                     if(isFirstSpan === true)
                     {
-                        track.setToFirstStartMarker(startMarkerMsPosInScore);
+                        track.setToFirstStartMarker(startMarkerMsPosInScore, endMarkerMsPosInScore);
                     }
                     else
                     {
@@ -495,7 +494,7 @@ _AP.sequence = (function(window)
             sequenceRecording = recording; // can be undefined or null
 
             // an unassisted performance has/is a single span, so isFirstSpan will be true
-            setTrackAttributes(tracks, trackIsOnArray, startMarkerMsPosInScore, isFirstSpan);
+            setTrackAttributes(tracks, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, isFirstSpan);
 
             performanceStartTime = performance.now();
             endMarkerMsPosition = endMarkerMsPosInScore;
