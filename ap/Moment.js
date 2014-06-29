@@ -87,10 +87,7 @@ _AP.moment = (function ()
     {
         var msPositionInChord = this.msPositionInChord;
 
-        if (msPositionInChord !== moment2.msPositionInChord)
-        {
-            throw "Error: attempt to merge moments having different msPositionInChord values.";
-        }
+        console.assert(msPositionInChord === moment2.msPositionInChord, "Attempt to merge moments having different msPositionInChord values.");
 
         if (moment2.chordStart !== undefined)
         {
@@ -99,8 +96,6 @@ _AP.moment = (function ()
         else if (moment2.restStart !== undefined)
         {
             Object.defineProperty(this, "restStart", { value: true, writable: false });
-            //moment2.messages is always empty here...
-            ////console.log("RestStart: nMessages=" + moment2.messages.length);
         }
 
         this.messages = this.messages.concat(moment2.messages);

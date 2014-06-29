@@ -197,11 +197,8 @@ _AP.standardMIDIFile = (function ()
                             previousMoment = trackMoments[i-1];
                             if (previousMoment.timestamp > moment.timestamp)
                             {
-                                //diff = Math.ceil(previousMoment.timestamp - moment.timestamp);
-                                //console.log("Correction: moment.timestamp out of order (now corrected). Time difference re previous was: " + diff + "ms");
-
-                                console.log("Correction: moment.timestamp out of order (has now been corrected).");
                                 moment.timestamp = previousMoment.timestamp;
+                                console.warn("Correction: moment.timestamp out of order (has now been corrected).");
                             }
                         }
                     }
@@ -342,12 +339,8 @@ _AP.standardMIDIFile = (function ()
                     {
                         msg = trackMessages[i];
 
-                        //console.log("StandardMIDIfile.js 345: msg.timestamp=" + msg.timestamp + " previousTimestamp=" + previousTimestamp + " startOfTrackTimeOffset=" + startOfTrackTimeOffset);
-
                         timeOffset = getTimeOffset(msg.timestamp, previousTimestamp);
                         previousTimestamp = parseInt(msg.timestamp, 10);
-
-                        //console.log("StandardMIDIfile.js 350: timeOffset=" + timeOffset);
 
                         if(timeOffset < 0)
                         {

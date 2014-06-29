@@ -1114,7 +1114,6 @@ _AP.score = (function (document)
     {
         if (msPosition >= systems[runningMarker.systemIndex()].endMsPosition)
         {
-            //console.log("score:advanceRunningMarker: moving runningMarker to the beginning of the next system., msPosition=" + msPosition);
             // Move runningMarker to the beginning of the next system.
             runningMarker.setVisible(false);
             if (runningMarker.systemIndex() < (systems.length - 1))
@@ -1130,7 +1129,6 @@ _AP.score = (function (document)
         {
             while (msPosition >= runningMarker.nextMsPosition())
             {
-                //console.log("score:advanceRunningMarker: calling runningMarker.incrementPosition(), msPosition=" + msPosition);
                 // this function can assume that the runningMarker's currentPosition can simply be incremented
                 runningMarker.incrementPosition();
             }
@@ -1668,7 +1666,7 @@ _AP.score = (function (document)
                                     midiRest = new MidiRest(timeObject);
                                     livePerformersSilentTrack.midiObjects.push(midiRest);
                                 }
-                                //console.log("midiRest added at sysIndex=", +sysIndex + ", staffIndex=", +staffIndex + ", timeObjectIndex=" + timeObjectIndex);
+                                //console.log("midiRest added at sysIndex=%i, staffIndex=%i, timeObjectIndex=%i", sysIndex, staffIndex, timeObjectIndex);
                             }
                         }
                         else
@@ -1677,7 +1675,7 @@ _AP.score = (function (document)
                             chordIsSilent = false;
                             midiChord = new MidiChord(channel, chordDef, timeObject, chordIsSilent);
                             track.midiObjects.push(midiChord);
-                            //console.log("midiChord added at sysIndex=", +sysIndex + ", staffIndex=", +staffIndex + ", timeObjectIndex=" + timeObjectIndex);
+                            //console.log("midiChord added at sysIndex=%i, staffIndex=%i, timeObjectIndex=%i", sysIndex, staffIndex, timeObjectIndex);
                             if(isAssistedPerformance === true && trackIndex === livePerformersTrackIndex)
                             {
                                 chordIsSilent = true;

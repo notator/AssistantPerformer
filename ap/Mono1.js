@@ -144,7 +144,7 @@ _AP.mono1 = (function()
     // The performance and recording continue until reportEndOfPerformance is called in mono1.stop() above.
     reportEndOfSpanCallback = function()
     {
-        console.log("reportEndOfSpanCallback: nextSpanIndex=", nextSpanIndex.toString(10));
+        console.log("reportEndOfSpanCallback: nextSpanIndex=%i", nextSpanIndex);
 
         currentSpanIsPlaying = false;
 
@@ -468,7 +468,7 @@ _AP.mono1 = (function()
     handleMIDIInputEvent = function(msg)
     {
         var CMD = _AP.constants.COMMAND,
-            inputEvent, command,
+            inputEvent, command, data,
             pOpts = performersOptions;
 
         // The returned object is either empty, or has .data and .receivedTime attributes,
@@ -549,7 +549,7 @@ _AP.mono1 = (function()
             }
 
             speedFactor = getSpeedFactor(controllerValue, slowerRoot, fasterRoot);
-            console.log("mono1: speedFactor=" + speedFactor.toString(10));
+            console.log("mono1: speedFactor=%f" + speedFactor);
             mainSequence.setSpeedFactor(speedFactor);
         }
 
@@ -802,76 +802,77 @@ _AP.mono1 = (function()
         if(inputEvent.data !== undefined)
         {
             command = inputEvent.command();
+            data = inputEvent.data;
 
             switch(command)
             {
                 case CMD.CHANNEL_PRESSURE: // produced by both R2M and E-MU XBoard49 when using "aftertouch"
                     if(pOpts.speedControllerName === "pressure")
                     {
-                        setSpeedFactor(inputEvent.data[1], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
+                        setSpeedFactor(data[1], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
                     }
-                    //console.log("ChannelPressure, data[1]:", inputEvent.data[1].toString());  // CHANNEL_PRESSURE control has no data[2]
+                    //console.log("ChannelPressure, data[1]=%i", data[1]);  // CHANNEL_PRESSURE control has no data[2]
                     if(pOpts.pressureSubstituteControlData !== undefined)
                     {
                         // CHANNEL_PRESSURE.data[1] is the amount of pressure 0..127.
-                        handleController(pOpts, pOpts.pressureSubstituteControlData, inputEvent.data[1], pOpts.pressureTracks);
+                        handleController(pOpts, pOpts.pressureSubstituteControlData, data[1], pOpts.pressureTracks);
                     }
                     break;
                 case CMD.AFTERTOUCH: // produced by the EWI breath controller
                     if(pOpts.speedControllerName === "pressure")
                     {
-                        setSpeedFactor(inputEvent.data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
+                        setSpeedFactor(data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
                     }
-                    //console.log("Aftertouch input, key:" + inputEvent.data[1].toString() + " value:", inputEvent.data[2].toString());
+                    //console.log("Aftertouch input, key=%i value=%i" + data[1], data[2]);
                     if(pOpts.pressureSubstituteControlData !== undefined)
                     {
                         // AFTERTOUCH.data[1] is the MIDIpitch to which to apply the aftertouch, but I dont need that
                         // because the current pitch is kept in currentLivePerformersKeyPitch (in the closure).
                         // AFTERTOUCH.data[2] is the amount of pressure 0..127.
-                        handleController(pOpts, pOpts.pressureSubstituteControlData, inputEvent.data[2], pOpts.pressureTracks);
+                        handleController(pOpts, pOpts.pressureSubstituteControlData, data[2], pOpts.pressureTracks);
                     }
                     break;
                 case CMD.CONTROL_CHANGE: // sent when the input device's mod wheel changes.
-                    if(inputEvent.data[1] === _AP.constants.CONTROL.MODWHEEL)
+                    if(data[1] === _AP.constants.CONTROL.MODWHEEL)
                     {
-                        console.log("Modulation Wheel, data[1]:", inputEvent.data[1].toString() + " data[2]:", inputEvent.data[2].toString());
+                        console.log("Modulation Wheel, data[1]=%i, data[2]=%i", data[1], data[2]);
                         if(pOpts.speedControllerName === "modulation wheel")
                         {
-                            setSpeedFactor(inputEvent.data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
+                            setSpeedFactor(data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
                         }
                         // (EWI bite, EMU modulation wheel (CC 1, Coarse Modulation))
                         if(pOpts.modWheelSubstituteControlData !== undefined)
                         {
-                            // inputEvent.data[2] is the value to which to set the changed control
-                            handleController(pOpts, pOpts.modWheelSubstituteControlData, inputEvent.data[2], pOpts.modWheelTracks);
+                            // data[2] is the value to which to set the changed control
+                            handleController(pOpts, pOpts.modWheelSubstituteControlData, data[2], pOpts.modWheelTracks);
                         }
                     }
                     break;
                 case CMD.PITCH_WHEEL: // EWI pitch bend up/down controllers, EMU pitch wheel
                     if(pOpts.speedControllerName === "pitch wheel")
                     {
-                        setSpeedFactor(inputEvent.data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
+                        setSpeedFactor(data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
                     }
-                    console.log("Pitch Wheel, data[1]:", inputEvent.data[1].toString() + " data[2]:", inputEvent.data[2].toString());
-                    // by experiment: inputEvent.data[2] is the "high byte" and has a range 0..127. 
+                    console.log("Pitch Wheel, data[1]=%i, data[2]=%i", data[1], data[2]);
+                    // by experiment: data[2] is the "high byte" and has a range 0..127. 
                     if(pOpts.pitchWheelSubstituteControlData !== undefined)
                     {
                         // PITCH_WHEEL.data[1] is the 7-bit LSB (0..127) -- ignored here
                         // PITCH_WHEEL.data[2] is the 7-bit MSB (0..127)
-                        handleController(pOpts, pOpts.pitchWheelSubstituteControlData, inputEvent.data[2], pOpts.pitchWheelTracks);
+                        handleController(pOpts, pOpts.pitchWheelSubstituteControlData, data[2], pOpts.pitchWheelTracks);
                     }
                     break;
                 case CMD.NOTE_ON:
-                    console.log("NoteOn, pitch:", inputEvent.data[1].toString(), " velocity:", inputEvent.data[2].toString());
-                    if(inputEvent.data[2] !== 0)
+                    console.log("NoteOn, pitch:%i, velocity=%i", data[1], data[2]);
+                    if(data[2] !== 0)
                     {
                         if(pOpts.speedControllerName === "noteOn: pitch")
                         {
-                            setSpeedFactor(inputEvent.data[1], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
+                            setSpeedFactor(data[1], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
                         }
                         else if(pOpts.speedControllerName === "noteOn: velocity")
                         {
-                            setSpeedFactor(inputEvent.data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
+                            setSpeedFactor(data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
                         }
                         handleNoteOn(inputEvent);
                     }
@@ -881,7 +882,7 @@ _AP.mono1 = (function()
                     }
                     break;
                 case CMD.NOTE_OFF:
-                    console.log("NoteOff, pitch:", inputEvent.data[1].toString(), " velocity:", inputEvent.data[2].toString());
+                    console.log("NoteOff, pitch:%i, velocity=%i", data[1], data[2]);
                     handleNoteOff(inputEvent);
                     break;
                 default:

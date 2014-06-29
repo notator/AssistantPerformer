@@ -248,7 +248,7 @@ _AP.sequence = (function(window)
                 {
                     // the position will be reported by tick() when nextMomt is sent.
                     msPositionToReport = nextMomtMsPosInScore;
-                    ////console.log("msPositionToReport=" + msPositionToReport);
+                    //console.log("msPositionToReport=%i", msPositionToReport);
                 }
 
                 if(previousTimestamp === null)
@@ -324,9 +324,9 @@ _AP.sequence = (function(window)
             }
 
             delay = currentMoment.timestamp - now; // compensates for inaccuracies in setTimeout
-            ////console.log("tick: delay1 = " + delay.toString(10));
-            ////console.log("currentMoment.msPositionInScore: " + currentMoment.msPositionInScore);
-            ////console.log("currentMoment.timestamp: " + currentMoment.timestamp);
+            ////console.log("tick: delay1=%f", delay);
+            ////console.log("currentMoment.msPositionInScore=%i", currentMoment.msPositionInScore);
+            ////console.log("currentMoment.timestamp=%f", currentMoment.timestamp);
             // send all messages that are due between now and PREQUEUE ms later. 
             while(delay <= PREQUEUE)
             {
@@ -361,11 +361,8 @@ _AP.sequence = (function(window)
                 }
 
                 delay = currentMoment.timestamp - now;
-
-                ////console.log("tick: delay2 = " + delay.toString(10));
             }
 
-            ////console.log("tick: delay3 = " + delay);
             window.setTimeout(tick, delay);  // that will schedule the next tick.
         },
 

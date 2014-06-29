@@ -359,7 +359,7 @@ _AP.markers = (function ()
 
         incrementPosition = function ()
         {
-            //console.log("runningMarker: msPos before increment=" + timeObjects[positionIndex].msPosition + ", after increment=" + timeObjects[positionIndex + 1].msPosition);
+            //console.log("runningMarker: msPos before increment=%i, after increment=%i", timeObjects[positionIndex].msPosition, timeObjects[positionIndex + 1].msPosition);
             positionIndex++;
             setNextMsPosition(positionIndex);
             moveLineToAlignmentX(timeObjects[positionIndex].alignmentX);
