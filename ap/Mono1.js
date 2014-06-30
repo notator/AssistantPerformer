@@ -443,7 +443,7 @@ _AP.mono1 = (function()
 
         console.assert(isFirstSpan === true);
         console.assert(isAssisted === true);
-        mainSequence.setTrackAttributes(argTrackIsOnArray, startMarkerMsPosition, endMarkerMsPosition, isFirstSpan, isAssisted);
+        mainSequence.initPlay(argTrackIsOnArray, startMarkerMsPosition, endMarkerMsPosition);
 
         readOnlyTrackIsOnArray = argTrackIsOnArray;
         performedSpans = getPerformedSpans(allPerformersSpansInScore, startMarkerMsPosition, endMarkerMsPosition);

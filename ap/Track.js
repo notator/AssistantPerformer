@@ -65,7 +65,7 @@ _AP.track = (function()
     // If the track has a rest at the startMarker, this.currentMoment.messages can be empty. 
     // If the track has no midiObjects at the startMarker, and the previous midiObject is a rest,
     // this.currentMoment.messages will be empty.
-    Track.prototype.setToFirstStartMarker = function(startMarkerMsPositionInScore, endMarkerMsPositionInScore)
+    Track.prototype.setForSpan = function(startMarkerMsPositionInScore, endMarkerMsPositionInScore)
     {
         var i, moIndex, midiObject, nMidiObjects = this.midiObjects.length;
 
@@ -101,29 +101,6 @@ _AP.track = (function()
         }
     };
 
-    // Advances the currentMidiObject if the next one is at msPosition. Stops repeating chords, if any.
-    // Sets _currentMidiObjectIndex, currentMidiObject and currentMoment
-    // Sets currentMidiObject and currentMoment to null when there are no more moments.
-    Track.prototype.advanceCurrentMidiObjectIfTheNextOneIsAtMsPosition = function(msPosition)
-    {
-        var
-        nextIndex = this._currentMidiObjectIndex + 1;
-
-        if(nextIndex === this.midiObjects.length)
-        {
-            this._currentMidiObjectIndex++;
-            this.currentMidiObject = null;
-            this.currentMoment = null;
-        }
-        else if(this.midiObjects[nextIndex].msPositionInChord === msPosition)
-        {
-            this._currentMidiObjectIndex = nextIndex;
-            this.currentMidiObject = this.midiObjects[nextIndex];
-            this.currentMoment = this.currentMidiObject.currentMoment;
-        }
-        // else do nothing
-    };
-
     // Returns Number.MAX_VALUE at end of track.
     Track.prototype.currentMsPosition = function()
     {
@@ -152,16 +129,35 @@ _AP.track = (function()
         return msPos;
     };
 
-    // Track.currentMoment is moved to the next moment in the currentMidiObject (ignoring the midiObject's repeat attribute).
-    // If the end of the currentMidiObect.moments is reached (it set its currentMoment to null), the currentMidiObject is advanced.
-    // Both track.currentMidiObject and track.currentMoment are null at the end of the track, but non-null otherwise.
-    Track.prototype.advanceCurrentMoment = function()
+    // Advances the currentMidiObject, setting _currentMidiObjectIndex, currentMidiObject and currentMoment
+    // Sets both currentMidiObject and currentMoment to null when there are no more midiObjects in track.midiObjects.
+    Track.prototype.advanceCurrentMidiObject = function()
     {
-        var nextMoIndex;
+        var index;
 
-        // advanceCurrentMoment() updates the currentMidiObject's internal moment index, ignoring its repeat setting,
-        // and sets currentMidiObject.currentMoment to null if out of range.
-        this.currentMoment = this.currentMidiObject.advanceCurrentMoment();
+        this._currentMidiObjectIndex++;
+        index = this._currentMidiObjectIndex;
+
+        if(index < this.midiObjects.length)
+        {
+            this.currentMidiObject = this.midiObjects[index];
+            this.currentMoment = this.currentMidiObject.currentMoment;
+        }
+        else
+        {
+            this.currentMidiObject = null;
+            this.currentMoment = null;
+        }
+    };
+
+    // If the doLoop argument is undefined or false, or currentMidiChord._repeat is false, the currentMidiChord will not repeat, and
+    // track.currentMidiChord will be advanced. This is as if the track contained a single, flat sequence of moments.
+    // If both doLoop and currentMidiChord._repeat are true, currentMoment will cycle through the currentMidiChord's moments, and
+    // never be set to null. In this case, this.currentMidiObject will not be advanced by this function.
+    // To advance immediately from a looping midiChord, use advanceCurrentMidiObject() (see above). 
+    Track.prototype.advanceCurrentMoment = function(doLoop)
+    {
+        this.currentMoment = this.currentMidiObject.advanceCurrentMoment(doLoop);
 
         if(this.currentMoment === null)
         {

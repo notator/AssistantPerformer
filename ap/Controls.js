@@ -174,20 +174,20 @@ _AP.controls = (function(document, window)
                     a.href = window.URL.createObjectURL(standardMIDIFile); // window.URL is set in Main.js
                     a.innerHTML = '<img id="saveImg" border="0" src="images/saveMouseOut.png" alt="saveMouseOutImage" width="56" height="31">';
 
-                    a.onmouseover = function(e)
+                    a.onmouseover = function() // there is an event argument, but it is ignored
                     {
                         var img = document.getElementById("saveImg");
                         img.src = "images/saveMouseOver.png";
                         a.style.cursor = 'default';
                     };
 
-                    a.onmouseout = function(e)
+                    a.onmouseout = function() // there is an event argument, but it is ignored
                     {
                         var img = document.getElementById("saveImg");
                         img.src = "images/saveMouseOut.png";
                     };
 
-                    a.onclick = function(e)
+                    a.onclick = function() // there is an event argument, but it is ignored
                     {
                         deleteSaveMIDIFileButton();
                     };
@@ -357,16 +357,16 @@ _AP.controls = (function(document, window)
             function findOffset(sequenceRecording)
             {
                 var
-                i, nTrks, trackRec,
+                k, nTrks, trackRec,
                 timestamp,
                 rOffset = Number.MAX_VALUE;
 
                 if(sequenceRecording !== undefined && sequenceRecording !== null)
                 {
                     nTrks = sequenceRecording.trackRecordings.length;
-                    for(i = 0; i < nTrks; ++i)
+                    for(k = 0; k < nTrks; ++k)
                     {
-                        trackRec = sequenceRecording.trackRecordings[i];
+                        trackRec = sequenceRecording.trackRecordings[k];
                         if(trackRec.moments.length > 0)
                         {
                             timestamp = trackRec.moments[0].timestamp;

@@ -728,14 +728,13 @@ _AP.midiChord = (function()
         nMoments = this.moments.length,
         currentIndex, currentPosition;
 
-        if((this.msPositionInScore > startMarkerMsPositionInScore)
-        || (this.msPositionInScore + this.msDurationInScore < startMarkerMsPositionInScore))
-        {
-            throw "Error: this chord must be at or straddle the start marker.";
-        }
+        console.assert(
+            (  (this.msPositionInScore <= startMarkerMsPositionInScore)
+            && (this.msPositionInScore + this.msDurationInScore > startMarkerMsPositionInScore)),
+            "This chord must be at or straddle the start marker.");
 
         for(currentIndex = 0; currentIndex < nMoments; ++currentIndex)
-        {  
+        {
             currentPosition = this.msPositionInScore + this.moments[currentIndex].msPositionInChord;
             if(currentPosition >= startMarkerMsPositionInScore)
             {
@@ -744,20 +743,17 @@ _AP.midiChord = (function()
         }
         this._currentMomentIndex = currentIndex;
         this.currentMoment = this.moments[currentIndex];
-        this.msDurationOfRepeats = 0;        
+        this.msDurationOfRepeats = 0;
     };
 
-    // Updates the MidiChord's internal moment index, ignoring its repeat setting.
-    // Sets currentMidiObject.currentMoment to null if out of range.
-    // Returns the new currentMoment or null
-    MidiChord.prototype.advanceCurrentMoment = function()
+    // If the doLoop argument is undefined or false, or midiChord._repeat is false, the midiChord will not repeat, and
+    // midiChord.currentMoment will be set to null when _currentMomentIndex === moments.length.
+    // If both doLoop and this._repeat are true, currentMoment will cycle through the midiChord's moments, never being set to null.
+    MidiChord.prototype.advanceCurrentMoment = function(doLoop)
     {
         var returnMoment;
 
-        if(this.currentMoment === null)
-        {
-            throw "Error: currentMoment should never be null here!";
-        }
+        console.assert(this.currentMoment !== null, "CurrentMoment should never be null here!");
 
         this._currentMomentIndex++;
         if(this._currentMomentIndex < this.moments.length)
@@ -765,17 +761,18 @@ _AP.midiChord = (function()
             this.currentMoment = this.moments[this._currentMomentIndex];
             returnMoment = this.currentMoment;
         }
-        else if(this._repeat === true)
+        else if(doLoop === undefined || doLoop === false || this._repeat === false)
+        {
+            returnMoment = null;
+        }
+        else // repeat
         {
             this._currentMomentIndex = 0;
             this.currentMoment = this.moments[0];
             this.msDurationOfRepeats += this.msDurationInScore;
             returnMoment = this.currentMoment;
         }
-        else
-        {
-            returnMoment = null;
-        }
+
         return returnMoment;
     };
 

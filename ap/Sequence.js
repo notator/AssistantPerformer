@@ -112,6 +112,7 @@ _AP.sequence = (function(window)
         pausedMoment = null, // set by pause(), used by resume()
         stopped = true, // nextMoment(), stop(), pause(), resume(), isStopped()
         paused = false, // nextMoment(), pause(), isPaused()
+        isLooping = false, // managed by a live performer when performing (see setLooping(bool))
 
         reportEndOfPerformance, // callback. Can be null or undefined. Set in play().
         reportMsPositionInScore,  // callback. Can be null or undefined. Set in play().
@@ -133,6 +134,7 @@ _AP.sequence = (function(window)
                 case "stopped":
                     stopped = true;
                     paused = false;
+                    isLooping = false;
                     pauseStartTime = performance.now();
                     pausedMoment = currentMoment;
                     currentMoment = null;
@@ -191,7 +193,7 @@ _AP.sequence = (function(window)
             if(!isStopped())
             {
                 performanceMsDuration = Math.ceil(performance.now() - performanceStartTime);
-                setState("stopped"); 
+                setState("stopped");
                 reportEndOfPerformance(sequenceRecording, performanceMsDuration);
             }
         },
@@ -202,52 +204,54 @@ _AP.sequence = (function(window)
         nextMoment = function()
         {
             var
-            nTracks = tracks.length,
+            i, track, nTracks = tracks.length,
             trackMomentMsPosInScore, nextMomtMsPosInScore = Number.MAX_VALUE,
-            nextMomt = null;
+            nextMomt = null,
+            localIsLooping = isLooping; // false by default, but can be changed during live performances.
 
-            function getNextMoment(tracks, nTracks)
+            // Returns the track having the earliest nextMsPosition (= the position of the first unsent Moment in the track),
+            // or null if the earliest nextMsPosition is >= endMarkerMsPosition.
+            function getNextTrack(tracks, nTracks)
             {
-                var track, i, currentTrack = null, nextMomt = null;
+                var track, j, nextTrack = null, nextMomt = null;
 
-                // find the track having the earliest nextMsPosition (= the position of the first unsent Moment in the track).
-                for(i = 0; i < nTracks; ++i)
+
+                for(j = 0; j < nTracks; ++j)
                 {
-                    track = tracks[i];
+                    track = tracks[j];
                     if(track.isPerforming)
                     {
                         trackMomentMsPosInScore = track.currentMsPosition(); // returns Number.MAX_VALUE at end of track
                         if(trackMomentMsPosInScore < nextMomtMsPosInScore && trackMomentMsPosInScore < endMarkerMsPosition)
                         {
-                            currentTrack = track;
+                            nextTrack = track;
                             nextMomtMsPosInScore = trackMomentMsPosInScore;
                         }
                     }
                 }
 
-                if(currentTrack !== null)
-                {
-                    nextMomt = currentTrack.currentMoment;
-                    currentTrack.advanceCurrentMoment();
-                }
-
-                return nextMomt;
+                return nextTrack;
             }
 
-            nextMomt = getNextMoment(tracks, nTracks);
+            track = getNextTrack(tracks, nTracks);
 
-            if(nextMomt === null)
+            if(track === null)
             {
                 stop(); // calls reportEndOfPerformance()
+            }
+            else
+            {
+                nextMomt = track.currentMoment;
+                track.advanceCurrentMoment(localIsLooping);
             }
 
             if(!stopped && !paused)
             {
                 if((nextMomt.chordStart || nextMomt.restStart) // These attributes are set when loading a score.
-                && (nextMomtMsPosInScore > lastReportedMsPosition))
+                && (nextMomtMsPosInScore > lastReportedMsPosition) && (localIsLooping === false))
                 {
                     // the position will be reported by tick() when nextMomt is sent.
-                    msPositionToReport = nextMomtMsPosInScore;
+                    msPositionToReport = nextMomtMsPosInScore;                   
                     //console.log("msPositionToReport=%i", msPositionToReport);
                 }
 
@@ -454,12 +458,10 @@ _AP.sequence = (function(window)
 
         // Sets each track's isPerforming attribute.
         // If the track is set to perform (in the trackIsOnArray -- the trackControl settings),
-        // an attempt is made to set its fromIndex, currentIndex and toIndex attributes such that
-        //     fromIndex is the index of the first midiObject at or after startMarkerMsPositionInScore
-        //     toIndex is the index of the last midiObject before endMarkerMsPositionInScore.
-        //     currentIndex is set to fromIndex
-        // If, however, the track contains no such moments, track.isPerforming is set to false. 
-        setTrackAttributes = function(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, isFirstSpan)
+        // sets track._currentMidiObjectIndex, track.currentMidiObject and track.currentMoment to
+        // startMarkerMsPosInScore, and all subsequent midiObjects before endMarkerMsPosInScore to
+        // start at their beginnings.
+        initPlay = function(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore)
         {
             var i, nTracks = tracks.length, track;
 
@@ -468,13 +470,9 @@ _AP.sequence = (function(window)
                 track = tracks[i];
                 track.isPerforming = trackIsOnArray[i];
 
-                if(isFirstSpan === true)
+                if(track.isPerforming)
                 {
-                    track.setToFirstStartMarker(startMarkerMsPosInScore, endMarkerMsPosInScore);
-                }
-                else
-                {
-                    track.advanceCurrentMidiObjectIfTheNextOneIsAtMsPosition(startMarkerMsPosInScore);
+                    track.setForSpan(startMarkerMsPosInScore, endMarkerMsPosInScore);
                 }
             }
         },
@@ -500,7 +498,7 @@ _AP.sequence = (function(window)
                 // an unassisted performance has/is a single span, and isFirstSpan will be true
                 if(isAssisted === false)
                 {
-                    setTrackAttributes(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, isFirstSpan);
+                    initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
                 }
 
                 pausedMoment = null;
@@ -510,7 +508,7 @@ _AP.sequence = (function(window)
                 msPositionToReport = -1;
                 lastReportedMsPosition = -1;
             }
-            
+
             run();
         },
 
@@ -576,7 +574,7 @@ _AP.sequence = (function(window)
                         }
                         lastTrackMomentMsPositionInScore = lastMsPos; // the last msPosition before the end marker
                         addNoteOffs(track.currentMoment, noteOffsMoment);
-                        track.advanceCurrentMoment();
+                        track.advanceCurrentMoment(); // undefined argument: means don't loop midiChords.
                     }
 
                     if(track.currentMsPosition() === endOfSpanMsPosition)
@@ -608,10 +606,18 @@ _AP.sequence = (function(window)
             speedFactor = factor;
         },
 
+        // isLooping is false by default, but can be changed during live performances using this function.
+        // See also Track.advanceMidiObject() -- which leaves (i.e. stops) a looping midiChord .
+        setLooping = function(bool)
+        {
+            console.assert(bool === true || bool === false);
+            isLooping = bool;
+        },
+
         publicPrototypeAPI =
         {
             init: init,
-            setTrackAttributes: setTrackAttributes,
+            initPlay: initPlay,
 
             play: play,
             pause: pause,
@@ -622,7 +628,8 @@ _AP.sequence = (function(window)
             isRunning: isRunning,
 
             finishSpanSilently: finishSpanSilently,
-            setSpeedFactor: setSpeedFactor
+            setSpeedFactor: setSpeedFactor,
+            setLooping: setLooping
         };
         // end var
 
