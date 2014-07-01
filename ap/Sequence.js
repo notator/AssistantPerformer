@@ -11,56 +11,21 @@
 *       // The new sequence contains nTracks empty tracks.
 *       Sequence(nTracks) sequence constructor. 
 *
-*  Public Interface (See longer descriptions in the code.):
-*
-*       // an array of Tracks
-*       tracks 
-*
-*       // functions (defined on the prototype):
-*
-*           // Start playing (part of) the Sequence.
-*           // Arguments:
-*           // midiOutdevice: the MIDI output device
-*           // startMarkerMsPosition, endMarkerMsPosition: the part of the sequence to play 
-*           //      (not including endMarkerMsPosition)
-*           // trackIsOnArray[trackIndex] returns a boolean which determines whether the track will
-*           //       be played or not. This array is read only.
-*           // [optional] recording: a sequence in which the performed messages will be recorded.
-*           // [optional] reportEndOfSpanCallback: called when the performance ends.
-*           // [optional] reportMsPositionInScoreCallback: called whenever a cursor needs to be updated
-*           //       in the score.
-*           //  The optional arguments can either be missing or null.
-*           play(midiOutDevice, startMarkerMsPosition, endMarkerMsPosition, trackIsOnArray,
-*                    recording, reportEndOfSpanCallback, reportMsPositionInScoreCallback)
+*   public interface functions defined on prototype (see comments in code below) 
+*       init(...)
+*       initPlay(...)
 *       
-*           // pause a running performance
-*           pause(),
+*       play()
+*       pause()
+*       resume()
+*       stop()
+*       isStopped()
+*       isPaused()
+*       isRunning()
 *       
-*           // resume a paused performance
-*           resume()
-*       
-*           // stop a running performance
-*           stop()
-*       
-*           // Is the performance stopped?
-*           isStopped()
-*       
-*           // Is the performance paused?
-*           isPaused()
-*       
-*           // Is the performance running?
-*           isRunning()
-*
-*           // Immediately sends all the sequence's NOTE_OFF commands that happen
-*           // before the endOfSpanMsPosition argument, and then calls stop().
-*           finishSpanSilently: finishSpanSilently
-*
-*           // Sends the controller message to the given track immediately.
-*           sendControlMessageNow(outputDevice, track, controller, midiValue)
-*
-*           /// Sets the track's pitchWheel deviation to value
-*           sendSetPitchWheelDeviationMessageNow(outputDevice, track, value)
-*
+*       finishSpanSilently()
+*       setSpeedFactor()
+*       setKeyIsDown()
 */
 
 /*jslint bitwise: false, nomen: true, plusplus: true, white: true */
@@ -104,7 +69,7 @@ _AP.sequence = (function(window)
 
         speedFactor = 1.0, // nextMoment(), setSpeedFactor() in handleMIDIInputEvent()
         previousTimestamp = null, // nextMoment()
-        previousMomtMsPosInScore, // nextMoment()
+        previousMomtMsPos, // nextMoment()
         currentMoment = null, // nextMoment(), resume(), tick()
         endMarkerMsPosition,
 
@@ -112,7 +77,7 @@ _AP.sequence = (function(window)
         pausedMoment = null, // set by pause(), used by resume()
         stopped = true, // nextMoment(), stop(), pause(), resume(), isStopped()
         paused = false, // nextMoment(), pause(), isPaused()
-        isLooping = false, // managed by a live performer when performing (see setLooping(bool))
+        keyIsDown = false, // managed by (is owned by) a live performer (see setKeyIsDown(bool))
 
         reportEndOfPerformance, // callback. Can be null or undefined. Set in play().
         reportMsPositionInScore,  // callback. Can be null or undefined. Set in play().
@@ -134,7 +99,6 @@ _AP.sequence = (function(window)
                 case "stopped":
                     stopped = true;
                     paused = false;
-                    isLooping = false;
                     pauseStartTime = performance.now();
                     pausedMoment = currentMoment;
                     currentMoment = null;
@@ -204,68 +168,137 @@ _AP.sequence = (function(window)
         nextMoment = function()
         {
             var
-            i, track, nTracks = tracks.length,
-            trackMomentMsPosInScore, nextMomtMsPosInScore = Number.MAX_VALUE,
+            track, nTracks = tracks.length, trackMsPos,
+            nextMomtMsPos,
             nextMomt = null,
-            localIsLooping = isLooping; // false by default, but can be changed during live performances.
+            localKeyIsDown = keyIsDown, // false by default, but can be changed during live performances.
+            inLoopPhase = false;
 
-            // Returns the track having the earliest nextMsPosition (= the position of the first unsent Moment in the track),
-            // or null if the earliest nextMsPosition is >= endMarkerMsPosition.
-            function getNextTrack(tracks, nTracks)
+            // this function is only called during assisted performances when keyIsDown is true.
+            function allTracksArePlayingTheirFinalMidiObjectInTheSpan(tracks, nTracks)
             {
-                var track, j, nextTrack = null, nextMomt = null;
+                var i, rval = true;
 
-
-                for(j = 0; j < nTracks; ++j)
+                for(i = 0; i < nTracks; ++i)
                 {
-                    track = tracks[j];
+                    if(tracks[i].isPlayingFinalAssistedMidiObjectInTheSpan() === false)
+                    {
+                        rval = false;
+                        break;
+                    }
+                }
+                return rval;
+            }
+
+            // Returns the looping track having the earliest nextMsPosition (= the position of the first unsent Moment in the track),
+            // or null if the earliest nextMsPosition is >= endMarkerMsPosition.
+            function getNextLoopingTrack(tracks, nTracks)
+            {
+                var track, i, nextTrack = null, nextMomt = null, trackMsPos, nextMomtMsPos = Number.MAX_VALUE;
+
+                for(i = 0; i < nTracks; ++i)
+                {
+                    track = tracks[i];
                     if(track.isPerforming)
                     {
-                        trackMomentMsPosInScore = track.currentMsPosition(); // returns Number.MAX_VALUE at end of track
-                        if(trackMomentMsPosInScore < nextMomtMsPosInScore && trackMomentMsPosInScore < endMarkerMsPosition)
+                        trackMsPos = track.currentMsPosition(); // returns Number.MAX_VALUE at end of track
+
+                        // ACHTUNG: inLoopPhase is true. Check track.currentMidiObject.msPositionInScore here! (c.f. the function below)
+                        if((track.currentMidiObject.msPositionInScore < endMarkerMsPosition) && (trackMsPos < nextMomtMsPos))
                         {
                             nextTrack = track;
-                            nextMomtMsPosInScore = trackMomentMsPosInScore;
+                            nextMomtMsPos = trackMsPos;
                         }
                     }
                 }
 
-                return nextTrack;
+                return { track: nextTrack, nextMomtMsPos: nextMomtMsPos };
             }
 
-            track = getNextTrack(tracks, nTracks);
+            // Returns the (non-looping) track having the earliest nextMsPosition (= the position of the first unsent Moment in the track),
+            // or null if the earliest nextMsPosition is >= endMarkerMsPosition.
+            function getNextTrack(tracks, nTracks)
+            {
+                var track, i, nextTrack = null, nextMomt = null, trackMsPos, nextMomtMsPos = Number.MAX_VALUE;
+
+                for(i = 0; i < nTracks; ++i)
+                {
+                    track = tracks[i];
+                    if(track.isPerforming)
+                    {
+                        trackMsPos = track.currentMsPosition(); // returns Number.MAX_VALUE at end of track
+
+                        // ACHTUNG: inLoopPhase is false. Check trackMsPos here (c.f. the above function)
+                        if((trackMsPos < endMarkerMsPosition) && (trackMsPos < nextMomtMsPos))
+                        {
+                            nextTrack = track;
+                            nextMomtMsPos = trackMsPos;
+                        }
+                    }
+                }
+
+                return { track: nextTrack, nextMomtMsPos: nextMomtMsPos };
+            }
+
+            if(localKeyIsDown)
+            {
+                inLoopPhase = allTracksArePlayingTheirFinalMidiObjectInTheSpan(tracks, nTracks);
+            }
+
+            if(inLoopPhase)
+            {
+                trackMsPos = getNextLoopingTrack(tracks, nTracks);
+            }
+            else
+            {
+                trackMsPos = getNextTrack(tracks, nTracks);
+            }
+
+            track = trackMsPos.track;
 
             if(track === null)
             {
-                stop(); // calls reportEndOfPerformance()
+                stop(); // calls reportEndOfPerformance(). An assisted performance waits for a noteOff...
             }
             else
             {
                 nextMomt = track.currentMoment;
-                track.advanceCurrentMoment(localIsLooping);
+                track.advanceCurrentMoment(inLoopPhase);
             }
 
             if(!stopped && !paused)
             {
-                if((nextMomt.chordStart || nextMomt.restStart) // These attributes are set when loading a score.
-                && (nextMomtMsPosInScore > lastReportedMsPosition) && (localIsLooping === false))
+                if(inLoopPhase === false)
                 {
-                    // the position will be reported by tick() when nextMomt is sent.
-                    msPositionToReport = nextMomtMsPosInScore;                   
-                    //console.log("msPositionToReport=%i", msPositionToReport);
-                }
+                    nextMomtMsPos = trackMsPos.nextMomtMsPos;
 
-                if(previousTimestamp === null)
-                {
-                    nextMomt.timestamp = startTimeAdjustedForPauses;
+                    if((nextMomt.chordStart || nextMomt.restStart)
+                    && (nextMomtMsPos > lastReportedMsPosition))
+                    {
+                        // the position will be reported by tick() when nextMomt is sent.
+                        msPositionToReport = nextMomtMsPos;
+                        //console.log("msPositionToReport=%i", msPositionToReport);
+                    }
+
+                    if(previousTimestamp === null)
+                    {
+                        nextMomt.timestamp = startTimeAdjustedForPauses;
+                    }
+                    else
+                    {
+                        nextMomt.timestamp = ((nextMomtMsPos - previousMomtMsPos) * speedFactor) + previousTimestamp;
+                    }
                 }
-                else
+                else // inLoopPhase === true
                 {
-                    nextMomt.timestamp = ((nextMomtMsPosInScore - previousMomtMsPosInScore) * speedFactor) + previousTimestamp;
+                    nextMomtMsPos = trackMsPos.nextMomtMsPos;
+                    nextMomt.timestamp = ((nextMomtMsPos - previousMomtMsPos) * speedFactor) + previousTimestamp;
+
+                    //console.log("inLoopPhase: endMarkerMsPosition=%i, nextMomtMsPos=%i", endMarkerMsPosition, nextMomtMsPos);
                 }
 
                 previousTimestamp = nextMomt.timestamp;
-                previousMomtMsPosInScore = nextMomtMsPosInScore;
+                previousMomtMsPos = nextMomtMsPos;
             }
 
             return nextMomt; // null stops tick().
@@ -461,7 +494,7 @@ _AP.sequence = (function(window)
         // sets track._currentMidiObjectIndex, track.currentMidiObject and track.currentMoment to
         // startMarkerMsPosInScore, and all subsequent midiObjects before endMarkerMsPosInScore to
         // start at their beginnings.
-        initPlay = function(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore)
+        initPlay = function(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, isAssisted)
         {
             var i, nTracks = tracks.length, track;
 
@@ -472,7 +505,7 @@ _AP.sequence = (function(window)
 
                 if(track.isPerforming)
                 {
-                    track.setForSpan(startMarkerMsPosInScore, endMarkerMsPosInScore);
+                    track.setForSpan(startMarkerMsPosInScore, endMarkerMsPosInScore, isAssisted);
                 }
             }
         },
@@ -498,13 +531,13 @@ _AP.sequence = (function(window)
                 // an unassisted performance has/is a single span, and isFirstSpan will be true
                 if(isAssisted === false)
                 {
-                    initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
+                    initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, isAssisted);
                 }
 
                 pausedMoment = null;
                 pauseStartTime = -1;
                 previousTimestamp = null;
-                previousMomtMsPosInScore = startMarkerMsPosInScore;
+                previousMomtMsPos = startMarkerMsPosInScore;
                 msPositionToReport = -1;
                 lastReportedMsPosition = -1;
             }
@@ -592,8 +625,8 @@ _AP.sequence = (function(window)
                             sequenceRecording.trackRecordings[noteOffsMoment.messages[0].channel()].addLiveScoreMoment(noteOffsMoment);
                         }
 
-                        // previousMomtMsPosInScore is used in the next span when setting the next moment's timestamp
-                        previousMomtMsPosInScore = (previousMomtMsPosInScore > lastTrackMomentMsPositionInScore) ? previousMomtMsPosInScore : lastTrackMomentMsPositionInScore;
+                        // previousMomtMsPos is used in the next span when setting the next moment's timestamp
+                        previousMomtMsPos = (previousMomtMsPos > lastTrackMomentMsPositionInScore) ? previousMomtMsPos : lastTrackMomentMsPositionInScore;
                     }
                 }
             }
@@ -606,12 +639,12 @@ _AP.sequence = (function(window)
             speedFactor = factor;
         },
 
-        // isLooping is false by default, but can be changed during live performances using this function.
+        // keyIsDown is false by default, but can be changed during live performances using this function.
         // See also Track.advanceMidiObject() -- which leaves (i.e. stops) a looping midiChord .
-        setLooping = function(bool)
+        setKeyIsDown = function(bool)
         {
             console.assert(bool === true || bool === false);
-            isLooping = bool;
+            keyIsDown = bool;
         },
 
         publicPrototypeAPI =
@@ -629,7 +662,7 @@ _AP.sequence = (function(window)
 
             finishSpanSilently: finishSpanSilently,
             setSpeedFactor: setSpeedFactor,
-            setLooping: setLooping
+            setKeyIsDown: setKeyIsDown
         };
         // end var
 

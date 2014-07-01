@@ -59,7 +59,7 @@ _AP.midiChord = (function()
         // used at runtime
         Object.defineProperty(this, "currentMoment", { value: null, writable: true });
         Object.defineProperty(this, "msDurationOfRepeats", { value: 0, writable: true });
-        Object.defineProperty(this, "_currentMomentIndex", { value: -1, writable: true });
+        Object.defineProperty(this, "_currentMomentIndex", { value: -1, writable: true });  
 
         if(chordIsSilent === true)
         {
@@ -746,10 +746,12 @@ _AP.midiChord = (function()
         this.msDurationOfRepeats = 0;
     };
 
-    // If the doLoop argument is undefined or false, or midiChord._repeat is false, the midiChord will not repeat, and
-    // midiChord.currentMoment will be set to null when _currentMomentIndex === moments.length.
-    // If both doLoop and this._repeat are true, currentMoment will cycle through the midiChord's moments, never being set to null.
-    MidiChord.prototype.advanceCurrentMoment = function(doLoop)
+    // The inLoopPhase argument is usually false. It will be true, in assisted performances when the performer is holding down a key,
+    // when all the performing tracks have played the first moment in the last midiObject of the span.
+    // If the inLoopPhase argument is undefined or false, or midiChord._repeat is false, the midiChord will not repeat.
+    // In this case midiChord.currentMoment will be set to null when _currentMomentIndex === moments.length.
+    // If the chord is repeating, it will continue to do so until the performer releases the key.
+    MidiChord.prototype.advanceCurrentMoment = function(inLoopPhase)
     {
         var returnMoment;
 
@@ -761,7 +763,7 @@ _AP.midiChord = (function()
             this.currentMoment = this.moments[this._currentMomentIndex];
             returnMoment = this.currentMoment;
         }
-        else if(doLoop === undefined || doLoop === false || this._repeat === false)
+        else if(inLoopPhase === undefined || inLoopPhase === false || this._repeat === false)
         {
             returnMoment = null;
         }
@@ -772,7 +774,6 @@ _AP.midiChord = (function()
             this.msDurationOfRepeats += this.msDurationInScore;
             returnMoment = this.currentMoment;
         }
-
         return returnMoment;
     };
 

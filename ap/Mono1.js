@@ -314,7 +314,7 @@ _AP.mono1 = (function()
             }
 
             span = {};
-            span.msPosition = performersTrack.endMsPosition();
+            span.msPosition = performersTrack.finalBarlineMsPosition();
             spans.push(span);
 
             getTrackSpanIsEmptyArrays(spans, tracks);
@@ -443,7 +443,7 @@ _AP.mono1 = (function()
 
         console.assert(isFirstSpan === true);
         console.assert(isAssisted === true);
-        mainSequence.initPlay(argTrackIsOnArray, startMarkerMsPosition, endMarkerMsPosition);
+        mainSequence.initPlay(argTrackIsOnArray, startMarkerMsPosition, endMarkerMsPosition, true);
 
         readOnlyTrackIsOnArray = argTrackIsOnArray;
         performedSpans = getPerformedSpans(allPerformersSpansInScore, startMarkerMsPosition, endMarkerMsPosition);
@@ -706,6 +706,8 @@ _AP.mono1 = (function()
             {
                 currentLivePerformersKeyPitch = -1;
 
+                mainSequence.setKeyIsDown(false);
+
                 if(currentSpanIsPlaying === true)
                 {
                     // finish the current span (that ends at performedSpans[nextSpanIndex].msPosition).
@@ -749,6 +751,8 @@ _AP.mono1 = (function()
             var isFirstSpan = false;
 
             currentLivePerformersKeyPitch = inputEvent.data[1];
+
+            mainSequence.setKeyIsDown(true);
 
             if(endOfPerformance)
             {

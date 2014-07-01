@@ -16,6 +16,7 @@
  */
 
 /*jslint bitwise: true, nomen: true, plusplus: true, white: true */
+/*global _AP: false,  window: false,  performance: false, console: false, ArrayBuffer: false, DataView: false, Uint8Array: false, Blob: false */
 
 _AP.namespace('_AP.standardMIDIFile');
 
@@ -31,11 +32,9 @@ _AP.standardMIDIFile = (function ()
     {
         var length;
 
-        if (value < 0)
-        {
-            throw "Error: value may not be negative.";
-        }
-        else if (value < 128) // 7 bits, 8th bit is 2^7 == 128
+        console.assert((value >= 0),"value may not be negative.");
+
+        if (value < 128) // 7 bits, 8th bit is 2^7 == 128
         {
             length = 1;
         }
@@ -311,7 +310,9 @@ _AP.standardMIDIFile = (function ()
                             previousTimestamp = parseInt(msg.timestamp, 10);
                             if(timeOffset < 0)
                             {
-                                throw "Error: line 315.";
+                                console.warn("Corrected negative timeOffset=%i", timeOffset);
+                                timeOffset = parseInt(0, 10);
+                                //throw "Error: line 315.";
                             }
                             dataLength += _variableLengthValueLength(timeOffset);
                             dataLength += msg.data.length;
@@ -320,7 +321,9 @@ _AP.standardMIDIFile = (function ()
                         timeOffset = endOfTrackTimestamp - previousTimestamp;
                         if(timeOffset < 0)
                         {
-                            throw "Error: line 324.";
+                            console.warn("Corrected negative timeOffset=%i", timeOffset);
+                            timeOffset = parseInt(0, 10);
+                            // throw "Error: line 324.";
                         }
                         dataLength += _variableLengthValueLength(timeOffset);
                         dataLength += 3; // all sound off ( Bx 78 00 )
