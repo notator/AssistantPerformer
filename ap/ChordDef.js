@@ -42,7 +42,7 @@ _AP.chordDef = (function ()
             attributesLength = chordDefNode.attributes.length,
             i;
 
-        attributes.repeat = true; // default value
+        attributes.repeat = false; // default value
         attributes.hasChordOff = true; // default value
 
         for (i = 0; i < attributesLength; ++i)
@@ -64,14 +64,22 @@ _AP.chordDef = (function ()
                     {
                         attributes.repeat = false;
                     }
-                    // if repeat is undefined, it is true
+                    else if(a.value === "1")
+                    {
+                        attributes.repeat = true;
+                    }
+                    // if "repeat" does not occur, attributes.repeat will be false
                     break;
                 case "hasChordOff":
                     if(a.value === "0")
                     {
                         attributes.hasChordOff = false;
                     }
-                    // if hasChordOff is undefined, it is true
+                    else if(a.value === "1")
+                    {
+                        attributes.hasChordOff = true;
+                    }
+                    // if "hasChordOff" does not occur, attributes.hasChordOff will be true
                     break;
                 case "pitchWheelDeviation":
                     attributes.pitchWheelDeviation = parseInt(a.value, 10);
