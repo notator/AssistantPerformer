@@ -50,9 +50,8 @@ _AP.mono1 = (function()
 
     // these variables are initialized by play() and used by handleMIDIInputEvent() 
     performedSpans, // the spans between and including the start and end markers.
-    endOfSpansIndex = -1, // the index of the (unplayed) last span in a performance (the end chord or rest or endBarline).
+    endOfSpansIndex = -1, // the index of the (unplayed) last span in a performance (the index of the end chord or rest or endBarline).
     currentSpanIndex = -1, // the index of the currently playing span (which will be stopped when a noteOn or noteOff arrives).
-    endOfPerformance = false, // flag, set to true when (currentSpanIndex === endOfSpansIndex)
     nextSpanIndex = 0, // the index of the span which will be played when a noteOn event arrives
     performanceStartNow, // set when the performance starts, used to set the reported duration of the performance  
     currentSpanIsPlaying,
@@ -81,7 +80,6 @@ _AP.mono1 = (function()
                 // these variables are also set in perform() when the state is first set to "running"
                 endOfSpansIndex = (performedSpans === undefined) ? -1 : (performedSpans.length - 1);
                 currentSpanIndex = -1;
-                endOfPerformance = false;
                 nextSpanIndex = 0;
                 stopped = true;
                 currentSpanIsPlaying = false;
@@ -144,11 +142,11 @@ _AP.mono1 = (function()
     // The performance and recording continue until reportEndOfPerformance is called in mono1.stop() above.
     reportEndOfSpanCallback = function()
     {
-        console.log("reportEndOfSpanCallback: nextSpanIndex=%i", nextSpanIndex);
+        //console.log("reportEndOfSpanCallback: nextSpanIndex=%i", nextSpanIndex);
 
         currentSpanIsPlaying = false;
 
-        if(endOfPerformance)
+        if(nextSpanIndex === endOfSpansIndex) // the index of the last, unplayed span (e.g. the final barline)
         {
             stop();
         }
@@ -368,13 +366,14 @@ _AP.mono1 = (function()
     // Called when the Go button is clicked, performersOptions.livePerformance === true and the performersOptions.midieventhandler is Mono1.
     // If performersOptions.livePerformance === false, the main sequence.play(...) is called instead.
     // The assistant's allSequences array, which is set in init(), contains the whole piece as an array of sequence,
-    // with one sequence per performer's rest or chord, whereby consecutive rests in the performer's track have been merged.
+    // with one sequence per performer's rest or chord.
     // This function sets the performedSpans array, which is the section of the allSequences array between startMarkerMsPosition and
     // endMarkerMsPosition (including moments at the endMarkerMsPosition).
     // Except for reseting the timestamps in the moments which are about to be performed, the performedSpans array does *not* change
     // the data in the mainSequence or the readOnlyTrackIsOnArray.
     // The start and end markers can be moved, and tracks selected or deselected between performances.
-    play = function(argTrackIsOnArray, startMarkerMsPosition, endMarkerMsPosition, recording, isFirstSpan, isAssisted)
+    // This function is called with two extra arguments (isFirstSpan and isAssisted), which are however ignored.
+    play = function(argTrackIsOnArray, startMarkerMsPosition, endMarkerMsPosition, recording)
     {
         // Simply returns the section of allPerformersSpansInScore between startMarkerMsPosition and endMarkerMsPosition,
         // including both startMarkerMsPosition and endMarkerPosition.
@@ -441,8 +440,8 @@ _AP.mono1 = (function()
             }
         }
 
-        console.assert(isFirstSpan === true);
-        console.assert(isAssisted === true);
+        //console.assert(isFirstSpan === true);
+        //console.assert(isAssisted === true);
         mainSequence.initPlay(argTrackIsOnArray, startMarkerMsPosition, endMarkerMsPosition, true);
 
         readOnlyTrackIsOnArray = argTrackIsOnArray;
@@ -454,7 +453,6 @@ _AP.mono1 = (function()
         // the index of the (unplayed) span at the endMarkerPosition (the end chord or rest or endBarline).
         endOfSpansIndex = performedSpans.length - 1;
         currentSpanIndex = -1;
-        endOfPerformance = false;
         nextSpanIndex = 0;
         currentSpanIsPlaying = false;
 
@@ -548,7 +546,7 @@ _AP.mono1 = (function()
             }
 
             speedFactor = getSpeedFactor(controllerValue, slowerRoot, fasterRoot);
-            console.log("mono1: speedFactor=%f" + speedFactor);
+            //console.log("mono1: speedFactor=%f" + speedFactor);
             mainSequence.setSpeedFactor(speedFactor);
         }
 
@@ -702,6 +700,8 @@ _AP.mono1 = (function()
 
         function handleNoteOff(inputEvent)
         {
+            var nSpans = performedSpans.length;
+
             if(inputEvent.data[1] === currentLivePerformersKeyPitch)
             {
                 currentLivePerformersKeyPitch = -1;
@@ -714,35 +714,17 @@ _AP.mono1 = (function()
                     mainSequence.finishSpanSilently(performedSpans[nextSpanIndex].msPosition);
                 }
 
-                currentSpanIndex = nextSpanIndex++;
-                endOfPerformance = (currentSpanIndex === endOfSpansIndex);
-
-                if(endOfPerformance) // see reportEndOfPerformance() above 
+                if((nextSpanIndex < nSpans) && performedSpans[nextSpanIndex].restSpan === true)
                 {
-                    stop();
-                }
-                else if(performedSpans[currentSpanIndex].restSpan === true) // if the next spans are restSpans, play them.
-                {
-                    while(performedSpans[currentSpanIndex].restSpan === true && !endOfPerformance)
+                    while((nextSpanIndex <= endOfSpansIndex) && performedSpans[nextSpanIndex].restSpan === true)
                     {
-                        playSpan(performedSpans, currentSpanIndex, nextSpanIndex, false);
                         currentSpanIndex = nextSpanIndex++;
-                        endOfPerformance = (currentSpanIndex === endOfSpansIndex);
-                    }
-                    if(!endOfPerformance)
-                    {
-                        currentSpanIndex--;
-                        nextSpanIndex--;
-                        endOfPerformance = (currentSpanIndex === endOfSpansIndex);
+                        playSpan(performedSpans, currentSpanIndex, nextSpanIndex, false);
                     }
                 }
-                else
-                {
-                    if(performedSpans[currentSpanIndex].chordSpan === undefined)
-                    {
-                        throw "Error: the current span must be a chordSpan here."; 
-                    }
-                }
+                
+                //console.assert((nextSpanIndex === endOfSpansIndex || (performedSpans[nextSpanIndex].chordSpan !== undefined)),
+                //    "The current span must be a chordSpan here.");
             }
         }
 
@@ -754,7 +736,7 @@ _AP.mono1 = (function()
 
             mainSequence.setKeyIsDown(true);
 
-            if(endOfPerformance)
+            if(nextSpanIndex === endOfSpansIndex)
             {
                 // If the final sequence is playing and a noteOn is received, the performance stops immediately.
                 // In this case the final sequence must be a restSpan (otherwise a noteOn can't be received).
@@ -775,21 +757,16 @@ _AP.mono1 = (function()
                 }
 
                 currentSpanIndex = nextSpanIndex++;
-                endOfPerformance = (currentSpanIndex === endOfSpansIndex);
 
                 // skip to the next chordSpan
-                while(performedSpans[currentSpanIndex].restSpan === true && !endOfPerformance)
+                while(performedSpans[currentSpanIndex].restSpan === true && (currentSpanIndex < endOfSpansIndex))
                 {
                     currentSpanIndex = nextSpanIndex++;
-                    endOfPerformance = (currentSpanIndex === endOfSpansIndex);
                 }
 
-                if(!endOfPerformance)
+                if(currentSpanIndex < endOfSpansIndex)
                 {
-                    if(performedSpans[currentSpanIndex].chordSpan === undefined)
-                    {
-                        throw "Error: the current span must be a chordSpan here.";
-                    }
+                    //console.assert((performedSpans[currentSpanIndex].chordSpan !== undefined), "The current span must be a chordSpan here.");
 
                     playSpan(performedSpans, currentSpanIndex, nextSpanIndex, isFirstSpan);
                 }             
@@ -838,7 +815,7 @@ _AP.mono1 = (function()
                 case CMD.CONTROL_CHANGE: // sent when the input device's mod wheel changes.
                     if(data[1] === _AP.constants.CONTROL.MODWHEEL)
                     {
-                        console.log("Modulation Wheel, data[1]=%i, data[2]=%i", data[1], data[2]);
+                        //console.log("Modulation Wheel, data[1]=%i, data[2]=%i", data[1], data[2]);
                         if(pOpts.speedControllerName === "modulation wheel")
                         {
                             setSpeedFactor(data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
@@ -856,7 +833,7 @@ _AP.mono1 = (function()
                     {
                         setSpeedFactor(data[2], pOpts.slowerSpeedRoot, pOpts.fasterSpeedRoot);
                     }
-                    console.log("Pitch Wheel, data[1]=%i, data[2]=%i", data[1], data[2]);
+                    //console.log("Pitch Wheel, data[1]=%i, data[2]=%i", data[1], data[2]);
                     // by experiment: data[2] is the "high byte" and has a range 0..127. 
                     if(pOpts.pitchWheelSubstituteControlData !== undefined)
                     {
@@ -866,7 +843,7 @@ _AP.mono1 = (function()
                     }
                     break;
                 case CMD.NOTE_ON:
-                    console.log("NoteOn, pitch:%i, velocity=%i", data[1], data[2]);
+                    //console.log("NoteOn, pitch:%i, velocity=%i", data[1], data[2]);
                     if(data[2] !== 0)
                     {
                         if(pOpts.speedControllerName === "noteOn: pitch")
@@ -885,7 +862,7 @@ _AP.mono1 = (function()
                     }
                     break;
                 case CMD.NOTE_OFF:
-                    console.log("NoteOff, pitch:%i, velocity=%i", data[1], data[2]);
+                    //console.log("NoteOff, pitch:%i, velocity=%i", data[1], data[2]);
                     handleNoteOff(inputEvent);
                     break;
                 default:
