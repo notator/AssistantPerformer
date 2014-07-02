@@ -5,22 +5,22 @@
  *  Code licensed under MIT
  *  https://github.com/notator/assistant-performer/blob/master/License.md
  *
- *  ap/StandardMIDIFile.js
- *  The _AP.standardMIDIFile namespace which exposes the functions
+ *  ap/StandardMidiFile.js
+ *  The _AP.standardMidiFile namespace which exposes the functions
  *
  *      // Convert a SequenceRecording to a Standard MIDI File (actually a Blob).
  *      // The SMF can be made downloadable by connecting it to a document link element.
  *      // When the user clicks the link, the browser saves the file on the user's
  *      // computer. See https://developer.mozilla.org/en/docs/DOM/Blob.
- *      standardMIDIFile = sequenceToSMF(sequenceRecording, sequenceMsDuration);
+ *      standardMidiFile = sequenceToSMF(sequenceRecording, sequenceMsDuration);
  */
 
 /*jslint bitwise: true, nomen: true, plusplus: true, white: true */
 /*global _AP: false,  window: false,  performance: false, console: false, ArrayBuffer: false, DataView: false, Uint8Array: false, Blob: false */
 
-_AP.namespace('_AP.standardMIDIFile');
+_AP.namespace('_AP.standardMidiFile');
 
-_AP.standardMIDIFile = (function ()
+_AP.standardMidiFile = (function ()
 {
     "use strict";
 
@@ -108,7 +108,7 @@ _AP.standardMIDIFile = (function ()
     // The file can be downloaded by connecting it to a document link element, which the user can
     // then click.
     // The link's href should be set as follows:
-    //      a.href = window.URL.createObjectURL(standardMIDIFile);
+    //      a.href = window.URL.createObjectURL(standardMidiFile);
     // It is otherwise the responsibility of the calling code to design and create the link element.
     // It could be a simple text link, or be something more elaborate using images etc. 
     // Arguments:        

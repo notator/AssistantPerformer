@@ -17,7 +17,7 @@
 (function(global)
 {
     'use strict';
-    var midiIO, _requestMIDIAccess, MIDIAccess, _onReady, MIDIPort, MIDIInput, MIDIOutput, _midiProc;
+    var midiIO, _requestMIDIAccess, _delayedInit, MIDIAccess, _onReady, _onNotReady, MIDIPort, MIDIInput, MIDIOutput, _midiProc;
 
     function Promise()
     {
@@ -85,19 +85,36 @@
             document.body.appendChild(insertionPoint);
         }
         insertionPoint.appendChild(o1);
+    }
 
+    _JazzInstance.prototype._init = function()
+    {
         if(this.objRef.isJazz)
+        {
             this._Jazz = this.objRef;
-        else if(this.activeX.isJazz)
+        } else if(this.activeX.isJazz)
+        {
             this._Jazz = this.activeX;
-        else
+        } else
+        {
             this._Jazz = null;
+        }
         if(this._Jazz)
         {
             this._Jazz._jazzTimeZero = this._Jazz.Time();
             this._Jazz._perfTimeZero = window.performance.now();
         }
-    }
+    };
+
+    _JazzInstance.prototype._delayedInit = function(then)
+    {
+        var that = this;
+        setTimeout(function()
+        {
+            that._init();
+            then();
+        }, 100);
+    };
 
     _requestMIDIAccess = function _requestMIDIAccess()
     {
@@ -110,26 +127,29 @@
     MIDIAccess = function()
     {
         this._jazzInstances = new Array();
-        this._jazzInstances.push(new _JazzInstance());
+        var instance = new _JazzInstance();
+        this._jazzInstances.push(instance);
         this._promise = new Promise;
-
-        if(this._jazzInstances[0]._Jazz)
+        instance._delayedInit(function()
         {
-            this._Jazz = this._jazzInstances[0]._Jazz;
-            window.setTimeout(_onReady.bind(this), 3);
-        } else
-        {
-            window.setTimeout(_onNotReady.bind(this), 3);
-        }
+            if(instance._Jazz)
+            {
+                this._Jazz = instance._Jazz;
+                window.setTimeout(_onReady.bind(this), 3);
+            } else
+            {
+                window.setTimeout(_onNotReady.bind(this), 3);
+            }
+        }.bind(this));
     };
 
-    _onReady = function _onReady()
+    _onReady = function()
     {
         if(this._promise)
             this._promise.succeed(this);
     };
 
-    function _onNotReady()
+    _onNotReady = function()
     {
         if(this._promise)
             this._promise.fail({ code: 1 });
@@ -178,6 +198,11 @@
         this.onmidimessage = null;
 
         var inputInstance = null;
+        var then = function()
+        {
+            this._jazzInstance = inputInstance._Jazz;
+            this._input = this._jazzInstance.MidiInOpen(this._index, _midiProc.bind(this));
+        };
         for(var i = 0; (i < midiAccess._jazzInstances.length) && (!inputInstance) ; i++)
         {
             if(!midiAccess._jazzInstances[i].inputInUse)
@@ -187,11 +212,13 @@
         {
             inputInstance = new _JazzInstance();
             midiAccess._jazzInstances.push(inputInstance);
+            inputInstance.inputInUse = true;
+            inputInstance._delayedInit(then.bind(this));
+        } else
+        {
+            inputInstance.inputInUse = true;
+            then.bind(this).apply();
         }
-        inputInstance.inputInUse = true;
-
-        this._jazzInstance = inputInstance._Jazz;
-        this._input = this._jazzInstance.MidiInOpen(this._index, _midiProc.bind(this));
     };
 
     // Introduced in DOM Level 2:
@@ -362,6 +389,11 @@
         this.version = "";
 
         var outputInstance = null;
+        var then = function()
+        {
+            this._jazzInstance = outputInstance._Jazz;
+            this._jazzInstance.MidiOutOpen(this.name);
+        };
         for(var i = 0; (i < midiAccess._jazzInstances.length) && (!outputInstance) ; i++)
         {
             if(!midiAccess._jazzInstances[i].outputInUse)
@@ -371,11 +403,13 @@
         {
             outputInstance = new _JazzInstance();
             midiAccess._jazzInstances.push(outputInstance);
+            outputInstance.outputInUse = true;
+            outputInstance._delayedInit(then.bind(this));
+        } else
+        {
+            outputInstance.outputInUse = true;
+            then.bind(this).apply();
         }
-        outputInstance.outputInUse = true;
-
-        this._jazzInstance = outputInstance._Jazz;
-        this._jazzInstance.MidiOutOpen(this.name);
     };
 
     function _sendLater()

@@ -29,7 +29,7 @@ _AP.controls = (function(document, window)
     SequenceRecording = _AP.sequenceRecording.SequenceRecording,
     COMMAND = _AP.constants.COMMAND,
     CONTROL = _AP.constants.CONTROL,
-    sequenceToSMF = _AP.standardMIDIFile.sequenceToSMF,
+    sequenceToSMF = _AP.standardMidiFile.sequenceToSMF,
 
     midiAccess,
     scoreInfo, // set when a score is loaded
@@ -142,7 +142,7 @@ _AP.controls = (function(document, window)
     createSaveMIDIFileButton = function(scoreName, sequenceRecording, sequenceMsDuration)
     {
         var
-        standardMIDIFile,
+        standardMidiFile,
         downloadName,
         downloadLinkDiv, downloadLinkFound = false, i, a,
         nTracks = sequenceRecording.trackRecordings.length;
@@ -166,12 +166,12 @@ _AP.controls = (function(document, window)
 
                     downloadName = getMIDIFileName(scoreName);
 
-                    standardMIDIFile = sequenceToSMF(sequenceRecording, sequenceMsDuration);
+                    standardMidiFile = sequenceToSMF(sequenceRecording, sequenceMsDuration);
 
                     a = document.createElement('a');
                     a.id = "downloadLink";
                     a.download = downloadName;
-                    a.href = window.URL.createObjectURL(standardMIDIFile); // window.URL is set in Main.js
+                    a.href = window.URL.createObjectURL(standardMidiFile); // window.URL is set in Main.js
                     a.innerHTML = '<img id="saveImg" border="0" src="images/saveMouseOut.png" alt="saveMouseOutImage" width="56" height="31">';
 
                     a.onmouseover = function() // there is an event argument, but it is ignored
