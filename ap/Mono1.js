@@ -50,7 +50,7 @@ _AP.mono1 = (function()
 
     // these variables are initialized by play() and used by handleMIDIInputEvent() 
     performedSpans, // the spans between and including the start and end markers.
-    endOfSpansIndex = -1, // the index of the (unplayed) last span in a performance (the index of the end chord or rest or endBarline).
+    endMarkerIndex = -1, // the index of the (unplayed) last span in a performance (the index of the end chord or rest or endBarline).
     currentSpanIndex = -1, // the index of the currently playing span (which will be stopped when a noteOn or noteOff arrives).
     nextSpanIndex = 0, // the index of the span which will be played when a noteOn event arrives
     performanceStartNow, // set when the performance starts, used to set the reported duration of the performance  
@@ -78,7 +78,7 @@ _AP.mono1 = (function()
             case "stopped":
                 mainSequence.stop();
                 // these variables are also set in perform() when the state is first set to "running"
-                endOfSpansIndex = (performedSpans === undefined) ? -1 : (performedSpans.length - 1);
+                endMarkerIndex = (performedSpans === undefined) ? -1 : (performedSpans.length - 1);
                 currentSpanIndex = -1;
                 nextSpanIndex = 0;
                 stopped = true;
@@ -146,7 +146,7 @@ _AP.mono1 = (function()
 
         currentSpanIsPlaying = false;
 
-        if(nextSpanIndex === endOfSpansIndex) // the index of the last, unplayed span (e.g. the final barline)
+        if(nextSpanIndex === endMarkerIndex) // the index of the last, unplayed span (e.g. the final barline)
         {
             stop();
         }
@@ -451,7 +451,7 @@ _AP.mono1 = (function()
         recordingSequence = recording;
 
         // the index of the (unplayed) span at the endMarkerPosition (the end chord or rest or endBarline).
-        endOfSpansIndex = performedSpans.length - 1;
+        endMarkerIndex = performedSpans.length - 1;
         currentSpanIndex = -1;
         nextSpanIndex = 0;
         currentSpanIsPlaying = false;
@@ -716,14 +716,14 @@ _AP.mono1 = (function()
 
                 if((nextSpanIndex < nSpans) && performedSpans[nextSpanIndex].restSpan === true)
                 {
-                    while((nextSpanIndex <= endOfSpansIndex) && performedSpans[nextSpanIndex].restSpan === true)
+                    while((nextSpanIndex <= endMarkerIndex) && performedSpans[nextSpanIndex].restSpan === true)
                     {
                         currentSpanIndex = nextSpanIndex++;
                         playSpan(performedSpans, currentSpanIndex, nextSpanIndex, false);
                     }
                 }
                 
-                //console.assert((nextSpanIndex === endOfSpansIndex || (performedSpans[nextSpanIndex].chordSpan !== undefined)),
+                //console.assert((nextSpanIndex === endMarkerIndex || (performedSpans[nextSpanIndex].chordSpan !== undefined)),
                 //    "The current span must be a chordSpan here.");
             }
         }
@@ -736,7 +736,7 @@ _AP.mono1 = (function()
 
             mainSequence.setKeyIsDown(true);
 
-            if(nextSpanIndex === endOfSpansIndex)
+            if(nextSpanIndex === endMarkerIndex)
             {
                 // If the final sequence is playing and a noteOn is received, the performance stops immediately.
                 // In this case the final sequence must be a restSpan (otherwise a noteOn can't be received).
@@ -759,12 +759,12 @@ _AP.mono1 = (function()
                 currentSpanIndex = nextSpanIndex++;
 
                 // skip to the next chordSpan
-                while(performedSpans[currentSpanIndex].restSpan === true && (currentSpanIndex < endOfSpansIndex))
+                while(performedSpans[currentSpanIndex].restSpan === true && (currentSpanIndex < endMarkerIndex))
                 {
                     currentSpanIndex = nextSpanIndex++;
                 }
 
-                if(currentSpanIndex < endOfSpansIndex)
+                if(currentSpanIndex < endMarkerIndex)
                 {
                     //console.assert((performedSpans[currentSpanIndex].chordSpan !== undefined), "The current span must be a chordSpan here.");
 
