@@ -920,7 +920,7 @@ _AP.score = (function (document)
                             }
                         }
                     }
-                    else if (systemChildID.indexOf('staff') !== -1)
+                    else if (systemChildID.indexOf('Staff') !== -1) // this should find both outputStaff and inputStaff
                     {
                         staff = {};
                         staff.voices = [];
@@ -944,7 +944,7 @@ _AP.score = (function (document)
                                     staff.bottomLineY = stafflineInfo.stafflineYs[stafflineInfo.stafflineYs.length - 1];
                                     staff.svgStafflines = stafflineInfo.svgStafflines; // top down
                                 }
-                                if (staffChildID.indexOf('voice') !== -1)
+                                if (staffChildID.indexOf('Voice') !== -1) // this should find both outputVoice and inputVoice
                                 {
                                     voice = {};
                                     voiceChildren = staffChildren[j].childNodes;
@@ -1306,17 +1306,18 @@ _AP.score = (function (document)
                         if(noteObject.nodeName === 'g')
                         {
                             id = noteObject.getAttribute('id');
-                            if(id.indexOf('chord') >= 0)
+                            if(id.indexOf('outputChord') >= 0)
                             {
                                 timeObject = {};
                                 timeObject.alignmentX = parseFloat(noteObject.getAttribute('score:alignmentX')) / viewBoxScale1;
                                 chordChildren = noteObject.childNodes;
                                 for(j = 0; j < chordChildren.length; ++j)
                                 {
-                                    if(chordChildren[j].nodeName !== '#text')
-                                    {
-                                        id = chordChildren[j].getAttribute('id');
-                                        if(id.indexOf('midi') >= 0)
+                                    //if(chordChildren[j].nodeName !== '#text')
+                                    //{
+                                        //id = chordChildren[j].getAttribute('id');
+                                    	//if(id.indexOf('midi') >= 0)
+                                    	if(chordChildren[j].nodeName === 'score:midiChord')
                                         {
                                             midiChildren = chordChildren[j].childNodes;
                                             for(k = 0; k < midiChildren.length; ++k)
@@ -1329,14 +1330,14 @@ _AP.score = (function (document)
                                             }
                                             break;
                                         }
-                                    }
+                                    //}
                                 }
                                 timeObject.msDuration = getMsDuration(timeObject.chordDef);
                                 timeObjects.push(timeObject);
                             }
                             else if(id.indexOf('rest') >= 0)
                             {
-                                 timeObject = {};
+                                timeObject = {};
                                 timeObject.alignmentX = parseFloat(noteObject.getAttribute('score:alignmentX') / viewBoxScale1);
                                 timeObject.msDuration = parseFloat(noteObject.getAttribute('score:msDuration'));
                                 timeObjects.push(timeObject);
@@ -1358,7 +1359,7 @@ _AP.score = (function (document)
                     if(systemChildren[i].nodeName !== '#text')
                     {
                         systemChildID = systemChildren[i].getAttribute("id");
-                        if(systemChildID.indexOf('staff') !== -1)
+                        if(systemChildID.indexOf('outputStaff') !== -1)
                         {
                             staff = system.staves[staffIndex++];
                             staffChildren = systemChildren[i].childNodes;
@@ -1367,7 +1368,7 @@ _AP.score = (function (document)
                                 if(staffChildren[j].nodeName !== '#text')
                                 {
                                     staffChildID = staffChildren[j].getAttribute('id');
-                                    if(staffChildID.indexOf('voice') !== -1)
+                                    if(staffChildID.indexOf('outputVoice') !== -1)
                                     {
                                         voice = staff.voices[voiceIndex++];
                                         voice.timeObjects = getTimeObjects(staffChildren[j].childNodes, speed);
