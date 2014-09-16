@@ -815,7 +815,7 @@ _AP.score = (function (document)
         var system, embeddedSvgPages, nPages, viewBoxOriginY,
             i, j,
             sysNumber, svgPage, svgElem, svgChildren, systemID,
-            childID, currentFrame, pageHeight;
+            childClass, currentFrame, pageHeight;
 
         function resetContent()
         {
@@ -831,8 +831,8 @@ _AP.score = (function (document)
 
         function getEmptySystem(viewBoxOriginY, viewBoxScale, systemNode)
         {
-            var i, j, k, systemChildren, systemChildID,
-                staff, staffChildren, staffChildID, stafflineInfo,
+            var i, j, k, systemChildren, childClass,
+                staff, staffChildren, staffChildClass, stafflineInfo,
                 markersChildren, barlinesChildren, voice, voiceChildren, voiceChild;
 
             // returns an info object containing left, right and stafflineYs
@@ -897,15 +897,15 @@ _AP.score = (function (document)
             {
                 if (systemChildren[i].nodeName !== '#text')
                 {
-                    systemChildID = systemChildren[i].getAttribute("id");
-                    if (systemChildID.indexOf('markers') !== -1)
+                    childClass = systemChildren[i].getAttribute("class");
+                    if (childClass === 'markers')
                     {
                         markersChildren = systemChildren[i].childNodes;
                         for (j = 0; j < markersChildren.length; ++j)
                         {
                             if (markersChildren[j].nodeName !== '#text')
                             {
-                                switch (markersChildren[j].getAttribute('id'))
+                                switch (markersChildren[j].getAttribute('class'))
                                 {
                                     case 'startMarker':
                                         system.startMarker = new Markers.StartMarker(markersChildren[j], viewBoxOriginY, viewBoxScale);
@@ -920,7 +920,7 @@ _AP.score = (function (document)
                             }
                         }
                     }
-                    else if (systemChildID.indexOf('Staff') !== -1) // this should find both outputStaff and inputStaff
+                    else if(childClass === 'outputStaff' || childClass === 'inputStaff')
                     {
                         staff = {};
                         staff.voices = [];
@@ -931,9 +931,9 @@ _AP.score = (function (document)
                         {
                             if (staffChildren[j].nodeName !== '#text')
                             {
-                                staffChildID = staffChildren[j].getAttribute('id');
+                                staffChildClass = staffChildren[j].getAttribute('class');
 
-                                if (staffChildID.indexOf('stafflines') !== -1)
+                                if (staffChildClass === 'stafflines')
                                 {
                                     stafflineInfo = getStafflineInfo(staffChildren[j].childNodes);
                                     system.left = stafflineInfo.left;
@@ -944,37 +944,37 @@ _AP.score = (function (document)
                                     staff.bottomLineY = stafflineInfo.stafflineYs[stafflineInfo.stafflineYs.length - 1];
                                     staff.svgStafflines = stafflineInfo.svgStafflines; // top down
                                 }
-                                if (staffChildID.indexOf('Voice') !== -1) // this should find both outputVoice and inputVoice
-                                {
-                                    voice = {};
-                                    voiceChildren = staffChildren[j].childNodes;
-                                    for (k = 0; k < voiceChildren.length; ++k)
-                                    {
-                                        voiceChild = voiceChildren[k];
-                                        if (voiceChild.nodeName === "text")
-                                        {
-                                            staff.nameElem = voiceChild;
-                                            break;
-                                        }
-                                    }
-                                    staff.voices.push(voice);
+                                if(staffChildClass === 'outputVoice' || staffChildClass === 'inputVoice')
+{
+                                	voice = {};
+                                	voiceChildren = staffChildren[j].childNodes;
+                                	for(k = 0; k < voiceChildren.length; ++k)
+                                	{
+                                		voiceChild = voiceChildren[k];
+                                		if(voiceChild.nodeName === "text")
+                                		{
+                                			staff.nameElem = voiceChild;
+                                			break;
+                                		}
+                                	}
+                                	staff.voices.push(voice);
                                 }
                             }
                         }
                         setVoiceCentreYs(staff.topLineY, staff.bottomLineY, staff.voices);
                     }
-                    else if (systemChildID.indexOf('barlines') !== -1)
+                    else if(childClass.indexOf('barlines') !== -1)
                     {
-                        barlinesChildren = systemChildren[i].childNodes;
-                        for (j = 0; j < barlinesChildren.length; ++j)
-                        {
-                            if (barlinesChildren[j].nodeName !== '#text')
-                            {
-                                system.firstBarlineX = parseFloat(barlinesChildren[j].getAttribute("x1"));
-                                system.firstBarlineX /= viewBoxScale;
-                                break;
-                            }
-                        }
+                    	barlinesChildren = systemChildren[i].childNodes;
+                    	for(j = 0; j < barlinesChildren.length; ++j)
+                    	{
+                    		if(barlinesChildren[j].nodeName !== '#text')
+                    		{
+                    			system.firstBarlineX = parseFloat(barlinesChildren[j].getAttribute("x1"));
+                    			system.firstBarlineX /= viewBoxScale;
+                    			break;
+                    		}
+                    	}
                     }
                 }
             }
@@ -1021,24 +1021,21 @@ _AP.score = (function (document)
             svgElem = svgPage.childNodes[1];
             viewBoxScale = getViewBoxScale(svgElem); // a float >= 1 (currently, usually 8.0)
             svgChildren = svgElem.childNodes;
-            systemID = "page" + (i + 1).toString() + "_system" + (sysNumber++).toString();
             for (j = 0; j < svgChildren.length; ++j)
             {
                 if(svgChildren[j].nodeName !== '#text' && svgChildren[j].nodeName !== '#comment' && svgChildren[j].nodeName !== 'script')
                 {
-                    childID = svgChildren[j].getAttribute("id");
-                    if (childID === "frame")
+                    childClass = svgChildren[j].getAttribute("class");
+                    if (childClass === "frame")
                     {
                         currentFrame = svgChildren[j];
                         currentFrame.originY = viewBoxOriginY;
                         svgFrames.push(currentFrame);
                     }
-                    if (childID === systemID)
+                    if (childClass === "system")
                     {
                         system = getEmptySystem(viewBoxOriginY, viewBoxScale, svgChildren[j]);
                         systems.push(system); // systems is global inside this namespace
-
-                        systemID = "page" + (i + 1).toString() + "_system" + (sysNumber++).toString();
                     }
                 }
             }
@@ -1163,24 +1160,24 @@ _AP.score = (function (document)
             var embeddedSvgPages, nPages,
                 i, j,
                 systemIndex, sysNumber, svgPage, svgElem, viewBoxScale2, svgChildren, systemID,
-                childID,
+                childClass,
                 lastSystemTimeObjects, finalBarlineMsPosition;
 
             function getSystemTimeObjects(system, viewBoxScale1, systemNode, speed)
             {
-                var i, j, systemChildren, systemChildID,
-                    staff, staffChildren, staffChildID,
+                var i, j, systemChildren, childClass,
+                    staff, staffChildren, staffChildClass,
                     voice,
                     staffIndex = 0,
                     voiceIndex = 0;
 
-                // A timeObject is either a chord or a rest.
-                // Both chords and rests have alignmentX and msDuration fields.
+                // A timeObject is either an outputChord or a rest.
+            	// Both outputChords and rests have alignmentX and msDuration fields.
                 // Later in this program (as soon as all systems have been read), the msPosition
                 // of all timeObjects will appended to them.
                 function getTimeObjects(noteObjects, speed)
                 {
-                    var timeObjects = [], id,
+                    var timeObjects = [], typeString,
                         timeObject, i, j, k, length, noteObject, chordChildren, midiChildren;
 
                     // timeObjects is an array of timeObject.
@@ -1305,37 +1302,32 @@ _AP.score = (function (document)
                         noteObject = noteObjects[i];
                         if(noteObject.nodeName === 'g')
                         {
-                            id = noteObject.getAttribute('id');
-                            if(id.indexOf('outputChord') >= 0)
+                            typeString = noteObject.getAttribute('class');
+                            if(typeString === 'outputChord')
                             {
                                 timeObject = {};
                                 timeObject.alignmentX = parseFloat(noteObject.getAttribute('score:alignmentX')) / viewBoxScale1;
                                 chordChildren = noteObject.childNodes;
                                 for(j = 0; j < chordChildren.length; ++j)
                                 {
-                                    //if(chordChildren[j].nodeName !== '#text')
-                                    //{
-                                        //id = chordChildren[j].getAttribute('id');
-                                    	//if(id.indexOf('midi') >= 0)
-                                    	if(chordChildren[j].nodeName === 'score:midiChord')
+                                    if(chordChildren[j].nodeName === 'score:midiChord')
+                                    {
+                                        midiChildren = chordChildren[j].childNodes;
+                                        for(k = 0; k < midiChildren.length; ++k)
                                         {
-                                            midiChildren = chordChildren[j].childNodes;
-                                            for(k = 0; k < midiChildren.length; ++k)
+                                            if(midiChildren[k].nodeName === 'score:basicChords')
                                             {
-                                                if(midiChildren[k].nodeName === 'score:basicChords')
-                                                {
-                                                    timeObject.chordDef = new ChordDef(chordChildren[j]);
-                                                    break;
-                                                }
+                                                timeObject.chordDef = new ChordDef(chordChildren[j]);
+                                                break;
                                             }
-                                            break;
                                         }
-                                    //}
+                                        break;
+                                    }
                                 }
                                 timeObject.msDuration = getMsDuration(timeObject.chordDef);
                                 timeObjects.push(timeObject);
                             }
-                            else if(id.indexOf('rest') >= 0)
+                            else if(typeString === 'rest')
                             {
                                 timeObject = {};
                                 timeObject.alignmentX = parseFloat(noteObject.getAttribute('score:alignmentX') / viewBoxScale1);
@@ -1358,8 +1350,8 @@ _AP.score = (function (document)
                 {
                     if(systemChildren[i].nodeName !== '#text')
                     {
-                        systemChildID = systemChildren[i].getAttribute("id");
-                        if(systemChildID.indexOf('outputStaff') !== -1)
+                        childClass = systemChildren[i].getAttribute("class");
+                        if(childClass === 'outputStaff')
                         {
                             staff = system.staves[staffIndex++];
                             staffChildren = systemChildren[i].childNodes;
@@ -1367,8 +1359,8 @@ _AP.score = (function (document)
                             {
                                 if(staffChildren[j].nodeName !== '#text')
                                 {
-                                    staffChildID = staffChildren[j].getAttribute('id');
-                                    if(staffChildID.indexOf('outputVoice') !== -1)
+                                    staffChildClass = staffChildren[j].getAttribute('class');
+                                    if(staffChildClass === 'outputVoice')
                                     {
                                         voice = staff.voices[voiceIndex++];
                                         voice.timeObjects = getTimeObjects(staffChildren[j].childNodes, speed);
@@ -1544,13 +1536,12 @@ _AP.score = (function (document)
                 svgElem = svgPage.childNodes[1];
                 viewBoxScale2 = getViewBoxScale(svgElem); // a float >= 1 (currently, usually 8.0)
                 svgChildren = svgElem.childNodes;
-                systemID = "page" + (i + 1).toString() + "_system" + (sysNumber++).toString();
                 for(j = 0; j < svgChildren.length; ++j)
                 {
                     if(svgChildren[j].nodeName !== '#text' && svgChildren[j].nodeName !== '#comment' && svgChildren[j].nodeName !== 'script')
                     {
-                        childID = svgChildren[j].getAttribute("id");
-                        if(childID === systemID)
+                        childClass = svgChildren[j].getAttribute("class");
+                        if(childClass === "system")
                         {
                             if(systems[systemIndex].msDuration !== undefined)
                             {
@@ -1558,7 +1549,6 @@ _AP.score = (function (document)
                             }
                             getSystemTimeObjects(systems[systemIndex], viewBoxScale2, svgChildren[j], speed);
                             systemIndex++;
-                            systemID = "page" + (i + 1).toString() + "_system" + (sysNumber++).toString();
                         }
                     }
                 }

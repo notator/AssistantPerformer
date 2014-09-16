@@ -113,13 +113,13 @@ _AP.midiChord = (function()
         {
             var i, j,
                 len = chordDef.basicChordsArray.length,
-                notes,
-                notesLength,
+                pitches,
+                pitchesLength,
                 basicChordDef,
                 msPositionInChord = 0,
                 allNoteOffs = [],
                 chordMoments = [],
-                noteNumber,
+                pitchNumber,
                 moment,
                 currentMoment,
                 msDurationOfBasicChords;
@@ -209,7 +209,7 @@ _AP.midiChord = (function()
             // BasicChord Bank, Patch and ChordOn messages
             function basicChordOnMoment(channel, basicChordDef, msPosition)
             {
-                var midiNotes = basicChordDef.notes,
+                var midiNotes = basicChordDef.pitches,
                     midiVelocities = basicChordDef.velocities,
                     len = midiNotes.length,
                     message,
@@ -241,8 +241,8 @@ _AP.midiChord = (function()
 
             function basicChordOffMoment(channel, basicChordDef, msPosition)
             {
-                var notes = basicChordDef.notes,
-                    len = notes.length,
+                var pitches = basicChordDef.pitches,
+                    len = pitches.length,
                     velocity = 127,
                     bcoffMoment = new Moment(msPosition),
                     message,
@@ -250,7 +250,7 @@ _AP.midiChord = (function()
 
                 for(i = 0; i < len; ++i)
                 {
-                    message = new Message(CMD.NOTE_OFF + channel, notes[i], velocity);
+                    message = new Message(CMD.NOTE_OFF + channel, pitches[i], velocity);
                     bcoffMoment.messages.push(message);
                 }
 
@@ -261,7 +261,7 @@ _AP.midiChord = (function()
             // noteOffs contains duplicates. Avoid creating duplicate noteOffs in this function.
             function chordOffMoment(channel, noteOffs, msPosition)
             {
-                var uniqueNoteNumbers = [], nnIndex, noteNumber,
+                var uniquePitchNumbers = [], pnIndex, pitchNumber,
                     velocity = 127,
                     cOffMoment = new Moment(msPosition),
                     message;
@@ -280,12 +280,12 @@ _AP.midiChord = (function()
                     return unique;
                 }
 
-                uniqueNoteNumbers = getUniqueNoteNumbers(noteOffs);
+                uniquePitchNumbers = getUniqueNoteNumbers(noteOffs);
 
-                for(nnIndex = 0; nnIndex < uniqueNoteNumbers.length; ++nnIndex)
+                for(pnIndex = 0; pnIndex < uniquePitchNumbers.length; ++pnIndex)
                 {
-                    noteNumber = uniqueNoteNumbers[nnIndex];
-                    message = new Message(CMD.NOTE_OFF + channel, noteNumber.valueOf(), velocity);
+                    pitchNumber = uniquePitchNumbers[pnIndex];
+                    message = new Message(CMD.NOTE_OFF + channel, pitchNumber.valueOf(), velocity);
                     cOffMoment.messages.push(message);
                 }
 
@@ -312,13 +312,13 @@ _AP.midiChord = (function()
 
                 if(chordDef.attributes.hasChordOff === true)
                 {
-                    notes = basicChordDef.notes;
-                    notesLength = notes.length;
-                    for(j = 0; j < notesLength; ++j)
+                    pitches = basicChordDef.pitches;
+                    pitchesLength = pitches.length;
+                    for(j = 0; j < pitchesLength; ++j)
                     {
-                        noteNumber = notes[j];
-                        allNoteOffs.push(noteNumber);
-                        // allNoteOffs is used at the end of the ornament to turn notes off that were turned on during the ornament.
+                        pitchNumber = pitches[j];
+                        allNoteOffs.push(pitchNumber);
+                        // allNoteOffs is used at the end of the ornament to turn pitches off that were turned on during the ornament.
                     }
                 }
 

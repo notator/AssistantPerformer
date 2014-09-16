@@ -10,7 +10,7 @@
 	<desc>
 		Author: James Ingram
 		Website: http://www.james-ingram-act-two.de
-		Date: Wednesday 27.08.2014, 22:11:48
+		Date: Tuesday 16.09.2014, 13:30:16
 		Software: Moritz/Assistant Composer</desc>
 	<defs>
 		<g
@@ -239,7 +239,7 @@
 		</g>
 	</defs>
 	<rect
-		id="frame"
+		class="frame"
 		x="0"
 		y="0"
 		width="8080"
@@ -252,14 +252,14 @@
 		x="80"
 		y="80"
 		font-size="72"
-		font-family="Arial">Song Six: page 2, Wednesday 27.08.2014, 22:11:48</text>
+		font-family="Arial">Song Six: page 2, Tuesday 16.09.2014, 13:30:13</text>
 	<g
-		id="page2_system1"
-		score:object="system">
+		class="system"
+		id="page2_system1">
 		<g
-			id="markers1772">
+			class="markers">
 			<g
-				id="startMarker">
+				class="startMarker">
 				<line
 					x1="0"
 					y1="0"
@@ -276,7 +276,7 @@
 					fill="#009900" />
 			</g>
 			<g
-				id="runningMarker">
+				class="runningMarker">
 				<line
 					x1="0"
 					y1="0"
@@ -286,7 +286,7 @@
 					stroke-width="1" />
 			</g>
 			<g
-				id="endMarker">
+				class="endMarker">
 				<line
 					x1="0"
 					y1="0"
@@ -304,13 +304,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys1_staff1"
-			score:object="staff"
 			score:staffName="F 1"
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1773">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="394.6667"
@@ -348,8 +348,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice1774"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="0">
 				<use
 					xlink:href="#bassClef"
@@ -363,7 +362,7 @@
 					font-size="80"
 					font-family="Times New Roman">F 1</text>
 				<g
-					id="barnumber1775">
+					id="barnumber62">
 					<text
 						x="503.2"
 						y="202.6667"
@@ -380,8 +379,7 @@
 						fill="none" />
 				</g>
 				<g
-					id="rest1776"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="594.8679"
 					score:msDuration="1672">
 					<text
@@ -391,8 +389,7 @@
 						font-family="CLicht">Ó</text>
 				</g>
 				<g
-					id="rest1777"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="1513.256"
 					score:msDuration="3574">
 					<text
@@ -402,8 +399,7 @@
 						font-family="CLicht">∑</text>
 				</g>
 				<g
-					id="rest1778"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="3404.845"
 					score:msDuration="3887">
 					<text
@@ -413,8 +409,7 @@
 						font-family="CLicht">∑</text>
 				</g>
 				<g
-					id="rest1779"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="5463.252"
 					score:msDuration="2155">
 					<text
@@ -424,8 +419,7 @@
 						font-family="CLicht">Ó</text>
 				</g>
 				<g
-					id="rest1780"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="6660.944"
 					score:msDuration="2063">
 					<text
@@ -437,13 +431,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys1_staff2"
-			score:object="staff"
 			score:staffName="F 2"
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1781">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="650.6666"
@@ -481,8 +475,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice1782"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="1">
 				<use
 					xlink:href="#bassClef"
@@ -496,8 +489,7 @@
 					font-size="80"
 					font-family="Times New Roman">F 2</text>
 				<g
-					id="rest1783"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="594.8679"
 					score:msDuration="1672">
 					<text
@@ -507,8 +499,7 @@
 						font-family="CLicht">Ó</text>
 				</g>
 				<g
-					id="rest1784"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="1513.256"
 					score:msDuration="3574">
 					<text
@@ -518,8 +509,7 @@
 						font-family="CLicht">∑</text>
 				</g>
 				<g
-					id="rest1785"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="3404.845"
 					score:msDuration="3887">
 					<text
@@ -529,8 +519,7 @@
 						font-family="CLicht">∑</text>
 				</g>
 				<g
-					id="rest1786"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="5463.252"
 					score:msDuration="2155">
 					<text
@@ -540,8 +529,7 @@
 						font-family="CLicht">Ó</text>
 				</g>
 				<g
-					id="rest1787"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="6660.944"
 					score:msDuration="2063">
 					<text
@@ -553,13 +541,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys1_staff3"
-			score:object="staff"
 			score:staffName="F 3"
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1788">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="906.6666"
@@ -597,8 +585,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice1789"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="2">
 				<use
 					xlink:href="#bassClef2x8"
@@ -612,8 +599,7 @@
 					font-size="80"
 					font-family="Times New Roman">F 3</text>
 				<g
-					id="rest1790"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="594.8679"
 					score:msDuration="1672">
 					<text
@@ -623,8 +609,7 @@
 						font-family="CLicht">Ó</text>
 				</g>
 				<g
-					id="rest1791"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="1513.256"
 					score:msDuration="3574">
 					<text
@@ -634,8 +619,7 @@
 						font-family="CLicht">∑</text>
 				</g>
 				<g
-					id="rest1792"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="3404.845"
 					score:msDuration="3887">
 					<text
@@ -645,8 +629,7 @@
 						font-family="CLicht">∑</text>
 				</g>
 				<g
-					id="rest1793"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="5463.252"
 					score:msDuration="2155">
 					<text
@@ -656,8 +639,7 @@
 						font-family="CLicht">Ó</text>
 				</g>
 				<g
-					id="rest1794"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="6660.944"
 					score:msDuration="2063">
 					<text
@@ -669,13 +651,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys1_staff4"
-			score:object="staff"
 			score:staffName="F 4"
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1795">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="1162.667"
@@ -713,8 +695,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice1796"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="3">
 				<use
 					xlink:href="#bassClef2x8"
@@ -728,8 +709,7 @@
 					font-size="80"
 					font-family="Times New Roman">F 4</text>
 				<g
-					id="rest1797"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="594.8679"
 					score:msDuration="1672">
 					<text
@@ -739,8 +719,7 @@
 						font-family="CLicht">Ó</text>
 				</g>
 				<g
-					id="rest1798"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="1521.256"
 					score:msDuration="1451">
 					<text
@@ -750,24 +729,22 @@
 						font-family="CLicht">Œ</text>
 				</g>
 				<g
-					id="chord1799"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="2230.801">
 					<score:midiChord
-						id="midi1799"
 						pitchWheelDeviation="3">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="9062"
 								patch="60"
-								notes="11 18 22"
+								pitches="11 18 22"
 								velocities="65 65 65" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="0 80 127 100 80 100 90 0" />
 					</score:midiChord>
 					<g
-						id="graphics1799">
+						class="graphics">
 						<text
 							x="2212.522"
 							y="1274.667"
@@ -839,8 +816,7 @@
 					</g>
 				</g>
 				<g
-					id="rest1800"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="7093.821"
 					score:msDuration="1166">
 					<text
@@ -852,13 +828,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys1_staff5"
-			score:object="staff"
 			score:staffName="R2M"
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1801">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="1450.667"
@@ -896,8 +872,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice1802"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="4">
 				<use
 					xlink:href="#trebleClef"
@@ -911,8 +886,7 @@
 					font-size="80"
 					font-family="Times New Roman">R2M</text>
 				<g
-					id="rest1803"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="594.8679"
 					score:msDuration="1672">
 					<text
@@ -922,8 +896,7 @@
 						font-family="CLicht">Ó</text>
 				</g>
 				<g
-					id="rest1804"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="1521.256"
 					score:msDuration="1451">
 					<text
@@ -933,22 +906,20 @@
 						font-family="CLicht">Œ</text>
 				</g>
 				<g
-					id="chord1805"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="2230.801">
 					<score:midiChord
-						id="midi1805"
 						hasChordOff="0">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="9062"
 								hasChordOff="0"
-								notes="67"
+								pitches="67"
 								velocities="0" />
 						</score:basicChords>
 					</score:midiChord>
 					<g
-						id="graphics1805">
+						class="graphics">
 						<text
 							x="2212.522"
 							y="1546.667"
@@ -965,8 +936,7 @@
 					</g>
 				</g>
 				<g
-					id="rest1806"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="7093.821"
 					score:msDuration="1166">
 					<text
@@ -978,13 +948,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys1_staff6"
-			score:object="staff"
 			score:staffName="Clyt."
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1807">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="1738.667"
@@ -1022,8 +992,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice1808"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="5">
 				<use
 					xlink:href="#trebleClef"
@@ -1037,54 +1006,52 @@
 					font-size="80"
 					font-family="Times New Roman">Clyt.</text>
 				<g
-					id="beamBlock1809">
+					class="beamBlock">
 					<path
 						fill="white"
 						opacity="0.65"
-						d="M 605.5206 1724.266 L 643.9206 1724.266 643.9206 1743.466 605.5206 1743.466 z" />
+						d="M 605.5206 1722.987 L 643.9206 1722.987 643.9206 1743.147 605.5206 1743.147 z" />
 					<path
 						stroke="black"
 						stroke-width="4"
 						fill="black"
-						d="M 605.5206 1737.067 L 643.9206 1737.067 643.9206 1749.867 605.5206 1749.867 z" />
+						d="M 605.5206 1736.427 L 643.9206 1736.427 643.9206 1749.867 605.5206 1749.867 z" />
 					<path
 						fill="white"
 						opacity="0.65"
-						d="M 1081.811 1724.266 L 1275.456 1724.266 1275.456 1743.466 1081.811 1743.466 z" />
+						d="M 1081.811 1722.987 L 1275.456 1722.987 1275.456 1743.147 1081.811 1743.147 z" />
 					<path
 						stroke="black"
 						stroke-width="4"
 						fill="black"
-						d="M 1081.811 1737.067 L 1275.456 1737.067 1275.456 1749.867 1081.811 1749.867 z" />
+						d="M 1081.811 1736.427 L 1275.456 1736.427 1275.456 1749.867 1081.811 1749.867 z" />
 					<path
 						stroke="black"
 						stroke-width="4"
 						fill="black"
-						d="M 605.5206 1705.067 L 1275.456 1705.067 1275.456 1717.867 605.5206 1717.867 z" />
+						d="M 605.5206 1704.427 L 1275.456 1704.427 1275.456 1717.867 605.5206 1717.867 z" />
 				</g>
 				<g
-					id="chord1810"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="589.1079">
 					<score:midiChord
-						id="midi1810"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="373"
 								patch="123"
-								notes="13"
+								pitches="13"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1810">
+						class="graphics">
 						<line
 							x1="605.5206"
-							y1="1705.067"
+							y1="1704.427"
 							x2="605.5206"
 							y2="1830.971"
 							stroke="black"
@@ -1104,28 +1071,26 @@
 					</g>
 				</g>
 				<g
-					id="chord1811"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="771.5065">
 					<score:midiChord
-						id="midi1811"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="601"
 								patch="123"
-								notes="14"
+								pitches="14"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1811">
+						class="graphics">
 						<line
 							x1="787.9191"
-							y1="1705.067"
+							y1="1704.427"
 							x2="787.9191"
 							y2="1830.971"
 							stroke="black"
@@ -1145,28 +1110,26 @@
 					</g>
 				</g>
 				<g
-					id="chord1812"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="1065.398">
 					<score:midiChord
-						id="midi1812"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="396"
 								patch="123"
-								notes="15"
+								pitches="15"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1812">
+						class="graphics">
 						<line
 							x1="1081.811"
-							y1="1705.067"
+							y1="1704.427"
 							x2="1081.811"
 							y2="1830.971"
 							stroke="black"
@@ -1186,28 +1149,26 @@
 					</g>
 				</g>
 				<g
-					id="chord1813"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="1259.044">
 					<score:midiChord
-						id="midi1813"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="302"
 								patch="123"
-								notes="16"
+								pitches="16"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1813">
+						class="graphics">
 						<line
 							x1="1275.456"
-							y1="1705.067"
+							y1="1704.427"
 							x2="1275.456"
 							y2="1830.971"
 							stroke="black"
@@ -1227,25 +1188,23 @@
 					</g>
 				</g>
 				<g
-					id="chord1814"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="1521.256">
 					<score:midiChord
-						id="midi1814"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="699"
 								patch="123"
-								notes="17"
+								pitches="17"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1814">
+						class="graphics">
 						<line
 							x1="1537.669"
 							y1="1714.121"
@@ -1273,8 +1232,7 @@
 					</g>
 				</g>
 				<g
-					id="rest1815"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="1863.07"
 					score:msDuration="752">
 					<text
@@ -1284,25 +1242,23 @@
 						font-family="CLicht">‰</text>
 				</g>
 				<g
-					id="chord1816"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="2230.801">
 					<score:midiChord
-						id="midi1816"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="410"
 								patch="123"
-								notes="18"
+								pitches="18"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1816">
+						class="graphics">
 						<line
 							x1="2247.214"
 							y1="1714.121"
@@ -1330,25 +1286,23 @@
 					</g>
 				</g>
 				<g
-					id="chord1817"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="2431.293">
 					<score:midiChord
-						id="midi1817"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="1282"
 								patch="123"
-								notes="19"
+								pitches="19"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1817">
+						class="graphics">
 						<line
 							x1="2447.706"
 							y1="1719.467"
@@ -1371,25 +1325,23 @@
 					</g>
 				</g>
 				<g
-					id="chord1818"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="3058.196">
 					<score:midiChord
-						id="midi1818"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="431"
 								patch="123"
-								notes="20"
+								pitches="20"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1818">
+						class="graphics">
 						<line
 							x1="3074.609"
 							y1="1714.121"
@@ -1417,36 +1369,34 @@
 					</g>
 				</g>
 				<g
-					id="beamBlock1819">
+					class="beamBlock">
 					<path
 						stroke="black"
 						stroke-width="4"
 						fill="black"
-						d="M 3429.258 1705.067 L 3951.514 1705.067 3951.514 1717.867 3429.258 1717.867 z" />
+						d="M 3429.258 1704.427 L 3951.514 1704.427 3951.514 1717.867 3429.258 1717.867 z" />
 				</g>
 				<g
-					id="chord1820"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="3412.845">
 					<score:midiChord
-						id="midi1820"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="413"
 								patch="123"
-								notes="21"
+								pitches="21"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1820">
+						class="graphics">
 						<line
 							x1="3429.258"
-							y1="1705.067"
+							y1="1704.427"
 							x2="3429.258"
 							y2="1830.971"
 							stroke="black"
@@ -1466,28 +1416,26 @@
 					</g>
 				</g>
 				<g
-					id="chord1821"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="3614.804">
 					<score:midiChord
-						id="midi1821"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="655"
 								patch="123"
-								notes="22"
+								pitches="22"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1821">
+						class="graphics">
 						<line
 							x1="3631.216"
-							y1="1705.067"
+							y1="1704.427"
 							x2="3631.216"
 							y2="1830.971"
 							stroke="black"
@@ -1507,28 +1455,26 @@
 					</g>
 				</g>
 				<g
-					id="chord1822"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="3935.102">
 					<score:midiChord
-						id="midi1822"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="591"
 								patch="123"
-								notes="23"
+								pitches="23"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1822">
+						class="graphics">
 						<line
 							x1="3951.514"
-							y1="1705.067"
+							y1="1704.427"
 							x2="3951.514"
 							y2="1830.971"
 							stroke="black"
@@ -1548,8 +1494,7 @@
 					</g>
 				</g>
 				<g
-					id="rest1823"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="4224.103"
 					score:msDuration="833">
 					<text
@@ -1559,54 +1504,52 @@
 						font-family="CLicht">Œ</text>
 				</g>
 				<g
-					id="beamBlock1824">
+					class="beamBlock">
 					<path
 						fill="white"
 						opacity="0.65"
-						d="M 4647.856 1724.266 L 4686.256 1724.266 4686.256 1743.466 4647.856 1743.466 z" />
+						d="M 4647.856 1722.987 L 4686.256 1722.987 4686.256 1743.147 4647.856 1743.147 z" />
 					<path
 						stroke="black"
 						stroke-width="4"
 						fill="black"
-						d="M 4647.856 1737.067 L 4686.256 1737.067 4686.256 1749.867 4647.856 1749.867 z" />
+						d="M 4647.856 1736.427 L 4686.256 1736.427 4686.256 1749.867 4647.856 1749.867 z" />
 					<path
 						fill="white"
 						opacity="0.65"
-						d="M 5112.152 1724.266 L 5150.552 1724.266 5150.552 1743.466 5112.152 1743.466 z" />
+						d="M 5112.152 1722.987 L 5150.552 1722.987 5150.552 1743.147 5112.152 1743.147 z" />
 					<path
 						stroke="black"
 						stroke-width="4"
 						fill="black"
-						d="M 5112.152 1737.067 L 5150.552 1737.067 5150.552 1749.867 5112.152 1749.867 z" />
+						d="M 5112.152 1736.427 L 5150.552 1736.427 5150.552 1749.867 5112.152 1749.867 z" />
 					<path
 						stroke="black"
 						stroke-width="4"
 						fill="black"
-						d="M 4647.856 1705.067 L 5150.552 1705.067 5150.552 1717.867 4647.856 1717.867 z" />
+						d="M 4647.856 1704.427 L 5150.552 1704.427 5150.552 1717.867 4647.856 1717.867 z" />
 				</g>
 				<g
-					id="chord1825"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="4631.443">
 					<score:midiChord
-						id="midi1825"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="356"
 								patch="123"
-								notes="24"
+								pitches="24"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1825">
+						class="graphics">
 						<line
 							x1="4647.856"
-							y1="1705.067"
+							y1="1704.427"
 							x2="4647.856"
 							y2="1830.971"
 							stroke="black"
@@ -1626,28 +1569,26 @@
 					</g>
 				</g>
 				<g
-					id="chord1826"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="4805.529">
 					<score:midiChord
-						id="midi1826"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="672"
 								patch="123"
-								notes="25"
+								pitches="25"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1826">
+						class="graphics">
 						<line
 							x1="4821.941"
-							y1="1705.067"
+							y1="1704.427"
 							x2="4821.941"
 							y2="1830.971"
 							stroke="black"
@@ -1667,28 +1608,26 @@
 					</g>
 				</g>
 				<g
-					id="chord1827"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="5134.14">
 					<score:midiChord
-						id="midi1827"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="367"
 								patch="123"
-								notes="26"
+								pitches="26"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1827">
+						class="graphics">
 						<line
 							x1="5150.552"
-							y1="1705.067"
+							y1="1704.427"
 							x2="5150.552"
 							y2="1830.971"
 							stroke="black"
@@ -1708,45 +1647,43 @@
 					</g>
 				</g>
 				<g
-					id="beamBlock1828">
+					class="beamBlock">
 					<path
 						fill="white"
 						opacity="0.65"
-						d="M 6328.426 1724.266 L 6366.826 1724.266 6366.826 1743.466 6328.426 1743.466 z" />
+						d="M 6328.426 1722.987 L 6366.826 1722.987 6366.826 1743.147 6328.426 1743.147 z" />
 					<path
 						stroke="black"
 						stroke-width="4"
 						fill="black"
-						d="M 6328.426 1737.067 L 6366.826 1737.067 6366.826 1749.867 6328.426 1749.867 z" />
+						d="M 6328.426 1736.427 L 6366.826 1736.427 6366.826 1749.867 6328.426 1749.867 z" />
 					<path
 						stroke="black"
 						stroke-width="4"
 						fill="black"
-						d="M 5473.905 1705.067 L 6366.826 1705.067 6366.826 1717.867 5473.905 1717.867 z" />
+						d="M 5473.905 1704.427 L 6366.826 1704.427 6366.826 1717.867 5473.905 1717.867 z" />
 				</g>
 				<g
-					id="chord1829"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="5457.492">
 					<score:midiChord
-						id="midi1829"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="570"
 								patch="123"
-								notes="27"
+								pitches="27"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1829">
+						class="graphics">
 						<line
 							x1="5473.905"
-							y1="1705.067"
+							y1="1704.427"
 							x2="5473.905"
 							y2="1830.971"
 							stroke="black"
@@ -1766,28 +1703,26 @@
 					</g>
 				</g>
 				<g
-					id="chord1830"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="5736.225">
 					<score:midiChord
-						id="midi1830"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="550"
 								patch="123"
-								notes="28"
+								pitches="28"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1830">
+						class="graphics">
 						<line
 							x1="5752.637"
-							y1="1705.067"
+							y1="1704.427"
 							x2="5752.637"
 							y2="1830.971"
 							stroke="black"
@@ -1807,28 +1742,26 @@
 					</g>
 				</g>
 				<g
-					id="chord1831"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="6005.177">
 					<score:midiChord
-						id="midi1831"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="706"
 								patch="123"
-								notes="29"
+								pitches="29"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1831">
+						class="graphics">
 						<line
 							x1="6021.589"
-							y1="1705.067"
+							y1="1704.427"
 							x2="6021.589"
 							y2="1830.971"
 							stroke="black"
@@ -1848,28 +1781,26 @@
 					</g>
 				</g>
 				<g
-					id="chord1832"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="6350.414">
 					<score:midiChord
-						id="midi1832"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="329"
 								patch="123"
-								notes="30"
+								pitches="30"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1832">
+						class="graphics">
 						<line
 							x1="6366.826"
-							y1="1705.067"
+							y1="1704.427"
 							x2="6366.826"
 							y2="1830.971"
 							stroke="black"
@@ -1889,25 +1820,23 @@
 					</g>
 				</g>
 				<g
-					id="chord1833"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="6655.184">
 					<score:midiChord
-						id="midi1833"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="897"
 								patch="123"
-								notes="31"
+								pitches="31"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1833">
+						class="graphics">
 						<line
 							x1="6671.597"
 							y1="1719.467"
@@ -1930,8 +1859,7 @@
 					</g>
 				</g>
 				<g
-					id="rest1834"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="7093.821"
 					score:msDuration="615">
 					<text
@@ -1941,25 +1869,23 @@
 						font-family="CLicht">‰</text>
 				</g>
 				<g
-					id="chord1835"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="7394.559">
 					<score:midiChord
-						id="midi1835"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="551"
 								patch="123"
-								notes="32"
+								pitches="32"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1835">
+						class="graphics">
 						<line
 							x1="7410.971"
 							y1="1714.121"
@@ -1989,13 +1915,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys1_staff7"
-			score:object="staff"
 			score:staffName="W 1"
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1836">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="2026.667"
@@ -2033,8 +1959,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice1837"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="6">
 				<use
 					xlink:href="#bassClef8"
@@ -2048,9 +1973,8 @@
 					font-size="80"
 					font-family="Times New Roman">W 1</text>
 				<g
-					id="cautionaryChord1838">
-					<g
-						id="graphics1838">
+					class="cautionaryChord">
+					<g>
 						<text
 							x="574.3778"
 							y="2058.667"
@@ -2087,18 +2011,15 @@
 					</g>
 				</g>
 				<g
-					id="chord1839"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="988.1353">
 					<score:midiChord
-						id="midi1839"
-						repeat="1"
 						pitchWheelDeviation="3">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="5853"
 								patch="122"
-								notes="35"
+								pitches="35"
 								velocities="55" />
 						</score:basicChords>
 						<score:sliders
@@ -2107,7 +2028,7 @@
 							expressionSlider="0 81 81 102 38 38 25 127 81 64 0" />
 					</score:midiChord>
 					<g
-						id="graphics1839">
+						class="graphics">
 						<text
 							x="961.05"
 							y="2122.667"
@@ -2129,18 +2050,15 @@
 					</g>
 				</g>
 				<g
-					id="chord1840"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="4108.698">
 					<score:midiChord
-						id="midi1840"
-						repeat="1"
 						pitchWheelDeviation="3">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="7134"
 								patch="122"
-								notes="37"
+								pitches="37"
 								velocities="47" />
 						</score:basicChords>
 						<score:sliders
@@ -2149,7 +2067,7 @@
 							expressionSlider="0 127 127 38 64 38 0" />
 					</score:midiChord>
 					<g
-						id="graphics1840">
+						class="graphics">
 						<text
 							x="4090.419"
 							y="2106.667"
@@ -2178,13 +2096,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys1_staff8"
-			score:object="staff"
 			score:staffName="W 2"
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1841">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="2314.667"
@@ -2222,8 +2140,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice1842"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="7">
 				<use
 					xlink:href="#bassClef8"
@@ -2237,9 +2154,8 @@
 					font-size="80"
 					font-family="Times New Roman">W 2</text>
 				<g
-					id="cautionaryChord1843">
-					<g
-						id="graphics1843">
+					class="cautionaryChord">
+					<g>
 						<text
 							x="574.3778"
 							y="2394.667"
@@ -2281,18 +2197,15 @@
 					</g>
 				</g>
 				<g
-					id="chord1844"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="2745.723">
 					<score:midiChord
-						id="midi1844"
-						repeat="1"
 						pitchWheelDeviation="3">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="6200"
 								patch="122"
-								notes="42"
+								pitches="42"
 								velocities="55" />
 						</score:basicChords>
 						<score:sliders
@@ -2301,7 +2214,7 @@
 							expressionSlider="0 81 81 102 38 38 25 127 81 64 0" />
 					</score:midiChord>
 					<g
-						id="graphics1844">
+						class="graphics">
 						<text
 							x="2718.637"
 							y="2346.667"
@@ -2328,18 +2241,15 @@
 					</g>
 				</g>
 				<g
-					id="chord1845"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="6065.324">
 					<score:midiChord
-						id="midi1845"
-						repeat="1"
 						pitchWheelDeviation="3">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="6845"
 								patch="122"
-								notes="48"
+								pitches="48"
 								velocities="51" />
 						</score:basicChords>
 						<score:sliders
@@ -2348,7 +2258,7 @@
 							expressionSlider="0 25 64 25 102 25 0" />
 					</score:midiChord>
 					<g
-						id="graphics1845">
+						class="graphics">
 						<text
 							x="6047.045"
 							y="2282.667"
@@ -2379,13 +2289,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys1_staff9"
-			score:object="staff"
 			score:staffName="W 3"
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1846">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="2602.667"
@@ -2423,8 +2333,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice1847"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="8">
 				<use
 					xlink:href="#bassClef2x8"
@@ -2438,9 +2347,8 @@
 					font-size="80"
 					font-family="Times New Roman">W 3</text>
 				<g
-					id="cautionaryChord1848">
-					<g
-						id="graphics1848">
+					class="cautionaryChord">
+					<g>
 						<text
 							x="574.3778"
 							y="2794.667"
@@ -2491,18 +2399,15 @@
 					</g>
 				</g>
 				<g
-					id="chord1849"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="3694.511">
 					<score:midiChord
-						id="midi1849"
-						repeat="1"
 						pitchWheelDeviation="3">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="5720"
 								patch="122"
-								notes="10"
+								pitches="10"
 								velocities="55" />
 						</score:basicChords>
 						<score:sliders
@@ -2511,7 +2416,7 @@
 							expressionSlider="0 81 81 102 38 38 25 127 81 64 0" />
 					</score:midiChord>
 					<g
-						id="graphics1849">
+						class="graphics">
 						<text
 							x="3667.426"
 							y="2826.667"
@@ -2559,18 +2464,15 @@
 					</g>
 				</g>
 				<g
-					id="chord1850"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="6779.391">
 					<score:midiChord
-						id="midi1850"
-						repeat="1"
 						pitchWheelDeviation="3">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="6315"
 								patch="122"
-								notes="12"
+								pitches="12"
 								velocities="51" />
 						</score:basicChords>
 						<score:sliders
@@ -2579,7 +2481,7 @@
 							expressionSlider="0 25 64 25 102 25 0" />
 					</score:midiChord>
 					<g
-						id="graphics1850">
+						class="graphics">
 						<text
 							x="6752.306"
 							y="2794.667"
@@ -2617,457 +2519,646 @@
 			</g>
 		</g>
 		<g
-			id="barlines1851">
-			<line
-				x1="503.2"
-				y1="394.6667"
-				x2="503.2"
-				y2="522.6666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="1422.723"
-				y1="394.6667"
-				x2="1422.723"
-				y2="522.6666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="3284.957"
-				y1="394.6667"
-				x2="3284.957"
-				y2="522.6666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5329.604"
-				y1="394.6667"
-				x2="5329.604"
-				y2="522.6666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="6527.296"
-				y1="394.6667"
-				x2="6527.296"
-				y2="522.6666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7680"
-				y1="392.6667"
-				x2="7680"
-				y2="524.6666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="522.6666"
-				x2="503.2"
-				y2="650.6666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="1422.723"
-				y1="522.6666"
-				x2="1422.723"
-				y2="650.6666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="3284.957"
-				y1="522.6666"
-				x2="3284.957"
-				y2="650.6666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5329.604"
-				y1="522.6666"
-				x2="5329.604"
-				y2="650.6666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="6527.296"
-				y1="522.6666"
-				x2="6527.296"
-				y2="650.6666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7680"
-				y1="522.6666"
-				x2="7680"
-				y2="650.6666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="650.6666"
-				x2="503.2"
-				y2="778.6666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="1422.723"
-				y1="650.6666"
-				x2="1422.723"
-				y2="778.6666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="3284.957"
-				y1="650.6666"
-				x2="3284.957"
-				y2="778.6666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5329.604"
-				y1="650.6666"
-				x2="5329.604"
-				y2="778.6666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="6527.296"
-				y1="650.6666"
-				x2="6527.296"
-				y2="778.6666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7680"
-				y1="648.6666"
-				x2="7680"
-				y2="780.6666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="778.6666"
-				x2="503.2"
-				y2="906.6666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="1422.723"
-				y1="778.6666"
-				x2="1422.723"
-				y2="906.6666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="3284.957"
-				y1="778.6666"
-				x2="3284.957"
-				y2="906.6666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5329.604"
-				y1="778.6666"
-				x2="5329.604"
-				y2="906.6666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="6527.296"
-				y1="778.6666"
-				x2="6527.296"
-				y2="906.6666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7680"
-				y1="778.6666"
-				x2="7680"
-				y2="906.6666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="906.6666"
-				x2="503.2"
-				y2="1034.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="1422.723"
-				y1="906.6666"
-				x2="1422.723"
-				y2="1034.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="3284.957"
-				y1="906.6666"
-				x2="3284.957"
-				y2="1034.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5329.604"
-				y1="906.6666"
-				x2="5329.604"
-				y2="1034.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="6527.296"
-				y1="906.6666"
-				x2="6527.296"
-				y2="1034.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7680"
-				y1="904.6666"
-				x2="7680"
-				y2="1036.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="1034.667"
-				x2="503.2"
-				y2="1162.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="1422.723"
-				y1="1034.667"
-				x2="1422.723"
-				y2="1162.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="3284.957"
-				y1="1034.667"
-				x2="3284.957"
-				y2="1162.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5329.604"
-				y1="1034.667"
-				x2="5329.604"
-				y2="1162.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="6527.296"
-				y1="1034.667"
-				x2="6527.296"
-				y2="1162.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7680"
-				y1="1034.667"
-				x2="7680"
-				y2="1162.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="1162.667"
-				x2="503.2"
-				y2="1290.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="1422.723"
-				y1="1162.667"
-				x2="1422.723"
-				y2="1290.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7680"
-				y1="1160.667"
-				x2="7680"
-				y2="1292.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="1290.667"
-				x2="503.2"
-				y2="1450.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="1450.667"
-				x2="503.2"
-				y2="1578.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="1422.723"
-				y1="1450.667"
-				x2="1422.723"
-				y2="1578.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7680"
-				y1="1448.667"
-				x2="7680"
-				y2="1580.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="1578.667"
-				x2="503.2"
-				y2="1738.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="1738.667"
-				x2="503.2"
-				y2="1866.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="1422.723"
-				y1="1738.667"
-				x2="1422.723"
-				y2="1866.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="3284.957"
-				y1="1738.667"
-				x2="3284.957"
-				y2="1866.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5329.604"
-				y1="1738.667"
-				x2="5329.604"
-				y2="1866.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="6527.296"
-				y1="1738.667"
-				x2="6527.296"
-				y2="1866.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7680"
-				y1="1736.667"
-				x2="7680"
-				y2="1868.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="1866.667"
-				x2="503.2"
-				y2="2026.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="2154.667"
-				x2="503.2"
-				y2="2314.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="1422.723"
-				y1="2154.667"
-				x2="1422.723"
-				y2="2314.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="3284.957"
-				y1="2154.667"
-				x2="3284.957"
-				y2="2314.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5329.604"
-				y1="2154.667"
-				x2="5329.604"
-				y2="2314.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="6527.296"
-				y1="2154.667"
-				x2="6527.296"
-				y2="2282.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7680"
-				y1="2154.667"
-				x2="7680"
-				y2="2282.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="2442.667"
-				x2="503.2"
-				y2="2602.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="1422.723"
-				y1="2442.667"
-				x2="1422.723"
-				y2="2602.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="3284.957"
-				y1="2442.667"
-				x2="3284.957"
-				y2="2602.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5329.604"
-				y1="2442.667"
-				x2="5329.604"
-				y2="2602.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="6527.296"
-				y1="2442.667"
-				x2="6527.296"
-				y2="2602.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7680"
-				y1="2442.667"
-				x2="7680"
-				y2="2602.667"
-				stroke="#000000"
-				stroke-width="8" />
+			class="barlines">
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="394.6667"
+					x2="503.2"
+					y2="522.6666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="1422.723"
+					y1="394.6667"
+					x2="1422.723"
+					y2="522.6666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="3284.957"
+					y1="394.6667"
+					x2="3284.957"
+					y2="522.6666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5329.604"
+					y1="394.6667"
+					x2="5329.604"
+					y2="522.6666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="6527.296"
+					y1="394.6667"
+					x2="6527.296"
+					y2="522.6666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7680"
+					y1="392.6667"
+					x2="7680"
+					y2="524.6666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="522.6666"
+					x2="503.2"
+					y2="650.6666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="1422.723"
+					y1="522.6666"
+					x2="1422.723"
+					y2="650.6666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="3284.957"
+					y1="522.6666"
+					x2="3284.957"
+					y2="650.6666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5329.604"
+					y1="522.6666"
+					x2="5329.604"
+					y2="650.6666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="6527.296"
+					y1="522.6666"
+					x2="6527.296"
+					y2="650.6666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7680"
+					y1="522.6666"
+					x2="7680"
+					y2="650.6666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="650.6666"
+					x2="503.2"
+					y2="778.6666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="1422.723"
+					y1="650.6666"
+					x2="1422.723"
+					y2="778.6666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="3284.957"
+					y1="650.6666"
+					x2="3284.957"
+					y2="778.6666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5329.604"
+					y1="650.6666"
+					x2="5329.604"
+					y2="778.6666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="6527.296"
+					y1="650.6666"
+					x2="6527.296"
+					y2="778.6666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7680"
+					y1="648.6666"
+					x2="7680"
+					y2="780.6666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="778.6666"
+					x2="503.2"
+					y2="906.6666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="1422.723"
+					y1="778.6666"
+					x2="1422.723"
+					y2="906.6666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="3284.957"
+					y1="778.6666"
+					x2="3284.957"
+					y2="906.6666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5329.604"
+					y1="778.6666"
+					x2="5329.604"
+					y2="906.6666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="6527.296"
+					y1="778.6666"
+					x2="6527.296"
+					y2="906.6666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7680"
+					y1="778.6666"
+					x2="7680"
+					y2="906.6666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="906.6666"
+					x2="503.2"
+					y2="1034.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="1422.723"
+					y1="906.6666"
+					x2="1422.723"
+					y2="1034.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="3284.957"
+					y1="906.6666"
+					x2="3284.957"
+					y2="1034.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5329.604"
+					y1="906.6666"
+					x2="5329.604"
+					y2="1034.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="6527.296"
+					y1="906.6666"
+					x2="6527.296"
+					y2="1034.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7680"
+					y1="904.6666"
+					x2="7680"
+					y2="1036.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="1034.667"
+					x2="503.2"
+					y2="1162.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="1422.723"
+					y1="1034.667"
+					x2="1422.723"
+					y2="1162.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="3284.957"
+					y1="1034.667"
+					x2="3284.957"
+					y2="1162.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5329.604"
+					y1="1034.667"
+					x2="5329.604"
+					y2="1162.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="6527.296"
+					y1="1034.667"
+					x2="6527.296"
+					y2="1162.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7680"
+					y1="1034.667"
+					x2="7680"
+					y2="1162.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="1162.667"
+					x2="503.2"
+					y2="1290.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="1422.723"
+					y1="1162.667"
+					x2="1422.723"
+					y2="1290.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7680"
+					y1="1160.667"
+					x2="7680"
+					y2="1292.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="1290.667"
+					x2="503.2"
+					y2="1450.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="1450.667"
+					x2="503.2"
+					y2="1578.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="1422.723"
+					y1="1450.667"
+					x2="1422.723"
+					y2="1578.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7680"
+					y1="1448.667"
+					x2="7680"
+					y2="1580.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="1578.667"
+					x2="503.2"
+					y2="1738.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="1738.667"
+					x2="503.2"
+					y2="1866.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="1422.723"
+					y1="1738.667"
+					x2="1422.723"
+					y2="1866.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="3284.957"
+					y1="1738.667"
+					x2="3284.957"
+					y2="1866.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5329.604"
+					y1="1738.667"
+					x2="5329.604"
+					y2="1866.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="6527.296"
+					y1="1738.667"
+					x2="6527.296"
+					y2="1866.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7680"
+					y1="1736.667"
+					x2="7680"
+					y2="1868.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="1866.667"
+					x2="503.2"
+					y2="2026.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="2154.667"
+					x2="503.2"
+					y2="2314.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="1422.723"
+					y1="2154.667"
+					x2="1422.723"
+					y2="2314.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="3284.957"
+					y1="2154.667"
+					x2="3284.957"
+					y2="2314.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5329.604"
+					y1="2154.667"
+					x2="5329.604"
+					y2="2314.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="6527.296"
+					y1="2154.667"
+					x2="6527.296"
+					y2="2282.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7680"
+					y1="2154.667"
+					x2="7680"
+					y2="2282.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="2442.667"
+					x2="503.2"
+					y2="2602.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="1422.723"
+					y1="2442.667"
+					x2="1422.723"
+					y2="2602.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="3284.957"
+					y1="2442.667"
+					x2="3284.957"
+					y2="2602.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5329.604"
+					y1="2442.667"
+					x2="5329.604"
+					y2="2602.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="6527.296"
+					y1="2442.667"
+					x2="6527.296"
+					y2="2602.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7680"
+					y1="2442.667"
+					x2="7680"
+					y2="2602.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
 		</g>
 	</g>
 	<g
-		id="page2_system2"
-		score:object="system">
+		class="system"
+		id="page2_system2">
 		<g
-			id="markers1852">
+			class="markers">
 			<g
-				id="startMarker">
+				class="startMarker">
 				<line
 					x1="0"
 					y1="0"
@@ -3084,7 +3175,7 @@
 					fill="#009900" />
 			</g>
 			<g
-				id="runningMarker">
+				class="runningMarker">
 				<line
 					x1="0"
 					y1="0"
@@ -3094,7 +3185,7 @@
 					stroke-width="1" />
 			</g>
 			<g
-				id="endMarker">
+				class="endMarker">
 				<line
 					x1="0"
 					y1="0"
@@ -3112,13 +3203,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys2_staff1"
-			score:object="staff"
 			score:staffName="F 1"
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1853">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="3498.667"
@@ -3156,8 +3247,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice1854"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="0">
 				<use
 					xlink:href="#bassClef"
@@ -3171,7 +3261,7 @@
 					font-size="80"
 					font-family="Times New Roman">F 1</text>
 				<g
-					id="barnumber1855">
+					id="barnumber91">
 					<text
 						x="503.2"
 						y="3306.667"
@@ -3188,8 +3278,7 @@
 						fill="none" />
 				</g>
 				<g
-					id="rest1856"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="628.59"
 					score:msDuration="3233">
 					<text
@@ -3199,8 +3288,7 @@
 						font-family="CLicht">∑</text>
 				</g>
 				<g
-					id="rest1857"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="2450.747"
 					score:msDuration="1857">
 					<text
@@ -3210,8 +3298,7 @@
 						font-family="CLicht">Ó</text>
 				</g>
 				<g
-					id="rest1858"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="3578.705"
 					score:msDuration="1288">
 					<text
@@ -3221,8 +3308,7 @@
 						font-family="CLicht">Œ</text>
 				</g>
 				<g
-					id="rest1859"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="4374.723"
 					score:msDuration="1975">
 					<text
@@ -3232,8 +3318,7 @@
 						font-family="CLicht">Ó</text>
 				</g>
 				<g
-					id="rest1860"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="5524.602"
 					score:msDuration="2060">
 					<text
@@ -3243,8 +3328,7 @@
 						font-family="CLicht">Ó</text>
 				</g>
 				<g
-					id="rest1861"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="6726.476"
 					score:msDuration="1802">
 					<text
@@ -3256,13 +3340,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys2_staff2"
-			score:object="staff"
 			score:staffName="F 2"
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1862">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="3754.667"
@@ -3300,8 +3384,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice1863"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="1">
 				<use
 					xlink:href="#bassClef"
@@ -3315,8 +3398,7 @@
 					font-size="80"
 					font-family="Times New Roman">F 2</text>
 				<g
-					id="rest1864"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="628.59"
 					score:msDuration="3233">
 					<text
@@ -3326,8 +3408,7 @@
 						font-family="CLicht">∑</text>
 				</g>
 				<g
-					id="rest1865"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="2450.747"
 					score:msDuration="1857">
 					<text
@@ -3337,8 +3418,7 @@
 						font-family="CLicht">Ó</text>
 				</g>
 				<g
-					id="rest1866"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="3578.705"
 					score:msDuration="1288">
 					<text
@@ -3348,8 +3428,7 @@
 						font-family="CLicht">Œ</text>
 				</g>
 				<g
-					id="rest1867"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="4374.723"
 					score:msDuration="1975">
 					<text
@@ -3359,8 +3438,7 @@
 						font-family="CLicht">Ó</text>
 				</g>
 				<g
-					id="rest1868"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="5524.602"
 					score:msDuration="2060">
 					<text
@@ -3370,8 +3448,7 @@
 						font-family="CLicht">Ó</text>
 				</g>
 				<g
-					id="rest1869"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="6726.476"
 					score:msDuration="1802">
 					<text
@@ -3383,13 +3460,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys2_staff3"
-			score:object="staff"
 			score:staffName="F 3"
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1870">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="4010.667"
@@ -3427,8 +3504,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice1871"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="2">
 				<use
 					xlink:href="#bassClef2x8"
@@ -3442,8 +3518,7 @@
 					font-size="80"
 					font-family="Times New Roman">F 3</text>
 				<g
-					id="rest1872"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="628.59"
 					score:msDuration="3233">
 					<text
@@ -3453,8 +3528,7 @@
 						font-family="CLicht">∑</text>
 				</g>
 				<g
-					id="rest1873"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="2450.747"
 					score:msDuration="1857">
 					<text
@@ -3464,8 +3538,7 @@
 						font-family="CLicht">Ó</text>
 				</g>
 				<g
-					id="rest1874"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="3578.705"
 					score:msDuration="1288">
 					<text
@@ -3475,8 +3548,7 @@
 						font-family="CLicht">Œ</text>
 				</g>
 				<g
-					id="rest1875"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="4374.723"
 					score:msDuration="1975">
 					<text
@@ -3486,8 +3558,7 @@
 						font-family="CLicht">Ó</text>
 				</g>
 				<g
-					id="rest1876"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="5524.602"
 					score:msDuration="2060">
 					<text
@@ -3497,8 +3568,7 @@
 						font-family="CLicht">Ó</text>
 				</g>
 				<g
-					id="rest1877"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="6726.476"
 					score:msDuration="1802">
 					<text
@@ -3510,13 +3580,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys2_staff4"
-			score:object="staff"
 			score:staffName="F 4"
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1878">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="4266.667"
@@ -3554,8 +3624,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice1879"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="3">
 				<use
 					xlink:href="#bassClef2x8"
@@ -3569,8 +3638,7 @@
 					font-size="80"
 					font-family="Times New Roman">F 4</text>
 				<g
-					id="rest1880"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="636.59"
 					score:msDuration="934">
 					<text
@@ -3580,17 +3648,15 @@
 						font-family="CLicht">Œ</text>
 				</g>
 				<g
-					id="chord1881"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="1125.506">
 					<score:midiChord
-						id="midi1881"
 						pitchWheelDeviation="3">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="9142"
 								patch="60"
-								notes="10 17 21"
+								pitches="10 17 21"
 								velocities="65 65 65" />
 						</score:basicChords>
 						<score:sliders
@@ -3598,7 +3664,7 @@
 							expressionSlider="0 80 127 80 90 100 100 80 0" />
 					</score:midiChord>
 					<g
-						id="graphics1881">
+						class="graphics">
 						<text
 							x="1107.227"
 							y="4378.667"
@@ -3670,8 +3736,7 @@
 					</g>
 				</g>
 				<g
-					id="rest1882"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="6431.683"
 					score:msDuration="337">
 					<text
@@ -3681,8 +3746,7 @@
 						font-family="CLicht">≈</text>
 				</g>
 				<g
-					id="rest1883"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="6726.476"
 					score:msDuration="1802">
 					<text
@@ -3694,13 +3758,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys2_staff5"
-			score:object="staff"
 			score:staffName="R2M"
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1884">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="4554.667"
@@ -3738,8 +3802,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice1885"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="4">
 				<use
 					xlink:href="#trebleClef"
@@ -3753,8 +3816,7 @@
 					font-size="80"
 					font-family="Times New Roman">R2M</text>
 				<g
-					id="rest1886"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="628.59"
 					score:msDuration="3233">
 					<text
@@ -3764,8 +3826,7 @@
 						font-family="CLicht">∑</text>
 				</g>
 				<g
-					id="rest1887"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="2450.747"
 					score:msDuration="1857">
 					<text
@@ -3775,22 +3836,20 @@
 						font-family="CLicht">Ó</text>
 				</g>
 				<g
-					id="chord1888"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="3578.705">
 					<score:midiChord
-						id="midi1888"
 						hasChordOff="0">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="5874"
 								hasChordOff="0"
-								notes="67"
+								pitches="67"
 								velocities="0" />
 						</score:basicChords>
 					</score:midiChord>
 					<g
-						id="graphics1888">
+						class="graphics">
 						<text
 							x="3551.62"
 							y="4650.667"
@@ -3807,8 +3866,7 @@
 					</g>
 				</g>
 				<g
-					id="rest1889"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="7009.145"
 					score:msDuration="1251">
 					<text
@@ -3820,13 +3878,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys2_staff6"
-			score:object="staff"
 			score:staffName="Clyt."
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1890">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="4842.667"
@@ -3864,8 +3922,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice1891"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="5">
 				<use
 					xlink:href="#trebleClef"
@@ -3879,25 +3936,23 @@
 					font-size="80"
 					font-family="Times New Roman">Clyt.</text>
 				<g
-					id="chord1892"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="636.59">
 					<score:midiChord
-						id="midi1892"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="934"
 								patch="123"
-								notes="33"
+								pitches="33"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1892">
+						class="graphics">
 						<line
 							x1="653.0026"
 							y1="4823.467"
@@ -3920,45 +3975,43 @@
 					</g>
 				</g>
 				<g
-					id="beamBlock1893">
+					class="beamBlock">
 					<path
 						fill="white"
 						opacity="0.65"
-						d="M 1141.919 4828.267 L 1180.319 4828.267 1180.319 4847.467 1141.919 4847.467 z" />
+						d="M 1141.919 4826.987 L 1180.319 4826.987 1180.319 4847.147 1141.919 4847.147 z" />
 					<path
 						stroke="black"
 						stroke-width="4"
 						fill="black"
-						d="M 1141.919 4841.066 L 1180.319 4841.066 1180.319 4853.866 1141.919 4853.866 z" />
+						d="M 1141.919 4840.427 L 1180.319 4840.427 1180.319 4853.867 1141.919 4853.867 z" />
 					<path
 						stroke="black"
 						stroke-width="4"
 						fill="black"
-						d="M 1141.919 4809.066 L 2114.517 4809.066 2114.517 4821.866 1141.919 4821.866 z" />
+						d="M 1141.919 4808.427 L 2114.517 4808.427 2114.517 4821.867 1141.919 4821.867 z" />
 				</g>
 				<g
-					id="chord1894"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="1125.506">
 					<score:midiChord
-						id="midi1894"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="329"
 								patch="123"
-								notes="34"
+								pitches="34"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1894">
+						class="graphics">
 						<line
 							x1="1141.919"
-							y1="4809.066"
+							y1="4808.427"
 							x2="1141.919"
 							y2="4934.971"
 							stroke="black"
@@ -3978,28 +4031,26 @@
 					</g>
 				</g>
 				<g
-					id="chord1895"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="1297.726">
 					<score:midiChord
-						id="midi1895"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="480"
 								patch="123"
-								notes="35"
+								pitches="35"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1895">
+						class="graphics">
 						<line
 							x1="1314.139"
-							y1="4809.066"
+							y1="4808.427"
 							x2="1314.139"
 							y2="4934.971"
 							stroke="black"
@@ -4019,28 +4070,26 @@
 					</g>
 				</g>
 				<g
-					id="chord1896"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="1548.989">
 					<score:midiChord
-						id="midi1896"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="635"
 								patch="123"
-								notes="36"
+								pitches="36"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1896">
+						class="graphics">
 						<line
 							x1="1565.402"
-							y1="4809.066"
+							y1="4808.427"
 							x2="1565.402"
 							y2="4934.971"
 							stroke="black"
@@ -4060,28 +4109,26 @@
 					</g>
 				</g>
 				<g
-					id="chord1897"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="1881.39">
 					<score:midiChord
-						id="midi1897"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="414"
 								patch="123"
-								notes="37"
+								pitches="37"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1897">
+						class="graphics">
 						<line
 							x1="1897.802"
-							y1="4809.066"
+							y1="4808.427"
 							x2="1897.802"
 							y2="4934.971"
 							stroke="black"
@@ -4101,28 +4148,26 @@
 					</g>
 				</g>
 				<g
-					id="chord1898"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="2098.104">
 					<score:midiChord
-						id="midi1898"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="441"
 								patch="123"
-								notes="38"
+								pitches="38"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1898">
+						class="graphics">
 						<line
 							x1="2114.517"
-							y1="4809.066"
+							y1="4808.427"
 							x2="2114.517"
 							y2="4934.971"
 							stroke="black"
@@ -4142,25 +4187,23 @@
 					</g>
 				</g>
 				<g
-					id="chord1899"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="2444.987">
 					<score:midiChord
-						id="midi1899"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="876"
 								patch="123"
-								notes="39"
+								pitches="39"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1899">
+						class="graphics">
 						<line
 							x1="2461.4"
 							y1="4823.467"
@@ -4183,8 +4226,7 @@
 					</g>
 				</g>
 				<g
-					id="rest1900"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="2903.542"
 					score:msDuration="981">
 					<text
@@ -4194,25 +4236,23 @@
 						font-family="CLicht">Œ</text>
 				</g>
 				<g
-					id="chord1901"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="3578.705">
 					<score:midiChord
-						id="midi1901"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="1288"
 								patch="123"
-								notes="40"
+								pitches="40"
 								velocities="89" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1901">
+						class="graphics">
 						<line
 							x1="3595.118"
 							y1="4823.467"
@@ -4240,45 +4280,43 @@
 					</g>
 				</g>
 				<g
-					id="beamBlock1902">
+					class="beamBlock">
 					<path
 						fill="white"
 						opacity="0.65"
-						d="M 5205.458 4828.267 L 5243.858 4828.267 5243.858 4847.467 5205.458 4847.467 z" />
+						d="M 5205.458 4826.987 L 5243.858 4826.987 5243.858 4847.147 5205.458 4847.147 z" />
 					<path
 						stroke="black"
 						stroke-width="4"
 						fill="black"
-						d="M 5205.458 4841.066 L 5243.858 4841.066 5243.858 4853.866 5205.458 4853.866 z" />
+						d="M 5205.458 4840.427 L 5243.858 4840.427 5243.858 4853.867 5205.458 4853.867 z" />
 					<path
 						stroke="black"
 						stroke-width="4"
 						fill="black"
-						d="M 4385.375 4809.066 L 5243.858 4809.066 5243.858 4821.866 4385.375 4821.866 z" />
+						d="M 4385.375 4808.427 L 5243.858 4808.427 5243.858 4821.867 4385.375 4821.867 z" />
 				</g>
 				<g
-					id="chord1903"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="4368.963">
 					<score:midiChord
-						id="midi1903"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="585"
 								patch="123"
-								notes="41"
+								pitches="41"
 								velocities="89" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1903">
+						class="graphics">
 						<line
 							x1="4385.375"
-							y1="4809.066"
+							y1="4808.427"
 							x2="4385.375"
 							y2="4934.971"
 							stroke="black"
@@ -4298,28 +4336,26 @@
 					</g>
 				</g>
 				<g
-					id="chord1904"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="4675.19">
 					<score:midiChord
-						id="midi1904"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="574"
 								patch="123"
-								notes="42"
+								pitches="42"
 								velocities="89" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1904">
+						class="graphics">
 						<line
 							x1="4691.603"
-							y1="4809.066"
+							y1="4808.427"
 							x2="4691.603"
 							y2="4934.971"
 							stroke="black"
@@ -4339,28 +4375,26 @@
 					</g>
 				</g>
 				<g
-					id="chord1905"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="4975.659">
 					<score:midiChord
-						id="midi1905"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="481"
 								patch="123"
-								notes="43"
+								pitches="43"
 								velocities="89" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1905">
+						class="graphics">
 						<line
 							x1="4992.071"
-							y1="4809.066"
+							y1="4808.427"
 							x2="4992.071"
 							y2="4934.971"
 							stroke="black"
@@ -4380,28 +4414,26 @@
 					</g>
 				</g>
 				<g
-					id="chord1906"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="5227.445">
 					<score:midiChord
-						id="midi1906"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="335"
 								patch="123"
-								notes="44"
+								pitches="44"
 								velocities="89" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1906">
+						class="graphics">
 						<line
 							x1="5243.858"
-							y1="4809.066"
+							y1="4808.427"
 							x2="5243.858"
 							y2="4934.971"
 							stroke="black"
@@ -4421,54 +4453,52 @@
 					</g>
 				</g>
 				<g
-					id="beamBlock1907">
+					class="beamBlock">
 					<path
 						fill="white"
 						opacity="0.65"
-						d="M 5669.074 4828.267 L 5707.474 4828.267 5707.474 4847.467 5669.074 4847.467 z" />
+						d="M 5669.074 4826.987 L 5707.474 4826.987 5707.474 4847.147 5669.074 4847.147 z" />
 					<path
 						stroke="black"
 						stroke-width="4"
 						fill="black"
-						d="M 5669.074 4841.066 L 5707.474 4841.066 5707.474 4853.866 5669.074 4853.866 z" />
+						d="M 5669.074 4840.427 L 5707.474 4840.427 5707.474 4853.867 5669.074 4853.867 z" />
 					<path
 						fill="white"
 						opacity="0.65"
-						d="M 5535.254 4796.267 L 5707.474 4796.267 5707.474 4815.467 5535.254 4815.467 z" />
+						d="M 5535.254 4794.987 L 5707.474 4794.987 5707.474 4815.147 5535.254 4815.147 z" />
 					<path
 						stroke="black"
 						stroke-width="4"
 						fill="black"
-						d="M 5535.254 4809.066 L 5707.474 4809.066 5707.474 4821.866 5535.254 4821.866 z" />
+						d="M 5535.254 4808.427 L 5707.474 4808.427 5707.474 4821.867 5535.254 4821.867 z" />
 					<path
 						stroke="black"
 						stroke-width="4"
 						fill="black"
-						d="M 5535.254 4777.066 L 5707.474 4777.066 5707.474 4789.866 5535.254 4789.866 z" />
+						d="M 5535.254 4776.427 L 5707.474 4776.427 5707.474 4789.867 5535.254 4789.867 z" />
 				</g>
 				<g
-					id="chord1908"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="5518.841">
 					<score:midiChord
-						id="midi1908"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="329"
 								patch="123"
-								notes="45"
+								pitches="45"
 								velocities="89" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1908">
+						class="graphics">
 						<line
 							x1="5535.254"
-							y1="4777.066"
+							y1="4776.427"
 							x2="5535.254"
 							y2="4934.971"
 							stroke="black"
@@ -4488,28 +4518,26 @@
 					</g>
 				</g>
 				<g
-					id="chord1909"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="5691.061">
 					<score:midiChord
-						id="midi1909"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="180"
 								patch="123"
-								notes="46"
+								pitches="46"
 								velocities="89" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1909">
+						class="graphics">
 						<line
 							x1="5707.474"
-							y1="4777.066"
+							y1="4776.427"
 							x2="5707.474"
 							y2="4934.971"
 							stroke="black"
@@ -4529,25 +4557,23 @@
 					</g>
 				</g>
 				<g
-					id="chord1910"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="5796.197">
 					<score:midiChord
-						id="midi1910"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="937"
 								patch="123"
-								notes="47"
+								pitches="47"
 								velocities="89" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1910">
+						class="graphics">
 						<line
 							x1="5812.609"
 							y1="4823.467"
@@ -4570,25 +4596,23 @@
 					</g>
 				</g>
 				<g
-					id="chord1911"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="6286.684">
 					<score:midiChord
-						id="midi1911"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="614"
 								patch="123"
-								notes="48"
+								pitches="48"
 								velocities="89" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1911">
+						class="graphics">
 						<line
 							x1="6303.096"
 							y1="4818.121"
@@ -4616,25 +4640,23 @@
 					</g>
 				</g>
 				<g
-					id="chord1912"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="6720.715">
 					<score:midiChord
-						id="midi1912"
 						volume="120"
 						pitchWheelDeviation="1">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="1102"
 								patch="123"
-								notes="49"
+								pitches="49"
 								velocities="89" />
 						</score:basicChords>
 						<score:sliders
 							expressionSlider="65" />
 					</score:midiChord>
 					<g
-						id="graphics1912">
+						class="graphics">
 						<line
 							x1="6737.128"
 							y1="4823.467"
@@ -4657,8 +4679,7 @@
 					</g>
 				</g>
 				<g
-					id="rest1913"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="7297.574"
 					score:msDuration="700">
 					<text
@@ -4670,13 +4691,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys2_staff7"
-			score:object="staff"
 			score:staffName="W 1"
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1914">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="5130.667"
@@ -4714,8 +4735,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice1915"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="6">
 				<use
 					xlink:href="#bassClef8"
@@ -4729,9 +4749,8 @@
 					font-size="80"
 					font-family="Times New Roman">W 1</text>
 				<g
-					id="cautionaryChord1916">
-					<g
-						id="graphics1916">
+					class="cautionaryChord">
+					<g>
 						<text
 							x="621.8599"
 							y="5210.667"
@@ -4773,18 +4792,15 @@
 					</g>
 				</g>
 				<g
-					id="chord1917"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="873.1961">
 					<score:midiChord
-						id="midi1917"
-						repeat="1"
 						pitchWheelDeviation="3">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="5301"
 								patch="122"
-								notes="33"
+								pitches="33"
 								velocities="59" />
 						</score:basicChords>
 						<score:sliders
@@ -4793,7 +4809,7 @@
 							expressionSlider="0 25 102 25 64 25 0" />
 					</score:midiChord>
 					<g
-						id="graphics1917">
+						class="graphics">
 						<text
 							x="846.1108"
 							y="5242.667"
@@ -4815,18 +4831,15 @@
 					</g>
 				</g>
 				<g
-					id="chord1918"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="3925.762">
 					<score:midiChord
-						id="midi1918"
-						repeat="1"
 						pitchWheelDeviation="3">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="6462"
 								patch="122"
-								notes="38"
+								pitches="38"
 								velocities="51" />
 						</score:basicChords>
 						<score:sliders
@@ -4835,7 +4848,7 @@
 							expressionSlider="0 25 64 25 102 25 0" />
 					</score:midiChord>
 					<g
-						id="graphics1918">
+						class="graphics">
 						<text
 							x="3907.483"
 							y="5194.667"
@@ -4859,13 +4872,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys2_staff8"
-			score:object="staff"
 			score:staffName="W 2"
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1919">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="5482.667"
@@ -4903,8 +4916,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice1920"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="7">
 				<use
 					xlink:href="#bassClef8"
@@ -4918,9 +4930,8 @@
 					font-size="80"
 					font-family="Times New Roman">W 2</text>
 				<g
-					id="cautionaryChord1921">
-					<g
-						id="graphics1921">
+					class="cautionaryChord">
+					<g>
 						<text
 							x="621.8599"
 							y="5450.667"
@@ -4964,18 +4975,15 @@
 					</g>
 				</g>
 				<g
-					id="chord1922"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="2778.434">
 					<score:midiChord
-						id="midi1922"
-						repeat="1"
 						pitchWheelDeviation="3">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="8345"
 								patch="122"
-								notes="55"
+								pitches="55"
 								velocities="43" />
 						</score:basicChords>
 						<score:sliders
@@ -4984,7 +4992,7 @@
 							expressionSlider="0 64 127 0" />
 					</score:midiChord>
 					<g
-						id="graphics1922">
+						class="graphics">
 						<text
 							x="2760.155"
 							y="5386.667"
@@ -5029,13 +5037,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys2_staff9"
-			score:object="staff"
 			score:staffName="W 3"
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1923">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="5770.667"
@@ -5073,8 +5081,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice1924"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="8">
 				<use
 					xlink:href="#bassClef2x8"
@@ -5088,9 +5095,8 @@
 					font-size="80"
 					font-family="Times New Roman">W 3</text>
 				<g
-					id="cautionaryChord1925">
-					<g
-						id="graphics1925">
+					class="cautionaryChord">
+					<g>
 						<text
 							x="621.8599"
 							y="5962.667"
@@ -5141,18 +5147,15 @@
 					</g>
 				</g>
 				<g
-					id="chord1926"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="3111.358">
 					<score:midiChord
-						id="midi1926"
-						repeat="1"
 						pitchWheelDeviation="3">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="5181"
 								patch="122"
-								notes="7"
+								pitches="7"
 								velocities="59" />
 						</score:basicChords>
 						<score:sliders
@@ -5161,7 +5164,7 @@
 							expressionSlider="0 25 102 25 64 25 0" />
 					</score:midiChord>
 					<g
-						id="graphics1926">
+						class="graphics">
 						<text
 							x="3084.272"
 							y="6010.667"
@@ -5204,18 +5207,15 @@
 					</g>
 				</g>
 				<g
-					id="chord1927"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="6228.056">
 					<score:midiChord
-						id="midi1927"
-						repeat="1"
 						pitchWheelDeviation="3">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="5720"
 								patch="122"
-								notes="10"
+								pitches="10"
 								velocities="55" />
 						</score:basicChords>
 						<score:sliders
@@ -5224,7 +5224,7 @@
 							expressionSlider="0 81 81 102 38 38 25 127 81 64 0" />
 					</score:midiChord>
 					<g
-						id="graphics1927">
+						class="graphics">
 						<text
 							x="6200.97"
 							y="5994.667"
@@ -5274,541 +5274,766 @@
 			</g>
 		</g>
 		<g
-			id="barlines1928">
-			<line
-				x1="503.2"
-				y1="3498.667"
-				x2="503.2"
-				y2="3626.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="2344.952"
-				y1="3498.667"
-				x2="2344.952"
-				y2="3626.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="3433.061"
-				y1="3498.667"
-				x2="3433.061"
-				y2="3626.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="4268.928"
-				y1="3498.667"
-				x2="4268.928"
-				y2="3626.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5418.806"
-				y1="3498.667"
-				x2="5418.806"
-				y2="3626.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="6624.091"
-				y1="3498.667"
-				x2="6624.091"
-				y2="3626.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7679.999"
-				y1="3496.667"
-				x2="7679.999"
-				y2="3628.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="3626.667"
-				x2="503.2"
-				y2="3754.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="2344.952"
-				y1="3626.667"
-				x2="2344.952"
-				y2="3754.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="3433.061"
-				y1="3626.667"
-				x2="3433.061"
-				y2="3754.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="4268.928"
-				y1="3626.667"
-				x2="4268.928"
-				y2="3754.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5418.806"
-				y1="3626.667"
-				x2="5418.806"
-				y2="3754.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="6624.091"
-				y1="3626.667"
-				x2="6624.091"
-				y2="3754.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7679.999"
-				y1="3626.667"
-				x2="7679.999"
-				y2="3754.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="3754.667"
-				x2="503.2"
-				y2="3882.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="2344.952"
-				y1="3754.667"
-				x2="2344.952"
-				y2="3882.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="3433.061"
-				y1="3754.667"
-				x2="3433.061"
-				y2="3882.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="4268.928"
-				y1="3754.667"
-				x2="4268.928"
-				y2="3882.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5418.806"
-				y1="3754.667"
-				x2="5418.806"
-				y2="3882.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="6624.091"
-				y1="3754.667"
-				x2="6624.091"
-				y2="3882.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7679.999"
-				y1="3752.667"
-				x2="7679.999"
-				y2="3884.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="3882.667"
-				x2="503.2"
-				y2="4010.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="2344.952"
-				y1="3882.667"
-				x2="2344.952"
-				y2="4010.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="3433.061"
-				y1="3882.667"
-				x2="3433.061"
-				y2="4010.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="4268.928"
-				y1="3882.667"
-				x2="4268.928"
-				y2="4010.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5418.806"
-				y1="3882.667"
-				x2="5418.806"
-				y2="4010.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="6624.091"
-				y1="3882.667"
-				x2="6624.091"
-				y2="4010.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7679.999"
-				y1="3882.667"
-				x2="7679.999"
-				y2="4010.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="4010.667"
-				x2="503.2"
-				y2="4138.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="2344.952"
-				y1="4010.667"
-				x2="2344.952"
-				y2="4138.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="3433.061"
-				y1="4010.667"
-				x2="3433.061"
-				y2="4138.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="4268.928"
-				y1="4010.667"
-				x2="4268.928"
-				y2="4138.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5418.806"
-				y1="4010.667"
-				x2="5418.806"
-				y2="4138.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="6624.091"
-				y1="4010.667"
-				x2="6624.091"
-				y2="4138.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7679.999"
-				y1="4008.667"
-				x2="7679.999"
-				y2="4140.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="4138.667"
-				x2="503.2"
-				y2="4266.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="2344.952"
-				y1="4138.667"
-				x2="2344.952"
-				y2="4266.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="3433.061"
-				y1="4138.667"
-				x2="3433.061"
-				y2="4266.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="4268.928"
-				y1="4138.667"
-				x2="4268.928"
-				y2="4266.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5418.806"
-				y1="4138.667"
-				x2="5418.806"
-				y2="4266.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="6624.091"
-				y1="4138.667"
-				x2="6624.091"
-				y2="4266.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7679.999"
-				y1="4138.667"
-				x2="7679.999"
-				y2="4266.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="4266.667"
-				x2="503.2"
-				y2="4394.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="6624.091"
-				y1="4266.667"
-				x2="6624.091"
-				y2="4394.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7679.999"
-				y1="4264.667"
-				x2="7679.999"
-				y2="4396.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="4394.667"
-				x2="503.2"
-				y2="4554.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="4554.667"
-				x2="503.2"
-				y2="4682.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="2344.952"
-				y1="4554.667"
-				x2="2344.952"
-				y2="4682.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="3433.061"
-				y1="4554.667"
-				x2="3433.061"
-				y2="4682.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7679.999"
-				y1="4552.667"
-				x2="7679.999"
-				y2="4684.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="4682.667"
-				x2="503.2"
-				y2="4842.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="4842.667"
-				x2="503.2"
-				y2="4970.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="2344.952"
-				y1="4842.667"
-				x2="2344.952"
-				y2="4970.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="3433.061"
-				y1="4842.667"
-				x2="3433.061"
-				y2="4970.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="4268.928"
-				y1="4842.667"
-				x2="4268.928"
-				y2="4970.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5418.806"
-				y1="4842.667"
-				x2="5418.806"
-				y2="4970.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="6624.091"
-				y1="4842.667"
-				x2="6624.091"
-				y2="4970.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7679.999"
-				y1="4840.667"
-				x2="7679.999"
-				y2="4972.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="4970.667"
-				x2="503.2"
-				y2="5130.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7679.999"
-				y1="5128.667"
-				x2="7679.999"
-				y2="5260.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="5258.667"
-				x2="503.2"
-				y2="5450.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="2344.952"
-				y1="5258.667"
-				x2="2344.952"
-				y2="5450.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="3433.061"
-				y1="5258.667"
-				x2="3433.061"
-				y2="5386.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="4268.928"
-				y1="5258.667"
-				x2="4268.928"
-				y2="5386.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5418.806"
-				y1="5258.667"
-				x2="5418.806"
-				y2="5386.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="6624.091"
-				y1="5258.667"
-				x2="6624.091"
-				y2="5386.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7679.999"
-				y1="5258.667"
-				x2="7679.999"
-				y2="5386.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7679.999"
-				y1="5480.667"
-				x2="7679.999"
-				y2="5612.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="5610.667"
-				x2="503.2"
-				y2="5770.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="2344.952"
-				y1="5610.667"
-				x2="2344.952"
-				y2="5770.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="3433.061"
-				y1="5610.667"
-				x2="3433.061"
-				y2="5770.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="4268.928"
-				y1="5610.667"
-				x2="4268.928"
-				y2="5770.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5418.806"
-				y1="5610.667"
-				x2="5418.806"
-				y2="5770.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="6624.091"
-				y1="5610.667"
-				x2="6624.091"
-				y2="5770.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7679.999"
-				y1="5610.667"
-				x2="7679.999"
-				y2="5770.667"
-				stroke="#000000"
-				stroke-width="8" />
+			class="barlines">
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="3498.667"
+					x2="503.2"
+					y2="3626.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="2344.952"
+					y1="3498.667"
+					x2="2344.952"
+					y2="3626.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="3433.061"
+					y1="3498.667"
+					x2="3433.061"
+					y2="3626.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="4268.928"
+					y1="3498.667"
+					x2="4268.928"
+					y2="3626.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5418.806"
+					y1="3498.667"
+					x2="5418.806"
+					y2="3626.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="6624.091"
+					y1="3498.667"
+					x2="6624.091"
+					y2="3626.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7679.999"
+					y1="3496.667"
+					x2="7679.999"
+					y2="3628.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="3626.667"
+					x2="503.2"
+					y2="3754.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="2344.952"
+					y1="3626.667"
+					x2="2344.952"
+					y2="3754.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="3433.061"
+					y1="3626.667"
+					x2="3433.061"
+					y2="3754.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="4268.928"
+					y1="3626.667"
+					x2="4268.928"
+					y2="3754.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5418.806"
+					y1="3626.667"
+					x2="5418.806"
+					y2="3754.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="6624.091"
+					y1="3626.667"
+					x2="6624.091"
+					y2="3754.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7679.999"
+					y1="3626.667"
+					x2="7679.999"
+					y2="3754.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="3754.667"
+					x2="503.2"
+					y2="3882.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="2344.952"
+					y1="3754.667"
+					x2="2344.952"
+					y2="3882.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="3433.061"
+					y1="3754.667"
+					x2="3433.061"
+					y2="3882.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="4268.928"
+					y1="3754.667"
+					x2="4268.928"
+					y2="3882.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5418.806"
+					y1="3754.667"
+					x2="5418.806"
+					y2="3882.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="6624.091"
+					y1="3754.667"
+					x2="6624.091"
+					y2="3882.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7679.999"
+					y1="3752.667"
+					x2="7679.999"
+					y2="3884.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="3882.667"
+					x2="503.2"
+					y2="4010.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="2344.952"
+					y1="3882.667"
+					x2="2344.952"
+					y2="4010.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="3433.061"
+					y1="3882.667"
+					x2="3433.061"
+					y2="4010.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="4268.928"
+					y1="3882.667"
+					x2="4268.928"
+					y2="4010.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5418.806"
+					y1="3882.667"
+					x2="5418.806"
+					y2="4010.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="6624.091"
+					y1="3882.667"
+					x2="6624.091"
+					y2="4010.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7679.999"
+					y1="3882.667"
+					x2="7679.999"
+					y2="4010.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="4010.667"
+					x2="503.2"
+					y2="4138.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="2344.952"
+					y1="4010.667"
+					x2="2344.952"
+					y2="4138.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="3433.061"
+					y1="4010.667"
+					x2="3433.061"
+					y2="4138.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="4268.928"
+					y1="4010.667"
+					x2="4268.928"
+					y2="4138.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5418.806"
+					y1="4010.667"
+					x2="5418.806"
+					y2="4138.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="6624.091"
+					y1="4010.667"
+					x2="6624.091"
+					y2="4138.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7679.999"
+					y1="4008.667"
+					x2="7679.999"
+					y2="4140.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="4138.667"
+					x2="503.2"
+					y2="4266.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="2344.952"
+					y1="4138.667"
+					x2="2344.952"
+					y2="4266.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="3433.061"
+					y1="4138.667"
+					x2="3433.061"
+					y2="4266.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="4268.928"
+					y1="4138.667"
+					x2="4268.928"
+					y2="4266.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5418.806"
+					y1="4138.667"
+					x2="5418.806"
+					y2="4266.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="6624.091"
+					y1="4138.667"
+					x2="6624.091"
+					y2="4266.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7679.999"
+					y1="4138.667"
+					x2="7679.999"
+					y2="4266.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="4266.667"
+					x2="503.2"
+					y2="4394.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="6624.091"
+					y1="4266.667"
+					x2="6624.091"
+					y2="4394.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7679.999"
+					y1="4264.667"
+					x2="7679.999"
+					y2="4396.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="4394.667"
+					x2="503.2"
+					y2="4554.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="4554.667"
+					x2="503.2"
+					y2="4682.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="2344.952"
+					y1="4554.667"
+					x2="2344.952"
+					y2="4682.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="3433.061"
+					y1="4554.667"
+					x2="3433.061"
+					y2="4682.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7679.999"
+					y1="4552.667"
+					x2="7679.999"
+					y2="4684.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="4682.667"
+					x2="503.2"
+					y2="4842.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="4842.667"
+					x2="503.2"
+					y2="4970.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="2344.952"
+					y1="4842.667"
+					x2="2344.952"
+					y2="4970.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="3433.061"
+					y1="4842.667"
+					x2="3433.061"
+					y2="4970.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="4268.928"
+					y1="4842.667"
+					x2="4268.928"
+					y2="4970.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5418.806"
+					y1="4842.667"
+					x2="5418.806"
+					y2="4970.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="6624.091"
+					y1="4842.667"
+					x2="6624.091"
+					y2="4970.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7679.999"
+					y1="4840.667"
+					x2="7679.999"
+					y2="4972.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="4970.667"
+					x2="503.2"
+					y2="5130.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7679.999"
+					y1="5128.667"
+					x2="7679.999"
+					y2="5260.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="5258.667"
+					x2="503.2"
+					y2="5482.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="2344.952"
+					y1="5258.667"
+					x2="2344.952"
+					y2="5482.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="3433.061"
+					y1="5258.667"
+					x2="3433.061"
+					y2="5386.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="4268.928"
+					y1="5258.667"
+					x2="4268.928"
+					y2="5386.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5418.806"
+					y1="5258.667"
+					x2="5418.806"
+					y2="5386.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="6624.091"
+					y1="5258.667"
+					x2="6624.091"
+					y2="5386.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7679.999"
+					y1="5258.667"
+					x2="7679.999"
+					y2="5386.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7679.999"
+					y1="5480.667"
+					x2="7679.999"
+					y2="5612.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="5610.667"
+					x2="503.2"
+					y2="5770.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="2344.952"
+					y1="5610.667"
+					x2="2344.952"
+					y2="5770.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="3433.061"
+					y1="5610.667"
+					x2="3433.061"
+					y2="5770.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="4268.928"
+					y1="5610.667"
+					x2="4268.928"
+					y2="5770.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5418.806"
+					y1="5610.667"
+					x2="5418.806"
+					y2="5770.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="6624.091"
+					y1="5610.667"
+					x2="6624.091"
+					y2="5770.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7679.999"
+					y1="5610.667"
+					x2="7679.999"
+					y2="5770.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
 		</g>
 	</g>
 	<g
-		id="page2_system3"
-		score:object="system">
+		class="system"
+		id="page2_system3">
 		<g
-			id="markers1929">
+			class="markers">
 			<g
-				id="startMarker">
+				class="startMarker">
 				<line
 					x1="0"
 					y1="0"
@@ -5825,7 +6050,7 @@
 					fill="#009900" />
 			</g>
 			<g
-				id="runningMarker">
+				class="runningMarker">
 				<line
 					x1="0"
 					y1="0"
@@ -5835,7 +6060,7 @@
 					stroke-width="1" />
 			</g>
 			<g
-				id="endMarker">
+				class="endMarker">
 				<line
 					x1="0"
 					y1="0"
@@ -5853,13 +6078,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys3_staff1"
-			score:object="staff"
 			score:staffName="F 1"
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1930">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="6666.667"
@@ -5897,8 +6122,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice1931"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="0">
 				<use
 					xlink:href="#bassClef"
@@ -5912,7 +6136,7 @@
 					font-size="80"
 					font-family="Times New Roman">F 1</text>
 				<g
-					id="barnumber1932">
+					id="barnumber116">
 					<text
 						x="503.2"
 						y="6474.667"
@@ -5929,8 +6153,7 @@
 						fill="none" />
 				</g>
 				<g
-					id="rest1933"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="591.824"
 					score:msDuration="8243">
 					<text
@@ -5940,8 +6163,7 @@
 						font-family="CLicht">∑</text>
 				</g>
 				<g
-					id="rest1934"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="2446.402"
 					score:msDuration="14932">
 					<text
@@ -5951,8 +6173,7 @@
 						font-family="CLicht">∑</text>
 				</g>
 				<g
-					id="rest1935"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="5809.374"
 					score:msDuration="8898">
 					<text
@@ -5964,13 +6185,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys3_staff2"
-			score:object="staff"
 			score:staffName="F 2"
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1936">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="6922.667"
@@ -6008,8 +6229,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice1937"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="1">
 				<use
 					xlink:href="#bassClef"
@@ -6023,8 +6243,7 @@
 					font-size="80"
 					font-family="Times New Roman">F 2</text>
 				<g
-					id="rest1938"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="591.824"
 					score:msDuration="8243">
 					<text
@@ -6034,8 +6253,7 @@
 						font-family="CLicht">∑</text>
 				</g>
 				<g
-					id="rest1939"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="2446.402"
 					score:msDuration="14932">
 					<text
@@ -6045,8 +6263,7 @@
 						font-family="CLicht">∑</text>
 				</g>
 				<g
-					id="rest1940"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="5809.374"
 					score:msDuration="8898">
 					<text
@@ -6058,13 +6275,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys3_staff3"
-			score:object="staff"
 			score:staffName="F 3"
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1941">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="7274.667"
@@ -6102,8 +6319,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice1942"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="2">
 				<use
 					xlink:href="#bassClef2x8"
@@ -6117,16 +6333,14 @@
 					font-size="80"
 					font-family="Times New Roman">F 3</text>
 				<g
-					id="chord1943"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="599.824">
-					<score:midiChord
-						id="midi1943">
+					<score:midiChord>
 						<score:basicChords>
 							<score:basicChord
 								msDuration="515"
 								patch="76"
-								notes="9 16 22"
+								pitches="9 16 22"
 								velocities="56 56 56" />
 						</score:basicChords>
 						<score:sliders
@@ -6134,7 +6348,7 @@
 							expressionSlider="0 64 127 127 0" />
 					</score:midiChord>
 					<g
-						id="graphics1943">
+						class="graphics">
 						<line
 							x1="616.2366"
 							y1="7266.121"
@@ -6197,8 +6411,7 @@
 					</g>
 				</g>
 				<g
-					id="rest1944"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="706.7032"
 					score:msDuration="515">
 					<text
@@ -6208,24 +6421,22 @@
 						font-family="CLicht">‰</text>
 				</g>
 				<g
-					id="chord1945"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="813.5824">
-					<score:midiChord
-						id="midi1945">
+					<score:midiChord>
 						<score:basicChords>
 							<score:basicChord
 								msDuration="669"
 								patch="76"
-								notes="12 18 19 25 31"
-								velocities="56 56 56 56 56" />
+								pitches="12 19 25 18 25 31"
+								velocities="56 56 56 56 56 56" />
 						</score:basicChords>
 						<score:sliders
 							pan="127"
 							expressionSlider="0 64 127 127 0" />
 					</score:midiChord>
 					<g
-						id="graphics1945">
+						class="graphics">
 						<line
 							x1="829.9951"
 							y1="7250.121"
@@ -6282,8 +6493,7 @@
 					</g>
 				</g>
 				<g
-					id="rest1946"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="952.4217"
 					score:msDuration="669">
 					<text
@@ -6293,125 +6503,123 @@
 						font-family="CLicht">‰</text>
 				</g>
 				<g
-					id="chord1947"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="1091.261">
-					<score:midiChord
-						id="midi1947">
+					<score:midiChord>
 						<score:basicChords>
 							<score:basicChord
 								msDuration="91"
 								patch="76"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="92"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="91"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="93"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="91"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="92"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="93"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="91"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="92"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="91"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="93"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="91"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="92"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="93"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="91"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="92"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="91"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="93"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="91"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="92"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="93"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="91"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="92"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="91"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="93"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="91"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="92"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="93"
-								notes="17 23 24 30 36"
-								velocities="56 56 56 56 56" />
+								pitches="17 24 30 23 30 36"
+								velocities="56 56 56 56 56 56" />
 						</score:basicChords>
 						<score:sliders
 							pitchWheel="64 35 64"
@@ -6419,7 +6627,7 @@
 							expressionSlider="0 64 127 127 0" />
 					</score:midiChord>
 					<g
-						id="graphics1947">
+						class="graphics">
 						<line
 							x1="1107.674"
 							y1="7207.466"
@@ -6469,8 +6677,7 @@
 					</g>
 				</g>
 				<g
-					id="rest1948"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="1630.795"
 					score:msDuration="2571">
 					<text
@@ -6480,29 +6687,27 @@
 						font-family="CLicht">Ó</text>
 				</g>
 				<g
-					id="chord1949"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="2158.601">
-					<score:midiChord
-						id="midi1949">
+					<score:midiChord>
 						<score:basicChords>
 							<score:basicChord
 								msDuration="201"
 								patch="76"
-								notes="11 17 18 24 30"
-								velocities="56 56 56 56 56" />
+								pitches="11 18 24 17 24 30"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="209"
-								notes="12 18 19 25 31"
-								velocities="56 56 56 56 56" />
+								pitches="12 19 25 18 25 31"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="194"
-								notes="11 17 18 24 30"
-								velocities="56 56 56 56 56" />
+								pitches="11 18 24 17 24 30"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="219"
-								notes="12 18 19 25 31"
-								velocities="56 56 56 56 56" />
+								pitches="12 19 25 18 25 31"
+								velocities="56 56 56 56 56 56" />
 						</score:basicChords>
 						<score:sliders
 							pitchWheel="64 10"
@@ -6510,7 +6715,7 @@
 							expressionSlider="0 64 127 127 0" />
 					</score:midiChord>
 					<g
-						id="graphics1949">
+						class="graphics">
 						<line
 							x1="2175.013"
 							y1="7239.466"
@@ -6586,105 +6791,103 @@
 					</g>
 				</g>
 				<g
-					id="chord1950"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="2568.647">
-					<score:midiChord
-						id="midi1950">
+					<score:midiChord>
 						<score:basicChords>
 							<score:basicChord
 								msDuration="92"
 								patch="76"
-								notes="16 22 23 29 35"
-								velocities="56 56 56 56 56" />
+								pitches="16 23 29 22 29 35"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="98"
-								notes="16 22 23 29 35"
-								velocities="56 56 56 56 56" />
+								pitches="16 23 29 22 29 35"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="92"
-								notes="16 22 23 29 35"
-								velocities="56 56 56 56 56" />
+								pitches="16 23 29 22 29 35"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="91"
-								notes="15 21 22 28 34"
-								velocities="56 56 56 56 56" />
+								pitches="15 22 28 21 28 34"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="89"
-								notes="15 21 22 28 34"
-								velocities="56 56 56 56 56" />
+								pitches="15 22 28 21 28 34"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="91"
-								notes="15 21 22 28 34"
-								velocities="56 56 56 56 56" />
+								pitches="15 22 28 21 28 34"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="86"
-								notes="15 21 22 28 34"
-								velocities="56 56 56 56 56" />
+								pitches="15 22 28 21 28 34"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="94"
-								notes="16 22 23 29 35"
-								velocities="56 56 56 56 56" />
+								pitches="16 23 29 22 29 35"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="91"
-								notes="15 21 22 28 34"
-								velocities="56 56 56 56 56" />
+								pitches="15 22 28 21 28 34"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="89"
-								notes="15 21 22 28 34"
-								velocities="56 56 56 56 56" />
+								pitches="15 22 28 21 28 34"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="86"
-								notes="15 21 22 28 34"
-								velocities="56 56 56 56 56" />
+								pitches="15 22 28 21 28 34"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="91"
-								notes="15 21 22 28 34"
-								velocities="56 56 56 56 56" />
+								pitches="15 22 28 21 28 34"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="94"
-								notes="16 22 23 29 35"
-								velocities="56 56 56 56 56" />
+								pitches="16 23 29 22 29 35"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="96"
-								notes="16 22 23 29 35"
-								velocities="56 56 56 56 56" />
+								pitches="16 23 29 22 29 35"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="91"
-								notes="15 21 22 28 34"
-								velocities="56 56 56 56 56" />
+								pitches="15 22 28 21 28 34"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="83"
-								notes="15 21 22 28 34"
-								velocities="56 56 56 56 56" />
+								pitches="15 22 28 21 28 34"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="80"
-								notes="14 20 21 27 33"
-								velocities="56 56 56 56 56" />
+								pitches="14 21 27 20 27 33"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="91"
-								notes="15 21 22 28 34"
-								velocities="56 56 56 56 56" />
+								pitches="15 22 28 21 28 34"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="86"
-								notes="15 21 22 28 34"
-								velocities="56 56 56 56 56" />
+								pitches="15 22 28 21 28 34"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="94"
-								notes="16 22 23 29 35"
-								velocities="56 56 56 56 56" />
+								pitches="16 23 29 22 29 35"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="89"
-								notes="15 21 22 28 34"
-								velocities="56 56 56 56 56" />
+								pitches="15 22 28 21 28 34"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="91"
-								notes="15 21 22 28 34"
-								velocities="56 56 56 56 56" />
+								pitches="15 22 28 21 28 34"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="91"
-								notes="15 21 22 28 34"
-								velocities="56 56 56 56 56" />
+								pitches="15 22 28 21 28 34"
+								velocities="56 56 56 56 56 56" />
 						</score:basicChords>
 						<score:sliders
 							pitchWheel="64 94 64"
@@ -6692,7 +6895,7 @@
 							expressionSlider="0 64 127 127 0" />
 					</score:midiChord>
 					<g
-						id="graphics1950">
+						class="graphics">
 						<line
 							x1="2585.06"
 							y1="7223.466"
@@ -6737,8 +6940,7 @@
 					</g>
 				</g>
 				<g
-					id="rest1951"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="3005.245"
 					score:msDuration="2076">
 					<text
@@ -6748,53 +6950,51 @@
 						font-family="CLicht">Ó</text>
 				</g>
 				<g
-					id="chord1952"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="3430.322">
-					<score:midiChord
-						id="midi1952">
+					<score:midiChord>
 						<score:basicChords>
 							<score:basicChord
 								msDuration="129"
 								patch="76"
-								notes="13 19 20 26 32"
-								velocities="56 56 56 56 56" />
+								pitches="13 20 26 19 26 32"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="136"
-								notes="14 20 21 27 33"
-								velocities="56 56 56 56 56" />
+								pitches="14 21 27 20 27 33"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="120"
-								notes="13 19 20 26 32"
-								velocities="56 56 56 56 56" />
+								pitches="13 20 26 19 26 32"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="118"
-								notes="12 18 19 25 31"
-								velocities="56 56 56 56 56" />
+								pitches="12 19 25 18 25 31"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="125"
-								notes="13 19 20 26 32"
-								velocities="56 56 56 56 56" />
+								pitches="13 20 26 19 26 32"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="113"
-								notes="12 18 19 25 31"
-								velocities="56 56 56 56 56" />
+								pitches="12 19 25 18 25 31"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="129"
-								notes="13 19 20 26 32"
-								velocities="56 56 56 56 56" />
+								pitches="13 20 26 19 26 32"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="122"
-								notes="13 19 20 26 32"
-								velocities="56 56 56 56 56" />
+								pitches="13 20 26 19 26 32"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="116"
-								notes="12 18 19 25 31"
-								velocities="56 56 56 56 56" />
+								pitches="12 19 25 18 25 31"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="127"
-								notes="13 19 20 26 32"
-								velocities="56 56 56 56 56" />
+								pitches="13 20 26 19 26 32"
+								velocities="56 56 56 56 56 56" />
 						</score:basicChords>
 						<score:sliders
 							pitchWheel="64 127 64"
@@ -6802,7 +7002,7 @@
 							expressionSlider="0 64 127 127 0" />
 					</score:midiChord>
 					<g
-						id="graphics1952">
+						class="graphics">
 						<line
 							x1="3446.735"
 							y1="7239.466"
@@ -6854,85 +7054,83 @@
 					</g>
 				</g>
 				<g
-					id="chord1953"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="3686.625">
-					<score:midiChord
-						id="midi1953">
+					<score:midiChord>
 						<score:basicChords>
 							<score:basicChord
 								msDuration="122"
 								patch="76"
-								notes="15 21 22 28 34"
-								velocities="56 56 56 56 56" />
+								pitches="15 22 28 21 28 34"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="119"
-								notes="14 20 21 27 33"
-								velocities="56 56 56 56 56" />
+								pitches="14 21 27 20 27 33"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="111"
-								notes="14 20 21 27 33"
-								velocities="56 56 56 56 56" />
+								pitches="14 21 27 20 27 33"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="115"
-								notes="14 20 21 27 33"
-								velocities="56 56 56 56 56" />
+								pitches="14 21 27 20 27 33"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="128"
-								notes="15 21 22 28 34"
-								velocities="56 56 56 56 56" />
+								pitches="15 22 28 21 28 34"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="119"
-								notes="14 20 21 27 33"
-								velocities="56 56 56 56 56" />
+								pitches="14 21 27 20 27 33"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="111"
-								notes="14 20 21 27 33"
-								velocities="56 56 56 56 56" />
+								pitches="14 21 27 20 27 33"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="114"
-								notes="14 20 21 27 33"
-								velocities="56 56 56 56 56" />
+								pitches="14 21 27 20 27 33"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="107"
-								notes="13 19 20 26 32"
-								velocities="56 56 56 56 56" />
+								pitches="13 20 26 19 26 32"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="123"
-								notes="15 21 22 28 34"
-								velocities="56 56 56 56 56" />
+								pitches="15 22 28 21 28 34"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="114"
-								notes="14 20 21 27 33"
-								velocities="56 56 56 56 56" />
+								pitches="14 21 27 20 27 33"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="120"
-								notes="14 20 21 27 33"
-								velocities="56 56 56 56 56" />
+								pitches="14 21 27 20 27 33"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="103"
-								notes="13 19 20 26 32"
-								velocities="56 56 56 56 56" />
+								pitches="13 20 26 19 26 32"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="110"
-								notes="14 20 21 27 33"
-								velocities="56 56 56 56 56" />
+								pitches="14 21 27 20 27 33"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="115"
-								notes="14 20 21 27 33"
-								velocities="56 56 56 56 56" />
+								pitches="14 21 27 20 27 33"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="119"
-								notes="14 20 21 27 33"
-								velocities="56 56 56 56 56" />
+								pitches="14 21 27 20 27 33"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="110"
-								notes="14 20 21 27 33"
-								velocities="56 56 56 56 56" />
+								pitches="14 21 27 20 27 33"
+								velocities="56 56 56 56 56 56" />
 							<score:basicChord
 								msDuration="116"
-								notes="14 20 21 27 33"
-								velocities="56 56 56 56 56" />
+								pitches="14 21 27 20 27 33"
+								velocities="56 56 56 56 56 56" />
 						</score:basicChords>
 						<score:sliders
 							pitchWheel="64 0 64"
@@ -6940,7 +7138,7 @@
 							expressionSlider="0 64 127 127 0" />
 					</score:midiChord>
 					<g
-						id="graphics1953">
+						class="graphics">
 						<line
 							x1="3703.037"
 							y1="7223.466"
@@ -6997,8 +7195,7 @@
 					</g>
 				</g>
 				<g
-					id="rest1954"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="4123.223"
 					score:msDuration="2076">
 					<text
@@ -7008,16 +7205,14 @@
 						font-family="CLicht">Ó</text>
 				</g>
 				<g
-					id="chord1955"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="4548.3">
-					<score:midiChord
-						id="midi1955">
+					<score:midiChord>
 						<score:basicChords>
 							<score:basicChord
 								msDuration="458"
 								patch="76"
-								notes="10 17 23"
+								pitches="10 17 23"
 								velocities="49 49 49" />
 						</score:basicChords>
 						<score:sliders
@@ -7025,7 +7220,7 @@
 							expressionSlider="0 64 127 127 0" />
 					</score:midiChord>
 					<g
-						id="graphics1955">
+						class="graphics">
 						<line
 							x1="4564.712"
 							y1="7250.121"
@@ -7081,8 +7276,7 @@
 					</g>
 				</g>
 				<g
-					id="rest1956"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="4643.35"
 					score:msDuration="407">
 					<text
@@ -7092,24 +7286,22 @@
 						font-family="CLicht">‰</text>
 				</g>
 				<g
-					id="chord1957"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="4737.274">
-					<score:midiChord
-						id="midi1957">
+					<score:midiChord>
 						<score:basicChords>
 							<score:basicChord
 								msDuration="595"
 								patch="76"
-								notes="13 19 20 26 32"
-								velocities="49 49 49 49 49" />
+								pitches="13 19 20 26 26 32"
+								velocities="49 49 49 49 49 49" />
 						</score:basicChords>
 						<score:sliders
 							pan="127"
 							expressionSlider="0 64 127 127 0" />
 					</score:midiChord>
 					<g
-						id="graphics1957">
+						class="graphics">
 						<line
 							x1="4753.687"
 							y1="7234.121"
@@ -7171,8 +7363,7 @@
 					</g>
 				</g>
 				<g
-					id="rest1958"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="4860.756"
 					score:msDuration="528">
 					<text
@@ -7182,125 +7373,123 @@
 						font-family="CLicht">‰</text>
 				</g>
 				<g
-					id="chord1959"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="4970.333">
-					<score:midiChord
-						id="midi1959">
+					<score:midiChord>
 						<score:basicChords>
 							<score:basicChord
 								msDuration="81"
 								patch="76"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="81"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="81"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="83"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="81"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="82"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="82"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="82"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="81"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="81"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="83"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="82"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="81"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="82"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="82"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="81"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="82"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="83"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="81"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="81"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="82"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="82"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="82"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="81"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="83"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="81"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="81"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="84"
-								notes="18 24 25 31 37"
-								velocities="49 49 49 49 49" />
+								pitches="18 24 25 31 31 37"
+								velocities="49 49 49 49 49 49" />
 						</score:basicChords>
 						<score:sliders
 							pitchWheel="64 35 64"
@@ -7308,7 +7497,7 @@
 							expressionSlider="0 64 127 127 0" />
 					</score:midiChord>
 					<g
-						id="graphics1959">
+						class="graphics">
 						<line
 							x1="4986.746"
 							y1="7191.466"
@@ -7348,8 +7537,7 @@
 					</g>
 				</g>
 				<g
-					id="rest1960"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="5445.375"
 					score:msDuration="1025">
 					<text
@@ -7359,8 +7547,7 @@
 						font-family="CLicht">Œ</text>
 				</g>
 				<g
-					id="rest1961"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="5817.374"
 					score:msDuration="1012">
 					<text
@@ -7370,29 +7557,27 @@
 						font-family="CLicht">Œ</text>
 				</g>
 				<g
-					id="chord1962"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="6027.396">
-					<score:midiChord
-						id="midi1962">
+					<score:midiChord>
 						<score:basicChords>
 							<score:basicChord
 								msDuration="179"
 								patch="76"
-								notes="12 18 19 25 31"
-								velocities="49 49 49 49 49" />
+								pitches="12 18 19 25 25 31"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="186"
-								notes="13 19 20 26 32"
-								velocities="49 49 49 49 49" />
+								pitches="13 19 20 26 26 32"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="173"
-								notes="12 18 19 25 31"
-								velocities="49 49 49 49 49" />
+								pitches="12 18 19 25 25 31"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="195"
-								notes="13 19 20 26 32"
-								velocities="49 49 49 49 49" />
+								pitches="13 19 20 26 26 32"
+								velocities="49 49 49 49 49 49" />
 						</score:basicChords>
 						<score:sliders
 							pitchWheel="64 10"
@@ -7400,7 +7585,7 @@
 							expressionSlider="0 64 127 127 0" />
 					</score:midiChord>
 					<g
-						id="graphics1962">
+						class="graphics">
 						<line
 							x1="6043.809"
 							y1="7234.121"
@@ -7457,105 +7642,103 @@
 					</g>
 				</g>
 				<g
-					id="chord1963"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="6179.518">
-					<score:midiChord
-						id="midi1963">
+					<score:midiChord>
 						<score:basicChords>
 							<score:basicChord
 								msDuration="82"
 								patch="76"
-								notes="17 23 24 30 36"
-								velocities="49 49 49 49 49" />
+								pitches="17 23 24 30 30 36"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="86"
-								notes="17 23 24 30 36"
-								velocities="49 49 49 49 49" />
+								pitches="17 23 24 30 30 36"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="82"
-								notes="17 23 24 30 36"
-								velocities="49 49 49 49 49" />
+								pitches="17 23 24 30 30 36"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="82"
-								notes="16 22 23 29 35"
-								velocities="49 49 49 49 49" />
+								pitches="16 22 23 29 29 35"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="79"
-								notes="16 22 23 29 35"
-								velocities="49 49 49 49 49" />
+								pitches="16 22 23 29 29 35"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="80"
-								notes="16 22 23 29 35"
-								velocities="49 49 49 49 49" />
+								pitches="16 22 23 29 29 35"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="77"
-								notes="16 22 23 29 35"
-								velocities="49 49 49 49 49" />
+								pitches="16 22 23 29 29 35"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="84"
-								notes="17 23 24 30 36"
-								velocities="49 49 49 49 49" />
+								pitches="17 23 24 30 30 36"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="80"
-								notes="16 22 23 29 35"
-								velocities="49 49 49 49 49" />
+								pitches="16 22 23 29 29 35"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="80"
-								notes="16 22 23 29 35"
-								velocities="49 49 49 49 49" />
+								pitches="16 22 23 29 29 35"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="77"
-								notes="16 22 23 29 35"
-								velocities="49 49 49 49 49" />
+								pitches="16 22 23 29 29 35"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="80"
-								notes="16 22 23 29 35"
-								velocities="49 49 49 49 49" />
+								pitches="16 22 23 29 29 35"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="84"
-								notes="17 23 24 30 36"
-								velocities="49 49 49 49 49" />
+								pitches="17 23 24 30 30 36"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="86"
-								notes="17 23 24 30 36"
-								velocities="49 49 49 49 49" />
+								pitches="17 23 24 30 30 36"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="80"
-								notes="16 22 23 29 35"
-								velocities="49 49 49 49 49" />
+								pitches="16 22 23 29 29 35"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="74"
-								notes="16 22 23 29 35"
-								velocities="49 49 49 49 49" />
+								pitches="16 22 23 29 29 35"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="71"
-								notes="15 21 22 28 34"
-								velocities="49 49 49 49 49" />
+								pitches="15 21 22 28 28 34"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="81"
-								notes="16 22 23 29 35"
-								velocities="49 49 49 49 49" />
+								pitches="16 22 23 29 29 35"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="77"
-								notes="16 22 23 29 35"
-								velocities="49 49 49 49 49" />
+								pitches="16 22 23 29 29 35"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="83"
-								notes="17 23 24 30 36"
-								velocities="49 49 49 49 49" />
+								pitches="17 23 24 30 30 36"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="80"
-								notes="16 22 23 29 35"
-								velocities="49 49 49 49 49" />
+								pitches="16 22 23 29 29 35"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="80"
-								notes="16 22 23 29 35"
-								velocities="49 49 49 49 49" />
+								pitches="16 22 23 29 29 35"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="82"
-								notes="16 22 23 29 35"
-								velocities="49 49 49 49 49" />
+								pitches="16 22 23 29 29 35"
+								velocities="49 49 49 49 49 49" />
 						</score:basicChords>
 						<score:sliders
 							pitchWheel="64 94 64"
@@ -7563,7 +7746,7 @@
 							expressionSlider="0 64 127 127 0" />
 					</score:midiChord>
 					<g
-						id="graphics1963">
+						class="graphics">
 						<line
 							x1="6195.93"
 							y1="7207.466"
@@ -7613,8 +7796,7 @@
 					</g>
 				</g>
 				<g
-					id="rest1964"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="6568.59"
 					score:msDuration="1644">
 					<text
@@ -7624,53 +7806,51 @@
 						font-family="CLicht">Ó</text>
 				</g>
 				<g
-					id="chord1965"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="6904.013">
-					<score:midiChord
-						id="midi1965">
+					<score:midiChord>
 						<score:basicChords>
 							<score:basicChord
 								msDuration="115"
 								patch="76"
-								notes="14 20 21 27 33"
-								velocities="49 49 49 49 49" />
+								pitches="14 20 21 27 27 33"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="120"
-								notes="15 21 22 28 34"
-								velocities="49 49 49 49 49" />
+								pitches="15 21 22 28 28 34"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="107"
-								notes="14 20 21 27 33"
-								velocities="49 49 49 49 49" />
+								pitches="14 20 21 27 27 33"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="105"
-								notes="13 19 20 26 32"
-								velocities="49 49 49 49 49" />
+								pitches="13 19 20 26 26 32"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="111"
-								notes="14 20 21 27 33"
-								velocities="49 49 49 49 49" />
+								pitches="14 20 21 27 27 33"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="100"
-								notes="13 19 20 26 32"
-								velocities="49 49 49 49 49" />
+								pitches="13 19 20 26 26 32"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="115"
-								notes="14 20 21 27 33"
-								velocities="49 49 49 49 49" />
+								pitches="14 20 21 27 27 33"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="108"
-								notes="14 20 21 27 33"
-								velocities="49 49 49 49 49" />
+								pitches="14 20 21 27 27 33"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="104"
-								notes="13 19 20 26 32"
-								velocities="49 49 49 49 49" />
+								pitches="13 19 20 26 26 32"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="114"
-								notes="14 20 21 27 33"
-								velocities="49 49 49 49 49" />
+								pitches="14 20 21 27 27 33"
+								velocities="49 49 49 49 49 49" />
 						</score:basicChords>
 						<score:sliders
 							pitchWheel="64 127 64"
@@ -7678,7 +7858,7 @@
 							expressionSlider="0 64 127 127 0" />
 					</score:midiChord>
 					<g
-						id="graphics1965">
+						class="graphics">
 						<line
 							x1="6920.426"
 							y1="7223.466"
@@ -7735,85 +7915,83 @@
 					</g>
 				</g>
 				<g
-					id="chord1966"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="7132.091">
-					<score:midiChord
-						id="midi1966">
+					<score:midiChord>
 						<score:basicChords>
 							<score:basicChord
 								msDuration="108"
 								patch="76"
-								notes="16 22 23 29 35"
-								velocities="49 49 49 49 49" />
+								pitches="16 22 23 29 29 35"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="107"
-								notes="15 21 22 28 34"
-								velocities="49 49 49 49 49" />
+								pitches="15 21 22 28 28 34"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="98"
-								notes="15 21 22 28 34"
-								velocities="49 49 49 49 49" />
+								pitches="15 21 22 28 28 34"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="102"
-								notes="15 21 22 28 34"
-								velocities="49 49 49 49 49" />
+								pitches="15 21 22 28 28 34"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="114"
-								notes="16 22 23 29 35"
-								velocities="49 49 49 49 49" />
+								pitches="16 22 23 29 29 35"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="106"
-								notes="15 21 22 28 34"
-								velocities="49 49 49 49 49" />
+								pitches="15 21 22 28 28 34"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="98"
-								notes="15 21 22 28 34"
-								velocities="49 49 49 49 49" />
+								pitches="15 21 22 28 28 34"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="102"
-								notes="15 21 22 28 34"
-								velocities="49 49 49 49 49" />
+								pitches="15 21 22 28 28 34"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="96"
-								notes="14 20 21 27 33"
-								velocities="49 49 49 49 49" />
+								pitches="14 20 21 27 27 33"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="109"
-								notes="16 22 23 29 35"
-								velocities="49 49 49 49 49" />
+								pitches="16 22 23 29 29 35"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="102"
-								notes="15 21 22 28 34"
-								velocities="49 49 49 49 49" />
+								pitches="15 21 22 28 28 34"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="106"
-								notes="15 21 22 28 34"
-								velocities="49 49 49 49 49" />
+								pitches="15 21 22 28 28 34"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="91"
-								notes="14 20 21 27 33"
-								velocities="49 49 49 49 49" />
+								pitches="14 20 21 27 27 33"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="99"
-								notes="15 21 22 28 34"
-								velocities="49 49 49 49 49" />
+								pitches="15 21 22 28 28 34"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="102"
-								notes="15 21 22 28 34"
-								velocities="49 49 49 49 49" />
+								pitches="15 21 22 28 28 34"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="107"
-								notes="15 21 22 28 34"
-								velocities="49 49 49 49 49" />
+								pitches="15 21 22 28 28 34"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="98"
-								notes="15 21 22 28 34"
-								velocities="49 49 49 49 49" />
+								pitches="15 21 22 28 28 34"
+								velocities="49 49 49 49 49 49" />
 							<score:basicChord
 								msDuration="103"
-								notes="15 21 22 28 34"
-								velocities="49 49 49 49 49" />
+								pitches="15 21 22 28 28 34"
+								velocities="49 49 49 49 49 49" />
 						</score:basicChords>
 						<score:sliders
 							pitchWheel="64 0 64"
@@ -7821,7 +7999,7 @@
 							expressionSlider="0 64 127 127 0" />
 					</score:midiChord>
 					<g
-						id="graphics1966">
+						class="graphics">
 						<line
 							x1="7148.504"
 							y1="7223.466"
@@ -7866,8 +8044,7 @@
 					</g>
 				</g>
 				<g
-					id="rest1967"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="7515.611"
 					score:msDuration="715">
 					<text
@@ -7879,13 +8056,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys3_staff4"
-			score:object="staff"
 			score:staffName="F 4"
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1968">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="7658.667"
@@ -7923,8 +8100,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice1969"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="3">
 				<use
 					xlink:href="#bassClef2x8"
@@ -7938,8 +8114,7 @@
 					font-size="80"
 					font-family="Times New Roman">F 4</text>
 				<g
-					id="rest1970"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="599.824"
 					score:msDuration="1136">
 					<text
@@ -7949,17 +8124,15 @@
 						font-family="CLicht">Œ</text>
 				</g>
 				<g
-					id="chord1971"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="835.5809">
 					<score:midiChord
-						id="midi1971"
 						pitchWheelDeviation="20">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="18280"
 								patch="60"
-								notes="11 18 22"
+								pitches="11 18 22"
 								velocities="60 60 60" />
 						</score:basicChords>
 						<score:sliders
@@ -7967,7 +8140,7 @@
 							expressionSlider="0 127 127 100 100 80 0" />
 					</score:midiChord>
 					<g
-						id="graphics1971">
+						class="graphics">
 						<text
 							x="817.3016"
 							y="7770.667"
@@ -8044,8 +8217,7 @@
 					</g>
 				</g>
 				<g
-					id="rest1972"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="4869.981"
 					score:msDuration="3522">
 					<text
@@ -8055,17 +8227,15 @@
 						font-family="CLicht">∑</text>
 				</g>
 				<g
-					id="chord1973"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="5608.91">
 					<score:midiChord
-						id="midi1973"
 						pitchWheelDeviation="20">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="17002"
 								patch="60"
-								notes="11 18 22"
+								pitches="11 18 22"
 								velocities="56 56 56" />
 						</score:basicChords>
 						<score:sliders
@@ -8073,7 +8243,7 @@
 							expressionSlider="0 127 127 100 100 80 0" />
 					</score:midiChord>
 					<g
-						id="graphics1973">
+						class="graphics">
 						<text
 							x="5590.631"
 							y="7770.667"
@@ -8147,13 +8317,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys3_staff5"
-			score:object="staff"
 			score:staffName="R2M"
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1974">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="8010.667"
@@ -8191,8 +8361,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice1975"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="4">
 				<use
 					xlink:href="#trebleClef"
@@ -8206,22 +8375,20 @@
 					font-size="80"
 					font-family="Times New Roman">R2M</text>
 				<g
-					id="chord1976"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="599.824">
 					<score:midiChord
-						id="midi1976"
 						hasChordOff="0">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="15797"
 								hasChordOff="0"
-								notes="67"
+								pitches="67"
 								velocities="0" />
 						</score:basicChords>
 					</score:midiChord>
 					<g
-						id="graphics1976">
+						class="graphics">
 						<text
 							x="581.5447"
 							y="8106.667"
@@ -8238,8 +8405,7 @@
 					</g>
 				</g>
 				<g
-					id="rest1977"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="4123.223"
 					score:msDuration="2076">
 					<text
@@ -8249,22 +8415,20 @@
 						font-family="CLicht">Ó</text>
 				</g>
 				<g
-					id="chord1978"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="4548.3">
 					<score:midiChord
-						id="midi1978"
 						hasChordOff="0">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="13485"
 								hasChordOff="0"
-								notes="67"
+								pitches="67"
 								velocities="0" />
 						</score:basicChords>
 					</score:midiChord>
 					<g
-						id="graphics1978">
+						class="graphics">
 						<text
 							x="4530.021"
 							y="8106.667"
@@ -8281,8 +8445,7 @@
 					</g>
 				</g>
 				<g
-					id="rest1979"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="7515.611"
 					score:msDuration="715">
 					<text
@@ -8294,13 +8457,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys3_staff6"
-			score:object="staff"
 			score:staffName="Clyt."
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1980">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="8298.666"
@@ -8338,8 +8501,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice1981"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="5">
 				<use
 					xlink:href="#trebleClef"
@@ -8353,8 +8515,7 @@
 					font-size="80"
 					font-family="Times New Roman">Clyt.</text>
 				<g
-					id="rest1982"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="591.824"
 					score:msDuration="8243">
 					<text
@@ -8364,8 +8525,7 @@
 						font-family="CLicht">∑</text>
 				</g>
 				<g
-					id="rest1983"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="2446.402"
 					score:msDuration="14932">
 					<text
@@ -8375,8 +8535,7 @@
 						font-family="CLicht">∑</text>
 				</g>
 				<g
-					id="rest1984"
-					score:object="rest"
+					class="rest"
 					score:alignmentX="5809.374"
 					score:msDuration="8898">
 					<text
@@ -8388,13 +8547,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys3_staff7"
-			score:object="staff"
 			score:staffName="W 1"
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1985">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="8554.666"
@@ -8432,8 +8591,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice1986"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="6">
 				<use
 					xlink:href="#bassClef8"
@@ -8447,18 +8605,15 @@
 					font-size="80"
 					font-family="Times New Roman">W 1</text>
 				<g
-					id="chord1987"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="599.824">
 					<score:midiChord
-						id="midi1987"
-						repeat="1"
 						pitchWheelDeviation="8">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="6883"
 								patch="122"
-								notes="39"
+								pitches="39"
 								velocities="51" />
 						</score:basicChords>
 						<score:sliders
@@ -8467,7 +8622,7 @@
 							expressionSlider="0 25 64 25 102 25 0" />
 					</score:midiChord>
 					<g
-						id="graphics1987">
+						class="graphics">
 						<text
 							x="581.5447"
 							y="8618.666"
@@ -8481,18 +8636,15 @@
 					</g>
 				</g>
 				<g
-					id="chord1988"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="2028.271">
 					<score:midiChord
-						id="midi1988"
-						repeat="1"
 						pitchWheelDeviation="8">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="8393"
 								patch="122"
-								notes="44"
+								pitches="44"
 								velocities="43" />
 						</score:basicChords>
 						<score:sliders
@@ -8501,7 +8653,7 @@
 							expressionSlider="0 64 127 0" />
 					</score:midiChord>
 					<g
-						id="graphics1988">
+						class="graphics">
 						<text
 							x="2009.991"
 							y="8570.666"
@@ -8528,18 +8680,15 @@
 					</g>
 				</g>
 				<g
-					id="chord1989"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="4009.338">
 					<score:midiChord
-						id="midi1989"
-						repeat="1"
 						pitchWheelDeviation="8">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="6883"
 								patch="122"
-								notes="40"
+								pitches="40"
 								velocities="51" />
 						</score:basicChords>
 						<score:sliders
@@ -8548,7 +8697,7 @@
 							expressionSlider="0 25 64 25 102 25 0" />
 					</score:midiChord>
 					<g
-						id="graphics1989">
+						class="graphics">
 						<text
 							x="3991.059"
 							y="8602.666"
@@ -8562,18 +8711,15 @@
 					</g>
 				</g>
 				<g
-					id="chord1990"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="5447.243">
 					<score:midiChord
-						id="midi1990"
-						repeat="1"
 						pitchWheelDeviation="8">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="6235"
 								patch="122"
-								notes="40"
+								pitches="40"
 								velocities="55" />
 						</score:basicChords>
 						<score:sliders
@@ -8582,7 +8728,7 @@
 							expressionSlider="0 81 81 102 38 38 25 127 81 64 0" />
 					</score:midiChord>
 					<g
-						id="graphics1990">
+						class="graphics">
 						<text
 							x="5420.157"
 							y="8602.666"
@@ -8604,18 +8750,15 @@
 					</g>
 				</g>
 				<g
-					id="chord1991"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="6900.485">
 					<score:midiChord
-						id="midi1991"
-						repeat="1"
 						pitchWheelDeviation="8">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="7600"
 								patch="122"
-								notes="46"
+								pitches="46"
 								velocities="47" />
 						</score:basicChords>
 						<score:sliders
@@ -8624,7 +8767,7 @@
 							expressionSlider="0 127 127 38 64 38 0" />
 					</score:midiChord>
 					<g
-						id="graphics1991">
+						class="graphics">
 						<text
 							x="6882.206"
 							y="8554.666"
@@ -8653,13 +8796,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys3_staff8"
-			score:object="staff"
 			score:staffName="W 2"
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1992">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="8842.666"
@@ -8697,8 +8840,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice1993"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="7">
 				<use
 					xlink:href="#bassClef8"
@@ -8712,18 +8854,15 @@
 					font-size="80"
 					font-family="Times New Roman">W 2</text>
 				<g
-					id="chord1994"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="599.824">
 					<score:midiChord
-						id="midi1994"
-						repeat="1"
 						pitchWheelDeviation="8">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="8243"
 								patch="122"
-								notes="36"
+								pitches="36"
 								velocities="40" />
 						</score:basicChords>
 						<score:sliders
@@ -8732,7 +8871,7 @@
 							expressionSlider="0 64 127 0" />
 					</score:midiChord>
 					<g
-						id="graphics1994">
+						class="graphics">
 						<text
 							x="581.5447"
 							y="8922.666"
@@ -8746,18 +8885,15 @@
 					</g>
 				</g>
 				<g
-					id="chord1995"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="2454.402">
 					<score:midiChord
-						id="midi1995"
-						repeat="1"
 						pitchWheelDeviation="8">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="7466"
 								patch="122"
-								notes="36"
+								pitches="36"
 								velocities="43" />
 						</score:basicChords>
 						<score:sliders
@@ -8766,7 +8902,7 @@
 							expressionSlider="0 64 127 0" />
 					</score:midiChord>
 					<g
-						id="graphics1995">
+						class="graphics">
 						<text
 							x="2436.123"
 							y="8922.666"
@@ -8780,18 +8916,15 @@
 					</g>
 				</g>
 				<g
-					id="chord1996"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="4099.2">
 					<score:midiChord
-						id="midi1996"
-						repeat="1"
 						pitchWheelDeviation="8">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="7466"
 								patch="122"
-								notes="36"
+								pitches="36"
 								velocities="43" />
 						</score:basicChords>
 						<score:sliders
@@ -8800,7 +8933,7 @@
 							expressionSlider="0 64 127 0" />
 					</score:midiChord>
 					<g
-						id="graphics1996">
+						class="graphics">
 						<text
 							x="4080.92"
 							y="8922.666"
@@ -8809,18 +8942,15 @@
 					</g>
 				</g>
 				<g
-					id="chord1997"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="5817.374">
 					<score:midiChord
-						id="midi1997"
-						repeat="1"
 						pitchWheelDeviation="8">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="7467"
 								patch="122"
-								notes="36"
+								pitches="36"
 								velocities="43" />
 						</score:basicChords>
 						<score:sliders
@@ -8829,7 +8959,7 @@
 							expressionSlider="0 64 127 0" />
 					</score:midiChord>
 					<g
-						id="graphics1997">
+						class="graphics">
 						<text
 							x="5799.094"
 							y="8922.666"
@@ -8838,18 +8968,15 @@
 					</g>
 				</g>
 				<g
-					id="chord1998"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="7367.018">
 					<score:midiChord
-						id="midi1998"
-						repeat="1"
 						pitchWheelDeviation="8">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="7466"
 								patch="122"
-								notes="36"
+								pitches="36"
 								velocities="43" />
 						</score:basicChords>
 						<score:sliders
@@ -8858,7 +8985,7 @@
 							expressionSlider="0 64 127 0" />
 					</score:midiChord>
 					<g
-						id="graphics1998">
+						class="graphics">
 						<text
 							x="7348.739"
 							y="8922.666"
@@ -8877,13 +9004,13 @@
 			</g>
 		</g>
 		<g
+			class="outputStaff"
 			id="p2_sys3_staff9"
-			score:object="staff"
 			score:staffName="W 3"
 			score:stafflines="5"
 			score:gap="32">
 			<g
-				id="stafflines1999">
+				class="stafflines">
 				<line
 					x1="400"
 					y1="9130.666"
@@ -8921,8 +9048,7 @@
 					stroke-width="4" />
 			</g>
 			<g
-				id="voice2000"
-				score:object="voice"
+				class="outputVoice"
 				score:midiChannel="8">
 				<use
 					xlink:href="#bassClef2x8"
@@ -8936,9 +9062,8 @@
 					font-size="80"
 					font-family="Times New Roman">W 3</text>
 				<g
-					id="cautionaryChord2001">
-					<g
-						id="graphics2001">
+					class="cautionaryChord">
+					<g>
 						<text
 							x="585.0939"
 							y="9354.666"
@@ -9001,18 +9126,15 @@
 					</g>
 				</g>
 				<g
-					id="chord2002"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="1262.268">
 					<score:midiChord
-						id="midi2002"
-						repeat="1"
 						pitchWheelDeviation="8">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="4692"
 								patch="122"
-								notes="7"
+								pitches="7"
 								velocities="64" />
 						</score:basicChords>
 						<score:sliders
@@ -9021,7 +9143,7 @@
 							expressionSlider="0 38 64 38 127 127 64 0" />
 					</score:midiChord>
 					<g
-						id="graphics2002">
+						class="graphics">
 						<text
 							x="1235.182"
 							y="9370.666"
@@ -9056,18 +9178,15 @@
 					</g>
 				</g>
 				<g
-					id="chord2003"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="2236.01">
 					<score:midiChord
-						id="midi2003"
-						repeat="1"
 						pitchWheelDeviation="8">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="6315"
 								patch="122"
-								notes="12"
+								pitches="12"
 								velocities="51" />
 						</score:basicChords>
 						<score:sliders
@@ -9076,7 +9195,7 @@
 							expressionSlider="0 25 64 25 102 25 0" />
 					</score:midiChord>
 					<g
-						id="graphics2003">
+						class="graphics">
 						<text
 							x="2208.925"
 							y="9322.666"
@@ -9112,18 +9231,15 @@
 					</g>
 				</g>
 				<g
-					id="chord2004"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="3785.825">
 					<score:midiChord
-						id="midi2004"
-						repeat="1"
 						pitchWheelDeviation="8">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="5720"
 								patch="122"
-								notes="10"
+								pitches="10"
 								velocities="55" />
 						</score:basicChords>
 						<score:sliders
@@ -9132,7 +9248,7 @@
 							expressionSlider="0 81 81 102 38 38 25 127 81 64 0" />
 					</score:midiChord>
 					<g
-						id="graphics2004">
+						class="graphics">
 						<text
 							x="3758.74"
 							y="9354.666"
@@ -9172,18 +9288,15 @@
 					</g>
 				</g>
 				<g
-					id="chord2005"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="4982.37">
 					<score:midiChord
-						id="midi2005"
-						repeat="1"
 						pitchWheelDeviation="8">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="6973"
 								patch="122"
-								notes="12"
+								pitches="12"
 								velocities="47" />
 						</score:basicChords>
 						<score:sliders
@@ -9192,7 +9305,7 @@
 							expressionSlider="0 127 127 38 64 38 0" />
 					</score:midiChord>
 					<g
-						id="graphics2005">
+						class="graphics">
 						<text
 							x="4964.091"
 							y="9322.666"
@@ -9228,18 +9341,15 @@
 					</g>
 				</g>
 				<g
-					id="chord2006"
-					score:object="chord"
+					class="outputChord"
 					score:alignmentX="6588.771">
 					<score:midiChord
-						id="midi2006"
-						repeat="1"
 						pitchWheelDeviation="8">
 						<score:basicChords>
 							<score:basicChord
 								msDuration="5181"
 								patch="122"
-								notes="7"
+								pitches="7"
 								velocities="59" />
 						</score:basicChords>
 						<score:sliders
@@ -9248,7 +9358,7 @@
 							expressionSlider="0 25 102 25 64 25 0" />
 					</score:midiChord>
 					<g
-						id="graphics2006">
+						class="graphics">
 						<text
 							x="6561.686"
 							y="9370.666"
@@ -9285,329 +9395,467 @@
 			</g>
 		</g>
 		<g
-			id="barlines2007">
-			<line
-				x1="503.2"
-				y1="6666.667"
-				x2="503.2"
-				y2="6794.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="2326.514"
-				y1="6666.667"
-				x2="2326.514"
-				y2="6794.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5689.485"
-				y1="6666.667"
-				x2="5689.485"
-				y2="6794.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7679.997"
-				y1="6664.667"
-				x2="7679.997"
-				y2="6796.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="6794.667"
-				x2="503.2"
-				y2="6922.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="2326.514"
-				y1="6794.667"
-				x2="2326.514"
-				y2="6922.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5689.485"
-				y1="6794.667"
-				x2="5689.485"
-				y2="6922.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7679.997"
-				y1="6794.667"
-				x2="7679.997"
-				y2="6922.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="6922.667"
-				x2="503.2"
-				y2="7050.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="2326.514"
-				y1="6922.667"
-				x2="2326.514"
-				y2="7050.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5689.485"
-				y1="6922.667"
-				x2="5689.485"
-				y2="7050.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7679.997"
-				y1="6920.667"
-				x2="7679.997"
-				y2="7052.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="7050.667"
-				x2="503.2"
-				y2="7274.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="2326.514"
-				y1="7050.667"
-				x2="2326.514"
-				y2="7274.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5689.485"
-				y1="7050.667"
-				x2="5689.485"
-				y2="7274.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7679.997"
-				y1="7050.667"
-				x2="7679.997"
-				y2="7274.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="7274.667"
-				x2="503.2"
-				y2="7402.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5689.485"
-				y1="7274.667"
-				x2="5689.485"
-				y2="7402.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7679.997"
-				y1="7272.667"
-				x2="7679.997"
-				y2="7404.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="7402.667"
-				x2="503.2"
-				y2="7658.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="2326.514"
-				y1="7482.667"
-				x2="2326.514"
-				y2="7658.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5689.485"
-				y1="7402.667"
-				x2="5689.485"
-				y2="7658.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7679.997"
-				y1="7402.667"
-				x2="7679.997"
-				y2="7658.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="7658.667"
-				x2="503.2"
-				y2="7786.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="7786.667"
-				x2="503.2"
-				y2="8010.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="8010.667"
-				x2="503.2"
-				y2="8138.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7679.997"
-				y1="8008.667"
-				x2="7679.997"
-				y2="8140.667"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="8138.667"
-				x2="503.2"
-				y2="8298.666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="8298.666"
-				x2="503.2"
-				y2="8426.666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="2326.514"
-				y1="8298.666"
-				x2="2326.514"
-				y2="8426.666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5689.485"
-				y1="8298.666"
-				x2="5689.485"
-				y2="8426.666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7679.997"
-				y1="8296.666"
-				x2="7679.997"
-				y2="8428.666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="8426.666"
-				x2="503.2"
-				y2="8554.666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="8554.666"
-				x2="503.2"
-				y2="8682.666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="8682.666"
-				x2="503.2"
-				y2="8842.666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="2326.514"
-				y1="8682.666"
-				x2="2326.514"
-				y2="8842.666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5689.485"
-				y1="8682.666"
-				x2="5689.485"
-				y2="8842.666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7679.997"
-				y1="8682.666"
-				x2="7679.997"
-				y2="8842.666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="8842.666"
-				x2="503.2"
-				y2="8970.666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="2326.514"
-				y1="8842.666"
-				x2="2326.514"
-				y2="8970.666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5689.485"
-				y1="8842.666"
-				x2="5689.485"
-				y2="8970.666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="503.2"
-				y1="8970.666"
-				x2="503.2"
-				y2="9130.666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="2326.514"
-				y1="8970.666"
-				x2="2326.514"
-				y2="9130.666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="5689.485"
-				y1="8970.666"
-				x2="5689.485"
-				y2="9130.666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7679.997"
-				y1="8970.666"
-				x2="7679.997"
-				y2="9130.666"
-				stroke="#000000"
-				stroke-width="8" />
-			<line
-				x1="7679.997"
-				y1="9128.666"
-				x2="7679.997"
-				y2="9260.666"
-				stroke="#000000"
-				stroke-width="8" />
+			class="barlines">
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="6666.667"
+					x2="503.2"
+					y2="6794.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="2326.514"
+					y1="6666.667"
+					x2="2326.514"
+					y2="6794.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5689.485"
+					y1="6666.667"
+					x2="5689.485"
+					y2="6794.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7679.997"
+					y1="6664.667"
+					x2="7679.997"
+					y2="6796.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="6794.667"
+					x2="503.2"
+					y2="6922.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="2326.514"
+					y1="6794.667"
+					x2="2326.514"
+					y2="6922.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5689.485"
+					y1="6794.667"
+					x2="5689.485"
+					y2="6922.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7679.997"
+					y1="6794.667"
+					x2="7679.997"
+					y2="6922.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="6922.667"
+					x2="503.2"
+					y2="7050.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="2326.514"
+					y1="6922.667"
+					x2="2326.514"
+					y2="7050.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5689.485"
+					y1="6922.667"
+					x2="5689.485"
+					y2="7050.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7679.997"
+					y1="6920.667"
+					x2="7679.997"
+					y2="7052.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="7050.667"
+					x2="503.2"
+					y2="7274.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="2326.514"
+					y1="7050.667"
+					x2="2326.514"
+					y2="7274.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5689.485"
+					y1="7050.667"
+					x2="5689.485"
+					y2="7274.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7679.997"
+					y1="7050.667"
+					x2="7679.997"
+					y2="7274.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="7274.667"
+					x2="503.2"
+					y2="7402.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5689.485"
+					y1="7274.667"
+					x2="5689.485"
+					y2="7402.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7679.997"
+					y1="7272.667"
+					x2="7679.997"
+					y2="7404.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="7402.667"
+					x2="503.2"
+					y2="7658.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="2326.514"
+					y1="7482.667"
+					x2="2326.514"
+					y2="7658.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5689.485"
+					y1="7402.667"
+					x2="5689.485"
+					y2="7658.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7679.997"
+					y1="7402.667"
+					x2="7679.997"
+					y2="7658.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="7658.667"
+					x2="503.2"
+					y2="7786.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="7786.667"
+					x2="503.2"
+					y2="8010.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="8010.667"
+					x2="503.2"
+					y2="8138.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7679.997"
+					y1="8008.667"
+					x2="7679.997"
+					y2="8140.667"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="8138.667"
+					x2="503.2"
+					y2="8298.666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="8298.666"
+					x2="503.2"
+					y2="8426.666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="2326.514"
+					y1="8298.666"
+					x2="2326.514"
+					y2="8426.666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5689.485"
+					y1="8298.666"
+					x2="5689.485"
+					y2="8426.666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7679.997"
+					y1="8296.666"
+					x2="7679.997"
+					y2="8428.666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="8426.666"
+					x2="503.2"
+					y2="8554.666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="8554.666"
+					x2="503.2"
+					y2="8682.666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="8682.666"
+					x2="503.2"
+					y2="8842.666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="2326.514"
+					y1="8682.666"
+					x2="2326.514"
+					y2="8842.666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5689.485"
+					y1="8682.666"
+					x2="5689.485"
+					y2="8842.666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7679.997"
+					y1="8682.666"
+					x2="7679.997"
+					y2="8842.666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="8842.666"
+					x2="503.2"
+					y2="8970.666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="2326.514"
+					y1="8842.666"
+					x2="2326.514"
+					y2="8970.666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5689.485"
+					y1="8842.666"
+					x2="5689.485"
+					y2="8970.666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="503.2"
+					y1="8970.666"
+					x2="503.2"
+					y2="9130.666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="2326.514"
+					y1="8970.666"
+					x2="2326.514"
+					y2="9130.666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="5689.485"
+					y1="8970.666"
+					x2="5689.485"
+					y2="9130.666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7679.997"
+					y1="8970.666"
+					x2="7679.997"
+					y2="9130.666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
+			<g
+				class="barline">
+				<line
+					x1="7679.997"
+					y1="9128.666"
+					x2="7679.997"
+					y2="9260.666"
+					stroke="#000000"
+					stroke-width="8" />
+			</g>
 		</g>
 	</g>
 </svg>

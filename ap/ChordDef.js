@@ -35,6 +35,13 @@ _AP.chordDef = (function ()
     	return numArray;
     },
 
+	// the following outputChord attributes are always defined:
+    //  repeat (false by default)
+    //  hasChordOff (true by default)
+    // the following attributes can be undefined
+    //  volume (undefined means don't change the volume)
+    //  pitchWheelDeviation (default is 2, undefined means don't change the pitchWheelDeviation)
+    //  minBasicChordMsDuration (default is 1 millisecond)
     chordAttributes = function (chordDefNode)
     {
     	var a,
@@ -53,9 +60,6 @@ _AP.chordDef = (function ()
 
     		switch(a.name)
     		{
-    			case "id":
-    				attributes.id = a.value; // a string
-    				break;
     			case "volume":
     				attributes.volume = parseInt(a.value, 10);
     				break;
@@ -68,7 +72,6 @@ _AP.chordDef = (function ()
     				{
     					attributes.repeat = true;
     				}
-    				// if "repeat" does not occur, attributes.repeat will be false
     				break;
     			case "hasChordOff":
     				if(a.value === "0")
@@ -88,17 +91,11 @@ _AP.chordDef = (function ()
     				attributes.minBasicChordMsDuration = parseInt(a.value, 10);
     				break;
     			default:
-    				throw (">>>>>>>>>> Illegal midiChord attribute  <<<<<<<<<<");
+    				if(a.name !== "class") // the class attribute exists, but is not saved here
+    				{
+    					throw (">>>>>>>>>> Illegal midiChord attribute  <<<<<<<<<<");
+    				}
     		}
-    	}
-    	// the following attributes can be undefined
-    	//  volume
-    	//  hasChordOff (true by default)
-    	//  pitchWheelDeviation (default is 2 or unchanged)
-    	//  minBasicChordMsDuration (default is 1 millisecond)
-    	if(attributes.id === undefined)
-    	{
-    		throw ("Error: chords must have an id!");
     	}
 
     	return attributes;
@@ -139,9 +136,9 @@ _AP.chordDef = (function ()
     					}
     					// is true if undefined
     					break;
-    				case "notes":
-    					basicChord.notes = [];
-    					basicChord.notes = numberArray(attr.value);
+    				case "pitches":
+    					basicChord.pitches = [];
+    					basicChord.pitches = numberArray(attr.value);
     					break;
     				case "velocities":
     					basicChord.velocities = [];
@@ -157,13 +154,13 @@ _AP.chordDef = (function ()
     		//    patch;
     		//    hasChordOff -- if undefined, is true
     		if(basicChord.msDuration === undefined
-            || basicChord.notes === undefined
+            || basicChord.pitches === undefined
             || basicChord.velocities === undefined)
     		{
     			throw ("Error: all basic chords must have msDuration, notes and velocities");
     		}
 
-    		if(basicChord.notes.length !== basicChord.velocities.length)
+    		if(basicChord.pitches.length !== basicChord.velocities.length)
     		{
     			throw ("Error: basic chord must have the same number of notes and velocities");
     		}
@@ -248,7 +245,7 @@ _AP.chordDef = (function ()
     //       basicChord.bank (optional int)
     //       basicChord.patch (optional int -- compulsory, if bank is defined)
     //       basicChord.hasChordOff (optional boolean -- true if undefined)
-    //       basicChord.notes[] (compulsory int array)
+    //       basicChord.pitches[] (compulsory int array)
     //       basicChord.velocities (compulsory int array -- notes and velocities have the same length)
     //
     // chord.sliders (which are all either undefined, or numberArrays) can be:
