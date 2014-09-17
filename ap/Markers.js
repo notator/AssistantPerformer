@@ -14,7 +14,7 @@
  *  
  */
 
-/*jslint bitwise: false, nomen: false, plusplus: true, white: true */
+/*jslint bitwise: false, nomen: true, plusplus: true, white: true */
 
 _AP.namespace('_AP.markers');
 
@@ -379,61 +379,83 @@ _AP.markers = (function ()
         // It is ordered according to each timeObject msPosition.
         // trackIsOn is a callback which returns the on/of status of its trackIndex argument.
         // If trackIsOn is null, then all tracks are on by default.
-        setTimeObjects = function (system, trackIsOn)
-        {
-            var timeObject;
+		setTimeObjects = function (system, trackIsOn)
+		{
+			var timeObject,
+				trackTimeObjectIndices = [];
 
-            function findFollowingTimeObject(system, msPosition, trackIsOn)
-            {
-                var nextTimeObject, staff, voice, i, j, k,
-                        voiceTimeObjects = [],
-                        trackIndex = 0;
+			function initTrackTimeObjectIndices(system)
+			{
+				var i, j, staff;
+				for(i = 0; i < system.staves.length; ++i)
+				{
+					staff = system.staves[i];
+					for(j = 0; j < staff.voices.length; ++j)
+					{
+						trackTimeObjectIndices.push(0);
+					}
+				}
+			}
 
-                for (i = 0; i < system.staves.length; ++i)
-                {
-                    staff = system.staves[i];
-                    for (j = 0; j < staff.voices.length; ++j)
-                    {
-                        if (trackIsOn === null || trackIsOn(trackIndex))
-                        {
-                            voice = staff.voices[j];
-                            for (k = 0; k < voice.timeObjects.length; ++k)
-                            {
-                                if (voice.timeObjects[k].msPosition > msPosition)
-                                {
-                                    voiceTimeObjects.push(voice.timeObjects[k]);
-                                    break;
-                                }
-                            }
-                        }
-                        ++trackIndex;
-                    }
-                }
-                // voiceTimeObjects now contains the next timeObject in each active voice.
-                // Now find the one having the minimum msPosition.
-                nextTimeObject = voiceTimeObjects[0];
-                if (voiceTimeObjects.length > 1)
-                {
-                    for (i = 1; i < voiceTimeObjects.length; ++i)
-                    {
-                        if (voiceTimeObjects[i].msPosition < nextTimeObject.msPosition)
-                        {
-                            nextTimeObject = voiceTimeObjects[i];
-                        }
-                    }
-                }
-                return nextTimeObject;
-            }
+			function findNextTimeObject(system, trackIsOn)
+		    {
+				var nextTimeObject, staff, track, i, j,
+					trackIndex = 0,
+					minPos = Number.MAX_VALUE;
 
-            timeObjects = [];
-            timeObject = {};
-            timeObject.msPosition = -1;
-            while (timeObject.msPosition < system.endMsPosition)
-            {
-                timeObject = findFollowingTimeObject(system, timeObject.msPosition, trackIsOn);
-                timeObjects.push(timeObject);
-            }
-        },
+				for(i = 0; i < system.staves.length; ++i)
+				{
+					staff = system.staves[i];
+					for(j = 0; j < staff.voices.length; ++j)
+					{
+						if(trackIsOn === null || trackIsOn(trackIndex))
+						{
+							track = staff.voices[j];
+							if(track.timeObjects[trackTimeObjectIndices[trackIndex]].msPosition < minPos)
+							{
+								nextTimeObject = track.timeObjects[trackTimeObjectIndices[trackIndex]];
+								minPos = nextTimeObject.msPosition;
+							}
+						}
+						++trackIndex;
+					}
+				}
+
+				// nextTimeObject is the earliest in any voice (=track)
+				// Now increment the indices for all the tracks currently at this position.
+				trackIndex = 0;
+				for(i = 0; i < system.staves.length; ++i)
+				{
+					staff = system.staves[i];
+					for(j = 0; j < staff.voices.length; ++j)
+					{
+						if(trackIsOn === null || trackIsOn(trackIndex))
+						{
+							track = staff.voices[j];
+							if(track.timeObjects[trackTimeObjectIndices[trackIndex]].msPosition === minPos)
+							{
+								trackTimeObjectIndices[trackIndex]++;
+							}
+						}
+						++trackIndex;
+					}
+				}
+
+		        return nextTimeObject;
+		    }
+
+		    timeObjects = [];
+		    timeObject = {};
+		    timeObject.msPosition = -1;
+
+		    initTrackTimeObjectIndices(system);
+
+		    while(timeObject.msPosition < system.endMsPosition)
+		    {
+		        timeObject = findNextTimeObject(system, trackIsOn);
+		        timeObjects.push(timeObject);
+		    }
+		},
 
 
         setParameters = function (system, systIndex)

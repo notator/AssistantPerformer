@@ -1163,7 +1163,25 @@ _AP.score = (function (document)
                 childClass,
                 lastSystemTimeObjects, finalBarlineMsPosition;
 
-            function getSystemTimeObjects(system, viewBoxScale1, systemNode, speed)
+            function getViewBoxScale(svgElem)
+			{
+            	var width, viewBox, viewBoxStrings, viewBoxWidth, scale;
+
+            	width = parseFloat(svgElem.getAttribute('width'));
+            	viewBox = svgElem.getAttribute('viewBox');
+            	viewBoxStrings = viewBox.split(' ');
+            	viewBoxWidth = parseFloat(viewBoxStrings[2]);
+
+            	scale = viewBoxWidth / width;
+            	return scale;
+            }
+
+        	// Loads voice.timeObjects for each voice in the system.
+        	// A timeObject is either an outputChord or a rest.
+        	// Both outputChord and rest timeObjects are given alignmentX and msDuration attributes, but
+        	// as yet no msPosition.
+            // msPosition attributes are added to these timeObjects when all the systems have been read.
+            function getSystemVoiceTimeObjects(system, viewBoxScale1, systemNode, speed)
             {
                 var i, j, systemChildren, childClass,
                     staff, staffChildren, staffChildClass,
@@ -1175,7 +1193,7 @@ _AP.score = (function (document)
             	// Both outputChords and rests have alignmentX and msDuration fields.
                 // Later in this program (as soon as all systems have been read), the msPosition
                 // of all timeObjects will appended to them.
-                function getTimeObjects(noteObjects, speed)
+                function getVoiceTimeObjects(noteObjects, speed)
                 {
                     var timeObjects = [], typeString,
                         timeObject, i, j, k, length, noteObject, chordChildren, midiChildren;
@@ -1363,7 +1381,7 @@ _AP.score = (function (document)
                                     if(staffChildClass === 'outputVoice')
                                     {
                                         voice = staff.voices[voiceIndex++];
-                                        voice.timeObjects = getTimeObjects(staffChildren[j].childNodes, speed);
+                                        voice.timeObjects = getVoiceTimeObjects(staffChildren[j].childNodes, speed);
                                     }
                                 }
                             }
@@ -1373,20 +1391,7 @@ _AP.score = (function (document)
                 }
             }
 
-            function getViewBoxScale(svgElem)
-            {
-                var width, viewBox, viewBoxStrings, viewBoxWidth, scale;
-
-                width = parseFloat(svgElem.getAttribute('width'));
-                viewBox = svgElem.getAttribute('viewBox');
-                viewBoxStrings = viewBox.split(' ');
-                viewBoxWidth = parseFloat(viewBoxStrings[2]);
-
-                scale = viewBoxWidth / width;
-                return scale;
-            }
-
-            // Sets the msPosition of each timeObject (rests and chords) in the voice.timeObjectArrays
+            // Sets the msPosition of each timeObject (rests and outputChords) in the voice.timeObjects arrays
             // Returns the msPosition of the final barline in the score.
             function setMsPositions(systems)
             {
@@ -1420,7 +1425,7 @@ _AP.score = (function (document)
 
             // Sets system.startMsPosition and system.endMsPosition. These values are needed for selecting
             // runningMarkers.
-            // Except in the final system, system.endMsPosition is equal to  the startMsPosition of
+            // Except in the final system, system.endMsPosition is equal to the startMsPosition of
             // the following system. The final system's endMsPosition is set to the finalBarlineMsPosition
             // argument.
             // To be precise: system.StartMsPosition is the earliest msPosition of any timeObject
@@ -1547,7 +1552,7 @@ _AP.score = (function (document)
                             {
                                 delete systems[systemIndex].msDuration; // is reset in the following function
                             }
-                            getSystemTimeObjects(systems[systemIndex], viewBoxScale2, svgChildren[j], speed);
+                            getSystemVoiceTimeObjects(systems[systemIndex], viewBoxScale2, svgChildren[j], speed);
                             systemIndex++;
                         }
                     }
