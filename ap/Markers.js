@@ -29,7 +29,7 @@ _AP.markers = (function ()
     // markers are used to determine the start and end points of a performance
     // when playing a MIDI file
 
-    // The argument is an svg group with id='startMarker'.
+    // The argument is an svg group with class='startMarker'.
     // It contains an svg line and an svg ellipse element.
     // This constructor simply saves pointers to the line and ellipse.
     // Their parameters are set later, using the setParameters() function,
@@ -172,7 +172,7 @@ _AP.markers = (function ()
         return this;
     },
 
-    // The argument is an svg group with id='endMarker'.
+    // The argument is an svg group with class='endMarker'.
     // It contains an svg line and an svg rect element.
     // This constructor simply saves pointers to the line and rect.
     // Their parameters are set later, using the setParameters() function,
@@ -291,7 +291,7 @@ _AP.markers = (function ()
         return this;
     },
 
-    // The argument is an svg group with id='runningMarker'.
+    // The argument is an svg group with class='runningMarker'.
     // The group contains a single svg line.
     // This constructor simply saves pointers to the line.
     // Its parameters are set later, using the setParameters() function,
