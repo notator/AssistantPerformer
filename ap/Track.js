@@ -69,8 +69,9 @@ _AP.track = (function()
     // track._currentMidiObjectIndex is the index of track.currentMidiObject, which is either
     // the last midiObject before or at the startMarker, or the last midiObject in the track.
     // If the track has a rest at the startMarker, this.currentMoment.messages can be empty. 
-    // If the track has no midiObjects at the startMarker, and the previous midiObject is a rest,
-    // this.currentMoment.messages will be empty.
+	// If the track has no midiObjects at the startMarker, and the previous midiObject is a rest
+	// straddling the startMarker, the rest is adjusted to begin at the startMarker with a new,
+	// empty moment. (this.currentMoment.messages will be then be empty).
     Track.prototype.setForSpan = function(startMarkerMsPositionInScore, endMarkerMsPositionInScore, isAssisted)
     {
         var i, moIndex, midiObject, midiObjects = this.midiObjects, nMidiObjects = midiObjects.length,

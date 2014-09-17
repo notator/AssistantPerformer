@@ -1104,9 +1104,9 @@ _AP.score = (function (document)
         }
     },
 
-    // Advances the running marker to the following timeObject (in any channel)
-    // if msPosition is >= that object's msPosition. Otherwise does nothing.
-    // Also does nothing when the end of the score is reached.
+    // Advances the running marker to the following timeObject (in any channel).
+    // If msPosition is >= the endMsPosition of the current system, and the 
+	// current system is not the last, the running marker is moved to the following system.
     advanceRunningMarker = function (msPosition)
     {
         if (msPosition >= systems[runningMarker.systemIndex()].endMsPosition)

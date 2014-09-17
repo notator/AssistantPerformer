@@ -29,8 +29,8 @@ _AP.midiRest = (function()
         {
             return new MidiRest(timeObject);
         }
-        Object.defineProperty(this, "msPositionInScore", { value: timeObject.msPosition, writable: false });
-        Object.defineProperty(this, "msDurationInScore", { value: timeObject.msDuration, writable: false });
+        Object.defineProperty(this, "msPositionInScore", { value: timeObject.msPosition, writable: true });
+        Object.defineProperty(this, "msDurationInScore", { value: timeObject.msDuration, writable: true });
         Object.defineProperty(this, "moments", { value: [], writable: false });
         Object.defineProperty(this, "currentMoment", { value: new _AP.moment.Moment(0), writable: true });
 
@@ -67,7 +67,9 @@ _AP.midiRest = (function()
         }
         else
         {
-            this.currentMoment = new _AP.moment.Moment(startMarkerMsPositionInScore - this.msPositionInScore); // an empty moment
+        	this.msDurationInScore -= (startMarkerMsPositionInScore - this.msPositionInScore);
+        	this.msPositionInScore = startMarkerMsPositionInScore;
+        	this.currentMoment = new _AP.moment.Moment(0); // an empty moment
         }
     };
 
