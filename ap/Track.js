@@ -74,46 +74,45 @@ _AP.track = (function()
 	// empty moment. (this.currentMoment.messages will be then be empty).
     Track.prototype.setForSpan = function(startMarkerMsPositionInScore, endMarkerMsPositionInScore, isAssisted)
     {
-        var i, moIndex, midiObject, midiObjects = this.midiObjects, nMidiObjects = midiObjects.length,
-            lastPerformedIndex;
+        var i, midiObject, midiObjects = this.midiObjects, nMidiObjects = midiObjects.length,
+            startAndLastIndices;
 
-        for(i = 0; i < nMidiObjects; ++i)
+        function resetAllMidiObjects(midiObjects, nMidiObjects, startMarkerMsPositionInScore, endMarkerMsPositionInScore)
         {
-            if(midiObjects[i].msPositionInScore > startMarkerMsPositionInScore)
-            {
-                break;
-            }
-            moIndex = i;
+        	var mo, start = -1, last = -1;
+
+        	for(i = 0; i < nMidiObjects; ++i)
+        	{
+        		mo = midiObjects[i];
+        		mo.setToStartAtBeginning();
+        		if(mo.msPositionInScore <= startMarkerMsPositionInScore)
+        		{
+        			start = i;
+        		}
+        		if(last < 0 && mo.msPositionInScore >= endMarkerMsPositionInScore)
+        		{
+        			last = i - 1;
+        		}
+        	}
+
+        	return { startIndex: start, lastPerformedIndex: last };
         }
 
-        this._currentMidiObjectIndex = moIndex;
-        lastPerformedIndex = moIndex; // also updated below
+        startAndLastIndices = resetAllMidiObjects(midiObjects, nMidiObjects, startMarkerMsPositionInScore, endMarkerMsPositionInScore);
 
-        // moIndex is now either the index of the last midiObject before or at startMarkerMsPositionInScore
+        this._currentMidiObjectIndex = startAndLastIndices.startIndex;
+
+    	// this._currentMidiObjectIndex is now either the index of the last midiObject before or at startMarkerMsPositionInScore
         // or the index of the last midiObject in the track.
-        midiObject = midiObjects[moIndex];
-        midiObject.setToFirstStartMarker(startMarkerMsPositionInScore);
+        midiObject = midiObjects[this._currentMidiObjectIndex];
+        midiObject = midiObject.setToFirstStartMarker(startMarkerMsPositionInScore);
 
         this.currentMidiObject = midiObject;
         this.currentMoment = midiObject.currentMoment; // this.currentMoment.messages can be empty (see above)
 
-        for(i = moIndex + 1; i < nMidiObjects; ++i)
-        {
-            midiObject = midiObjects[i];
-            if(midiObject.msPositionInScore < endMarkerMsPositionInScore)
-            {
-                midiObject.setToStartAtBeginning();
-                lastPerformedIndex = i;
-            }
-            else
-            {
-                break;
-            }
-        }
-
         if(isAssisted === true)
         {
-            this._indexOfLastPerformedMidiObjectInAssistedSpan = lastPerformedIndex;
+        	this._indexOfLastPerformedMidiObjectInAssistedSpan = startAndLastIndices.lastPerformedIndex;
         }
         else
         {

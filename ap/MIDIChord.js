@@ -720,30 +720,47 @@ _AP.midiChord = (function()
     /***** The following functions are defined for both MidiChords and MidiRests *****************/
 
     // The chord must be at or straddle the start marker.
-    // This function sets the chord to the state it should have when a performance starts.
-    // this.currentMoment is set to the first moment at or after startMarkerMsPositionInScore.
+	// If this chord contains no moments at or after the startMarker, a new rest is created and returned,
+    // that begins at the startMarkerMsPositionInScore, and ends where this chord ends.
+    // otherwise this chord is set to start at or immediately after startMarkerMsPositionInScore and returned.
     MidiChord.prototype.setToFirstStartMarker = function(startMarkerMsPositionInScore)
     {
         var
         nMoments = this.moments.length,
-        currentIndex, currentPosition;
+        currentIndex, currentPosition, 
+		returnMidiObject = this, 
+		positionOfLastMoment = this.msPositionInScore + this.moments[this.moments.length - 1].msPositionInChord,
+		restDuration;
 
         console.assert(
             (  (this.msPositionInScore <= startMarkerMsPositionInScore)
             && (this.msPositionInScore + this.msDurationInScore > startMarkerMsPositionInScore)),
-            "This chord must be at or straddle the start marker.");
+            "Error: this chord must be at or straddle the start marker.");
 
-        for(currentIndex = 0; currentIndex < nMoments; ++currentIndex)
+        if(this.msPositionInScore < startMarkerMsPositionInScore)
         {
-            currentPosition = this.msPositionInScore + this.moments[currentIndex].msPositionInChord;
-            if(currentPosition >= startMarkerMsPositionInScore)
-            {
-                break;
-            }
+        	if(positionOfLastMoment < startMarkerMsPositionInScore)
+        	{
+        		restDuration = this.msDurationInScore - (startMarkerMsPositionInScore - this.msPositionInScore);
+        		returnMidiObject = new _AP.midiRest.MidiRest({ msPosition: startMarkerMsPositionInScore, msDuration: restDuration });
+        	}
+        	else
+        	{
+        		for(currentIndex = 0; currentIndex < nMoments; ++currentIndex)
+        		{
+        			currentPosition = this.msPositionInScore + this.moments[currentIndex].msPositionInChord;
+        			if(currentPosition >= startMarkerMsPositionInScore)
+        			{
+        				break;
+        			}
+        		}
+
+        		this._currentMomentIndex = currentIndex;
+        		this.currentMoment = this.moments[currentIndex];
+        	}
         }
-        this._currentMomentIndex = currentIndex;
-        this.currentMoment = this.moments[currentIndex];
-        this.msDurationOfRepeats = 0;
+
+        return returnMidiObject;
     };
 
     // The inLoopPhase argument is usually false. It will be true, in assisted performances when the performer is holding down a key,

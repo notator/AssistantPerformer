@@ -29,8 +29,8 @@ _AP.midiRest = (function()
         {
             return new MidiRest(timeObject);
         }
-        Object.defineProperty(this, "msPositionInScore", { value: timeObject.msPosition, writable: true });
-        Object.defineProperty(this, "msDurationInScore", { value: timeObject.msDuration, writable: true });
+        Object.defineProperty(this, "msPositionInScore", { value: timeObject.msPosition, writable: false });
+        Object.defineProperty(this, "msDurationInScore", { value: timeObject.msDuration, writable: false });
         Object.defineProperty(this, "moments", { value: [], writable: false });
         Object.defineProperty(this, "currentMoment", { value: new _AP.moment.Moment(0), writable: true });
 
@@ -51,26 +51,26 @@ _AP.midiRest = (function()
 
     /***** The following functions are defined for both MidiChords and MidiRests *****************/
 
-    // The rest must be at or straddle the start marker.
-    // Sets the rest to the state it should have when a performance starts.
+	// This rest must be at or straddle the start marker.
+	// If this rest straddles the startMarkerMsPositionInScore, a new rest is returned
+    // that begins at the startMarkerMsPositionInScore, and ends where the original rest ended.
     MidiRest.prototype.setToFirstStartMarker = function(startMarkerMsPositionInScore)
     {
+    	var newDuration, returnRest = this;
+
         if((this.msPositionInScore > startMarkerMsPositionInScore)
         || (this.msPositionInScore + this.msDurationInScore < startMarkerMsPositionInScore))
         {
             throw "Error: this rest must be at or straddle the start marker.";
         }
 
-        if(this.msPositionInScore === startMarkerMsPositionInScore)
+        if(this.msPositionInScore < startMarkerMsPositionInScore)
         {
-            this.currentMoment = this.moments[0];
+			newDuration = this.msDurationInScore - (startMarkerMsPositionInScore - this.msPositionInScore);
+			returnRest = new MidiRest({msPosition: startMarkerMsPositionInScore, msDuration: newDuration});
         }
-        else
-        {
-        	this.msDurationInScore -= (startMarkerMsPositionInScore - this.msPositionInScore);
-        	this.msPositionInScore = startMarkerMsPositionInScore;
-        	this.currentMoment = new _AP.moment.Moment(0); // an empty moment
-        }
+
+        return returnRest;
     };
 
     MidiRest.prototype.advanceCurrentMoment = function()
