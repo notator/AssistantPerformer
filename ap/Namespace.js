@@ -17,26 +17,26 @@ var _AP = _AP || {};
 
 _AP.namespace = function (ns_string)
 {
-    "use strict";
-    var parts = ns_string.split('.'),
-        parent = _AP,
-        i;
+	"use strict";
+	var parts = ns_string.split('.'),
+		parent = _AP,
+		i;
 
-    // strip redundant leading global
-    if (parts[0] === "_AP")
-    {
-        parts = parts.slice(1);
-    }
+	// strip redundant leading global
+	if (parts[0] === "_AP")
+	{
+		parts = parts.slice(1);
+	}
 
-    for (i = 0; i < parts.length; ++i)
-    {
-        // create a property if it does not exist
-        if (parent[parts[i]] === undefined)
-        {
-            parent[parts[i]] = {};
-            parent = parent[parts[i]];
-        }
-    }
-    return parent;
+	for (i = 0; i < parts.length; ++i)
+	{
+		// create a property if it does not exist
+		if (parent[parts[i]] === undefined)
+		{
+			parent[parts[i]] = {};
+			parent = parent[parts[i]];
+		}
+	}
+	return parent;
 };
 

@@ -24,22 +24,22 @@
 // Returns the xml of the embedded_element (which is a reference to an SVG file).
 function getSVGDocument(embedded_element)
 {
-    var subdoc;
+	var subdoc;
 
-    if(embedded_element.contentDocument)
-    {
-        subdoc = embedded_element.contentDocument;
-    }
-    else
-    {
-        subdoc = null;
-        try
-        {
-            subdoc = embedded_element.getSVGDocument();
-        }
-        catch(e) { }
-    }
-    return subdoc;
+	if(embedded_element.contentDocument)
+	{
+		subdoc = embedded_element.contentDocument;
+	}
+	else
+	{
+		subdoc = null;
+		try
+		{
+			subdoc = embedded_element.getSVGDocument();
+		}
+		catch(e) { }
+	}
+	return subdoc;
 }
 
 // This function is called by the first (SVG) page in each score, when it has loaded.
@@ -50,15 +50,15 @@ function getSVGDocument(embedded_element)
 // and it returns the embedded_element's xml without throwing a cross-protocol exception.
 function onLoad()
 {
-    "use strict";
+	"use strict";
 
-    if(document.URL.search("http://") === 0) // the web version.
-    {
-        // _JI_SVGLoaded() is defined in init() in ap/Controls.js if the AP is loaded from the web. 
-        // It adds the argument function to a local 'svg' object inside Controls.
-        if(window.parent._JI_SVGLoaded !== undefined)
-        {
-            window.parent._JI_SVGLoaded(getSVGDocument);
-        }
-    }
+	if(document.URL.search("http://") === 0) // the web version.
+	{
+		// _JI_SVGLoaded() is defined in init() in ap/Controls.js if the AP is loaded from the web. 
+		// It adds the argument function to a local 'svg' object inside Controls.
+		if(window.parent._JI_SVGLoaded !== undefined)
+		{
+			window.parent._JI_SVGLoaded(getSVGDocument);
+		}
+	}
 }
