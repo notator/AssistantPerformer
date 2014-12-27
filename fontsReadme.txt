@@ -12,7 +12,7 @@ https://developer.mozilla.org/En/HTTP_access_control
 I originally created this font in 1994, as a Postscript Type 1 font, using Letraset's
 FontStudio program (which no longer exists) on a Mac Quadra. The font was, and is, used
 in scores printed by the Stockhausen-Verlag
-http://www.stockhausen.org/stockhausen_verlag.html
+http://www.karlheinzstockhausen.org/
 
 The original postscript font was converted to .otf by a friend who had the necessary
 software, and I have never had any problems with it when installed on Windows and used
