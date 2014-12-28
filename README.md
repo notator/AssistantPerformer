@@ -34,7 +34,8 @@ The '<b>SongSixNoWorkers</b>' branch is also stable (March 2014), and was design
 When performing live, in concert, one can't rely on having a stable web connection, so the program in this branch can also be used off-line, using only local files on the user's computer. Unfortunately, '<em>Song Six</em>' requires the installation of a special soundFont, making it impossible for visitors to a public website to play correctly. The 'SongSixNoWorkers' branch therefore has no public website. The score, and a Flash/mp3 recording can however be found at<br />
 http://james-ingram-act-two.de/compositions/songSix/setting1Score/Song%20Six.html<br />
 <br />
-The '<b>dev</b>' branch is a volatile development of the 'SongSixNoWorkers' branch. It does not yet support the new SVG-MIDI file format produced by the Assistant Composer. When complete, it will use web workers to implement the "advanced prepared piano" scenario. This 'dev' branch changes quite a lot, and is used for testing possibly buggy code, so it does not have a public, onlne test site.<br />
+The '<b>dev</b>' branch is a volatile development of the 'SongSixNoWorkers' branch. It does not yet support the new SVG-MIDI file format produced by the Assistant Composer. When complete, it will use web workers to implement the "advanced prepared piano" scenario. This 'dev' branch changes quite a lot, and is used for testing possibly buggy code, so it does not have a public, online test site.<br />
+
 Again: Work is due to continue on the Assistant Performer (possibly in a new development branch) in January 2015.
 
 December 2014<br />
