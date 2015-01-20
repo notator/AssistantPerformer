@@ -1,8 +1,12 @@
 
 Introduction
 ------------
-This is a web MIDI application, that gives a single performer control over the performance of a music score displayed in a browser. A stable, public version (the master branch) can be tried out at<br />
+This is a web MIDI application, that gives a single performer control over the performance of a music score displayed in a browser.<br />
+A stable, public version (the master branch) can be tried out at<br />
 http://james-ingram-act-two.de/open-source/masterAssistantPerformer/masterAssistantPerformer.html<br />
+The volatile, development version is at<br />
+http://james-ingram-act-two.de/open-source/assistantPerformer/assistantPerformer.html<br />
+Note that the volatile version is in active development, and may often contain bugs or not work at all.
 This software has only been tested on the latest versions of Chrome and Firefox. It is not guaranteed to work in other browsers.
 
 The project is written in HTML5 and Javascript. It uses MIDI input and output devices, and scores stored in an SVG format which has been enhanced to contain MIDI information.
@@ -22,22 +26,21 @@ http://james-ingram-act-two.de/open-source/assistantPerformer/aboutAssistantPerf
 
 ========
 
-The Code
---------
-
 This project is a work-in-progress, and currently has three branches: 'master', 'SongSixNoWorkers', and 'dev'.<br />
 <br />
 The '<b>master</b>' branch defines an appplication which can be tried out publicly at<br />
 http://james-ingram-act-two.de/open-source/masterAssistantPerformer/masterAssistantPerformer.html<br />
-This 'master' version is stable, but is not the latest version of this project. It can play the scores 'Study 2c3.1' and 'Study 3 sketch', neither of which were designed specifically to be performed live.<br />
+This 'master' version is stable, but is currently a rather old version of this project. It can play the scores 'Study 2c3.1' and 'Study 3 sketch', neither of which were designed specifically to be performed live.<br />
 <br />
 The '<b>SongSixNoWorkers</b>' branch is also stable (March 2014), and was designed for live performance of the score '<em>Song Six</em>' (which <b>was</b> designed for interaction with a live performer).<br />
 When performing live, in concert, one can't rely on having a stable web connection, so the program in this branch can also be used off-line, using only local files on the user's computer. Unfortunately, '<em>Song Six</em>' requires the installation of a special soundFont, making it impossible for visitors to a public website to play correctly. The 'SongSixNoWorkers' branch therefore has no public website. The score, and a Flash/mp3 recording can however be found at<br />
 http://james-ingram-act-two.de/compositions/songSix/setting1Score/Song%20Six.html<br />
 <br />
-The '<b>dev</b>' branch is a volatile development of the 'SongSixNoWorkers' branch. It does not yet support the new SVG-MIDI file format produced by the Assistant Composer. When complete, it will use web workers to implement the "advanced prepared piano" scenario. This 'dev' branch changes quite a lot, and is used for testing possibly buggy code, so it does not have a public, online test site.<br />
+The '<b>dev</b>' branch at<br />
+http://james-ingram-act-two.de/open-source/assistantPerformer/assistantPerformer.html<br />
+is a volatile development of the 'SongSixNoWorkers' branch. It does not yet support the new SVG-MIDI file format produced by the Assistant Composer. When complete, it will use web workers to implement the "advanced prepared piano" scenario. This 'dev' branch changes quite a lot, and is used for testing possibly buggy code. Be warned!<br />
 
-Again: Work is due to continue on the Assistant Performer (possibly in a new development branch) in January 2015.
+Again: Work is due to continue on the Assistant Performer (possibly in a new development branch) later this month.
 
-December 2014<br />
+January 2015<br />
 James Ingram
