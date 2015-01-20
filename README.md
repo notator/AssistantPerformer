@@ -2,7 +2,7 @@
 Introduction
 ------------
 This is a web MIDI application, that gives a single performer control over the performance of a music score displayed in a browser. A stable, public version (the master branch) can be tried out at<br />
-http://james-ingram-act-two.de/open-source/publicAssistantPerformer/assistantPerformer.html<br />
+http://james-ingram-act-two.de/open-source/masterAssistantPerformer/masterAssistantPerformer.html<br />
 This software has only been tested on the latest versions of Chrome and Firefox. It is not guaranteed to work in other browsers.
 
 The project is written in HTML5 and Javascript. It uses MIDI input and output devices, and scores stored in an SVG format which has been enhanced to contain MIDI information.
@@ -28,7 +28,7 @@ The Code
 This project is a work-in-progress, and currently has three branches: 'master', 'SongSixNoWorkers', and 'dev'.<br />
 <br />
 The '<b>master</b>' branch defines an appplication which can be tried out publicly at<br />
-http://james-ingram-act-two.de/open-source/publicAssistantPerformer/assistantPerformer.html<br />
+http://james-ingram-act-two.de/open-source/masterAssistantPerformer/masterAssistantPerformer.html<br />
 This 'master' version is stable, but is not the latest version of this project. It can play the scores 'Study 2c3.1' and 'Study 3 sketch', neither of which were designed specifically to be performed live.<br />
 <br />
 The '<b>SongSixNoWorkers</b>' branch is also stable (March 2014), and was designed for live performance of the score '<em>Song Six</em>' (which <b>was</b> designed for interaction with a live performer).<br />
