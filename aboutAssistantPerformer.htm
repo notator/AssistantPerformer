@@ -1,0 +1,331 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>About Assistant Performer (web version)</title>
+    <base target="_top" />
+    <link href="../../styleSheet.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .smallLink {
+            font-size: 10px;
+        }
+
+        a:link {
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        a:active {
+            text-decoration: underline;
+        }
+
+        a:visited {
+            text-decoration: none;
+        }
+
+        hr.localStyle {
+            border-style: none;
+            height: 1px;
+            background-color: #1010C6;
+            margin-top: 14px;
+            margin-bottom: 10px;
+        }
+
+        .code {
+            font-family: 'Courier New', Courier, monospace;
+            color: #000000;
+        }
+
+        .attcon {
+            color: #0000AA;
+        }
+
+        .style1 {
+            font-size: 11px;
+        }
+    </style>
+    <script src="../../javascript.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        trap();
+    </script>
+</head>
+<body style="width: 630px">
+    <div>
+        <p class="header1">
+            Assistant Performer <span style="font-size: 14px">(browser version)</span>
+        </p>
+        <hr class="hrHeight1" />
+
+        <p class="boldHeader2">
+            Summary
+        </p>
+
+        <span style="color: #FF0000">Dec. 2014: This document is out of date - to be revised after Christmas!</span>
+		<br />
+
+        This is an open-source project (MIT license) hosted on Github at<br />
+        <a href="https://github.com/notator/assistant-performer">https://github.com/notator/assistant-performer</a>.<br />
+        The application itself can be tried out at<br />
+        <a href="http://james-ingram-act-two.de/open-source/masterAssistantPerformer/masterAssistantPerformer.html">http://james-ingram-act-two.de/open-source/masterAssistantPerformer/masterAssistantPerformer.html</a>
+        <br />
+        <br />
+        The README at Github contains the following introduction:
+        <div class="note" style="font-size: 12px">
+            This is a web MIDI application, which gives a single performer control over the performance of a
+            music score displayed in a browser. A stable, public version can be tried out at<br />
+            <a class="indent1Size" href="http://james-ingram-act-two.de/open-source/masterAssistantPerformer/masterAssistantPerformer.html">
+                http://james-ingram-act-two.de/open-source/masterAssistantPerformer/masterAssistantPerformer.html</a> <br />
+            This has only been tested on the latest version of Chrome, and is not guaranteed to work in other browsers.<br />
+            <br />
+            The project is written in HTML5 and Javascript. It uses MIDI input and output devices, and scores stored in an SVG format
+            which has been enhanced to contain MIDI information. See:<br />
+            <a class="indent1Size" href="http://james-ingram-act-two.de/open-source/svgScoreExtensions.html">
+                http://james-ingram-act-two.de/open-source/svgScoreExtensions.html</a> <br />
+            <br />
+            The file midiLib/WebMIDIAPI.js has been copied from Chris Wilson's Web MIDI API Polyfill at GitHub:
+            <a class="indent1Size" href="https://github.com/cwilso/WebMIDIAPIShim">https://github.com/cwilso/WebMIDIAPIShim</a>.
+            This code supplies MIDI support for browsers, and requires the <b>Jazz plugin</b>
+            (<a class="indent1Size" href="http://jazz-soft.net">http://jazz-soft.net</a>) to be installed on the user's computer.<br />
+            Both the Jazz plugin and Chris Wilson's polyfill will become obsolete as soon as the Web MIDI API is actually implemented
+            in browsers. For more details on the Web MIDI API, see:<br />
+            <a class="indent1Size" href="http://www.w3.org/2011/audio/">http://www.w3.org/2011/audio/</a>.<br />
+            <br />
+            Monophonic input, such as produced by an EWI (<a class="indent1Size" href="http://www.akaipro.com/ewiseries">
+                http://www.akaipro.com/ewiseries</a>) or R2M
+            (<a class="indent1Size" href="http://www.doepfer.de/R2M.htm">http://www.doepfer.de/R2M.htm</a>), is currently assumed.
+            A MIDI keyboard can be used, but only one key at a time
+            (incoming noteOffs are matched to noteOns, so playing legato is no problem). Timing is related to the times of single
+            noteOns and noteOffs. In addition to noteOn/Off, pitch and velocity information, the performance can also be affected by
+            the instrument's continuous controllers - modulation-wheel, pitch-wheel and aftertouch or channel-pressure.<br />
+            <br />
+            <b>Future directions</b>: I am currently working on the creation of more scores in the necessary format. Clearly, more
+            examples are needed. New scores could be created in several ways:<br />
+            <ol>
+                <li>with my existing desktop (C#) Assistant Composer software<br />
+                    <a class="indent1Size" href="http://james-ingram-act-two.de/moritz2/assistantComposer/assistantComposer.html">
+                        http://james-ingram-act-two.de/moritz2/assistantComposer/assistantComposer.html
+                    </a>
+                </li>
+                <li>with a web site for transcribing standard MIDI files.<br />
+                    This would work rather like the Assistant Composer, and have a similar GUI but without the choice of chord
+                    symbol type, and without the krystals and palettes. The Assistant Composer already creates scores from abstract
+                    MIDI information, without further human intervention, so this problem has already been solved in principle.<br />
+                    I, or someone else, would just have to translate the relevant parts of the (C#) program to JavaScript.
+                </li>
+                <li>with Finale/Sibelius plugins, etc.
+                </li>
+            </ol>
+        </div>
+        <br />
+        The idea for a <a href="http://james-ingram-act-two.de/open-source/masterAssistantPerformer/masterAssistantPerformer.html">
+            web version of the Assistant Performer</a> arose while working on the earlier desktop application.<br />
+        My (desktop) Assistant <em>Composer</em> software creates files in an SVG format
+        which will display in browsers, but the desktop Assistant <em>Performer</em> could
+        not interact with the browser&#39;s display. It was impossible to set the playback
+        start and end positions, disable tracks etc., and then play back subsections of
+        the score. Also, of course, I wanted to reach more users by not requiring them to
+        install any software. The use of a plug-in is, I hope, a temporary measure.<br />
+        Future uses are not limited to simple music-minus-one played in private (think Mozart’s
+        Clarinet concerto). The scores can describe any kind of temporal process, including
+        both recordings and processes which require live control. Performances can be cooperative,
+        with several live performers on different computers. Output devices can include
+        ordinary synthesizers, robot orchestras (or other teams of robots), lighting systems
+        etc.<br />
+        <br />
+        <hr class="hrHeight1" />
+        <p class="boldHeader2">
+            Usage
+        </p>
+        <span style="color: #FF0000">The</span> <a href="http://jazz-soft.net/">Jazz browser plugin</a>
+        <span style="color: #FF0000">currently has to be installed before using this application</span>.<br />
+        MIDI input and output devices can be then be selected from those which are attached to the
+        user&rsquo;s computer and switched on when the page is loaded.<br />
+        <br />
+        <div class="note">
+            June 2013: I have only tested this program properly on the latest version of Chrome running on
+            64 bit Windows 7 Professional, but it should work on other systems too.<br />
+            I have now heard that the latest version is also working in Chrome on Mac computers.<br />
+            I would much like to improve the situation, especially if I get any help/support for testing
+            on other browsers/systems. 
+            Both positive and negative feedback would be very welcome! As soon as I get any further
+            news, I will update this text, and my <a href="http://james-ingram-act-two.blogspot.de/">Site Log</a>.<br />
+            <br />
+            (I have briefly looked at the situation in Firefox/Windows 7: Jazz is finding the MIDI devices, but the Start
+            button is being covered by another object on the screen, so it can't be clicked. That should not be too
+            difficult to fix, but I currently have no time...)
+
+        </div>
+        <br />
+        If a MIDI <em>Input </em>device is not available or selected, the program can still
+        be used for playback of the information in the score. The speed option, start and
+        end markers, and track enabling/disabling can still be used to perform designated
+        parts of the file.<br />
+        <br />
+        When a score and a MIDI output device are selected, the &lsquo;Start&rsquo; button
+        at the bottom of the upper performance <em>options</em> panel becomes clickable.
+        When clicked, the screen scrolls so that the score window comes fully into view
+        with the performance <em>controls</em> at the top of the screen. The upper panel
+        is now off-screen and its options have been disabled so that they can no longer
+        be clicked &mdash; even if the user scrolls them into view.<br />
+        The options in the upper panel are always disabled while the controls above the
+        score are enabled, and vice versa. To toggle to the upper panel, click the &lsquo;set
+        options&rsquo; button in the performance controls (currently at the top of the screen).<br />
+        <br />
+        If a MIDI Input device has been selected when the ‘Start’ button is clicked, the
+        program assumes that the device is going to be used immediately, so the&nbsp; ‘Go’
+        button is clicked automatically, and the program waits for live MIDI Input events.
+        Otherwise, optionally use the tools provided to set the start and/or end markers,
+        and disable any tracks, before clicking the &lsquo;Go&rsquo; button.<br />
+        <br />
+        The performer&#39;s options in the upper panel should be self-explanatory. The best
+        way to hear what they do is to try them out on a not too complicated sequence of
+        notes (maybe from the <em>Study 3 sketch</em> score). Note that the <strong>
+            <span class="style1">speed option</span></strong> (part of the <span class="style1">
+                <strong>Assistant&#39;s duration options</strong></span> in the lower part
+        of the panel) works both in assisted and non-assisted performances. It is also used
+        to determine the speed during the first live performer&#39;s moment in a <span class="style1">
+            <strong>Relative Symbols</strong></span> performance.<br />
+        <br />
+        The Assistant Performer's <i>output</i> is abstract MIDI information. The sounds are only vaguely
+        defined by the standard General MIDI numbers/names. The sounds are just as much a matter of interpretation 
+        as the durations and phrasing, and I would very much like to work with specialists in this area &mdash; especially during
+        live performances.<br />
+        <br />
+        <div class="note">
+            08.04.2013:
+            I have been using the <i>Microsoft GS Wavetable Synth</i> as the standard MIDI output device during the composition and recordings
+            of <i><strong>Study 1</strong></i>, <i><strong>Study 2</strong></i> and the <i><strong>Study 3 sketch</strong></i>, but have now
+            installed the <a href="http://coolsoft.altervista.org/en/virtualmidisynth">CoolSoft VirtualMIDISynth</a> and various compatible
+            sound fonts as a flexible replacement.<br />
+            This setup should result in better sounding mp3 recordings on this web site, but these recordings should still not be thought of
+            as the <i>final</i> versions. A professional sound engineer has more control and expertees in this area than I have, and that
+            control and expertees should be used!<br />
+            The sound fonts will be acknowledged individually (with a link to a site where they can be downloaded) whenever they are used:
+            for constructing palettes, making recordings, or in a live performance.<br />
+        </div>
+        <br />
+        <hr class="hrHeight1" />
+        <p class="boldHeader2">
+            The big picture
+        </p>
+        The Assistant Composer/Performer project is part of an effort to re-enable <em>writing</em>
+        as a means of creating large-scale musical/temporal structures.<br />
+        Chord symbols, staves and beams evolved in music notation over several hundred years
+        to communicate a high density of polyphonic information on the page. Needing to
+        be readable in real time, they evolved to be as <em>legible</em> as possible, making
+        them good candidates for use in graphic user interfaces on computers.<br />
+        That the symbols together provide a much higher information density than the space=time
+        notations currently used everywhere in today&rsquo;s music software, means that
+        they ought to become a useful alternative in a large number of music applications.<a id="footnote1anchor"
+            href="#footnote1"
+            target="_self"><span style="text-decoration: underline; font-weight: bold;"><sup>1</sup></span></a>
+        <br />
+        Unfortunately, today’s standard music notation contains conceptual errors acquired
+        during the 19th century, and these have to be sorted out before any progress can
+        be made. I&rsquo;ve dealt with these errors at greater length elsewhere on this
+        site (<a href="../../writings/TheNotationOfTime/theNotationOfTime.html">1985</a>,
+        <a href="../../writings/InheritedProblems/inheritedProblems.html">2002</a>), but
+        in short:<br />
+        <em>Tempo</em> and <em>absolute time</em> became especially important concepts during
+        the 19th century, but outlived their usefulness during the late Romantic period:
+        <strong>Tempo</strong> is in fact related to human memory rather than to <strong>absolute
+            time</strong>, and “absolute time” is a mistaken idea related to the equally
+        mistaken spatial <a href="http://en.wikipedia.org/wiki/Luminiferous_aether" target="_blank">
+            <strong>ether</strong></a>. It is no coincidence that these three concepts all
+        failed together at around the same time (beginning of the 20th century).<br />
+        The only kind of “absolute time” we have is 
+        defined in terms of <em>integral</em> (i.e. usually <em>indivisible</em>) numbers of vibrations of 
+        some unchanging physical object.<a
+            id="footnote2anchor" href="#footnote2" target="_self"><span style="text-decoration: underline; font-weight: bold;"><sup>2</sup></span></a>&nbsp;
+        <br />
+        But 
+        the human experience
+        of time is not related to the physical vibration of some unchanging object in our brains.&nbsp; 
+        We are unable to remember or reproduce such durations accurately, and in fact nobody knows how human memory works at all.<a id="footnote3anchor" href="#footnote2"
+            target="_self"><span style="text-decoration: underline; font-weight: bold;"><sup>3</sup></span></a>
+        Neither &ldquo;absolute time&rdquo; nor humanly perceptible time is divisible, 
+        so using symbols for subdivisions of time is a
+        19th century mistake.<br />
+        If they mean anything at all, 19th century tuplet symbols can only indicate a humanly perceived 
+        and memorized <em>tempo relationship</em>.
+        But the perception of tempo is itself very subjective &mdash; 
+        in fact, exact, &rdquo;mechanical&ldquo; time is very 
+        undesirable in most musical styles, and it disappears altogether in flexible, late Romantic music.<br />
+        So tuplet symbols are really just <em>annotations</em>, like slurs, staccato dots and other 
+        performance instructions. It is meaningless to use them to make bars &ldquo;add up&rdquo; 
+        to a particular number of seconds. Such annotations could be added to the Assistant Performer&#39;s scores, but they
+        would (like <em>comments</em> in computer program source code) not form part of
+        the program logic. If they existed, they would be there as reminders to live
+        performers, to help them re-create particular, humanly learnable and communicable,
+        <em>performance practices</em>.<br />
+        The Assistant Composer/Performer project communicates with the host computer
+        in terms of machine units (whole milliseconds) but uses a basic notation devoid
+        of tuplets, metronome marks and other references to &lsquo;absolute&rsquo; (=machine)
+        time for its user interface.<br />
+        Human to human communication is completely independent of the machine level.<br />
+        <br />
+        <table>
+            <tr id="footnote1" style="vertical-align: top;" class="indent1Size">
+                <td style="width: 10px">
+                    <sup><strong>1</strong></sup>
+                </td>
+                <td>I 
+                     even think that new types of computer programming languages could be developed by replacing
+                     ordinary 1-dimensional text by 2-dimensional music symbols. These already 
+                     contain basic loops (repeat signs), but a serious programming language would 
+                     require something more sophisticated... [ <a href="http://james-ingram-act-two.de/open-source/masterAssistantPerformer/aboutAssistantPerformer_footnote1anchor.html">back</a> ]
+                </td>
+            </tr>
+            <tr id="footnote2" style="vertical-align: top;" class="indent1Size">
+                <td style="width: 10px">
+                    <sup><strong>2</strong></sup>
+                </td>
+                <td>Metronomes and computer processors are both &ldquo;unchanging physical object&rdquo;s, whose unit of speed is given as
+                    as cycles per second. <a href="http://en.wikipedia.org/wiki/Second">Second</a>s are also defined in terms of another &ldquo;unchanging physical object&rdquo; &mdash; the cesium 133 atom 
+                    in a particular physical state.&nbsp;
+                    [ <a href="http://james-ingram-act-two.de/open-source/masterAssistantPerformer/aboutAssistantPerformer_footnote2anchor.html">back</a> ]
+                </td>
+            </tr>
+            <tr id="footnote3" style="vertical-align: top;" class="indent1Size">
+                <td style="width: 10px">
+                    <sup><strong>3</strong></sup>
+                </td>
+                <td>On a metaphysical level, I believe that space and time are a strategy that the brain
+                    uses to reduce complexity. We also have no idea <em>why</em> human memory works
+                    &mdash; but these things are both inscrutable, and irrelevant to the above argument.
+                     [ <a href="http://james-ingram-act-two.de/open-source/masterAssistantPerformer/aboutAssistantPerformer_footnote3anchor.html">back</a> ]
+                </td>
+            </tr>
+        </table>
+        <br />
+        <hr class="hrHeight1" />
+        <p class="boldHeader2">
+            Acknowlegements
+        </p>
+        <ul class="ulStandard">
+            <li>I would like to thank sema, the author of Jazz, for letting everyone use his plugin for nothing. Wonderful stuff! Without it, this project would not have got off
+                the ground.</li>
+            <li>Thanks too to Chris Wilson, both for the use of his
+            <a href="https://github.com/cwilso/WebMIDIAPIShim">Web MIDI API Polyfill</a>, and for some very invaluable help with some detailed programming.</li>
+            <li>And to abudaan, the author of <a href="https://github.com/abudaan/JazzMIDIBridge">JazzMIDIBridge</a>, which was an invaluable inspiration during the early stages.</li>
+            <li>This <a href="http://www.cursor.cc/">beautiful cursor editor</a> deserves a mention.
+                I used it to create the Assistant Performer&rsquo;s "Set Start Marker" and "Set
+                End Marker" tools. Unfortunately, (most?) browsers currently insist that a cursor&rsquo;s
+                hot-spot has to be at the top left corner of the cursor, so my cursors turned out
+                very simply. But that may change in future. The cursor editor was also a great model for
+                loading and saving binary files &mdash; something I have now done with Standard MIDI Files.</li>
+            <li>Last but by no means least, I would like to thank the public W3C Audio Lists. I'm
+                often a bit out of my depth there, but have learned a lot trying to understand what
+                they are doing. Many thanks for your patience!<br />
+                There are now <em>two</em> public W3C Audio forums: one for those who are
+                <a href="http://lists.w3.org/Archives/Public/public-audio/">implementing</a> the Web MIDI API
+                in browsers, and another for those <a href="http://lists.w3.org/Archives/Public/public-audio-dev">wanting to use</a> the interface. I watch both of these, but intend to write only to the latter in future! </li>
+        </ul>
+        <br />
+        <hr class="hrHeight1" />
+    </div>
+    <script type="text/javascript">signature("December 2012 - revised January/March/April/June 2013");</script>
+</body>
+</html>
