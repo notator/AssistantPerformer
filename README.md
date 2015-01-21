@@ -1,15 +1,13 @@
 
 Introduction
 ------------
-This is a web MIDI application, that gives a single performer control over the performance of a music score displayed in a browser.<br />
+This is a WEB MIDI application, written in HTML5 and Javascript, that gives a single performer control over the performance of a music score displayed in a browser.<br /><br />
+The project is only being tested on the latest versions of Chrome and Firefox, and is not guaranteed to work in other browsers. It uses MIDI input and output devices, and scores stored in an SVG format which has been enhanced to contain MIDI information.<br /><br />
 A stable, public version (the master branch) can be tried out at<br />
 http://james-ingram-act-two.de/open-source/masterAssistantPerformer/masterAssistantPerformer.html<br />
 The volatile, development version is at<br />
 http://james-ingram-act-two.de/open-source/assistantPerformer/assistantPerformer.html<br />
 Note that the volatile version is in active development, and may often contain bugs or not work at all.
-This software has only been tested on the latest versions of Chrome and Firefox. It is not guaranteed to work in other browsers.
-
-The project is written in HTML5 and Javascript. It uses MIDI input and output devices, and scores stored in an SVG format which has been enhanced to contain MIDI information.
 
 WebMIDIAPI.js is a copy of the latest version of Chris Wilson's [Web MIDI API Polyfill](https://github.com/cwilso/WebMIDIAPIShim)<br />
 This polyfill supplies MIDI support for browsers that do not implement the [Web MIDI API](http://webaudio.github.io/web-audio-api/), and require the [Jazz plugin](http://jazz-soft.net) to be installed on the user's computer. Firefox comes into this category.<br />
@@ -17,16 +15,18 @@ The current version of Chrome does not require the Jazz plugin to be installed, 
 
 The Assistant Performer's master branch currently assumes monophonic input. A MIDI keyboard can be used, but only one key at a time (incoming noteOffs are matched to noteOns, so playing legato is no problem). Timing is related to the times of single noteOns and noteOffs. In addition to noteOn/Off, pitch and velocity information, the performance can also be affected by the instrument's continuous controllers - modulation-wheel, pitch-wheel and aftertouch or channel-pressure.
 
-The Assistant Performer cannot currently (December 2014) read the latest version of the [SVG-MIDI file format](http://james-ingram-act-two.de/open-source/svgScoreExtensions.html) produced by my [Assistant Composer software](https://github.com/notator/Moritz), but that is due to change in the coming months.<br />
+The Assistant Performer cannot currently (December 2014) read the latest version of the [SVG-MIDI file format](http://james-ingram-act-two.de/open-source/svgScoreExtensions.html) produced by my Assistant Composer software, see   [Github/Moritz](https://github.com/notator/Moritz), but that is due to change in the coming months.<br />
 The biggest change to the format is that scores can now contain both **_input_ and _output chords_**, enabling much greater control over what happens when midi input information arrives during a live performance: Parallel processing can be used to enable a non-blocking, "advanced prepared piano" scenario. Single key presses can trigger either simple events or complex sequences of events, depending on how the links inside the score are organized.<br />
 An example of a score in the new format can be viewed, but not yet performed, [here](http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Study%203%20sketch%202.1%20-%20with%20input/Study%203%20sketch%202.html).
 
-A more general description of the Assistant Performer, including its rationale, can be found at<br />
-http://james-ingram-act-two.de/open-source/assistantPerformer/aboutAssistantPerformer.html
+A general description of how the Assistant Performer is used, can be found at<br />
+http://james-ingram-act-two.de/open-source/assistantPerformer/aboutAssistantPerformer.html<br />
+Background information about the Assistant Composer/Performer software, including their rationale, can be found in the Moritz documentation at<br />
+http://james-ingram-act-two.de/moritz3/moritz3.html
 
 ========
 
-This project is a work-in-progress, and currently has three branches: 'master', 'SongSixNoWorkers', and 'dev'.<br />
+The Assistant Performer is a work-in-progress, and currently has three branches: 'master', 'SongSixNoWorkers', and 'dev'.<br />
 <br />
 The '<b>master</b>' branch defines an appplication which can be tried out publicly at<br />
 http://james-ingram-act-two.de/open-source/masterAssistantPerformer/masterAssistantPerformer.html<br />
