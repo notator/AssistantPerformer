@@ -30,7 +30,7 @@ _AP.inputChord = (function()
 
         if(!(this instanceof InputChord))
         {
-        	return new InputChord(inputChordDef, timeObject, outputTracks);
+        	return new InputChord(timeObject, outputTracks);
         }
 
         // The timeObject takes the global speed option into account.

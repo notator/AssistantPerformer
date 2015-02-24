@@ -228,14 +228,14 @@ _AP.tracksControl = (function (document)
 
         function isTheLastPlayingInputOrOutputTrack(trackIndex)
         {
-        	var i, rVal = true;
+        	var i, rVal = true, isOutput = trackCtlElems[trackIndex].isOutput;
 
             if(trackCtlElems[trackIndex].state === "on") // about to toggle it off
             {
             	for(i = 0; i < trackCtlElems.length; ++i)
                 {
 
-            		if(i !== trackIndex && trackCtlElems[i].state === "on")
+            		if(i !== trackIndex && trackCtlElems[i].state === "on" && trackCtlElems[i].isOutput === isOutput)
                     {
                         rVal = false;
                         break;
