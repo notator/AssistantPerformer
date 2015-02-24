@@ -11,379 +11,358 @@
 *  
 */
 
-/*jslint bitwise: false, nomen: false, plusplus: true, white: true */
+/*jslint bitwise: false, nomen: true, plusplus: true, white: true */
+/*global _AP: false,  window: false,  document: false, performance: false, console: false, alert: false, XMLHttpRequest: false */
 
 _AP.namespace('_AP.tracksControl');
 
 _AP.tracksControl = (function (document)
 {
-	"use strict";
+    "use strict";
 
 	var
-	BACKGROUND_GREEN = "#F5FFF5",
-	// button colours in this tracksControl 
-	SOLOISTS_STROKECOLOR = "#0000FF",
-	SOLOISTS_FILLCOLOR_WHEN_SOUNDING = "#CCCCFF",
-	SOLOISTS_FILLCOLOR_WHEN_SILENT = BACKGROUND_GREEN,
-	NORMAL_STROKECOLOR = "#000000",
-	NORMAL_FILLCOLOR = "#AAAAAA",
-	DISABLED_STROKECOLOR = "#000000",
-	DISABLED_FILLCOLOR = BACKGROUND_GREEN,
+	DISABLED_FRAME_ID = "trackControlsFrameDisabled",
 
-	disableLayerIDs = [],  // disableLayerIDs[0] is the disable layer id for the whole tracks control
-	trackIsOnStatus = [],
-	trackIsDisabledStatus = [],
-	disabled = true,
-	trackToggled = null,
-	livePerformersTrackIndex = -1,
-	livePerformerIsSilent = false,
-	isAssistedPerformance = false,
+	// colours in this tracksControl
+    BACKGROUND_GREEN = "#F5FFF5",
+    TRACKOFF_FILLCOLOR = BACKGROUND_GREEN,
+	DISABLED_BULLET_STROKECOLOR = "#FFFFFF", // used with opacity
+	DISABLED_BULLET_FILLCOLOR = "#FFFFFF", // used with opacity
+ 
+	OUTPUT_TRACKNUMBER_COLOR = "#000000",
+    OUTPUT_BULLET_STROKECOLOR = "#000000",
+	OUTPUT_BULLET_FILLCOLOR = "#AAAAAA",
+	OUTPUT_OVERBULLET_STROKECOLOR = "#00CE00", // mouseover ring
 
-	// Returns the (read only) boolean state of the track at trackIndex.
-	// This function is used while setting options.
-	trackIsOn = function (trackIndex)
+	INPUT_TRACKNUMBER_COLOR = "#0000FF",
+	INPUT_BULLET_STROKECOLOR = "#0000FF",
+	INPUT_BULLET_FILLCOLOR = "#BBBBFF",
+	INPUT_OVERBULLET_STROKECOLOR = "#7777FF", // mouseover ring
+
+	// constants for track control opacity values
+    METAL = "1", // control layer is completely opaque
+	SMOKE = "0.7", // control layer is fairly opaque
+    GLASS = "0", // control layer is completely transparent
+
+	isLivePerformance, // set in init()
+
+	trackCtlElems = [], // the controls for individual tracks
+
+    scoreRefresh = null, // a callback that tells the score to redraw itself
+
+	init = function(nOutputTracks, nInputTracks, isLivePerf, scoreRefreshCallback)
 	{
-		var isOnStatus;
-		if (trackIndex < trackIsOnStatus.length)
-		{
-			isOnStatus = trackIsOnStatus[trackIndex];
-		}
-		else
-		{
-			throw "illegal track index";
-		}
-		return isOnStatus;
+	    var trackControlsMainElem, svgTrackControlsElem, trackCtlElem,
+			controlPanel = document.getElementById("svgRuntimeControls"),
+			firstControlPanelChild,
+			i, parentElem,
+			nTrackControls,
+			trackControlsWidth;
+
+	    function getTrackControlsMainElem(trackControlsWidth)
+	    {
+	    	var trackControlsMainElem = document.getElementById("trackControlsMainElem");
+	    	if(trackControlsMainElem !== null)
+	    	{
+	    		parentElem = trackControlsMainElem.parentNode;
+	    		parentElem.removeChild(trackControlsMainElem);
+	    	}
+	    	trackControlsMainElem = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
+	    	trackControlsMainElem.setAttribute("id", "trackControlsMainElem");
+	    	trackControlsMainElem.setAttribute("width", trackControlsWidth + 2);
+	    	trackControlsMainElem.setAttribute("height", "36px");
+	    	trackControlsMainElem.style.position = "absolute";
+	    	trackControlsMainElem.style.top = 0;
+	    	trackControlsMainElem.style.left = 0;
+
+	    	return trackControlsMainElem;
+	    }
+
+	    function svgElem(contentString)
+	    {
+	    	var div = document.createElementNS('http://www.w3.org/1999/xhtml', 'div'),
+					frag = document.createDocumentFragment();
+
+	    	div.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg">' + contentString + '</svg>';
+	    	frag.appendChild(div.firstChild.firstChild);
+
+	    	return frag.firstChild;
+	    }
+
+	    // append the following child nodes to the trackControlsMainElem
+	    // <rect id="trackControlsFrame" x="0" y="0" width="' + width + '" height="30" stroke="#008000" stroke-width="1" fill="#F5FFF5" />
+	    // <rect id="trackControlsFrameDisabled" x="0" y="0" width="' + width + '" height="30" stroke="#FFFFFF" stroke-width="1" fill="#FFFFFF" opacity="0" />
+	    function addFrames(trackControlsMainElem, trackControlsWidth)
+	    {
+	    	var frameElem, disabledFrameElem;
+
+	    	frameElem = svgElem('<rect id="trackControlsFrame" x="0" y="0" width="' + trackControlsWidth + '" height="30" stroke="#008000" stroke-width="1" fill="#F5FFF5" />');
+	    	disabledFrameElem = svgElem('<rect id="' + DISABLED_FRAME_ID + '" x="0" y="0" width="' + trackControlsWidth + '" height="30" stroke="#FFFFFF" stroke-width="1" fill="#FFFFFF" opacity=' + GLASS + ' />');
+
+	    	trackControlsMainElem.appendChild(frameElem);
+	    	trackControlsMainElem.appendChild(disabledFrameElem);
+	    }
+
+	    function trackControlElem(trackIndexStr, isOutputTrackControl)
+	    {
+	    	var trackIndex = parseInt(trackIndexStr, 10),
+				trackNumberColor = isOutputTrackControl ? OUTPUT_TRACKNUMBER_COLOR : INPUT_TRACKNUMBER_COLOR,
+				overBulletStrokeColor = isOutputTrackControl ? OUTPUT_OVERBULLET_STROKECOLOR : INPUT_OVERBULLET_STROKECOLOR,
+				bulletOnStrokeColor = isOutputTrackControl ? OUTPUT_BULLET_STROKECOLOR : INPUT_BULLET_STROKECOLOR,
+				bulletOnFillColor = isOutputTrackControl ? OUTPUT_BULLET_FILLCOLOR : INPUT_BULLET_FILLCOLOR,
+				bulletOffStrokeColor = isOutputTrackControl ? OUTPUT_BULLET_STROKECOLOR : INPUT_BULLET_STROKECOLOR,
+				bulletOffFillColor = TRACKOFF_FILLCOLOR,
+				bulletDisabledStrokeColor = DISABLED_BULLET_STROKECOLOR,
+				bulletDisabledFillColor = DISABLED_BULLET_FILLCOLOR,
+
+				trackNumber = (trackIndex + 1).toString(),
+				controlID = "track" + trackNumber + "Control",
+				translateX = ((trackIndex * 16) + 6).toString(),
+
+				overBulletID = 'overBullet' + trackNumber,
+				bulletOnID = 'bullet' + trackNumber + 'On',
+				bulletOffID = 'bullet' + trackNumber + 'Off',
+				bulletDisabledID = 'bullet' + trackNumber + 'Disabled',
+
+				textTranslateX = (trackIndex < 9) ? "2.0" : "-2.0",
+				html = '<g id="' + controlID + '" transform="translate(' + translateX + ',1)"\n' +
+					'onmouseover="_AP.controls.showOverRect(\'' + overBulletID + '\', \'' + bulletDisabledID + '\')"\n' +
+					'onmouseout="_AP.controls.hideOverRect(\'' + overBulletID + '\')"\n' +
+					'onmousedown="_AP.tracksControl.trackOnOff(\'' + trackIndex + '\', \'' + bulletOffID + '\')" >\n' +
+					'    <text x="' + textTranslateX + '" y="10" font-size="10" font-family="Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif"' +
+							'fill="' + trackNumberColor + '">\n' +
+							trackNumber + '\n' +
+					'    </text>\n' +
+					'    <circle id="' + overBulletID + '" cx="5" cy="19" r="6.5" stroke="' + overBulletStrokeColor + '" stroke-width="2" opacity="' + GLASS + '"/> \n' +
+					'    <circle id="' + bulletOnID + '" cx="5" cy="19" r="5" stroke="' + bulletOnStrokeColor + '" stroke-width="1" fill="' + bulletOnFillColor + '" opacity="' + METAL + '"/>\n' +
+					'    <circle id="' + bulletOffID + '" cx="5" cy="19" r="5" stroke="' + bulletOffStrokeColor + '" stroke-width="1" fill="' + bulletOffFillColor + '" opacity="' + GLASS + '"/>\n' +
+					'    <circle id="' + bulletDisabledID + '" cx="5" cy="19" r="5" stroke="' + bulletDisabledStrokeColor + '" stroke-width="1" fill="' + bulletDisabledFillColor + '" opacity="' + GLASS + '"/>\n' +
+				'</g>\n';
+
+	    	return svgElem(html);
+	    }
+
+	    // Called if this is not a live performance 
+	    function disableInputControls()
+	    {
+	    	var i;
+
+	    	for(i = 0; i < trackCtlElems.length; ++i)
+	    	{
+	    		if(trackCtlElems[i].isOutput === false)
+	    		{
+	    			trackCtlElems[i].onmouseover = null;
+	    			trackCtlElems[i].onmouseout = null;
+	    			trackCtlElems[i].onmousedown = null;
+
+	    			setTrackCtlState(i, "disabled");
+	    			trackCtlElems[i].previousState = "disabled";
+	    		}
+	    	}
+	    }
+
+	    isLivePerformance = isLivePerf;
+	    scoreRefresh = scoreRefreshCallback;
+
+	    nTrackControls = nOutputTracks + nInputTracks;
+	    trackControlsWidth = ((nTrackControls * 16) + 6).toString(); // individual controls are 10 pixels wide, with 6px between them.
+
+	    trackControlsMainElem = getTrackControlsMainElem(trackControlsWidth);
+
+	    firstControlPanelChild = controlPanel.firstChild;
+	    controlPanel.insertBefore(trackControlsMainElem, firstControlPanelChild);
+
+	    svgTrackControlsElem = svgElem('<g id="trackControls" transform="translate(0.5,0.5)" \\>');
+	    trackControlsMainElem.appendChild(svgTrackControlsElem);
+
+	    addFrames(svgTrackControlsElem, trackControlsWidth);
+
+	    trackCtlElems = [];
+
+	    for(i = 0; i < nTrackControls; ++i)
+	    {
+	    	if(i < nOutputTracks)
+	    	{
+	    		trackCtlElem = trackControlElem(i, true); // an output track control
+	    	}
+	    	else
+	    	{
+	    		trackCtlElem = trackControlElem(i, false); // an input track control
+	    	}
+
+	    	svgTrackControlsElem.appendChild(trackCtlElem);
+
+	    	trackCtlElems.push(trackCtlElem);
+	    	trackCtlElems[i].isOutput = (i < nOutputTracks);
+	    	trackCtlElems[i].state = "on";
+	    	trackCtlElems[i].previousState = "on";
+	    }
+
+	    if(isLivePerformance === false)
+	    {
+	    	disableInputControls();
+	    }
 	},
 
-	// Returns an array containing the on/off status of each track.
-	// The tracks' status cannot be set by changing values in the returned array.
-	// This array is passed as an argument to the playSpan() functions.
+	// Returns a read-only array containing all the track on/off states.
+    // The tracks' state cannot be set by changing values in the returned array.
+    // This function is called by the performance controls when playing starts, and
+	// by the trackOnOff function below.
 	getTrackIsOnArray = function ()
 	{
 		var i, readOnlyArray = [];
-		for (i = 0; i < trackIsOnStatus.length; ++i)
+		for(i = 0; i < trackCtlElems.length; ++i)
 		{
-			readOnlyArray.push(trackIsOn(i));
+			readOnlyArray.push(trackCtlElems[i].state === "on"); // "disabled" and "off" are both "off" here
 		}
 		return readOnlyArray;
 	},
 
-	trackHasBeenToggled = function ()
+    // called by user by clicking on screen.
+    trackOnOff = function (trackNumberStr, bulletOffID)
+    {
+    	var
+		trackIndex = parseInt(trackNumberStr, 10),
+    	bulletOffLayer = document.getElementById(bulletOffID),
+        thisIsTheLastPlayingInputOrOutputTrack;
+
+        function isTheLastPlayingInputOrOutputTrack(trackIndex)
+        {
+        	var i, rVal = true;
+
+            if(trackCtlElems[trackIndex].state === "on") // about to toggle it off
+            {
+            	for(i = 0; i < trackCtlElems.length; ++i)
+                {
+
+            		if(i !== trackIndex && trackCtlElems[i].state === "on")
+                    {
+                        rVal = false;
+                        break;
+                    }
+                }
+            }
+            else // about to toggle it on
+            {
+                rVal = false;
+            }
+
+            if(rVal === true)
+            {
+            	if(trackCtlElems[trackIndex].isOutput)
+            	{
+            		alert("Can't turn off the last playing output track!");
+            	}
+            	else
+            	{
+            		alert("Can't turn off the last playing input track!");
+            	}
+            }
+
+            return rVal;
+        }
+
+        thisIsTheLastPlayingInputOrOutputTrack = isTheLastPlayingInputOrOutputTrack(trackIndex);
+
+        if (!thisIsTheLastPlayingInputOrOutputTrack)
+        {
+            if (trackCtlElems[trackIndex].state === "on")
+            {
+            	bulletOffLayer.setAttribute("opacity", METAL);
+                trackCtlElems[trackIndex].state = "off";
+            }
+            else if(trackCtlElems[trackIndex].state === "off")
+            {
+            	bulletOffLayer.setAttribute("opacity", GLASS);
+            	trackCtlElems[trackIndex].state = "on";
+            }
+
+        	// scoreRefresh is a callback that tells the score to redraw itself
+            if(scoreRefresh !== null)
+            {
+            	scoreRefresh(isLivePerformance, getTrackIsOnArray() );
+            }
+        }
+    },
+
+	setTrackCtlState = function(trackIndex, state)
 	{
-		// Calling this callback, which is defined in Controls, tells the score to redraw itself
-		// using the appropriate colours.
-		// If this is an assisted performance and the soloists silence status changes, the score
-		// sets the soloist's track appropriately, and the assistant is reconstructed.
-		if (trackToggled !== null)
+		var 
+		offLayer = document.getElementById("bullet" + (trackIndex + 1).toString() + "Off"),
+		disabledLayer = document.getElementById("bullet" + (trackIndex + 1).toString() + "Disabled");
+		trackCtlElems[trackIndex].previousState = trackCtlElems[trackIndex].state;
+
+		switch(state)
 		{
-			trackToggled(livePerformerIsSilent);
+			case "on":
+				offLayer.setAttribute("opacity", GLASS);
+				disabledLayer.setAttribute("opacity", GLASS);
+				trackCtlElems[trackIndex].state = "on";
+				break;
+			case "off":
+				offLayer.setAttribute("opacity", METAL);
+				disabledLayer.setAttribute("opacity", GLASS);
+				trackCtlElems[trackIndex].state = "off";
+				break;
+			case "disabled":
+				disabledLayer.setAttribute("opacity", SMOKE);
+				trackCtlElems[trackIndex].state = "disabled";
+				break;
 		}
 	},
 
-	// called by user by clicking on screen
-	trackOnOff = function (elemID, elemDisabledLayerID, trackIndexStr)
-	{
-		var
-		elem = document.getElementById(elemID),
-		elemDisabledLayer = document.getElementById(elemDisabledLayerID),
-		trackIndex = parseInt(trackIndexStr, 10),
-		thisIsTheLastPlayingTrack;
+    // disable/re-enable the whole tracks control
+    setDisabled = function (toDisabled)
+    {
+    	var i, isCurrentlyDisabled, disabledFrame = document.getElementById(DISABLED_FRAME_ID);
 
-		function isTheLastPlayingTrack(trackIndex)
-		{
-			var
-			i,
-			rVal = true;
+    	if(disabledFrame !== null)
+    	{
+    		isCurrentlyDisabled = (disabledFrame.getAttribute("opacity") === SMOKE);
 
-			if(trackIsOnStatus[trackIndex] === true) // about to toggle it off
-			{
-				for(i = 0; i < trackIsOnStatus.length; ++i)
-				{
-					if(i !== trackIndex && trackIsOnStatus[i] === true)
-					{
-						rVal = false;
-						break;
-					}
-				}
-			}
-			else // about to toggle it on
-			{
-				rVal = false;
-			}
+    		if(toDisabled)
+    		{
+    			disabledFrame.setAttribute("opacity", SMOKE);
+    		}
+    		else
+    		{
+    			disabledFrame.setAttribute("opacity", GLASS);
+    		}
 
-			if(rVal === true)
-			{
-				alert("Can't turn off the last playing track!");
-			}
+    		for(i = 0; i < trackCtlElems.length; ++i)
+    		{
+    			if(toDisabled)
+    			{
+    				setTrackCtlState(i, "disabled");
+    			}
+    			else if(isCurrentlyDisabled)
+    			{
+    				setTrackCtlState(i, trackCtlElems[i].previousState);
+    			}
+    		}
+    	}
+    },
 
-			return rVal;
-		}
+    publicAPI =
+    {
+        // Called after loading a particular score.
+    	init: init,
 
-		thisIsTheLastPlayingTrack = isTheLastPlayingTrack(trackIndex);
+    	// used to disable the whole tracks control when changing it makes no sense.
+    	setDisabled: setDisabled,
 
-		disabled = (elemDisabledLayer.getAttribute("opacity") !== "0");
+    	// Returns a read-only array of booleans containing all the track on/off states.
+    	// The tracks' state cannot be set by changing values in the returned array.
+    	// This function is called by the performance controls when playing starts.
+    	getTrackIsOnArray : getTrackIsOnArray,
 
-		if (!thisIsTheLastPlayingTrack && !disabled && !trackIsDisabledStatus[trackIndex])
-		{
-			if (isAssistedPerformance)
-			{
-				if (trackIndex === livePerformersTrackIndex)
-				{
-					elem.style.stroke = SOLOISTS_STROKECOLOR;
-					trackIsOnStatus[trackIndex] = true; // always
-					if(livePerformerIsSilent === true)
-					{
-						elem.style.fill = SOLOISTS_FILLCOLOR_WHEN_SOUNDING;
-						livePerformerIsSilent = false;
-					}
-					else
-					{
-						elem.style.fill = SOLOISTS_FILLCOLOR_WHEN_SILENT;
-						livePerformerIsSilent = true;
-					}
-				}
-				else if (trackIsOnStatus[trackIndex])
-				{
-					elem.style.stroke = DISABLED_STROKECOLOR;
-					elem.style.fill = DISABLED_FILLCOLOR;
-					trackIsOnStatus[trackIndex] = false;
-				}
-				else
-				{
-					elem.style.stroke = NORMAL_STROKECOLOR;
-					elem.style.fill = NORMAL_FILLCOLOR;
-					trackIsOnStatus[trackIndex] = true;
-				}
-			}
-			else // score performance
-			{
-				if (trackIsOnStatus[trackIndex])
-				{
-					elem.style.stroke = DISABLED_STROKECOLOR;
-					elem.style.fill = DISABLED_FILLCOLOR;
-					trackIsOnStatus[trackIndex] = false;
-				}
-				else
-				{
-					elem.style.stroke = NORMAL_STROKECOLOR;
-					elem.style.fill = NORMAL_FILLCOLOR;
-					trackIsOnStatus[trackIndex] = true;
-				}
-			}
+    	// Called if the user clicks a trackControl.
+    	// This function calls the scoreRefresh(isLivePerformance, trackIsOnArray)
+    	// callback which tells the score to redraw itself.
+        trackOnOff: trackOnOff
+    };
+    // end var
 
-			trackHasBeenToggled();
-		}
-	},
-
-	setTrackOn = function (trackIndex)
-	{
-		var elemID = 'track' + (trackIndex + 1).toString() + 'Bullet',
-			elem = document.getElementById(elemID);
-
-		if (isAssistedPerformance)
-		{
-			if (trackIndex === livePerformersTrackIndex)
-			{
-				elem.style.stroke = SOLOISTS_STROKECOLOR;
-				trackIsOnStatus[trackIndex] = true; // always
-				if(livePerformerIsSilent === false)
-				{
-					elem.style.fill = SOLOISTS_FILLCOLOR_WHEN_SOUNDING;
-				}
-				else
-				{
-					elem.style.fill = SOLOISTS_FILLCOLOR_WHEN_SILENT;
-				}
-			}
-			else
-			{
-				elem.style.stroke = NORMAL_STROKECOLOR;
-				elem.style.fill = NORMAL_FILLCOLOR;
-				trackIsOnStatus[trackIndex] = true;
-			}
-		}
-		else
-		{
-			elem.style.stroke = NORMAL_STROKECOLOR;
-			elem.style.fill = NORMAL_FILLCOLOR;
-			trackIsOnStatus[trackIndex] = true;
-		}
-	},
-
-	setInitialTracksControlState = function(isAssisted, soloistsTrackIndex)
-	{
-		var i, nTracks = trackIsOnStatus.length;
-
-		isAssistedPerformance = isAssisted;
-		livePerformersTrackIndex = soloistsTrackIndex;
-		livePerformerIsSilent = false;	   
-
-		for (i = 0; i < nTracks; ++i)
-		{
-			setTrackOn(i);
-		}
-	},
-
-	// disable/enable the whole tracks control
-	setDisabled = function (toDisabled)
-	{
-		var nLayers = disableLayerIDs.length,
-				elem, i, opacity;
-
-		opacity = toDisabled ? "0.7" : "0";
-		for (i = 0; i < nLayers; ++i)
-		{
-			elem = document.getElementById(disableLayerIDs[i]);
-			elem.setAttribute("opacity", opacity);
-			if (i > 0) // disableLayerIDs[0] is the id of the whole tracks control
-			{
-				trackIsDisabledStatus[i] = toDisabled;
-			}
-		}
-
-		disabled = toDisabled;
-	},
-
-	svgElem = function (s)
-	{
-		var div = document.createElementNS('http://www.w3.org/1999/xhtml', 'div'),
-				frag = document.createDocumentFragment();
-
-		div.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg">' + s + '</svg>';
-		frag.appendChild(div.firstChild.firstChild);
-
-		return frag.firstChild;
-	},
-
-	// append the following child nodes to the trackControlsElem
-	// <rect id="trackControlsFrame" x="0" y="0" width="' + width + '" height="30" stroke="#008000" stroke-width="1" fill="#F5FFF5" />
-	// <rect id="trackControlsFrameDisabled" x="0" y="0" width="' + width + '" height="30" stroke="#FFFFFF" stroke-width="1" fill="#FFFFFF" opacity="0" />
-	addFrames = function (trackControlsSvgElem, nTracks)
-	{
-		var width = ((nTracks * 16) + 6).toString(), // controls are 10 pixels wide, with 6px between them.
-			frameElem, disabledFrameElem, disableLayerID = "trackControlsFrameDisabled";
-
-		frameElem = svgElem('<rect id="trackControlsFrame" x="0" y="0" width="' + width + '" height="30" stroke="#008000" stroke-width="1" fill="#F5FFF5" />');
-		disabledFrameElem = svgElem('<rect id="' + disableLayerID + '" x="0" y="0" width="' + width + '" height="30" stroke="#FFFFFF" stroke-width="1" fill="#FFFFFF" opacity="0.7" />');
-
-		trackControlsSvgElem.appendChild(frameElem);
-		trackControlsSvgElem.appendChild(disabledFrameElem);
-
-		disableLayerIDs.push(disableLayerID);
-	},
-
-	addTrackControl = function (controlGroupElem, trackIndexStr)
-	{
-		var trackIndex = parseInt(trackIndexStr, 10),
-			trackNumber = (trackIndex + 1).toString(),
-			controlID = "track" + trackNumber + "Control",
-			translateX = ((trackIndex * 16) + 6).toString(),
-			bulletID = "track" + trackNumber + "Bullet",
-			overBulletID = "over" + bulletID,
-			disableFrameID = "trackControlsFrameDisabled",
-			disableControlID = controlID + "Disabled",
-			textTranslateX = (trackIndex < 9) ? "2.0" : "-2.0",
-			html = '<g id="' + controlID + '" transform="translate(' + translateX + ',1)"\n' +
-				'onmouseover="_AP.controls.showOverRect(\'' + overBulletID + '\', \'' + disableFrameID + '\')"\n' +
-				'onmouseout="_AP.controls.hideOverRect(\'' + overBulletID + '\')"\n' +
-				'onmousedown="_AP.tracksControl.trackOnOff(\'' + bulletID + '\', \'' + disableControlID + '\', \'' + trackIndexStr + '\')" >\n' +
-				'	<text x="' + textTranslateX + '" y="10" font-size="10" font-family="Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif" fill="black">\n' +
-				'		' + trackNumber + '\n' +
-				'	</text>\n' +
-				'	<circle id="' + overBulletID + '" cx="5" cy="19" r="6.5" stroke="#00CE00" stroke-width="2" opacity="0"/> \n' +
-				'	<circle id="' + bulletID + '" cx="5" cy="19" r="5" stroke="black" stroke-width="1" fill="#AAAAAA"/>\n' +
-				'	<rect id="' + disableControlID + '" x="-1" y="1" width="12" height="28" stroke="#FFFFFF" stroke-width="0" fill="#FFFFFF" opacity="0.7" />\n' +
-			'</g>\n',
-			svgTrackControlElem = svgElem(html);
-
-		controlGroupElem.appendChild(svgTrackControlElem);
-
-		trackIsOnStatus.push(true);
-		trackIsDisabledStatus.push(false);
-		disableLayerIDs.push(disableControlID);
-	},
-
-	setNumberOfTracks = function (nTracks)
-	{
-		var trackControlsSvgElem,
-			controlPanel = document.getElementById("svgRuntimeControls"),
-			firstControlPanelChild,
-			groupElem, i, parentElem;
-
-		trackControlsSvgElem = document.getElementById("trackControlsSvgElem");
-		if (trackControlsSvgElem !== null)
-		{
-			parentElem = trackControlsSvgElem.parentNode;
-			parentElem.removeChild(trackControlsSvgElem);
-			disableLayerIDs = [];
-		}
-
-		trackControlsSvgElem = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
-		trackControlsSvgElem.setAttribute("id", "trackControlsSvgElem");
-		trackControlsSvgElem.setAttribute("width", "1042px");
-		trackControlsSvgElem.setAttribute("height", "36px");
-		trackControlsSvgElem.style.position = "absolute";
-		trackControlsSvgElem.style.top = 0;
-		trackControlsSvgElem.style.left = 0;
-		groupElem = svgElem('<g id="trackControls" transform="translate(0.5,0.5)" \\>');
-		trackControlsSvgElem.appendChild(groupElem);
-
-		addFrames(groupElem, nTracks);
-
-		trackIsOnStatus = [];
-		trackIsDisabledStatus = [];
-		disableLayerIDs = [];
-
-		for (i = 0; i < nTracks; ++i)
-		{
-			addTrackControl(groupElem, i);
-		}
-
-		//controlPanel.appendChild(trackControlsSvgElem);
-		firstControlPanelChild = controlPanel.firstChild;
-		if(nTracks > 0)
-		{
-			controlPanel.insertBefore(trackControlsSvgElem, firstControlPanelChild);
-		}
-	},
-
-	getTrackToggledCallback = function (callback)
-	{
-		trackToggled = callback;
-	},
-
-	publicAPI =
-	{
-		// Called after loading a particular score.
-		setNumberOfTracks: setNumberOfTracks,
-
-		// Called when the user clicks the start button in the upper options.
-		setInitialTracksControlState: setInitialTracksControlState,
-
-		// called if the user clicks a trackControl
-		trackOnOff: trackOnOff,
-
-		// used to disable the tracks control when changing it makes no sense.
-		setDisabled: setDisabled,
-
-		//setTrackOn: setTrackOn,
-		//setAllTracksOn: setAllTracksOn,
-
-		// Function which returns the (read only) boolean state of the track at trackIndex.
-		// This function is used by the score when redrawing itself.
-		trackIsOn: trackIsOn,
-
-		// Function which returns an array containing the on/off status of each track.
-		// The tracks' status cannot be set by changing values in the returned array.
-		// The array is passed as an argument to the playSpan() functions.
-		// In an assisted performance, the soloist's track is always ON, but it can be
-		// either sounding or silent.
-		getTrackIsOnArray : getTrackIsOnArray,
-
-		getTrackToggledCallback: getTrackToggledCallback
-	};
-	// end var
-
-	return publicAPI;
+    return publicAPI;
 
 } (document));

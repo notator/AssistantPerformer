@@ -11,31 +11,31 @@
  *  When browsers implement the Web MIDI API natively, the code in
  *  ap/WebMIDIAPI.js is ignored (does nothing). In this function,
  *  1. The midiAccess object is first retrieved by calling
- *	   window.navigator.requestMIDIAccess(onSuccessCallback, onErrorCallback);
+ *       window.navigator.requestMIDIAccess(onSuccessCallback, onErrorCallback);
  *  2. onSuccessCallback calls _AP.controls.init(midiAccess) which saves the
- *	 midiAccess object and sets the contents of the device selector menus in
- *	 the Assistant Performer's user interface.
+ *     midiAccess object and sets the contents of the device selector menus in
+ *     the Assistant Performer's user interface.
  */
 
 /*jslint bitwise: false, nomen: false, plusplus: true, white: true */
 
 window.addEventListener("load", function (window)
 {
-	"use strict";
+    "use strict";
 
-	var
-	onSuccessCallback = function (midiAccess)
-	{
-		// Save the midiAccess object and set
-		// the contents of the device selector menus.
-		_AP.controls.init(midiAccess);
-	},
-	onErrorCallback = function (error)
-	{
-		throw "Error: Unable to set midiAccess. Error code:".concat(error.code);
-	};
+    var
+    onSuccessCallback = function (midiAccess)
+    {
+        // Save the midiAccess object and set
+        // the contents of the device selector menus.
+        _AP.controls.init(midiAccess);
+    },
+    onErrorCallback = function (error)
+    {
+        throw "Error: Unable to set midiAccess. Error code:".concat(error.code);
+    };
 
-	navigator.requestMIDIAccess().then(onSuccessCallback, onErrorCallback);
+    navigator.requestMIDIAccess().then(onSuccessCallback, onErrorCallback);
 
 }, false);
 

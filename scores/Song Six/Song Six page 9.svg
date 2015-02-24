@@ -10,7 +10,7 @@
 	<desc>
 		Author: James Ingram
 		Website: http://www.james-ingram-act-two.de
-		Date: Monday 15.12.2014, 22:47:28
+		Date: Wednesday 04.02.2015, 20:06:50
 		Software: Moritz/Assistant Composer</desc>
 	<defs>
 		<g
@@ -239,7 +239,7 @@
 		</g>
 	</defs>
 	<rect
-		class="frame"
+		id="frame"
 		x="0"
 		y="0"
 		width="8080"
@@ -252,7 +252,7 @@
 		x="80"
 		y="80"
 		font-size="72"
-		font-family="Arial">Song Six: page 9, Monday 15.12.2014, 22:47:26</text>
+		font-family="Arial">Song Six: page 9, Wednesday 04.02.2015, 20:06:49</text>
 	<g
 		class="system"
 		id="page9_system1">
@@ -359,7 +359,7 @@
 					font-size="80"
 					font-family="Times New Roman">F 1</text>
 				<g
-					id="barnumber20">
+					id="barnumber32">
 					<text
 						x="503.2"
 						y="416"
@@ -377,6 +377,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="599.824"
 					score:msDuration="820">
 					<text
 						x="580.3439"
@@ -385,7 +386,8 @@
 						font-family="CLicht">Œ</text>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="997.15">
 					<score:midiChord
 						pitchWheelDeviation="11">
 						<basicChords>
@@ -484,7 +486,8 @@
 						d="M 1439.001 660.8 L 1771.883 660.8 1771.883 674.24 1439.001 674.24 z" />
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="1455.414">
 					<score:midiChord
 						pitchWheelDeviation="11">
 						<basicChords>
@@ -577,7 +580,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="1788.296">
 					<score:midiChord
 						pitchWheelDeviation="11">
 						<basicChords>
@@ -659,7 +663,8 @@
 						d="M 2227.792 660.8 L 2566.47 660.8 2566.47 674.24 2227.792 674.24 z" />
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="2244.205">
 					<score:midiChord
 						pitchWheelDeviation="11">
 						<basicChords>
@@ -752,7 +757,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="2582.883">
 					<score:midiChord
 						pitchWheelDeviation="11">
 						<basicChords>
@@ -847,6 +853,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="2942.414"
 					score:msDuration="254">
 					<text
 						x="2923.734"
@@ -856,6 +863,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="3185.781"
 					score:msDuration="1680">
 					<text
 						x="3162.031"
@@ -864,7 +872,8 @@
 						font-family="CLicht">Ó</text>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="4115.55">
 					<score:midiChord
 						pitchWheelDeviation="11">
 						<basicChords>
@@ -936,7 +945,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="4561.33">
 					<score:midiChord
 						pitchWheelDeviation="11">
 						<basicChords>
@@ -1041,7 +1051,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="4753.693">
 					<score:midiChord
 						pitchWheelDeviation="11">
 						<basicChords>
@@ -1118,7 +1129,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="5229.072">
 					<score:midiChord
 						pitchWheelDeviation="11">
 						<basicChords>
@@ -1196,6 +1208,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="5785.092"
 					score:msDuration="2424">
 					<text
 						x="5761.342"
@@ -1221,7 +1234,8 @@
 						d="M 6950.204 660.8 L 7460.065 660.8 7460.065 674.24 6950.204 674.24 z" />
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="6966.616">
 					<score:midiChord
 						pitchWheelDeviation="12">
 						<basicChords>
@@ -1326,7 +1340,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="7317.063">
 					<score:midiChord
 						pitchWheelDeviation="12">
 						<basicChords>
@@ -1426,7 +1441,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="7476.478">
 					<score:midiChord
 						pitchWheelDeviation="12">
 						<basicChords>
@@ -1605,6 +1621,7 @@
 					font-family="Times New Roman">F 2</text>
 				<g
 					class="rest"
+					score:alignmentX="599.824"
 					score:msDuration="1347">
 					<text
 						x="580.3439"
@@ -1614,6 +1631,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="1365.128"
 					score:msDuration="283">
 					<text
 						x="1346.449"
@@ -1630,7 +1648,8 @@
 						d="M 1545.116 1088 L 1741.357 1088 1741.357 1101.44 1545.116 1101.44 z" />
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="1561.529">
 					<score:midiChord
 						pitchWheelDeviation="15">
 						<basicChords>
@@ -1708,7 +1727,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="1757.769">
 					<score:midiChord
 						pitchWheelDeviation="15">
 						<basicChords>
@@ -1794,7 +1814,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="2331.423">
 					<score:midiChord
 						pitchWheelDeviation="15">
 						<basicChords>
@@ -1877,7 +1898,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="2532.975">
 					<score:midiChord
 						pitchWheelDeviation="16">
 						<basicChords>
@@ -1915,6 +1937,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="2923.032"
 					score:msDuration="294">
 					<text
 						x="2904.353"
@@ -1924,6 +1947,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="3185.781"
 					score:msDuration="1680">
 					<text
 						x="3162.031"
@@ -1933,6 +1957,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="4121.31"
 					score:msDuration="2153">
 					<text
 						x="4097.56"
@@ -1949,7 +1974,8 @@
 						d="M 5171.473 1088 L 5481.096 1088 5481.096 1101.44 5171.473 1101.44 z" />
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="5187.885">
 					<score:midiChord
 						pitchWheelDeviation="16">
 						<basicChords>
@@ -2011,7 +2037,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="5497.509">
 					<score:midiChord
 						pitchWheelDeviation="16">
 						<basicChords>
@@ -2093,7 +2120,8 @@
 						d="M 5825.093 1088 L 6631.374 1088 6631.374 1101.44 5825.093 1101.44 z" />
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="5841.506">
 					<score:midiChord
 						pitchWheelDeviation="16">
 						<basicChords>
@@ -2163,7 +2191,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="6175.356">
 					<score:midiChord
 						pitchWheelDeviation="16">
 						<basicChords>
@@ -2220,7 +2249,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="6420.536">
 					<score:midiChord
 						pitchWheelDeviation="17">
 						<basicChords>
@@ -2291,7 +2321,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="6647.787">
 					<score:midiChord
 						pitchWheelDeviation="17">
 						<basicChords>
@@ -2359,6 +2390,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="6956.44"
 					score:msDuration="1442">
 					<text
 						x="6936.96"
@@ -2425,6 +2457,7 @@
 					font-family="Times New Roman">F 3</text>
 				<g
 					class="rest"
+					score:alignmentX="599.824"
 					score:msDuration="1347">
 					<text
 						x="580.3439"
@@ -2434,6 +2467,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="1365.128"
 					score:msDuration="621">
 					<text
 						x="1346.449"
@@ -2442,7 +2476,8 @@
 						font-family="CLicht">‰</text>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="1725.305">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -2541,7 +2576,8 @@
 						d="M 2143.891 1440 L 2661.925 1440 2661.925 1453.44 2143.891 1453.44 z" />
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="2160.303">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -2619,7 +2655,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="2413.559">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -2697,7 +2734,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="2678.338">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -2735,6 +2773,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="2899.774"
 					score:msDuration="342">
 					<text
 						x="2881.095"
@@ -2744,6 +2783,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="3185.781"
 					score:msDuration="1680">
 					<text
 						x="3162.031"
@@ -2753,6 +2793,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="4115.55"
 					score:msDuration="924">
 					<text
 						x="4096.07"
@@ -2787,7 +2828,8 @@
 						d="M 4546.855 1440 L 5484.003 1440 5484.003 1453.44 4546.855 1453.44 z" />
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="4563.268">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -2849,7 +2891,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="4738.672">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -2915,7 +2958,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="4948.542">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -2985,7 +3029,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="5150.091">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -3042,7 +3087,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="5315.321">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -3108,7 +3154,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="5500.416">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -3171,6 +3218,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="5785.092"
 					score:msDuration="2548">
 					<text
 						x="5761.342"
@@ -3205,7 +3253,8 @@
 						d="M 7012.031 1440 L 7473.147 1440 7473.147 1453.44 7012.031 1453.44 z" />
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="7028.443">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -3275,7 +3324,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="7224.03">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -3349,7 +3399,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="7489.56">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -3490,6 +3541,7 @@
 					font-family="Times New Roman">F 4</text>
 				<g
 					class="rest"
+					score:alignmentX="599.824"
 					score:msDuration="1347">
 					<text
 						x="580.3439"
@@ -3499,6 +3551,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="1365.128"
 					score:msDuration="1158">
 					<text
 						x="1345.648"
@@ -3508,6 +3561,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="2103.889"
 					score:msDuration="1783">
 					<text
 						x="2080.139"
@@ -3517,6 +3571,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="3185.781"
 					score:msDuration="1680">
 					<text
 						x="3162.031"
@@ -3526,6 +3581,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="4121.31"
 					score:msDuration="3159">
 					<text
 						x="4097.56"
@@ -3535,6 +3591,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="5771.332"
 					score:msDuration="3845">
 					<text
 						x="5753.052"
@@ -3639,6 +3696,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="3466.386"
 					score:msDuration="509">
 					<text
 						x="3447.707"
@@ -3647,7 +3705,8 @@
 						font-family="CLicht">‰</text>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="3713.019">
 					<score:midiChord
 						hasChordOff="0">
 						<basicChords>
@@ -3733,7 +3792,8 @@
 					font-size="80"
 					font-family="Times New Roman">Clyt.</text>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="599.824">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -3770,7 +3830,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="997.15">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -3820,7 +3881,8 @@
 						d="M 1381.541 2141.76 L 1786.78 2141.76 1786.78 2155.2 1381.541 2155.2 z" />
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="1365.128">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -3857,7 +3919,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="1770.368">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -3920,7 +3983,8 @@
 						d="M 2114.542 2109.76 L 2791.659 2109.76 2791.659 2123.2 2114.542 2123.2 z" />
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="2098.129">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -3957,7 +4021,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="2345.474">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -3994,7 +4059,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="2433.159">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -4031,7 +4097,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="2775.247">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -4068,7 +4135,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="3180.021">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -4111,6 +4179,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="3466.386"
 					score:msDuration="509">
 					<text
 						x="3447.707"
@@ -4119,7 +4188,8 @@
 						font-family="CLicht">‰</text>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="3713.019">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -4196,7 +4266,8 @@
 						d="M 4131.962 2109.76 L 4869.922 2109.76 4869.922 2123.2 4131.962 2123.2 z" />
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="4115.55">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -4233,7 +4304,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="4465.875">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -4270,7 +4342,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="4656.785">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -4307,7 +4380,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="4853.509">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -4344,7 +4418,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="4967.418">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -4381,7 +4456,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="5373.95">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -4449,7 +4525,8 @@
 						d="M 5795.744 2109.76 L 7437.652 2109.76 7437.652 2123.2 5795.744 2123.2 z" />
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="5779.332">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -4486,7 +4563,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="6045.014">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -4523,7 +4601,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="6215.089">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -4560,7 +4639,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="6395.339">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -4597,7 +4677,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="6560.084">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -4634,7 +4715,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="6748.087">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -4671,7 +4753,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="6830.459">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -4708,7 +4791,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="7006.349">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -4745,7 +4829,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="7118.399">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -4782,7 +4867,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="7421.24">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -4914,7 +5000,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="3462.995">
 					<score:midiChord
 						pitchWheelDeviation="3">
 						<basicChords>
@@ -4952,7 +5039,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="5948.59">
 					<score:midiChord
 						pitchWheelDeviation="3">
 						<basicChords>
@@ -5092,7 +5180,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="2612.44">
 					<score:midiChord
 						pitchWheelDeviation="3">
 						<basicChords>
@@ -5130,7 +5219,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="6031.932">
 					<score:midiChord
 						pitchWheelDeviation="3">
 						<basicChords>
@@ -5289,7 +5379,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="2914.31">
 					<score:midiChord
 						pitchWheelDeviation="3">
 						<basicChords>
@@ -5341,7 +5432,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="6356.091">
 					<score:midiChord
 						pitchWheelDeviation="3">
 						<basicChords>
@@ -6231,7 +6323,7 @@
 					font-size="80"
 					font-family="Times New Roman">F 1</text>
 				<g
-					id="barnumber21">
+					id="barnumber33">
 					<text
 						x="503.2"
 						y="6426"
@@ -6335,7 +6427,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="803.2408">
 					<score:midiChord
 						pitchWheelDeviation="12">
 						<basicChords>
@@ -6434,6 +6527,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="998.0565"
 					score:msDuration="2450">
 					<text
 						x="974.3068"
@@ -6443,6 +6537,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="2420.026"
 					score:msDuration="863">
 					<text
 						x="2400.546"
@@ -6452,6 +6547,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="3069.218"
 					score:msDuration="1672">
 					<text
 						x="3045.468"
@@ -6460,7 +6556,8 @@
 						font-family="CLicht">Ó</text>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="3951.381">
 					<score:midiChord
 						pitchWheelDeviation="12">
 						<basicChords>
@@ -6553,7 +6650,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="4632.471">
 					<score:midiChord
 						pitchWheelDeviation="12">
 						<basicChords>
@@ -6658,7 +6756,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="4845.423">
 					<score:midiChord
 						pitchWheelDeviation="12">
 						<basicChords>
@@ -6735,7 +6834,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="5338.773">
 					<score:midiChord
 						pitchWheelDeviation="12">
 						<basicChords>
@@ -6856,7 +6956,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="5742.697">
 					<score:midiChord
 						pitchWheelDeviation="13">
 						<basicChords>
@@ -6934,6 +7035,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="6373.452"
 					score:msDuration="2441">
 					<text
 						x="6349.703"
@@ -7000,6 +7102,7 @@
 					font-family="Times New Roman">F 2</text>
 				<g
 					class="rest"
+					score:alignmentX="591.7584"
 					score:msDuration="2188">
 					<text
 						x="568.0087"
@@ -7016,7 +7119,8 @@
 						d="M 1779.37 7136 L 2104.906 7136 2104.906 7149.44 1779.37 7149.44 z" />
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="1795.782">
 					<score:midiChord
 						pitchWheelDeviation="17">
 						<basicChords>
@@ -7091,7 +7195,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="2121.319">
 					<score:midiChord
 						pitchWheelDeviation="17">
 						<basicChords>
@@ -7181,7 +7286,8 @@
 						d="M 2465.788 7136 L 2816.815 7136 2816.815 7149.44 2465.788 7149.44 z" />
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="2482.2">
 					<score:midiChord
 						pitchWheelDeviation="18">
 						<basicChords>
@@ -7256,7 +7362,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="2833.228">
 					<score:midiChord
 						pitchWheelDeviation="18">
 						<basicChords>
@@ -7344,6 +7451,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="3233.845"
 					score:msDuration="1994">
 					<text
 						x="3210.095"
@@ -7353,6 +7461,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="4424.706"
 					score:msDuration="1627">
 					<text
 						x="4400.956"
@@ -7361,7 +7470,8 @@
 						font-family="CLicht">Ó</text>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="5338.773">
 					<score:midiChord
 						pitchWheelDeviation="18">
 						<basicChords>
@@ -7470,7 +7580,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="5883.427">
 					<score:midiChord
 						pitchWheelDeviation="18">
 						<basicChords>
@@ -7566,7 +7677,8 @@
 						d="M 6351.28 7168 L 6804.801 7168 6804.801 7181.44 6351.28 7181.44 z" />
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="6367.692">
 					<score:midiChord
 						pitchWheelDeviation="19">
 						<basicChords>
@@ -7654,7 +7766,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="6586.487">
 					<score:midiChord
 						pitchWheelDeviation="19">
 						<basicChords>
@@ -7738,7 +7851,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="6821.214">
 					<score:midiChord
 						pitchWheelDeviation="19">
 						<basicChords>
@@ -7827,6 +7941,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="7223.222"
 					score:msDuration="830">
 					<text
 						x="7203.742"
@@ -7922,7 +8037,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="648.1729">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -8002,6 +8118,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="944.9509"
 					score:msDuration="2550">
 					<text
 						x="921.2012"
@@ -8011,6 +8128,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="2420.026"
 					score:msDuration="863">
 					<text
 						x="2400.546"
@@ -8027,7 +8145,8 @@
 						d="M 3047.045 7488 L 3920.63 7488 3920.63 7501.44 3047.045 7501.44 z" />
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="3063.458">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -8110,7 +8229,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="3331.641">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -8188,7 +8308,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="3599.823">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -8271,7 +8392,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="3937.043">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -8353,7 +8475,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="4481.12">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -8442,6 +8565,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="4748.241"
 					score:msDuration="1510">
 					<text
 						x="4728.761"
@@ -8451,6 +8575,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="5652.412"
 					score:msDuration="933">
 					<text
 						x="5632.932"
@@ -8460,6 +8585,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="6373.452"
 					score:msDuration="2441">
 					<text
 						x="6349.703"
@@ -8526,6 +8652,7 @@
 					font-family="Times New Roman">F 4</text>
 				<g
 					class="rest"
+					score:alignmentX="591.7584"
 					score:msDuration="3125">
 					<text
 						x="568.0087"
@@ -8535,6 +8662,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="2420.026"
 					score:msDuration="863">
 					<text
 						x="2400.546"
@@ -8544,6 +8672,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="3069.218"
 					score:msDuration="2304">
 					<text
 						x="3045.468"
@@ -8553,6 +8682,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="4424.706"
 					score:msDuration="2025">
 					<text
 						x="4400.956"
@@ -8562,6 +8692,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="5652.412"
 					score:msDuration="933">
 					<text
 						x="5632.932"
@@ -8571,6 +8702,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="6373.452"
 					score:msDuration="2441">
 					<text
 						x="6349.703"
@@ -8675,6 +8807,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="1045.402"
 					score:msDuration="1413">
 					<text
 						x="1025.922"
@@ -8683,7 +8816,8 @@
 						font-family="CLicht">Œ</text>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="1795.782">
 					<score:midiChord
 						hasChordOff="0">
 						<basicChords>
@@ -8713,6 +8847,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="7276.327"
 					score:msDuration="730">
 					<text
 						x="7257.647"
@@ -8795,7 +8930,8 @@
 						d="M 602.4111 8189.76 L 844.082 8189.76 844.082 8203.2 602.4111 8203.2 z" />
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="585.9984">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -8832,7 +8968,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="827.6694">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -8870,6 +9007,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="1045.402"
 					score:msDuration="1413">
 					<text
 						x="1025.922"
@@ -8895,7 +9033,8 @@
 						d="M 1812.195 8189.76 L 2003.906 8189.76 2003.906 8203.2 1812.195 8203.2 z" />
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="1795.782">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -8932,7 +9071,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="1987.493">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -8986,7 +9126,8 @@
 						d="M 2436.439 8189.76 L 2768.92 8189.76 2768.92 8203.2 2436.439 8203.2 z" />
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="2420.026">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -9023,7 +9164,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="2752.508">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -9068,7 +9210,8 @@
 						d="M 3079.87 8189.76 L 3333.715 8189.76 3333.715 8203.2 3079.87 8203.2 z" />
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="3063.458">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -9105,7 +9248,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="3317.302">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -9142,7 +9286,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="3530.255">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -9179,7 +9324,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="4145.748">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -9221,7 +9367,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="4418.946">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -9275,7 +9422,8 @@
 						d="M 4980.261 8189.76 L 5300.487 8189.76 5300.487 8203.2 4980.261 8203.2 z" />
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="4963.848">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -9312,7 +9460,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="5105.109">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -9349,7 +9498,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="5284.074">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -9386,7 +9536,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="5652.412">
 					<score:midiChord
 						pitchWheelDeviation="5">
 						<basicChords>
@@ -9424,6 +9575,7 @@
 				</g>
 				<g
 					class="rest"
+					score:alignmentX="6373.452"
 					score:msDuration="2441">
 					<text
 						x="6349.703"
@@ -9527,7 +9679,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="1726.745">
 					<score:midiChord
 						pitchWheelDeviation="3">
 						<basicChords>
@@ -9565,7 +9718,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="4910.743">
 					<score:midiChord
 						pitchWheelDeviation="3">
 						<basicChords>
@@ -9698,7 +9852,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="2669.132">
 					<score:midiChord
 						pitchWheelDeviation="3">
 						<basicChords>
@@ -9736,7 +9891,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="6367.692">
 					<score:midiChord
 						pitchWheelDeviation="20">
 						<basicChords>
@@ -9897,7 +10053,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="1961.471">
 					<score:midiChord
 						pitchWheelDeviation="3">
 						<basicChords>
@@ -9935,7 +10092,8 @@
 					</g>
 				</g>
 				<g
-					class="outputChord">
+					class="outputChord"
+					score:alignmentX="7297.038">
 					<score:midiChord
 						pitchWheelDeviation="20">
 						<basicChords>
