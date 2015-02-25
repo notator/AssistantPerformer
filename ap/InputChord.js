@@ -21,13 +21,10 @@ _AP.inputChord = (function()
     // begin var
     var
 
-
     // public InputChord constructor
-    // A InputChord contains all the information required for playing an (ornamented) chord.
+    // An InputChord contains all the information required for playing an (ornamented) chord.
     InputChord = function(timeObject, outputTracks)
     {
-    	var rval = {};
-
         if(!(this instanceof InputChord))
         {
         	return new InputChord(timeObject, outputTracks);
@@ -37,11 +34,11 @@ _AP.inputChord = (function()
         Object.defineProperty(this, "msPositionInScore", { value: timeObject.msPosition, writable: false });
         Object.defineProperty(this, "msDurationInScore", { value: timeObject.msDuration, writable: false });
 
-    	// an array of noteSeq objects. Each noteSeq contains the following fields
-    	//		noteSeq.notatedkey
-    	//		noteSeq.Seq
-		//		noteSeq.inputOptions (optional)
-        this.noteSeqs = this.getNoteSeqs(timeObject.inputChordDef, outputTracks);
+    	// an array of inputNote objects. Each inputNote contains the following fields
+    	//		inputNote.notatedKey
+    	//		inputNote.trks
+    	//		inputNote.inputOptions (optional)
+        this.inputNotes = this.getInputNotes(timeObject.inputChordDef.inputNotes, timeObject.msPosition, outputTracks);
 
         return this;
     },
@@ -49,18 +46,88 @@ _AP.inputChord = (function()
     publicInputChordAPI =
     {
         // public InputChord constructor
-        // A InputChord contains a private array of Moments containing all
-        // the midi messages required for playing an (ornamented) chord.
-        // A Moment is a collection of logically synchronous MIDI messages.
+    	// A InputChord contains a private array of inputNotes.
+    	// Each inputNote contains an array of parallel MidiObject arrays (trks). 
         InputChord: InputChord
     };
     // end var
 
-    InputChord.prototype.getNoteSeqs = function(inputChordDef, outputTracks)
+    InputChord.prototype.getInputNotes = function(inputNoteDefs, msPosition, outputTracks)
     {
-    	var noteSeqs = [];
-    	// TODO
-    	return noteSeqs;
+    	var i, nInputNoteDefs = inputNoteDefs.length, inputNoteDef, 
+			inputNote, inputNotes = [],
+			j, trk, trkMsPosition, trkRefDef, trkRefDefs,
+			trkLength,
+			k, midiObjects, indexInMidiObjects, midiObjectsAndIndex;
+
+    	function getMidiObjectsAndIndex(outputTracks, voiceID, msPosition)
+    	{
+    		var found = false, i, midiObjects, outputTrack, nOutputTracks = outputTracks.length,
+    			index, midiObjectsAndIndex = {};
+
+    		for(i = 0; i < nOutputTracks; ++i)
+    		{
+    			outputTrack = outputTracks[i];
+    			if(outputTrack.voiceID === voiceID)
+    			{
+    				found = true;
+    				break;
+    			}
+    		}
+    		if(found === false)
+    		{
+    			throw "InputChord.js: Can't find the output track with the correct voiceID!";
+    		}
+
+    		found = false;
+    		midiObjects = outputTrack.midiObjects;
+    		for(index = 0; index < midiObjects.length; ++index)
+    		{
+    			if(midiObjects[index].msPositionInScore === msPosition)
+    			{
+    				found = true;
+    				break;
+    			}
+    		}
+    		if(found === false)
+    		{
+    			throw "InputChord.js: Can't find the beginning of the trk!";
+    		}
+
+    		midiObjectsAndIndex.midiObjects = midiObjects;
+    		midiObjectsAndIndex.index = index;
+    		return midiObjectsAndIndex;
+    	}
+
+    	for(i = 0; i < nInputNoteDefs; ++i)
+    	{
+    		inputNoteDef = inputNoteDefs[i];
+    		inputNote = {};
+    		inputNote.notatedKey = inputNoteDef.notatedKey;
+    		inputNote.trks = [];
+    		inputNote.inputOptions = inputNoteDef.inputOptions; // can be undefined
+    		trkRefDefs = inputNoteDef.trkRefs;
+    		for(j = 0; j < trkRefDefs.length; ++j)
+    		{
+    			trkRefDef = trkRefDefs[j];
+    			trk = [];
+    			trk.msOffset = trkRefDef.mOffset; // can be undefined
+    			trkMsPosition = (trkRefDef.mOffset === undefined) ? msPosition : msPosition + trkRefDef.mOffset;
+    			midiObjectsAndIndex = getMidiObjectsAndIndex(outputTracks, trkRefDef.voiceID, trkMsPosition);
+    			midiObjects = midiObjectsAndIndex.midiObjects;
+    			indexInMidiObjects = midiObjectsAndIndex.index;
+    			trkLength = trkRefDef.length;
+
+    			for(k = 0; k < trkLength; ++k)
+    			{
+    				trk.push(midiObjects[indexInMidiObjects++]);
+    			}
+    			inputNote.trks.push(trk);
+			}
+    		inputNotes.push(inputNote);
+    	}
+
+    	return inputNotes;
     };
 
     return publicInputChordAPI;

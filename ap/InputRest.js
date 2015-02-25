@@ -35,7 +35,7 @@ _AP.inputRest = (function()
     publicRestAPI =
     {
         // A InputRest is like a MidiChord which has a single, empty Moment.
-        // MIDIRests are necessary so that running cursors can be moved to their
+        // InputRests are necessary so that running cursors can be moved to their
         // symbol, when sequences call reportMsPositionInScore(msPositionInScore).
         InputRest: InputRest
     };

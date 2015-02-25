@@ -28,15 +28,15 @@ _AP.inputChordDef = (function ()
     //
     // Each inputNote in the inputChordDef.inputNotes[] has the following fields:
     //		inputNote.notatedKey (compulsory int)
-    //		inputNote.seqRefs (an array of seqRef)
+    //		inputNote.trkRefs (an array of trkRef)
 	//
-	// Each seqRef in inputNote.seqRefs has the following fields:
-	//		seqRef.voiceID (compulsory int >= 0. The voiceId of the voice containing the referenced Seq. )	
-	//		seqRef.length (compulsory int >= 0. The length of the referenced Seq.)
-	//		seqRef.msOffset (compulsory int >= 0 -- if attribute is not present, is 0 by default)
-	//		seqRef.inputControls (optional: can be contained in either Output Voice or seqRef elements.)
+	// Each trkRef in inputNote.trkRefs has the following fields:
+	//		trkRef.voiceID (compulsory int >= 0. The voiceId of the voice containing the referenced Seq. )	
+	//		trkRef.length (compulsory int >= 0. The length of the referenced Seq.)
+	//		trkRef.msOffset (compulsory int >= 0 -- if attribute is not present, is 0 by default)
+	//		trkRef.inputControls (optional: can be contained in either Output Voice or trkRef elements.)
 	//
-	// seqRef.inputControls sets the performance options for a Seq, by individually overriding the current options in the Seq's Output Voice.
+	// trkRef.inputControls sets the performance options for a Seq, by individually overriding the current options in the Seq's Output Voice.
 	// contains:
     //		inputControls.onlySeq -- possible values: "0" or "1", default is "0" 
 	//		inputControls.noteOnKey -- possible values: "ignore", "transpose", "matchExactly" 
@@ -80,63 +80,63 @@ _AP.inputChordDef = (function ()
 			var attr,
                 inputNote = {},
                 attributesLength = inputNoteDef.attributes.length,
-				seqRefsNode = inputNoteDef.firstElementChild,
+				trkRefsNode = inputNoteDef.firstElementChild,
                 i;
 
-			function getSeqRefs(seqRefsNode)
+			function getSeqRefs(trkRefsNode)
 			{
-				var seqRefsArray = [],
-				seqRefNode = seqRefsNode.firstElementChild;
+				var trkRefsArray = [],
+				trkRefNode = trkRefsNode.firstElementChild;
 
-				function getSeqRef(seqRefNode)
+				function getSeqRef(trkRefNode)
 				{
 					var i, attr,
-					seqRef = {},
-					attrLen = seqRefNode.attributes.length,
-					inputControlsNode = seqRefNode.firstElementChild;
+					trkRef = {},
+					attrLen = trkRefNode.attributes.length,
+					inputControlsNode = trkRefNode.firstElementChild;
 
 					for(i = 0; i < attrLen; ++i)
 					{
-						attr = seqRefNode.attributes[i];
+						attr = trkRefNode.attributes[i];
 						switch(attr.name)
 						{
-							//		seqRef.voiceID (compulsory int >= 0. The voiceId of the voice containing the referenced Seq. )	
-							//		seqRef.length (compulsory int >= 0. The length of the referenced Seq.)
-							//		seqRef.msOffset (compulsory int >= 0 -- if attribute is not present, is 0 by default)
+							//		trkRef.voiceID (compulsory int >= 0. The voiceId of the voice containing the referenced Seq. )	
+							//		trkRef.length (compulsory int >= 0. The length of the referenced Seq.)
+							//		trkRef.msOffset (compulsory int >= 0 -- if attribute is not present, is 0 by default)
 							case "voiceID":
-								seqRef.voiceID = parseInt(attr.value, 10);
+								trkRef.voiceID = parseInt(attr.value, 10);
 								break;
 							case "length":
-								seqRef.length = parseInt(attr.value, 10);
+								trkRef.length = parseInt(attr.value, 10);
 								break;
 							case "msOffset":
-								seqRef.msOffset = parseInt(attr.value, 10);
+								trkRef.msOffset = parseInt(attr.value, 10);
 								break;
 							default:
-								throw (">>>>>>>>>> Illegal seqRef attribute <<<<<<<<<<");
+								throw (">>>>>>>>>> Illegal trkRef attribute <<<<<<<<<<");
 						}
 					}
 
 					if(inputControlsNode !== undefined && inputControlsNode !== null)
 					{
-						seqRef.inputControls = new InputControls(inputControlsNode);
+						trkRef.inputControls = new InputControls(inputControlsNode);
 					}
-					return seqRef;
+					return trkRef;
 				}
 
-				while(seqRefNode)
+				while(trkRefNode)
 				{
 					try
 					{
-						seqRefsArray.push(getSeqRef(seqRefNode));
-						seqRefNode = seqRefNode.nextElementSibling;
+						trkRefsArray.push(getSeqRef(trkRefNode));
+						trkRefNode = trkRefNode.nextElementSibling;
 					}
 					catch(ex)
 					{
 						console.log(ex);
 					}
 				}
-				return seqRefsArray;
+				return trkRefsArray;
 			}
 
 			for(i = 0; i < attributesLength; ++i)
@@ -158,7 +158,7 @@ _AP.inputChordDef = (function ()
 				throw ("Error: all inputNotes must have a notatedKey attribute");
 			}
 
-			inputNote.seqRefs = getSeqRefs(seqRefsNode);
+			inputNote.trkRefs = getSeqRefs(trkRefsNode);
 
 			return inputNote;
 		}
