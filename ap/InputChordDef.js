@@ -25,20 +25,23 @@ _AP.inputChordDef = (function ()
     // The inputChordDef contains the inputChordDef information from the XML in a form that is easier to program with.
     // The InputChordDef has the following fields:
     //		inputChordDef.inputNotes[]
+	//		inputChordDef.inputControls -- can be undefined
     //
     // Each inputNote in the inputChordDef.inputNotes[] has the following fields:
     //		inputNote.notatedKey (compulsory int)
+	//		inputNote.inputControls -- can be undefined
     //		inputNote.trkRefs (an array of trkRef)
 	//
 	// Each trkRef in inputNote.trkRefs has the following fields:
 	//		trkRef.voiceID (compulsory int >= 0. The voiceId of the voice containing the referenced Seq. )	
 	//		trkRef.length (compulsory int >= 0. The length of the referenced Seq.)
 	//		trkRef.msOffset (compulsory int >= 0 -- if attribute is not present, is 0 by default)
-	//		trkRef.inputControls (optional: can be contained in either Output Voice or trkRef elements.)
+	//		trkRef.inputControls -- can be undefined
 	//
-	// trkRef.inputControls sets the performance options for a Seq, by individually overriding the current options in the Seq's Output Voice.
-	// contains:
-    //		inputControls.onlySeq -- possible values: "0" or "1", default is "0" 
+	// An inputChordDef.inputControls sets the current values in the midi input channel permanently by cascading the current values.
+	// inputNote.inputControls and trkRef.inputControls cascade with the current values in the midi input channel, but do not change
+	// those values permanently.
+	// inputControls contain:
 	//		inputControls.noteOnKey -- possible values: "ignore", "transpose", "matchExactly" 
 	//		inputControls.noteOnVel -- possible values: "ignore", "scale"  
 	//		inputControls.noteOff -- possible values: "ignore", "stop", "stopNow", "fade", "shortFade"  
@@ -80,20 +83,20 @@ _AP.inputChordDef = (function ()
 			var attr,
                 inputNote = {},
                 attributesLength = inputNoteDef.attributes.length,
-				trkRefsNode = inputNoteDef.firstElementChild,
+				childNodes = inputNoteDef.childNodes,
                 i;
 
-			function getSeqRefs(trkRefsNode)
+			function getTrkRefs(trkRefsNode)
 			{
 				var trkRefsArray = [],
 				trkRefNode = trkRefsNode.firstElementChild;
 
-				function getSeqRef(trkRefNode)
+				function getTrkRef(trkRefNode)
 				{
 					var i, attr,
 					trkRef = {},
 					attrLen = trkRefNode.attributes.length,
-					inputControlsNode = trkRefNode.firstElementChild;
+					childNodes = trkRefNode.childNodes;
 
 					for(i = 0; i < attrLen; ++i)
 					{
@@ -117,10 +120,15 @@ _AP.inputChordDef = (function ()
 						}
 					}
 
-					if(inputControlsNode !== undefined && inputControlsNode !== null)
+					for(i = 0; i < childNodes.length; ++i)
 					{
-						trkRef.inputControls = new InputControls(inputControlsNode);
+						if(childNodes[i].nodeName === "inputControls")
+						{
+							trkRef.inputControls = new InputControls(childNodes[i]);
+							break;
+						}
 					}
+
 					return trkRef;
 				}
 
@@ -128,7 +136,7 @@ _AP.inputChordDef = (function ()
 				{
 					try
 					{
-						trkRefsArray.push(getSeqRef(trkRefNode));
+						trkRefsArray.push(getTrkRef(trkRefNode));
 						trkRefNode = trkRefNode.nextElementSibling;
 					}
 					catch(ex)
@@ -158,7 +166,24 @@ _AP.inputChordDef = (function ()
 				throw ("Error: all inputNotes must have a notatedKey attribute");
 			}
 
-			inputNote.trkRefs = getSeqRefs(trkRefsNode);
+			for(i = 0; i < childNodes.length; ++i)
+			{
+				switch(childNodes[i].nodeName)
+				{
+					case "inputControls":
+						// inputNote.inputControls can be undefined
+						inputNote.inputControls = new InputControls(childNodes[i]);
+						break;
+					case "trkRefs":
+						inputNote.trkRefs = getTrkRefs(childNodes[i]);
+						break;
+				}
+			}
+
+			if(inputNote.trkRefs === undefined)
+			{
+				throw "inputNote.trkRefs must be defined!";
+			}
 
 			return inputNote;
 		}

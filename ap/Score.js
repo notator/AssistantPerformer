@@ -56,10 +56,6 @@ _AP.score = (function (document)
     // and when setting the position of the end marker in assisted performances.
     livePerformersTrackIndex = -1,
 
-    // callback: getTrackIsOnArray() returns a boolean which is the yes/no playing status of the track
-    // This callback is set in controls.beginRuntime() and called when using the performance controls.
-    getTrackIsOnArray = null,
-
     startMarker,
     runningMarker,
     endMarker,
@@ -264,18 +260,18 @@ _AP.score = (function (document)
         	for(i = 0; i < nTracks; ++i)
         	{
         		timeObjects = timeObjectsArray[i];
-        		if(trackIsOnArray === undefined || trackIsOnArray[i])
+        		if(trackIsOnArray === undefined || trackIsOnArray[i] === true)
         		{
-        			nTimeObjects = timeObjectsArray[i].length;
+        			nTimeObjects = timeObjects.length;
         			for(j = 0; j < nTimeObjects; ++j)
         			{
-        				if(alignmentX === timeObjectsArray[i][j].alignmentX)
+        				if(alignmentX === timeObjects[j].alignmentX)
         				{
         					timeObjectFound = true;
         					break;
         				}
 
-        				if(alignmentX < timeObjectsArray[i][j].alignmentX)
+        				if(alignmentX < timeObjects[j].alignmentX)
         				{
         					break;
         				}
@@ -393,12 +389,6 @@ _AP.score = (function (document)
                 startMarker.moveTo(timeObject);
             }
         }
-    },
-
-    getTrackIsOnArrayCallback = function(trackControlGetTrackIsOnArray)
-    {
-    	// getTrackIsOnArray() returns an array of booleans which are the current on/off state of each track
-    	getTrackIsOnArray = trackControlGetTrackIsOnArray;
     },
 
     // this function is called only when state is 'settingStart' or 'settingEnd'.
@@ -1261,7 +1251,7 @@ _AP.score = (function (document)
     			function getTimeObjects(noteObjects, speed)
     			{
     				var timeObjects = [], noteObjectClass,
-                        timeObject, i, j, length, noteObject, chordChildren;
+                        timeObject, i, j, length, noteObject, childNodes;
 
     				// timeObjects is an array of timeObject.
     				// speed is a floating point number, greater than zero.
@@ -1390,27 +1380,23 @@ _AP.score = (function (document)
     						{
     							timeObject = {};
     							timeObject.alignmentX = parseFloat(noteObject.getAttribute('score:alignmentX')) / viewBoxScale1;
-    							chordChildren = noteObject.childNodes;
-    							for(j = 0; j < chordChildren.length; ++j)
+    							childNodes = noteObject.childNodes;
+    							for(j = 0; j < childNodes.length; ++j)
     							{
-    								if(chordChildren[j].nodeName === 'score:midiChord')
+    								switch(childNodes[j].nodeName)
     								{
-    									timeObject.midiChordDef = new MidiChordDef(chordChildren[j]);
-    									break;
+    									case 'score:midiChord':
+    										timeObject.midiChordDef = new MidiChordDef(childNodes[j]);
+    										timeObject.msDuration = getMsDuration(timeObject.midiChordDef);
+    										break;
+    									case 'score:inputNotes':
+    										timeObject.inputChordDef = new InputChordDef(childNodes[j]);
+    										timeObject.msDuration = parseInt(noteObject.getAttribute('score:msDuration'), 10);
+    										break;
+    									case 'inputControls':
+    										timeObject.inputControls = new InputControls(childNodes[j]);
+    										break;
     								}
-    								if(chordChildren[j].nodeName === 'score:inputNotes')
-    								{
-    									timeObject.inputChordDef = new InputChordDef(chordChildren[j]);
-    									break;
-    								}
-    							}
-    							if(timeObject.midiChordDef !== undefined)
-    							{
-    								timeObject.msDuration = getMsDuration(timeObject.midiChordDef);
-    							}
-    							else
-    							{
-    								timeObject.msDuration = parseInt(noteObject.getAttribute('score:msDuration'), 10);
     							}
     							timeObjects.push(timeObject);
     						}
@@ -1853,9 +1839,6 @@ _AP.score = (function (document)
     	// Returns all the input and output tracks from the score
     	// in an object having two attributes: inputTracks[] and outputTracks[].
         this.getTracks = getTracks;
-
-    	// Loads the tracksControl.getTrackIsOnArray() callback.
-        this.getTrackIsOnArrayCallback = getTrackIsOnArrayCallback;
 
         // The TracksControl controls the display, and should be the only module to call this function.
         this.refreshDisplay = refreshDisplay;

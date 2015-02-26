@@ -112,6 +112,7 @@ _AP.inputChord = (function()
     			trkRefDef = trkRefDefs[j];
     			trk = [];
     			trk.msOffset = trkRefDef.mOffset; // can be undefined
+    			trk.inputControls = trkRefDef.inputControls; // can be undefined
     			trkMsPosition = (trkRefDef.mOffset === undefined) ? msPosition : msPosition + trkRefDef.mOffset;
     			midiObjectsAndIndex = getMidiObjectsAndIndex(outputTracks, trkRefDef.voiceID, trkMsPosition);
     			midiObjects = midiObjectsAndIndex.midiObjects;

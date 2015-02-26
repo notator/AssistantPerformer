@@ -9,12 +9,12 @@
 	onload="onLoad()" xmlns="http://www.w3.org/2000/svg">
 	<script
 		xlink:href="../../ap/SVG.js"
-		type="text/javascript" />
+		type="text/javascript"></script>
 	<title>Study 3 sketch 2</title>
 	<desc>
 		Author: James Ingram
 		Website: http://www.james-ingram-act-two.de
-		Date: Wednesday 25.02.2015, 11:11:30
+		Date: Thursday 26.02.2015, 12:47:46
 		Software: Moritz/Assistant Composer</desc>
 	<defs>
 		<g
@@ -256,9 +256,9 @@
 		x="80"
 		y="80"
 		font-size="72"
-		font-family="Arial">Study 3 sketch 2: page 1, Wednesday 25.02.2015, 11:11:30</text>
+		font-family="Arial">Study 3 sketch 2: page 1, Thursday 26.02.2015, 12:47:45</text>
 	<g
-		id="page1LinkTitleAndAuthor46">
+		id="page1LinkTitleAndAuthor1">
 		<a
 			class="linkClass"
 			xlink:href="http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html"
@@ -9072,13 +9072,22 @@
 					class="inputChord"
 					score:alignmentX="708.0109"
 					score:msDuration="150">
+					<inputControls
+						noteOnKey="matchExactly" />
 					<score:inputNotes>
 						<inputNote
 							notatedKey="80">
+							<inputControls
+								noteOnKey="transpose" />
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="0"
-									length="1" />
+									length="1">
+									<inputControls
+										noteOnKey="matchExactly"
+										noteOff="fade"
+										pitchWheel="pitchWheel" />
+								</trkRef>
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -9127,7 +9136,7 @@
 						<inputNote
 							notatedKey="78">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="0"
 									length="1" />
 							</trkRefs>
@@ -9178,7 +9187,7 @@
 						<inputNote
 							notatedKey="76">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="0"
 									length="1" />
 							</trkRefs>
@@ -9224,7 +9233,7 @@
 						<inputNote
 							notatedKey="74">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="0"
 									length="1" />
 							</trkRefs>
@@ -9270,7 +9279,7 @@
 						<inputNote
 							notatedKey="72">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="0"
 									length="1" />
 							</trkRefs>
@@ -9316,7 +9325,7 @@
 						<inputNote
 							notatedKey="70">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="0"
 									length="1" />
 							</trkRefs>
@@ -9367,7 +9376,7 @@
 						<inputNote
 							notatedKey="68">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="0"
 									length="1" />
 							</trkRefs>
@@ -9418,7 +9427,7 @@
 						<inputNote
 							notatedKey="66">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="0"
 									length="1" />
 							</trkRefs>
@@ -9469,7 +9478,7 @@
 						<inputNote
 							notatedKey="64">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="0"
 									length="1" />
 							</trkRefs>
@@ -9515,7 +9524,7 @@
 						<inputNote
 							notatedKey="62">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="0"
 									length="1" />
 							</trkRefs>
@@ -9561,7 +9570,7 @@
 						<inputNote
 							notatedKey="60">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="0"
 									length="1" />
 							</trkRefs>
@@ -9614,7 +9623,7 @@
 						<inputNote
 							notatedKey="58">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="0"
 									length="1" />
 							</trkRefs>
@@ -9674,13 +9683,13 @@
 						<inputNote
 							notatedKey="64">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="0"
 									length="12">
 									<inputControls
 										noteOnKey="matchExactly"
 										noteOff="fade" />
-								</seqRef>
+								</trkRef>
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -9709,13 +9718,13 @@
 						<inputNote
 							notatedKey="64">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="1"
 									length="12">
 									<inputControls
 										noteOnKey="matchExactly"
 										noteOff="fade" />
-								</seqRef>
+								</trkRef>
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -9744,13 +9753,13 @@
 						<inputNote
 							notatedKey="64">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="2"
 									length="12">
 									<inputControls
 										noteOnKey="matchExactly"
 										noteOff="fade" />
-								</seqRef>
+								</trkRef>
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -9779,13 +9788,13 @@
 						<inputNote
 							notatedKey="64">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="3"
 									length="12">
 									<inputControls
 										noteOnKey="matchExactly"
 										noteOff="fade" />
-								</seqRef>
+								</trkRef>
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -9814,13 +9823,13 @@
 						<inputNote
 							notatedKey="64">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="4"
 									length="12">
 									<inputControls
 										noteOnKey="matchExactly"
 										noteOff="fade" />
-								</seqRef>
+								</trkRef>
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -9849,13 +9858,13 @@
 						<inputNote
 							notatedKey="64">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="5"
 									length="12">
 									<inputControls
 										noteOnKey="matchExactly"
 										noteOff="fade" />
-								</seqRef>
+								</trkRef>
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -9884,13 +9893,13 @@
 						<inputNote
 							notatedKey="64">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="6"
 									length="12">
 									<inputControls
 										noteOnKey="matchExactly"
 										noteOff="fade" />
-								</seqRef>
+								</trkRef>
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -9919,13 +9928,13 @@
 						<inputNote
 							notatedKey="64">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="7"
 									length="12">
 									<inputControls
 										noteOnKey="matchExactly"
 										noteOff="fade" />
-								</seqRef>
+								</trkRef>
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -13337,7 +13346,7 @@
 					font-size="80"
 					font-family="Times New Roman">pal. 1</text>
 				<g
-					id="barnumber47">
+					id="barnumber2">
 					<text
 						x="552.8"
 						y="1901.901"
@@ -14403,7 +14412,7 @@
 						<inputNote
 							notatedKey="64">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="0"
 									length="12">
 									<inputControls
@@ -14412,7 +14421,7 @@
 										pitchWheel="volume"
 										maxVolume="100"
 										minVolume="50" />
-								</seqRef>
+								</trkRef>
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -14441,7 +14450,7 @@
 						<inputNote
 							notatedKey="64">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="1"
 									length="12">
 									<inputControls
@@ -14450,7 +14459,7 @@
 										pitchWheel="volume"
 										maxVolume="100"
 										minVolume="50" />
-								</seqRef>
+								</trkRef>
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -14479,7 +14488,7 @@
 						<inputNote
 							notatedKey="64">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="2"
 									length="12">
 									<inputControls
@@ -14488,7 +14497,7 @@
 										pitchWheel="volume"
 										maxVolume="100"
 										minVolume="50" />
-								</seqRef>
+								</trkRef>
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -14517,7 +14526,7 @@
 						<inputNote
 							notatedKey="64">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="3"
 									length="12">
 									<inputControls
@@ -14526,7 +14535,7 @@
 										pitchWheel="volume"
 										maxVolume="100"
 										minVolume="50" />
-								</seqRef>
+								</trkRef>
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -14563,7 +14572,7 @@
 						<inputNote
 							notatedKey="64">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="4"
 									length="12">
 									<inputControls
@@ -14571,7 +14580,7 @@
 										noteOff="shortFade"
 										shortFade="4"
 										pitchWheel="pitchWheel" />
-								</seqRef>
+								</trkRef>
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -14600,7 +14609,7 @@
 						<inputNote
 							notatedKey="64">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="5"
 									length="12">
 									<inputControls
@@ -14608,7 +14617,7 @@
 										noteOff="shortFade"
 										shortFade="5"
 										pitchWheel="pitchWheel" />
-								</seqRef>
+								</trkRef>
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -14637,7 +14646,7 @@
 						<inputNote
 							notatedKey="64">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="6"
 									length="12">
 									<inputControls
@@ -14645,7 +14654,7 @@
 										noteOff="shortFade"
 										shortFade="6"
 										pitchWheel="pitchWheel" />
-								</seqRef>
+								</trkRef>
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -14674,14 +14683,14 @@
 						<inputNote
 							notatedKey="64">
 							<trkRefs>
-								<seqRef
+								<trkRef
 									voiceID="7"
 									length="12">
 									<inputControls
 										pitchWheel="pitchWheel"
 										speedOption="noteOnKey"
 										maxSpeedPercent="500" />
-								</seqRef>
+								</trkRef>
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
