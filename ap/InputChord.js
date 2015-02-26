@@ -36,8 +36,8 @@ _AP.inputChord = (function()
 
     	// an array of inputNote objects. Each inputNote contains the following fields
     	//		inputNote.notatedKey
-    	//		inputNote.trks
-    	//		inputNote.inputOptions (optional)
+    	//		inputNote.seq
+    	//		inputNote.inputOptions (can be undefined)
         this.inputNotes = this.getInputNotes(timeObject.inputChordDef.inputNotes, timeObject.msPosition, outputTracks);
 
         return this;
@@ -56,7 +56,7 @@ _AP.inputChord = (function()
     {
     	var i, nInputNoteDefs = inputNoteDefs.length, inputNoteDef, 
 			inputNote, inputNotes = [],
-			j, trk, trkMsPosition, trkRefDef, trkRefDefs,
+			j, trk, trks, trkMsPosition, trkRefDef, trkRefDefs,
 			trkLength,
 			k, midiObjects, indexInMidiObjects, midiObjectsAndIndex;
 
@@ -104,7 +104,7 @@ _AP.inputChord = (function()
     		inputNoteDef = inputNoteDefs[i];
     		inputNote = {};
     		inputNote.notatedKey = inputNoteDef.notatedKey;
-    		inputNote.trks = [];
+    		trks = [];
     		inputNote.inputOptions = inputNoteDef.inputOptions; // can be undefined
     		trkRefDefs = inputNoteDef.trkRefs;
     		for(j = 0; j < trkRefDefs.length; ++j)
@@ -123,8 +123,11 @@ _AP.inputChord = (function()
     			{
     				trk.push(midiObjects[indexInMidiObjects++]);
     			}
-    			inputNote.trks.push(trk);
-			}
+    			trks.push(trk);
+    		}
+
+    		inputNote.seq = new _AP.seq.Seq(trks);
+
     		inputNotes.push(inputNote);
     	}
 
