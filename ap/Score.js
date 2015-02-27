@@ -205,10 +205,11 @@ _AP.score = (function (document)
                     trackIndex = clickedTrackIndex + 1;
                     diff = 1;
                 }
-                if (diff === 1 && trackIndex === timeObjectsArray.length)
-                {
-                    throw "Error: there must be at least one chord on the system!";
-                }
+                console.assert(!(diff === 1 && trackIndex === timeObjectsArray.length), "There must be at least one chord on the system!");
+                //if (diff === 1 && trackIndex === timeObjectsArray.length)
+                //{
+                //    throw "Error: there must be at least one chord on the system!";
+                //}
             }
         }
 
@@ -844,24 +845,17 @@ _AP.score = (function (document)
         			voices[1].centreY = staffBottomY;
         		}
         	}
-
-			// These attributes are only defined once (in the first bar of the piece).
+			
         	function getOutputVoiceAttributes(outputVoice, voiceNode)
         	{
         		var
-				voiceID = voiceNode.getAttribute('score:voiceID'),
 				midiChannel = voiceNode.getAttribute('score:midiChannel'),
 				masterVolume = voiceNode.getAttribute('score:masterVolume');
-        		if(voiceID !== null)
-        		{
-        			outputVoice.id = parseInt(voiceID, 10);
-        		}
-        		if(midiChannel !== null)
+
+        		// This condition will only be true in the first bar of the piece.
+        		if(midiChannel !== null && masterVolume !== null)
         		{
         			outputVoice.midiChannel = parseInt(midiChannel, 10);
-        		}
-        		if(masterVolume !== null)
-        		{
         			outputVoice.masterVolume = parseInt(masterVolume, 10);
         		}
         	}
@@ -962,7 +956,6 @@ _AP.score = (function (document)
             {
                 if (systemChildren[i].nodeName !== '#text')
                 {
-                	//systemChildID = systemChildren[i].getAttribute("id");
                 	systemChildClass = systemChildren[i].getAttribute("class");
                     if (systemChildClass === 'markers')
                     {
@@ -1650,10 +1643,8 @@ _AP.score = (function (document)
                     {
                         if(track.midiObjects[midiObjectIndex - 1] instanceof MidiChord)
                         {
-                            if(track.midiObjects[midiObjectIndex - 1].finalChordOffMoment === undefined)
-                            {
-                                throw "Error: finalChordOffMoment must be defined (but it can be empty).";
-                            }
+                        	console.assert(track.midiObjects[midiObjectIndex - 1].finalChordOffMoment !== undefined, "finalChordOffMoment must be defined (but it can be empty).");
+
                             finalChordOffMessages = track.midiObjects[midiObjectIndex - 1].finalChordOffMoment.messages;
                             nextObjectMessages = track.midiObjects[midiObjectIndex].moments[0].messages;
                             for(i = 0; i < finalChordOffMessages.length; ++i)
@@ -1680,7 +1671,6 @@ _AP.score = (function (document)
         			{
         				outputTracks.push(new Track());
         				outputTracks[outputTrackIndex].midiObjects = [];
-        				outputTracks[outputTrackIndex].voiceID = voice.id;
         				outputTracks[outputTrackIndex].midiChannel = voice.midiChannel;
         				outputTracks[outputTrackIndex].masterVolume = voice.masterVolume;
         				if(isLivePerformance === true)

@@ -33,7 +33,7 @@ _AP.inputChord = (function()
 				trkLength,
 				k, midiObjects, indexInMidiObjects, midiObjectsAndIndex;
 
-    		function getMidiObjectsAndIndex(outputTracks, voiceID, msPosition)
+    		function getMidiObjectsAndIndex(outputTracks, midiChannel, msPosition)
     		{
     			var found = false, i, midiObjects, outputTrack, nOutputTracks = outputTracks.length,
 					index, midiObjectsAndIndex = {};
@@ -41,7 +41,7 @@ _AP.inputChord = (function()
     			for(i = 0; i < nOutputTracks; ++i)
     			{
     				outputTrack = outputTracks[i];
-    				if(outputTrack.voiceID === voiceID)
+    				if(outputTrack.midiChannel === midiChannel)
     				{
     					found = true;
     					break;
@@ -49,7 +49,7 @@ _AP.inputChord = (function()
     			}
     			if(found === false)
     			{
-    				throw "InputChord.js: Can't find the output track with the correct voiceID!";
+    				throw "InputChord.js: Can't find the output track referenced by this midi channel!";
     			}
 
     			found = false;
@@ -96,7 +96,7 @@ _AP.inputChord = (function()
     					trk.inputControls = trkRefDef.inputControls; // can be undefined
     				}
     				trkMsPosition = (trkRefDef.mOffset === undefined) ? msPosition : msPosition + trkRefDef.mOffset;
-    				midiObjectsAndIndex = getMidiObjectsAndIndex(outputTracks, trkRefDef.voiceID, trkMsPosition);
+    				midiObjectsAndIndex = getMidiObjectsAndIndex(outputTracks, trkRefDef.midiChannel, trkMsPosition);
     				midiObjects = midiObjectsAndIndex.midiObjects;
     				indexInMidiObjects = midiObjectsAndIndex.index;
     				trkLength = trkRefDef.length;
