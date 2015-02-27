@@ -31,18 +31,19 @@ _AP.inputChord = (function()
 				inputNote, inputNotes = [],
 				j, trk, trks, trkMsPosition, trkRefDef, trkRefDefs,
 				trkLength,
-				k, midiObjects, indexInMidiObjects, midiObjectsAndIndex;
+				k, midiObjects, midiObjectIndex, trackData;
 
-    		function getMidiObjectsAndIndex(outputTracks, midiChannel, msPosition)
+    		function getTrackData(outputTracks, midiChannel, msPosition)
     		{
-    			var found = false, i, midiObjects, outputTrack, nOutputTracks = outputTracks.length,
-					index, midiObjectsAndIndex = {};
+    			var found = false, i, trackIndex = -1, midiObjects, outputTrack, nOutputTracks = outputTracks.length,
+					midiObjectIndex, trackData = {};
 
     			for(i = 0; i < nOutputTracks; ++i)
     			{
     				outputTrack = outputTracks[i];
     				if(outputTrack.midiChannel === midiChannel)
     				{
+    					trackIndex = i;
     					found = true;
     					break;
     				}
@@ -54,9 +55,9 @@ _AP.inputChord = (function()
 
     			found = false;
     			midiObjects = outputTrack.midiObjects;
-    			for(index = 0; index < midiObjects.length; ++index)
+    			for(midiObjectIndex = 0; midiObjectIndex < midiObjects.length; ++midiObjectIndex)
     			{
-    				if(midiObjects[index].msPositionInScore === msPosition)
+    				if(midiObjects[midiObjectIndex].msPositionInScore === msPosition)
     				{
     					found = true;
     					break;
@@ -67,9 +68,10 @@ _AP.inputChord = (function()
     				throw "InputChord.js: Can't find the beginning of the trk!";
     			}
 
-    			midiObjectsAndIndex.midiObjects = midiObjects;
-    			midiObjectsAndIndex.index = index;
-    			return midiObjectsAndIndex;
+    			trackData.trackIndex = trackIndex;
+				trackData.midiObjects = midiObjects;
+    			trackData.midiObjectIndex = midiObjectIndex;
+    			return trackData;
     		}
 
     		for(i = 0; i < nInputNoteDefs; ++i)
@@ -95,20 +97,26 @@ _AP.inputChord = (function()
     				{
     					trk.inputControls = trkRefDef.inputControls; // can be undefined
     				}
-    				trkMsPosition = (trkRefDef.mOffset === undefined) ? msPosition : msPosition + trkRefDef.mOffset;
-    				midiObjectsAndIndex = getMidiObjectsAndIndex(outputTracks, trkRefDef.midiChannel, trkMsPosition);
-    				midiObjects = midiObjectsAndIndex.midiObjects;
-    				indexInMidiObjects = midiObjectsAndIndex.index;
+    				trkMsPosition = (trkRefDef.mOffset === undefined) ? msPosition: msPosition + trkRefDef.mOffset;
+
+    				trackData = getTrackData(outputTracks, trkRefDef.midiChannel, trkMsPosition);
+
+    				// This is the track index from the top of the score (i.e. the index in the trackIsOnArray).
+					// Need to check trackIsOn at performance time. 
+    				trk.trackIndex = trackData.trackIndex;
+
+    				midiObjects = trackData.midiObjects;
+    				midiObjectIndex = trackData.midiObjectIndex;
     				trkLength = trkRefDef.length;
 
     				for(k = 0; k < trkLength; ++k)
     				{
-    					trk.push(midiObjects[indexInMidiObjects++]);
+    					trk.push(midiObjects[midiObjectIndex++]);
     				}
     				trks.push(trk);
     			}
 
-    			inputNote.seq = new _AP.seq.Seq(trks);
+    			inputNote.trks = trks;
 
     			inputNotes.push(inputNote);
     		}
