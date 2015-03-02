@@ -30,8 +30,6 @@ _AP.controls = (function(document, window)
     CONTROL = _AP.constants.CONTROL,
     sequenceToSMF = _AP.standardMidiFile.sequenceToSMF,
 
-	keyboard1 = _AP.keyboard1,
-
     midiAccess,
     score,
     svg = {}, // an object containing pointers to functions defined in SVG files
@@ -847,9 +845,7 @@ _AP.controls = (function(document, window)
     doControl = function(controlID)
     {
     	// This function analyses the score's id string in the scoreSelector in assistantPerformer.html,
-    	// and uses the information to:
-    	//     1. set the options on the main options page to default values,
-    	//     2. load the score's svg files into the "svgPages" div,
+    	// and uses the information to load the score's svg files into the "svgPages" div,
     	// The score is actually analysed when the Start button is clicked.
     	function setScore()
     	{
@@ -933,7 +929,7 @@ _AP.controls = (function(document, window)
     					scoreInfo.svgPageHeightStr = components[4].slice(14);
     					scoreInfo.nOutputVoices = parseInt(components[5].slice(14), 10);
     					scoreInfo.nInputVoices = parseInt(components[6].slice(13), 10);
-    					scoreInfo.inputHandler = components[7].slice(13);
+    					scoreInfo.inputHandler = components[7].slice(13); // e.g. "keyboard1[36..84]"
     				}
 
     				return scoreInfo;
@@ -1008,8 +1004,26 @@ _AP.controls = (function(document, window)
     			svgPagesFrame.innerHTML = embedCode;
     		}
 
+    		// scoreInfoInputHandler includes the keyRange (e.g: "keyboard1[36..84]").
     		function setInputDeviceOptions(scoreInfoInputHandler)
     		{
+    			var handler, range;
+
+    			// rangeString is of the form "[36..84]" containing two numbers
+    			// that are returned as range.bottomKey and range.topKey
+    			function getRange(rangeString)
+    			{
+    				var strs, range = {};
+
+    				strs = rangeString.split("..");
+    				strs[0] = strs[0].replace("[", "");
+    				strs[1] = strs[1].replace("]", "");
+    				range.bottomKey = parseInt(strs[0], 10);
+    				range.topKey = parseInt(strs[1], 10);
+
+    				return range;
+    			}
+
     			if(scoreInfoInputHandler === "none")
     			{
     				globalElements.inputDeviceSelect.selectedIndex = 0;
@@ -1022,14 +1036,19 @@ _AP.controls = (function(document, window)
     				// globalElements.inputDeviceSelect.selectedIndex is not changed here
     				globalElements.inputDeviceSelect.options[0].text = "choose a MIDI input device";
     				globalElements.inputDeviceSelect.disabled = false;
-    				switch(scoreInfoInputHandler)
+
+    				if(scoreInfoInputHandler.indexOf("keyboard1") === 0)
     				{
-    					case "keyboard1":
-    						options.inputHandler = keyboard1;
-    						break;
-    					default:
-    						throw "unknown scoreInfo.inputType";
+    					handler = _AP.keyboard1;
+    					range = getRange(scoreInfoInputHandler.slice("keyboard1".length));
     				}
+    				else
+    				{
+    					console.assert(false, "Error: unknown scoreInfo.inputType")
+    				}
+
+    				options.inputHandler = handler;
+    				options.inputKeyRange = range;
     			}
     		}
 
@@ -1241,8 +1260,8 @@ _AP.controls = (function(document, window)
     			player = options.inputHandler; // e.g. keyboard1 -- the "prepared piano"
     			player.inputTracks = tracks.inputTracks;
     			player.outputTracks = tracks.outputTracks; // public player.outputTracks is needed for sending track initialization messages
-    			player.init(options.inputDevice, options.outputDevice, reportEndOfPerformance, reportMsPos);
-    		}
+    			player.init(options.inputDevice, options.outputDevice, options.inputKeyRange, reportEndOfPerformance, reportMsPos);
+			}
     		else
     		{
     			player = sequence; // sequence is a namespace, not a class.

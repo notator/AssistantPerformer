@@ -1,0 +1,49 @@
+﻿
+The 'prepared synth' algorithm:
+===============================
+
+When a NoteOn arrives at handleMIDIInputEvent(msg):
+	1. keyObj = keyObjs[noteOn.key]
+	2. seq = keyObj.seqs[keyObj.index]
+	2. each trk in seq.trks is initiated using the global inputControls (and seq.inputControls, and trk.inputControls if defined).
+		Each trk plays in its own worker thread.
+
+When a NoteOff arrives at handleMIDIInputEvent(msg):
+	1. keyObj = keyObjs[noteOff.key]. This is the same object as for the noteOn above.
+	2. Send a noteOff message to each trk in keyObj.seqs[keyObj.index].trks (the key's currently playing trks).
+	3. index = keyObj.offIndices[keyObj.index]; (The index in msPosObjs of the noteOff position of this key.)
+		msPosObj = msPosObjs[index];
+		msPosObj.triggered = true;
+		if (index === (currentMsPosIndex + 1))
+		{	
+			while(msPosObj.triggered)
+			{
+				currentMsPosIndex++;
+				call runningMarker.incrementPosition()
+				if msPosObj.inputControls is defined, set the global inputControls (msPosObj.inputControls will have been set from inputChord.inputControls)
+				increment keyObj.index for each of the keys in msPosObj.onKeys[].
+			}
+		}
+
+keyboard1.play().initPlay() therefore sets the following objects:
+	
+	keyboard1.inputControls (to default values)
+	keyboard1.currentMsPosIndex = 0 // index in the msPosObjs array. The runningMarker is at msPosObjs[currentMsPosIndex].msPositionInScore.
+	keyboard1.msPosObjs // an array of msPosObj, ordered by msPosObj.msPositionInScore
+	keyboard1.keyObjs // an array of keyObj. There is one keyObj per key on the keyboard. Keyboard1.keyObjs[midikey] is the keyObj for that key. 
+
+	There is one msPosObj for each InputChord, InputRest, and finalBarline msPositionInTheScore
+	msPosObj has the following fields:
+	msPosObj.triggered // initially false, is set to true while performing (see above)
+	msPosObj.msPositionInScore // used when updating the runningMarker position.
+	msPosObj.onKeys[] // all the notatedKeys (noteOns) at this msPositionInScore
+	msPosObj.inputControls // undefined or from an inputChord
+	
+	keyObj // an object having the following fields:
+	keyObj.index // initialized to 0. The current index in keyObj.seqs[] and keyObj.offIndices[]	
+	keyObj.seqs[] // an array of seq -- initialized from the score. There is a seq for each inputNote having this notatedKey. Ordered by msPositionInScore.
+	keyObj.offIndices[] // the index in msPosObjs of the noteOff position of each seq.
+
+	seq // an object having the following fields:
+	seq.trks[] // an array of parallel trk - initialized from the score.
+	seq.inputControls // undefined or from inputNote
