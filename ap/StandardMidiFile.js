@@ -16,7 +16,7 @@
  */
 
 /*jslint bitwise: true, nomen: true, plusplus: true, white: true */
-/*global _AP: false,  window: false,  performance: false, console: false, ArrayBuffer: false, DataView: false, Uint8Array: false, Blob: false */
+/*global _AP: false,  window: false,  document: false, performance: false, console: false, alert: false, ArrayBuffer: false, DataView: false, Uint8Array: false, Blob: false */
 
 _AP.namespace('_AP.standardMidiFile');
 

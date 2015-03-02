@@ -20,6 +20,7 @@
  */
  
 /*jslint bitwise: false, nomen: false, plusplus: false, white: true */
+/*global _AP: false,  window: false,  document: false, performance: false, console: false, alert: false, XMLHttpRequest: false */
 
 // Returns the xml of the embedded_element (which is a reference to an SVG file).
 function getSVGDocument(embedded_element)
