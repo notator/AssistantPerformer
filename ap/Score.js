@@ -1673,10 +1673,6 @@ _AP.score = (function (document)
         				outputTracks[outputTrackIndex].midiObjects = [];
         				outputTracks[outputTrackIndex].midiChannel = voice.midiChannel;
         				outputTracks[outputTrackIndex].masterVolume = voice.masterVolume;
-        				if(isLivePerformance === true)
-        				{
-        					outputTracks[outputTrackIndex].inputControls = new InputControls(null); // default input controls
-        				}
         				outputTrackIndex++;
         			}
         			else // voice.class === "inputVoice" 
