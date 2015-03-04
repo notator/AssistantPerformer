@@ -112,19 +112,21 @@ _AP.inputControls = (function ()
         InputControls: InputControls
     };
 
-	// Returns a new inputControls object that is the result of cascading
-    // this inputControls object over the baseInputControls (which can be undefined)
+	// Returns a new inputControls object that is the result of cascading this inputControls object over the
+    // baseInputControls argument. An exception is thrown if the argument is undefined.
+	// The returned inputControls object only contains the attributes contained in this and/or the argument.
+	// (Attributes that are missing in both this and the argument will be missing in the returned inputControls.)
     InputControls.prototype.getCascadeOver = function(baseInputControls)
     {
     	var rval = {};
 
-    	console.assert(false, "This block of code has not been tested!");
+    	console.assert(baseInputControls !== undefined, "Error. The baseInputControls argument cannot be undefined");
 
     	if(this.noteOnKey !== undefined)
     	{
     		rval.noteOnKey = this.noteOnKey;
     	}
-    	else if(baseInputControls !== undefined && baseInputControls.noteOnKey !== undefined)
+    	else if(baseInputControls.noteOnKey !== undefined)
     	{
     		rval.noteOnKey = baseInputControls.noteOnKey;
     	}
@@ -133,7 +135,7 @@ _AP.inputControls = (function ()
     	{
     		rval.noteOnVel = this.noteOnVel;
     	}
-    	else if(baseInputControls !== undefined && baseInputControls.noteOnVel !== undefined)
+    	else if(baseInputControls.noteOnVel !== undefined)
     	{
     		rval.noteOnVel = baseInputControls.noteOnVel;
     	}
@@ -142,7 +144,7 @@ _AP.inputControls = (function ()
     	{
     		rval.noteOff = this.noteOff;
     	}
-    	else if(baseInputControls !== undefined && baseInputControls.noteOff !== undefined)
+    	else if(baseInputControls.noteOff !== undefined)
     	{
     		rval.noteOff = baseInputControls.noteOff;
     	}
@@ -155,7 +157,7 @@ _AP.inputControls = (function ()
     			rval.shortFade = this.shortFade;
     		}
     	}
-    	else if(baseInputControls !== undefined && baseInputControls.noteOff !== undefined)
+    	else if(baseInputControls.noteOff !== undefined)
     	{
     		rval.noteOff = baseInputControls.noteOff;
     		if(rval.noteOff === "shortFade")
@@ -173,7 +175,7 @@ _AP.inputControls = (function ()
     			rval.minVolume = this.minVolume;
     		}
     	}
-    	else if(baseInputControls !== undefined && baseInputControls.pressure !== undefined)
+    	else if(baseInputControls.pressure !== undefined)
     	{
     		rval.pressure = baseInputControls.pressure;
     		if(rval.pressure === "volume")
@@ -192,7 +194,7 @@ _AP.inputControls = (function ()
     			rval.minVolume = this.minVolume;
     		}
     	}
-    	else if(baseInputControls !== undefined && baseInputControls.pitchWheel !== undefined)
+    	else if(baseInputControls.pitchWheel !== undefined)
     	{
     		rval.pitchWheel = baseInputControls.pitchWheel;
     		if(rval.pitchWheel === "volume")
@@ -211,7 +213,7 @@ _AP.inputControls = (function ()
     			rval.minVolume = this.minVolume;
     		}
     	}
-    	else if(baseInputControls !== undefined && baseInputControls.modulation !== undefined)
+    	else if(baseInputControls.modulation !== undefined)
     	{
     		rval.modulation = baseInputControls.modulation;
     		if(rval.modulation === "volume")
@@ -229,7 +231,7 @@ _AP.inputControls = (function ()
     			rval.maxSpeedPercent = this.maxSpeedPercent;
     		}
     	}
-    	else if(baseInputControls !== undefined && baseInputControls.speedOption !== undefined)
+    	else if(baseInputControls.speedOption !== undefined)
     	{
     		rval.speedOption = baseInputControls.speedOption;
     		if(rval.speedOption !== "none")

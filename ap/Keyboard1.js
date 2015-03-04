@@ -70,15 +70,12 @@ _AP.keyboard1 = (function()
 
 	var
 	// set or called in init(...)
-	inputTracks,
-	outputTracks,
-	trackIsOnArray,
 	midiInputDevice,
 	midiOutputDevice,
 	inputControls, // the running controls, initialized in initPlay() and updated while performing.
 	currentMsPosIndex, // initialized to 0 when playing starts. Is the index in the following array.
 	msPosObjs,
-	keyObjs,
+	keyData,
 	keyRange, // keyRange.bottomKey and keyRange.topKey are the bottom and top midi key values that can be used by the score.
 	reportEndOfPerformance, // callback -- called here as reportEndOfPerformance(sequenceRecording, performanceMsDuration);
 	reportMsPositionInScore, // callback -- called here as reportMsPositionInScore(msPositionToReport);
@@ -100,9 +97,6 @@ _AP.keyboard1 = (function()
 	currentMoment = null, // nextMoment(), resume(), tick()
 	reportEndOfSpan, // callback. Can be null or undefined. Set in play().
 
-	midiObjectMsPositionsInScoreIndex = 0, // the current index in the following array
-	midiObjectMsPositionsInScore = [], // a flat, ordered array of msPositions
-
 	speedFactor = 1.0, // nextMoment(), setSpeedFactor() in handleMIDIInputEvent()
 	//maxDeviation, // for //console.log, set to 0 when performance starts
 
@@ -112,7 +106,7 @@ _AP.keyboard1 = (function()
 
 	sequenceRecording, // the sequence being recorded. set in play() and resume(), used by tick()
 
-		// TODO: complete resume()
+	// TODO: complete resume()
 	// Public function. Should only be called when this sequence is paused (and pausedMoment is set correctly).
 	// The sequence pauses if nextMoment() sets currentMoment to null while tick() is waiting for setTimeout().
 	// So the messages in pausedMoment (set to the last non-null currentMoment) have already been sent.
@@ -303,52 +297,93 @@ _AP.keyboard1 = (function()
 
 	// play()
 	//
-	// trackIsOnArrayArg[trackIndex] returns a boolean which determines whether each output or input
+	// trackIsOnArray[trackIndex] returns a boolean which determines whether each output or input
 	// track will be played or not. This array is read only.
 	// recording is a Sequence to which timestamped moments are added as they are performed.
 	// It should be an empty Sequence having the same number of output tracks as the score.
-	play = function(trackIsOnArrayArg, startMarkerMsPosInScore, endMarkerMsPosInScore, recording)
+	play = function(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, recording)
 	{
-		// Sets
-		//	keyboard1.inputControls (to default values)
-		//	keyboard1.currentMsPosIndex (the index in the following array. -- the startMarker is at msPosObjs[currentMsPosIndex].msPositionInScore.)
-		//	keyboard1.msPosObjs (an array of msPosObj - see below -, ordered by msPosObj.msPositionInScore)
-		//	keyboard1.keyObjs (an array of keyObj - see below. There is one keyObj per key on the keyboard. Keyboard1.keyObjs[midikey] is the keyObj for that key.) 
-		//	
-		//	There is one msPosObj for each InputChord and InputRest
-		//	msPosObj has the following fields:
-		//	msPosObj.triggered // initially false, is set to true while performing (see above)
-		//	msPosObj.msPositionInScore // used when updating the runningMarker position.
-		//	msPosObj.onKeys[] // all the notatedKeys (noteOns) at this msPositionInScore (can be empty - at rest positions)
-		//	msPosObj.inputControls // undefined or from an inputChord
-		//	
-		//	keyObj // an object having the following fields:
-		//	keyObj.index // initialized to 0. The current index in keyObj.seqs[] and keyObj.offIndices[]	
-		//	keyObj.seqs[] // an array of seq -- initialized from the score. There is a seq for each inputNote having this notatedKey. Ordered by msPositionInScore.
-		//	keyObj.offIndices[] // the index in msPosObjs of the noteOff position of each seq.
-		//	
-		//	seq // an object having the following fields:
-		//	seq.trks[] // an array of parallel trk - initialized from the score.
-		//	seq.inputControls // undefined or from inputNote
-		// See _PreparedSynthAlgorithm.txt
 		function initPlay(that, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore)
 		{
-			var i, inputTrack, inputTrackIndex = 0,
-			nInputTracks = that.inputTracks.length,
+			var
 			nOutputTracks = that.outputTracks.length,
-			nTracks = nOutputTracks + nInputTracks;
+			nTracks = nOutputTracks + that.inputTracks.length;
 
+			// Returns the inputControls current when the span starts.
+			// (Shunts in all playing inputTracks from the start of the score.)
+			// This "global" inputControls always has a complete set of attributes.
+			function getCurrentInputControls(inputTracks, trackIsOnArray, nOutputTracks, nTracks, startMarkerMsPosInScore)
+			{
+				var returnInputControlsObj = {}, currentTrackInputControlsObj,
+				i, inputTrackIndex = 0, inputTrack;
+
+				// returns null or an object having msPositionInScore and inputControls attributes
+				// The inputControls will contain a complete set of attributes.
+				function getCurrentTrackInputControlsObj(inputObjects, startMarkerMsPosInScore)
+				{
+					var i, nInputObjects = inputObjects.length, inputObject, returnInputControlsObj = null;
+
+					for(i = 0; i < nInputObjects; ++i)
+					{
+						inputObject = inputObjects[i];
+						if(inputObject.msPositionInScore >= startMarkerMsPosInScore)
+						{
+							break;
+						}
+						if(inputObject.inputControls !== undefined)
+						{
+							returnInputControlsObj = {};
+							returnInputControlsObj.msPositionInScore = inputObject.msPositionInScore;
+							returnInputControlsObj.inputControls = inputObject.inputControls.getCascadeOver(new _AP.inputControls.InputControls());
+						}
+					}
+					return returnInputControlsObj;
+				}
+
+				returnInputControlsObj.msPositionInScore = 0;
+				returnInputControlsObj.inputControls = new _AP.inputControls.InputControls();
+				
+				for(i = nOutputTracks; i < nTracks; ++i)
+				{
+					inputTrack = inputTracks[inputTrackIndex++];
+
+					if(trackIsOnArray[i])
+					{
+						currentTrackInputControlsObj = getCurrentTrackInputControlsObj(inputTrack.inputObjects, startMarkerMsPosInScore);
+						if(currentTrackInputControlsObj !== null)
+						{
+							console.assert(!(returnInputControlsObj.msPositionInScore > 0
+								&& (returnInputControlsObj.msPositionInScore === currentTrackInputControlsObj.msPositionInScore)),
+								"Error. Synchronous inputControl objects are not allowed.");
+
+							if(currentTrackInputControlsObj.msPositionInScore === 0
+							|| currentTrackInputControlsObj.msPositionInScore > returnInputControlsObj.msPositionInScore)
+							{
+								returnInputControlsObj = currentTrackInputControlsObj;
+							}	
+						}
+					}
+				}
+
+				return returnInputControlsObj.inputControls;
+			}
+
+			// Returns an array of msPosObj, from startMarkerMsPositionInScore to (not including) endMarkerMsPositionInScore,
+			// ordered by msPosObj.msPositionInScore. The "span" is the section of the score in this msPosition range.
+			// This array includes the positions of all inputChords and inputRests in the span, but not if their track has been turned off.
+			// It does not include the positions of outputChords and outputRests.
 			function getMsPosObjs(inputTracks, trackIsOnArray, nOutputTracks, nTracks, startMarkerMsPosInScore, endMarkerMsPosInScore)
 			{
-				var msPosObjs = [];
+				var i, inputTrackIndex = 0, inputTrack, msPosObjs = [];
 
+				// the inputTrack is performing
 				function addTrackSpanToMsPosObjs(inputTrack, msPosObjs, startMarkerMsPosInScore, endMarkerMsPosInScore)
 				{
-					var singleMsPosObjsArray, mergedArray;
+					var trackSpanMsPosObjsArray;
 
-					function getSingleMsPosObjsArray(inputObjects, startMarkerMsPosInScore, endMarkerMsPosInScore)
+					function getTrackSpanMsPosObjsArray(inputObjects, startMarkerMsPosInScore, endMarkerMsPosInScore)
 					{
-						var i, j, nInputObjects = inputObjects.length, inputObject, msPosObj, inputNotes, singleMsPosObjsArray = [];
+						var i, nInputObjects = inputObjects.length, inputObject, msPosObj, trackSpanMsPosObjsArray = [];
 
 						for(i = 0; i < nInputObjects; ++i)
 						{
@@ -360,41 +395,26 @@ _AP.keyboard1 = (function()
 							if(inputObject.msPositionInScore >= startMarkerMsPosInScore)
 							{
 								//	msPosObj has the following fields:
-								//	msPosObj.triggered // initially false, is set to true while performing (see above)
 								//	msPosObj.msPositionInScore // used when updating the runningMarker position.
-								//	msPosObj.onKeys[] // all the notatedKeys (noteOns) at this msPositionInScore (can be empty - at rest positions)
 								//	msPosObj.inputControls // undefined or from an inputChord
 								msPosObj = {};
-								msPosObj.triggered = false;
 								msPosObj.msPositionInScore = inputObject.msPositionInScore;
-								msPosObj.onKeys = [];
-								if(inputObject.inputNotes !== undefined)
+								if(inputObject.inputControls !== undefined)
 								{
-									// an inputChord
-									inputNotes = inputObject.inputNotes;
-									for(j = 0; j < inputNotes.length; ++j)
-									{
-										msPosObj.onKeys.push(inputNotes[j].notatedKey);
-									}
-									if(inputObject.inputControls !== undefined)
-									{
-										msPosObj.inputControls = inputObject.inputControls;
-									}
+									msPosObj.inputControls = inputObject.inputControls;
 								}
-								singleMsPosObjsArray.push(msPosObj);
+								trackSpanMsPosObjsArray.push(msPosObj);
 							}
 						}
-						return singleMsPosObjsArray;
+						return trackSpanMsPosObjsArray;
 					}
 
 					// Returns the result of merging newArray into oldArray.
 					// The merged array has one object per msPositionInScore, ordered according to msPositionInScore.
-					// If the two argument arrays have msPosObjs with a common msPositionInScore, the merged msPosObj
-					// has onKeys that are the concatenation of the old and new onKeys.
-					// Only one synchronous inputChord can should have an inputControls attribute!
+					// It is an error for more than one synchronous inputChord to have inputControls attribute!
 					function getMergedArrays(newArray, oldArray)
 					{
-						var msPos, mergedArray = [], indexNew, indexOld = 0;
+						var mergedArray = [], indexNew, indexOld = 0, obj, newObj;
 
 						if(oldArray.length === 0)
 						{
@@ -413,20 +433,13 @@ _AP.keyboard1 = (function()
 									mergedArray.push(oldArray[indexOld++]);
 								}
 
-								if(newObj.msPositionInScore < oldArray[indexOld].msPositionInScore)
+								if(indexOld === oldArray.length || newObj.msPositionInScore < oldArray[indexOld].msPositionInScore)
 								{
 									mergedArray.push(newObj);
 								}
-								else if(newArray[indexNew].msPositionInScore === oldArray[indexOld].msPositionInScore)
+								else if(newObj.msPositionInScore === oldArray[indexOld].msPositionInScore)
 								{
-									//	obj.triggered is always false here, but the following attributes have to be merged:
-									//	obj.onKeys[] // all the notatedKeys (noteOns) at this msPositionInScore (can be empty - at rest positions)
-									//	obj.inputControls // undefined or from an inputChord
-									obj = oldArray[indexOld];
-									for(i = 0; i < newObj.onKeys.length; ++i)
-									{
-										obj.onKeys.push(newObj.onKeys[i]);
-									}
+									obj = oldArray[indexOld++];
 
 									console.assert(!(obj.inputControls !== undefined && newObj.inputControls !== undefined),
 										"It is an error for two synchronous inputChords to have an inputControls attribute!");
@@ -435,21 +448,16 @@ _AP.keyboard1 = (function()
 									{
 										obj.inputControls = newObj.inputControls;
 									}
+
 									mergedArray.push(obj);
-									indexOld++;
-								}
-								else if(indexOld === oldArray.length)
-								{
-									mergedArray.push(newObj);
 								}
 							}
 						}
-
-						return mergedArray
+						return mergedArray;
 					}
 
-					singleMsPosObjsArray = getSingleMsPosObjsArray(inputTrack.inputObjects, startMarkerMsPosInScore, endMarkerMsPosInScore);
-					msPosObjs = getMergedArrays(singleMsPosObjsArray, msPosObjs);
+					trackSpanMsPosObjsArray = getTrackSpanMsPosObjsArray(inputTrack.inputObjects, startMarkerMsPosInScore, endMarkerMsPosInScore);
+					msPosObjs = getMergedArrays(trackSpanMsPosObjsArray, msPosObjs);
 
 					return msPosObjs;
 				}
@@ -457,44 +465,83 @@ _AP.keyboard1 = (function()
 				for(i = nOutputTracks; i < nTracks; ++i)
 				{
 					inputTrack = inputTracks[inputTrackIndex++];
-					inputTrack.isPerforming = trackIsOnArray[i];
+					// inputTrack.isPerforming = false;
 
-					if(inputTrack.isPerforming)
+					if(trackIsOnArray[i])
 					{
+						// inputTrack.isPerforming = true;
 						inputTrack.setForInputSpan(startMarkerMsPosInScore, endMarkerMsPosInScore);
 						msPosObjs = addTrackSpanToMsPosObjs(inputTrack, msPosObjs, startMarkerMsPosInScore, endMarkerMsPosInScore);
 					}
 				}
 				return msPosObjs;
 			}			
-
-			// TODO: complete getKeyObjs(...)
-			function getKeyObjs(inputTracks, trackIsOnArray, nOutputTracks, nTracks)
+			
+			function getKeyData(inputTracks, outputTracks, trackIsOnArray, msPosObjs, endMarkerMsPosInScore)
 			{
-			}
+				var keyData = [], keySeqs = [], midiKey,
+					bottomKey = keyRange.bottomKey, topKey = keyRange.topKey; // keyRange was been set in keyboard1.init().
 
-			// keyboard1.inputControls
-			inputControls = new _AP.inputControls.InputControls(null); // default input controls
+				// TODO: complete getKeySeqs(...)
+				function getKeySeqs(midiKey, inputTracks, outputTracks, trackIsOnArray, msPosObjs, endMarkerMsPosInScore)
+				{
+					//keySeqs is an object having the following fields:
+					//keySeqs.index	// Initialized to 0. The current index in the keySeqs array attributes (below).	
+					//keySeqs.seqs[]	An array of seq -- initialized from the span (see below).
+					//					This array is ordered by msPositionInScore.
+					//					There is a seq for each inputNote having this midiKey, unless the seq's inputTrack has been turned off, or
+					//					all its outputTracks have been turned off. In either case, the seq is simply not created. 
+					//keySeqs.onIndices[]  // The index in msPosObjs of each seq's noteOn position.
+					//keySeqs.offIndices[] // The index in msPosObjs of each seq's noteOff position.
+					//keySeqs.triggeredOns[]	// An array of booleans. One value per seq.
+					//							// Each value is initialised to false, but set to true when the inputNote's (seq's) noteOn is used (accepted).
+					//keySeqs.triggeredOffs[]	// An array of booleans. One value per inputNote (seq) played by the key.
+					//							// Each value is initialised to false, but set to true when the inputNote's (seq's) noteOff is used (accepted).
+
+					//seq is an object having the following fields:
+					//seq.trks[]	// An array of parallel trk - initialized from inputChord.inputNotes in the span (excluding non-playing outputTracks).
+					//				// This array is never empty. If it would be empty (because tracks have been turned off), the seq is not created.
+					//				// The outputChords and outputRests in each trk are also in range of the span (they do not continue beyond endMarkerMsPosition).
+					//seq.inputControls // undefined or from inputChord.inputNotes
+					var keySeqs = [];
+
+					// etc...
+
+					return keySeqs;
+					/* end of getKeySeqs(...) */
+				}
+				
+				for(midiKey = bottomKey; midiKey <= topKey; ++midiKey)
+				{
+					keySeqs = getKeySeqs(midiKey, inputTracks, outputTracks, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
+					keyData.push(keySeqs);
+				}
+				return keyData;
+			}
+			
+			/*** begin initPlay() ***/
+
+			// keyboard1.inputControls. This "global" inputControls always has a complete set of attributes.
+			inputControls = getCurrentInputControls(that.inputTracks, trackIsOnArray, nOutputTracks, nTracks, startMarkerMsPosInScore);
 
 			// keyboard1.currentMsPosIndex
 			currentMsPosIndex = 0; // the index in the following array
 
-			// keyboard1.msPosObjs
+			// keyboard1.msPosObjs. The msPositionsInScore (and inputControls, if defined) of all inputChords and inputRests in the span. 
 			msPosObjs = getMsPosObjs(that.inputTracks, trackIsOnArray, nOutputTracks, nTracks, startMarkerMsPosInScore, endMarkerMsPosInScore);
 
 			console.assert(msPosObjs[0].msPositionInScore === startMarkerMsPosInScore);
 
-			// keyboard1.keyObjs
-			keyObjs = getKeyObjs(that.inputTracks, trackIsOnArray, nOutputTracks, nTracks);
+			// keyboard1.keyData
+			keyData = getKeyData(that.inputTracks, that.outputTracks, trackIsOnArray, msPosObjs, endMarkerMsPosInScore);
 		}
 
 		sequenceRecording = recording;
 
-		trackIsOnArray = trackIsOnArrayArg;
 		endMarkerMsPosition = endMarkerMsPosInScore;
 		startTimeAdjustedForPauses = performanceStartTime;
 
-		initPlay(this, trackIsOnArrayArg, startMarkerMsPosInScore, endMarkerMsPosInScore);
+		initPlay(this, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
 
 		pausedMoment = null;
 		pauseStartTime = -1;
