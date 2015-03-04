@@ -1,25 +1,28 @@
 ﻿
-The 'prepared synth' algorithm:
-===============================
+The Keyboard1 algorithm (a 'prepared keyboard'):
+===============================================
 
 When a NoteOn arrives at handleMIDIInputEvent(msg):
 			if(noteOn.key >= bottomKeyInScore && noteOn.key <= topKeyInScore)
 			{
 				keySeqs = keyData[noteOn.key - bottomKeyInScore]
-				keySeqsOnIndex = keySeqs.onIndices[keySeqs.index];
-				if(keySeqsOnIndex === currentMsPosIndex || keySeqsOnIndex === currentMsPosIndex + 1) // legato realization
+				if(keySeqs.onIndices.length > keySeqs.index) // some keys may not have seqs...
 				{
-					if(keySeqsOnIndex === currentMsPosIndex + 1)
+					keySeqsOnIndex = keySeqs.onIndices[keySeqs.index];
+					if(keySeqsOnIndex === currentMsPosIndex || keySeqsOnIndex === currentMsPosIndex + 1) // legato realization
 					{
-						currentMsPosIndex++;
-						runningMarker.incrementPosition()
-						ADVANCE_CURRENT_KEY_INDICES_TO(currentMsPosIndex) // see below
+						if(keySeqsOnIndex === currentMsPosIndex + 1)
+						{
+							currentMsPosIndex++;
+							runningMarker.incrementPosition()
+							ADVANCE_CURRENT_KEY_INDICES_TO(currentMsPosIndex) // see below
+						}
+						seq = keySeqs.seqs[keySeqs.index];
+						// Start playing each trk in seq.trks using the global inputControls (and seq.inputControls, and trk.inputControls if defined).
+						// Each trk plays in its own worker thread. N.B.: seq.trks is not empty here.
+						PLAY_SEQ(seq, keyboard1.InputControls)																 
+						keySeqs.triggeredOn[keySeqs.index] = true; // was initialised to false
 					}
-					seq = keySeqs.seqs[keySeqs.index];
-					// Start playing each trk in seq.trks using the global inputControls (and seq.inputControls, and trk.inputControls if defined).
-					// Each trk plays in its own worker thread. N.B.: seq.trks is not empty here.
-					PLAY_SEQ(seq, keyboard1.InputControls)																 
-					keySeqs.triggeredOn[keySeqs.index] = true; // was initialised to false
 				}
 			}
 
@@ -55,13 +58,16 @@ ADVANCE_CURRENT_KEY_INDICES_TO(currentMsPosIndex)
 	for(i = 0; i < keyData.length; ++i)
 	{
 		keySeqs = keyData[i];
-		while(keySeqs.onIndices[keySeqs.index] < currentMsPosIndex)
-		{ 
-			if(keySeqs.triggeredOns[keySeqs.index] && !keySeqs.triggeredOffs[keySeqs.index] )
-			{
-				SEND_A_NOTEOFF_MESSAGE_TO_EACH_TRK_IN(keySeqs.seqs[keySeqs.index].trks) // (the key's currently playing trks).
+		if(keySeqs.onIndices.length > keySeqs.index) // some keys may not have seqs...
+		{
+			while(keySeqs.onIndices[keySeqs.index] < currentMsPosIndex)
+			{ 
+				if(keySeqs.triggeredOns[keySeqs.index] && !keySeqs.triggeredOffs[keySeqs.index] )
+				{
+					SEND_A_NOTEOFF_MESSAGE_TO_EACH_TRK_IN(keySeqs.seqs[keySeqs.index].trks) // (the key's currently playing trks).
+				}
+				keySeqs.index++;
 			}
-			keySeqs.index++;
 		}					
 	}
 }
@@ -91,7 +97,7 @@ keyboard1.play().initPlay() therefore sets the following objects:
 	msPosObj.msPositionInScore // The (start) msPositionInScore of an inputChord or inputRest in the span.
 	msPosObj.inputControls	// undefined or from an inputChord. It is an error for synchronous inputChords to have inputControls.
 							// To save processor time during performance, msPosObj.inputControls should contain the complete set of options,
-							// so set it as follows:
+							// so set it like this:
 							// if(inputChord.inputControls !== undefined)
 							// {
 							//		console.assert(msPosObj.inputControls === undefined, "There can only be one inputChord.inputControls at a time.");
@@ -99,12 +105,12 @@ keyboard1.play().initPlay() therefore sets the following objects:
 							// }
 	
 	keySeqs // an object having the following fields:
-	keySeqs.index	// Initialized to 0. The current index in the keySeqs array attributes (below).	
-	keySeqs.seqs[]	// An array of seq -- initialized from the span (see below).
-					// This array is ordered by msPositionInScore.
+	keySeqs.index	// Always initialized to 0, even when there are no seqs. This is the current index in the keySeqs array attributes (below).	
+	keySeqs.seqs[]	// An array of seq (see below). This array is initialized from the span, and may be empty. 
 					// There is a seq for each inputNote having this notatedKey, unless the seq's inputTrack has been turned off, or
-					// all its outputTracks have been turned off. In either case, the seq is simply not created. 
-	keySeqs.onIndices[]  // The index in msPosObjs of each seq's noteOn position.
+					// all its outputTracks have been turned off. In either case, the seq is simply not created.
+					// This array is in order of each seq's msPositionInScore (i.e. the following array is in ascending order). 
+	keySeqs.onIndices[]  // The index in msPosObjs of each seq's noteOn position. This array is in ascending order.
 	keySeqs.offIndices[] // The index in msPosObjs of each seq's noteOff position.
 	keySeqs.triggeredOns[]	// An array of booleans. One value per seq.
 							// Each value is initialised to false, but set to true when the inputNote's (seq's) noteOn is used (accepted).
