@@ -596,10 +596,43 @@ _AP.keyboard1 = (function()
 					/* end of setKeySeqsFromInputTrack(...) */
 				}
 				
-				// TODO: complete sortKeySeqs(keyData)
 				function sortKeySeqs(keyData)
 				{
-					throw "Not implemented.";
+					var i, keySeqs;
+
+					// Sorts the keySeqs.onIndices into ascending order,
+					// then rearranges keySeqs.seqs and keySeqs.offIndices accordingly
+					function sort(keySeqs)
+					{
+						var i, unsorted = [], cameFromIndex = [], nSeqs = keySeqs.onIndices.length, seqs = [], offIndices = [];
+
+						for(i = 0; i < nSeqs; ++i)
+						{
+							unsorted.push(keySeqs.onIndices[i]);
+						}
+						keySeqs.onIndices.sort(function(a, b) { return (a - b); });
+
+						for(i = 0; i < nSeqs; ++i)
+						{
+							cameFromIndex.push(unsorted.indexOf(keySeqs.onIndices[i]));
+						}
+
+						for(i = 0; i < nSeqs; ++i)
+						{
+							seqs.push(keySeqs.seqs[cameFromIndex[i]]);
+							offIndices.push(keySeqs.offIndices[cameFromIndex[i]]);	
+						}
+						keySeqs.seqs = seqs;
+						keySeqs.offIndices = offIndices;
+					}
+
+					console.assert(false, "This code has not yet been tested.");
+
+					for(i = 0; i < keyData.length; ++i)
+					{
+						keySeqs = keyData[i];
+						sort(keySeqs);
+					}
 				}
 
 				// create an empty keySeqs object per midi key
