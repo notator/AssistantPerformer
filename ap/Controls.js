@@ -1004,26 +1004,8 @@ _AP.controls = (function(document, window)
     			svgPagesFrame.innerHTML = embedCode;
     		}
 
-    		// scoreInfoInputHandler includes the keyRange (e.g: "keyboard1[36..84]").
-    		function setInputDeviceOptions(scoreInfoInputHandler)
+    		function setOptionsInputHandler(scoreInfoInputHandler)
     		{
-    			var handler, range;
-
-    			// rangeString is of the form "[36..84]" containing two numbers
-    			// that are returned as range.bottomKey and range.topKey
-    			function getRange(rangeString)
-    			{
-    				var strs, range = {};
-
-    				strs = rangeString.split("..");
-    				strs[0] = strs[0].replace("[", "");
-    				strs[1] = strs[1].replace("]", "");
-    				range.bottomKey = parseInt(strs[0], 10);
-    				range.topKey = parseInt(strs[1], 10);
-
-    				return range;
-    			}
-
     			if(scoreInfoInputHandler === "none")
     			{
     				globalElements.inputDeviceSelect.selectedIndex = 0;
@@ -1037,18 +1019,15 @@ _AP.controls = (function(document, window)
     				globalElements.inputDeviceSelect.options[0].text = "choose a MIDI input device";
     				globalElements.inputDeviceSelect.disabled = false;
 
-    				if(scoreInfoInputHandler.indexOf("keyboard1") === 0)
+    				switch(scoreInfoInputHandler)
     				{
-    					handler = _AP.keyboard1;
-    					range = getRange(scoreInfoInputHandler.slice("keyboard1".length));
+    					case "keyboard1":
+    						options.inputHandler = _AP.keyboard1;
+    						break;
+    					default:
+    						console.assert(false, "Error: unknown scoreInfo.inputType");
+    						break;
     				}
-    				else
-    				{
-    					console.assert(false, "Error: unknown scoreInfo.inputType")
-    				}
-
-    				options.inputHandler = handler;
-    				options.inputKeyRange = range;
     			}
     		}
 
@@ -1056,7 +1035,7 @@ _AP.controls = (function(document, window)
 
     		setPages(scoreInfo);
 
-    		setInputDeviceOptions(scoreInfo.inputHandler);
+    		setOptionsInputHandler(scoreInfo.inputHandler);
 
     		svgPagesDiv.scrollTop = 0;
     		scoreHasJustBeenSelected = true;
@@ -1242,7 +1221,7 @@ _AP.controls = (function(document, window)
     {
     	function getTracksAndPlayer(score, options)
     	{
-    		var tracks;
+    		var tracksData;
 
     		if(scoreHasJustBeenSelected)
     		{
@@ -1251,21 +1230,24 @@ _AP.controls = (function(document, window)
     			score.getEmptyPagesAndSystems(svg, options.livePerformance);
     		}
 
-    		// tracks will contain the input and output tracks from the score
-    		// in two attributes; inputTracks[] and outputTracks[].
-    		tracks = score.getTracks(svg, options.livePerformance, options.globalSpeed);
+    		// tracksData will contain the following defined attributes:
+    		//		inputTracks[]
+    		//		outputTracks[]
+			//		if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
+    		//			inputKeyRange.bottomKey
+    		//			inputKeyRange.topKey
+    		tracksData = score.getTracksData(svg, options.livePerformance, options.globalSpeed);
 
     		if(options.livePerformance)
     		{			
     			player = options.inputHandler; // e.g. keyboard1 -- the "prepared piano"
-    			player.inputTracks = tracks.inputTracks;
-    			player.outputTracks = tracks.outputTracks; // public player.outputTracks is needed for sending track initialization messages
-    			player.init(options.inputDevice, options.outputDevice, options.inputKeyRange, reportEndOfPerformance, reportMsPos);
+    			player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
+    			player.init(options.inputDevice, options.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
 			}
     		else
     		{
     			player = sequence; // sequence is a namespace, not a class.
-    			player.outputTracks = tracks.outputTracks; // public player.outputTracks is needed for sending track initialization messages
+    			player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
     			player.init(options.outputDevice, reportEndOfPerformance, reportMsPos);
     		}
 
@@ -1275,7 +1257,7 @@ _AP.controls = (function(document, window)
     		// score.refreshDisplay(isLivePerformance, trackIsOnArray) simply tells the score to repaint itself.
     		// Repainting includes using the correct staff colours, but the score may also update the position of
     		// its start marker (which always starts on a chord) if a track is turned off.
-    		tracksControl.init(tracks.outputTracks.length, tracks.inputTracks.length, options.livePerformance, score.refreshDisplay);
+    		tracksControl.init(tracksData.outputTracks.length, tracksData.inputTracks.length, options.livePerformance, score.refreshDisplay);
     	}
 
         if(document.getElementById("inputDeviceSelect").selectedIndex === 0)

@@ -75,8 +75,10 @@ _AP.keyboard1 = (function()
 	inputControls, // the running controls, initialized in initPlay() and updated while performing.
 	currentMsPosIndex, // initialized to 0 when playing starts. Is the index in the following array.
 	msPosObjs,
+	inputTracks,
+	outputTracks,
 	keyData,
-	keyRange, // keyRange.bottomKey and keyRange.topKey are the bottom and top midi key values that can be used by the score.
+	keyRange, // keyRange.bottomKey and keyRange.topKey are the bottom and top input midi key values notated in the score.
 	reportEndOfPerformance, // callback -- called here as reportEndOfPerformance(sequenceRecording, performanceMsDuration);
 	reportMsPositionInScore, // callback -- called here as reportMsPositionInScore(msPositionToReport);
 
@@ -277,18 +279,23 @@ _AP.keyboard1 = (function()
 	// chord and rest symbols in the score, and so to synchronize the running cursor.
 	// Moments whose msPositionInScore is to be reported are given chordStart or restStart
 	// attributes before play() is called.
-	init = function(inputDevice, outputDevice, inputKeyRange, reportEndOfPerfCallback, reportMsPosCallback)
+	init = function(inputDevice, outputDevice, tracksData, reportEndOfPerfCallback, reportMsPosCallback)
 	{
 		console.assert((inputDevice !== undefined && inputDevice !== null), "The midi input device must be defined.");
 		console.assert((outputDevice !== undefined && outputDevice !== null), "The midi output device must be defined.");
+		console.assert((tracksData !== undefined && tracksData !== null), "The tracksData must be defined.");
+		console.assert((tracksData.inputTracks !== undefined && tracksData.inputTracks !== null), "The input tracks must be defined.");
+		console.assert((tracksData.outputTracks !== undefined && tracksData.outputTracks !== null), "The output tracks must be defined.");
+		console.assert((tracksData.inputKeyRange !== undefined && tracksData.inputKeyRange !== null), "The input key range must be defined.");
 		console.assert(!(reportEndOfPerfCallback === undefined || reportEndOfPerfCallback === null
 						|| reportMsPosCallback === undefined || reportMsPosCallback === null),
 						"Error: both the position reporting callbacks must be defined.");
-		console.assert((inputKeyRange !== undefined && inputKeyRange !== null), "The inputKeyRange must be defined.");
 
 		midiInputDevice = inputDevice;
 		midiOutputDevice = outputDevice;
-		keyRange = inputKeyRange; // these are the bottom and top midi key values that can be used by the score.
+		inputTracks = tracksData.inputTracks;
+		outputTracks = tracksData.outputTracks;
+		keyRange = tracksData.inputKeyRange; // these are the bottom and top midi key values notated in the score.
 		reportEndOfPerformance = reportEndOfPerfCallback;
 		reportMsPositionInScore = reportMsPosCallback;
 
@@ -303,11 +310,11 @@ _AP.keyboard1 = (function()
 	// It should be an empty Sequence having the same number of output tracks as the score.
 	play = function(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, recording)
 	{
-		function initPlay(that, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore)
+		function initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore)
 		{
 			var
-			nOutputTracks = that.outputTracks.length,
-			nTracks = nOutputTracks + that.inputTracks.length;
+			nOutputTracks = outputTracks.length,
+			nTracks = nOutputTracks + inputTracks.length;
 
 			// Returns the inputControls current when the span starts.
 			// (Shunts in all playing inputTracks from the start of the score.)
@@ -522,18 +529,18 @@ _AP.keyboard1 = (function()
 			/*** begin initPlay() ***/
 
 			// keyboard1.inputControls. This "global" inputControls always has a complete set of attributes.
-			inputControls = getCurrentInputControls(that.inputTracks, trackIsOnArray, nOutputTracks, nTracks, startMarkerMsPosInScore);
+			inputControls = getCurrentInputControls(inputTracks, trackIsOnArray, nOutputTracks, nTracks, startMarkerMsPosInScore);
 
 			// keyboard1.currentMsPosIndex
 			currentMsPosIndex = 0; // the index in the following array
 
 			// keyboard1.msPosObjs. The msPositionsInScore (and inputControls, if defined) of all inputChords and inputRests in the span. 
-			msPosObjs = getMsPosObjs(that.inputTracks, trackIsOnArray, nOutputTracks, nTracks, startMarkerMsPosInScore, endMarkerMsPosInScore);
+			msPosObjs = getMsPosObjs(inputTracks, trackIsOnArray, nOutputTracks, nTracks, startMarkerMsPosInScore, endMarkerMsPosInScore);
 
 			console.assert(msPosObjs[0].msPositionInScore === startMarkerMsPosInScore);
 
 			// keyboard1.keyData
-			keyData = getKeyData(that.inputTracks, that.outputTracks, trackIsOnArray, msPosObjs, endMarkerMsPosInScore);
+			keyData = getKeyData(inputTracks, outputTracks, trackIsOnArray, msPosObjs, endMarkerMsPosInScore);
 		}
 
 		sequenceRecording = recording;
@@ -541,7 +548,7 @@ _AP.keyboard1 = (function()
 		endMarkerMsPosition = endMarkerMsPosInScore;
 		startTimeAdjustedForPauses = performanceStartTime;
 
-		initPlay(this, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
+		initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
 
 		pausedMoment = null;
 		pauseStartTime = -1;

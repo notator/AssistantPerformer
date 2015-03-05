@@ -1201,13 +1201,17 @@ _AP.score = (function (document)
         }
     },
 
-    // Returns all the input and output tracks from the score
-	// in a tracks object having two attributes: inputTracks[] and outputTracks[].
-	getTracks = function(svg, isLivePerformance, globalSpeed)
+    // Returns a tracksData object having the following defined attributes:
+    //		inputTracks[] - an array of tracks containing inputChords and inputRests
+    //		outputTracks[] - an array of tracks containing outputChords and outputRests
+    //		if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
+    //			inputKeyRange.bottomKey
+    //			inputKeyRange.topKey
+	getTracksData = function(svg, isLivePerformance, globalSpeed)
     {
     	// systems->staves->voices->timeObjects
     	var
-        tracks = {}, inputTracks = [], outputTracks = [],
+        tracksData = {}, inputTracks = [], outputTracks = [],
 		outputTrackIndex = 0, inputTrackIndex = 0, inputTrack, outputTrack,
         timeObjectIndex, nTimeObjects, timeObject, chordIsSilent,
         voiceIndex, nVoices, voice,
@@ -1657,7 +1661,7 @@ _AP.score = (function (document)
             }
         }
 
-        function setTrackAttributes(outputTracks, inputTracks, system0staves, isLivePerformance)
+        function setTrackAttributes(outputTracks, inputTracks, system0staves)
         {
         	var outputTrackIndex = 0, inputTrackIndex = 0, staffIndex, voiceIndex, nStaves = system0staves.length, staff, voice;
 
@@ -1685,11 +1689,41 @@ _AP.score = (function (document)
         	}
         }
 
+        function getInputKeyRange(inputTracks)
+        {
+        	var i, j, k, nTracks = inputTracks.length, track, inputNotes, key,
+			inputKeyRange = {}, bottomKey = Number.MAX_VALUE, topKey = Number.MIN_VALUE;
+
+        	for(i = 0; i < nTracks; ++i)
+        	{
+        		track = inputTracks[i];
+        		for(j = 0; j < track.inputObjects.length; ++j)
+        		{
+        			if(track.inputObjects[j].inputNotes !== undefined)
+        			{
+        				// an inputChord
+        				inputNotes = track.inputObjects[j].inputNotes;
+        				for(k = 0; k < inputNotes.length; ++k)
+        				{
+        					key = inputNotes[k].notatedKey;
+        					bottomKey = (bottomKey < key) ? bottomKey : key;
+        					topKey = (topKey > key) ? topKey : key;
+        				}
+        			}
+        		}
+        	}
+			
+        	inputKeyRange.bottomKey = bottomKey;
+        	inputKeyRange.topKey = topKey;
+
+        	return inputKeyRange;
+        }
+
         getOutputAndInputTimeObjects(svg, globalSpeed);
 
         setSystemMarkerParameters(systems, isLivePerformance);
 
-        setTrackAttributes(outputTracks, inputTracks, systems[0].staves, isLivePerformance);
+        setTrackAttributes(outputTracks, inputTracks, systems[0].staves);
 
         nStaves = systems[0].staves.length;
 
@@ -1768,9 +1802,18 @@ _AP.score = (function (document)
 
         transferFinalChordOffMoments(outputTracks);
 
-        tracks.inputTracks = inputTracks;
-        tracks.outputTracks = outputTracks;
-        return tracks;
+        tracksData.inputTracks = inputTracks;
+        tracksData.outputTracks = outputTracks;
+
+		//	if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
+		//		inputKeyRange.bottomKey
+		//		inputKeyRange.topKey
+        if(inputTracks.length > 0)
+        {
+        	tracksData.inputKeyRange = getInputKeyRange(inputTracks);			
+        }
+
+        return tracksData;
 	},
 
     // an empty score
@@ -1822,9 +1865,13 @@ _AP.score = (function (document)
 
         this.getEmptyPagesAndSystems = getEmptyPagesAndSystems;
 
-    	// Returns all the input and output tracks from the score
-    	// in an object having two attributes: inputTracks[] and outputTracks[].
-        this.getTracks = getTracks;
+    	// Returns a tracksData object having the following defined attributes:
+    	//		inputTracks[] - an array of tracks containing inputChords and inputRests
+    	//		outputTracks[] - an array of tracks containing outputChords and outputRests
+    	//		if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
+    	//			inputKeyRange.bottomKey
+    	//			inputKeyRange.topKey
+        this.getTracksData = getTracksData;
 
         // The TracksControl controls the display, and should be the only module to call this function.
         this.refreshDisplay = refreshDisplay;
