@@ -59,7 +59,7 @@
 *	sendSetPitchWheelDeviationMessageNow(outputDevice, track, value)
 */
 
-/*jslint bitwise: true, nomen: true, plusplus: true, white: true */
+/*jslint bitwise: true, nomen: true, plusplus: true, white: true, continue: true */
 /*global _AP: false,  window: false,  document: false, performance: false, console: false, alert: false, XMLHttpRequest: false */
 
 _AP.namespace('_AP.keyboard1');
@@ -185,7 +185,7 @@ _AP.keyboard1 = (function()
 	},
 
 	// TODO: complete handleMIDIInputEvent(msg)
-	// see _PreparedSynthAlgorithm.txt
+	// see _Keyboard1Algorithm.txt
 	handleMIDIInputEvent = function(msg)
 	{
 
@@ -484,13 +484,12 @@ _AP.keyboard1 = (function()
 				return msPosObjs;
 			}			
 			
-			function getKeyData(inputTracks, outputTracks, trackIsOnArray, msPosObjs, endMarkerMsPosInScore)
+			function getKeyData(inputTracks, trackIsOnArray, msPosObjs, endMarkerMsPosInScore)
 			{
-				var keyData = [], keySeqs = [], midiKey,
-					bottomKey = keyRange.bottomKey, topKey = keyRange.topKey; // keyRange was been set in keyboard1.init().
+				var i, keyData = [], keySeqs, inputTrack;
 
-				// TODO: complete getKeySeqs(...)
-				function getKeySeqs(midiKey, inputTracks, outputTracks, trackIsOnArray, msPosObjs, endMarkerMsPosInScore)
+				// Appends keySeqs to the appropriate keyData[midikey] keySeqs array.
+				function setKeySeqsFromInputTrack(keyData, bottomKey, inputObjects, trackIsOnArray, msPosObjs, endMarkerMsPosInScore)
 				{
 					//keySeqs is an object having the following fields:
 					//keySeqs.index	// Initialized to 0. The current index in the keySeqs array attributes (below).	
@@ -510,19 +509,125 @@ _AP.keyboard1 = (function()
 					//				// This array is never empty. If it would be empty (because tracks have been turned off), the seq is not created.
 					//				// The outputChords and outputRests in each trk are also in range of the span (they do not continue beyond endMarkerMsPosition).
 					//seq.inputControls // undefined or from inputChord.inputNotes
-					var keySeqs = [];
+					var startMarkerMsPosInScore = msPosObjs[0].msPositionInScore, 
+						i, j, inputObject, inputNotes, inputChord, inputNote, onIndex, offIndex,
+						keySeqs, noteSeqData;
 
-					// etc...
+					function getNoteSeqData(inputNote, trackIsOnArray)
+					{
+						var noteSeqData = {};
+						
+						function getTrks(inputNoteTrks, trackIsOnArray)
+						{
+							var i, trks = [];
 
-					return keySeqs;
-					/* end of getKeySeqs(...) */
+							for(i=0;i <inputNoteTrks.length;++i)
+							{
+								if(trackIsOnArray[inputNoteTrks[i].trackIndex]=== true)
+								{
+									trks.push(inputNoteTrks[i]);
+								}
+							}
+							return trks;
+						}
+
+						noteSeqData.seq = {};
+						noteSeqData.seq.trks = getTrks(inputNote.trks, trackIsOnArray);
+						if(inputNote.inputControls !== undefined)
+						{
+							noteSeqData.seq.inputControls = inputNote.inputControls;
+						}
+
+						return noteSeqData;
+					}
+
+					function findIndex(msPosObjs, msPosition)
+					{
+						var i, rval = -1;
+						for(i = 0; i < msPosObjs.length; ++i)
+						{
+							if(msPosObjs[i].msPositionInScore === msPosition)
+							{
+								rval = i;
+								break;
+							}
+						}
+						console.assert(rval >= 0, "Error: index not found in msPosObjs.");
+						return rval;
+					}
+
+					for(i=0; i < inputObjects.length; ++i)
+					{
+						inputObject = inputObjects[i];
+						if(inputObject.msPositionInScore < startMarkerMsPosInScore)
+						{
+							continue;
+						}
+						if(inputObject.msPositionInScore >= endMarkerMsPosInScore)
+						{
+							break;
+						}
+
+						if(inputObjects[i].inputNotes !== undefined)
+						{
+							inputChord = inputObjects[i];
+							inputNotes = inputChord.inputNotes;
+							for(j = 0; j < inputNotes.length; ++j)
+							{
+								inputNote = inputNotes[j];
+								noteSeqData = getNoteSeqData(inputNote, trackIsOnArray);
+
+								if(noteSeqData.seq.trks.length > 0)
+								{
+									onIndex = findIndex(msPosObjs, inputChord.msPositionInScore);
+									offIndex = findIndex(msPosObjs, inputChord.msPositionInScore +inputChord.msDurationInScore);
+
+									keySeqs = keyData[inputNote.notatedKey -bottomKey];
+									// keySeqs.index has already been initialized
+									keySeqs.seqs.push(noteSeqData.seq); // seq may have an inputControls attribute
+									keySeqs.onIndices.push(onIndex);
+									keySeqs.offIndices.push(offIndex);
+									keySeqs.triggeredOns.push(false);
+									keySeqs.triggeredOffs.push(false);
+								}
+							}
+						}
+					}
+					/* end of setKeySeqsFromInputTrack(...) */
 				}
 				
-				for(midiKey = bottomKey; midiKey <= topKey; ++midiKey)
+				// TODO: complete sortKeySeqs(keyData)
+				function sortKeySeqs(keyData)
 				{
-					keySeqs = getKeySeqs(midiKey, inputTracks, outputTracks, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
+					throw "Not implemented.";
+				}
+
+				// create an empty keySeqs object per midi key
+				for(i = keyRange.bottomKey; i <= keyRange.topKey; ++i) // keyRange was set in keyboard1.init().
+				{
+					keySeqs = {};
+					keySeqs.index = 0;
+					keySeqs.seqs = [];
+					keySeqs.onIndices = [];
+					keySeqs.offIndices = [];
+					keySeqs.triggeredOns = [];
+					keySeqs.triggeredOffs = [];
 					keyData.push(keySeqs);
 				}
+
+				for(i = 0; i < inputTracks.length; ++i)
+				{
+					inputTrack = inputTracks[i];
+					setKeySeqsFromInputTrack(keyData, keyRange.bottomKey, inputTrack.inputObjects, trackIsOnArray, msPosObjs, endMarkerMsPosInScore);
+				}
+
+				if(inputTracks.length > 1)
+				{
+					// setKeySeqsFromInputTrack() appends keySeqs to the appropriate keyData[midikey] keySeqs array.
+					// This is done for each inputTrack in msPosition order, so the seqs need to be sorted here.
+					sortKeySeqs(keyData);
+				}
+
 				return keyData;
 			}
 			
@@ -540,7 +645,7 @@ _AP.keyboard1 = (function()
 			console.assert(msPosObjs[0].msPositionInScore === startMarkerMsPosInScore);
 
 			// keyboard1.keyData
-			keyData = getKeyData(inputTracks, outputTracks, trackIsOnArray, msPosObjs, endMarkerMsPosInScore);
+			keyData = getKeyData(inputTracks, trackIsOnArray, msPosObjs, endMarkerMsPosInScore);
 		}
 
 		sequenceRecording = recording;
