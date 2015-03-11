@@ -44,18 +44,7 @@ _AP.inputControls = (function ()
 
 		var i, attr, attrLen;
 
-		if(inputControlsNode === undefined || inputControlsNode === null)
-		{
-			// each InputHandler is initialized with this set of default options 
-			this.noteOnKey = "ignore";
-			this.noteOnVel = "ignore";
-			this.noteOff = "ignore";
-			this.pressure = "ignore";
-			this.pitchWheel = "ignore";
-			this.modulation = "ignore";
-			this.speedOption = "none";
-		}
-		else
+		if(inputControlsNode !== undefined && inputControlsNode !== null)
 		{
 			attrLen = inputControlsNode.attributes.length;
 
@@ -64,37 +53,37 @@ _AP.inputControls = (function ()
 				attr = inputControlsNode.attributes[i];
 				switch(attr.name)
 				{
-					case "noteOnKey":
+					case "noteOnKey": // undefined/default is "matchExactly" 
 						this.noteOnKey = attr.value;
 						break;
-					case "noteOnVel":
+					case "noteOnVel": // undefined/default is "ignore"
 						this.noteOnVel = attr.value;
 						break;
-					case "noteOff":
+					case "noteOff": // undefined/default is "stop"
 						this.noteOff = attr.value;
 						break;
-					case "shortFade":
+					case "shortFade": // undefined/default is 0
 						this.shortFade = parseInt(attr.value, 10);
 						break;
-					case "pressure":
+					case "pressure": // undefined/default is "ignore"
 						this.pressure = attr.value;
 						break;
-					case "pitchWheel":
+					case "pitchWheel": // undefined/default is "ignore"
 						this.pitchWheel = attr.value;
 						break;
-					case "modulation":
+					case "modulation": // undefined/default is "ignore"
 						this.modulation = attr.value;
 						break;
-					case "maxVolume":
+					case "maxVolume": // undefined/default is 127
 						this.maxVolume = parseInt(attr.value, 10);
 						break;
-					case "minVolume":
+					case "minVolume": // undefined/default is 0
 						this.minVolume = parseInt(attr.value, 10);
 						break;
-					case "speedOption":
+					case "speedOption": // undefined/default is "none"
 						this.speedOption = attr.value;
 						break;
-					case "maxSpeedPercent":
+					case "maxSpeedPercent": // undefined/default is 200
 						this.maxSpeedPercent = parseInt(attr.value, 10);
 						break;
 					default:

@@ -184,8 +184,10 @@ _AP.keyboard1 = (function()
 		outputDevice.send(msg.data, 0);
 	},
 
-	// TODO: complete handleMIDIInputEvent(msg)
 	// see _Keyboard1Algorithm.txt
+	// This handler
+    // a) ignores both RealTime and SysEx messages in its input, and
+    // b) assumes that RealTime messages will not interrupt the messages being received. 
 	handleMIDIInputEvent = function(msg)
 	{
 
@@ -496,7 +498,8 @@ _AP.keyboard1 = (function()
 					//keySeqs.seqs[]	An array of seq -- initialized from the span (see below).
 					//					This array is ordered by msPositionInScore.
 					//					There is a seq for each inputNote having this midiKey, unless the seq's inputTrack has been turned off, or
-					//					all its outputTracks have been turned off. In either case, the seq is simply not created. 
+					//					all its outputTracks have been turned off. In either case, the seq is simply not created.
+					//					Each seq contains new Tracks that are initialised with pointers to midiObjects in the containing tracks.
 					//keySeqs.onIndices[]  // The index in msPosObjs of each seq's noteOn position.
 					//keySeqs.offIndices[] // The index in msPosObjs of each seq's noteOff position.
 					//keySeqs.triggeredOns[]	// An array of booleans. One value per seq.
@@ -511,7 +514,7 @@ _AP.keyboard1 = (function()
 					//seq.inputControls // undefined or from inputChord.inputNotes
 					var startMarkerMsPosInScore = msPosObjs[0].msPositionInScore, 
 						i, j, inputObject, inputNotes, inputChord, inputNote, onIndex, offIndex,
-						keySeqs, noteSeqData;
+						keySeqs, seq, noteSeqData, chordInputControls, noteInputControls;
 
 					function getNoteSeqData(inputNote, trackIsOnArray)
 					{
@@ -556,6 +559,7 @@ _AP.keyboard1 = (function()
 						return rval;
 					}
 
+					inputControls = {}; // the "global" inputControls is empty
 					for(i=0; i < inputObjects.length; ++i)
 					{
 						inputObject = inputObjects[i];
@@ -572,6 +576,11 @@ _AP.keyboard1 = (function()
 						{
 							inputChord = inputObjects[i];
 							inputNotes = inputChord.inputNotes;
+							chordInputControls = inputChord.inputControls;
+							if(chordInputControls !== undefined)
+							{
+								inputControls = chordInputControls;
+							}
 							for(j = 0; j < inputNotes.length; ++j)
 							{
 								inputNote = inputNotes[j];
@@ -582,9 +591,19 @@ _AP.keyboard1 = (function()
 									onIndex = findIndex(msPosObjs, inputChord.msPositionInScore);
 									offIndex = findIndex(msPosObjs, inputChord.msPositionInScore +inputChord.msDurationInScore);
 
+									if(noteSeqData.seq.inputControls !== undefined)
+									{
+										noteInputControls = noteSeqData.seq.inputControls.getCascadeOver(inputControls);
+									}
+									else
+									{
+										noteInputControls = inputControls;
+									}
+
 									keySeqs = keyData[inputNote.notatedKey -bottomKey];
 									// keySeqs.index has already been initialized
-									keySeqs.seqs.push(noteSeqData.seq); // seq may have an inputControls attribute
+									seq = new _AP.seq.Seq(noteSeqData.seq.trks, noteInputControls, endMarkerMsPosInScore);
+									keySeqs.seqs.push(seq); // seq may have an inputControls attribute
 									keySeqs.onIndices.push(onIndex);
 									keySeqs.offIndices.push(offIndex);
 									keySeqs.triggeredOns.push(false);
