@@ -7,7 +7,11 @@
  *
  *  ap/MidiChord.js
  *  Public interface:
- *      MidiChord(channel, midiChordDef, timeObject, chordIsSilent) // MidiChord constructor 
+ *  The constructor can be called with either 1 or 3 arguments:
+ *	either
+ *      MidiChord(midiChord) // MidiChord Clone constructor
+ *	or
+ *		MidiChord(channel, midiChordDef, timeObject) // MidiChord constructor		 
  */
 
 /*jslint bitwise: false, nomen: true, plusplus: true, white: true */
@@ -29,58 +33,92 @@ _AP.midiChord = (function()
     SLIDER_MILLISECONDS = 10,
 
     // public MidiChord constructor
-    // A MidiChord contains all the midi messages required for playing an (ornamented) chord.
-    // If chordisSilent == true, this is a chord being played by a silent soloist (=conductor),
-    // and the chord is given an empty message (like a MidiRest).
-    MidiChord = function(channel, midiChordDef, timeObject, chordIsSilent)
+	// This constructor can be called with either 1 or 3 arguments.
+	// When called with 1 argument, the argument is itself a MidiChord, and this is a clone constructor.
+	// When called with 3 arguments, argument 1 is the new MidiChord's channel index.
+	// A MidiChord contains all the midi messages required for playing an (ornamented) chord. 
+    MidiChord = function(channelOrMidiChordArg, midiChordDef, timeObject)
     {
-        var rval = {};
+    	var rval = {}, channel, midiChordArg;
+
+    	console.assert(arguments.length === 1 || arguments.length === 3, "Error: MidiChord constructor called with the wrong number of arguments.");
+
+    	if(arguments.length === 1)
+    	{
+    		midiChordArg = channelOrMidiChordArg;
+    	}
+    	else if(arguments.length === 3)
+        {
+        	channel = channelOrMidiChordArg;
+        }
 
         if(!(this instanceof MidiChord))
         {
-            return new MidiChord(channel, midiChordDef, timeObject, chordIsSilent);
+        	if(arguments.length === 1)
+        	{
+        		return new MidiChord(midiChordArg); // clone constructor
+        	}
+        	if(arguments.length === 3)
+        	{
+        		return new MidiChord(channel, midiChordDef, timeObject);
+        	}  	
         }
 
-        if(midiChordDef.basicChordsArray === undefined)
+        if(arguments.length === 1) // clone constructor
         {
-            throw "Error: the chord definition must contain a basicChordsArray!";
+        	// this clone constructor does not make a deep clone of the moments since they are not changed at runtime.
+
+        	Object.defineProperty(this, "msPositionInScore", { value: midiChordArg.msPositionInScore, writable: false });
+        	Object.defineProperty(this, "msDurationInScore", { value: midiChordArg.msDurationInScore, writable: false });
+
+        	// initialised below, not changed at runtime.
+        	Object.defineProperty(this, "moments", { value: midiChordArg.moments, writable: false });
+        	Object.defineProperty(this, "_msDurationOfBasicChords", { value: midiChordArg._msDurationOfBasicChords, writable: false });
+        	Object.defineProperty(this, "finalChordOffMoment", { value: midiChordArg.finalChordOffMoment, writable: false });
+        	Object.defineProperty(this, "_repeat", { value: midiChordArg._repeat, writable: false });
+
+        	// used at runtime
+        	Object.defineProperty(this, "currentMoment", { value: midiChordArg.currentMoment, writable: true });
+        	Object.defineProperty(this, "msDurationOfRepeats", { value: midiChordArg.msDurationOfRepeats, writable: true });
+        	Object.defineProperty(this, "_currentMomentIndex", { value: midiChordArg._currentMomentIndex, writable: true });	
         }
 
-        // The timeObject takes the global speed option into account.
-        Object.defineProperty(this, "msPositionInScore", { value: timeObject.msPosition, writable: false });
-        Object.defineProperty(this, "msDurationInScore", { value: timeObject.msDuration, writable: false });
-
-        // initialised below, not changed at runtime.
-        Object.defineProperty(this, "moments", { value: null, writable: true });
-        Object.defineProperty(this, "_msDurationOfBasicChords", { value: 0, writable: true });
-        Object.defineProperty(this, "finalChordOffMoment", { value: null, writable: true });
-        Object.defineProperty(this, "_repeat", { value: midiChordDef.attributes.repeat, writable: false });
-
-        // used at runtime
-        Object.defineProperty(this, "currentMoment", { value: null, writable: true });
-        Object.defineProperty(this, "msDurationOfRepeats", { value: 0, writable: true });
-        Object.defineProperty(this, "_currentMomentIndex", { value: -1, writable: true });  
-
-        if(chordIsSilent === true)
+        if(arguments.length === 3) // construct MidiChord from MidiChordDef
         {
-            this.moments = this._getSilentMoment(); // like rest._getMoments()
-        }
-        else
-        {
-            // The timeObject takes the global speed option into account.
-            rval = this._getMoments(channel, midiChordDef, timeObject.msDuration); // defined in prototype below
+        	if(midiChordDef.basicChordsArray === undefined)
+        	{
+        		throw "Error: the chord definition must contain a basicChordsArray!";
+        	}
 
-            // moments is an ordered array of moments (containing messages for sequential chords and slider messages).
-            // A Moment is a list of logically synchronous MIDI messages.  
-            this.moments = rval.moments;
-            this._msDurationOfBasicChords = rval.msDurationOfBasicChords;
+        	// The timeObject takes the global speed option into account.
+        	Object.defineProperty(this, "msPositionInScore", { value: timeObject.msPosition, writable: false });
+        	Object.defineProperty(this, "msDurationInScore", { value: timeObject.msDuration, writable: false });
 
-            // When completing Tracks, each MidiChord's finalChordOffMoment messages are inserted into the first moment
-            // in the following midiObject. i.e. they are sent when the performance or live performer reaches the following midiObject.
-            // The finalChordOffMoment is always a valid moment, at the msPositionInScore of the following midiObject, but it may have no messages.
-            this.finalChordOffMoment = rval.finalChordOffMoment;
+        	// initialised below, not changed at runtime.
+        	Object.defineProperty(this, "moments", { value: null, writable: true });
+        	Object.defineProperty(this, "_msDurationOfBasicChords", { value: 0, writable: true });
+        	Object.defineProperty(this, "finalChordOffMoment", { value: null, writable: true });
+        	Object.defineProperty(this, "_repeat", { value: midiChordDef.attributes.repeat, writable: false });
 
-            this.currentMoment = this.moments[0];
+        	// used at runtime
+        	Object.defineProperty(this, "currentMoment", { value: null, writable: true });
+        	Object.defineProperty(this, "msDurationOfRepeats", { value: 0, writable: true });
+        	Object.defineProperty(this, "_currentMomentIndex", { value: -1, writable: true });
+
+        	// The timeObject takes the global speed option into account.
+        	rval = this._getMoments(channel, midiChordDef, timeObject.msDuration); // defined in prototype below
+
+        	// moments is an ordered array of moments (containing messages for sequential chords and slider messages).
+        	// A Moment is a list of logically synchronous MIDI messages.  
+        	this.moments = rval.moments;
+        	this._msDurationOfBasicChords = rval.msDurationOfBasicChords;
+
+        	// When completing Tracks, each MidiChord's finalChordOffMoment messages are inserted into the first moment
+        	// in the following midiObject. i.e. they are sent when the performance or live performer reaches the following midiObject.
+        	// The finalChordOffMoment is always a valid moment, at the msPositionInScore of the following midiObject, but it may have no messages.
+        	this.finalChordOffMoment = rval.finalChordOffMoment;
+
+        	this.currentMoment = this.moments[0];
         }
 
         return this;
@@ -703,21 +741,6 @@ _AP.midiChord = (function()
         Object.defineProperty(rval.moments[0], "chordStart", { value: true, writable: false });
 
         return rval;
-    };
-
-    // returns an array containing a single empty moment having a "chordStart" attribute.
-    // The moment's messages array is empty.
-    MidiChord.prototype._getSilentMoment = function()
-    {
-        var
-        moments = [],
-        silentMoment = new Moment(0);
-
-        Object.defineProperty(silentMoment, "chordStart", { value: true, writable: false });
-
-        moments.push(silentMoment); // an empty chordStart moment.
-
-        return moments;
     };
 
     /***** The following functions are defined for both MidiChords and MidiRests *****************/

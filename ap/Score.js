@@ -1213,7 +1213,7 @@ _AP.score = (function (document)
     	var
         tracksData = {}, inputTracks = [], outputTracks = [],
 		outputTrackIndex = 0, inputTrackIndex = 0, inputTrack, outputTrack,
-        timeObjectIndex, nTimeObjects, timeObject, chordIsSilent,
+        timeObjectIndex, nTimeObjects, timeObject,
         voiceIndex, nVoices, voice,
         staffIndex, nStaves, staff,
         sysIndex, nSystems = systems.length, system,
@@ -1759,8 +1759,7 @@ _AP.score = (function (document)
             				else
             				{
             					midiChordDef = timeObject.midiChordDef;
-            					chordIsSilent = false;
-            					midiChord = new MidiChord(outputTrack.midiChannel, midiChordDef, timeObject, chordIsSilent);
+            					midiChord = new MidiChord(outputTrack.midiChannel, midiChordDef, timeObject);
             					outputTrack.midiObjects.push(midiChord);
             				}
             			}

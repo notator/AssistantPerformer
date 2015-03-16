@@ -36,7 +36,7 @@ _AP.seq = (function()
 
 	Seq = function(noteSeqTrks, inputControlsArg, endMarkerMsPosInScore)
 	{
-		var i, j, trk, midiObjects, trkMidiObjects;
+		var i, j, trk, midiObject, midiObjects, trkMidiObjects;
 
 		if(!(this instanceof Seq))
 		{
@@ -53,7 +53,14 @@ _AP.seq = (function()
 			trkMidiObjects = noteSeqTrks[i];
 			for(j = 0; j < trkMidiObjects.length; ++j)
 			{
-				midiObjects.push(trkMidiObjects[j]);
+				midiObject = trkMidiObjects[j];
+				if(midiObject instanceof _AP.midiChord.MidiChord)
+				{
+					midiObject = new _AP.midiChord.MidiChord(midiObject); //clone constructor
+					console.assert(midiObject instanceof _AP.midiChord.MidiChord, "error");
+				}
+				// midiRests are not cloned (because they never change at runtime).
+				midiObjects.push(midiObject);
 			}
 			trk.midiObjects = midiObjects;
 			trk.setForOutputSpan(midiObjects[0].msPositionInScore, endMarkerMsPosInScore);
