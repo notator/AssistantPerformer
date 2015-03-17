@@ -69,6 +69,12 @@ _AP.keyboard1 = (function()
 	"use strict";
 
 	var
+	UNDEFINED_TIMESTAMP = _AP.moment.UNDEFINED_TIMESTAMP,
+    CMD = _AP.constants.COMMAND,
+    Message = _AP.message.Message,
+    Moment = _AP.moment.Moment,
+    Sequence = _AP.sequence.Sequence,
+
 	// set or called in init(...)
 	midiInputDevice,
 	midiOutputDevice,
@@ -187,11 +193,187 @@ _AP.keyboard1 = (function()
 	// see _Keyboard1Algorithm.txt
 	// This handler
     // a) ignores both RealTime and SysEx messages in its input, and
-    // b) assumes that RealTime messages will not interrupt the messages being received. 
-	handleMIDIInputEvent = function(msg)
-	{
+    // b) assumes that RealTime messages will not interrupt the messages being received.    
+    handleMIDIInputEvent = function(msg)
+    {
+    	var inputEvent, command, inputPressure;    	
 
-	},
+    	// The returned object is either empty, or has .data and .receivedTime attributes,
+    	// and so constitutes a timestamped Message. (Web MIDI API simply calls this an Event)
+    	// This handler ignores both realTime and SysEx messages, even though these are
+    	// defined (untested 8.3.2013) in the _AP library, so this function only returns
+    	// the other types of message (having 2 or 3 data bytes).
+    	// If the input data is undefined, an empty object is returned, otherwise data must
+    	// be an array of numbers in range 0..0xF0. An exception is thrown if the data is illegal.
+    	function getInputEvent(data, now)
+    	{
+    		var
+            SYSTEM_EXCLUSIVE = _AP.constants.SYSTEM_EXCLUSIVE,
+            isRealTimeStatus = _AP.constants.isRealTimeStatus,
+            inputEvent = {};
+
+    		if(data !== undefined)
+    		{
+    			if(data[0] === SYSTEM_EXCLUSIVE.START)
+    			{
+    				if(!(data.length > 2 && data[data.length - 1] === SYSTEM_EXCLUSIVE.END))
+    				{
+    					throw "Error in System Exclusive inputEvent.";
+    				}
+    				// SysExMessages are ignored by the assistant, so do nothing here.
+    				// Note that SysExMessages may contain realTime messages at this point (they
+    				// would have to be removed somehow before creating a sysEx event), but since
+    				// we are ignoring both realTime and sysEx, nothing needs doing here.
+    			}
+    			else if((data[0] & 0xF0) === 0xF0)
+    			{
+    				if(!(isRealTimeStatus(data[0])))
+    				{
+    					throw "Error: illegal data.";
+    				}
+    				// RealTime messages are ignored by the assistant, so do nothing here.
+    			}
+    			else if(data.length === 2)
+    			{
+    				inputEvent = new Message(data[0], data[1], 0);
+    			}
+    			else if(data.length === 3)
+    			{
+    				inputEvent = new Message(data[0], data[1], data[2]);
+    			}
+
+    			// other data is simply ignored
+
+    			if(inputEvent.data !== undefined)
+    			{
+    				inputEvent.receivedTime = now;
+    			}
+    		}
+
+    		return inputEvent;
+    	}
+
+    	function sendNoteOffToSeq(seq)
+    	{
+    		// TODO
+    	}
+
+    	// increment the keySeqs positions until they are >= currentMsPosIndex
+    	function advanceCurrentKeyIndicesTo(currentMsPosIndex)
+    	{
+    		var i, keySeqs;
+
+    		for(i = 0; i < keyData.length; ++i)
+    		{
+    			keySeqs = keyData[i];
+    			if(keySeqs.onIndices.length > keySeqs.index) // some keys may not have seqs...
+    			{
+    				while(keySeqs.onIndices[keySeqs.index] < currentMsPosIndex)
+    				{
+    					if(keySeqs.triggeredOns[keySeqs.index] && !keySeqs.triggeredOffs[keySeqs.index])
+    					{
+    						sendNoteOffToSeq(keySeqs.seqs[keySeqs.index]); // (the key's currently playing trks).
+    					}
+    					keySeqs.index++;
+    				}
+    			}
+    		}
+    	}
+
+    	function handleNoteOff(key)
+    	{
+    		var keyIndex = key - keyRange.bottomKey, keySeqs,
+			triggeredOn,
+			offIndex;
+
+    		if(key >= keyRange.bottomKey && key <= keyRange.topKey)
+    		{
+    			keySeqs = keyData[keyIndex]; // This is the same object as for the corresponding noteOn.
+    			triggeredOn = keySeqs.triggeredOns[keySeqs.index]; // will be false if the key was pressed prematurely;
+    			if(triggeredOn)
+    			{
+    				sendNoteOffToSeq(keySeqs.seqs[keySeqs.index]); // (the key's currently playing seq).
+
+    				keySeqs.triggeredOffs[keySeqs.index] = true; // triggeredOff is used in line xxx below.
+    				offIndex = keySeqs.offIndices[keySeqs.index]; // The index, in msPosObjs, of the msPosObj at the noteOff position of this inputNote (=seq).
+    				while(currentMsPosIndex < offIndex) // advance until currentMsPosIndex === offIndex
+    				{
+    					currentMsPosIndex++;
+    					reportMsPositionInScore(msPosObjs[currentMsPosIndex].msPositionInScore);
+    					if(msPosObjs[currentMsPosIndex].inputControls !== undefined)
+    					{
+    						// set the global inputControls (msPosObj.inputControls will have been set from inputChord.inputControls)
+    						// N.B.: To save time, set this directly, not as a cascade!
+    						// msPosObj.inputControls only contains non-default options (?)
+    						inputControls = msPosObjs[currentMsPosIndex].inputControls;
+    					}
+    					advanceCurrentKeyIndicesTo(currentMsPosIndex);
+    				}
+    			}
+    		}
+    	}
+
+    	function handleNoteOn(key)
+    	{
+    		var keyIndex = key - keyRange.bottomKey, keySeqs, keySeqsOnIndex, seq;
+
+    		function playSeq(seq, inputControls)
+    		{
+				// TODO
+    		}
+
+    		if(key >= keyRange.bottomKey && key <= keyRange.topKey)
+    		{
+    			keySeqs = keyData[keyIndex];
+    			if(keySeqs.onIndices.length > keySeqs.index) // some keys may not have seqs...
+    			{
+    				keySeqsOnIndex = keySeqs.onIndices[keySeqs.index];
+    				if(keySeqsOnIndex === currentMsPosIndex || keySeqsOnIndex === currentMsPosIndex + 1) // legato realization
+    				{
+    					if(keySeqsOnIndex === currentMsPosIndex + 1)
+    					{
+    						currentMsPosIndex++;
+    						reportMsPositionInScore(msPosObjs[currentMsPosIndex].msPositionInScore);
+    						advanceCurrentKeyIndicesTo(currentMsPosIndex); // see above
+    					}
+    					seq = keySeqs.seqs[keySeqs.index];
+    					// Start playing the seq using the current global inputControls.
+    					// The inputControls may be overridden at the chord or note levels.
+    					// Each trk plays in its own worker thread. N.B.: seq.trks is not empty here.
+    					playSeq(seq, inputControls);
+    					keySeqs.triggeredOns[keySeqs.index] = true; // was initialised to false
+    				}
+    			}
+    		}
+    	}
+
+    	inputEvent = getInputEvent(msg.data, performance.now());
+
+    	if(inputEvent.data !== undefined)
+    	{
+    		command = inputEvent.command();
+
+    		switch(command)
+    		{
+    			case CMD.NOTE_ON:
+    				if(inputEvent.data[2] !== 0)
+    				{
+    					// setSpeedFactor is called inside handleNoteOn(...) because currentIndex needs to be >= 0.
+    					handleNoteOn(inputEvent.data[1]);
+    				}
+    				else
+    				{
+    					handleNoteOff(inputEvent.data[1]);
+    				}
+    				break;
+    			case CMD.NOTE_OFF:
+    				handleNoteOff(inputEvent.data[1]);
+    				break;
+    			default:
+    				break;
+    		}
+    	}
+    },
 
 	setState = function(state)
 	{
