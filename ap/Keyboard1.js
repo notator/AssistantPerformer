@@ -15,7 +15,7 @@
 *	// reportEndOfPerfCallback: a callback function which is called when performing sequence
 *	//		reaches the endMarkerMsPosition (see play(), or stop() is called. Can be undefined or null.
 *	//		It is called in this file as:
-*	//			reportEndOfPerformance(sequenceRecording, performanceMsDuration);
+*	//			reportEndOfSpan(sequenceRecording, performanceMsDuration);
 *	// reportMsPosCallback: a callback function which reports the current msPositionInScore
 *	//		back to the GUI while performing. Can be undefined or null.
 *	//		It is called here as:
@@ -85,7 +85,7 @@ _AP.keyboard1 = (function()
 	outputTracks,
 	keyData,
 	keyRange, // keyRange.bottomKey and keyRange.topKey are the bottom and top input midi key values notated in the score.
-	reportEndOfPerformance, // callback -- called here as reportEndOfPerformance(sequenceRecording, performanceMsDuration);
+	reportEndOfSpan, // callback -- called here as reportEndOfSpan(sequenceRecording, performanceMsDuration);
 	reportMsPositionInScore, // callback -- called here as reportMsPositionInScore(msPositionToReport);
 
 	endMarkerMsPosition,
@@ -103,7 +103,6 @@ _AP.keyboard1 = (function()
 	previousTimestamp = null, // nextMoment()
 	previousMomtMsPosInScore = 0, // nextMoment()
 	currentMoment = null, // nextMoment(), resume(), tick()
-	reportEndOfSpan, // callback. Can be null or undefined. Set in play().
 
 	speedFactor = 1.0, // nextMoment(), setSpeedFactor() in handleMIDIInputEvent()
 	//maxDeviation, // for //console.log, set to 0 when performance starts
@@ -190,6 +189,23 @@ _AP.keyboard1 = (function()
 		outputDevice.send(msg.data, 0);
 	},
 
+	// does nothing if the sequence is already stopped
+	stop = function()
+	{
+		var performanceMsDuration;
+
+		if(!isStopped())
+		{
+			performanceMsDuration = Math.ceil(performance.now() - performanceStartTime);
+			currentMoment = null;
+			setState("stopped");
+			if(reportEndOfSpan !== undefined && reportEndOfSpan !== null)
+			{
+				reportEndOfSpan(sequenceRecording, performanceMsDuration);
+			}
+		}
+	},
+
 	// see _Keyboard1Algorithm.txt
 	// This handler
     // a) ignores both RealTime and SysEx messages in its input, and
@@ -266,9 +282,9 @@ _AP.keyboard1 = (function()
     		for(i = 0; i < keyData.length; ++i)
     		{
     			keySeqs = keyData[i];
-    			if(keySeqs.onIndices.length > keySeqs.index) // some keys may not have seqs...
+    			if(keySeqs.seqMsPosIndices.length > keySeqs.index) // some keys may not have seqs...
     			{
-    				while(keySeqs.onIndices[keySeqs.index] < currentMsPosIndex)
+    				while(keySeqs.seqMsPosIndices[keySeqs.index] < currentMsPosIndex)
     				{
     					if(keySeqs.triggeredOns[keySeqs.index] && !keySeqs.triggeredOffs[keySeqs.index])
     					{
@@ -284,7 +300,7 @@ _AP.keyboard1 = (function()
     	{
     		var keyIndex = key - keyRange.bottomKey, keySeqs,
 			triggeredOn,
-			offIndex;
+			nextSeqMsPosIndex;
 
     		if(key >= keyRange.bottomKey && key <= keyRange.topKey)
     		{
@@ -295,11 +311,12 @@ _AP.keyboard1 = (function()
     				sendNoteOffToSeq(keySeqs.seqs[keySeqs.index]); // (the key's currently playing seq).
 
     				keySeqs.triggeredOffs[keySeqs.index] = true; // triggeredOff is used in line xxx below.
-    				offIndex = keySeqs.offIndices[keySeqs.index]; // The index, in msPosObjs, of the msPosObj at the noteOff position of this inputNote (=seq).
-    				while(currentMsPosIndex < offIndex) // advance until currentMsPosIndex === offIndex
+    				nextSeqMsPosIndex = keySeqs.nextSeqMsPosIndices[keySeqs.index]; // The index, in msPosObjs, of the msPosObj at the next inputChord position (in any input track).
+    				while(currentMsPosIndex < nextSeqMsPosIndex) // advance until currentMsPosIndex === nextSeqMsPosIndex
     				{
     					currentMsPosIndex++;
     					reportMsPositionInScore(msPosObjs[currentMsPosIndex].msPositionInScore);
+    					
     					if(msPosObjs[currentMsPosIndex].inputControls !== undefined)
     					{
     						// set the global inputControls (msPosObj.inputControls will have been set from inputChord.inputControls)
@@ -308,6 +325,11 @@ _AP.keyboard1 = (function()
     						inputControls = msPosObjs[currentMsPosIndex].inputControls;
     					}
     					advanceCurrentKeyIndicesTo(currentMsPosIndex);
+    				}
+
+    				if(currentMsPosIndex === msPosObjs.length - 1)
+    				{
+    					stop();
     				}
     			}
     		}
@@ -325,9 +347,9 @@ _AP.keyboard1 = (function()
     		if(key >= keyRange.bottomKey && key <= keyRange.topKey)
     		{
     			keySeqs = keyData[keyIndex];
-    			if(keySeqs.onIndices.length > keySeqs.index) // some keys may not have seqs...
+    			if(keySeqs.seqMsPosIndices.length > keySeqs.index) // some keys may not have seqs...
     			{
-    				keySeqsOnIndex = keySeqs.onIndices[keySeqs.index];
+    				keySeqsOnIndex = keySeqs.seqMsPosIndices[keySeqs.index];
     				if(keySeqsOnIndex === currentMsPosIndex || keySeqsOnIndex === currentMsPosIndex + 1) // legato realization
     				{
     					if(keySeqsOnIndex === currentMsPosIndex + 1)
@@ -433,27 +455,10 @@ _AP.keyboard1 = (function()
 		}
 	},
 
-	// does nothing if the sequence is already stopped
-	stop = function()
-	{
-		var performanceMsDuration;
-
-		if(!isStopped())
-		{
-			performanceMsDuration = Math.ceil(performance.now() - performanceStartTime);
-			currentMoment = null;
-			setState("stopped");
-			if(reportEndOfSpan !== undefined && reportEndOfSpan !== null)
-			{
-				reportEndOfSpan(sequenceRecording, performanceMsDuration);
-			}
-		}
-	},
-
 	// The reportEndOfPerfCallback argument is a callback function which is called when performing sequence
 	// reaches the endMarkerMsPosition (see play(), or stop() is called. Can be undefined or null.
 	// It is called in this file as:
-	//	  reportEndOfPerformance(sequenceRecording, performanceMsDuration);
+	//	  reportEndOfSpan(sequenceRecording, performanceMsDuration);
 	// The reportMsPosCallback argument is a callback function which reports the current msPositionInScore back
 	// to the GUI while performing. Can be undefined or null.
 	// It is called here as:
@@ -480,7 +485,7 @@ _AP.keyboard1 = (function()
 		inputTracks = tracksData.inputTracks;
 		outputTracks = tracksData.outputTracks;
 		keyRange = tracksData.inputKeyRange; // these are the bottom and top midi key values notated in the score.
-		reportEndOfPerformance = reportEndOfPerfCallback;
+		reportEndOfSpan = reportEndOfPerfCallback;
 		reportMsPositionInScore = reportMsPosCallback;
 
 		setState("stopped");
@@ -559,13 +564,14 @@ _AP.keyboard1 = (function()
 				return returnInputControlsObj.inputControls;
 			}
 
-			// Returns an array of msPosObj, from startMarkerMsPositionInScore to (not including) endMarkerMsPositionInScore,
+			// Returns an array of msPosObj, from startMarkerMsPositionInScore to (*including*) endMarkerMsPositionInScore,
 			// ordered by msPosObj.msPositionInScore. The "span" is the section of the score in this msPosition range.
-			// This array includes the positions of all inputChords and inputRests in the span, but not if their track has been turned off.
-			// It does not include the positions of outputChords and outputRests.
+			// This array includes the positions of all inputChords in the span, but not if their track has been turned off.
+			// It does not include the positions of inputRests, outputChords or outputRests.
+			// The last msPosObj.msPositionInScore is the endMarkerMsPosInScore.
 			function getMsPosObjs(inputTracks, trackIsOnArray, nOutputTracks, nTracks, startMarkerMsPosInScore, endMarkerMsPosInScore)
 			{
-				var i, inputTrackIndex = 0, inputTrack, msPosObjs = [];
+				var i, inputTrackIndex = 0, inputTrack, msPosObjs = [], endMsPosObj = {};
 
 				// the inputTrack is performing
 				function addTrackSpanToMsPosObjs(inputTrack, msPosObjs, startMarkerMsPosInScore, endMarkerMsPosInScore)
@@ -583,7 +589,7 @@ _AP.keyboard1 = (function()
 							{
 								break;
 							}
-							if(inputObject.msPositionInScore >= startMarkerMsPosInScore)
+							if(inputObject instanceof _AP.inputChord.InputChord && inputObject.msPositionInScore >= startMarkerMsPosInScore)
 							{
 								//	msPosObj has the following fields:
 								//	msPosObj.msPositionInScore // used when updating the runningMarker position.
@@ -665,6 +671,10 @@ _AP.keyboard1 = (function()
 						msPosObjs = addTrackSpanToMsPosObjs(inputTrack, msPosObjs, startMarkerMsPosInScore, endMarkerMsPosInScore);
 					}
 				}
+
+				endMsPosObj.msPositionInScore = endMarkerMsPosInScore;
+				msPosObjs.push(endMsPosObj);
+
 				return msPosObjs;
 			}			
 			
@@ -682,8 +692,8 @@ _AP.keyboard1 = (function()
 					//					There is a seq for each inputNote having this midiKey, unless the seq's inputTrack has been turned off, or
 					//					all its outputTracks have been turned off. In either case, the seq is simply not created.
 					//					Each seq contains new Tracks that are initialised with pointers to midiObjects in the containing tracks.
-					//keySeqs.onIndices[]  // The index in msPosObjs of each seq's noteOn position.
-					//keySeqs.offIndices[] // The index in msPosObjs of each seq's noteOff position.
+					//keySeqs.seqMsPosIndices[]  // The index in msPosObjs of each seq's noteOn position.
+					//keySeqs.nextSeqMsPosIndices[] // The index in msPosObjs of the following seq's noteOn position.
 					//keySeqs.triggeredOns[]	// An array of booleans. One value per seq.
 					//							// Each value is initialised to false, but set to true when the inputNote's (seq's) noteOn is used (accepted).
 					//keySeqs.triggeredOffs[]	// An array of booleans. One value per inputNote (seq) played by the key.
@@ -695,7 +705,7 @@ _AP.keyboard1 = (function()
 					//				// The outputChords and outputRests in each trk are also in range of the span (they do not continue beyond endMarkerMsPosition).
 					//seq.inputControls // undefined or from inputChord.inputNotes
 					var startMarkerMsPosInScore = msPosObjs[0].msPositionInScore, 
-						i, j, inputObject, inputNotes, inputChord, inputNote, onIndex, offIndex,
+						i, j, inputObject, inputNotes, inputChord, inputNote, seqMsPosIndex, nextSeqMsPosIndex,
 						keySeqs, seq, noteSeqData, chordInputControls, noteInputControls;
 
 					function getNoteSeqData(inputNote, trackIsOnArray)
@@ -731,7 +741,7 @@ _AP.keyboard1 = (function()
 						var i, rval = -1;
 						for(i = 0; i < msPosObjs.length; ++i)
 						{
-							if(msPosObjs[i].msPositionInScore === msPosition)
+							if(msPosObjs[i].msPositionInScore >= msPosition)
 							{
 								rval = i;
 								break;
@@ -770,8 +780,8 @@ _AP.keyboard1 = (function()
 
 								if(noteSeqData.seq.trks.length > 0)
 								{
-									onIndex = findIndex(msPosObjs, inputChord.msPositionInScore);
-									offIndex = findIndex(msPosObjs, inputChord.msPositionInScore +inputChord.msDurationInScore);
+									seqMsPosIndex = findIndex(msPosObjs, inputChord.msPositionInScore);
+									nextSeqMsPosIndex = findIndex(msPosObjs, inputChord.msPositionInScore + inputChord.msDurationInScore);
 
 									if(noteSeqData.seq.inputControls !== undefined)
 									{
@@ -786,8 +796,8 @@ _AP.keyboard1 = (function()
 									// keySeqs.index has already been initialized
 									seq = new _AP.seq.Seq(noteSeqData.seq.trks, noteInputControls, endMarkerMsPosInScore);
 									keySeqs.seqs.push(seq); // seq may have an inputControls attribute
-									keySeqs.onIndices.push(onIndex);
-									keySeqs.offIndices.push(offIndex);
+									keySeqs.seqMsPosIndices.push(seqMsPosIndex);
+									keySeqs.nextSeqMsPosIndices.push(nextSeqMsPosIndex);
 									keySeqs.triggeredOns.push(false);
 									keySeqs.triggeredOffs.push(false);
 								}
@@ -801,30 +811,30 @@ _AP.keyboard1 = (function()
 				{
 					var i, keySeqs;
 
-					// Sorts the keySeqs.onIndices into ascending order,
-					// then rearranges keySeqs.seqs and keySeqs.offIndices accordingly
+					// Sorts the keySeqs.seqMsPosIndices into ascending order,
+					// then rearranges keySeqs.seqs and keySeqs.nextSeqMsPosIndices accordingly
 					function sort(keySeqs)
 					{
-						var i, unsorted = [], cameFromIndex = [], nSeqs = keySeqs.onIndices.length, seqs = [], offIndices = [];
+						var i, unsorted = [], cameFromIndex = [], nSeqs = keySeqs.seqMsPosIndices.length, seqs = [], nextSeqMsPosIndices = [];
 
 						for(i = 0; i < nSeqs; ++i)
 						{
-							unsorted.push(keySeqs.onIndices[i]);
+							unsorted.push(keySeqs.seqMsPosIndices[i]);
 						}
-						keySeqs.onIndices.sort(function(a, b) { return (a - b); });
+						keySeqs.seqMsPosIndices.sort(function(a, b) { return (a - b); });
 
 						for(i = 0; i < nSeqs; ++i)
 						{
-							cameFromIndex.push(unsorted.indexOf(keySeqs.onIndices[i]));
+							cameFromIndex.push(unsorted.indexOf(keySeqs.seqMsPosIndices[i]));
 						}
 
 						for(i = 0; i < nSeqs; ++i)
 						{
 							seqs.push(keySeqs.seqs[cameFromIndex[i]]);
-							offIndices.push(keySeqs.offIndices[cameFromIndex[i]]);	
+							nextSeqMsPosIndices.push(keySeqs.nextSeqMsPosIndices[cameFromIndex[i]]);	
 						}
 						keySeqs.seqs = seqs;
-						keySeqs.offIndices = offIndices;
+						keySeqs.nextSeqMsPosIndices = nextSeqMsPosIndices;
 					}
 
 					console.assert(false, "This code has not yet been tested.");
@@ -842,8 +852,8 @@ _AP.keyboard1 = (function()
 					keySeqs = {};
 					keySeqs.index = 0;
 					keySeqs.seqs = [];
-					keySeqs.onIndices = [];
-					keySeqs.offIndices = [];
+					keySeqs.seqMsPosIndices = [];
+					keySeqs.nextSeqMsPosIndices = [];
 					keySeqs.triggeredOns = [];
 					keySeqs.triggeredOffs = [];
 					keyData.push(keySeqs);
@@ -873,10 +883,11 @@ _AP.keyboard1 = (function()
 			// keyboard1.currentMsPosIndex
 			currentMsPosIndex = 0; // the index in the following array
 
-			// keyboard1.msPosObjs. The msPositionsInScore (and inputControls, if defined) of all inputChords and inputRests in the span. 
+			// keyboard1.msPosObjs
 			msPosObjs = getMsPosObjs(inputTracks, trackIsOnArray, nOutputTracks, nTracks, startMarkerMsPosInScore, endMarkerMsPosInScore);
 
 			console.assert(msPosObjs[0].msPositionInScore === startMarkerMsPosInScore);
+			console.assert(msPosObjs[msPosObjs.length - 1].msPositionInScore === endMarkerMsPosInScore);
 
 			// keyboard1.keyData
 			keyData = getKeyData(inputTracks, trackIsOnArray, msPosObjs, endMarkerMsPosInScore);
