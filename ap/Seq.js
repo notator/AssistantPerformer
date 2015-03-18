@@ -34,17 +34,25 @@ _AP.seq = (function()
 	"use strict";
 	var
 
-	Seq = function(noteSeqTrks, inputControlsArg, endMarkerMsPosInScore)
+	// A seq is an object having the following attributes
+	//seq.trks[]	// An array of parallel tracks - initialized from inputChord.inputNotes in the span (excluding non-playing outputTracks).
+	//				// This array is never empty. If it would be empty (because tracks have been turned off), the seq is not created.
+	//				// The outputChords and outputRests in each trk are in range of the span (they do not continue beyond endMarkerMsPosition).
+	//seq.seqMsPosIndex  // The index in allSeqMsPositions of the seq's noteOn position.
+	//seq.nextSeqMsPosIndex // The index in allSeqMsPositions of the following seq's noteOn position.
+	//seq.triggeredOn	// Is set to true when the seq is triggered On. Default is false.
+	//seq.triggeredOff	// Is set to true when the seq is triggered Off. Default is false.
+	//seq.inputControls // undefined or from inputChord.inputNotes
+	Seq = function(noteSeqTrks, seqMsPosIndex, nextSeqMsPosIndex, inputControls, endMarkerMsPosInScore)
 	{
-		var i, j, trk, midiObject, midiObjects, trkMidiObjects;
+		var i, j, trk, trks = [], midiObject, midiObjects, trkMidiObjects;
 
 		if(!(this instanceof Seq))
 		{
-			return new Seq(noteSeqTrks, inputControlsArg, endMarkerMsPosInScore);
+			return new Seq(noteSeqTrks, seqMsPosIndex, nextSeqMsPosIndex, inputControls, endMarkerMsPosInScore);
 		}
 
-		this.trks = [];
-		this.inputControls = {};
+		console.assert(inputControls !== undefined, "inputControlArgs must be defined here");
 
 		for(i = 0; i < noteSeqTrks.length; ++i)
 		{
@@ -65,11 +73,14 @@ _AP.seq = (function()
 			trk.midiObjects = midiObjects;
 			trk.setForOutputSpan(midiObjects[0].msPositionInScore, endMarkerMsPosInScore);
 
-			this.trks.push(trk);
+			trks.push(trk);
 		}
-
-		console.assert(inputControlsArg !== undefined, "inputControlArgs must be defined here");
-		this.inputControls = inputControlsArg;
+		Object.defineProperty(this, "trks", { value: trks, writable: false });
+		Object.defineProperty(this, "seqMsPosIndex", { value: seqMsPosIndex, writable: false });
+		Object.defineProperty(this, "nextSeqMsPosIndex", { value: nextSeqMsPosIndex, writable: false });
+		Object.defineProperty(this, "triggeredOn", { value: false, writable: true });
+		Object.defineProperty(this, "triggeredOff", { value: false, writable: true });
+		Object.defineProperty(this, "inputControls", { value: inputControls, writable: false });
 	},
 
 	API =
