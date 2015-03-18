@@ -13,7 +13,7 @@
 *	// inputDevice: The midi input device.
 *	// outputdevice: The midi output device.
 *	// reportEndOfPerfCallback: a callback function which is called when performing sequence
-*	//		reaches the endMarkerMsPosition (see play(), or stop() is called. Can be undefined or null.
+*	//		reaches the endMarkerMsPosition.
 *	//		It is called in this file as:
 *	//			reportEndOfSpan(sequenceRecording, performanceMsDuration);
 *	// reportMsPosCallback: a callback function which reports the current msPositionInScore
@@ -34,20 +34,11 @@
 *	// [optional] recording: a sequence in which the performed messages will be recorded.
 *	play(trackIsOnArrayArg, startMarkerMsPosInScore, endMarkerMsPosInScore, recording)
 *	
-*	// pause a running performance
-*	pause(),
-*	
-*	// resume a paused performance
-*	resume()
-*	
 *	// stop a running performance
 *	stop()
 *	
 *	// Is the performance stopped?
 *	isStopped()
-*	
-*	// Is the performance paused?
-*	isPaused()
 *	
 *	// Is the performance running?
 *	isRunning()
@@ -69,82 +60,31 @@ _AP.keyboard1 = (function()
 	"use strict";
 
 	var
-	UNDEFINED_TIMESTAMP = _AP.moment.UNDEFINED_TIMESTAMP,
     CMD = _AP.constants.COMMAND,
     Message = _AP.message.Message,
-    Moment = _AP.moment.Moment,
-    Sequence = _AP.sequence.Sequence,
 
 	// set or called in init(...)
 	midiInputDevice,
 	midiOutputDevice,
 	inputControls, // the running controls, initialized in initPlay() and updated while performing.
+
 	currentMsPosIndex, // initialized to 0 when playing starts. Is the index in the following array.
 	msPosObjs,
 	inputTracks,
 	outputTracks,
 	keyData,
 	keyRange, // keyRange.bottomKey and keyRange.topKey are the bottom and top input midi key values notated in the score.
+
 	reportEndOfSpan, // callback -- called here as reportEndOfSpan(sequenceRecording, performanceMsDuration);
 	reportMsPositionInScore, // callback -- called here as reportMsPositionInScore(msPositionToReport);
 
-	endMarkerMsPosition,
-
 	// (performance.now() - performanceStartTime) is the real time elapsed since the start of the performance.
 	performanceStartTime = -1,  // set in play(), used by stop(), run()
-	// (performance.now() - startTimeAdjustedForPauses) is the current performance duration excluding the durations of pauses.
-	startTimeAdjustedForPauses = -1, // performanceStartTime minus the durations of pauses. Used in nextMoment()
-	pauseStartTime = -1, // the performance.now() time at which the performance was paused.
 
 	// used by setState()
-	pausedMoment = null, // set by pause(), used by resume()
-	stopped = true, // nextMoment(), stop(), pause(), resume(), isStopped()
-	paused = false, // nextMoment(), pause(), isPaused()
-	previousTimestamp = null, // nextMoment()
-	previousMomtMsPosInScore = 0, // nextMoment()
-	currentMoment = null, // nextMoment(), resume(), tick()
+	stopped = true, // stop(), isStopped()
 
-	speedFactor = 1.0, // nextMoment(), setSpeedFactor() in handleMIDIInputEvent()
-	//maxDeviation, // for //console.log, set to 0 when performance starts
-
-	lastReportedMsPosition = -1, // set by tick() used by nextMoment()
-	msPositionToReport = -1,   // set in nextMoment() and used/reset by tick()
-	previousMomtMsPos,
-
-	sequenceRecording, // the sequence being recorded. set in play() and resume(), used by tick()
-
-	// TODO: complete resume()
-	// Public function. Should only be called when this sequence is paused (and pausedMoment is set correctly).
-	// The sequence pauses if nextMoment() sets currentMoment to null while tick() is waiting for setTimeout().
-	// So the messages in pausedMoment (set to the last non-null currentMoment) have already been sent.
-	resume = function()
-	{
-		//var
-		//pauseMsDuration = performance.now() - pauseStartTime;
-
-		//if(isPaused())
-		//{
-		//	currentMoment = pausedMoment; // the last moment whose messages were sent.
-
-		//	setState("running"); // sets pausedMoment to null.
-
-		//	currentMoment.timestamp += pauseMsDuration;
-		//	previousTimestamp += pauseMsDuration;
-		//	startTimeAdjustedForPauses += pauseMsDuration;
-
-		//	currentMoment = nextMoment();
-		//	if(currentMoment === null)
-		//	{
-		//		return;
-		//	}
-		//	currentMoment.timestamp = performance.now();
-		//	tick();
-		//}
-		//else
-		//{
-		//	throw "Error: resume() should only be called when this sequence is paused.";
-		//}
-	},
+	sequenceRecording, // the sequence being recorded.
 
 	sendCommandMessageNow = function(outputDevice, trackIndex, command, midiValue)
 	{
@@ -189,6 +129,35 @@ _AP.keyboard1 = (function()
 		outputDevice.send(msg.data, 0);
 	},
 
+	handleMIDIInputEventForwardDeclaration,
+
+	setState = function(state)
+	{
+		switch(state)
+		{
+			case "stopped":
+				stopped = true;
+				midiInputDevice.removeEventListener("midimessage", handleMIDIInputEventForwardDeclaration);
+				break;
+			case "running":
+				stopped = false;
+				midiInputDevice.addEventListener("midimessage", handleMIDIInputEventForwardDeclaration);
+				break;
+			default:
+				throw "Unknown sequence state!";
+		}
+	},
+
+	isRunning = function()
+	{
+		return (stopped === false);
+	},
+
+	isStopped = function()
+	{
+		return (stopped === true);
+	},
+
 	// does nothing if the sequence is already stopped
 	stop = function()
 	{
@@ -197,7 +166,6 @@ _AP.keyboard1 = (function()
 		if(!isStopped())
 		{
 			performanceMsDuration = Math.ceil(performance.now() - performanceStartTime);
-			currentMoment = null;
 			setState("stopped");
 			if(reportEndOfSpan !== undefined && reportEndOfSpan !== null)
 			{
@@ -396,64 +364,6 @@ _AP.keyboard1 = (function()
     		}
     	}
     },
-
-	setState = function(state)
-	{
-		switch(state)
-		{
-			case "stopped":
-				stopped = true;
-				paused = false;
-				pausedMoment = null;
-				previousTimestamp = null;
-				previousMomtMsPosInScore = 0;
-				midiInputDevice.removeEventListener("midimessage", handleMIDIInputEvent);
-				break;
-			case "paused":
-				stopped = false;
-				paused = true;
-				pausedMoment = currentMoment;
-				midiInputDevice.removeEventListener("midimessage", handleMIDIInputEvent);
-				break;
-			case "running":
-				stopped = false;
-				paused = false;
-				pausedMoment = null;
-				midiInputDevice.addEventListener("midimessage", handleMIDIInputEvent);
-				break;
-			default:
-				throw "Unknown sequence state!";
-		}
-	},
-
-	isStopped = function()
-	{
-		return (stopped === true && paused === false);
-	},
-
-	isPaused = function()
-	{
-		return (stopped === false && paused === true);
-	},
-
-	isRunning = function()
-	{
-		return (stopped === false && paused === false);
-	},
-
-	// Should only be called while running
-	pause = function()
-	{
-		if(isRunning())
-		{
-			setState("paused");
-			pauseStartTime = performance.now();
-		}
-		else
-		{
-			throw "Attempt to pause a stopped or paused sequence.";
-		}
-	},
 
 	// The reportEndOfPerfCallback argument is a callback function which is called when performing sequence
 	// reaches the endMarkerMsPosition (see play(), or stop() is called. Can be undefined or null.
@@ -895,17 +805,7 @@ _AP.keyboard1 = (function()
 
 		sequenceRecording = recording;
 
-		endMarkerMsPosition = endMarkerMsPosInScore;
-		startTimeAdjustedForPauses = performanceStartTime;
-
 		initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
-
-		pausedMoment = null;
-		pauseStartTime = -1;
-		previousTimestamp = null;
-		previousMomtMsPos = startMarkerMsPosInScore;
-		msPositionToReport = -1;
-		lastReportedMsPosition = -1;
 
 		performanceStartTime = performance.now();
 		setState("running");
@@ -916,11 +816,8 @@ _AP.keyboard1 = (function()
 		init: init,
 
 		play: play,
-		pause: pause,
-		resume: resume,
 		stop: stop,
 		isStopped: isStopped,
-		isPaused: isPaused,
 		isRunning: isRunning,
 
 		sendCommandMessageNow: sendCommandMessageNow,
@@ -930,6 +827,8 @@ _AP.keyboard1 = (function()
 		handleMIDIInputEvent: handleMIDIInputEvent
 	};
 	// end var
+
+	handleMIDIInputEventForwardDeclaration = handleMIDIInputEvent;
 
 	return publicAPI;
 
