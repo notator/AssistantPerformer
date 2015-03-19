@@ -89,19 +89,22 @@ _AP.seq = (function()
 	};
 	// end var
 
-	Seq.prototype.play = function(inputControls)
+	Seq.prototype.play = function(workerData, inputControls)
 	{
-
+		this.worker = workerData.worker;
+		this.worker.postMessage({ action: "play", tracks: this.trks, inputControls: inputControls, workerIndex: workerData.workerIndex });
+		this.triggeredOn = true; // triggeredOn is used when shunting.
 	};
 
 	Seq.prototype.stop = function(inputControls)
 	{
-
+		this.worker.postMessage({ action: "stop", inputControls: inputControls });
+		this.triggeredOff = true; // triggeredOff is used when shunting.
 	};
 
 	Seq.prototype.setSpeedFactor = function(factor)
 	{
-
+		this.worker.postMessage({ action: "setSpeedFactor", factor: factor });
 	};
 
 	return API;
