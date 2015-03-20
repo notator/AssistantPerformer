@@ -33,26 +33,23 @@ _AP.seq = (function()
 {
 	"use strict";
 	var
-
 	// A seq is an object having the following attributes
-	//seq.trks[]	// An array of parallel tracks - initialized from inputChord.inputNotes in the span (excluding non-playing outputTracks).
-	//				// This array is never empty. If it would be empty (because tracks have been turned off), the seq is not created.
-	//				// The outputChords and outputRests in each trk are in range of the span (they do not continue beyond endMarkerMsPosition).
+	//seq.worker // Each seq uses its own web worker to play its trks. The worker owns the trks.
 	//seq.seqMsPosIndex  // The index in allSeqMsPositions of the seq's noteOn position.
 	//seq.nextSeqMsPosIndex // The index in allSeqMsPositions of the following seq's noteOn position.
 	//seq.triggeredOn	// Is set to true when the seq is triggered On. Default is false.
 	//seq.triggeredOff	// Is set to true when the seq is triggered Off. Default is false.
 	//seq.inputControls // undefined or from inputChord.inputNotes
-	Seq = function(noteSeqTrks, seqMsPosIndex, nextSeqMsPosIndex, inputControls, endMarkerMsPosInScore)
+	Seq = function(noteSeqTrks, seqMsPosIndex, nextSeqMsPosIndex, inputControls, endMarkerMsPosInScore, seqMessageHandler)
 	{
-		var i, j, trk, trks = [], midiObject, midiObjects, trkMidiObjects;
+		var i, j, trk, trks = [], midiObject, midiObjects, trkMidiObjects, worker;
 
 		if(!(this instanceof Seq))
 		{
 			return new Seq(noteSeqTrks, seqMsPosIndex, nextSeqMsPosIndex, inputControls, endMarkerMsPosInScore);
 		}
 
-		console.assert(inputControls !== undefined, "inputControlArgs must be defined here");
+		console.assert(inputControls !== undefined, "inputControls must be defined here");
 
 		for(i = 0; i < noteSeqTrks.length; ++i)
 		{
@@ -75,7 +72,12 @@ _AP.seq = (function()
 
 			trks.push(trk);
 		}
-		Object.defineProperty(this, "trks", { value: trks, writable: false });
+
+		worker = new window.Worker("ap/SeqWorker.js");
+		worker.onmessage = seqMessageHandler;
+		worker.postMessage({ action: "init", tracks: trks, inputControls: inputControls });
+		
+		Object.defineProperty(this, "worker", { value: worker, writable: false });
 		Object.defineProperty(this, "seqMsPosIndex", { value: seqMsPosIndex, writable: false });
 		Object.defineProperty(this, "nextSeqMsPosIndex", { value: nextSeqMsPosIndex, writable: false });
 		Object.defineProperty(this, "triggeredOn", { value: false, writable: true });
@@ -89,16 +91,15 @@ _AP.seq = (function()
 	};
 	// end var
 
-	Seq.prototype.play = function(workerData, inputControls)
+	Seq.prototype.play = function()
 	{
-		this.worker = workerData.worker;
-		this.worker.postMessage({ action: "play", tracks: this.trks, inputControls: inputControls, workerIndex: workerData.workerIndex });
+		this.worker.postMessage({ action: "play" }); // plays according to the inputControls set in the seq's constructor
 		this.triggeredOn = true; // triggeredOn is used when shunting.
 	};
 
 	Seq.prototype.stop = function(inputControls)
 	{
-		this.worker.postMessage({ action: "stop", inputControls: inputControls });
+		this.worker.postMessage({ action: "stop" }); // stops according to the inputControls set in the seq's constructor
 		this.triggeredOff = true; // triggeredOff is used when shunting.
 	};
 
@@ -109,7 +110,7 @@ _AP.seq = (function()
 
 	return API;
 
-}());
+}(window));
 
 
 

@@ -78,9 +78,6 @@ _AP.keyboard1 = (function()
 	reportEndOfSpan, // callback -- called here as reportEndOfSpan(sequenceRecording, performanceMsDuration);
 	reportMsPositionInScore, // callback -- called here as reportMsPositionInScore(msPositionToReport);
 
-	INITIAL_NUMBER_OF_SEQ_WORKERS = 10, // more are created automatically if necessary...
-	seqWorkers = [],
-
 	// (performance.now() - performanceStartTime) is the real time elapsed since the start of the performance.
 	performanceStartTime = -1,  // set in play(), used by stop(), run()
 
@@ -89,35 +86,10 @@ _AP.keyboard1 = (function()
 
 	sequenceRecording, // the sequence being recorded.
 
-	// SeqWorkers send their messages here.
+	// Seq workers send their messages here.
 	handleSeqMessage = function(e)
 	{
-		var msg = e.data;
-
-		if(msg.constructor === Array)
-		{
-			outputDevice.send(msg, 0);
-		}
-		else if(msg.workerIsBusy === false)
-		{
-			console.log("SeqWorker index " + msg.workerIndex + " has stopped.");
-			seqWorkers[msg.workerIndex].isBusy = false;
-		}
-	},
-
-	newSeqWorker = function(index)
-	{
-		var seqWorkerData = {}, worker;
-
-		worker = new Worker("ap/SeqWorker.js");
-		//worker.postMessage = worker.webkitPostMessage || worker.postMessage;
-		worker.onmessage = handleSeqMessage;
-
-		seqWorkerData.worker = worker;
-		seqWorkerData.workerIndex = index;
-		seqWorkerData.isBusy = false;
-
-		return seqWorkerData;
+		outputDevice.send(e.data, 0);
 	},
 
 	sendCommandMessageNow = function(outputDevice, trackIndex, command, midiValue)
@@ -287,7 +259,7 @@ _AP.keyboard1 = (function()
     				{
     					if(seq.triggeredOn === true && seq.triggeredOff === false)
     					{
-    						seq.stop(inputControls);
+    						seq.stop(); // stops according to the inputControls set in the seq's constructor
     					}
     					keySeqs.index++;
     					seq = keySeqs.seqs[keySeqs.index];
@@ -307,7 +279,7 @@ _AP.keyboard1 = (function()
 				seq = keySeqs.seqs[keySeqs.index]; // (the key's currently playing seq).
     			if(seq !== undefined && seq.triggeredOn)// will be false if the key was pressed prematurely;
     			{
-    				seq.stop(inputControls); 
+    				seq.stop();  // stops according to the inputControls set in the seq's constructor
 
     				nextSeqMsPosIndex = seq.nextSeqMsPosIndex; // The index, in allSeqMsPositions, of the following seq (in any input track).
     				while(currentMsPosIndex < nextSeqMsPosIndex) // advance until currentMsPosIndex === nextSeqMsPosIndex
@@ -335,32 +307,7 @@ _AP.keyboard1 = (function()
 
     	function handleNoteOn(key)
     	{
-    		var keyIndex = key - keyRange.bottomKey, keySeqs, keySeqsOnIndex, seq, seqWorkerData;
-
-    		function getSeqWorkerData(seqWorkers)
-    		{
-    			var i, seqWorkerData = null;
-
-    			for(i = 0; i < seqWorkers.length; ++i)
-    			{
-    				if(seqWorkers[i].isBusy === false)
-    				{
-    					seqWorkerData = seqWorkers[i];
-    					break;						
-    				}
-    			}
-
-    			if(seqWorkerData === null)
-    			{
-    				seqWorkerData = newSeqWorker(seqWorkers.length);
-    				seqWorkers.push(seqWorkerData);
-					console.log("New SeqWorker created.")
-    			}
-
-    			seqWorkerData.isBusy = true;
-
-    			return seqWorkerData;
-    		}
+    		var keyIndex = key - keyRange.bottomKey, keySeqs, keySeqsOnIndex, seq;
 
     		if(key >= keyRange.bottomKey && key <= keyRange.topKey)
     		{
@@ -381,10 +328,8 @@ _AP.keyboard1 = (function()
     							seq = keySeqs.seqs[keySeqs.index];
     						}
 
-    						// Start playing the seq using the current global inputControls.
-    						// The inputControls may be overridden inside the seq.
-    						seqWorkerData = getSeqWorkerData(seqWorkers);
-    						seq.play(seqWorkerData, inputControls);
+    						// Start playing the seq using the inputControls set in its constructor.
+    						seq.play();
     					}
     				}
     			}
@@ -434,14 +379,6 @@ _AP.keyboard1 = (function()
 	// attributes before play() is called.
 	init = function(inputDeviceArg, outputDeviceArg, tracksData, reportEndOfPerfCallback, reportMsPosCallback)
 	{
-		function createSeqWorkers()
-		{
-			var i;
-			for(i = 0; i < INITIAL_NUMBER_OF_SEQ_WORKERS; ++i)
-			{
-				seqWorkers.push(newSeqWorker(i));
-			}
-		}
 		console.assert((inputDeviceArg !== undefined && inputDeviceArg !== null), "The midi input device must be defined.");
 		console.assert((outputDeviceArg !== undefined && outputDeviceArg !== null), "The midi output device must be defined.");
 		console.assert((tracksData !== undefined && tracksData !== null), "The tracksData must be defined.");
@@ -459,8 +396,6 @@ _AP.keyboard1 = (function()
 		keyRange = tracksData.inputKeyRange; // these are the bottom and top midi key values notated in the score.
 		reportEndOfSpan = reportEndOfPerfCallback;
 		reportMsPositionInScore = reportMsPosCallback;
-
-		createSeqWorkers();
 
 		setState("stopped");
 	},
@@ -768,7 +703,7 @@ _AP.keyboard1 = (function()
 									keySeqs = keyData[inputNote.notatedKey -bottomKey];
 									// keySeqs.index has already been initialized
 									seq = new _AP.seq.Seq(noteSeqData.seq.trks, seqMsPosIndex, nextSeqMsPosIndex,
-										noteInputControls, endMarkerMsPosInScore);
+										noteInputControls, endMarkerMsPosInScore, handleSeqMessage);
 									keySeqs.seqs.push(seq); // seq may have an inputControls attribute
 								}
 							}
