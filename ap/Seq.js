@@ -97,7 +97,7 @@ _AP.seq = (function()
 		this.triggeredOn = true; // triggeredOn is used when shunting.
 	};
 
-	Seq.prototype.stop = function(inputControls)
+	Seq.prototype.stop = function()
 	{
 		this.worker.postMessage({ action: "stop" }); // stops according to the inputControls set in the seq's constructor
 		this.triggeredOff = true; // triggeredOff is used when shunting.
