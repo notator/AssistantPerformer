@@ -87,9 +87,22 @@ _AP.keyboard1 = (function()
 	sequenceRecording, // the sequence being recorded.
 
 	// Seq workers send their messages here.
+	// timestamps are always absolute DOMHRT values here.
+    // (Chris said that the timestamp should be absolute DOMHRT time when the moment is sent.)
+    // Note that Jazz 1.2 does not support timestamps. It always sends Messages immediately.
 	handleSeqMessage = function(e)
 	{
-		outputDevice.send(e.data, 0);
+		outputDevice.send(e.data, performance.now());
+		// TODO: recording
+		//if(sequenceRecording !== undefined && sequenceRecording !== null)
+		//{
+		//	// The moments are recorded with their current (absolute DOMHRT) timestamp values.
+		//	// These values are adjusted relative to the first moment.timestamp
+		//	// before saving them in a Standard MIDI File.
+		//	// (i.e. the value of the earliest timestamp in the recording is
+		//	// subtracted from all the timestamps in the recording) 
+		//	sequenceRecording.trackRecordings[currentMoment.messages[0].channel()].addLiveScoreMoment(currentMoment);
+		//}
 	},
 
 	sendCommandMessageNow = function(outputDevice, trackIndex, command, midiValue)
@@ -703,7 +716,7 @@ _AP.keyboard1 = (function()
 									keySeqs = keyData[inputNote.notatedKey -bottomKey];
 									// keySeqs.index has already been initialized
 									seq = new _AP.seq.Seq(noteSeqData.seq.trks, seqMsPosIndex, nextSeqMsPosIndex,
-										noteInputControls, endMarkerMsPosInScore, handleSeqMessage);
+										noteInputControls, inputChord.msPositionInScore, endMarkerMsPosInScore, handleSeqMessage);
 									keySeqs.seqs.push(seq); // seq may have an inputControls attribute
 								}
 							}

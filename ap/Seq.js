@@ -9,7 +9,7 @@
 *  The _AP.seq namespace containing:
 * 
 *		// Seq constructor
-*       Seq(noteSeqTrks, inputControls, endMarkerMsPosInScore) 
+*       Seq(seqTracks, inputControls, endMarkerMsPosInScore) 
 *
 * Functions (in prototype): 
 *
@@ -34,49 +34,182 @@ _AP.seq = (function()
 	"use strict";
 	var
 	// A seq is an object having the following attributes
-	//seq.worker // Each seq uses its own web worker to play its trks. The worker owns the trks.
+	//seq.worker // Each seq uses its own web worker to play its moments. The worker owns the moments.
 	//seq.seqMsPosIndex  // The index in allSeqMsPositions of the seq's noteOn position.
 	//seq.nextSeqMsPosIndex // The index in allSeqMsPositions of the following seq's noteOn position.
 	//seq.triggeredOn	// Is set to true when the seq is triggered On. Default is false.
 	//seq.triggeredOff	// Is set to true when the seq is triggered Off. Default is false.
 	//seq.inputControls // undefined or from inputChord.inputNotes
-	Seq = function(noteSeqTrks, seqMsPosIndex, nextSeqMsPosIndex, inputControls, endMarkerMsPosInScore, seqMessageHandler)
+	Seq = function(seqTracks, seqMsPosIndex, nextSeqMsPosIndex, inputControls, seqPositionInScore, endMarkerMsPosInScore, seqMessageHandler)
 	{
-		var i, j, trk, trks = [], midiObject, midiObjects, trkMidiObjects, worker;
+		var moments, worker;
 
 		if(!(this instanceof Seq))
 		{
-			return new Seq(noteSeqTrks, seqMsPosIndex, nextSeqMsPosIndex, inputControls, endMarkerMsPosInScore);
+			return new Seq(seqTracks, seqMsPosIndex, nextSeqMsPosIndex, inputControls, seqPositionInScore, endMarkerMsPosInScore);
 		}
 
 		console.assert(inputControls !== undefined, "inputControls must be defined here");
 
-		for(i = 0; i < noteSeqTrks.length; ++i)
+		// Returns a one-dimensional array containing a sequence of moments ordered according to their msPositionInSeq attributes.
+		// Each moment object has a messages[] attribute and an msPositionInSeq attribute. The msPositionInSeq attributes are unique.
+		// The messages array contains midiMessages that are to be sent "synchronously".
+		// The midiMessages are *clones* of the midiMessages in the original tracks.
+		function getMoments(seqTracks, seqPositionInScore)
 		{
-			trk = new _AP.track.Track();
-			midiObjects = [];
-			trkMidiObjects = noteSeqTrks[i];
-			for(j = 0; j < trkMidiObjects.length; ++j)
-			{
-				midiObject = trkMidiObjects[j];
-				if(midiObject instanceof _AP.midiChord.MidiChord)
-				{
-					midiObject = new _AP.midiChord.MidiChord(midiObject); //clone constructor
-					console.assert(midiObject instanceof _AP.midiChord.MidiChord, "error");
-				}
-				// midiRests are not cloned (because they never change at runtime).
-				midiObjects.push(midiObject);
-			}
-			trk.midiObjects = midiObjects;
-			trk.setForOutputSpan(midiObjects[0].msPositionInScore, endMarkerMsPosInScore);
+			var seqMsDuration, tracksMoments = [], moments = [];
 
-			trks.push(trk);
+			// returns the msPositionReSeq of the end of the last midiObject in the Seq
+			function getSeqMsDuration(seqTracks, seqPositionInScore)
+			{
+				var i, endOfSeqMsPosReScore = 0, seqMsDuration = 0, nTracks = seqTracks.length,
+				lastMidiObject, midiObjects, endOfThisTrack;
+
+				for(i = 0; i < nTracks; ++i)
+				{
+					midiObjects = seqTracks[i];
+					lastMidiObject = midiObjects[midiObjects.length - 1];
+					endOfThisTrack = lastMidiObject.msPositionInScore + lastMidiObject.msDurationInScore;
+					endOfSeqMsPosReScore = (endOfSeqMsPosReScore > endOfThisTrack) ? endOfSeqMsPosReScore : endOfThisTrack;
+				}
+				seqMsDuration = endOfSeqMsPosReScore - seqPositionInScore;
+
+				return seqMsDuration;
+			}
+
+			// Returns an array containing one array per track.
+			// Each contained array contains one track's moments.
+			// Each moment has a messages[] attribute -- an array containing midiMessages that are to be sent "synchronously",
+			// and an msPositionInSeq attribute.
+			// The midiMessages are *clones* of the midiMessages in the original tracks.
+			function getTracksMoments(seqTracks, seqPositionInScore)
+			{
+				var i, j, k, trackMoments, moment, momentClone, trackMidiObjects, midiObject, midiObjectMsPosInSeq,
+				tracksMoments = [];
+
+				function messageClones(messages)
+				{
+					var clones = [], i, newUint8Array;
+
+					for(i = 0; i < messages.length; ++i)
+					{
+						//// Uint8Arrays don't have a split() function, so this seems the best way to make a clone...
+						//uint8Array = messages[i].data;
+						//newUint8Array = new Uint8Array(uint8Array.length);
+						//for(j = 0; j < uint8Array.length; ++j)
+						//{
+						//	newUint8Array[j] = uint8Array[j];
+						//}
+						//clones.push(newUint8Array);
+
+						newUint8Array = new Uint8Array(messages[i].data);
+						clones.push(newUint8Array);
+					}
+					return clones;
+				}
+
+				for(i = 0; i < seqTracks.length; ++i)
+				{
+					trackMoments = [];
+					trackMidiObjects = seqTracks[i];
+					for(j = 0; j < trackMidiObjects.length; ++j)
+					{
+						midiObject = trackMidiObjects[j];
+						midiObjectMsPosInSeq = midiObject.msPositionInScore - seqPositionInScore;
+						for(k = 0; k < midiObject.moments.length; ++k)
+						{
+							moment = midiObject.moments[k];
+							if(moment.messages.length > 0) // midiRests can have empty messages.
+							{
+								momentClone = {};
+								// all moments have an msPositionInChord attribute (even in midiRests)
+								momentClone.msPositionInSeq = midiObjectMsPosInSeq + moment.msPositionInChord;
+								momentClone.messages = messageClones(moment.messages);
+								trackMoments.push(momentClone);
+							}
+						}
+					}
+					tracksMoments.push(trackMoments);
+				}
+				return tracksMoments;
+			}
+
+			// Returns the tracksMoments collapsed into a 1-dimensional sequence of moments.
+			// Each moment has a unique msPositionInSeq.
+			function getFlatMoments(tracksMoments, seqMsDuration)
+			{
+				var i, j,
+				nTracks = tracksMoments.length, trackMomentIndices = [], trackPositions = [], moment,
+				allMoments = [], moments = [], earliestMsPos = 0, earliestTrackIndex = 0, messages;
+
+				for(i = 0; i < nTracks; ++i)
+				{
+					trackMomentIndices.push(0);
+					trackPositions.push(tracksMoments[i][0].msPositionInSeq);
+				}
+
+				while(earliestMsPos < Number.MAX_VALUE)
+				{
+					earliestMsPos = Number.MAX_VALUE;
+					earliestTrackIndex = -1;
+					for(i = 0; i < nTracks; ++i)
+					{
+						if(trackMomentIndices[i] < tracksMoments[i].length && (trackPositions[i] <= earliestMsPos))
+						{
+							earliestTrackIndex = i;
+							earliestMsPos = trackPositions[i];
+						}
+					}
+					if(earliestMsPos < Number.MAX_VALUE)
+					{
+						moment = tracksMoments[earliestTrackIndex][trackMomentIndices[earliestTrackIndex]];
+						allMoments.push(moment);
+
+						trackMomentIndices[earliestTrackIndex]++;
+						if(trackMomentIndices[earliestTrackIndex] < tracksMoments[earliestTrackIndex].length)
+						{
+							trackPositions[earliestTrackIndex] = tracksMoments[earliestTrackIndex][trackMomentIndices[earliestTrackIndex]].msPositionInSeq;
+						}
+						else
+						{
+							trackPositions[earliestTrackIndex] = Number.MAX_VALUE;
+						}
+					}
+				}
+
+				// combine synchronous moments
+				for(i = 0; i < allMoments.length; ++i)
+				{
+					if(i < allMoments.length - 1 && (allMoments[i].msPositionInSeq === allMoments[i + 1].msPositionInSeq))
+					{
+						messages = allMoments[i].messages;
+						for(j = 0; j < messages.length; ++j)
+						{
+							allMoments[i + 1].messages.push(messages[j]);
+						}
+					}
+					else
+					{
+						moments.push(allMoments[i]);
+					}
+				}
+
+				return moments;
+			}
+
+			seqMsDuration = getSeqMsDuration(seqTracks, seqPositionInScore);
+			tracksMoments = getTracksMoments(seqTracks, seqPositionInScore);
+			moments = getFlatMoments(tracksMoments, seqMsDuration);
+
+			return moments;
 		}
+
+		moments = getMoments(seqTracks, seqPositionInScore);
 
 		worker = new window.Worker("ap/SeqWorker.js");
 		worker.onmessage = seqMessageHandler;
-		worker.postMessage({ action: "init", tracks: trks, inputControls: inputControls });
-		
+		worker.postMessage({ action: "init", moments: moments, inputControls: inputControls });
+
 		Object.defineProperty(this, "worker", { value: worker, writable: false });
 		Object.defineProperty(this, "seqMsPosIndex", { value: seqMsPosIndex, writable: false });
 		Object.defineProperty(this, "nextSeqMsPosIndex", { value: nextSeqMsPosIndex, writable: false });
