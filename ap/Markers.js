@@ -331,6 +331,22 @@ _AP.markers = (function ()
             }
         },
 
+		// This function is necessary after changing systems, where the first position of the system needs to be skipped.
+		// msPosition must be in the current system
+		moveTo = function(msPosition)
+		{
+			var i;
+
+			positionIndex = 0;
+			while(timeObjects[positionIndex].msPosition !== msPosition)
+			{
+				positionIndex++;
+			}
+
+			moveLineToAlignmentX(timeObjects[positionIndex].alignmentX);
+			nextMillisecondPosition = timeObjects[positionIndex + 1].msPosition; // may be system's end barline
+		},
+
         // The startMarker argument is in the same system as this runningMarker
         // If the startMarker is on the system's end barline, nextMsPosition is set to undefined.
         // (The current runningMarker is changed to the following system's runningMarker,
@@ -338,25 +354,22 @@ _AP.markers = (function ()
         // the runningMarker.nextMsPosition should never be accessed.
         moveToStartMarker = function (startMarker)
         {
-            var i;
+        	//moveTo(startMarker.timeObject().msPosition);
+        	var i, msPosition = startMarker.timeObject().msPosition;
 
-            for (i = 0; i < timeObjects.length; ++i)
-            {
-                if (startMarker.timeObject().msPosition === timeObjects[i].msPosition)
-                {
-                    positionIndex = i;
-                    setNextMsPosition(i);
-                    break;
-                }
-            }
-            moveLineToAlignmentX(startMarker.timeObject().alignmentX);
+        	positionIndex = 0;
+        	while(timeObjects[positionIndex].msPosition < msPosition)
+        	{
+        		positionIndex++;
+        	}
+
+        	moveLineToAlignmentX(timeObjects[positionIndex].alignmentX);
+        	nextMillisecondPosition = timeObjects[positionIndex + 1].msPosition; // may be system's end barline
         },
 
-        moveToStartOfSystem = function ()
+        moveToStartOfSystem = function()
         {
-            positionIndex = 0;
-            moveLineToAlignmentX(timeObjects[positionIndex].alignmentX);
-            nextMillisecondPosition = timeObjects[positionIndex + 1].msPosition; // may be system's end barline
+        	moveTo(timeObjects[0].msPosition);
         },
 
         incrementPosition = function ()
@@ -400,13 +413,24 @@ _AP.markers = (function ()
                 		if(trackIsOnArray === undefined || trackIsOnArray[trackIndex] === true)
                 		{
                 			voice = staff.voices[voiceIndex];
-                			if((voice.class === "outputVoice" && isLivePerformance === false)
-							|| (voice.class === "inputVoice" && isLivePerformance === true))
+                			if(voice.class === "outputVoice" && isLivePerformance === false)
                 			{
                 				for(k = 0; k < voice.timeObjects.length; ++k)
                 				{
                 					if(voice.timeObjects[k].msPosition > msPosition)
                 					{
+                						voiceTimeObjects.push(voice.timeObjects[k]);
+                						break;
+                					}
+                				}
+                			}
+                			else if(voice.class === "inputVoice" && isLivePerformance === true)
+                			{
+                				for(k = 0; k < voice.timeObjects.length; ++k)
+                				{
+                					if(voice.timeObjects[k].msPosition > msPosition)
+                					{
+                						// if voice.timeObjects[k] points at a performing output track
                 						voiceTimeObjects.push(voice.timeObjects[k]);
                 						break;
                 					}
@@ -509,6 +533,7 @@ _AP.markers = (function ()
         this.systemIndex = systemIndex;
         this.nextMsPosition = nextMsPosition;
         this.moveToStartOfSystem = moveToStartOfSystem;
+        this.moveTo = moveTo;
         this.moveToStartMarker = moveToStartMarker;
         this.incrementPosition = incrementPosition;
         this.getYCoordinates = getYCoordinates;

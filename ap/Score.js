@@ -1173,33 +1173,34 @@ _AP.score = (function (document)
         }
     },
 
-    // Advances the running marker to the following timeObject (in any channel)
+    // Advances the running marker to msPosition (in any channel)
     // if msPosition is >= that object's msPosition. Otherwise does nothing.
     // Also does nothing when the end of the score is reached.
-    advanceRunningMarker = function (msPosition)
+    advanceRunningMarker = function(msPosition)
     {
-        if (msPosition >= systems[runningMarker.systemIndex()].endMsPosition)
-        {
-            // Move runningMarker to the beginning of the next system.
-            runningMarker.setVisible(false);
-            if (runningMarker.systemIndex() < (systems.length - 1))
-            {
-                runningMarker = systems[runningMarker.systemIndex() + 1].runningMarker;
-                runningMarker.moveToStartOfSystem();
-                runningMarker.setVisible(true);
-            }
-            // callback for auto scroll
-            runningMarkerHeightChanged(runningMarker.getYCoordinates());
-        }
-        else
-        {
-            while (msPosition >= runningMarker.nextMsPosition())
-            {
-                // this function can assume that the runningMarker's currentPosition can simply be incremented
-                runningMarker.incrementPosition();
-            }
-        }
+    	if(msPosition >= systems[runningMarker.systemIndex()].endMsPosition)
+    	{
+    		// Move runningMarker to msPosition in the next system.
+    		runningMarker.setVisible(false);
+    		if(runningMarker.systemIndex() < (systems.length - 1))
+    		{
+    			runningMarker = systems[runningMarker.systemIndex() + 1].runningMarker;
+    			runningMarker.moveTo(msPosition);
+    			runningMarker.setVisible(true);
+    		}
+    		// callback for auto scroll
+    		runningMarkerHeightChanged(runningMarker.getYCoordinates());
+    	}
+    	else
+    	{
+    		while(msPosition >= runningMarker.nextMsPosition())
+    		{
+    			// this function can assume that the runningMarker's currentPosition can simply be incremented
+    			runningMarker.incrementPosition();
+    		}
+    	}
     },
+
 
     // Returns a tracksData object having the following defined attributes:
     //		inputTracks[] - an array of tracks containing inputChords and inputRests
