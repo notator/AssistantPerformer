@@ -488,7 +488,7 @@ _AP.keyboard1 = (function()
 
 			// Returns an array of msPosObj, from startMarkerMsPositionInScore to (*including*) endMarkerMsPositionInScore,
 			// ordered by msPosObj.msPositionInScore. The "span" is the section of the score in this msPosition range.
-			// This array includes the positions of all inputChords in the span, but not if their track has been turned off.
+			// This array includes the positions of all inputChords in the span, but not if their track and/or all their outputTracks have been turned off.
 			// It does not include the positions of inputRests, outputChords or outputRests.
 			// The last msPosObj.msPositionInScore is the endMarkerMsPosInScore.
 			function getMsPosObjs(inputTracks, trackIsOnArray, nOutputTracks, nTracks, startMarkerMsPosInScore, endMarkerMsPosInScore)
@@ -496,13 +496,37 @@ _AP.keyboard1 = (function()
 				var i, inputTrackIndex = 0, inputTrack, allSeqMsPositions = [], endMsPosObj = {};
 
 				// the inputTrack is performing
-				function addTrackSpanToMsPosObjs(inputTrack, allSeqMsPositions, startMarkerMsPosInScore, endMarkerMsPosInScore)
+				function addTrackSpanToMsPosObjs(inputTrack, trackIsOnArray, allSeqMsPositions, startMarkerMsPosInScore, endMarkerMsPosInScore)
 				{
 					var trackSpanMsPosObjsArray;
 
-					function getTrackSpanMsPosObjsArray(inputObjects, startMarkerMsPosInScore, endMarkerMsPosInScore)
+					function getTrackSpanMsPosObjsArray(inputObjects, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore)
 					{
 						var i, nInputObjects = inputObjects.length, inputObject, msPosObj, trackSpanMsPosObjsArray = [];
+
+						function hasPlayingOutputTracks(inputChord, trackIsOnArray)
+						{
+							var i, j, hasTracks = false, inputNotes = inputChord.inputNotes, trks;
+
+							for(i = 0; i < inputNotes.length; ++i)
+							{
+								trks = inputNotes[i].trks;
+								for(j = 0; j < trks.length; ++j)
+								{
+									if(trackIsOnArray[trks[j].trackIndex] === true)
+									{
+										hasTracks = true;
+										break;
+									}
+								}
+								if(hasTracks === true)
+								{
+									break;
+								}
+							}
+
+							return hasTracks;
+						}
 
 						for(i = 0; i < nInputObjects; ++i)
 						{
@@ -511,7 +535,9 @@ _AP.keyboard1 = (function()
 							{
 								break;
 							}
-							if(inputObject instanceof _AP.inputChord.InputChord && inputObject.msPositionInScore >= startMarkerMsPosInScore)
+							if(inputObject instanceof _AP.inputChord.InputChord
+							&& inputObject.msPositionInScore >= startMarkerMsPosInScore
+							&& hasPlayingOutputTracks(inputObject, trackIsOnArray))
 							{
 								//	msPosObj has the following fields:
 								//	msPosObj.msPositionInScore // used when updating the runningMarker position.
@@ -575,7 +601,7 @@ _AP.keyboard1 = (function()
 						return mergedArray;
 					}
 
-					trackSpanMsPosObjsArray = getTrackSpanMsPosObjsArray(inputTrack.inputObjects, startMarkerMsPosInScore, endMarkerMsPosInScore);
+					trackSpanMsPosObjsArray = getTrackSpanMsPosObjsArray(inputTrack.inputObjects, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
 					allSeqMsPositions = getMergedArrays(trackSpanMsPosObjsArray, allSeqMsPositions);
 
 					return allSeqMsPositions;
@@ -590,7 +616,7 @@ _AP.keyboard1 = (function()
 					{
 						// inputTrack.isPerforming = true;
 						inputTrack.setForInputSpan(startMarkerMsPosInScore, endMarkerMsPosInScore);
-						allSeqMsPositions = addTrackSpanToMsPosObjs(inputTrack, allSeqMsPositions, startMarkerMsPosInScore, endMarkerMsPosInScore);
+						allSeqMsPositions = addTrackSpanToMsPosObjs(inputTrack, trackIsOnArray, allSeqMsPositions, startMarkerMsPosInScore, endMarkerMsPosInScore);
 					}
 				}
 
