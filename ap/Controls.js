@@ -439,9 +439,7 @@ _AP.controls = (function(document, window)
 
         function setPlaying(isLivePerformance)
         {
-            var
-            trackIsOnArray = tracksControl.getTrackIsOnArray(),
-            sequenceRecording;
+            var sequenceRecording;
 
             function sendTrackInitializationMessages(options, outputTracks)
             {
@@ -517,12 +515,12 @@ _AP.controls = (function(document, window)
 
                 // the running marker is at its correct position:
                 // either at the start marker, or somewhere paused.
-                score.setRunningMarkers(isLivePerformance, trackIsOnArray);
+                score.setRunningMarkers();
                 score.moveStartMarkerToTop(svgPagesDiv);
 
                 sendTrackInitializationMessages(options, player.outputTracks);
 
-                player.play(trackIsOnArray, score.startMarkerMsPosition(), score.endMarkerMsPosition(), sequenceRecording);
+                player.play(score.getTrackIsOnArray(), score.startMarkerMsPosition(), score.endMarkerMsPosition(), sequenceRecording);
             }
 
             if(options.livePerformance === true)
@@ -1214,8 +1212,7 @@ _AP.controls = (function(document, window)
     		if(scoreHasJustBeenSelected)
     		{
     			// everything except the timeObjects (which have to take account of speed)
-    			// if options.livePerformance === false, the InputVoices are not constructed.
-    			score.getEmptyPagesAndSystems(svg, options.livePerformance);
+    			score.getEmptyPagesAndSystems(svg);
     		}
 
     		// tracksData will contain the following defined attributes:
@@ -1224,16 +1221,18 @@ _AP.controls = (function(document, window)
 			//		if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
     		//			inputKeyRange.bottomKey
     		//			inputKeyRange.topKey
-    		tracksData = score.getTracksData(svg, options.livePerformance, options.globalSpeed);
+    		tracksData = score.getTracksData(svg, options.globalSpeed);
 
     		if(options.livePerformance)
-    		{			
+    		{
+    			score.beginRuntime(true);
     			player = options.inputHandler; // e.g. keyboard1 -- the "prepared piano"
     			player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
     			player.init(options.inputDevice, options.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
 			}
     		else
     		{
+    			score.beginRuntime(false);
     			player = sequence; // sequence is a namespace, not a class.
     			player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
     			player.init(options.outputDevice, reportEndOfPerformance, reportMsPos);
@@ -1261,7 +1260,7 @@ _AP.controls = (function(document, window)
 
         getTracksAndPlayer(score, options);
 
-        score.refreshDisplay(options.livePerformance); // undefined trackIsOnArray is the same as all track states are "on"
+        score.refreshDisplay(); // undefined trackIsOnArray
 
         score.moveStartMarkerToTop(svgPagesDiv);
 

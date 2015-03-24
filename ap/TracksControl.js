@@ -206,8 +206,7 @@ _AP.tracksControl = (function (document)
 
 	// Returns a read-only array containing all the track on/off states.
     // The tracks' state cannot be set by changing values in the returned array.
-    // This function is called by the performance controls when playing starts, and
-	// by the trackOnOff function below.
+    // This function is called by the trackOnOff function below.
 	getTrackIsOnArray = function ()
 	{
 		var i, readOnlyArray = [];
@@ -280,7 +279,7 @@ _AP.tracksControl = (function (document)
         	// scoreRefresh is a callback that tells the score to redraw itself
             if(scoreRefresh !== null)
             {
-            	scoreRefresh(isLivePerformance, getTrackIsOnArray() );
+            	scoreRefresh(getTrackIsOnArray());
             }
         }
     },
@@ -350,11 +349,6 @@ _AP.tracksControl = (function (document)
 
     	// used to disable the whole tracks control when changing it makes no sense.
     	setDisabled: setDisabled,
-
-    	// Returns a read-only array of booleans containing all the track on/off states.
-    	// The tracks' state cannot be set by changing values in the returned array.
-    	// This function is called by the performance controls when playing starts.
-    	getTrackIsOnArray : getTrackIsOnArray,
 
     	// Called if the user clicks a trackControl.
     	// This function calls the scoreRefresh(isLivePerformance, trackIsOnArray)

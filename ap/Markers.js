@@ -410,7 +410,7 @@ _AP.markers = (function ()
 
                 	for(voiceIndex = 0; voiceIndex < staff.voices.length; ++voiceIndex)
                 	{
-                		if(trackIsOnArray === undefined || trackIsOnArray[trackIndex] === true)
+                		if(trackIsOnArray[trackIndex] === true)
                 		{
                 			voice = staff.voices[voiceIndex];
                 			if(voice.class === "outputVoice" && isLivePerformance === false)
@@ -430,7 +430,6 @@ _AP.markers = (function ()
                 				{
                 					if(voice.timeObjects[k].msPosition > msPosition)
                 					{
-                						// if voice.timeObjects[k] points at a performing output track
                 						voiceTimeObjects.push(voice.timeObjects[k]);
                 						break;
                 					}
@@ -467,7 +466,6 @@ _AP.markers = (function ()
         },
 
 		// The trackIsOnArray contains the boolean on/off state of eack track.
-	    // It may be undefined, in which case all tracks are treated as 'on'.
         setParameters = function(system, systIndex, isLivePerformance, trackIsOnArray)
         {
             var topY, bottomY, color = '#999999';
