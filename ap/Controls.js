@@ -590,12 +590,6 @@ _AP.controls = (function(document, window)
 
         function setSettingStart()
         {
-            // The setStartCursor should be set here when I have extracted the svgFrames from the svgPages.
-            // c.f. http://james-ingram.de/MidiBridge/js/apMidiControl.js
-            // The cursor should be (re-)set in setSettingStart(), setSettingEnd() and setStopped()
-
-            // svgFrames[i].style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setStartCursor.cur'), auto";
-
             tracksControl.setDisabled(true);
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);
@@ -615,12 +609,6 @@ _AP.controls = (function(document, window)
 
         function setSettingEnd()
         {
-            // The setStartCursor should be set here when I have extracted the svgFrames from the svgPages.
-            // c.f. http://james-ingram.de/MidiBridge/js/apMidiControl.js
-            // The cursor should be (re-)set in setSettingStart(), setSettingEnd() and setStopped()
-
-            // svgFrames[i].style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setStartCursor.cur'), auto";
-
             tracksControl.setDisabled(true);
 
             cl.gotoOptionsDisabled.setAttribute("opacity", SMOKE);

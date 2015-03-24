@@ -41,6 +41,7 @@ _AP.score = (function (document)
 	DISABLED_PINK_COLOR = "#FFBBBB",
 
     MAX_MIDI_CHANNELS = 16,
+	midiChannelPerOutputTrack = [],
 
     // The frames around each svgPage
     svgFrames = [],
@@ -227,38 +228,68 @@ _AP.score = (function (document)
         timeObjectsArray = getTimeObjectsArray(system),
         timeObjectTrackIndex;
 
-        function findTrackIndex(timeObjectsArray, timeObject)
+        function hasPerformingTrack(inputChordDef, midiChannelPerOutputTrack, trackIsOnArray)
         {
-            var i, nTracks = timeObjectsArray.length, j, nTimeObjects, returnIndex = -1;
-            for (i = 0; i < nTracks; ++i)
-            {
-                nTimeObjects = timeObjectsArray[i].length;
-                for (j = 0; j < nTimeObjects; ++j)
-                {
-                    if (timeObject === timeObjectsArray[i][j])
-                    {
-                        returnIndex = i;
-                        break;
-                    }
-                }
-                if (returnIndex >= 0)
-                {
-                    break;
-                }
-            }
-            if (returnIndex === -1)
-            {
-                throw "Error: timeObject not found in system.";
-            }
-            return returnIndex;
+        	var i, j, outputTrackFound = false, inputNotes, trkRefs, midiChannel;
+
+        	console.assert(inputChordDef !== undefined, "inputChordDef must be defined.");
+
+        	inputNotes = inputChordDef.inputNotes;
+        	for(i = 0; i < inputNotes.length; ++i)
+        	{
+        		trkRefs = inputNotes[i].trkRefs;
+        		for(j = 0; j < trkRefs.length; ++j)
+        		{
+        			midiChannel = trkRefs[j].midiChannel;
+        			if(trackIsOnArray === undefined || trackIsOnArray[midiChannelPerOutputTrack.indexOf(midiChannel)])
+        			{
+        				outputTrackFound = true;
+        				break;
+        			}
+        		}
+        		if(outputTrackFound === true)
+        		{
+        			break;
+        		}
+        	}
+
+        	return outputTrackFound;
         }
 
-        function thereIsNoPerformingChordOnTheStartBarline(timeObjectsArray, alignmentX, trackIsOnArray)
+        function findTrackIndex(timeObjectsArray, timeObject)
         {
-        	var i, timeObjects, nTracks = timeObjectsArray.length, j, nTimeObjects,
-                timeObjectFound = false;
-
+        	var i, nTracks = timeObjectsArray.length, j, nTimeObjects, returnIndex = -1;
         	for(i = 0; i < nTracks; ++i)
+        	{
+        		nTimeObjects = timeObjectsArray[i].length;
+        		for(j = 0; j < nTimeObjects; ++j)
+        		{
+        			if(timeObject === timeObjectsArray[i][j])
+        			{
+        				returnIndex = i;
+        				break;
+        			}
+        		}
+        		if(returnIndex >= 0)
+        		{
+        			break;
+        		}
+        	}
+        	if(returnIndex === -1)
+        	{
+        		throw "Error: timeObject not found in system.";
+        	}
+        	return returnIndex;
+        }
+
+    	// Returns the performing timeObject closest to alignmentX (in the topmost performing input track). 
+        function findPerformingInputTimeObject(timeObjectsArray, alignmentX, midiChannelPerOutputTrack, trackIsOnArray)
+        {
+        	var i, j, timeObjects, timeObject = null, timeObjectBefore = null, timeObjectAfter = null, returnTimeObject = null, nTimeObjects,
+			nOutputTracks = midiChannelPerOutputTrack.length, nAllTracks = timeObjectsArray.length,
+        		deltaBefore = Number.MAX_VALUE, deltaAfter = Number.MAX_VALUE;
+
+        	for(i = nOutputTracks; i < nAllTracks; ++i)
         	{
         		timeObjects = timeObjectsArray[i];
         		if(trackIsOnArray === undefined || trackIsOnArray[i] === true)
@@ -266,28 +297,86 @@ _AP.score = (function (document)
         			nTimeObjects = timeObjects.length;
         			for(j = 0; j < nTimeObjects; ++j)
         			{
-        				if(alignmentX === timeObjects[j].alignmentX)
+        				timeObject = timeObjects[j];
+        				if(timeObject.inputChordDef !== undefined
+						&& hasPerformingTrack(timeObject.inputChordDef, midiChannelPerOutputTrack, trackIsOnArray))
         				{
-        					timeObjectFound = true;
-        					break;
-        				}
-
-        				if(alignmentX < timeObjects[j].alignmentX)
-        				{
-        					break;
+        					if(alignmentX === timeObject.alignmentX)
+        					{
+        						returnTimeObject = timeObject;
+        						break;
+        					}
+        					if(alignmentX > timeObject.alignmentX)
+        					{
+        						timeObjectBefore = timeObject;
+        					}
+        					if(alignmentX < timeObject.alignmentX)
+        					{
+        						timeObjectAfter = timeObject;
+        						break;
+        					}
         				}
         			}
         		}
-        		if(timeObjectFound === true)
+        		if(returnTimeObject === null && (timeObjectBefore !== null || timeObjectAfter !== null))
+        		{
+        			deltaBefore = (timeObjectBefore === null) ? deltaBefore : (alignmentX - timeObjectBefore.alignmentX);
+        			deltaAfter = (timeObjectAfter === null) ? deltaAfter : (timeObjectAfter.alignmentX - alignmentX);
+        			returnTimeObject = (deltaBefore > deltaAfter) ? timeObjectAfter : timeObjectBefore;
+        		}
+        		if(returnTimeObject !== null)
         		{
         			break;
         		}
+        	}
+        	return returnTimeObject;
+		}
+
+        function thereIsNoPerformingChordOnTheStartBarline(timeObjectsArray, alignmentX,
+					 midiChannelPerOutputTrack, trackIsOnArray, isLivePerformance)
+        {
+        	var i, j, timeObjects, timeObject,
+			nOutputTracks = midiChannelPerOutputTrack.length,
+			nTimeObjects, timeObjectFound = false;
+
+        	if(isLivePerformance === false)
+        	{
+        		for(i = 0; i < nOutputTracks; ++i)
+        		{
+        			timeObjects = timeObjectsArray[i];
+        			if(trackIsOnArray === undefined || trackIsOnArray[i] === true)
+        			{
+        				nTimeObjects = timeObjects.length;
+        				for(j = 0; j < nTimeObjects; ++j)
+        				{
+        					if(alignmentX === timeObjects[j].alignmentX)
+        					{
+        						timeObjectFound = true;
+        						break;
+        					}
+
+        					if(alignmentX < timeObjects[j].alignmentX)
+        					{
+        						break;
+        					}
+        				}
+        			}
+        			if(timeObjectFound === true)
+        			{
+        				break;
+        			}
+        		}
+        	}
+        	else // isLivePerformance === true
+        	{
+        		timeObject = findPerformingInputTimeObject(timeObjectsArray, alignmentX, midiChannelPerOutputTrack, trackIsOnArray);
+        		timeObjectFound = (timeObject !== null && timeObject.alignmentX === alignmentX);
         	}
 
         	return (!timeObjectFound);
         }
 
-    	// This function only affects OutputStaves.
+    	// This function sets the colours of the OutputStaves.
     	// (there are no InputStaves in the system, when isLivePerformance === false)
         // Staves have either one or two voices (=tracks). The tracks are 0-indexed channels from top
         // to bottom of the system.
@@ -377,13 +466,21 @@ _AP.score = (function (document)
         	setColors(trackIsOnArray, isLivePerformance);
         }
 
-        setOutputView(trackIsOnArray, isLivePerformance); // sets the colours of the output tracks
+        setOutputView(trackIsOnArray, isLivePerformance);
 
         // move the start marker if necessary
-        if (thereIsNoPerformingChordOnTheStartBarline(timeObjectsArray, timeObject.alignmentX, trackIsOnArray))
+        if(thereIsNoPerformingChordOnTheStartBarline(timeObjectsArray, timeObject.alignmentX,
+			midiChannelPerOutputTrack, trackIsOnArray, isLivePerformance))
         {
-            timeObjectTrackIndex = findTrackIndex(timeObjectsArray, timeObject);
-            timeObject = findStartMarkerTimeObject(timeObject, timeObjectTrackIndex, system, trackIsOnArray);
+        	if(isLivePerformance === false)
+        	{
+        		timeObjectTrackIndex = findTrackIndex(timeObjectsArray, timeObject);
+        		timeObject = findStartMarkerTimeObject(timeObject, timeObjectTrackIndex, system, trackIsOnArray);
+        	}
+        	else
+        	{
+        		timeObject = findPerformingInputTimeObject(timeObjectsArray, timeObject.alignmentX, midiChannelPerOutputTrack, trackIsOnArray);
+        	}
 
             if (timeObject.msPosition < endMarker.msPosition())
             {
@@ -857,6 +954,10 @@ _AP.score = (function (document)
         		{
         			outputVoice.midiChannel = parseInt(midiChannel, 10);
         			outputVoice.masterVolume = parseInt(masterVolume, 10);
+					
+        			// score variable: midiChannelPerOutputTrack[] is used with trackIsOnArray[]
+        			// when checking that inputNotes have at least one performing track
+        			midiChannelPerOutputTrack.push(outputVoice.midiChannel);
         		}
         	}
 
