@@ -1212,7 +1212,7 @@ _AP.controls = (function(document, window)
     		if(scoreHasJustBeenSelected)
     		{
     			// everything except the timeObjects (which have to take account of speed)
-    			score.getEmptyPagesAndSystems(svg);
+    			score.getEmptyPagesAndSystems(svg, options.livePerformance);
     		}
 
     		// tracksData will contain the following defined attributes:
@@ -1225,14 +1225,12 @@ _AP.controls = (function(document, window)
 
     		if(options.livePerformance)
     		{
-    			score.beginRuntime(true);
     			player = options.inputHandler; // e.g. keyboard1 -- the "prepared piano"
     			player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
     			player.init(options.inputDevice, options.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
 			}
     		else
     		{
-    			score.beginRuntime(false);
     			player = sequence; // sequence is a namespace, not a class.
     			player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
     			player.init(options.outputDevice, reportEndOfPerformance, reportMsPos);

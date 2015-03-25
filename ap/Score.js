@@ -72,12 +72,6 @@ _AP.score = (function (document)
 		return trackIsOnArray.slice(0);
 	},
 
-	// called when the start runtime button is clicked.
-	beginRuntime = function(isLive)
-	{
-		isLivePerformance = isLive;
-	},
-
     // Sends a noteOff to all notes on all channels on the midi output device.
     allNotesOff = function (midiOutputDevice)
     {
@@ -643,14 +637,14 @@ _AP.score = (function (document)
 	// the score's trackIsOnArray is initialized to all tracks on (=true).
 	// If isLivePerformance === true, then outputStaves are grey, inputStaves are black.
 	// If isLivePerformance === false, then outputStaves are black, inputStaves are pink.
-    getEmptyPagesAndSystems = function (svg)
+    getEmptyPagesAndSystems = function (svg, isLivePerformanceArg)
     {
         var system, embeddedSvgPages, nPages, viewBoxOriginY,
             i, j,
             sysNumber, svgPage, svgElem, svgChildren, systemID,
             childID, currentFrame, pageHeight;
 
-        function resetContent()
+        function resetContent(isLivePerformanceArg)
         {
             while (svgFrames.length > 0)
             {
@@ -661,6 +655,7 @@ _AP.score = (function (document)
                 systems.pop();
             }
 
+            isLivePerformance = isLivePerformanceArg;
             midiChannelPerOutputTrack = []; // reset global
             trackIsOnArray = []; // reset global
         }
@@ -962,14 +957,21 @@ _AP.score = (function (document)
         		staff = system.staves[i];
         		for(j = 0; j < staff.voices.length; ++j)
         		{
-        			trackIsOnArray.push(true);
+        			if(staff.voices[j].class === "inputVoice" && isLivePerformance === false)
+        			{
+        				trackIsOnArray.push(false);
+        			}
+        			else
+        			{
+        				trackIsOnArray.push(true);
+        			}
         		}
         	}
         }
 
         /*************** end of getEmptyPagesAndSystems function definitions *****************************/
 
-        resetContent();
+        resetContent(isLivePerformanceArg);
 
         embeddedSvgPages = document.querySelectorAll(".svgPage");
         nPages = embeddedSvgPages.length;
@@ -1724,9 +1726,6 @@ _AP.score = (function (document)
         systems = [];
 
         runningMarkerHeightChanged = callback;
-
-		// called when runtime is started. Sets the score's local isLivePerformance variable
-        this.beginRuntime = beginRuntime;
 
         // Sends a noteOff to all notes on all channels on the midi output device.
         this.allNotesOff = allNotesOff;
