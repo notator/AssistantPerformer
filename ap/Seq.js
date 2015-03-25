@@ -140,7 +140,7 @@ _AP.seq = (function()
 			{
 				var i, j,
 				nTracks = tracksMoments.length, trackMomentIndices = [], trackPositions = [], moment,
-				allMoments = [], moments = [], earliestMsPos = 0, earliestTrackIndex = 0, messages;
+				moments = [], earliestMsPos = 0, earliestTrackIndex = 0, messages;
 
 				for(i = 0; i < nTracks; ++i)
 				{
@@ -163,7 +163,7 @@ _AP.seq = (function()
 					if(earliestMsPos < Number.MAX_VALUE)
 					{
 						moment = tracksMoments[earliestTrackIndex][trackMomentIndices[earliestTrackIndex]];
-						allMoments.push(moment);
+						moments.push(moment);
 
 						trackMomentIndices[earliestTrackIndex]++;
 						if(trackMomentIndices[earliestTrackIndex] < tracksMoments[earliestTrackIndex].length)
@@ -174,23 +174,6 @@ _AP.seq = (function()
 						{
 							trackPositions[earliestTrackIndex] = Number.MAX_VALUE;
 						}
-					}
-				}
-
-				// combine synchronous moments
-				for(i = 0; i < allMoments.length; ++i)
-				{
-					if(i < allMoments.length - 1 && (allMoments[i].msPositionInSeq === allMoments[i + 1].msPositionInSeq))
-					{
-						messages = allMoments[i].messages;
-						for(j = 0; j < messages.length; ++j)
-						{
-							allMoments[i + 1].messages.push(messages[j]);
-						}
-					}
-					else
-					{
-						moments.push(allMoments[i]);
 					}
 				}
 
