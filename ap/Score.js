@@ -184,7 +184,7 @@ _AP.score = (function (document)
 
 		for(i = startIndex; i < endIndex; ++i)
 		{
-			if(trackIndex === undefined || (i === trackIndex))
+			if(trackIndex === undefined || findInput === true || (i === trackIndex))
 			{
 				timeObjects = timeObjectsArray[i];
 				if(trackIsOnArray[i] === true)
@@ -565,29 +565,32 @@ _AP.score = (function (document)
 
             // timeObject is now the nearest performing chord to the click,
             // either in a live performers voice (if there is one and it is performing) or in a performing output voice.
-            switch(state)
+            if(timeObject !== null)
             {
-                case 'settingStart':
-                    if(timeObject.msPosition < endMarker.msPosition())
-                    {
-                        startMarker = system.startMarker;
-                        hideStartMarkersExcept(startMarker);
-                        updateStartMarker(timeObjectsArray, timeObject);
-                    }
-                    break;
-                case 'settingEnd':
-                	// returns the rightmost barline if that is closer to x than the timeObject
-                	// returns null if timeObject.alignmentX is the alignmentx of the first chord on the system. 
-                	timeObject = getEndMarkerTimeObject(timeObject, x, systems, systemIndex);
-                    if(timeObject !== null && startMarker.msPosition() < timeObject.msPosition)
-                    {
-                        endMarker = system.endMarker;
-                        hideEndMarkersExcept(endMarker);
-                        endMarker.moveTo(timeObject);
-                    }
-                    break;
-                default:
-                    break;
+            	switch(state)
+            	{
+            		case 'settingStart':
+            			if(timeObject.msPosition < endMarker.msPosition())
+            			{
+            				startMarker = system.startMarker;
+            				hideStartMarkersExcept(startMarker);
+            				updateStartMarker(timeObjectsArray, timeObject);
+            			}
+            			break;
+            		case 'settingEnd':
+            			// returns the rightmost barline if that is closer to x than the timeObject
+            			// returns null if timeObject.alignmentX is the alignmentx of the first chord on the system.
+            			timeObject = getEndMarkerTimeObject(timeObject, x, systems, systemIndex);
+            			if(timeObject !== null && startMarker.msPosition() < timeObject.msPosition)
+            			{
+            				endMarker = system.endMarker;
+            				hideEndMarkersExcept(endMarker);
+            				endMarker.moveTo(timeObject);
+            			}
+            			break;
+            		default:
+            			break;
+            	}
             }
         }
     },
