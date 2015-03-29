@@ -20,7 +20,7 @@ _AP.inputControls = (function ()
 {
     "use strict";
     var
-    // InputControls constructor
+    // InputControls constructor: argument can be an inputControls node from a document, or another InputControls object (to be cloned).
     // inputControls sets the performance options for a Seq, by individually overriding the current options in the Seq's Output Voice.
 	// contains: 
     //		inputControls.noteOnKey -- possible values: "ignore", "transpose", "matchExactly" 
@@ -35,59 +35,111 @@ _AP.inputControls = (function ()
     //		inputControls.minVolume -- only defined if one of the above controllers is set to "volume". Possible values: 0..127
     //		inputControls.speedOption -- possible values: "none", "noteOnKey", "noteOnVel", "pressure", "pitchWheel", "modulation"
     //		inputControls.maxSpeedPercent -- only defined if speedOption is not "none". Possible values: an integer > 100
-	InputControls = function (inputControlsNode)
+	InputControls = function (arg)
 	{
 		if (!(this instanceof InputControls))
 		{
-			return new InputControls(inputControlsNode);
+			return new InputControls(arg);
 		}
 
-		var i, attr, attrLen;
+		var i, attr, attrLen, inputControlsNode;
 
-		if(inputControlsNode !== undefined && inputControlsNode !== null)
+		if(arg !== undefined) // undefined returns an empty InputControls object
 		{
-			attrLen = inputControlsNode.attributes.length;
-
-			for(i = 0; i < attrLen; ++i)
+			if(arg instanceof InputControls)
 			{
-				attr = inputControlsNode.attributes[i];
-				switch(attr.name)
+				// construct clone
+				if(arg.noteOnKey !== undefined)
 				{
-					case "noteOnKey": // undefined/default is "matchExactly" 
-						this.noteOnKey = attr.value;
-						break;
-					case "noteOnVel": // undefined/default is "ignore"
-						this.noteOnVel = attr.value;
-						break;
-					case "noteOff": // undefined/default is "stop"
-						this.noteOff = attr.value;
-						break;
-					case "shortFade": // undefined/default is 0
-						this.shortFade = parseInt(attr.value, 10);
-						break;
-					case "pressure": // undefined/default is "ignore"
-						this.pressure = attr.value;
-						break;
-					case "pitchWheel": // undefined/default is "ignore"
-						this.pitchWheel = attr.value;
-						break;
-					case "modulation": // undefined/default is "ignore"
-						this.modulation = attr.value;
-						break;
-					case "maxVolume": // undefined/default is 127
-						this.maxVolume = parseInt(attr.value, 10);
-						break;
-					case "minVolume": // undefined/default is 0
-						this.minVolume = parseInt(attr.value, 10);
-						break;
-					case "speedOption": // undefined/default is "none"
-						this.speedOption = attr.value;
-						break;
-					case "maxSpeedPercent": // undefined/default is 200
-						this.maxSpeedPercent = parseInt(attr.value, 10);
-						break;
-					default:
-						throw (">>>>>>>>>> Illegal InputControls attribute <<<<<<<<<<");
+					this.noteOnKey = arg.noteOnKey;
+				}
+				if(arg.noteOnVel !== undefined)
+				{
+					this.noteOnVel = arg.noteOnVel;
+				}
+				if(arg.noteOff !== undefined)
+				{
+					this.noteOff = arg.noteOff;
+				}
+				if(arg.shortFade !== undefined)
+				{
+					this.shortFade = arg.shortFade;
+				}
+				if(arg.pressure !== undefined)
+				{
+					this.pressure = arg.pressure;
+				}
+				if(arg.pitchWheel !== undefined)
+				{
+					this.pitchWheel = arg.pitchWheel;
+				}
+				if(arg.modulation !== undefined)
+				{
+					this.modulation = arg.modulation;
+				}
+				if(arg.maxVolume !== undefined)
+				{
+					this.maxVolume = arg.maxVolume;
+				}
+				if(arg.minVolume !== undefined)
+				{
+					this.minVolume = arg.minVolume;
+				}
+				if(arg.speedOption !== undefined)
+				{
+					this.speedOption = arg.speedOption;
+				}
+				if(arg.maxSpeedPercent !== undefined)
+				{
+					this.maxSpeedPercent = arg.maxSpeedPercent;
+				}
+			}
+			else // construct from document
+			{
+				inputControlsNode = arg;
+				attrLen = inputControlsNode.attributes.length;
+
+				for(i = 0; i < attrLen; ++i)
+				{
+					attr = inputControlsNode.attributes[i];
+					switch(attr.name)
+					{
+						case "noteOnKey": // undefined/default is "matchExactly" 
+							this.noteOnKey = attr.value;
+							break;
+						case "noteOnVel": // undefined/default is "ignore"
+							this.noteOnVel = attr.value;
+							break;
+						case "noteOff": // undefined/default is "ignore"
+							this.noteOff = attr.value;
+							break;
+						case "shortFade": // undefined/default is 0
+							this.shortFade = parseInt(attr.value, 10);
+							break;
+						case "pressure": // undefined/default is "ignore"
+							this.pressure = attr.value;
+							break;
+						case "pitchWheel": // undefined/default is "ignore"
+							this.pitchWheel = attr.value;
+							break;
+						case "modulation": // undefined/default is "ignore"
+							this.modulation = attr.value;
+							break;
+						case "maxVolume": // undefined/default is 127
+							this.maxVolume = parseInt(attr.value, 10);
+							break;
+						case "minVolume": // undefined/default is 0
+							this.minVolume = parseInt(attr.value, 10);
+							break;
+						case "speedOption": // undefined/default is "none"
+							this.speedOption = attr.value;
+							break;
+						case "maxSpeedPercent": // undefined/default is 200
+							this.maxSpeedPercent = parseInt(attr.value, 10);
+							break;
+						default:
+							throw (">>>>>>>>>> Illegal InputControls attribute <<<<<<<<<<");
+					}
 				}
 			}
 		}
