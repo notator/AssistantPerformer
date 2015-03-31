@@ -10,15 +10,40 @@ moments,
 momentIndex = 0,
 inputControls,
 
+stop = false,
+nAllMoments,
+currentMomentNumber = 0,
+fadeLength = -1,
+
 currentMoment = null, // nextMoment(), tick()
 speedFactor = 1.0, // nextMoment(), setSpeedFactor()
-seqStartTime = -1,  // set in play(), used by nextMoment()
+seqStartTime = -1,  // set in doNoteOn(), used by nextMoment()
 
-stop = function()
+doNoteOff = function()
 {
 	"use strict";
+
+	function setFade()
+	{
+		fadeLength = nAllMoments - currentMomentNumber;
+	}
+
+	switch(inputControls.noteOff)
+	{
+		case "stop":
+			stop = true;
+			console.log("doNoteOff: stop is true.");
+			break;
+		case "fade":
+			stop = true;
+			console.log("doNoteOff: setFade().");
+			setFade();
+			break;
+		default:
+			break; // "ignore" do nothing (allow the Seq to complete) 
+	}
 	// stop according to the inputControls (set in "init"), possibly sending an all sound off...
-	postMessage([0xB0, 120, 0]); // send all sound off (channel 0) now
+	
 },
 
 // null is returned when there are no more moments.
@@ -26,9 +51,10 @@ nextMoment = function()
 {
     "use strict";
     var nextMoment = null;
-    if(momentIndex < moments.length)
+    if(momentIndex < nAllMoments)
     {
     	nextMoment = moments[momentIndex++];
+    	currentMomentNumber++;
     }
     return nextMoment; // null stops tick().
 },
@@ -42,12 +68,20 @@ tick = function()
     function sendMessages(moment)
     {
     	var
-        messages = moment.messages,
-        i, nMessages = messages.length;
+        message, messages = moment.messages,
+        i, nMessages = messages.length,
+        newVelocity;
 
     	for(i = 0; i < nMessages; ++i)
     	{
-    		postMessage(messages[i]);
+    		message = messages[i];
+    		if(fadeLength > 0 && message[0] >= 0x90 && message[0] < 0xA0)
+    		{
+				newVelocity = message[2] * (nAllMoments - currentMomentNumber) / fadeLength; // scale the velocity
+    			// a NoteOn
+				message = new Uint8Array([message[0], message[1], newVelocity]);	
+    		}
+    		postMessage(message);
     	}
     }
 
@@ -65,6 +99,12 @@ tick = function()
  
     while(delay <= 0)
     {
+    	if(stop === true && fadeLength < 0)
+    	{
+    		console.log("stopping tick().");
+    		postMessage([0xB0, 120, 0]); // send all sound off (channel 0) now
+    		return;
+    	}
     	if(currentMoment.messages.length > 0) // rest moments can be empty
     	{
     		sendMessages(currentMoment);
@@ -83,20 +123,11 @@ tick = function()
     setTimeout(tick, delay);  // schedules the next tick.
 },
 
-play = function()
+// play the tracks according to the inputControls (set in "init").
+doNoteOn = function()
 {
 	"use strict";
 
-	//// play the tracks according to the inputControls (set in "init").
-	//// use postmessage(uint8Array) to send MIDI messages;
-	//postMessage([0x90, 0x45, 0x45]); // send noteOn (channel 0) now
-
-	//setTimeout(function()
-	//{
-	//	// when playing finishes...
-	//  postMessage([0xB0, 120, 0]); // send all sound off (channel 0) now    
-	//
-	//}, 1000);
 	console.log("worker says: moments.length is: " + moments.length);
 
 	seqStartTime = performance.now();
@@ -120,13 +151,15 @@ onmessage = function(e)
 	{
 		case "init":
 			moments = msg.moments;
+			nAllMoments = moments.length;
 			inputControls = msg.inputControls;
 			break;
 		case "play":
-			play();
+			doNoteOn();
 			break;
 		case "stop":
-			stop();
+			console.log("worker received noteOff()");
+			doNoteOff();
 			break;
 		case "setSpeedFactor":
 			speedFactor = msg.factor;

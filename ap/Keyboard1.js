@@ -66,7 +66,6 @@ _AP.keyboard1 = (function()
 	// set or called in init(...)
 	inputDevice,
 	outputDevice,
-	inputControls, // the running controls, initialized in initPlay() and updated while performing.
 
 	currentMsPosIndex, // initialized to 0 when playing starts. Is the index in the following array.
 	allSeqMsPositions,
@@ -424,66 +423,55 @@ _AP.keyboard1 = (function()
 		function initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore)
 		{
 			var
+			inputTracksInputControls,
 			nOutputTracks = outputTracks.length,
 			nTracks = nOutputTracks + inputTracks.length;
 
-			// Returns the inputControls current when the span starts.
-			// (Shunts in all playing inputTracks from the start of the score.)
-			// This "global" inputControls always has a complete set of attributes.
-			function getCurrentInputControls(inputTracks, trackIsOnArray, nOutputTracks, nTracks, startMarkerMsPosInScore)
+			// Returns the performer's inputControls current in each inputTrack when the span starts.
+			// (Shunts in all inputObjects in all inputTracks (playing or not) from the start of the score.)
+			function getCurrentInputTracksInputControls(inputTracks, nOutputTracks, nTracks, startMarkerMsPosInScore)
 			{
-				var returnInputControlsObj = {}, currentTrackInputControlsObj,
-				i, inputTrackIndex = 0, inputTrack;
+				var returnArray = [], currentTrackInputControlsObj,
+				i, inputTrackIndex = 0, inputTrack, inputControls;
 
-				// returns null or an object having msPositionInScore and inputControls attributes
-				// The inputControls will contain a complete set of attributes.
+				// Returns a clone of the most recent InputControls object at or before startMarkerMsPosInScore.
+				// If there are no such InputControls objects, a new, empty InputControls object is returned.
 				function getCurrentTrackInputControlsObj(inputObjects, startMarkerMsPosInScore)
 				{
-					var i, nInputObjects = inputObjects.length, inputObject, returnInputControlsObj = null;
+					var i, nInputObjects = inputObjects.length, inputObject, foundICO = null, returnInputControlsObj;
 
 					for(i = 0; i < nInputObjects; ++i)
 					{
 						inputObject = inputObjects[i];
+						if(inputObject.inputControls !== undefined)
+						{
+							foundICO = inputObject.inputControls;
+						}
 						if(inputObject.msPositionInScore >= startMarkerMsPosInScore)
 						{
 							break;
 						}
-						if(inputObject.inputControls !== undefined)
-						{
-							returnInputControlsObj = {};
-							returnInputControlsObj.msPositionInScore = inputObject.msPositionInScore;
-							returnInputControlsObj.inputControls = inputObject.inputControls.getCascadeOver(new _AP.inputControls.InputControls());
-						}
+					}
+
+					if(foundICO !== null)
+					{
+						returnInputControlsObj = new _AP.inputControls.InputControls(foundICO); // a clone
+					}
+					else
+					{
+						returnInputControlsObj = new _AP.inputControls.InputControls(); // a new, empty InputControls object
 					}
 					return returnInputControlsObj;
 				}
-
-				returnInputControlsObj.msPositionInScore = 0;
-				returnInputControlsObj.inputControls = new _AP.inputControls.InputControls();
 				
 				for(i = nOutputTracks; i < nTracks; ++i)
 				{
 					inputTrack = inputTracks[inputTrackIndex++];
-
-					if(trackIsOnArray[i])
-					{
-						currentTrackInputControlsObj = getCurrentTrackInputControlsObj(inputTrack.inputObjects, startMarkerMsPosInScore);
-						if(currentTrackInputControlsObj !== null)
-						{
-							console.assert(!(returnInputControlsObj.msPositionInScore > 0
-								&& (returnInputControlsObj.msPositionInScore === currentTrackInputControlsObj.msPositionInScore)),
-								"Error. Synchronous inputControl objects are not allowed.");
-
-							if(currentTrackInputControlsObj.msPositionInScore === 0
-							|| currentTrackInputControlsObj.msPositionInScore > returnInputControlsObj.msPositionInScore)
-							{
-								returnInputControlsObj = currentTrackInputControlsObj;
-							}	
-						}
-					}
+					inputControls = getCurrentTrackInputControlsObj(inputTrack.inputObjects, startMarkerMsPosInScore);
+					returnArray.push(inputControls) // default is an empty InputControls object.
 				}
 
-				return returnInputControlsObj.inputControls;
+				return returnArray;
 			}
 
 			// Returns an array of msPosObj, from startMarkerMsPositionInScore to (*including*) endMarkerMsPositionInScore,
@@ -626,12 +614,12 @@ _AP.keyboard1 = (function()
 				return allSeqMsPositions;
 			}			
 			
-			function getKeyData(inputTracks, trackIsOnArray, allSeqMsPositions, endMarkerMsPosInScore)
+			function getKeyData(inputTracks, trackIsOnArray, allSeqMsPositions, inputTracksInputControls, endMarkerMsPosInScore)
 			{
-				var i, keyData = [], keySeqs, inputTrack;
+				var i, keyData = [], keySeqs, inputTrack, inputControls;
 
 				// Appends keySeqs to the appropriate keyData[midikey] keySeqs array.
-				function setKeySeqsFromInputTrack(keyData, bottomKey, inputObjects, trackIsOnArray, allSeqMsPositions, endMarkerMsPosInScore)
+				function setKeySeqsFromInputTrack(keyData, bottomKey, inputObjects, inputControls, trackIsOnArray, allSeqMsPositions, endMarkerMsPosInScore)
 				{
 					//keySeqs is an object, relating to a keyboard key, having the following fields:
 					//keySeqs.index	// Initialized to 0. The current index in the keySeqs array attributes (below).	
@@ -698,7 +686,6 @@ _AP.keyboard1 = (function()
 						return rval;
 					}
 
-					inputControls = {}; // the "global" inputControls is empty
 					for(i=0; i < inputObjects.length; ++i)
 					{
 						inputObject = inputObjects[i];
@@ -718,7 +705,7 @@ _AP.keyboard1 = (function()
 							chordInputControls = inputChord.inputControls;
 							if(chordInputControls !== undefined)
 							{
-								inputControls = chordInputControls;
+								inputControls = chordInputControls; // don't cascade here!
 							}
 							for(j = 0; j < inputNotes.length; ++j)
 							{
@@ -806,7 +793,8 @@ _AP.keyboard1 = (function()
 				for(i = 0; i < inputTracks.length; ++i)
 				{
 					inputTrack = inputTracks[i];
-					setKeySeqsFromInputTrack(keyData, keyRange.bottomKey, inputTrack.inputObjects, trackIsOnArray, allSeqMsPositions, endMarkerMsPosInScore);
+					inputControls = inputTracksInputControls[i];
+					setKeySeqsFromInputTrack(keyData, keyRange.bottomKey, inputTrack.inputObjects, inputControls,trackIsOnArray, allSeqMsPositions, endMarkerMsPosInScore);
 				}
 
 				if(inputTracks.length > 1)
@@ -821,8 +809,7 @@ _AP.keyboard1 = (function()
 			
 			/*** begin initPlay() ***/
 
-			// keyboard1.inputControls. This "global" inputControls always has a complete set of attributes.
-			inputControls = getCurrentInputControls(inputTracks, trackIsOnArray, nOutputTracks, nTracks, startMarkerMsPosInScore);
+			inputTracksInputControls = getCurrentInputTracksInputControls(inputTracks, nOutputTracks, nTracks, startMarkerMsPosInScore);
 
 			// keyboard1.currentMsPosIndex
 			currentMsPosIndex = 0; // the index in the following array
@@ -834,7 +821,7 @@ _AP.keyboard1 = (function()
 			console.assert(allSeqMsPositions[allSeqMsPositions.length - 1].msPositionInScore === endMarkerMsPosInScore);
 
 			// keyboard1.keyData
-			keyData = getKeyData(inputTracks, trackIsOnArray, allSeqMsPositions, endMarkerMsPosInScore);
+			keyData = getKeyData(inputTracks, trackIsOnArray, allSeqMsPositions, inputTracksInputControls, endMarkerMsPosInScore);
 		}
 
 		sequenceRecording = recording;

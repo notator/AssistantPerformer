@@ -93,10 +93,6 @@ _AP.inputChord = (function()
     				{
     					trk.msOffset = trkRefDef.mOffset; // can be undefined
     				}
-    				if(trkRefDef.inputControls !== undefined)
-    				{
-    					trk.inputControls = trkRefDef.inputControls; // can be undefined
-    				}
     				trkMsPosition = (trkRefDef.mOffset === undefined) ? msPosition: msPosition + trkRefDef.mOffset;
 
     				trackData = getTrackData(outputTracks, trkRefDef.midiChannel, trkMsPosition);

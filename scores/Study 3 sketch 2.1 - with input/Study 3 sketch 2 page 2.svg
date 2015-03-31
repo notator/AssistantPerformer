@@ -10,7 +10,7 @@
 	<desc>
 		Author: James Ingram
 		Website: http://www.james-ingram-act-two.de
-		Date: Friday 27.02.2015, 11:58:18
+		Date: Tuesday 31.03.2015, 11:37:23
 		Software: Moritz/Assistant Composer</desc>
 	<defs>
 		<g
@@ -252,7 +252,7 @@
 		x="80"
 		y="80"
 		font-size="72"
-		font-family="Arial">Study 3 sketch 2: page 2, Friday 27.02.2015, 11:58:18</text>
+		font-family="Arial">Study 3 sketch 2: page 2, Tuesday 31.03.2015, 11:36:58</text>
 	<g
 		class="system"
 		id="page2_system1">
@@ -7648,17 +7648,16 @@
 					<score:inputNotes>
 						<inputNote
 							notatedKey="64">
+							<inputControls
+								noteOnKey="matchExactly"
+								noteOff="fade"
+								pitchWheel="volume"
+								maxVolume="100"
+								minVolume="50" />
 							<trkRefs>
 								<trkRef
 									midiChannel="0"
-									length="12">
-									<inputControls
-										noteOnKey="matchExactly"
-										noteOff="fade"
-										pitchWheel="volume"
-										maxVolume="100"
-										minVolume="50" />
-								</trkRef>
+									length="12" />
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -7686,17 +7685,16 @@
 					<score:inputNotes>
 						<inputNote
 							notatedKey="64">
+							<inputControls
+								noteOnKey="matchExactly"
+								noteOff="fade"
+								pitchWheel="volume"
+								maxVolume="100"
+								minVolume="50" />
 							<trkRefs>
 								<trkRef
 									midiChannel="1"
-									length="12">
-									<inputControls
-										noteOnKey="matchExactly"
-										noteOff="fade"
-										pitchWheel="volume"
-										maxVolume="100"
-										minVolume="50" />
-								</trkRef>
+									length="12" />
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -7724,17 +7722,16 @@
 					<score:inputNotes>
 						<inputNote
 							notatedKey="64">
+							<inputControls
+								noteOnKey="matchExactly"
+								noteOff="fade"
+								pitchWheel="volume"
+								maxVolume="100"
+								minVolume="50" />
 							<trkRefs>
 								<trkRef
 									midiChannel="2"
-									length="12">
-									<inputControls
-										noteOnKey="matchExactly"
-										noteOff="fade"
-										pitchWheel="volume"
-										maxVolume="100"
-										minVolume="50" />
-								</trkRef>
+									length="12" />
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -7762,17 +7759,16 @@
 					<score:inputNotes>
 						<inputNote
 							notatedKey="64">
+							<inputControls
+								noteOnKey="matchExactly"
+								noteOff="fade"
+								pitchWheel="volume"
+								maxVolume="100"
+								minVolume="50" />
 							<trkRefs>
 								<trkRef
 									midiChannel="3"
-									length="12">
-									<inputControls
-										noteOnKey="matchExactly"
-										noteOff="fade"
-										pitchWheel="volume"
-										maxVolume="100"
-										minVolume="50" />
-								</trkRef>
+									length="12" />
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -7808,16 +7804,14 @@
 					<score:inputNotes>
 						<inputNote
 							notatedKey="64">
+							<inputControls
+								noteOnKey="matchExactly"
+								noteOff="stop"
+								pitchWheel="pitchWheel" />
 							<trkRefs>
 								<trkRef
 									midiChannel="4"
-									length="12">
-									<inputControls
-										noteOnKey="matchExactly"
-										noteOff="shortFade"
-										shortFade="4"
-										pitchWheel="pitchWheel" />
-								</trkRef>
+									length="12" />
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -7845,16 +7839,14 @@
 					<score:inputNotes>
 						<inputNote
 							notatedKey="64">
+							<inputControls
+								noteOnKey="matchExactly"
+								noteOff="stop"
+								pitchWheel="pitchWheel" />
 							<trkRefs>
 								<trkRef
 									midiChannel="5"
-									length="12">
-									<inputControls
-										noteOnKey="matchExactly"
-										noteOff="shortFade"
-										shortFade="5"
-										pitchWheel="pitchWheel" />
-								</trkRef>
+									length="12" />
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -7882,16 +7874,14 @@
 					<score:inputNotes>
 						<inputNote
 							notatedKey="64">
+							<inputControls
+								noteOnKey="matchExactly"
+								noteOff="stop"
+								pitchWheel="pitchWheel" />
 							<trkRefs>
 								<trkRef
 									midiChannel="6"
-									length="12">
-									<inputControls
-										noteOnKey="matchExactly"
-										noteOff="shortFade"
-										shortFade="6"
-										pitchWheel="pitchWheel" />
-								</trkRef>
+									length="12" />
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -7919,15 +7909,14 @@
 					<score:inputNotes>
 						<inputNote
 							notatedKey="64">
+							<inputControls
+								pitchWheel="pitchWheel"
+								speedOption="noteOnKey"
+								maxSpeedPercent="500" />
 							<trkRefs>
 								<trkRef
 									midiChannel="7"
-									length="12">
-									<inputControls
-										pitchWheel="pitchWheel"
-										speedOption="noteOnKey"
-										maxSpeedPercent="500" />
-								</trkRef>
+									length="12" />
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>

@@ -14,7 +14,7 @@
 	<desc>
 		Author: James Ingram
 		Website: http://www.james-ingram-act-two.de
-		Date: Friday 27.02.2015, 11:58:18
+		Date: Tuesday 31.03.2015, 11:37:11
 		Software: Moritz/Assistant Composer</desc>
 	<defs>
 		<g
@@ -256,7 +256,7 @@
 		x="80"
 		y="80"
 		font-size="72"
-		font-family="Arial">Study 3 sketch 2: page 1, Friday 27.02.2015, 11:58:18</text>
+		font-family="Arial">Study 3 sketch 2: page 1, Tuesday 31.03.2015, 11:36:58</text>
 	<g
 		id="page1LinkTitleAndAuthor1">
 		<a
@@ -15329,7 +15329,7 @@
 					score:alignmentX="708.0109"
 					score:msDuration="150">
 					<inputControls
-						noteOnKey="matchExactly" />
+						noteOnKey="ignore" />
 					<score:inputNotes>
 						<inputNote
 							notatedKey="80">
@@ -15338,12 +15338,7 @@
 							<trkRefs>
 								<trkRef
 									midiChannel="0"
-									length="1">
-									<inputControls
-										noteOnKey="matchExactly"
-										noteOff="fade"
-										pitchWheel="pitchWheel" />
-								</trkRef>
+									length="1" />
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -15938,14 +15933,12 @@
 					<score:inputNotes>
 						<inputNote
 							notatedKey="64">
+							<inputControls
+								noteOff="stop" />
 							<trkRefs>
 								<trkRef
 									midiChannel="0"
-									length="12">
-									<inputControls
-										noteOnKey="matchExactly"
-										noteOff="fade" />
-								</trkRef>
+									length="12" />
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -15973,14 +15966,12 @@
 					<score:inputNotes>
 						<inputNote
 							notatedKey="64">
+							<inputControls
+								noteOff="fade" />
 							<trkRefs>
 								<trkRef
 									midiChannel="1"
-									length="12">
-									<inputControls
-										noteOnKey="matchExactly"
-										noteOff="fade" />
-								</trkRef>
+									length="12" />
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -16011,11 +16002,7 @@
 							<trkRefs>
 								<trkRef
 									midiChannel="2"
-									length="12">
-									<inputControls
-										noteOnKey="matchExactly"
-										noteOff="fade" />
-								</trkRef>
+									length="12" />
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -16046,11 +16033,7 @@
 							<trkRefs>
 								<trkRef
 									midiChannel="3"
-									length="12">
-									<inputControls
-										noteOnKey="matchExactly"
-										noteOff="fade" />
-								</trkRef>
+									length="12" />
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -16081,11 +16064,7 @@
 							<trkRefs>
 								<trkRef
 									midiChannel="4"
-									length="12">
-									<inputControls
-										noteOnKey="matchExactly"
-										noteOff="fade" />
-								</trkRef>
+									length="12" />
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -16116,11 +16095,7 @@
 							<trkRefs>
 								<trkRef
 									midiChannel="5"
-									length="12">
-									<inputControls
-										noteOnKey="matchExactly"
-										noteOff="fade" />
-								</trkRef>
+									length="12" />
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -16151,11 +16126,7 @@
 							<trkRefs>
 								<trkRef
 									midiChannel="6"
-									length="12">
-									<inputControls
-										noteOnKey="matchExactly"
-										noteOff="fade" />
-								</trkRef>
+									length="12" />
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
@@ -16186,11 +16157,7 @@
 							<trkRefs>
 								<trkRef
 									midiChannel="7"
-									length="12">
-									<inputControls
-										noteOnKey="matchExactly"
-										noteOff="fade" />
-								</trkRef>
+									length="12" />
 							</trkRefs>
 						</inputNote>
 					</score:inputNotes>
