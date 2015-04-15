@@ -94,7 +94,7 @@ _AP.constants = (function ()
     // CONTROL
     // These are all I use for the moment (Feb. 2013).
     // This list could be easily be extended/completed.
-    // Note that I am currently only using the "coarse" versions of these controls
+	// Note that I am currently only using the "coarse" versions of these controls
     Object.defineProperty(CONTROL, "MODWHEEL", { value: 1, writable: false });
     Object.defineProperty(CONTROL, "DATA_ENTRY_COARSE", { value: 6, writable: false });
     Object.defineProperty(CONTROL, "VOLUME", { value: 7, writable: false });
@@ -109,6 +109,9 @@ _AP.constants = (function ()
     Object.defineProperty(CONTROL, "PHASER", { value: 95, writable: false });
     Object.defineProperty(CONTROL, "REGISTERED_PARAMETER_FINE", { value: 100, writable: false });
     Object.defineProperty(CONTROL, "REGISTERED_PARAMETER_COARSE", { value: 101, writable: false });
+    Object.defineProperty(CONTROL, "ALL_SOUND_OFF", { value: 120, writable: false });
+    Object.defineProperty(CONTROL, "ALL_CONTROLLERS_OFF", { value: 121, writable: false });
+    Object.defineProperty(CONTROL, "ALL_NOTES_OFF", { value: 123, writable: false });
 
     // SYSTEM_EXCLUSIVE
     Object.defineProperty(SYSTEM_EXCLUSIVE, "START", { value: 0xF0, writable: false });

@@ -35,10 +35,10 @@ _AP.sequence = (function(window)
 {
     "use strict";
     var
-    midiOutputDevice,
+    outputDevice,
 	tracks,
 
-    speedFactor = 1.0, // nextMoment(), setSpeedFactor() in handleMIDIInputEvent()
+    speedFactor = 1.0, // nextMoment(), setSpeedFactor()
     previousTimestamp = null, // nextMoment()
     previousMomtMsPos, // nextMoment()
     currentMoment = null, // nextMoment(), resume(), tick()
@@ -61,6 +61,31 @@ _AP.sequence = (function(window)
     pauseStartTime = -1, // the performance.now() time at which the performance was paused.
 
     sequenceRecording, // the sequence being recorded. set in play() and resume(), used by tick()
+
+	allControllersOffMessages = [],
+	allNotesOffMessages = [],
+
+	initChannelResetMessages = function(nOutputChannels)
+	{
+		var byte1, channelIndex,
+			constants = _AP.constants,
+			CONTROL_CHANGE = constants.COMMAND.CONTROL_CHANGE,
+			ALL_CONTROLLERS_OFF = constants.CONTROL.ALL_CONTROLLERS_OFF,
+			ALL_NOTES_OFF = constants.CONTROL.ALL_NOTES_OFF;
+
+		for(channelIndex = 0; channelIndex < nOutputChannels; channelIndex++)
+		{
+			byte1 = CONTROL_CHANGE + channelIndex;
+			allControllersOffMessages.push(new Uint8Array([byte1, ALL_CONTROLLERS_OFF, 0]));
+			allNotesOffMessages.push(new Uint8Array([byte1, ALL_NOTES_OFF, 0]));
+		}
+	},
+
+	resetChannel = function(outputDevice, channelIndex)
+	{
+		outputDevice.send(allControllersOffMessages[channelIndex], performance.now());
+		outputDevice.send(allNotesOffMessages[channelIndex], performance.now());
+	},
 
     setState = function(state)
     {
@@ -299,7 +324,7 @@ _AP.sequence = (function(window)
 
             for(i = 0; i < nMessages; ++i)
             {
-                midiOutputDevice.send(messages[i].data, timestamp);
+                outputDevice.send(messages[i].data, timestamp);
             }
         }
 
@@ -413,9 +438,9 @@ _AP.sequence = (function(window)
     // chord and rest symbols in the score, and so to synchronize the running cursor.
     // Moments whose msPositionInScore is to be reported are given chordStart or restStart
     // attributes before play() is called.
-    init = function(outputDevice, reportEndOfPerfCallback, reportMsPosCallback)
+    init = function(outputDeviceArg, reportEndOfPerfCallback, reportMsPosCallback)
     {
-        if(outputDevice === undefined || outputDevice === null)
+        if(outputDeviceArg === undefined || outputDeviceArg === null)
         {
         	throw "The midi output device must be defined.";
         }
@@ -429,9 +454,11 @@ _AP.sequence = (function(window)
         setState("stopped");
 
         tracks = this.outputTracks;
-        midiOutputDevice = outputDevice;
+        outputDevice = outputDeviceArg;
         reportEndOfPerformance = reportEndOfPerfCallback;
         reportMsPositionInScore = reportMsPosCallback;
+
+        initChannelResetMessages(tracks.length);
     },
 
     // play()
@@ -444,6 +471,8 @@ _AP.sequence = (function(window)
     // of tracks as this (calling) sequence.
     play = function(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, recording)
     {
+    	var channelIndex;
+
     	// Sets each (output) track's isPerforming attribute.
     	// If the track is set to perform (in the trackIsOnArray -- the trackControl settings),
     	// sets track._currentMidiObjectIndex, track.currentMidiObject and track.currentMoment.
@@ -473,6 +502,11 @@ _AP.sequence = (function(window)
         performanceStartTime = performance.now();
         endMarkerMsPosition = endMarkerMsPosInScore;
         startTimeAdjustedForPauses = performanceStartTime;
+
+        for(channelIndex = 0; channelIndex < trackIsOnArray.length; channelIndex++)
+        {
+        	resetChannel(outputDevice, channelIndex);
+        }
 
         initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
 
@@ -524,7 +558,7 @@ _AP.sequence = (function(window)
 
             for(i = 0; i < nMessages; ++i)
             {
-                midiOutputDevice.send(messages[i].data, moment.timestamp);
+                outputDevice.send(messages[i].data, moment.timestamp);
             }
         }
 

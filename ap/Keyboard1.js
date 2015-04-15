@@ -1,53 +1,48 @@
 /*
-*  copyright 2014 James Ingram
-*  http://james-ingram-act-two.de/
+* copyright 2014 James Ingram
+* http://james-ingram-act-two.de/
 *
-*  Code licensed under MIT
-*  https://github.com/notator/assistant-performer/blob/master/License.md
+* Code licensed under MIT
+* https://github.com/notator/assistant-performer/blob/master/License.md
 *
-*  ap/Keyboard1.js
-*  The _AP.keyboard1 namespace which defines
+* ap/Keyboard1.js
+* The _AP.keyboard1 namespace which defines
 *
-*	// Initialize Keyboard1
-*	// Arguments:
-*	// inputDevice: The midi input device.
-*	// outputdevice: The midi output device.
-*	// reportEndOfPerfCallback: a callback function which is called when performing sequence
-*	//		reaches the endMarkerMsPosition.
-*	//		It is called in this file as:
-*	//			reportEndOfSpan(sequenceRecording, performanceMsDuration);
-*	// reportMsPosCallback: a callback function which reports the current msPositionInScore
-*	//		back to the GUI while performing. Can be undefined or null.
-*	//		It is called here as:
-*	//			reportMsPositionInScore(msPositionToReport);
-*	//		The msPosition it passes back is the original number of milliseconds from the start of
-*	//		the score (taking the global speed option into account). This value is used to identify
-*	//		chord and rest symbols in the score, and so to synchronize the running cursor.
-*	init = function(inputDevice, outputDevice, reportEndOfPerfCallback, reportMsPosCallback)
+* // Initialize Keyboard1
+* // Arguments:
+* // inputDevice: The midi input device.
+* // outputdevice: The midi output device.
+* // reportEndOfPerfCallback: a callback function which is called when performing sequence
+* //      reaches the endMarkerMsPosition.
+* //      It is called in this file as:
+* //          reportEndOfSpan(sequenceRecording, performanceMsDuration);
+* // reportMsPosCallback: a callback function which reports the current msPositionInScore
+* //      back to the GUI while performing. Can be undefined or null.
+* //      It is called here as:
+* //          reportMsPositionInScore(msPositionToReport);
+* //      The msPosition it passes back is the original number of milliseconds from the start of
+* //      the score (taking the global speed option into account). This value is used to identify
+* //      chord and rest symbols in the score, and so to synchronize the running cursor.
+* init = function(inputDevice, outputDevice, reportEndOfPerfCallback, reportMsPosCallback)
 * 
-*	// Start playing (part of) the Sequence.
-*	// Arguments:
-*	// trackIsOnArrayArg an array containing a boolean per track, determining whether it will
-*	//	   be played or not. This array is read only.
-*	// startMarkerMsPosition, endMarkerMsPosition: the part of the sequence to play 
-*	//	  (not including endMarkerMsPosition)
-*	// [optional] recording: a sequence in which the performed messages will be recorded.
-*	play(trackIsOnArrayArg, startMarkerMsPosInScore, endMarkerMsPosInScore, recording)
-*	
-*	// stop a running performance
-*	stop()
-*	
-*	// Is the performance stopped?
-*	isStopped()
-*	
-*	// Is the performance running?
-*	isRunning()
-*
-*	// Sends the controller message to the given track immediately.
-*	sendControlMessageNow(outputDevice, track, controller, midiValue)
-*
-*	/// Sets the track's pitchWheel deviation to value
-*	sendSetPitchWheelDeviationMessageNow(outputDevice, track, value)
+* // Start playing (part of) the Score.
+* // Arguments:
+* // trackIsOnArray an array containing a boolean per track, determining whether it will
+* //      be played or not. This array is read only.
+* // startMarkerMsPosition, endMarkerMsPosition: the part of the sequence to play 
+* //      (not including endMarkerMsPosition)
+* // [optional] recording: a sequence in which the performed messages will be recorded.
+* play(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, recording)
+* 
+* // stop a running performance
+* stop()
+* 
+* // Is the performance stopped?
+* isStopped()
+* 
+* // Is the performance running?
+* isRunning()
+* 
 */
 
 /*jslint bitwise: true, nomen: true, plusplus: true, white: true, continue: true */
@@ -60,10 +55,6 @@ _AP.keyboard1 = (function()
 	"use strict";
 
 	var
-    CMD = _AP.constants.COMMAND,
-    Message = _AP.message.Message,
-
-	// set or called in init(...)
 	inputDevice,
 	outputDevice,
 
@@ -71,6 +62,7 @@ _AP.keyboard1 = (function()
 	allSeqMsPositions,
 	inputTracks,
 	outputTracks,
+	trackWorkers = [], // an array of webWorkers, one per outputTrack (=trackIndex).
 	keyData,
 	keyRange, // keyRange.bottomKey and keyRange.topKey are the bottom and top input midi key values notated in the score.
 
@@ -85,66 +77,57 @@ _AP.keyboard1 = (function()
 
 	sequenceRecording, // the sequence being recorded.
 
-	// Seq workers send their messages here.
-	// timestamps are always absolute DOMHRT values here.
-    // (Chris said that the timestamp should be absolute DOMHRT time when the moment is sent.)
-    // Note that Jazz 1.2 does not support timestamps. It always sends Messages immediately.
-	handleSeqMessage = function(e)
+	allControllersOffMessages = [],
+	allNotesOffMessages = [],
+
+	initChannelResetMessages = function(nOutputChannels)
 	{
-		outputDevice.send(e.data, performance.now());
-		// TODO: recording
-		//if(sequenceRecording !== undefined && sequenceRecording !== null)
-		//{
-		//	// The moments are recorded with their current (absolute DOMHRT) timestamp values.
-		//	// These values are adjusted relative to the first moment.timestamp
-		//	// before saving them in a Standard MIDI File.
-		//	// (i.e. the value of the earliest timestamp in the recording is
-		//	// subtracted from all the timestamps in the recording) 
-		//	sequenceRecording.trackRecordings[currentMoment.messages[0].channel()].addLiveScoreMoment(currentMoment);
-		//}
+		var byte1, channelIndex,
+			constants = _AP.constants,
+			CONTROL_CHANGE = constants.COMMAND.CONTROL_CHANGE,
+			ALL_CONTROLLERS_OFF = constants.CONTROL.ALL_CONTROLLERS_OFF,
+			ALL_NOTES_OFF = constants.CONTROL.ALL_NOTES_OFF;
+
+		for(channelIndex = 0; channelIndex < nOutputChannels; channelIndex++)
+		{
+			byte1 = CONTROL_CHANGE + channelIndex;
+			allControllersOffMessages.push(new Uint8Array([byte1, ALL_CONTROLLERS_OFF, 0]));
+			allNotesOffMessages.push(new Uint8Array([byte1, ALL_NOTES_OFF, 0]));
+		}
 	},
 
-	sendCommandMessageNow = function(outputDevice, trackIndex, command, midiValue)
+	resetChannel = function(outputDevice, channelIndex)
 	{
-		var
-		msg;
-
-		msg = new _AP.message.Message(command + trackIndex, 0, midiValue); // controller 7 is volume control
-		outputDevice.send(msg.data, 0);
+		outputDevice.send(allControllersOffMessages[channelIndex], performance.now());
+		outputDevice.send(allNotesOffMessages[channelIndex], performance.now());
 	},
 
-	sendControlMessageNow = function(outputDevice, trackIndex, controller, midiValue)
+	// trackWorkers send their messages here.
+	handleTrackMessage = function(e)
 	{
-		var
-		msg,
-		CMD = _AP.constants.COMMAND;
-
-		msg = new _AP.message.Message(CMD.CONTROL_CHANGE + trackIndex, controller, midiValue); // controller 7 is volume control
-		outputDevice.send(msg.data, 0);
-	},
-
-	// Sets the track's pitchWheel deviation to value, and the pitchWheel to 64 (=centre position).
-	// Sets both RegisteredParameter controls to 0 (zero). This is standard MIDI for selecting the
-	// pitch wheel so that it can be set by the subsequent DataEntry messages.
-	// A DataEntryFine message is not set, because it is not needed and has no effect anyway.
-	// However, RegisteredParameterFine MUST be set, otherwise the messages as a whole have no effect!
-	sendSetPitchWheelDeviationMessageNow = function(outputDevice, track, value)
-	{
-		var
-		msg,
-		Message = _AP.message.Message,
-		CMD = _AP.constants.COMMAND,
-		CTL = _AP.constants.CONTROL;
-
-		msg = new Message(CMD.CONTROL_CHANGE + track, CTL.REGISTERED_PARAMETER_COARSE, 0);
-		outputDevice.send(msg.data, 0);
-		msg = new Message(CMD.CONTROL_CHANGE + track, CTL.REGISTERED_PARAMETER_FINE, 0);
-		outputDevice.send(msg.data, 0);
-		msg = new Message(CMD.CONTROL_CHANGE + track, CTL.DATA_ENTRY_COARSE, value);
-		outputDevice.send(msg.data, 0);
-
-		msg = new Message(CMD.PITCH_WHEEL + track, 0, 64); // centre the pitch wheel
-		outputDevice.send(msg.data, 0);
+		var msg = e.data;
+		switch(msg.action)
+		{
+			case "midiMessage":
+				// Note that Jazz 1.2 does not support timestamps. It always sends messages immediately.
+				outputDevice.send(msg.midiMessage, performance.now());
+				// TODO: recording
+				//if(sequenceRecording !== undefined && sequenceRecording !== null)
+				//{
+				//	// The moments are recorded with their current (absolute DOMHRT) timestamp values.
+				//	// These values are adjusted relative to the first moment.timestamp
+				//	// before saving them in a Standard MIDI File.
+				//	// (i.e. the value of the earliest timestamp in the recording is
+				//	// subtracted from all the timestamps in the recording) 
+				//	sequenceRecording.trackRecordings[currentMoment.messages[0].channel()].addLiveScoreMoment(currentMoment);
+				//}
+				break;
+			case "resetChannel":
+				resetChannel(outputDevice, msg.channelIndex);
+				break;
+			default:
+				break;
+		}
 	},
 
 	handleMIDIInputEventForwardDeclaration,
@@ -179,7 +162,7 @@ _AP.keyboard1 = (function()
 	// does nothing if the sequence is already stopped
 	stop = function()
 	{
-		var performanceMsDuration;
+		var performanceMsDuration, i;
 
 		if(!isStopped())
 		{
@@ -189,6 +172,12 @@ _AP.keyboard1 = (function()
 			{
 				reportEndOfSpan(sequenceRecording, performanceMsDuration);
 			}
+
+			for(i = 0; i < trackWorkers.length; ++i)
+			{
+				trackWorkers[i].terminate();
+			}
+			trackWorkers = [];
 		}
 	},
 
@@ -198,7 +187,8 @@ _AP.keyboard1 = (function()
     // b) assumes that RealTime messages will not interrupt the messages being received.    
     handleMIDIInputEvent = function(msg)
     {
-    	var inputEvent, command, inputPressure;    	
+    	var inputEvent, command, inputPressure,
+    		CMD = _AP.constants.COMMAND;    	
 
     	// The returned object is either empty, or has .data and .receivedTime attributes,
     	// and so constitutes a timestamped Message. (Web MIDI API simply calls this an Event)
@@ -237,11 +227,11 @@ _AP.keyboard1 = (function()
     			}
     			else if(data.length === 2)
     			{
-    				inputEvent = new Message(data[0], data[1], 0);
+    				inputEvent = new _AP.message.Message(data[0], data[1], 0);
     			}
     			else if(data.length === 3)
     			{
-    				inputEvent = new Message(data[0], data[1], data[2]);
+    				inputEvent = new _AP.message.Message(data[0], data[1], data[2]);
     			}
 
     			// other data is simply ignored
@@ -299,13 +289,6 @@ _AP.keyboard1 = (function()
     					currentMsPosIndex++;
     					reportMsPositionInScore(allSeqMsPositions[currentMsPosIndex].msPositionInScore);
     					
-    					if(allSeqMsPositions[currentMsPosIndex].inputControls !== undefined)
-    					{
-    						// set the global inputControls (msPosObj.inputControls will have been set from inputChord.inputControls)
-    						// N.B.: To save time, set this directly, not as a cascade!
-    						// msPosObj.inputControls only contains non-default options (?)
-    						inputControls = allSeqMsPositions[currentMsPosIndex].inputControls;
-    					}
     					advanceCurrentKeyIndicesTo(currentMsPosIndex);
     				}
 
@@ -339,7 +322,6 @@ _AP.keyboard1 = (function()
     							advanceCurrentKeyIndicesTo(currentMsPosIndex); // see above
     							seq = keySeqs.seqs[keySeqs.index];
     						}
-
     						// Start playing the seq using the inputControls set in its constructor.
     						seq.play();
     					}
@@ -379,11 +361,11 @@ _AP.keyboard1 = (function()
 	// The reportEndOfPerfCallback argument is a callback function which is called when performing sequence
 	// reaches the endMarkerMsPosition (see play(), or stop() is called. Can be undefined or null.
 	// It is called in this file as:
-	//	  reportEndOfSpan(sequenceRecording, performanceMsDuration);
+	//      reportEndOfSpan(sequenceRecording, performanceMsDuration);
 	// The reportMsPosCallback argument is a callback function which reports the current msPositionInScore back
 	// to the GUI while performing. Can be undefined or null.
 	// It is called here as:
-	//	  reportMsPositionInScore(msPositionToReport);
+	//      reportMsPositionInScore(msPositionToReport);
 	// The msPosition it passes back is the original number of milliseconds from the start of
 	// the score (taking the global speed option into account). This value is used to identify
 	// chord and rest symbols in the score, and so to synchronize the running cursor.
@@ -409,6 +391,8 @@ _AP.keyboard1 = (function()
 		reportEndOfSpan = reportEndOfPerfCallback;
 		reportMsPositionInScore = reportMsPosCallback;
 
+		initChannelResetMessages(outputTracks.length);
+
 		setState("stopped");
 	},
 
@@ -420,19 +404,47 @@ _AP.keyboard1 = (function()
 	// It should be an empty Sequence having the same number of output tracks as the score.
 	play = function(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, recording)
 	{
+		var channelIndex;
+
 		function initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore)
 		{
 			var
 			inputTracksInputControls,
 			nOutputTracks = outputTracks.length,
-			nTracks = nOutputTracks + inputTracks.length;
+			nTracks = nOutputTracks + inputTracks.length,
+			outputTrackMidiChannels;
+
+			function getOutputTrackMidiChannels(outputTracks)
+			{
+				var i, channels = [];
+
+				for(i = 0; i < outputTracks.length; i++)
+				{
+					channels.push(outputTracks[i].midiChannel);
+				}
+				return channels;
+			}
+
+			function initTrackWorkers(trackWorkers, outputTrackMidiChannels)
+			{
+				var i, worker;
+
+				console.assert(trackWorkers.length === 0);
+
+				for(i = 0; i < outputTrackMidiChannels.length; i++)
+				{
+					worker = new window.Worker("ap/TrackWorker.js");
+					worker.addEventListener("message", handleTrackMessage);
+					worker.postMessage({ action: "init", channelIndex: outputTrackMidiChannels[i] });
+					trackWorkers.push(worker);
+				}
+			}
 
 			// Returns the performer's inputControls current in each inputTrack when the span starts.
 			// (Shunts in all inputObjects in all inputTracks (playing or not) from the start of the score.)
 			function getCurrentInputTracksInputControls(inputTracks, nOutputTracks, nTracks, startMarkerMsPosInScore)
 			{
-				var returnArray = [], currentTrackInputControlsObj,
-				i, inputTrackIndex = 0, inputTrack, inputControls;
+				var returnArray = [], i, inputTrackIndex = 0, inputTrack, inputControls;
 
 				// Returns a clone of the most recent InputControls object at or before startMarkerMsPosInScore.
 				// If there are no such InputControls objects, a new, empty InputControls object is returned.
@@ -468,7 +480,7 @@ _AP.keyboard1 = (function()
 				{
 					inputTrack = inputTracks[inputTrackIndex++];
 					inputControls = getCurrentTrackInputControlsObj(inputTrack.inputObjects, startMarkerMsPosInScore);
-					returnArray.push(inputControls) // default is an empty InputControls object.
+					returnArray.push(inputControls); // default is an empty InputControls object.
 				}
 
 				return returnArray;
@@ -557,7 +569,8 @@ _AP.keyboard1 = (function()
 						{
 							for(indexNew = 0; indexNew < newArray.length; ++indexNew)
 							{
-								console.assert(false, "This block of code has not been tested!");
+								console.log("This block of code has not been tested!");
+								debugger;
 
 								newObj = newArray[indexNew];
 								while((newObj.msPositionInScore > oldArray[indexOld].msPositionInScore)
@@ -616,7 +629,25 @@ _AP.keyboard1 = (function()
 			
 			function getKeyData(inputTracks, trackIsOnArray, allSeqMsPositions, inputTracksInputControls, endMarkerMsPosInScore)
 			{
-				var i, keyData = [], keySeqs, inputTrack, inputControls;
+				var i, keyData, keySeqs, inputTrack, inputControls;
+
+				function newKeyDataArray(bottomKey, topKey)
+				{
+					var keyData = [];
+					// create an empty keySeqs object per midi key
+					for(i = bottomKey; i <= topKey; ++i) // keyRange was set in keyboard1.init().
+					{
+						keySeqs = {};
+						keySeqs.index = 0;
+						keySeqs.seqs = [];
+						keySeqs.seqMsPosIndices = [];
+						keySeqs.nextSeqMsPosIndices = [];
+						keySeqs.triggeredOns = [];
+						keySeqs.triggeredOffs = [];
+						keyData.push(keySeqs);
+					}
+					return keyData;
+				}
 
 				// Appends keySeqs to the appropriate keyData[midikey] keySeqs array.
 				function setKeySeqsFromInputTrack(keyData, bottomKey, inputObjects, inputControls, trackIsOnArray, allSeqMsPositions, endMarkerMsPosInScore)
@@ -624,15 +655,15 @@ _AP.keyboard1 = (function()
 					//keySeqs is an object, relating to a keyboard key, having the following fields:
 					//keySeqs.index	// Initialized to 0. The current index in the keySeqs array attributes (below).	
 					//keySeqs.seqs[]	An array of seq -- initialized from the span (see below).
-					//					This array is ordered by msPositionInScore.
-					//					There is a seq for each inputNote having this midiKey, unless the seq's inputTrack has been turned off, or
-					//					all its outputTracks have been turned off. In either case, the seq is simply not created.
-					//					Each seq contains new Tracks that are initialised with clones of midiChords and pointers to midiRests
-					//					in the containing tracks.				
+					//      			This array is ordered by msPositionInScore.
+					//      			There is a seq for each inputNote having this midiKey, unless the seq's inputTrack has been turned off, or
+					//      			all its outputTracks have been turned off. In either case, the seq is simply not created.
+					//      			Each seq contains new Tracks that are initialised with clones of midiChords and pointers to midiRests
+					//      			in the containing tracks.				
 					// A seq is an object having the following fields:
 					//seq.trks[]	// An array of parallel trk - initialized from inputChord.inputNotes in the span (excluding non-playing outputTracks).
-					//				// This array is never empty. If it would be empty (because tracks have been turned off), the seq is not created.
-					//				// The outputChords and outputRests in each trk are also in range of the span (they do not continue beyond endMarkerMsPosition).
+					//      		// This array is never empty. If it would be empty (because tracks have been turned off), the seq is not created.
+					//      		// The outputChords and outputRests in each trk are also in range of the span (they do not continue beyond endMarkerMsPosition).
 					//seq.seqMsPosIndex  // The index in allSeqMsPositions of the seq's noteOn position.
 					//seq.nextSeqMsPosIndex // The index in allSeqMsPositions of the following seq's noteOn position.
 					//seq.triggeredOn	// Is set to true when the seq is triggered On. Default is false.
@@ -651,9 +682,9 @@ _AP.keyboard1 = (function()
 						{
 							var i, trks = [];
 
-							for(i=0;i <inputNoteTrks.length;++i)
+							for(i = 0; i < inputNoteTrks.length; ++i)
 							{
-								if(trackIsOnArray[inputNoteTrks[i].trackIndex]=== true)
+								if(trackIsOnArray[inputNoteTrks[i].trackIndex] === true)
 								{
 									trks.push(inputNoteTrks[i]);
 								}
@@ -726,10 +757,10 @@ _AP.keyboard1 = (function()
 										noteInputControls = inputControls;
 									}
 
-									keySeqs = keyData[inputNote.notatedKey -bottomKey];
+									keySeqs = keyData[inputNote.notatedKey - bottomKey];
 									// keySeqs.index has already been initialized
-									seq = new _AP.seq.Seq(noteSeqData.seq.trks, seqMsPosIndex, nextSeqMsPosIndex,
-										noteInputControls, inputChord.msPositionInScore, endMarkerMsPosInScore, handleSeqMessage);
+									seq = new _AP.seq.Seq(trackWorkers, noteSeqData.seq.trks, seqMsPosIndex, nextSeqMsPosIndex,
+										noteInputControls, inputChord.msPositionInScore, endMarkerMsPosInScore);
 									keySeqs.seqs.push(seq); // seq may have an inputControls attribute
 								}
 							}
@@ -777,24 +808,13 @@ _AP.keyboard1 = (function()
 					}
 				}
 
-				// create an empty keySeqs object per midi key
-				for(i = keyRange.bottomKey; i <= keyRange.topKey; ++i) // keyRange was set in keyboard1.init().
-				{
-					keySeqs = {};
-					keySeqs.index = 0;
-					keySeqs.seqs = [];
-					keySeqs.seqMsPosIndices = [];
-					keySeqs.nextSeqMsPosIndices = [];
-					keySeqs.triggeredOns = [];
-					keySeqs.triggeredOffs = [];
-					keyData.push(keySeqs);
-				}
+				keyData = newKeyDataArray(keyRange.bottomKey, keyRange.topKey);
 
 				for(i = 0; i < inputTracks.length; ++i)
 				{
 					inputTrack = inputTracks[i];
 					inputControls = inputTracksInputControls[i];
-					setKeySeqsFromInputTrack(keyData, keyRange.bottomKey, inputTrack.inputObjects, inputControls,trackIsOnArray, allSeqMsPositions, endMarkerMsPosInScore);
+					setKeySeqsFromInputTrack(keyData, keyRange.bottomKey, inputTrack.inputObjects, inputControls, trackIsOnArray, allSeqMsPositions, endMarkerMsPosInScore);
 				}
 
 				if(inputTracks.length > 1)
@@ -806,8 +826,58 @@ _AP.keyboard1 = (function()
 
 				return keyData;
 			}
+
+			function setTrackWorkers(keyData, allSeqMsPositions)
+			{
+				var i, keySeqIndices = [], currentSeq;
+
+				console.assert(trackWorkers.length > 0);
+
+				function findCurrentSeq(keySeqIndices, keyData, allSeqMsPositions)
+				{
+					var i, currentKeyIndex, currentSeq = null, currentMsPos = Number.MAX_VALUE, seqs, seq, seqMsPositionInScore;
+
+					for(i = 0; i < keySeqIndices.length; i++)
+					{
+						seqs = keyData[i].seqs;
+						if(seqs.length > keySeqIndices[i])
+						{
+							seq = seqs[keySeqIndices[i]];
+							seqMsPositionInScore = allSeqMsPositions[seq.seqMsPosIndex].msPositionInScore;
+							if(seqMsPositionInScore < currentMsPos)
+							{
+								currentMsPos = seqMsPositionInScore;
+								currentKeyIndex = i;
+							}
+						}
+					}
+					if(currentMsPos < Number.MAX_VALUE)
+					{
+						currentSeq = keyData[currentKeyIndex].seqs[keySeqIndices[currentKeyIndex]];
+						keySeqIndices[currentKeyIndex]++;
+					}
+
+					return currentSeq;
+				}
+
+				for(i = 0; i < keyData.length; i++)
+				{
+					keySeqIndices.push(0);
+				}
+
+				currentSeq = findCurrentSeq(keySeqIndices, keyData, allSeqMsPositions);
+				while(currentSeq !== null)
+				{
+					currentSeq.setWorkers();
+					currentSeq = findCurrentSeq(keySeqIndices, keyData, allSeqMsPositions);
+				}
+			}
 			
 			/*** begin initPlay() ***/
+
+			outputTrackMidiChannels = getOutputTrackMidiChannels(outputTracks);
+
+			initTrackWorkers(trackWorkers, outputTrackMidiChannels); // must be done before creating the Seqs
 
 			inputTracksInputControls = getCurrentInputTracksInputControls(inputTracks, nOutputTracks, nTracks, startMarkerMsPosInScore);
 
@@ -822,9 +892,16 @@ _AP.keyboard1 = (function()
 
 			// keyboard1.keyData
 			keyData = getKeyData(inputTracks, trackIsOnArray, allSeqMsPositions, inputTracksInputControls, endMarkerMsPosInScore);
+
+			setTrackWorkers(keyData, allSeqMsPositions);
 		}
 
 		sequenceRecording = recording;
+
+		for(channelIndex = 0; channelIndex < outputTracks.length; channelIndex++)
+		{
+			resetChannel(outputDevice, channelIndex);
+		}
 
 		initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
 
@@ -840,10 +917,6 @@ _AP.keyboard1 = (function()
 		stop: stop,
 		isStopped: isStopped,
 		isRunning: isRunning,
-
-		sendCommandMessageNow: sendCommandMessageNow,
-		sendControlMessageNow: sendControlMessageNow,
-		sendSetPitchWheelDeviationMessageNow: sendSetPitchWheelDeviationMessageNow,
 
 		handleMIDIInputEvent: handleMIDIInputEvent
 	};

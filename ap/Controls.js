@@ -26,8 +26,6 @@ _AP.controls = (function(document, window)
     sequence = _AP.sequence,
     player, // player can be set to sequence, or to MIDI input event handlers such as _AP.mono1 or _AP.keyboard1.
     SequenceRecording = _AP.sequenceRecording.SequenceRecording,
-    COMMAND = _AP.constants.COMMAND,
-    CONTROL = _AP.constants.CONTROL,
     sequenceToSMF = _AP.standardMidiFile.sequenceToSMF,
 
     midiAccess,
@@ -441,71 +439,9 @@ _AP.controls = (function(document, window)
         {
             var sequenceRecording;
 
-            function sendTrackInitializationMessages(options, outputTracks)
-            {
-                var track, trackIndex, nOutputTracks = outputTracks.length;
-
-                function sendCommandMessageNow(outputDevice, trackIndex, command, midiValue)
-                {
-                    var
-                    msg;
-
-                    msg = new _AP.message.Message(command + trackIndex, 0, midiValue); // controller 7 is volume control
-                    outputDevice.send(msg.data, 0);
-                }
-
-                function sendControlMessageNow(outputDevice, trackIndex, controller, midiValue)
-                {
-                    var
-                    msg,
-                    CMD = _AP.constants.COMMAND;
-
-                    msg = new _AP.message.Message(CMD.CONTROL_CHANGE + trackIndex, controller, midiValue); // controller 7 is volume control
-                    outputDevice.send(msg.data, 0);
-                }
-
-                // Sets the track's pitchWheel deviation to value, and the pitchWheel to 64 (=centre position).
-                // Sets both RegisteredParameter controls to 0 (zero). This is standard MIDI for selecting the
-                // pitch wheel so that it can be set by the subsequent DataEntry messages.
-                // A DataEntryFine message is not set, because it is not needed and has no effect anyway.
-                // However, RegisteredParameterFine MUST be set, otherwise the messages as a whole have no effect!
-                function sendSetPitchWheelDeviationMessageNow(outputDevice, track, value)
-                {
-                    var
-                    msg,
-                    Message = _AP.message.Message,
-                    CMD = _AP.constants.COMMAND,
-                    CTL = _AP.constants.CONTROL;
-
-                    msg = new Message(CMD.CONTROL_CHANGE + track, CTL.REGISTERED_PARAMETER_COARSE, 0);
-                    outputDevice.send(msg.data, 0);
-                    msg = new Message(CMD.CONTROL_CHANGE + track, CTL.REGISTERED_PARAMETER_FINE, 0);
-                    outputDevice.send(msg.data, 0);
-                    msg = new Message(CMD.CONTROL_CHANGE + track, CTL.DATA_ENTRY_COARSE, value);
-                    outputDevice.send(msg.data, 0);
-
-                    msg = new Message(CMD.PITCH_WHEEL + track, 0, 64); // centre the pitch wheel
-                    outputDevice.send(msg.data, 0);
-                }
-
-                for(trackIndex = 0; trackIndex < nOutputTracks; ++trackIndex)
-                {
-                	track = outputTracks[trackIndex];
-                	if(track.class === "outputTrack")
-                	{
-                		sendControlMessageNow(options.outputDevice, track.midiChannel, CONTROL.VOLUME, track.masterVolume);
-                		sendSetPitchWheelDeviationMessageNow(options.outputDevice, track.midiChannel, 2);
-                		sendCommandMessageNow(options.outputDevice, track.midiChannel, COMMAND.PITCH_WHEEL, 64);
-                		sendControlMessageNow(options.outputDevice, track.midiChannel, CONTROL.EXPRESSION, 100);
-                		sendControlMessageNow(options.outputDevice, track.midiChannel, CONTROL.PAN, 64);
-                		sendControlMessageNow(options.outputDevice, track.midiChannel, CONTROL.MODWHEEL, 0);
-                	}
-                }
-            }
-
             deleteSaveMIDIFileButton();
 
-            if(options.livePerformance === false && player.isPaused())
+            if(isLivePerformance === false && player.isPaused())
             {
                 player.resume();
             }
@@ -518,12 +454,10 @@ _AP.controls = (function(document, window)
                 score.setRunningMarkers();
                 score.moveStartMarkerToTop(svgPagesDiv);
 
-                sendTrackInitializationMessages(options, player.outputTracks);
-
                 player.play(score.getTrackIsOnArray(), score.startMarkerMsPosition(), score.endMarkerMsPosition(), sequenceRecording);
             }
 
-            if(options.livePerformance === true)
+            if(isLivePerformance === true)
             {
                 cl.goDisabled.setAttribute("opacity", SMOKE);
             }
