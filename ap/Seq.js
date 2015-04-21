@@ -115,6 +115,7 @@ _AP.seq = (function()
 			{
 				workerIndex = workersPerTrk[i];
 				momsPerTrk = momentsPerTrk[i];
+				trackWorkers[workerIndex].hasCompleted = false;
 				trackWorkers[workerIndex].postMessage({ action: "pushTrk", moments: momsPerTrk, inputControls: inputControls });
 			}
 			trkData.momentsPerTrk = undefined; // can be garbage collected
@@ -140,7 +141,7 @@ _AP.seq = (function()
 	// end var
 
 	// Called when a noteOn is sent and this is the current Seq.
-	Seq.prototype.play = function()
+	Seq.prototype.doNoteOn = function()
 	{
 		var trackWorkers = this.trackWorkers,
 			workersPerTrk = this.workersPerTrk;
@@ -150,15 +151,16 @@ _AP.seq = (function()
 			var i;
 			for(i = 0; i < workersPerTrk.length; ++i)
 			{
-				trackWorkers[workersPerTrk[i]].postMessage({ action: "stopImmediately" }); // stops the worker immediately, if it is busy
+				trackWorkers[workersPerTrk[i]].postMessage({ action: "stopImmediately" });
 			}
 		}
+
 		function postPlay(trackWorkers, workersPerTrk)
 		{
 			var i;
 			for(i = 0; i < workersPerTrk.length; ++i)
 			{
-				trackWorkers[workersPerTrk[i]].postMessage({ action: "play" }); // plays according to the inputControls set in the seq's constructor
+				trackWorkers[workersPerTrk[i]].postMessage({ action: "doNoteOn" }); // plays according to the inputControls set in the seq's constructor
 			}
 		}
 
@@ -174,13 +176,13 @@ _AP.seq = (function()
 	};
 
 	// Called when a noteOff is sent while the Seq is playing.
-	Seq.prototype.stop = function()
+	Seq.prototype.doNoteOff = function()
 	{
 		var i, workersPerTrk = this.workersPerTrk;
 
 		for(i = 0; i < workersPerTrk.length; ++i)
 		{
-			this.trackWorkers[workersPerTrk[i]].postMessage({ action: "stop" }); // stops according to the inputControls set in the seq's constructor
+			this.trackWorkers[workersPerTrk[i]].postMessage({ action: "doNoteOff" }); // stops according to the inputControls set in the seq's constructor
 		}
 		this.triggeredOff = true; // triggeredOff is used when shunting.
 	};

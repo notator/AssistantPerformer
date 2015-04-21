@@ -7910,9 +7910,10 @@
 						<inputNote
 							notatedKey="64">
 							<inputControls
-								pitchWheel="pitchWheel"
-								speedOption="noteOnKey"
-								maxSpeedPercent="500" />
+							noteOff="fade"
+										   pitchWheel="pitchWheel"
+										   speedOption="noteOnKey"
+										   maxSpeedPercent="500" />
 							<trkRefs>
 								<trkRef
 									midiChannel="7"

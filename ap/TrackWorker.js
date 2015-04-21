@@ -3,22 +3,40 @@
 /*global _AP: false,  window: false,  document: false, performance: false, console: false, alert: false, postMessage: false, setTimeout: false */
 
 var
+trackIndex,
 channelIndex,
 
-allTrks = [],
-trkIndex = 0,
+allTrks,
+trkIndex,
+currentTrk,
+trkStartTime,
+
+// currentTrk.moments
 moments,
 momentIndex,
-inputControls,
-
-isBusy = false,
-stopImmediately = false, // used (to stop a playing trk) when handling a noteON
+currentMoment,
 nAllMoments,
-fadeLength = -1,
 
-currentMoment = null, // nextMoment(), tick()
-speedFactor = 1.0, // nextMoment(), setSpeedFactor()
-trkStartTime = -1,  // set in doNoteOn(), used by nextMoment()
+// private, can be set at runtime
+stopImmediately,
+fadeLength,
+speedFactor,
+
+init = function(trackIndexArg, channelIndexArg)
+{
+	"use strict";
+
+	trackIndex = trackIndexArg;
+	channelIndex = channelIndexArg;
+	allTrks = [];
+	trkIndex = 0;
+	momentIndex = 0;
+	stopImmediately = false;
+	fadeLength = -1;
+	currentMoment = null;
+	speedFactor = 1.0;
+	trkStartTime = -1;
+},
 
 doNoteOff = function()
 {
@@ -29,22 +47,20 @@ doNoteOff = function()
 		fadeLength = nAllMoments - momentIndex;
 	}
 
-	if(isBusy === true)
+	switch(currentTrk.inputControls.noteOff)
 	{
-		switch(inputControls.noteOff)
-		{
-			case "stop":
-				stopImmediately = true;
-				// console.log("doNoteOff: stopping a busy trkWorker immediately.");
-				break;
-			case "fade":
-				// console.log("doNoteOff: setFade().");
-				setFade();
-				break;
-			default:
-				break; // "ignore" do nothing (allow the Seq to complete) 
-		}
+		case "stop":
+			stopImmediately = true;
+			// console.log("doNoteOff: stopping a busy trkWorker immediately.");
+			break;
+		case "fade":
+			// console.log("doNoteOff: setFade().");
+			setFade();
+			break;
+		default:
+			break; // "ignore" do nothing (allow the Seq to complete) 
 	}
+
 	// stop according to the inputControls (set in "init"), possibly sending an all sound off...	
 },
 
@@ -53,7 +69,7 @@ nextMoment = function()
 {
 	"use strict";
 	var nextMomt = null;
-	if(momentIndex < nAllMoments && stopImmediately === false)
+	if(momentIndex < moments.length && stopImmediately === false)
 	{
 		nextMomt = moments[momentIndex++];
 	}
@@ -64,6 +80,22 @@ tick = function()
 {
 	"use strict";
 	var delay;
+
+	function trkCompleted()
+	{
+		var isLastTrk;
+		
+		isLastTrk = (trkIndex === allTrks.length);
+
+		if(isLastTrk === false)
+		{
+			postMessage({ action: "trkCompleted", channelIndex: channelIndex });
+		}
+		else
+		{
+			postMessage({ action: "workerCompleted", trackIndex: trackIndex, channelIndex: channelIndex });
+		}
+	}
 
 	function sendMessages(moment)
 	{
@@ -98,7 +130,7 @@ tick = function()
 
 	if(currentMoment === null || stopImmediately === true)
 	{
-		postMessage({ action: "resetChannel", channelIndex: channelIndex });
+		trkCompleted();
 		return;
 	}
 
@@ -108,7 +140,7 @@ tick = function()
 	{
 		if(stopImmediately === true)
 		{
-			postMessage({ action: "resetChannel", channelIndex: channelIndex });
+			trkCompleted();
 			return;
 		}
 		if(currentMoment.messages.length > 0) // rest moments can be empty
@@ -120,7 +152,7 @@ tick = function()
 
 		if(currentMoment === null || stopImmediately === true)
 		{
-			postMessage({ action: "resetChannel", channelIndex: channelIndex });
+			trkCompleted();
 			return;
 		}
 
@@ -130,33 +162,28 @@ tick = function()
 	setTimeout(tick, delay);  // schedules the next tick.
 },
 
-// play the trk according to the inputControls (set in "pushTrk").
+// play the trk according to its inputControls (set in "pushTrk").
 doNoteOn = function()
 {
 	"use strict";
-
-	// if this assertion fails, increase the setTimeout delay in Seq.prototype.play()
-	console.assert(isBusy === false);
 
 	if(trkIndex < allTrks.length)
 	{
 		stopImmediately = false;
 
-		moments = allTrks[trkIndex++].moments;
+		currentTrk = allTrks[trkIndex++];
+		moments = currentTrk.moments;
 		nAllMoments = moments.length;
 		momentIndex = 0;
 
 		trkStartTime = performance.now();
 
-		isBusy = true;
 		currentMoment = nextMoment();
 		if(currentMoment === null)
 		{
-			isBusy = false;
 			return;
 		}
 		tick();
-		isBusy = false;
 	}
 },
 
@@ -169,7 +196,7 @@ eventHandler = function(e)
 	switch(msg.action)
 	{
 		case "init":
-			channelIndex = msg.channelIndex;
+			init(msg.trackIndex, msg.channelIndex);
 			break;
 		case "pushTrk":
 			trk = {};
@@ -181,11 +208,11 @@ eventHandler = function(e)
 			// console.log("worker received noteOn(): stopping immediately");
 			stopImmediately = true;
 			break;
-		case "play":
+		case "doNoteOn":
 			doNoteOn();
 			break;
-		case "stop":
-			// console.log("worker received noteOff()");
+		case "doNoteOff":
+			// console.log("worker received doNoteOff()");
 			doNoteOff();
 			break;
 		case "setSpeedFactor":
