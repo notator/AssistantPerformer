@@ -63,7 +63,7 @@ _AP.seq = (function()
 		//		Each contained array contains the trk's moments.
 		//		Each moment has a messages[] attribute -- an array containing midiMessages that are to be sent "synchronously",
 		//		and an msPositionInSeq attribute.
-		//   workersPerTrk: an array containing the trackIndex of each trackWorker in the Seq.
+		//   workersPerTrk: an array containing the trackIndex of each trackWorker (per Trk).
 		function getTrkData(seqTrks, seqPositionInScore)
 		{
 			var i, j, k, trkMoments, moment, trkMoment, trkMidiObjects, midiObject, midiObjectMsPosInSeq,
@@ -80,7 +80,8 @@ _AP.seq = (function()
 					for(k = 0; k < midiObject.moments.length; ++k)
 					{
 						moment = midiObject.moments[k];
-						if(moment.messages.length > 0) // midiRests can have empty messages.
+						// midiRests have a single moment, but its messages array can be empty.
+						if(moment.messages.length > 0)
 						{
 							trkMoment = {};
 							if(moment.chordStart !== undefined)

@@ -18,7 +18,8 @@ currentMoment,
 nAllMoments,
 
 // private, can be set at runtime
-stopImmediately,
+stopChord,
+stopNow,
 fadeLength,
 speedFactor,
 
@@ -31,7 +32,8 @@ init = function(trackIndexArg, channelIndexArg)
 	allTrks = [];
 	trkIndex = 0;
 	momentIndex = 0;
-	stopImmediately = false;
+	stopChord = false;
+	stopNow = false;
 	fadeLength = -1;
 	currentMoment = null;
 	speedFactor = 1.0;
@@ -44,34 +46,45 @@ doNoteOff = function()
 
 	function setFade()
 	{
-		fadeLength = nAllMoments - momentIndex;
+		fadeLength = nAllMoments + 1 - momentIndex;
 	}
 
 	switch(currentTrk.inputControls.noteOff)
 	{
-		case "stop":
-			stopImmediately = true;
-			// console.log("doNoteOff: stopping a busy trkWorker immediately.");
+		case "stopChord":
+			stopChord = true; // stop playing the trk at the following midiChord or midiRest.
+			break;
+		case "stopNow":
+			stopNow = true; // stop immediately, without playing the remainder of the current midiChord or midiRest.
 			break;
 		case "fade":
-			// console.log("doNoteOff: setFade().");
-			setFade();
+			setFade(); // fade the velocity to zero at the end of the trk
 			break;
+		case "shortFade":
+			// console.log("doNoteOff: setFade().");
+			// setShortFade();
+			break;
+		case "ignore":
+			break; // "ignore" do nothing (allow the Seq to complete)
 		default:
-			break; // "ignore" do nothing (allow the Seq to complete) 
+			break; // "ignore" do nothing (allow the Seq to complete)
 	}
 
 	// stop according to the inputControls (set in "init"), possibly sending an all sound off...	
 },
 
-// Returns null when there are no more moments or global stopImmediately is true.
+// Returns null when there are no more moments, or global stopNow is true, or (stopChord is true and we have reached the next midiObject).
 nextMoment = function()
 {
 	"use strict";
 	var nextMomt = null;
-	if(momentIndex < moments.length && stopImmediately === false)
+	if(momentIndex < moments.length && stopNow === false)
 	{
 		nextMomt = moments[momentIndex++];
+		if(stopChord && momentIndex > 1 && (nextMomt.chordStart !== undefined || nextMomt.RestStart !== undefined))
+		{
+			nextMomt = null; // stop at this chord or rest
+		}
 	}
 	return nextMomt; // null stops tick().
 },
@@ -104,20 +117,16 @@ tick = function()
         i, nMessages = messages.length,
         newVelocity, uint8Array;
 
-		if(moment.chordStart !== undefined)
-		{
-			// moments are given chordStart and restStart attributes, even though these are not currently used.
-			console.log("chordStart found!");
-		}
-
 		for(i = 0; i < nMessages; ++i)
 		{
 			uint8Array = messages[i].data;
 			if(fadeLength > 0 && uint8Array[0] >= 0x90 && uint8Array[0] <= 0x9F)
 			{
-				newVelocity = uint8Array[2] * (nAllMoments - momentIndex) / fadeLength; // scale the velocity
 				// a NoteOn
+				newVelocity = (uint8Array[2] * (nAllMoments + 1 - momentIndex) / fadeLength); // scale the velocity
+				newVelocity = (newVelocity > 127) ? 127 : newVelocity | 0; // | 0 truncates to an int
 				uint8Array = new Uint8Array([uint8Array[0], uint8Array[1], newVelocity]);
+				//console.log("Changed velocity = " + newVelocity);
 			}
 			postMessage({ action: "midiMessage", midiMessage: uint8Array });
 		}
@@ -128,7 +137,7 @@ tick = function()
 		return (moment.msPositionInSeq - (performance.now() - trkStartTime)) / speedFactor;
 	}
 
-	if(currentMoment === null || stopImmediately === true)
+	if(currentMoment === null || stopNow === true)
 	{
 		trkCompleted();
 		return;
@@ -138,7 +147,7 @@ tick = function()
 
 	while(delay <= 0)
 	{
-		if(stopImmediately === true)
+		if(stopNow === true)
 		{
 			trkCompleted();
 			return;
@@ -150,7 +159,7 @@ tick = function()
 
 		currentMoment = nextMoment();
 
-		if(currentMoment === null || stopImmediately === true)
+		if(currentMoment === null || stopNow === true)
 		{
 			trkCompleted();
 			return;
@@ -169,7 +178,8 @@ doNoteOn = function()
 
 	if(trkIndex < allTrks.length)
 	{
-		stopImmediately = false;
+		stopChord = false;
+		stopNow = false;
 
 		currentTrk = allTrks[trkIndex++];
 		moments = currentTrk.moments;
@@ -191,7 +201,7 @@ eventHandler = function(e)
 {
 	"use strict";
 
-	var msg = e.data, trk;
+	var msg = e.data;
 
 	switch(msg.action)
 	{
@@ -199,14 +209,14 @@ eventHandler = function(e)
 			init(msg.trackIndex, msg.channelIndex);
 			break;
 		case "pushTrk":
-			trk = {};
-			trk.moments = msg.moments;
-			trk.inputControls = msg.inputControls;
-			allTrks.push(trk);
+			// msg (=trk) has the following attributes:
+			//    msg.moments;
+			//    msg.inputControls;
+			allTrks.push(msg);
 			break;
-		case "stopImmediately":
+		case "stopNow":
 			// console.log("worker received noteOn(): stopping immediately");
-			stopImmediately = true;
+			stopNow = true;
 			break;
 		case "doNoteOn":
 			doNoteOn();

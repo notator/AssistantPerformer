@@ -25,8 +25,8 @@ _AP.inputControls = (function ()
 	// contains: 
     //		inputControls.noteOnKey -- possible values: "ignore", "transpose", "matchExactly" 
     //		inputControls.noteOnVel -- possible values: "ignore", "scale"  
-    //		inputControls.noteOff -- possible values: "ignore", "stop", "stopNow", "fade", "shortFade"  
-    //		inputControls.shortFade  -- only defined if noteOff is set to "shortfade". Possible values: an integer >= 0. 
+    //		inputControls.noteOff -- possible values: "ignore", "stopChord", "stopNow", "fade", "shortFade"  
+    //		inputControls.shortFade  -- only defined if noteOff is set to "shortFade". Possible values: an integer >= 0. 
     //		inputControls.pressure -- possible values: "ignore", "aftertouch", "channelPressure", "pitchWheel", "modulation", "volume", "pan"
     //									               "expression", "timbre", "brightness", "effects", "tremolo", "chorus", "celeste", "phaser"
     //		inputControls.pitchWheel -- possible values: same as pressure

@@ -10,7 +10,7 @@
 	<desc>
 		Author: James Ingram
 		Website: http://www.james-ingram-act-two.de
-		Date: Tuesday 31.03.2015, 11:37:23
+		Date: Wednesday 22.04.2015, 15:38:23
 		Software: Moritz/Assistant Composer</desc>
 	<defs>
 		<g
@@ -252,7 +252,7 @@
 		x="80"
 		y="80"
 		font-size="72"
-		font-family="Arial">Study 3 sketch 2: page 2, Tuesday 31.03.2015, 11:36:58</text>
+		font-family="Arial">Study 3 sketch 2: page 2, Wednesday 22.04.2015, 15:38:22</text>
 	<g
 		class="system"
 		id="page2_system1">
@@ -7806,7 +7806,7 @@
 							notatedKey="64">
 							<inputControls
 								noteOnKey="matchExactly"
-								noteOff="stop"
+								noteOff="stopChord"
 								pitchWheel="pitchWheel" />
 							<trkRefs>
 								<trkRef
@@ -7841,7 +7841,7 @@
 							notatedKey="64">
 							<inputControls
 								noteOnKey="matchExactly"
-								noteOff="stop"
+								noteOff="stopChord"
 								pitchWheel="pitchWheel" />
 							<trkRefs>
 								<trkRef
@@ -7876,7 +7876,7 @@
 							notatedKey="64">
 							<inputControls
 								noteOnKey="matchExactly"
-								noteOff="stop"
+								noteOff="stopChord"
 								pitchWheel="pitchWheel" />
 							<trkRefs>
 								<trkRef
@@ -7910,10 +7910,9 @@
 						<inputNote
 							notatedKey="64">
 							<inputControls
-							noteOff="fade"
-										   pitchWheel="pitchWheel"
-										   speedOption="noteOnKey"
-										   maxSpeedPercent="500" />
+								pitchWheel="pitchWheel"
+								speedOption="noteOnKey"
+								maxSpeedPercent="500" />
 							<trkRefs>
 								<trkRef
 									midiChannel="7"
