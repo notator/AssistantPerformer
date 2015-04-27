@@ -24,15 +24,15 @@ _AP.markers = (function ()
     "use strict";
 
     var EXTRA_TOP_AND_BOTTOM = 45, // user html pixels
-        ELLIPSE_RADIUS = 5, // user html pixels
+        CIRCLE_RADIUS = 5, // user html pixels
         RECT_WIDTH_AND_HEIGHT = 8, // user html pixels
 
     // markers are used to determine the start and end points of a performance
     // when playing a MIDI file
 
-    // The argument is an svg group with id='startMarker'.
-    // It contains an svg line and an svg ellipse element.
-    // This constructor simply saves pointers to the line and ellipse.
+    // The argument is an svg group with class='startMarker'.
+    // It contains an svg line and an svg circle element.
+    // This constructor simply saves pointers to the line and circle.
     // Their parameters are set later, using the setParameters() function,
     // when the system parameters are known.
     StartMarker = function (svgStartMarkerGroup, vbOriginY, vbScale)
@@ -46,8 +46,8 @@ _AP.markers = (function ()
         i, groupChildren,
         viewBoxOriginY, viewBoxScale,
         line,
-        ellipse,
-        color = '#00BB00', disabledColor = '#AAFFAA',
+        circle,
+        color = '#009900', disabledColor = '#AAFFAA',
         sysIndex, timObject,
         millisecondPosition, yCoordinates = {},
 
@@ -62,7 +62,7 @@ _AP.markers = (function ()
             x *= viewBoxScale;
             line.setAttribute('x1', x.toString());
             line.setAttribute('x2', x.toString());
-            ellipse.setAttribute('cx', x.toString());
+            circle.setAttribute('cx', x.toString());
         },
 
         msPosition = function ()
@@ -81,14 +81,14 @@ _AP.markers = (function ()
             line.setAttribute('y1', topY);
             line.setAttribute('x2', '0');
             line.setAttribute('y2', bottomY);
-            line.setAttribute('stroke-width', '4'); // 1/2 pixel
-            line.setAttribute('stroke', color);
 
-            ellipse.setAttribute('cy', topY);
-            ellipse.setAttribute('rx', (viewBoxScale * ELLIPSE_RADIUS).toString());
-            ellipse.setAttribute('ry', (viewBoxScale * ELLIPSE_RADIUS).toString());
-            ellipse.setAttribute('stroke-width', '0');
-            ellipse.setAttribute('fill', color);
+            line.style.strokeWidth = 4; // 1/2 pixel
+            line.style.stroke = color;
+
+            circle.setAttribute('cy', topY);
+            circle.setAttribute('r', (viewBoxScale * CIRCLE_RADIUS).toString());
+            circle.style.strokeWidth = 0;
+            circle.style.fill = color;
 
             yCoordinates.top = Math.round(parseFloat(topY) / vbScale) + viewBoxOriginY;
             yCoordinates.bottom = Math.round(parseFloat(bottomY) / vbScale) + viewBoxOriginY;
@@ -111,13 +111,13 @@ _AP.markers = (function ()
         {
             if (setToEnabledColor)
             {
-                line.setAttribute('stroke', color);
-                ellipse.setAttribute('fill', color);
+                line.style.stroke = color;
+                circle.style.fill = color;
             }
             else
             {
-                line.setAttribute('stroke', disabledColor);
-                ellipse.setAttribute('fill', disabledColor);
+                line.style.stroke = disabledColor;
+            	circle.style.fill = disabledColor;
             }
         },
 
@@ -125,13 +125,13 @@ _AP.markers = (function ()
         {
             if (setToVisible)
             {
-                line.setAttribute('visibility', 'visible');
-                ellipse.setAttribute('visibility', 'visible');
+                line.style.visibility = 'visible';
+                circle.style.visibility = 'visible';
             }
             else
             {
-                line.setAttribute('visibility', 'hidden');
-                ellipse.setAttribute('visibility', 'hidden');
+                line.style.visibility = 'hidden';
+                circle.style.visibility = 'hidden';
             }
         },
 
@@ -153,9 +153,9 @@ _AP.markers = (function ()
             {
                 line = groupChildren[i];
             }
-            if (groupChildren[i].nodeName === 'ellipse')
+            if (groupChildren[i].nodeName === 'circle')
             {
-                ellipse = groupChildren[i];
+                circle = groupChildren[i];
             }
         }
 
@@ -196,28 +196,32 @@ _AP.markers = (function ()
 
         setParameters = function(system)
         {
-            var topY, bottomY, rectX, rectY;
+        	var topY, bottomY, rectX, rectY, widthHeight;
 
             topY = (viewBoxScale * (system.topLineY - viewBoxOriginY - EXTRA_TOP_AND_BOTTOM)).toString();
             bottomY = (viewBoxScale * (system.bottomLineY - viewBoxOriginY + EXTRA_TOP_AND_BOTTOM)).toString();
 
-            rectX = (viewBoxScale * (-RECT_WIDTH_AND_HEIGHT / 2)).toString();
-            rectY = (topY - (viewBoxScale * (RECT_WIDTH_AND_HEIGHT / 2))).toString();
+            rectX = (viewBoxScale * (-RECT_WIDTH_AND_HEIGHT / 2)).toString(10);
+            rectY = (topY - (viewBoxScale * (RECT_WIDTH_AND_HEIGHT / 2))).toString(10);
+
+            halfRectWidth = (viewBoxScale * RECT_WIDTH_AND_HEIGHT) / 2;
+            widthHeight = (viewBoxScale * RECT_WIDTH_AND_HEIGHT).toString(10);
 
             line.setAttribute('x1', '0');
             line.setAttribute('y1', topY);
             line.setAttribute('x2', '0');
             line.setAttribute('y2', bottomY);
-            line.setAttribute('stroke-width', '4'); // 1/2 pixel
-            line.setAttribute('stroke', color);
+
+            line.style.strokeWidth = 4;
+            line.style.stroke = color;
 
             rect.setAttribute('x', rectX);
             rect.setAttribute('y', rectY);
-            rect.setAttribute('width', (viewBoxScale * RECT_WIDTH_AND_HEIGHT).toString());
-            rect.setAttribute('height', (viewBoxScale * RECT_WIDTH_AND_HEIGHT).toString());
-            halfRectWidth = (viewBoxScale * RECT_WIDTH_AND_HEIGHT) / 2;
-            rect.setAttribute('stroke-width', '0');
-            rect.setAttribute('fill', color);
+            rect.setAttribute('width', widthHeight);
+            rect.setAttribute('height', widthHeight);
+
+            rect.style.strokeWidth = 0;
+            rect.style.fill = color;
         },
 
         // the argument's alignmentX is in user html pixels
@@ -242,13 +246,13 @@ _AP.markers = (function ()
         {
             if (setToEnabledColor)
             {
-                line.setAttribute('stroke', color);
-                rect.setAttribute('fill', color);
+            	rect.style.fill = color;
+                line.style.stroke = color;
             }
             else
             {
-                line.setAttribute('stroke', disabledColor);
-                rect.setAttribute('fill', disabledColor);
+                rect.style.fill = disabledColor;
+                line.style.stroke = disabledColor;
             }
         },
 
@@ -256,13 +260,13 @@ _AP.markers = (function ()
         {
             if (setToVisible)
             {
-                line.setAttribute('visibility', 'visible');
-                rect.setAttribute('visibility', 'visible');
+                rect.style.visibility = 'visible';
+                line.style.visibility = 'visible';
             }
             else
             {
-                line.setAttribute('visibility', 'hidden');
-                rect.setAttribute('visibility', 'hidden');
+                rect.style.visibility = 'hidden';
+                line.style.visibility = 'hidden';
             }
         };
 
@@ -479,8 +483,9 @@ _AP.markers = (function ()
             line.setAttribute('y1', topY);
             line.setAttribute('x2', '0');
             line.setAttribute('y2', bottomY);
-            line.setAttribute('stroke-width', '8'); // 1 pixel
-            line.setAttribute('stroke', color);
+
+            line.style.strokeWidth = 8; // 1 pixel
+            line.style.stroke = color;
 
             yCoordinates.top = Math.round(parseFloat(topY) / vbScale) + viewBoxOriginY;
             yCoordinates.bottom = Math.round(parseFloat(bottomY) / vbScale) + viewBoxOriginY;
@@ -494,11 +499,11 @@ _AP.markers = (function ()
         {
             if (setToVisible)
             {
-                line.setAttribute('visibility', 'visible');
+            	line.style.visibility = 'visible';
             }
             else
             {
-                line.setAttribute('visibility', 'hidden');
+            	line.style.visibility = 'hidden';
             }
         },
 

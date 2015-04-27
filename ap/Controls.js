@@ -228,7 +228,15 @@ _AP.controls = (function(document, window)
         switch(mainOptionsState)
         {
             case "toFront": // set main options visible with the appropriate controls enabled/disabled
-                globalElements.titleOptionsDiv.style.visibility = "visible";
+            	globalElements.titleOptionsDiv.style.visibility = "visible";
+            	if(scoreIndex > 0)
+            	{
+            		globalElements.aboutScoreLinkDiv.style.display = "block";
+            	}
+            	else
+            	{
+            		globalElements.aboutScoreLinkDiv.style.display = "none";
+            	}
                 globalElements.globalSpeedDiv.style.display = "none";
                 globalElements.startRuntimeButton.style.display = "none";
                 globalElements.svgRuntimeControls.style.visibility = "hidden";
@@ -597,6 +605,7 @@ _AP.controls = (function(document, window)
             globalElements.inputDeviceSelect = document.getElementById("inputDeviceSelect");
             globalElements.scoreSelect = document.getElementById("scoreSelect");
             globalElements.outputDeviceSelect = document.getElementById("outputDeviceSelect");
+            globalElements.aboutScoreLinkDiv = document.getElementById("aboutScoreLinkDiv");
             globalElements.globalSpeedDiv = document.getElementById("globalSpeedDiv");
             globalElements.titleOptionsDiv = document.getElementById("titleOptionsDiv");
             globalElements.startRuntimeButton = document.getElementById("startRuntimeButton");
@@ -827,7 +836,7 @@ _AP.controls = (function(document, window)
     				}
 
     				if((components.length === 1 && components[0] !== "choose a score")
-    				|| components.length !== 8
+    				|| components.length !== 9
 					|| components[0].slice(0, 7) !== "folder="
 					|| components[1].slice(0, 6) !== "title="
 					|| components[2].slice(0, 7) !== "nPages="
@@ -835,22 +844,21 @@ _AP.controls = (function(document, window)
 					|| components[4].slice(0, 14) !== "svgPageHeight="
 					|| components[5].slice(0, 14) !== "nOutputVoices="
 					|| components[6].slice(0, 13) !== "nInputVoices="
-					|| components[7].slice(0, 13) !== "inputHandler=")
+					|| components[7].slice(0, 13) !== "inputHandler="
+					|| components[8].slice(0, 9) !== "aboutURL=")
     				{
     					throw "Illegal option value in assistantPerformer.html";
     				}
 
-    				if(components.length === 8)
-    				{
-    					scoreInfo.folder = components[0].slice(7);
-    					scoreInfo.title = components[1].slice(6);
-    					scoreInfo.nPages = parseInt(components[2].slice(7), 10);
-    					scoreInfo.svgPageWidthStr = components[3].slice(13);
-    					scoreInfo.svgPageHeightStr = components[4].slice(14);
-    					scoreInfo.nOutputVoices = parseInt(components[5].slice(14), 10);
-    					scoreInfo.nInputVoices = parseInt(components[6].slice(13), 10);
-    					scoreInfo.inputHandler = components[7].slice(13); // e.g. "keyboard1[36..84]"
-    				}
+    				scoreInfo.folder = components[0].slice(7);
+    				scoreInfo.title = components[1].slice(6);
+    				scoreInfo.nPages = parseInt(components[2].slice(7), 10);
+    				scoreInfo.svgPageWidthStr = components[3].slice(13);
+    				scoreInfo.svgPageHeightStr = components[4].slice(14);
+    				scoreInfo.nOutputVoices = parseInt(components[5].slice(14), 10);
+    				scoreInfo.nInputVoices = parseInt(components[6].slice(13), 10);
+    				scoreInfo.inputHandler = components[7].slice(13); // e.g. "keyboard1[36..84]"
+    				scoreInfo.aboutURL = components[8].slice(9);
 
     				return scoreInfo;
     			}
@@ -862,6 +870,12 @@ _AP.controls = (function(document, window)
     			scoreInfo = analyseString(scoreInfoString);
 
     			return scoreInfo;
+    		}
+
+    		function setAboutLink(url)
+    		{
+    			var aboutLinkElem = document.getElementById('aboutScoreLink');
+    			aboutLinkElem.setAttribute("href", url);
     		}
 
     		function setPages(scoreInfo)
@@ -952,6 +966,8 @@ _AP.controls = (function(document, window)
     		}
 
     		scoreInfo = getScoreInfo();
+
+    		setAboutLink(scoreInfo.aboutURL);
 
     		setPages(scoreInfo);
 

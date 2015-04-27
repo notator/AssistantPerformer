@@ -643,9 +643,9 @@ _AP.score = (function (document)
     getEmptyPagesAndSystems = function (svg, isLivePerformanceArg)
     {
         var system, embeddedSvgPages, nPages, viewBoxOriginY,
-            i, j,
-            sysNumber, svgPage, svgElem, svgChildren, systemID,
-            childID, currentFrame, pageHeight;
+            i, j, k,
+            svgPage, svgElem, svgChildren, layerChildren, layerName,
+            childClass, currentFrame, pageHeight;
 
         function resetContent(isLivePerformanceArg)
         {
@@ -981,32 +981,47 @@ _AP.score = (function (document)
         viewBoxOriginY = 0; // absolute coordinates
         for (i = 0; i < nPages; ++i)
         {
-            sysNumber = 1;
             svgPage = svg.getSVGDocument(embeddedSvgPages[i]);
-
             svgElem = svgPage.childNodes[1];
             viewBoxScale = getViewBoxScale(svgElem); // a float >= 1 (currently, usually 8.0)
             svgChildren = svgElem.childNodes;
-            systemID = "page" + (i + 1).toString() + "_system" + (sysNumber++).toString();
             for (j = 0; j < svgChildren.length; ++j)
             {
-                if(svgChildren[j].nodeName !== '#text' && svgChildren[j].nodeName !== '#comment' && svgChildren[j].nodeName !== 'script')
-                {
-                	childID = svgChildren[j].getAttribute("id");
-                	if(childID === "frame")
-                    {
-                        currentFrame = svgChildren[j];
-                        currentFrame.originY = viewBoxOriginY;
-                        svgFrames.push(currentFrame);
-                    }
-                    else if (childID === systemID)
-                    {
-                        system = getEmptySystem(viewBoxOriginY, viewBoxScale, svgChildren[j], isLivePerformance);
-                        systems.push(system); // systems is global inside this namespace
-
-                        systemID = "page" + (i + 1).toString() + "_system" + (sysNumber++).toString();
-                    }
-                }
+            	if(svgChildren[j].nodeName === 'g') // added for use in Inkscape 24.04.2015
+            	{
+            		layerName = svgChildren[j].getAttribute("inkscape:label");
+            		layerChildren = svgChildren[j].childNodes;
+            		switch(layerName)
+            		{
+            			case "transparent, clickable surface":
+            				for(k = 0; k < layerChildren.length; ++k)
+            				{
+            					if(layerChildren[k].nodeName === "rect")
+            					{
+            						currentFrame = layerChildren[k];
+            						currentFrame.originY = viewBoxOriginY;
+            						svgFrames.push(currentFrame);
+            					}
+            				}
+            				break;
+            			case "moritz":
+            				for(k = 0; k < layerChildren.length; ++k)
+            				{
+            					if(layerChildren[k].nodeName === "g")
+            					{
+            						childClass = layerChildren[k].getAttribute("class");
+            						if(childClass === "system")
+            						{
+            							system = getEmptySystem(viewBoxOriginY, viewBoxScale, layerChildren[k], isLivePerformance);
+            							systems.push(system); // systems is global inside this namespace
+            						}
+            					}
+            				}
+            				break;
+            			default:
+            				break;
+            		}
+            	}
             }
             pageHeight = parseInt(svgElem.getAttribute('height'), 10);
             viewBoxOriginY += pageHeight;
@@ -1130,9 +1145,8 @@ _AP.score = (function (document)
     	function getOutputAndInputTimeObjects(svg, speed)
     	{
     		var embeddedSvgPages, nPages,
-                i, j,
-                systemIndex, sysNumber, svgPage, svgElem, viewBoxScale2, svgChildren, systemID,
-                childID,
+                i, j, k, systemIndex,
+                svgPage, svgElem, svgChildren, layerChildren, layerName, childClass,
                 lastSystemTimeObjects, finalBarlineMsPosition;
 
     		function getSystemTimeObjects(system, viewBoxScale1, systemNode, speed)
@@ -1345,19 +1359,6 @@ _AP.score = (function (document)
     			}
     		}
 
-    		function getViewBoxScale(svgElem)
-    		{
-    			var width, viewBox, viewBoxStrings, viewBoxWidth, scale;
-
-    			width = parseFloat(svgElem.getAttribute('width'));
-    			viewBox = svgElem.getAttribute('viewBox');
-    			viewBoxStrings = viewBox.split(' ');
-    			viewBoxWidth = parseFloat(viewBoxStrings[2]);
-
-    			scale = viewBoxWidth / width;
-    			return scale;
-    		}
-
     		// Sets the msPosition of each timeObject (input and output rests and chords) in the voice.timeObjectArrays
     		// Returns the msPosition of the final barline in the score.
     		function setMsPositions(systems)
@@ -1478,27 +1479,37 @@ _AP.score = (function (document)
     		systemIndex = 0;
     		for(i = 0; i < nPages; ++i)
     		{
-    			sysNumber = 1;
     			svgPage = svg.getSVGDocument(embeddedSvgPages[i]);
-
     			svgElem = svgPage.childNodes[1];
-    			viewBoxScale2 = getViewBoxScale(svgElem); // a float >= 1 (currently, usually 8.0)
     			svgChildren = svgElem.childNodes;
-    			systemID = "page" + (i + 1).toString() + "_system" + (sysNumber++).toString();
     			for(j = 0; j < svgChildren.length; ++j)
     			{
-    				if(svgChildren[j].nodeName !== '#text' && svgChildren[j].nodeName !== '#comment' && svgChildren[j].nodeName !== 'script')
+    				if(svgChildren[j].nodeName === 'g') // added for use in Inkscape 24.04.2015
     				{
-    					childID = svgChildren[j].getAttribute("id");
-    					if(childID === systemID)
+    					layerName = svgChildren[j].getAttribute("inkscape:label");
+    					layerChildren = svgChildren[j].childNodes;
+    					switch(layerName)
     					{
-    						if(systems[systemIndex].msDuration !== undefined)
-    						{
-    							delete systems[systemIndex].msDuration; // is reset in the following function
-    						}
-    						getSystemTimeObjects(systems[systemIndex], viewBoxScale2, svgChildren[j], speed);
-    						systemIndex++;
-    						systemID = "page" + (i + 1).toString() + "_system" + (sysNumber++).toString();
+    						case "moritz":
+    							for(k = 0; k < layerChildren.length; ++k)
+    							{
+    								if(layerChildren[k].nodeName === "g")
+    								{
+    									childClass = layerChildren[k].getAttribute("class");
+    									if(childClass === "system")
+    									{
+    										if(systems[systemIndex].msDuration !== undefined)
+    										{
+    											delete systems[systemIndex].msDuration; // is reset in the following function
+    										}
+    										getSystemTimeObjects(systems[systemIndex], viewBoxScale, layerChildren[k], speed);
+    										systemIndex++;
+    									}
+    								}
+    							}
+    							break;
+    						default:
+    							break;
     					}
     				}
     			}
