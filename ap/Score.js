@@ -47,9 +47,9 @@ _AP.score = (function (document)
 	trackIsOnArray = [], // all tracks, including input tracks
 
     // The frames around each svgPage
-    svgFrames = [],
+    markersLayers = [],
 
-    viewBoxScale,
+    viewBox,
 
     // See comments in the publicAPI definition at the bottom of this file.
     systems = [], // an array of all the systems
@@ -642,16 +642,16 @@ _AP.score = (function (document)
 	// If isLivePerformance === false, then outputStaves are black, inputStaves are pink.
     getEmptyPagesAndSystems = function (svg, isLivePerformanceArg)
     {
-        var system, embeddedSvgPages, nPages, viewBoxOriginY,
+        var system, embeddedSvgPages, nPages, runningViewBoxOriginY,
             i, j, k,
-            svgPage, svgElem, svgChildren, layerChildren, layerName,
-            childClass, currentFrame, pageHeight;
+            svgPage, svgElem, svgChildren, layerChildren, layerName, markersLayer,
+            childClass, pageHeight;
 
         function resetContent(isLivePerformanceArg)
         {
-            while (svgFrames.length > 0)
+            while (markersLayers.length > 0)
             {
-                svgFrames.pop();
+                markersLayers.pop();
             }
             while (systems.length > 0)
             {
@@ -937,17 +937,45 @@ _AP.score = (function (document)
             return system;
         }
 
-        function getViewBoxScale(svgElem)
+        function getViewBox(svgElem)
         {
-            var width, viewBox, viewBoxStrings, viewBoxWidth, scale;
+        	var width, viewBox = {}, viewBoxStr, viewBoxStrings;
 
             width = parseFloat(svgElem.getAttribute('width'));
-            viewBox = svgElem.getAttribute('viewBox');
-            viewBoxStrings = viewBox.split(' ');
-            viewBoxWidth = parseFloat(viewBoxStrings[2]);
+            viewBoxStr = svgElem.getAttribute('viewBox');
+            viewBoxStrings = viewBoxStr.split(' ');
 
-            scale = viewBoxWidth / width;
-            return scale;
+            viewBox.x = parseFloat(viewBoxStrings[0]);
+            viewBox.y = parseFloat(viewBoxStrings[1]);
+            viewBox.width = parseFloat(viewBoxStrings[2]);
+            viewBox.height = parseFloat(viewBoxStrings[3]);
+            viewBox.scale = viewBox.width / width;
+
+            return viewBox;
+        }
+
+    	// creates a new element at the top level of the svg document.
+		// The element contains the clickable rect and the Assistant Performer's markers
+        function newMarkersLayer(svgElem, viewBox, runningViewBoxOriginY, systems)
+        {
+        	var rect, newLayer = document.createElementNS("http://www.w3.org/2000/svg", 'g')
+
+        	newLayer.setAttribute("style", "display:inline");
+
+        	rect = document.createElementNS("http://www.w3.org/2000/svg", 'rect')
+        	rect.setAttribute("x", viewBox.x.toString());
+        	rect.setAttribute("y", viewBox.y.toString());
+        	rect.setAttribute("width", viewBox.width.toString());
+        	rect.setAttribute("height", viewBox.height.toString());
+        	rect.setAttribute("style", "stroke:none; fill:#ffffff; fill-opacity:0");
+
+        	rect.originY = runningViewBoxOriginY;
+
+        	newLayer.appendChild(rect);
+
+        	svgElem.appendChild(newLayer);
+
+        	return rect;
         }
 
         function initializeTrackIsOnArray(system)
@@ -978,12 +1006,12 @@ _AP.score = (function (document)
 
         embeddedSvgPages = document.querySelectorAll(".svgPage");
         nPages = embeddedSvgPages.length;
-        viewBoxOriginY = 0; // absolute coordinates
+        runningViewBoxOriginY = 0; // absolute coordinates
         for (i = 0; i < nPages; ++i)
         {
             svgPage = svg.getSVGDocument(embeddedSvgPages[i]);
             svgElem = svgPage.childNodes[1];
-            viewBoxScale = getViewBoxScale(svgElem); // a float >= 1 (currently, usually 8.0)
+            viewBox = getViewBox(svgElem);
             svgChildren = svgElem.childNodes;
             for (j = 0; j < svgChildren.length; ++j)
             {
@@ -993,18 +1021,7 @@ _AP.score = (function (document)
             		layerChildren = svgChildren[j].childNodes;
             		switch(layerName)
             		{
-            			case "transparent, clickable surface":
-            				for(k = 0; k < layerChildren.length; ++k)
-            				{
-            					if(layerChildren[k].nodeName === "rect")
-            					{
-            						currentFrame = layerChildren[k];
-            						currentFrame.originY = viewBoxOriginY;
-            						svgFrames.push(currentFrame);
-            					}
-            				}
-            				break;
-            			case "moritz":
+            			case "score":
             				for(k = 0; k < layerChildren.length; ++k)
             				{
             					if(layerChildren[k].nodeName === "g")
@@ -1012,11 +1029,13 @@ _AP.score = (function (document)
             						childClass = layerChildren[k].getAttribute("class");
             						if(childClass === "system")
             						{
-            							system = getEmptySystem(viewBoxOriginY, viewBoxScale, layerChildren[k], isLivePerformance);
+            							system = getEmptySystem(runningViewBoxOriginY, viewBox.scale, layerChildren[k], isLivePerformance);
             							systems.push(system); // systems is global inside this namespace
             						}
             					}
             				}
+            				markersLayer = newMarkersLayer(svgElem, viewBox, runningViewBoxOriginY, systems);
+            				markersLayers.push(markersLayer);
             				break;
             			default:
             				break;
@@ -1024,7 +1043,7 @@ _AP.score = (function (document)
             	}
             }
             pageHeight = parseInt(svgElem.getAttribute('height'), 10);
-            viewBoxOriginY += pageHeight;
+            runningViewBoxOriginY += pageHeight;
         }
         initializeTrackIsOnArray(systems[0]);
     },
@@ -1490,7 +1509,7 @@ _AP.score = (function (document)
     					layerChildren = svgChildren[j].childNodes;
     					switch(layerName)
     					{
-    						case "moritz":
+    						case "score":
     							for(k = 0; k < layerChildren.length; ++k)
     							{
     								if(layerChildren[k].nodeName === "g")
@@ -1502,7 +1521,7 @@ _AP.score = (function (document)
     										{
     											delete systems[systemIndex].msDuration; // is reset in the following function
     										}
-    										getSystemTimeObjects(systems[systemIndex], viewBoxScale, layerChildren[k], speed);
+    										getSystemTimeObjects(systems[systemIndex], viewBox.scale, layerChildren[k], speed);
     										systemIndex++;
     									}
     								}
@@ -1736,7 +1755,7 @@ _AP.score = (function (document)
             return new Score(callback);
         }
 
-        svgFrames = [];
+        markersLayers = [];
         systems = [];
 
         runningMarkerHeightChanged = callback;
@@ -1773,8 +1792,11 @@ _AP.score = (function (document)
         this.hideRunningMarkers = hideRunningMarkers;
         this.moveRunningMarkerToStartMarker = moveRunningMarkerToStartMarker;
 
-        // The frames in the GUI
-        this.svgFrames = svgFrames;
+    	// markersLayers contains one markersLayer per page of the score.
+    	// Each markersLayer contains the assistant performer's markers
+    	// and the page-sized transparent, clickable surface used when
+    	// setting them.
+        this.markersLayers = markersLayers;
 
         this.getEmptyPagesAndSystems = getEmptyPagesAndSystems;
 

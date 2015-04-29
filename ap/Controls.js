@@ -494,34 +494,34 @@ _AP.controls = (function(document, window)
             var i,
                 s = score;
 
-            if(s.svgFrames !== undefined)
+            if(s.markersLayers !== undefined)
             {
                 switch(svgControlsState)
                 {
                     case 'settingStart':
-                        for(i = 0; i < s.svgFrames.length; ++i)
+                        for(i = 0; i < s.markersLayers.length; ++i)
                         {
-                            s.svgFrames[i].addEventListener('click', s.setStartMarkerClick, false);
-                            s.svgFrames[i].style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setStartCursor.cur'), crosshair";
+                            s.markersLayers[i].addEventListener('click', s.setStartMarkerClick, false);
+                            s.markersLayers[i].style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setStartCursor.cur'), crosshair";
                         }
                         break;
                     case 'settingEnd':
-                        for(i = 0; i < s.svgFrames.length; ++i)
+                        for(i = 0; i < s.markersLayers.length; ++i)
                         {
-                            s.svgFrames[i].addEventListener('click', s.setEndMarkerClick, false);
-                            s.svgFrames[i].style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setEndCursor.cur'), pointer";
+                            s.markersLayers[i].addEventListener('click', s.setEndMarkerClick, false);
+                            s.markersLayers[i].style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setEndCursor.cur'), pointer";
                         }
                         break;
                     default:
-                        for(i = 0; i < s.svgFrames.length; ++i)
+                        for(i = 0; i < s.markersLayers.length; ++i)
                         {
                             // According to
                             // https://developer.mozilla.org/en-US/docs/DOM/element.removeEventListener#Notes
                             // "Calling removeEventListener() with arguments which do not identify any currently 
                             //  registered EventListener on the EventTarget has no effect."
-                            s.svgFrames[i].removeEventListener('click', s.setStartMarkerClick, false);
-                            s.svgFrames[i].removeEventListener('click', s.setEndMarkerClick, false);
-                            s.svgFrames[i].style.cursor = 'auto';
+                            s.markersLayers[i].removeEventListener('click', s.setStartMarkerClick, false);
+                            s.markersLayers[i].removeEventListener('click', s.setEndMarkerClick, false);
+                            s.markersLayers[i].style.cursor = 'auto';
                         }
                         break;
                 }
