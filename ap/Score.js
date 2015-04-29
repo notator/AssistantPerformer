@@ -645,7 +645,7 @@ _AP.score = (function (document)
         var system, embeddedSvgPages, nPages, runningViewBoxOriginY,
             i, j, k,
             svgPage, svgElem, svgChildren, layerChildren, layerName, markersLayer,
-            childClass, pageHeight;
+            childClass, pageHeight, pageSystems;
 
         function resetContent(isLivePerformanceArg)
         {
@@ -667,7 +667,7 @@ _AP.score = (function (document)
         {
         	var i, j, systemChildren, systemChildClass,
                 staff, staffChildren, staffChild, staffChildClass, stafflineInfo,
-                markersChildren, barlinesChildren, voice;
+                barlinesChildren, voice;
 
         	// returns an info object containing left, right and stafflineYs
         	function getStafflineInfo(stafflines)
@@ -839,29 +839,7 @@ _AP.score = (function (document)
                 if (systemChildren[i].nodeName !== '#text')
                 {
                 	systemChildClass = systemChildren[i].getAttribute("class");
-                    if (systemChildClass === 'markers')
-                    {
-                        markersChildren = systemChildren[i].childNodes;
-                        for (j = 0; j < markersChildren.length; ++j)
-                        {
-                            if (markersChildren[j].nodeName !== '#text')
-                            {
-                                switch (markersChildren[j].getAttribute('class'))
-                                {
-                                    case 'startMarker':
-                                        system.startMarker = new Markers.StartMarker(markersChildren[j], viewBoxOriginY, viewBoxScale);
-                                        break;
-                                    case 'runningMarker':
-                                        system.runningMarker = new Markers.RunningMarker(markersChildren[j], viewBoxOriginY, viewBoxScale);
-                                        break;
-                                    case 'endMarker':
-                                        system.endMarker = new Markers.EndMarker(markersChildren[j], viewBoxOriginY, viewBoxScale);
-                                        break;
-                                }
-                            }
-                        }
-                    }
-                    else if(systemChildClass === 'outputStaff' || systemChildClass === 'inputStaff')
+                    if(systemChildClass === 'outputStaff' || systemChildClass === 'inputStaff')
                     {
                     	staff = {};
                     	staff.class = systemChildClass;
@@ -954,28 +932,88 @@ _AP.score = (function (document)
             return viewBox;
         }
 
-    	// creates a new element at the top level of the svg document.
-		// The element contains the clickable rect and the Assistant Performer's markers
-        function newMarkersLayer(svgElem, viewBox, runningViewBoxOriginY, systems)
+    	// Creates a new 'g' element at the top level of the svg page.
+    	// The element contains the transparent, clickable rect and the start-, running- and
+        // end-markers for each system on the page.
+        function createMarkersLayer(svgElem, viewBox, runningViewBoxOriginY, pageSystems)
         {
-        	var rect, newLayer = document.createElementNS("http://www.w3.org/2000/svg", 'g')
+        	var i, markersLayer = document.createElementNS("http://www.w3.org/2000/svg", 'g'),
+				rect = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
 
-        	newLayer.setAttribute("style", "display:inline");
+        	function createMarkers(markersLayer, viewBox, system)
+        	{
+        		var startMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", 'g'),
+					runningMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", 'g'),
+					endMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", 'g'),
+					startMarkerLine = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
+					startMarkerCircle = document.createElementNS("http://www.w3.org/2000/svg", 'circle'),
+					runningMarkerLine = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
+					endMarkerLine = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
+					endMarkerRect = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
 
-        	rect = document.createElementNS("http://www.w3.org/2000/svg", 'rect')
+        		startMarkerLine.setAttribute("x1", "0");
+        		startMarkerLine.setAttribute("y1", "0");
+        		startMarkerLine.setAttribute("x2", "0");
+        		startMarkerLine.setAttribute("y2", "0");
+        		startMarkerLine.setAttribute("style", "stroke-width:1px");
+
+        		startMarkerCircle.setAttribute("cx", "0");
+        		startMarkerCircle.setAttribute("cy", "0");
+        		startMarkerCircle.setAttribute("r", "0");
+        		startMarkerCircle.setAttribute("style", "stroke-width:1px");
+
+        		runningMarkerLine.setAttribute("x1", "0");
+        		runningMarkerLine.setAttribute("y1", "0");
+        		runningMarkerLine.setAttribute("x2", "0");
+        		runningMarkerLine.setAttribute("y2", "0");
+        		runningMarkerLine.setAttribute("style", "stroke-width:1px");
+
+        		endMarkerLine.setAttribute("x1", "0");
+        		endMarkerLine.setAttribute("y1", "0");
+        		endMarkerLine.setAttribute("x2", "0");
+        		endMarkerLine.setAttribute("y2", "0");
+        		endMarkerLine.setAttribute("style", "stroke-width:1px");
+
+        		endMarkerRect.setAttribute("x", "0");
+        		endMarkerRect.setAttribute("y", "0");
+        		endMarkerRect.setAttribute("width", "0");
+        		endMarkerRect.setAttribute("height", "0");
+        		endMarkerRect.setAttribute("style", "stroke-width:1px");
+
+        		startMarkerElem.appendChild(startMarkerLine);
+        		startMarkerElem.appendChild(startMarkerCircle);
+        		runningMarkerElem.appendChild(runningMarkerLine);
+        		endMarkerElem.appendChild(endMarkerLine);
+        		endMarkerElem.appendChild(endMarkerRect);
+
+        		markersLayer.appendChild(startMarkerElem);
+        		markersLayer.appendChild(runningMarkerElem);
+        		markersLayer.appendChild(endMarkerElem);
+
+				system.startMarker = new Markers.StartMarker(startMarkerElem, markersLayer.rect.originY, viewBox.scale);
+        		system.runningMarker = new Markers.RunningMarker(runningMarkerElem, markersLayer.rect.originY, viewBox.scale);
+        		system.endMarker = new Markers.EndMarker(endMarkerElem, markersLayer.rect.originY, viewBox.scale);
+        	}
+
+        	markersLayer.setAttribute("style", "display:inline");
+
         	rect.setAttribute("x", viewBox.x.toString());
         	rect.setAttribute("y", viewBox.y.toString());
         	rect.setAttribute("width", viewBox.width.toString());
         	rect.setAttribute("height", viewBox.height.toString());
         	rect.setAttribute("style", "stroke:none; fill:#ffffff; fill-opacity:0");
-
         	rect.originY = runningViewBoxOriginY;
+        	markersLayer.appendChild(rect);
+        	markersLayer.rect = rect;
 
-        	newLayer.appendChild(rect);
+        	for(i = 0; i < pageSystems.length; i++)
+        	{
+        		createMarkers(markersLayer, viewBox, pageSystems[i]);
+        	}
 
-        	svgElem.appendChild(newLayer);
+        	svgElem.appendChild(markersLayer);
 
-        	return rect;
+        	return markersLayer;
         }
 
         function initializeTrackIsOnArray(system)
@@ -1007,41 +1045,45 @@ _AP.score = (function (document)
         embeddedSvgPages = document.querySelectorAll(".svgPage");
         nPages = embeddedSvgPages.length;
         runningViewBoxOriginY = 0; // absolute coordinates
-        for (i = 0; i < nPages; ++i)
+        for(i = 0; i < nPages; ++i)
         {
-            svgPage = svg.getSVGDocument(embeddedSvgPages[i]);
-            svgElem = svgPage.childNodes[1];
-            viewBox = getViewBox(svgElem);
-            svgChildren = svgElem.childNodes;
-            for (j = 0; j < svgChildren.length; ++j)
-            {
-            	if(svgChildren[j].nodeName === 'g') // added for use in Inkscape 24.04.2015
-            	{
-            		layerName = svgChildren[j].getAttribute("inkscape:label");
-            		layerChildren = svgChildren[j].childNodes;
-            		switch(layerName)
-            		{
-            			case "score":
-            				for(k = 0; k < layerChildren.length; ++k)
-            				{
-            					if(layerChildren[k].nodeName === "g")
-            					{
-            						childClass = layerChildren[k].getAttribute("class");
-            						if(childClass === "system")
-            						{
-            							system = getEmptySystem(runningViewBoxOriginY, viewBox.scale, layerChildren[k], isLivePerformance);
-            							systems.push(system); // systems is global inside this namespace
-            						}
-            					}
-            				}
-            				markersLayer = newMarkersLayer(svgElem, viewBox, runningViewBoxOriginY, systems);
-            				markersLayers.push(markersLayer);
-            				break;
-            			default:
-            				break;
-            		}
-            	}
-            }
+        	svgPage = svg.getSVGDocument(embeddedSvgPages[i]);
+        	svgElem = svgPage.childNodes[1];
+        	viewBox = getViewBox(svgElem);
+        	svgChildren = svgElem.childNodes;
+			pageSystems = [];
+        	for(j = 0; j < svgChildren.length; ++j)
+        	{
+        		if(svgChildren[j].nodeName === 'g') // added for use in Inkscape 24.04.2015
+        		{
+        			layerName = svgChildren[j].getAttribute("inkscape:label");
+        			layerChildren = svgChildren[j].childNodes;
+        			switch(layerName)
+        			{
+        				case "score":
+        					for(k = 0; k < layerChildren.length; ++k)
+        					{
+        						if(layerChildren[k].nodeName === "g")
+        						{
+        							childClass = layerChildren[k].getAttribute("class");
+        							if(childClass === "system")
+        							{
+        								system = getEmptySystem(runningViewBoxOriginY, viewBox.scale, layerChildren[k], isLivePerformance);
+        								systems.push(system); // systems is global inside this namespace
+        								pageSystems.push(system);
+        							}
+        						}
+        					}
+        					break;
+        				default:
+        					break;
+        			}
+        		}
+        	}
+
+        	markersLayer = createMarkersLayer(svgElem, viewBox, runningViewBoxOriginY, pageSystems);
+        	markersLayers.push(markersLayer);
+
             pageHeight = parseInt(svgElem.getAttribute('height'), 10);
             runningViewBoxOriginY += pageHeight;
         }
