@@ -644,7 +644,7 @@ _AP.score = (function (document)
     {
         var system, embeddedSvgPages, nPages, runningViewBoxOriginY,
             i, j, k,
-            svgPage, svgElem, svgChildren, layerChildren, layerName, markersLayer,
+            svgPage, svgElem, svgChildren, scoreChildren, layerName, markersLayer,
             childClass, pageHeight, pageSystems;
 
         function resetContent(isLivePerformanceArg)
@@ -677,7 +677,7 @@ _AP.score = (function (document)
 
         		for (i = 0; i < stafflines.length; ++i)
         		{
-        			if (stafflines[i].nodeName !== '#text')
+        			if (stafflines[i].nodeName === 'line')
         			{
         				svgStaffline = stafflines[i];
         				svgStafflines.push(svgStaffline);
@@ -836,7 +836,7 @@ _AP.score = (function (document)
 
             for (i = 0; i < systemChildren.length; ++i)
             {
-                if (systemChildren[i].nodeName !== '#text')
+                if (systemChildren[i].nodeName === 'g')
                 {
                 	systemChildClass = systemChildren[i].getAttribute("class");
                     if(systemChildClass === 'outputStaff' || systemChildClass === 'inputStaff')
@@ -851,37 +851,39 @@ _AP.score = (function (document)
                         {
                         	staffChild = staffChildren[j];
 
-                        	if(staffChild.nodeName !== '#text')
+                        	if(staffChild.nodeName === 'g')
                             {
-                            	staffChildClass = staffChild.getAttribute('class');
+                        		staffChildClass = staffChild.getAttribute('class');
+                        		switch(staffChildClass)
+                        		{
+                        			case "stafflines":
+                        				stafflineInfo = getStafflineInfo(staffChild.childNodes);
+                        				system.left = stafflineInfo.left;
+                        				system.right = stafflineInfo.right;
+                        				system.gap = getGap(system.gap, stafflineInfo.stafflineYs);
 
-                            	if(staffChildClass === 'stafflines')
-                                {
-                            		stafflineInfo = getStafflineInfo(staffChild.childNodes);
-                                    system.left = stafflineInfo.left;
-                                    system.right = stafflineInfo.right;
-                                    system.gap = getGap(system.gap, stafflineInfo.stafflineYs);
+                        				staff.topLineY = stafflineInfo.stafflineYs[0];
+                        				staff.bottomLineY = stafflineInfo.stafflineYs[stafflineInfo.stafflineYs.length - 1];
+                        				staff.svgStafflines = stafflineInfo.svgStafflines; // top down
+                        				break;
+                        			case "outputVoice":
+                        				staff.nameElem = getNameElem(staffChild);
+                        				voice = {};
+                        				voice.class = staffChildClass;
+                        				// the attributes are only defined in the first bar of the piece
+                        				getOutputVoiceAttributes(voice, staffChild);
+                        				staff.voices.push(voice);
+                        				break;
+                        			case "inputVoice":
+                        				staff.nameElem = getNameElem(staffChild);
+                        				voice = {};
+                        				voice.class = staffChildClass;
+                        				staff.voices.push(voice);
+                        				break;
+                        			default:
+                        				break;
 
-                                    staff.topLineY = stafflineInfo.stafflineYs[0];
-                                    staff.bottomLineY = stafflineInfo.stafflineYs[stafflineInfo.stafflineYs.length - 1];
-                                    staff.svgStafflines = stafflineInfo.svgStafflines; // top down
-                                }
-                            	if(staffChildClass === 'outputVoice')
-                            	{
-                            		staff.nameElem = getNameElem(staffChild);
-                            		voice = {};
-                            		voice.class = staffChildClass;
-                            		// the attributes are only defined in the first bar of the piece
-                            		getOutputVoiceAttributes(voice, staffChild);
-                            		staff.voices.push(voice);
-                            	}
-                            	else if(staffChildClass === 'inputVoice')
-                            	{
-                            		staff.nameElem = getNameElem(staffChild);
-                            		voice = {};
-                            		voice.class = staffChildClass;
-                            		staff.voices.push(voice);
-                            	}
+                        		}
                             }
                         }
 
@@ -893,11 +895,15 @@ _AP.score = (function (document)
                         barlinesChildren = systemChildren[i].childNodes;
                         for (j = 0; j < barlinesChildren.length; ++j)
                         {
-                            if (barlinesChildren[j].nodeName !== '#text')
+                            if (barlinesChildren[j].nodeName === 'g')
                             {
-                                system.firstBarlineX = parseFloat(barlinesChildren[j].getAttribute("x1"));
-                                system.firstBarlineX /= viewBoxScale;
-                                break;
+                            	staffChildClass = barlinesChildren[j].getAttribute('class');
+                            	if(staffChildClass === "barline")
+                            	{
+                            		system.firstBarlineX = parseFloat(barlinesChildren[j].getAttribute("x1"));
+                            		system.firstBarlineX /= viewBoxScale;
+                            		break;
+                            	}
                             }
                         }
                     }
@@ -1057,26 +1063,22 @@ _AP.score = (function (document)
         		if(svgChildren[j].nodeName === 'g') // added for use in Inkscape 24.04.2015
         		{
         			layerName = svgChildren[j].getAttribute("inkscape:label");
-        			layerChildren = svgChildren[j].childNodes;
-        			switch(layerName)
+        			if(layerName === "score")
         			{
-        				case "score":
-        					for(k = 0; k < layerChildren.length; ++k)
+        				scoreChildren = svgChildren[j].childNodes;
+        				for(k = 0; k < scoreChildren.length; ++k)
+        				{
+        					if(scoreChildren[k].nodeName === "g")
         					{
-        						if(layerChildren[k].nodeName === "g")
+        						childClass = scoreChildren[k].getAttribute("class");
+        						if(childClass === "system")
         						{
-        							childClass = layerChildren[k].getAttribute("class");
-        							if(childClass === "system")
-        							{
-        								system = getEmptySystem(runningViewBoxOriginY, viewBox.scale, layerChildren[k], isLivePerformance);
-        								systems.push(system); // systems is global inside this namespace
-        								pageSystems.push(system);
-        							}
+        							system = getEmptySystem(runningViewBoxOriginY, viewBox.scale, scoreChildren[k], isLivePerformance);
+        							systems.push(system); // systems is global inside this namespace
+        							pageSystems.push(system);
         						}
         					}
-        					break;
-        				default:
-        					break;
+        				}
         			}
         		}
         	}
@@ -1207,13 +1209,13 @@ _AP.score = (function (document)
     	{
     		var embeddedSvgPages, nPages,
                 i, j, k, systemIndex,
-                svgPage, svgElem, svgChildren, layerChildren, layerName, childClass,
+                svgPage, svgElem, svgChildren, scoreChildren, layerName, childClass,
                 lastSystemTimeObjects, finalBarlineMsPosition;
 
     		function getSystemTimeObjects(system, viewBoxScale1, systemNode, speed)
     		{
     			var i, j, systemChildren, systemChildClass,
-                    staff, staffChildren, staffChildClass,
+                    staff, staffChildren, staffChildClass, staffChild,
                     voice,
                     staffIndex = 0,
                     voiceIndex = 0;
@@ -1395,7 +1397,7 @@ _AP.score = (function (document)
     			systemChildren = systemNode.childNodes;
     			for(i = 0; i < systemChildren.length; ++i)
     			{
-    				if(systemChildren[i].nodeName !== '#text')
+    				if(systemChildren[i].nodeName === 'g')
     				{
     					systemChildClass = systemChildren[i].getAttribute("class");
     					if(systemChildClass === 'outputStaff' || systemChildClass === 'inputStaff')
@@ -1404,13 +1406,14 @@ _AP.score = (function (document)
     						staffChildren = systemChildren[i].childNodes;
     						for(j = 0; j < staffChildren.length; ++j)
     						{
-    							if(staffChildren[j].nodeName !== '#text')
+    							if(staffChildren[j].nodeName === 'g')
     							{
-    								staffChildClass = staffChildren[j].getAttribute('class');
+    								staffChild = staffChildren[j];
+    								staffChildClass = staffChild.getAttribute('class');
     								if(staffChildClass === 'outputVoice' || staffChildClass === 'inputVoice')
     								{
     									voice = staff.voices[voiceIndex++];
-    									voice.timeObjects = getTimeObjects(staffChildren[j].childNodes, speed);
+    									voice.timeObjects = getTimeObjects(staffChild.childNodes, speed);
     								}
     							}
     						}
@@ -1548,29 +1551,26 @@ _AP.score = (function (document)
     				if(svgChildren[j].nodeName === 'g') // added for use in Inkscape 24.04.2015
     				{
     					layerName = svgChildren[j].getAttribute("inkscape:label");
-    					layerChildren = svgChildren[j].childNodes;
-    					switch(layerName)
+    					if(layerName === "score")
     					{
-    						case "score":
-    							for(k = 0; k < layerChildren.length; ++k)
+    						scoreChildren = svgChildren[j].childNodes;
+    						for(k = 0; k < scoreChildren.length; ++k)
+    						{
+    							if(scoreChildren[k].nodeName === "g")
     							{
-    								if(layerChildren[k].nodeName === "g")
+    								childClass = scoreChildren[k].getAttribute("class");
+    								if(childClass === "system")
     								{
-    									childClass = layerChildren[k].getAttribute("class");
-    									if(childClass === "system")
+    									if(systems[systemIndex].msDuration !== undefined)
     									{
-    										if(systems[systemIndex].msDuration !== undefined)
-    										{
-    											delete systems[systemIndex].msDuration; // is reset in the following function
-    										}
-    										getSystemTimeObjects(systems[systemIndex], viewBox.scale, layerChildren[k], speed);
-    										systemIndex++;
+    										delete systems[systemIndex].msDuration; // is reset in the following function
     									}
+    									getSystemTimeObjects(systems[systemIndex], viewBox.scale, scoreChildren[k], speed);
+    									systemIndex++;
     								}
     							}
-    							break;
-    						default:
-    							break;
+    						}
+
     					}
     				}
     			}
@@ -1709,18 +1709,17 @@ _AP.score = (function (document)
             for(staffIndex = 0; staffIndex < nStaves; ++staffIndex)
             {
             	staff = system.staves[staffIndex];
-            	if(staff.class === "outputStaff")
+            	nVoices = staff.voices.length;
+            	for(voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
             	{
-            		nVoices = staff.voices.length;
-            		for(voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
+            		voice = staff.voices[voiceIndex];
+            		nTimeObjects = voice.timeObjects.length;
+            		if(voice.class === "outputVoice")
             		{
-            			voice = staff.voices[voiceIndex];
-            			nTimeObjects = voice.timeObjects.length;
             			outputTrack = outputTracks[outputTrackIndex];
             			for(timeObjectIndex = 0; timeObjectIndex < nTimeObjects; ++timeObjectIndex)
             			{
             				timeObject = voice.timeObjects[timeObjectIndex];
-
             				if(timeObject.midiChordDef === undefined)
             				{
             					if(timeObjectIndex < (nTimeObjects - 1))
@@ -1728,7 +1727,7 @@ _AP.score = (function (document)
             						// A real rest. All barlines on the right ends of staves are ignored.
             						midiRest = new MidiRest(timeObject);
             						outputTrack.midiObjects.push(midiRest);
-             					}
+            					}
             				}
             				else
             				{
@@ -1739,19 +1738,12 @@ _AP.score = (function (document)
             			}
             			++outputTrackIndex;
             		}
-            	}
-            	if(staff.class === "inputStaff")
-            	{
-            		nVoices = staff.voices.length;
-            		for(voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
+            		else // inputVoice
             		{
-            			voice = staff.voices[voiceIndex];
-            			nTimeObjects = voice.timeObjects.length;
             			inputTrack = inputTracks[inputTrackIndex];
             			for(timeObjectIndex = 0; timeObjectIndex < nTimeObjects; ++timeObjectIndex)
             			{
             				timeObject = voice.timeObjects[timeObjectIndex];
-
             				if(timeObject.inputChordDef === undefined)
             				{
             					if(timeObjectIndex < (nTimeObjects - 1))
