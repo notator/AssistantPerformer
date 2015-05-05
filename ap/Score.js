@@ -665,12 +665,12 @@ _AP.score = (function (document)
 
         function getEmptySystem(viewBoxOriginY, viewBoxScale, systemNode, isLivePerformance)
         {
-        	var i, j, systemChildren, systemChildClass,
+        	var i, j, systemChildren, systemChildClass, systemDy, staffDy,
                 staff, staffChildren, staffChild, staffChildClass, stafflineInfo,
                 barlinesChildren, voice;
 
         	// returns an info object containing left, right and stafflineYs
-        	function getStafflineInfo(stafflines)
+        	function getStafflineInfo(stafflines, dy)
         	{
         		var i, rStafflineInfo = {}, stafflineYs = [], left, right, stafflineY,
                 svgStaffline, svgStafflines = [];
@@ -681,7 +681,7 @@ _AP.score = (function (document)
         			{
         				svgStaffline = stafflines[i];
         				svgStafflines.push(svgStaffline);
-        				stafflineY = parseFloat(svgStaffline.getAttribute('y1'));
+        				stafflineY = parseFloat(svgStaffline.getAttribute('y1')) + dy;
         				stafflineYs.push((stafflineY / viewBoxScale) + viewBoxOriginY);
         				left = parseFloat(svgStaffline.getAttribute('x1'));
         				left /= viewBoxScale;
@@ -830,7 +830,28 @@ _AP.score = (function (document)
         		return nameElem;
         	}
 
-            system = {};
+        	function getDy(nodeElem)
+        	{
+        		var dy = 0, transformStr, indexOfTranslate, params, yStr;
+
+        		transformStr = nodeElem.getAttribute("transform");
+				
+        		if(transformStr !== null)
+        		{
+        			indexOfTranslate = transformStr.indexOf("translate(");
+        			if(indexOfTranslate >= 0)
+        			{
+        				params = transformStr.slice(indexOfTranslate + "translate(".length);
+        				yStr = params.split(",")[1];
+        				dy = parseFloat(yStr);
+        			}
+        		}
+
+        		return dy;
+        	}
+
+        	system = {};
+        	systemDy = getDy(systemNode);
             system.staves = [];
             systemChildren = systemNode.childNodes;
 
@@ -842,6 +863,7 @@ _AP.score = (function (document)
                     if(systemChildClass === 'outputStaff' || systemChildClass === 'inputStaff')
                     {
                     	staff = {};
+                    	staffDy = systemDy + getDy(systemChildren[i]);
                     	staff.class = systemChildClass;
                     	staff.voices = [];
                     	system.staves.push(staff);
@@ -857,7 +879,7 @@ _AP.score = (function (document)
                         		switch(staffChildClass)
                         		{
                         			case "stafflines":
-                        				stafflineInfo = getStafflineInfo(staffChild.childNodes);
+                        				stafflineInfo = getStafflineInfo(staffChild.childNodes, staffDy);
                         				system.left = stafflineInfo.left;
                         				system.right = stafflineInfo.right;
                         				system.gap = getGap(system.gap, stafflineInfo.stafflineYs);
