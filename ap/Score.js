@@ -1214,9 +1214,9 @@ _AP.score = (function (document)
     	// a system continue to have the same msDuration.
     	function getOutputAndInputTimeObjects(svg, speed)
     	{
-    		var embeddedSvgPages, nPages,
+    		var embeddedSvgPages, nPages, systemElem, systemElems,
                 i, j, k, systemIndex,
-                svgPage, svgElem, svgChildren, scoreChildren, layerName, childClass,
+                svgPage, svgElem, svgChildren, layerName,
                 lastSystemTimeObjects, finalBarlineMsPosition;
 
     		function getSystemTimeObjects(system, viewBoxScale1, systemElem, speed)
@@ -1543,32 +1543,22 @@ _AP.score = (function (document)
     		{
     			svgPage = svg.getSVGDocument(embeddedSvgPages[i]);
     			svgElem = svgPage.childNodes[1];
-    			svgChildren = svgElem.childNodes;
+    			svgChildren = svgElem.children;
     			for(j = 0; j < svgChildren.length; ++j)
     			{
-    				if(svgChildren[j].nodeName === "g") // added for use in Inkscape 24.04.2015
+    				layerName = svgChildren[j].getAttribute("inkscape:label");
+    				if(layerName === "score")
     				{
-    					layerName = svgChildren[j].getAttribute("inkscape:label");
-    					if(layerName === "score")
+    					systemElems = svgChildren[j].getElementsByClassName("system");
+    					for(k = 0; k < systemElems.length; ++k)
     					{
-    						scoreChildren = svgChildren[j].childNodes;
-    						for(k = 0; k < scoreChildren.length; ++k)
+    						systemElem = systemElems[k];
+    						if(systems[systemIndex].msDuration !== undefined)
     						{
-    							if(scoreChildren[k].nodeName === "g")
-    							{
-    								childClass = scoreChildren[k].getAttribute("class");
-    								if(childClass === "system")
-    								{
-    									if(systems[systemIndex].msDuration !== undefined)
-    									{
-    										delete systems[systemIndex].msDuration; // is reset in the following function
-    									}
-    									getSystemTimeObjects(systems[systemIndex], viewBox.scale, scoreChildren[k], speed);
-    									systemIndex++;
-    								}
-    							}
+    							delete systems[systemIndex].msDuration; // is reset in the following function
     						}
-
+    						getSystemTimeObjects(systems[systemIndex], viewBox.scale, systemElem, speed);
+    						systemIndex++;
     					}
     				}
     			}
