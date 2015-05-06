@@ -642,10 +642,10 @@ _AP.score = (function (document)
 	// If isLivePerformance === false, then outputStaves are black, inputStaves are pink.
     getEmptyPagesAndSystems = function (svg, isLivePerformanceArg)
     {
-        var system, embeddedSvgPages, nPages, runningViewBoxOriginY,
+    	var system, embeddedSvgPages, nPages, runningViewBoxOriginY, scoreLayerElem, systemElems,
             i, j, k,
-            svgPage, svgElem, svgChildren, scoreChildren, layerName, markersLayer,
-            childClass, pageHeight, pageSystems;
+            svgPage, svgElem, svgChildren, layerName, markersLayer,
+            pageHeight, pageSystems;
 
         function resetContent(isLivePerformanceArg)
         {
@@ -663,7 +663,7 @@ _AP.score = (function (document)
             trackIsOnArray = []; // reset global
         }
 
-        function getEmptySystem(viewBoxOriginY, viewBoxScale, systemNode, isLivePerformance)
+        function getEmptySystem(viewBoxOriginY, viewBoxScale, systemElem, isLivePerformance)
         {
         	var i, j,
 				systemDy, staffDy,
@@ -672,16 +672,16 @@ _AP.score = (function (document)
                 staff, stafflineInfo,
                 voice;
 
-        	function getStaffElems(systemNode)
+        	function getStaffElems(systemElem)
         	{
         		var staffElemsNodeList, staffElems = [];
 
-        		staffElemsNodeList = systemNode.getElementsByClassName("outputStaff");
+        		staffElemsNodeList = systemElem.getElementsByClassName("outputStaff");
         		for(i = 0; i < staffElemsNodeList.length; ++i)
         		{
         			staffElems.push(staffElemsNodeList[i]);
         		}
-        		staffElemsNodeList = systemNode.getElementsByClassName("inputStaff");
+        		staffElemsNodeList = systemElem.getElementsByClassName("inputStaff");
         		for(i = 0; i < staffElemsNodeList.length; ++i)
         		{
         			staffElems.push(staffElemsNodeList[i]);
@@ -869,10 +869,10 @@ _AP.score = (function (document)
         	}
 
         	system = {};
-        	systemDy = getDy(systemNode);
+        	systemDy = getDy(systemElem);
             system.staves = [];
 
-            staffElems = getStaffElems(systemNode);
+            staffElems = getStaffElems(systemElem);
 
             for(i = 0; i < staffElems.length; ++i)
             {
@@ -1069,31 +1069,23 @@ _AP.score = (function (document)
         for(i = 0; i < nPages; ++i)
         {
         	svgPage = svg.getSVGDocument(embeddedSvgPages[i]);
-        	svgElem = svgPage.childNodes[1];
+        	svgElem = svgPage.children[0];
         	viewBox = getViewBox(svgElem);
-        	svgChildren = svgElem.childNodes;
+        	svgChildren = svgElem.children;
 			pageSystems = [];
         	for(j = 0; j < svgChildren.length; ++j)
         	{
-        		if(svgChildren[j].nodeName === "g") // added for use in Inkscape 24.04.2015
+        		layerName = svgChildren[j].getAttribute("inkscape:label");
+        		if(layerName === "score")
         		{
-        			layerName = svgChildren[j].getAttribute("inkscape:label");
-        			if(layerName === "score")
+        			scoreLayerElem = svgChildren[j];
+        			systemElems = scoreLayerElem.getElementsByClassName("system");
+				
+        			for(k = 0; k < systemElems.length; ++k)
         			{
-        				scoreChildren = svgChildren[j].childNodes;
-        				for(k = 0; k < scoreChildren.length; ++k)
-        				{
-        					if(scoreChildren[k].nodeName === "g")
-        					{
-        						childClass = scoreChildren[k].getAttribute("class");
-        						if(childClass === "system")
-        						{
-        							system = getEmptySystem(runningViewBoxOriginY, viewBox.scale, scoreChildren[k], isLivePerformance);
-        							systems.push(system); // systems is global inside this namespace
-        							pageSystems.push(system);
-        						}
-        					}
-        				}
+        				system = getEmptySystem(runningViewBoxOriginY, viewBox.scale, systemElems[k], isLivePerformance);
+        				systems.push(system); // systems is global inside this namespace
+        				pageSystems.push(system);
         			}
         		}
         	}

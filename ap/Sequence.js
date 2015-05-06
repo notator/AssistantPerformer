@@ -505,7 +505,10 @@ _AP.sequence = (function(window)
 
         for(channelIndex = 0; channelIndex < trackIsOnArray.length; channelIndex++)
         {
-        	resetChannel(outputDevice, channelIndex);
+        	if(trackIsOnArray[channelIndex] == true)
+        	{
+        		resetChannel(outputDevice, channelIndex);
+        	}
         }
 
         initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
