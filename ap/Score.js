@@ -665,29 +665,47 @@ _AP.score = (function (document)
 
         function getEmptySystem(viewBoxOriginY, viewBoxScale, systemNode, isLivePerformance)
         {
-        	var i, j, systemChildren, systemChildClass, systemDy, staffDy,
-                staff, staffChildren, staffChild, staffChildClass, stafflineInfo,
-                barlinesChildren, voice;
+        	var i, j,
+				systemDy, staffDy,
+				staffElems, staffElem, stafflinesElems,
+				outputVoiceElem, outputVoiceElems, inputVoiceElem, inputVoiceElems,				
+                staff, stafflineInfo,
+                voice;
+
+        	function getStaffElems(systemNode)
+        	{
+        		var staffElemsNodeList, staffElems = [];
+
+        		staffElemsNodeList = systemNode.getElementsByClassName("outputStaff");
+        		for(i = 0; i < staffElemsNodeList.length; ++i)
+        		{
+        			staffElems.push(staffElemsNodeList[i]);
+        		}
+        		staffElemsNodeList = systemNode.getElementsByClassName("inputStaff");
+        		for(i = 0; i < staffElemsNodeList.length; ++i)
+        		{
+        			staffElems.push(staffElemsNodeList[i]);
+        		}
+        		return staffElems;
+        	}
 
         	// returns an info object containing left, right and stafflineYs
-        	function getStafflineInfo(stafflines, dy)
+        	function getStafflineInfo(stafflinesElem, dy)
         	{
         		var i, rStafflineInfo = {}, stafflineYs = [], left, right, stafflineY,
-                svgStaffline, svgStafflines = [];
+                lineElem, svgStafflines = [], staffLinesElemChildren = stafflinesElem.children;
 
-        		for (i = 0; i < stafflines.length; ++i)
+        		for (i = 0; i < staffLinesElemChildren.length; ++i)
         		{
-        			if (stafflines[i].nodeName === 'line')
-        			{
-        				svgStaffline = stafflines[i];
-        				svgStafflines.push(svgStaffline);
-        				stafflineY = parseFloat(svgStaffline.getAttribute('y1')) + dy;
-        				stafflineYs.push((stafflineY / viewBoxScale) + viewBoxOriginY);
-        				left = parseFloat(svgStaffline.getAttribute('x1'));
-        				left /= viewBoxScale;
-        				right = parseFloat(svgStaffline.getAttribute('x2'));
-        				right /= viewBoxScale;
-        			}
+        			console.assert(staffLinesElemChildren[i].nodeName === "line");
+        			lineElem = staffLinesElemChildren[i];
+        			svgStafflines.push(lineElem);
+        			stafflineY = parseFloat(lineElem.getAttribute('y1')) + dy;
+        			stafflineYs.push((stafflineY / viewBoxScale) + viewBoxOriginY);
+        			left = parseFloat(lineElem.getAttribute('x1'));
+        			left /= viewBoxScale;
+        			right = parseFloat(lineElem.getAttribute('x2'));
+        			right /= viewBoxScale;
         		}
         		rStafflineInfo.left = left;
         		rStafflineInfo.right = right;
@@ -853,83 +871,58 @@ _AP.score = (function (document)
         	system = {};
         	systemDy = getDy(systemNode);
             system.staves = [];
-            systemChildren = systemNode.childNodes;
 
-            for (i = 0; i < systemChildren.length; ++i)
+            staffElems = getStaffElems(systemNode);
+
+            for(i = 0; i < staffElems.length; ++i)
             {
-                if (systemChildren[i].nodeName === 'g')
+            	staffElem = staffElems[i];
+                staff = {};
+                staffDy = systemDy + getDy(staffElem);
+                staff.class = staffElem.getAttribute("class");
+                staff.voices = [];
+                system.staves.push(staff);
+
+                stafflinesElems = staffElem.getElementsByClassName("stafflines");
+                stafflineInfo = getStafflineInfo(stafflinesElems[0], staffDy);
+                system.left = stafflineInfo.left;
+                system.right = stafflineInfo.right;
+                system.gap = getGap(system.gap, stafflineInfo.stafflineYs);
+
+                staff.topLineY = stafflineInfo.stafflineYs[0];
+                staff.bottomLineY = stafflineInfo.stafflineYs[stafflineInfo.stafflineYs.length - 1];
+                staff.svgStafflines = stafflineInfo.svgStafflines; // top down
+
+                switch(staff.class)
                 {
-                	systemChildClass = systemChildren[i].getAttribute("class");
-                    if(systemChildClass === 'outputStaff' || systemChildClass === 'inputStaff')
-                    {
-                    	staff = {};
-                    	staffDy = systemDy + getDy(systemChildren[i]);
-                    	staff.class = systemChildClass;
-                    	staff.voices = [];
-                    	system.staves.push(staff);
-
-                        staffChildren = systemChildren[i].childNodes;
-                        for (j = 0; j < staffChildren.length; ++j)
-                        {
-                        	staffChild = staffChildren[j];
-
-                        	if(staffChild.nodeName === 'g')
-                            {
-                        		staffChildClass = staffChild.getAttribute('class');
-                        		switch(staffChildClass)
-                        		{
-                        			case "stafflines":
-                        				stafflineInfo = getStafflineInfo(staffChild.childNodes, staffDy);
-                        				system.left = stafflineInfo.left;
-                        				system.right = stafflineInfo.right;
-                        				system.gap = getGap(system.gap, stafflineInfo.stafflineYs);
-
-                        				staff.topLineY = stafflineInfo.stafflineYs[0];
-                        				staff.bottomLineY = stafflineInfo.stafflineYs[stafflineInfo.stafflineYs.length - 1];
-                        				staff.svgStafflines = stafflineInfo.svgStafflines; // top down
-                        				break;
-                        			case "outputVoice":
-                        				staff.nameElem = getNameElem(staffChild);
-                        				voice = {};
-                        				voice.class = staffChildClass;
-                        				// the attributes are only defined in the first bar of the piece
-                        				getOutputVoiceAttributes(voice, staffChild);
-                        				staff.voices.push(voice);
-                        				break;
-                        			case "inputVoice":
-                        				staff.nameElem = getNameElem(staffChild);
-                        				voice = {};
-                        				voice.class = staffChildClass;
-                        				staff.voices.push(voice);
-                        				break;
-                        			default:
-                        				break;
-
-                        		}
-                            }
-                        }
-
-                        setStaffColours(staff, isLivePerformance);
-                        setVoiceCentreYs(staff.topLineY, staff.bottomLineY, staff.voices);
-                    }
-                    else if (systemChildClass === 'barlines')
-                    {
-                        barlinesChildren = systemChildren[i].childNodes;
-                        for (j = 0; j < barlinesChildren.length; ++j)
-                        {
-                            if (barlinesChildren[j].nodeName === 'g')
-                            {
-                            	staffChildClass = barlinesChildren[j].getAttribute('class');
-                            	if(staffChildClass === "barline")
-                            	{
-                            		system.firstBarlineX = parseFloat(barlinesChildren[j].getAttribute("x1"));
-                            		system.firstBarlineX /= viewBoxScale;
-                            		break;
-                            	}
-                            }
-                        }
-                    }
+                	case "outputStaff":
+                		outputVoiceElems = staffElem.getElementsByClassName("outputVoice");
+                		for(j = 0; j < outputVoiceElems.length; ++j)
+                		{
+                			outputVoiceElem = outputVoiceElems[j];
+                			staff.nameElem = getNameElem(outputVoiceElem);
+                			voice = {};
+                			voice.class = "outputVoice";
+                			// the attributes are only defined in the first bar of the piece
+                			getOutputVoiceAttributes(voice, outputVoiceElem);
+                			staff.voices.push(voice);
+                		}
+                		break;
+                	case "inputStaff":
+                		inputVoiceElems = staffElem.getElementsByClassName("inputVoice");
+                		for(j = 0; j < inputVoiceElems.length; ++j)
+                		{
+                			inputVoiceElem = inputVoiceElems[j];
+                			staff.nameElem = getNameElem(inputVoiceElem);
+                			voice = {};
+                			voice.class = "inputVoice";
+                			staff.voices.push(voice);
+                		}
+                		break;
                 }
+
+                setStaffColours(staff, isLivePerformance);
+                setVoiceCentreYs(staff.topLineY, staff.bottomLineY, staff.voices);
             }
 
             system.topLineY = system.staves[0].topLineY;
@@ -960,19 +953,19 @@ _AP.score = (function (document)
             return viewBox;
         }
 
-    	// Creates a new 'g' element at the top level of the svg page.
+    	// Creates a new "g" element at the top level of the svg page.
     	// The element contains the transparent, clickable rect and the start-, running- and
         // end-markers for each system on the page.
         function createMarkersLayer(svgElem, viewBox, runningViewBoxOriginY, pageSystems)
         {
-        	var i, markersLayer = document.createElementNS("http://www.w3.org/2000/svg", 'g'),
+        	var i, markersLayer = document.createElementNS("http://www.w3.org/2000/svg", "g"),
 				rect = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
 
         	function createMarkers(markersLayer, viewBox, system)
         	{
-        		var startMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", 'g'),
-					runningMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", 'g'),
-					endMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", 'g'),
+        		var startMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", "g"),
+					runningMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", "g"),
+					endMarkerElem = document.createElementNS("http://www.w3.org/2000/svg", "g"),
 					startMarkerLine = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
 					startMarkerCircle = document.createElementNS("http://www.w3.org/2000/svg", 'circle'),
 					runningMarkerLine = document.createElementNS("http://www.w3.org/2000/svg", 'line'),
@@ -1082,7 +1075,7 @@ _AP.score = (function (document)
 			pageSystems = [];
         	for(j = 0; j < svgChildren.length; ++j)
         	{
-        		if(svgChildren[j].nodeName === 'g') // added for use in Inkscape 24.04.2015
+        		if(svgChildren[j].nodeName === "g") // added for use in Inkscape 24.04.2015
         		{
         			layerName = svgChildren[j].getAttribute("inkscape:label");
         			if(layerName === "score")
@@ -1371,7 +1364,7 @@ _AP.score = (function (document)
     				for(i = 0; i < length; ++i)
     				{
     					noteObject = noteObjects[i];
-    					if(noteObject.nodeName === 'g')
+    					if(noteObject.nodeName === "g")
     					{
     						noteObjectClass = noteObject.getAttribute('class');
     						if(noteObjectClass === 'outputChord' || noteObjectClass === 'inputChord')
@@ -1419,7 +1412,7 @@ _AP.score = (function (document)
     			systemChildren = systemNode.childNodes;
     			for(i = 0; i < systemChildren.length; ++i)
     			{
-    				if(systemChildren[i].nodeName === 'g')
+    				if(systemChildren[i].nodeName === "g")
     				{
     					systemChildClass = systemChildren[i].getAttribute("class");
     					if(systemChildClass === 'outputStaff' || systemChildClass === 'inputStaff')
@@ -1428,7 +1421,7 @@ _AP.score = (function (document)
     						staffChildren = systemChildren[i].childNodes;
     						for(j = 0; j < staffChildren.length; ++j)
     						{
-    							if(staffChildren[j].nodeName === 'g')
+    							if(staffChildren[j].nodeName === "g")
     							{
     								staffChild = staffChildren[j];
     								staffChildClass = staffChild.getAttribute('class');
@@ -1570,7 +1563,7 @@ _AP.score = (function (document)
     			svgChildren = svgElem.childNodes;
     			for(j = 0; j < svgChildren.length; ++j)
     			{
-    				if(svgChildren[j].nodeName === 'g') // added for use in Inkscape 24.04.2015
+    				if(svgChildren[j].nodeName === "g") // added for use in Inkscape 24.04.2015
     				{
     					layerName = svgChildren[j].getAttribute("inkscape:label");
     					if(layerName === "score")
