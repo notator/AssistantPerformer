@@ -1219,7 +1219,7 @@ _AP.score = (function (document)
                 svgPage, svgElem, svgChildren, scoreChildren, layerName, childClass,
                 lastSystemTimeObjects, finalBarlineMsPosition;
 
-    		function getSystemTimeObjects(system, viewBoxScale1, systemNode, speed)
+    		function getSystemTimeObjects(system, viewBoxScale1, systemElem, speed)
     		{
     			var i, j, systemChildren, systemChildClass,
                     staff, staffChildren, staffChildClass, staffChild,
@@ -1231,10 +1231,10 @@ _AP.score = (function (document)
     			// All timeObjects are allocated alignmentX and msDuration fields.
 				// Chord timeObjects are allocated either a midiChordDef or an inputChordDef field depending on whether they are input or output chords.
     			// Later in this program (as soon as all systems have been read), the msPosition of all timeObjects will appended to them.
-    			function getTimeObjects(noteObjects, speed)
+    			function getTimeObjects(noteObjectElems, speed)
     			{
     				var timeObjects = [], noteObjectClass,
-                        timeObject, i, j, length, noteObject, childNodes;
+                        timeObject, i, j, length, noteObjectElem, chordChildElems;
 
     				// timeObjects is an array of timeObject.
     				// speed is a floating point number, greater than zero.
@@ -1352,44 +1352,41 @@ _AP.score = (function (document)
     					return msDuration;
     				}
 
-    				length = noteObjects.length;
+    				length = noteObjectElems.length;
     				for(i = 0; i < length; ++i)
     				{
-    					noteObject = noteObjects[i];
-    					if(noteObject.nodeName === "g")
+    					noteObjectElem = noteObjectElems[i];
+    					noteObjectClass = noteObjectElem.getAttribute('class');
+    					if(noteObjectClass === 'outputChord' || noteObjectClass === 'inputChord')
     					{
-    						noteObjectClass = noteObject.getAttribute('class');
-    						if(noteObjectClass === 'outputChord' || noteObjectClass === 'inputChord')
+    						timeObject = {};
+    						timeObject.alignmentX = parseFloat(noteObjectElem.getAttribute('score:alignmentX')) / viewBoxScale1;
+    						chordChildElems = noteObjectElem.children;
+    						for(j = 0; j < chordChildElems.length; ++j)
     						{
-    							timeObject = {};
-    							timeObject.alignmentX = parseFloat(noteObject.getAttribute('score:alignmentX')) / viewBoxScale1;
-    							childNodes = noteObject.childNodes;
-    							for(j = 0; j < childNodes.length; ++j)
+    							switch(chordChildElems[j].nodeName)
     							{
-    								switch(childNodes[j].nodeName)
-    								{
-    									case 'score:midiChord':
-    										timeObject.midiChordDef = new MidiChordDef(childNodes[j]);
-    										timeObject.msDuration = getMsDuration(timeObject.midiChordDef);
-    										break;
-    									case 'score:inputNotes':
-    										timeObject.inputChordDef = new InputChordDef(childNodes[j]);
-    										timeObject.msDuration = parseInt(noteObject.getAttribute('score:msDuration'), 10);
-    										break;
-    									case 'inputControls':
-    										timeObject.inputControls = new InputControls(childNodes[j]);
-    										break;
-    								}
+    								case 'score:midiChord':
+    									timeObject.midiChordDef = new MidiChordDef(chordChildElems[j]);
+    									timeObject.msDuration = getMsDuration(timeObject.midiChordDef);
+    									break;
+    								case 'score:inputNotes':
+    									timeObject.inputChordDef = new InputChordDef(chordChildElems[j]);
+    									timeObject.msDuration = parseInt(noteObjectElem.getAttribute('score:msDuration'), 10);
+    									break;
+    								case 'inputControls':
+    									timeObject.inputControls = new InputControls(chordChildElems[j]);
+    									break;
     							}
-    							timeObjects.push(timeObject);
     						}
-    						else if(noteObjectClass === 'rest')
-    						{
-    							timeObject = {};
-    							timeObject.alignmentX = parseFloat(noteObject.getAttribute('score:alignmentX') / viewBoxScale1);
-    							timeObject.msDuration = parseFloat(noteObject.getAttribute('score:msDuration'));
-    							timeObjects.push(timeObject);
-    						}
+    						timeObjects.push(timeObject);
+    					}
+    					else if(noteObjectClass === 'rest')
+    					{
+    						timeObject = {};
+    						timeObject.alignmentX = parseFloat(noteObjectElem.getAttribute('score:alignmentX') / viewBoxScale1);
+    						timeObject.msDuration = parseFloat(noteObjectElem.getAttribute('score:msDuration'));
+    						timeObjects.push(timeObject);
     					}
     				}
 
@@ -1401,31 +1398,25 @@ _AP.score = (function (document)
     				return timeObjects;
     			}
 
-    			systemChildren = systemNode.childNodes;
+    			systemChildren = systemElem.children;
     			for(i = 0; i < systemChildren.length; ++i)
     			{
-    				if(systemChildren[i].nodeName === "g")
+    				systemChildClass = systemChildren[i].getAttribute("class");
+    				if(systemChildClass === 'outputStaff' || systemChildClass === 'inputStaff')
     				{
-    					systemChildClass = systemChildren[i].getAttribute("class");
-    					if(systemChildClass === 'outputStaff' || systemChildClass === 'inputStaff')
+    					staff = system.staves[staffIndex++];
+    					staffChildren = systemChildren[i].children;
+    					for(j = 0; j < staffChildren.length; ++j)
     					{
-    						staff = system.staves[staffIndex++];
-    						staffChildren = systemChildren[i].childNodes;
-    						for(j = 0; j < staffChildren.length; ++j)
+    						staffChild = staffChildren[j];
+    						staffChildClass = staffChild.getAttribute('class');
+    						if(staffChildClass === 'outputVoice' || staffChildClass === 'inputVoice')
     						{
-    							if(staffChildren[j].nodeName === "g")
-    							{
-    								staffChild = staffChildren[j];
-    								staffChildClass = staffChild.getAttribute('class');
-    								if(staffChildClass === 'outputVoice' || staffChildClass === 'inputVoice')
-    								{
-    									voice = staff.voices[voiceIndex++];
-    									voice.timeObjects = getTimeObjects(staffChild.childNodes, speed);
-    								}
-    							}
+    							voice = staff.voices[voiceIndex++];
+    							voice.timeObjects = getTimeObjects(staffChild.children, speed);
     						}
-    						voiceIndex = 0;
     					}
+    					voiceIndex = 0;
     				}
     			}
     		}
