@@ -21,7 +21,7 @@ _AP.score = (function (document)
 {
 	"use strict";
 
-	var 
+	var
     CMD = _AP.constants.COMMAND,
     Message = _AP.message.Message,
     Track = _AP.track.Track,
@@ -50,6 +50,8 @@ _AP.score = (function (document)
     markersLayers = [],
 
     viewBox,
+
+	systemElems = [], // all the SVG elements having class "system"
 
     // See comments in the publicAPI definition at the bottom of this file.
     systems = [], // an array of all the systems
@@ -642,7 +644,7 @@ _AP.score = (function (document)
 	// If isLivePerformance === false, then outputStaves are black, inputStaves are pink.
     getEmptyPagesAndSystems = function (svg, isLivePerformanceArg)
     {
-    	var system, embeddedSvgPages, nPages, runningViewBoxOriginY, scoreLayerElem, systemElems,
+    	var system, sysElems, embeddedSvgPages, nPages, runningViewBoxOriginY, scoreLayerElem,
             i, j, k,
             svgPage, svgElem, svgChildren, layerName, markersLayer,
             pageHeight, pageSystems;
@@ -1079,12 +1081,13 @@ _AP.score = (function (document)
         		if(layerName === "score")
         		{
         			scoreLayerElem = svgChildren[j];
-        			systemElems = scoreLayerElem.getElementsByClassName("system");
+        			sysElems = scoreLayerElem.getElementsByClassName("system");
 				
-        			for(k = 0; k < systemElems.length; ++k)
+        			for(k = 0; k < sysElems.length; ++k)
         			{
-        				system = getEmptySystem(runningViewBoxOriginY, viewBox.scale, systemElems[k], isLivePerformance);
+        				system = getEmptySystem(runningViewBoxOriginY, viewBox.scale, sysElems[k], isLivePerformance);
         				systems.push(system); // systems is global inside this namespace
+        				systemElems.push(sysElems[k]); // used when creating timeObjects...
         				pageSystems.push(system);
         			}
         		}
@@ -1194,7 +1197,7 @@ _AP.score = (function (document)
     //		if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
     //			inputKeyRange.bottomKey
     //			inputKeyRange.topKey
-	getTracksData = function(svg, globalSpeed)
+	getTracksData = function(globalSpeed)
     {
     	// systems->staves->voices->timeObjects
     	var
@@ -1212,11 +1215,10 @@ _AP.score = (function (document)
     	// msDurations stored in the score are divided by speed.
     	// Rounding errors are corrected, so that all voices in
     	// a system continue to have the same msDuration.
-    	function getOutputAndInputTimeObjects(svg, speed)
+    	function getOutputAndInputTimeObjects(speed)
     	{
-    		var embeddedSvgPages, nPages, systemElem, systemElems,
-                i, j, k, systemIndex,
-                svgPage, svgElem, svgChildren, layerName,
+    		var systemElem,
+                i, systemIndex,
                 lastSystemTimeObjects, finalBarlineMsPosition;
 
     		function getSystemTimeObjects(system, viewBoxScale1, systemElem, speed)
@@ -1536,32 +1538,16 @@ _AP.score = (function (document)
 
     		/*************** end of getTimeObjects function definitions *****************************/
 
-    		embeddedSvgPages = document.querySelectorAll(".svgPage");
-    		nPages = embeddedSvgPages.length;
     		systemIndex = 0;
-    		for(i = 0; i < nPages; ++i)
+    		for(i = 0; i < systemElems.length; ++i)
     		{
-    			svgPage = svg.getSVGDocument(embeddedSvgPages[i]);
-    			svgElem = svgPage.childNodes[1];
-    			svgChildren = svgElem.children;
-    			for(j = 0; j < svgChildren.length; ++j)
+    			systemElem = systemElems[i];
+    			if(systems[systemIndex].msDuration !== undefined)
     			{
-    				layerName = svgChildren[j].getAttribute("inkscape:label");
-    				if(layerName === "score")
-    				{
-    					systemElems = svgChildren[j].getElementsByClassName("system");
-    					for(k = 0; k < systemElems.length; ++k)
-    					{
-    						systemElem = systemElems[k];
-    						if(systems[systemIndex].msDuration !== undefined)
-    						{
-    							delete systems[systemIndex].msDuration; // is reset in the following function
-    						}
-    						getSystemTimeObjects(systems[systemIndex], viewBox.scale, systemElem, speed);
-    						systemIndex++;
-    					}
-    				}
+    				delete systems[systemIndex].msDuration; // is reset in the following function
     			}
+    			getSystemTimeObjects(systems[systemIndex], viewBox.scale, systemElem, speed);
+    			systemIndex++;
     		}
 
     		finalBarlineMsPosition = setMsPositions(systems);
@@ -1681,7 +1667,7 @@ _AP.score = (function (document)
         	return inputKeyRange;
         }
 
-        getOutputAndInputTimeObjects(svg, globalSpeed);
+        getOutputAndInputTimeObjects(globalSpeed);
 
         setSystemMarkerParameters(systems, isLivePerformance);
 

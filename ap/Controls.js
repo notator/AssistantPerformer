@@ -1171,7 +1171,7 @@ _AP.controls = (function(document, window)
 			//		if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
     		//			inputKeyRange.bottomKey
     		//			inputKeyRange.topKey
-    		tracksData = score.getTracksData(svg, options.globalSpeed);
+    		tracksData = score.getTracksData(options.globalSpeed);
 
     		if(options.livePerformance)
     		{
