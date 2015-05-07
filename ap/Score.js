@@ -642,7 +642,7 @@ _AP.score = (function (document)
 	// the score's trackIsOnArray is initialized to all tracks on (=true).
 	// If isLivePerformance === true, then outputStaves are grey, inputStaves are black.
 	// If isLivePerformance === false, then outputStaves are black, inputStaves are pink.
-    getEmptyPagesAndSystems = function (svg, isLivePerformanceArg)
+    getEmptyPagesAndSystems = function (isLivePerformanceArg)
     {
     	var system, sysElems, svgPageEmbeds, nPages, runningViewBoxOriginY, scoreLayerElem,
             i, j, k,

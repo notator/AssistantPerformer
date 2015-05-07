@@ -30,7 +30,6 @@ _AP.controls = (function(document, window)
 
     midiAccess,
     score,
-    svg = {}, // an object containing pointers to functions defined in SVG files
     svgControlsState = 'stopped', //svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd'.
     svgPagesDiv,
     globalElements = {}, // assistantPerformer.html elements 
@@ -1124,7 +1123,7 @@ _AP.controls = (function(document, window)
     		if(scoreHasJustBeenSelected)
     		{
     			// everything except the timeObjects (which have to take account of speed)
-    			score.getEmptyPagesAndSystems(svg, options.livePerformance);
+    			score.getEmptyPagesAndSystems(options.livePerformance);
     		}
 
     		// tracksData will contain the following defined attributes:
