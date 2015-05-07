@@ -644,7 +644,7 @@ _AP.score = (function (document)
 	// If isLivePerformance === false, then outputStaves are black, inputStaves are pink.
     getEmptyPagesAndSystems = function (svg, isLivePerformanceArg)
     {
-    	var system, sysElems, embeddedSvgPages, nPages, runningViewBoxOriginY, scoreLayerElem,
+    	var system, sysElems, svgPageEmbeds, nPages, runningViewBoxOriginY, scoreLayerElem,
             i, j, k,
             svgPage, svgElem, svgChildren, layerName, markersLayer,
             pageHeight, pageSystems;
@@ -1065,12 +1065,12 @@ _AP.score = (function (document)
 
         resetContent(isLivePerformanceArg);
 
-        embeddedSvgPages = document.querySelectorAll(".svgPage");
-        nPages = embeddedSvgPages.length;
+        svgPageEmbeds = document.getElementsByClassName("svgPage");
+        nPages = svgPageEmbeds.length;
         runningViewBoxOriginY = 0; // absolute coordinates
         for(i = 0; i < nPages; ++i)
         {
-        	svgPage = svg.getSVGDocument(embeddedSvgPages[i]);
+        	svgPage = svgPageEmbeds[i].getSVGDocument();
         	svgElem = svgPage.children[0];
         	viewBox = getViewBox(svgElem);
         	svgChildren = svgElem.children;

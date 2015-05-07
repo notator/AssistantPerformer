@@ -703,44 +703,6 @@ _AP.controls = (function(document, window)
             svgPagesDiv.style.height = window.innerHeight - 43;
         }
 
-        if(document.URL.search("file://") === 0)
-        {
-            svg.getSVGDocument = function(embedded_element)
-            {
-                var subdoc;
-
-                if(embedded_element.contentDocument)
-                {
-                    subdoc = embedded_element.contentDocument;
-                }
-                else
-                {
-                    subdoc = null;
-                    try
-                    {
-                        subdoc = embedded_element.getSVGDocument();
-                    }
-                    catch(e)
-                    {
-                        alert("Exception thrown: Could not get embedded SVG document.");
-                    }
-                }
-                return subdoc;
-            };
-        }
-        else
-        {
-            // This function is called by the first SVG page in a score when it loads (using an onLoad() function).
-            // The argument list contains pointers to functions defined in scores/SVG.js
-            // The first SVG page in each score contains the line
-            //     <script type="text/javascript" xlink:href="../SVG.js"/>
-            // Each argument function is added to the local svg object (which only exists for that purpose).
-            window._JI_SVGLoaded = function(getSVGDocument)
-            {
-                svg.getSVGDocument = getSVGDocument;
-            };
-        }
-
         midiAccess = mAccess;
 
         getGlobalElements();
