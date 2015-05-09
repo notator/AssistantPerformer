@@ -14,7 +14,7 @@
  *  
  */
 
-/*jslint bitwise: false, nomen: false, plusplus: true, white: true */
+/*jslint bitwise: false, nomen: true, plusplus: true, white: true */
 /*global _AP: false,  window: false,  document: false, performance: false, console: false, alert: false, XMLHttpRequest: false */
 
 _AP.namespace('_AP.markers');
@@ -72,7 +72,7 @@ _AP.markers = (function ()
 
         setParameters = function(system, systIndex)
         {
-            var topY, bottomY;
+            var i, topY, bottomY;
 
             topY = (viewBoxScale * (system.topLineY - viewBoxOriginY - EXTRA_TOP_AND_BOTTOM)).toString();
             bottomY = (viewBoxScale * (system.bottomLineY - viewBoxOriginY + EXTRA_TOP_AND_BOTTOM)).toString();
@@ -94,7 +94,14 @@ _AP.markers = (function ()
             yCoordinates.bottom = Math.round(parseFloat(bottomY) / vbScale) + viewBoxOriginY;
 
             sysIndex = systIndex;
-            moveTo(system.staves[0].voices[0].timeObjects[0]);
+            for(i = 0; i < system.staves.length; ++i)
+            {
+            	if(!isNaN(system.staves[i].voices[0].timeObjects[0].alignmentX))
+            	{
+            		moveTo(system.staves[i].voices[0].timeObjects[0]);
+            		break;
+            	}
+            }         
         },
 
         systemIndex = function ()
@@ -405,8 +412,7 @@ _AP.markers = (function ()
             function findFollowingTimeObject(system, msPosition, isLivePerformance, trackIsOnArray)
             {
                 var nextTimeObject, staff, voice, i, k, voiceIndex, trackIndex = 0,
-                        voiceTimeObjects = [],
-                        trackIndex;
+                        voiceTimeObjects = [];
 
                 for (i = 0; i < system.staves.length; ++i)
                 {

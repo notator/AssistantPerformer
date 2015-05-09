@@ -46,10 +46,10 @@ _AP.score = (function (document)
 	// and reset when the tracksControl calls refreshDisplay().
 	trackIsOnArray = [], // all tracks, including input tracks
 
+	viewBoxScale,
+
     // The frames around each svgPage
     markersLayers = [],
-
-    viewBox,
 
 	systemElems = [], // all the SVG elements having class "system"
 
@@ -644,7 +644,7 @@ _AP.score = (function (document)
 	// If isLivePerformance === false, then outputStaves are black, inputStaves are pink.
     getEmptyPagesAndSystems = function (isLivePerformanceArg)
     {
-    	var system, sysElems, svgPageEmbeds, nPages, runningViewBoxOriginY, scoreLayerElem,
+    	var system, sysElems, svgPageEmbeds, viewBox, nPages, runningViewBoxOriginY, scoreLayerElem,
             i, j, k,
             svgPage, svgElem, svgChildren, layerName, markersLayer,
             pageHeight, pageSystems;
@@ -657,7 +657,8 @@ _AP.score = (function (document)
             }
             while (systems.length > 0)
             {
-                systems.pop();
+            	systems.pop();
+				systemElems.pop();
             }
 
             isLivePerformance = isLivePerformanceArg;
@@ -715,20 +716,6 @@ _AP.score = (function (document)
         		rStafflineInfo.svgStafflines = svgStafflines;
 
         		return rStafflineInfo;
-        	}
-
-        	function getGap(gap, stafflineYs)
-        	{
-        		var newGap = gap;
-        		if (newGap === undefined && stafflineYs.length > 1)
-        		{
-        			newGap = stafflineYs[1] - stafflineYs[0];
-        			if (newGap < 0)
-        			{
-        				newGap *= -1;
-        			}
-        		}
-        		return newGap;
         	}
 
         	function setVoiceCentreYs(staffTopY, staffBottomY, voices)
@@ -879,80 +866,71 @@ _AP.score = (function (document)
             for(i = 0; i < staffElems.length; ++i)
             {
             	staffElem = staffElems[i];
-                staff = {};
-                staffDy = systemDy + getDy(staffElem);
-                staff.class = staffElem.getAttribute("class");
-                staff.voices = [];
-                system.staves.push(staff);
+            	staff = {};
+            	staffDy = systemDy + getDy(staffElem);
+            	staff.class = staffElem.getAttribute("class");
+            	staff.voices = [];
+            	system.staves.push(staff);
 
-                stafflinesElems = staffElem.getElementsByClassName("stafflines");
-                stafflineInfo = getStafflineInfo(stafflinesElems[0], staffDy);
-                system.left = stafflineInfo.left;
-                system.right = stafflineInfo.right;
-                system.gap = getGap(system.gap, stafflineInfo.stafflineYs);
+            	switch(staff.class)
+            	{
+            		case "outputStaff":
+            			outputVoiceElems = staffElem.getElementsByClassName("outputVoice");
+            			for(j = 0; j < outputVoiceElems.length; ++j)
+            			{
+            				outputVoiceElem = outputVoiceElems[j];
+            				staff.nameElem = getNameElem(outputVoiceElem);
+            				voice = {};
+            				voice.class = "outputVoice";
+            				// the attributes are only defined in the first bar of the piece
+            				getOutputVoiceAttributes(voice, outputVoiceElem);
+            				staff.voices.push(voice);
+            			}
+            			break;
+            		case "inputStaff":
+            			inputVoiceElems = staffElem.getElementsByClassName("inputVoice");
+            			for(j = 0; j < inputVoiceElems.length; ++j)
+            			{
+            				inputVoiceElem = inputVoiceElems[j];
+            				staff.nameElem = getNameElem(inputVoiceElem);
+            				voice = {};
+            				voice.class = "inputVoice";
+            				staff.voices.push(voice);
+            			}
+            			break;
+            	}
 
-                staff.topLineY = stafflineInfo.stafflineYs[0];
-                staff.bottomLineY = stafflineInfo.stafflineYs[stafflineInfo.stafflineYs.length - 1];
-                staff.svgStafflines = stafflineInfo.svgStafflines; // top down
+            	stafflinesElems = staffElem.getElementsByClassName("stafflines");
+            	staff.isVisible = (stafflinesElems.length > 0);
+            	if(staff.isVisible)
+            	{
+            		stafflineInfo = getStafflineInfo(stafflinesElems[0], staffDy);
+            		system.left = stafflineInfo.left;
+            		system.right = stafflineInfo.right;
 
-                switch(staff.class)
-                {
-                	case "outputStaff":
-                		outputVoiceElems = staffElem.getElementsByClassName("outputVoice");
-                		for(j = 0; j < outputVoiceElems.length; ++j)
-                		{
-                			outputVoiceElem = outputVoiceElems[j];
-                			staff.nameElem = getNameElem(outputVoiceElem);
-                			voice = {};
-                			voice.class = "outputVoice";
-                			// the attributes are only defined in the first bar of the piece
-                			getOutputVoiceAttributes(voice, outputVoiceElem);
-                			staff.voices.push(voice);
-                		}
-                		break;
-                	case "inputStaff":
-                		inputVoiceElems = staffElem.getElementsByClassName("inputVoice");
-                		for(j = 0; j < inputVoiceElems.length; ++j)
-                		{
-                			inputVoiceElem = inputVoiceElems[j];
-                			staff.nameElem = getNameElem(inputVoiceElem);
-                			voice = {};
-                			voice.class = "inputVoice";
-                			staff.voices.push(voice);
-                		}
-                		break;
-                }
+            		staff.topLineY = stafflineInfo.stafflineYs[0];
+            		staff.bottomLineY = stafflineInfo.stafflineYs[stafflineInfo.stafflineYs.length - 1];
+            		staff.svgStafflines = stafflineInfo.svgStafflines; // top down
 
-                setStaffColours(staff, isLivePerformance);
-                setVoiceCentreYs(staff.topLineY, staff.bottomLineY, staff.voices);
+            		setStaffColours(staff, isLivePerformance);
+            		setVoiceCentreYs(staff.topLineY, staff.bottomLineY, staff.voices);
+            	}
+
+            	if(system.topLineY === undefined)
+            	{
+            		system.topLineY = staff.topLineY;
+            		system.bottomLineY = staff.bottomLineY;
+            	}
+            	else
+            	{
+            		system.topLineY = (system.topLineY < staff.topLineY) ? system.topLineY : staff.topLineY;
+            		system.bottomLineY = (system.bottomLineY > staff.bottomLineY) ? system.bottomLineY : staff.bottomLineY;
+            	}
             }
 
-            system.topLineY = system.staves[0].topLineY;
-            system.bottomLineY = system.staves[system.staves.length - 1].bottomLineY;
 
-            if (system.gap === undefined)
-            {
-                system.gap = 4; // default value, when all staves have one line.
-            }
 
             return system;
-        }
-
-        function getViewBox(svgElem)
-        {
-        	var width, viewBox = {}, viewBoxStr, viewBoxStrings;
-
-            width = parseFloat(svgElem.getAttribute('width'));
-            viewBoxStr = svgElem.getAttribute('viewBox');
-            viewBoxStrings = viewBoxStr.split(' ');
-
-            viewBox.x = parseFloat(viewBoxStrings[0]);
-            viewBox.y = parseFloat(viewBoxStrings[1]);
-            viewBox.width = parseFloat(viewBoxStrings[2]);
-            viewBox.height = parseFloat(viewBoxStrings[3]);
-            viewBox.scale = viewBox.width / width;
-
-            return viewBox;
         }
 
     	// Creates a new "g" element at the top level of the svg page.
@@ -1061,9 +1039,60 @@ _AP.score = (function (document)
         	}
         }
 
+    	// Sets the global viewBox object and the sizes and positions of the objects on page 2 (the div that is originally invisible)
+		// Returns the viewBox in the final page of the score.
+        function setGraphics()
+        {
+        	var
+			i, svgPage, embedsWidth, viewBox, pagesFrameWidth,
+        	svgRuntimeControlsElem = document.getElementById("svgRuntimeControls"),
+			svgPagesFrameElem = document.getElementById("svgPagesFrame"),
+        	svgPageEmbeds = document.getElementsByClassName("svgPage"),
+			nPages = svgPageEmbeds.length;
+
+        	function getViewBox(svgElem)
+        	{
+        		var height, viewBox = {}, viewBoxStr, viewBoxStrings;
+
+        		height = parseFloat(svgElem.getAttribute('height'));
+        		viewBoxStr = svgElem.getAttribute('viewBox');
+        		viewBoxStrings = viewBoxStr.split(' ');
+
+        		viewBox.x = parseFloat(viewBoxStrings[0]);
+        		viewBox.y = parseFloat(viewBoxStrings[1]);
+        		viewBox.width = parseFloat(viewBoxStrings[2]);
+        		viewBox.height = parseFloat(viewBoxStrings[3]);
+        		viewBox.scale = viewBox.height / height;
+
+        		return viewBox;
+        	}
+
+        	svgRuntimeControlsElem.style.left = ((window.innerWidth - parseInt(svgRuntimeControlsElem.style.width, 10)) / 2).toString();
+
+        	for(i = 0; i < nPages; ++i)
+        	{
+        		svgPage = svgPageEmbeds[i].getSVGDocument();
+        		viewBox = getViewBox(svgPage.children[0]); // global
+        		embedsWidth = Math.ceil(viewBox.width / viewBox.scale);
+        		svgPageEmbeds[i].style.width = embedsWidth.toString();
+        		svgPageEmbeds[i].style.height = (Math.ceil(viewBox.height / viewBox.scale)).toString();
+        	}
+
+			pagesFrameWidth = embedsWidth + 17; 
+			svgPagesFrameElem.style.width = pagesFrameWidth.toString();
+        	svgPagesFrameElem.style.height = (window.innerHeight - parseInt(svgPagesFrameElem.style.top, 10) -2).toString();
+        	svgPagesFrameElem.style.left = (Math.ceil((window.innerWidth - pagesFrameWidth) / 2)).toString();
+
+        	viewBoxScale = viewBox.scale;
+			
+        	return viewBox;
+        }
+
         /*************** end of getEmptyPagesAndSystems function definitions *****************************/
 
         resetContent(isLivePerformanceArg);
+
+        viewBox = setGraphics();
 
         svgPageEmbeds = document.getElementsByClassName("svgPage");
         nPages = svgPageEmbeds.length;
@@ -1072,7 +1101,7 @@ _AP.score = (function (document)
         {
         	svgPage = svgPageEmbeds[i].getSVGDocument();
         	svgElem = svgPage.children[0];
-        	viewBox = getViewBox(svgElem);
+
         	svgChildren = svgElem.children;
 			pageSystems = [];
         	for(j = 0; j < svgChildren.length; ++j)
@@ -1546,7 +1575,7 @@ _AP.score = (function (document)
     			{
     				delete systems[systemIndex].msDuration; // is reset in the following function
     			}
-    			getSystemTimeObjects(systems[systemIndex], viewBox.scale, systemElem, speed);
+    			getSystemTimeObjects(systems[systemIndex], viewBoxScale, systemElem, speed);
     			systemIndex++;
     		}
 

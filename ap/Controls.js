@@ -239,7 +239,7 @@ _AP.controls = (function(document, window)
                 globalElements.globalSpeedDiv.style.display = "none";
                 globalElements.startRuntimeButton.style.display = "none";
                 globalElements.svgRuntimeControls.style.visibility = "hidden";
-                globalElements.svgPages.style.visibility = "hidden";
+                globalElements.svgPagesFrame.style.visibility = "hidden";
 
                 if(scoreIndex > 0 && outputDeviceIndex > 0)
                 {
@@ -251,7 +251,7 @@ _AP.controls = (function(document, window)
             case "toBack": // set svg controls and score visible
                 globalElements.titleOptionsDiv.style.visibility = "hidden";
                 globalElements.svgRuntimeControls.style.visibility = "visible";
-                globalElements.svgPages.style.visibility = "visible";
+                globalElements.svgPagesFrame.style.visibility = "visible";
                 break;
             default:
                 throw "Unknown program state.";
@@ -609,7 +609,7 @@ _AP.controls = (function(document, window)
             globalElements.titleOptionsDiv = document.getElementById("titleOptionsDiv");
             globalElements.startRuntimeButton = document.getElementById("startRuntimeButton");
             globalElements.svgRuntimeControls = document.getElementById("svgRuntimeControls");
-            globalElements.svgPages = document.getElementById("svgPages");
+            globalElements.svgPagesFrame = document.getElementById("svgPagesFrame");
         }
 
     	// sets the options in the device selectors' menus
@@ -698,7 +698,7 @@ _AP.controls = (function(document, window)
 
         function setSvgPagesDivHeight()
         {
-            svgPagesDiv = document.getElementById("svgPages");
+            svgPagesDiv = document.getElementById("svgPagesFrame");
             svgPagesDiv.style.height = window.innerHeight - 43;
         }
 
@@ -735,7 +735,7 @@ _AP.controls = (function(document, window)
     doControl = function(controlID)
     {
     	// This function analyses the score's id string in the scoreSelector in assistantPerformer.html,
-    	// and uses the information to load the score's svg files into the "svgPages" div,
+    	// and uses the information to load the score's svg files into the "svgPagesFrame" div,
     	// The score is actually analysed when the Start button is clicked.
     	function setScore()
     	{
@@ -797,16 +797,14 @@ _AP.controls = (function(document, window)
     				}
 
     				if((components.length === 1 && components[0] !== "choose a score")
-    				|| components.length !== 9
+    				|| components.length !== 7
 					|| components[0].slice(0, 7) !== "folder="
 					|| components[1].slice(0, 6) !== "title="
 					|| components[2].slice(0, 7) !== "nPages="
-					|| components[3].slice(0, 13) !== "svgPageWidth="
-					|| components[4].slice(0, 14) !== "svgPageHeight="
-					|| components[5].slice(0, 14) !== "nOutputVoices="
-					|| components[6].slice(0, 13) !== "nInputVoices="
-					|| components[7].slice(0, 13) !== "inputHandler="
-					|| components[8].slice(0, 9) !== "aboutURL=")
+					|| components[3].slice(0, 14) !== "nOutputVoices="
+					|| components[4].slice(0, 13) !== "nInputVoices="
+					|| components[5].slice(0, 13) !== "inputHandler="
+					|| components[6].slice(0, 9) !== "aboutURL=")
     				{
     					throw "Illegal option value in assistantPerformer.html";
     				}
@@ -814,12 +812,10 @@ _AP.controls = (function(document, window)
     				scoreInfo.folder = components[0].slice(7);
     				scoreInfo.title = components[1].slice(6);
     				scoreInfo.nPages = parseInt(components[2].slice(7), 10);
-    				scoreInfo.svgPageWidthStr = components[3].slice(13);
-    				scoreInfo.svgPageHeightStr = components[4].slice(14);
-    				scoreInfo.nOutputVoices = parseInt(components[5].slice(14), 10);
-    				scoreInfo.nInputVoices = parseInt(components[6].slice(13), 10);
-    				scoreInfo.inputHandler = components[7].slice(13); // e.g. "keyboard1[36..84]"
-    				scoreInfo.aboutURL = components[8].slice(9);
+    				scoreInfo.nOutputVoices = parseInt(components[3].slice(14), 10);
+    				scoreInfo.nInputVoices = parseInt(components[4].slice(13), 10);
+    				scoreInfo.inputHandler = components[5].slice(13); // e.g. "keyboard1[36..84]"
+    				scoreInfo.aboutURL = components[6].slice(9);
 
     				return scoreInfo;
     			}
@@ -845,13 +841,10 @@ _AP.controls = (function(document, window)
                     folder = scoreInfo.folder, // e.g. "Study 3 sketch 2.1 - with input"
 					title = scoreInfo.title, // e.g. "Study 3 sketch 2"
                     nPages = scoreInfo.nPages,
-					widthStr = scoreInfo.svgPageWidthStr,
-					heightStr = scoreInfo.svgPageHeightStr,
                     svgPagesFrame,
                     embedCode = "",
                     pageURL,
-                    i,
-                    frameWidth = parseInt(widthStr, 10) + 17;
+                    i;
 
     			// Returns the URL of the scores directory. This can either be in the local server:
     			// e.g. "file:///C:/xampp/htdocs/localAssistantPerformer/scores/"
@@ -866,15 +859,12 @@ _AP.controls = (function(document, window)
     				return url;
     			}
 
-    			function embedPageCode(url, widthStr, heightStr)
+    			function embedPageCode(url)
     			{
     				var code = "<embed " +
                                     "src=\'" + url + "\' " +
                                     "content-type=\'image/svg+xml\' " +
-                                    "class=\'svgPage\' " +
-                                    "width=\'" + widthStr + "\' " +  // the width value at the top of each svg page
-                                    "height=\'" + heightStr + "\' />" +   // the height value at the top of each svg page
-                                "<br />";
+                                    "class=\'svgPage\' />";
     				return code;
     			}
 
@@ -891,11 +881,9 @@ _AP.controls = (function(document, window)
     				// e.g. "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Song Six/Song Six page 1.svg"
     				// or   "file:///C:/xampp/htdocs/localAssistantPerformer/scores/Song Six/Song Six page 1.svg"
 
-    				embedCode += embedPageCode(pageURL, widthStr, heightStr);
+    				embedCode += embedPageCode(pageURL);
     			}
-    			svgPagesFrame = document.getElementById('svgPages');
-    			svgPagesFrame.style.width = frameWidth.toString(10);
-    			svgPagesFrame.style.marginLeft = (1446 - frameWidth) / 2;
+    			svgPagesFrame = document.getElementById('svgPagesFrame');
     			svgPagesFrame.innerHTML = embedCode;
     		}
 

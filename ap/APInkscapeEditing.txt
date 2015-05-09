@@ -2,12 +2,35 @@
 APInkscapeEditing.txt
 
 ******************************************************************
+ 
+Moritz creates scores in the score's root folder as:
+	a) a series of printable, page-numbered .svg pages (contained in an HTML file).
+	b) **TODO**: an un-numbered .svg file containing all the systems.
+These files are all overwritten without warning, when Moritz (re-)compiles the score.
+So, when adding annotations:
+1. create a new "annotated" folder inside the score's root folder, and copy the page-numbered .svg files there.
+2. edit and save these annotated/page-numbered .svg files.
+   If more vertical space is needed, change the page height as follows:
+      a) select the top element in Inkscape's XML editor
+	  b) in the editor's left panel, change the height value to an integral number of pixels as required, and the final viewBox value to (height * 8).
+	  c) either edit the rect on the frame layer (layer1)correspondingly, or delete the frame layer completely.
+3. Either manually copy all the systems to a new, single svg page having the name of the score without " Page <pageNumber>" (but with an .svg suffix),
+   or **TODO**: Moritz provides a utility for moving systems from a series of page-numbered .svg files into a single .svg file containing
+         all the systems. Use this on the result of editing the single pages. The resulting file will be saved next to the page-numbered
+         .svg files. The utility preserves the annotations.
+
+**TODO** The Assistant Performer uses the first score it finds, when looking at locations in the following order:
+	1. score root file/annotated/un-numbered .svg file
+	2. score root file/annotated/page-numbered .svg files
+	3. score root file/un-numbered .svg file
+	4. score root file/page-numbered .svg files
 
 Scores can be edited as follows in Inkscape:
 
 1. The Assistant Performer ignores:
 	a) all layers except the 'score' layer.
-	b) all id attributes. These are, however useful as comments when editing in Inkscape, and should be maintained.
+	b) all id attributes except those inside the <defs> element (used to identify particular clef and flag definitions).
+	   id attributes are, however useful as comments when editing in Inkscape, and should be maintained.
 	b) all objects that have no class (see below).
 	d) all classes (e.g. barline) that are not listed below.
 	c) all attributes (e.g. color) that a classed object does not originally have.
