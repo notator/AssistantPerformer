@@ -4,16 +4,14 @@
 	version="1.1"
 	width="1429"
 	height="875"
-	viewBox="0 0 11432 6976"
-	onload="onLoad()">
-	<script
-		xlink:href="../../ap/SVG.js"
-		type="text/javascript"></script>
+	viewBox="0 0 11432 7000">
 	<sodipodi:namedview
 		inkscape:window-maximized="1"
-		inkscape:current-layer="layer3" />
-	<title>Study 3 sketch 2, page 1 of 1</title>
-	<metadata>
+		inkscape:current-layer="layer2" />
+	<title
+		id="pageTitle">Study 3 sketch 2, page 1 of 1</title>
+	<metadata
+		id="metadata">
 		<rdf:RDF>
 			<cc:Work
 				rdf:about="">
@@ -21,7 +19,7 @@
 				<dc:type
 					rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
 				<dc:title>Study 3 sketch 2, page 1 of 1</dc:title>
-				<dc:date>Monday 27.04.2015, 16:39:42</dc:date>
+				<dc:date>Saturday 09.05.2015, 12:49:21</dc:date>
 				<dc:creator>
 					<cc:Agent>
 						<dc:title>James Ingram</dc:title>
@@ -268,7 +266,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 	<g
 		inkscape:groupmode="layer"
 		id="layer1"
-		inkscape:label="boundary"
+		inkscape:label="frame"
 		style="display:inline"
 		sodipodi:insensitive="true">
 		<rect
@@ -281,22 +279,26 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 	<g
 		inkscape:groupmode="layer"
 		id="layer2"
-		inkscape:label="moritz"
+		inkscape:label="score"
 		style="display:inline"
 		sodipodi:insensitive="true">
 		<text
+			id="timeStamp"
 			x="80"
 			y="80"
 			font-size="72"
-			font-family="Arial">Study 3 sketch 2: page 1, Monday 27.04.2015, 16:39:42</text>
-		<g>
+			font-family="Arial">Study 3 sketch 2: page 1, Saturday 09.05.2015, 12:49:21</text>
+		<g
+			id="titles">
 			<text
+				id="mainTitle"
 				x="5716"
 				y="400"
 				text-anchor="middle"
 				font-size="256"
 				font-family="Estrangelo Edessa">Study 3 sketch 2</text>
 			<text
+				id="author"
 				x="11032"
 				y="400"
 				text-anchor="end"
@@ -305,58 +307,19 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 		</g>
 		<g
 			class="system"
-			id="page1_system1">
-			<g
-				class="markers">
-				<g
-					class="startMarker">
-					<line
-						x1="0"
-						y1="0"
-						x2="0"
-						y2="0"
-						style="stroke-width:1px" />
-					<circle
-						cx="0"
-						cy="0"
-						r="0"
-						style="stroke-width:1px" />
-				</g>
-				<g
-					class="runningMarker">
-					<line
-						x1="0"
-						y1="0"
-						x2="0"
-						y2="0"
-						style="stroke-width:1px" />
-				</g>
-				<g
-					class="endMarker">
-					<line
-						x1="0"
-						y1="0"
-						x2="0"
-						y2="0"
-						style="stroke-width:1px" />
-					<rect
-						x="0"
-						y="0"
-						width="0"
-						height="0"
-						style="stroke-width:1px" />
-				</g>
-			</g>
+			id="sys1">
 			<g
 				class="outputStaff"
-				id="p1_sys1_staff1"
+				id="sys1invisibleStaff1"
 				score:invisible="1">
 				<g
 					class="outputVoice"
+					id="sys1staff1voice1"
 					score:midiChannel="1"
 					score:masterVolume="100">
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord1">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -396,9 +359,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest2"
 						score:msDuration="1345" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord3">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -438,9 +403,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest4"
 						score:msDuration="1328" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord5">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -484,9 +451,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest6"
 						score:msDuration="1308" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord7">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -530,9 +499,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest8"
 						score:msDuration="1287" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord9">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -580,9 +551,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest10"
 						score:msDuration="1263" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord11">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -630,9 +603,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest12"
 						score:msDuration="1236" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord13">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -684,9 +659,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest14"
 						score:msDuration="1207" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord15">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -738,9 +715,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest16"
 						score:msDuration="1174" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord17">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -796,9 +775,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest18"
 						score:msDuration="1137" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord19">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -854,9 +835,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest20"
 						score:msDuration="1097" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord21">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -916,9 +899,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest22"
 						score:msDuration="1051" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord23">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -978,12 +963,15 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest24"
 						score:msDuration="1001" />
 					<g
 						class="rest"
+						id="rest25"
 						score:msDuration="1500" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord26">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -1022,7 +1010,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord27">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -1061,7 +1050,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord28">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -1104,7 +1094,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord29">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -1147,7 +1138,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord30">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -1194,7 +1186,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord31">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -1241,7 +1234,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord32">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -1292,7 +1286,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord33">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -1343,7 +1338,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord34">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -1398,7 +1394,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord35">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -1453,7 +1450,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord36">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -1512,7 +1510,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord37">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -1572,19 +1571,22 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest38"
 						score:msDuration="9000" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys1_staff2"
+				id="sys1invisibleStaff2"
 				score:invisible="1">
 				<g
 					class="outputVoice"
+					id="sys1staff2voice1"
 					score:midiChannel="2"
 					score:masterVolume="100">
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord39">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -1623,9 +1625,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest40"
 						score:msDuration="1345" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord41">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -1664,9 +1668,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest42"
 						score:msDuration="1318" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord43">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -1709,9 +1715,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest44"
 						score:msDuration="1287" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord45">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -1754,9 +1762,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest46"
 						score:msDuration="1251" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord47">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -1803,9 +1813,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest48"
 						score:msDuration="1209" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord49">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -1852,9 +1864,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest50"
 						score:msDuration="1159" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord51">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -1905,9 +1919,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest52"
 						score:msDuration="1100" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord53">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -1958,9 +1974,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest54"
 						score:msDuration="1032" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord55">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -2015,9 +2033,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest56"
 						score:msDuration="952" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord57">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -2072,9 +2092,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest58"
 						score:msDuration="858" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord59">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -2133,9 +2155,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest60"
 						score:msDuration="749" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord61">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -2194,12 +2218,15 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest62"
 						score:msDuration="620" />
 					<g
 						class="rest"
+						id="rest63"
 						score:msDuration="3000" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord64">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -2237,7 +2264,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord65">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -2275,7 +2303,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord66">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -2317,7 +2346,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord67">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -2359,7 +2389,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord68">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -2405,7 +2436,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord69">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -2451,7 +2483,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord70">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -2501,7 +2534,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord71">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -2551,7 +2585,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord72">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -2605,7 +2640,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord73">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -2659,7 +2695,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord74">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -2717,7 +2754,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord75">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -2776,19 +2814,22 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest76"
 						score:msDuration="7500" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys1_staff3"
+				id="sys1invisibleStaff3"
 				score:invisible="1">
 				<g
 					class="outputVoice"
+					id="sys1staff3voice1"
 					score:midiChannel="3"
 					score:masterVolume="100">
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord77">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -2823,9 +2864,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest78"
 						score:msDuration="1195" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord79">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -2864,9 +2907,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest80"
 						score:msDuration="1162" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord81">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -2909,9 +2954,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest82"
 						score:msDuration="1125" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord83">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -2958,9 +3005,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest84"
 						score:msDuration="1084" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord85">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -3011,9 +3060,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest86"
 						score:msDuration="1039" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord87">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -3068,9 +3119,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest88"
 						score:msDuration="989" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord89">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -3129,9 +3182,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest90"
 						score:msDuration="933" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord91">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -3190,9 +3245,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest92"
 						score:msDuration="872" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord93">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -3251,9 +3308,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest94"
 						score:msDuration="803" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord95">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -3312,9 +3371,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest96"
 						score:msDuration="727" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord97">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -3373,9 +3434,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest98"
 						score:msDuration="643" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord99">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -3434,12 +3497,15 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest100"
 						score:msDuration="550" />
 					<g
 						class="rest"
+						id="rest101"
 						score:msDuration="4500" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord102">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -3473,7 +3539,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord103">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -3511,7 +3578,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord104">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -3553,7 +3621,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord105">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -3599,7 +3668,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord106">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -3649,7 +3719,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord107">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -3703,7 +3774,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord108">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -3761,7 +3833,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord109">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -3819,7 +3892,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord110">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -3877,7 +3951,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord111">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -3935,7 +4010,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord112">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -3993,7 +4069,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord113">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -4052,19 +4129,22 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest114"
 						score:msDuration="6000" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys1_staff4"
+				id="sys1invisibleStaff4"
 				score:invisible="1">
 				<g
 					class="outputVoice"
+					id="sys1staff4voice1"
 					score:midiChannel="4"
 					score:masterVolume="100">
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord115">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4081,9 +4161,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest116"
 						score:msDuration="938" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord117">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4100,9 +4182,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest118"
 						score:msDuration="859" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord119">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4119,9 +4203,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest120"
 						score:msDuration="1007" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord121">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4138,9 +4224,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest122"
 						score:msDuration="667" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord123">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4157,9 +4245,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest124"
 						score:msDuration="550" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord125">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4176,9 +4266,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest126"
 						score:msDuration="769" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord127">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4195,9 +4287,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest128"
 						score:msDuration="938" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord129">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4214,9 +4308,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest130"
 						score:msDuration="859" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord131">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4233,9 +4329,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest132"
 						score:msDuration="1007" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord133">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4252,9 +4350,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest134"
 						score:msDuration="667" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord135">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4271,9 +4371,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest136"
 						score:msDuration="550" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord137">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4290,12 +4392,15 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest138"
 						score:msDuration="769" />
 					<g
 						class="rest"
+						id="rest139"
 						score:msDuration="6000" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord140">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4311,7 +4416,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord141">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4327,7 +4433,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord142">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4343,7 +4450,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord143">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4359,7 +4467,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord144">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4375,7 +4484,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord145">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4391,7 +4501,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord146">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4407,7 +4518,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord147">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4423,7 +4535,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord148">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4439,7 +4552,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord149">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4455,7 +4569,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord150">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4471,7 +4586,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord151">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4488,19 +4604,22 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest152"
 						score:msDuration="4500" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys1_staff5"
+				id="sys1invisibleStaff5"
 				score:invisible="1">
 				<g
 					class="outputVoice"
+					id="sys1staff5voice1"
 					score:midiChannel="5"
 					score:masterVolume="100">
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord153">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4518,9 +4637,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest154"
 						score:msDuration="938" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord155">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4538,9 +4659,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest156"
 						score:msDuration="859" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord157">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4558,9 +4681,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest158"
 						score:msDuration="1007" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord159">
 						<score:midiChord
 							pitchWheelDeviation="13">
 							<basicChords>
@@ -4578,9 +4703,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest160"
 						score:msDuration="667" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord161">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4598,9 +4725,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest162"
 						score:msDuration="550" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord163">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4618,9 +4747,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest164"
 						score:msDuration="769" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord165">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4638,9 +4769,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest166"
 						score:msDuration="938" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord167">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4658,9 +4791,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest168"
 						score:msDuration="859" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord169">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4678,9 +4813,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest170"
 						score:msDuration="1007" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord171">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4698,9 +4835,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest172"
 						score:msDuration="667" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord173">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4718,9 +4857,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest174"
 						score:msDuration="550" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord175">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4738,12 +4879,15 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest176"
 						score:msDuration="769" />
 					<g
 						class="rest"
+						id="rest177"
 						score:msDuration="7500" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord178">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4760,7 +4904,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord179">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4777,7 +4922,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord180">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4794,7 +4940,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord181">
 						<score:midiChord
 							pitchWheelDeviation="13">
 							<basicChords>
@@ -4811,7 +4958,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord182">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4828,7 +4976,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord183">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4845,7 +4994,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord184">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4862,7 +5012,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord185">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4879,7 +5030,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord186">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4896,7 +5048,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord187">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4913,7 +5066,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord188">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4930,7 +5084,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord189">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -4948,19 +5103,22 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest190"
 						score:msDuration="3000" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys1_staff6"
+				id="sys1invisibleStaff6"
 				score:invisible="1">
 				<g
 					class="outputVoice"
+					id="sys1staff6voice1"
 					score:midiChannel="6"
 					score:masterVolume="100">
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord191">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -5001,9 +5159,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest192"
 						score:msDuration="289" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord193">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -5040,9 +5200,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest194"
 						score:msDuration="1007" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord195">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -5087,9 +5249,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest196"
 						score:msDuration="384" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord197">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -5122,9 +5286,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest198"
 						score:msDuration="965" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord199">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -5173,9 +5339,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest200"
 						score:msDuration="472" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord201">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -5204,9 +5372,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest202"
 						score:msDuration="919" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord203">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -5259,9 +5429,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest204"
 						score:msDuration="552" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord205">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -5286,9 +5458,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest206"
 						score:msDuration="870" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord207">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -5345,9 +5519,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest208"
 						score:msDuration="627" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord209">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -5368,9 +5544,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest210"
 						score:msDuration="816" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord211">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -5431,9 +5609,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest212"
 						score:msDuration="695" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord213">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -5454,12 +5634,15 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest214"
 						score:msDuration="758" />
 					<g
 						class="rest"
+						id="rest215"
 						score:msDuration="9000" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord216">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -5499,7 +5682,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord217">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -5535,7 +5719,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord218">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -5579,7 +5764,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord219">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -5611,7 +5797,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord220">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -5659,7 +5846,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord221">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -5687,7 +5875,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord222">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -5739,7 +5928,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord223">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -5763,7 +5953,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord224">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -5819,7 +6010,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord225">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -5839,7 +6031,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord226">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -5899,7 +6092,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord227">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -5920,19 +6114,22 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest228"
 						score:msDuration="1500" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys1_staff7"
+				id="sys1invisibleStaff7"
 				score:invisible="1">
 				<g
 					class="outputVoice"
+					id="sys1staff7voice1"
 					score:midiChannel="7"
 					score:masterVolume="100">
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord229">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -5949,9 +6146,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest230"
 						score:msDuration="579" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord231">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -5991,9 +6190,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest232"
 						score:msDuration="1103" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord233">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -6038,9 +6239,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest234"
 						score:msDuration="647" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord235">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -6073,9 +6276,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest236"
 						score:msDuration="1071" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord237">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -6124,9 +6329,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest238"
 						score:msDuration="710" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord239">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -6155,9 +6362,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest240"
 						score:msDuration="1037" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord241">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -6210,9 +6419,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest242"
 						score:msDuration="768" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord243">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -6237,9 +6448,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest244"
 						score:msDuration="1001" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord245">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -6296,9 +6509,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest246"
 						score:msDuration="822" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord247">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -6319,9 +6534,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest248"
 						score:msDuration="961" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord249">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -6382,9 +6599,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest250"
 						score:msDuration="872" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord251">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -6420,12 +6639,15 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest252"
 						score:msDuration="918" />
 					<g
 						class="rest"
+						id="rest253"
 						score:msDuration="10500" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord254">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -6441,7 +6663,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord255">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -6480,7 +6703,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord256">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -6524,7 +6748,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord257">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -6556,7 +6781,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord258">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -6604,7 +6830,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord259">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -6632,7 +6859,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord260">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -6684,7 +6912,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord261">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -6708,7 +6937,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord262">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -6764,7 +6994,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord263">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -6784,7 +7015,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord264">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -6844,7 +7076,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord265">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -6882,35 +7115,41 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys1_staff8"
+				id="sys1staff8"
 				score:staffName="Palette 1">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys1staff8stafflines">
 					<line
+						id="staffline266"
 						x1="434.56"
 						y1="928"
 						x2="11032"
 						y2="928"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline267"
 						x1="434.56"
 						y1="960"
 						x2="11032"
 						y2="960"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline268"
 						x1="434.56"
 						y1="992"
 						x2="11032"
 						y2="992"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline269"
 						x1="434.56"
 						y1="1024"
 						x2="11032"
 						y2="1024"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline270"
 						x1="434.56"
 						y1="1056"
 						x2="11032"
@@ -6919,14 +7158,24 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 				</g>
 				<g
 					class="outputVoice"
+					id="sys1staff8voice1"
 					score:midiChannel="0"
 					score:masterVolume="100">
 					<use
+						id="clef271"
 						xlink:href="#bassClef8"
 						x="0"
 						y="0"
 						transform="translate(484.16,960) scale(125.44)" />
+					<line
+						id="barline272"
+						x1="587.36"
+						y1="928"
+						x2="587.36"
+						y2="1056"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName273"
 						x="249.28"
 						y="1017.6"
 						text-anchor="middle"
@@ -6934,6 +7183,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						font-family="Times New Roman">Palette 1</text>
 					<g
 						class="outputChord"
+						id="outputChord274"
 						score:alignmentX="708.0109">
 						<score:midiChord>
 							<basicChords>
@@ -6971,14 +7221,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="69" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics275">
 							<line
+								id="stem276"
 								x1="691.5982"
 								y1="947.696"
 								x2="691.5982"
 								y2="1095.266"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<use
+								id="flag277"
 								xlink:href="#Left3Flags"
 								x="0"
 								y="0"
@@ -6994,12 +7246,6 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<text
-								x="708.0109"
-								y="908.8"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~7</text>
-							<text
 								x="643.0725"
 								y="1168.866"
 								font-size="94.08"
@@ -7008,6 +7254,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest278"
 						score:alignmentX="794.9008"
 						score:msDuration="1350">
 						<text
@@ -7018,6 +7265,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord279"
 						score:alignmentX="1169.094">
 						<score:midiChord>
 							<basicChords>
@@ -7055,14 +7303,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="58" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics280">
 							<line
+								id="stem281"
 								x1="1152.681"
 								y1="963.696"
 								x2="1152.681"
 								y2="1111.266"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<use
+								id="flag282"
 								xlink:href="#Left3Flags"
 								x="0"
 								y="0"
@@ -7077,16 +7327,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="960"
 								font-size="125.44"
 								font-family="CLicht">#</text>
-							<text
-								x="1169.094"
-								y="908.8"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~7</text>
 						</g>
 					</g>
 					<g
 						class="rest"
+						id="rest283"
 						score:alignmentX="1255.984"
 						score:msDuration="1325">
 						<text
@@ -7097,6 +7342,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord284"
 						score:alignmentX="1623.247">
 						<score:midiChord>
 							<basicChords>
@@ -7138,14 +7384,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="81" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics285">
 							<line
+								id="stem286"
 								x1="1606.835"
 								y1="979.696"
 								x2="1606.835"
 								y2="1095.906"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<use
+								id="flag287"
 								xlink:href="#Left2Flags"
 								x="0"
 								y="0"
@@ -7155,16 +7403,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="976"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
-							<text
-								x="1623.247"
-								y="908.8"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~8</text>
 						</g>
 					</g>
 					<g
 						class="rest"
+						id="rest288"
 						score:alignmentX="1710.137"
 						score:msDuration="1297">
 						<text
@@ -7175,6 +7418,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord289"
 						score:alignmentX="2069.639">
 						<score:midiChord>
 							<basicChords>
@@ -7216,14 +7460,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="46" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics290">
 							<line
+								id="stem291"
 								x1="2053.227"
 								y1="995.696"
 								x2="2053.227"
 								y2="1111.906"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<use
+								id="flag292"
 								xlink:href="#Left2Flags"
 								x="0"
 								y="0"
@@ -7233,16 +7479,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="992"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
-							<text
-								x="2069.639"
-								y="908.8"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~8</text>
 						</g>
 					</g>
 					<g
 						class="rest"
+						id="rest293"
 						score:alignmentX="2156.529"
 						score:msDuration="1263">
 						<text
@@ -7253,6 +7494,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord294"
 						score:alignmentX="2506.607">
 						<score:midiChord>
 							<basicChords>
@@ -7298,14 +7540,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="92" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics295">
 							<line
+								id="stem296"
 								x1="2523.02"
 								y1="888.0939"
 								x2="2523.02"
 								y2="1004.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<use
+								id="flag297"
 								xlink:href="#Right2Flags"
 								x="0"
 								y="0"
@@ -7315,16 +7559,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="1008"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
-							<text
-								x="2506.607"
-								y="868.8939"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~9</text>
 						</g>
 					</g>
 					<g
 						class="rest"
+						id="rest298"
 						score:alignmentX="2593.497"
 						score:msDuration="1224">
 						<text
@@ -7335,6 +7574,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord299"
 						score:alignmentX="2932.766">
 						<score:midiChord>
 							<basicChords>
@@ -7380,14 +7620,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="35" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics300">
 							<line
+								id="stem301"
 								x1="2949.178"
 								y1="920.0939"
 								x2="2949.178"
 								y2="1036.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<use
+								id="flag302"
 								xlink:href="#Right2Flags"
 								x="0"
 								y="0"
@@ -7402,16 +7644,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="1040"
 								font-size="125.44"
 								font-family="CLicht">#</text>
-							<text
-								x="2932.766"
-								y="900.8939"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~9</text>
 						</g>
 					</g>
 					<g
 						class="rest"
+						id="rest303"
 						score:alignmentX="3044.052"
 						score:msDuration="1179">
 						<text
@@ -7422,6 +7659,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord304"
 						score:alignmentX="3370.847">
 						<score:midiChord>
 							<basicChords>
@@ -7471,14 +7709,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="104" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics305">
 							<line
+								id="stem306"
 								x1="3387.26"
 								y1="936.0939"
 								x2="3387.26"
 								y2="1052.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<use
+								id="flag307"
 								xlink:href="#Right2Flags"
 								x="0"
 								y="0"
@@ -7493,16 +7733,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="1056"
 								font-size="125.44"
 								font-family="CLicht">#</text>
-							<text
-								x="3370.847"
-								y="908.8"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~10</text>
 						</g>
 					</g>
 					<g
 						class="rest"
+						id="rest308"
 						score:alignmentX="3489.442"
 						score:msDuration="1126">
 						<text
@@ -7513,6 +7748,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord309"
 						score:alignmentX="3801.546">
 						<score:midiChord>
 							<basicChords>
@@ -7562,14 +7798,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="23" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics310">
 							<line
+								id="stem311"
 								x1="3817.959"
 								y1="951.454"
 								x2="3817.959"
 								y2="1068.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<use
+								id="flag312"
 								xlink:href="#Right1Flag"
 								x="0"
 								y="0"
@@ -7584,16 +7822,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="1072"
 								font-size="125.44"
 								font-family="CLicht">#</text>
-							<text
-								x="3801.546"
-								y="908.8"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~10</text>
 						</g>
 					</g>
 					<g
 						class="rest"
+						id="rest313"
 						score:alignmentX="3922.12"
 						score:msDuration="1065">
 						<text
@@ -7604,6 +7837,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord314"
 						score:alignmentX="4217.316">
 						<score:midiChord>
 							<basicChords>
@@ -7657,14 +7891,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="115" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics315">
 							<line
+								id="stem316"
 								x1="4233.729"
 								y1="967.454"
 								x2="4233.729"
 								y2="1084.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<use
+								id="flag317"
 								xlink:href="#Right1Flag"
 								x="0"
 								y="0"
@@ -7675,21 +7911,17 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
+								id="ledger318"
 								x1="4184.491"
 								y1="1088"
 								x2="4250.141"
 								y2="1088"
 								style="stroke:black; stroke-width:4px" />
-							<text
-								x="4217.316"
-								y="908.8"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~11</text>
 						</g>
 					</g>
 					<g
 						class="rest"
+						id="rest319"
 						score:alignmentX="4357.847"
 						score:msDuration="993">
 						<text
@@ -7700,6 +7932,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord320"
 						score:alignmentX="4633.087">
 						<score:midiChord>
 							<basicChords>
@@ -7753,14 +7986,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="12" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics321">
 							<line
+								id="stem322"
 								x1="4649.5"
 								y1="977.054"
 								x2="4649.5"
 								y2="1100.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<use
+								id="flag323"
 								xlink:href="#Right1Flag"
 								x="0"
 								y="0"
@@ -7771,21 +8006,17 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
+								id="ledger324"
 								x1="4600.262"
 								y1="1088"
 								x2="4665.912"
 								y2="1088"
 								style="stroke:black; stroke-width:4px" />
-							<text
-								x="4633.087"
-								y="908.8"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~11</text>
 						</g>
 					</g>
 					<g
 						class="rest"
+						id="rest325"
 						score:alignmentX="4796.624"
 						score:msDuration="910">
 						<text
@@ -7796,6 +8027,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord326"
 						score:alignmentX="5048.856">
 						<score:midiChord>
 							<basicChords>
@@ -7853,14 +8085,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="126" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics327">
 							<line
+								id="stem328"
 								x1="5065.269"
 								y1="977.054"
 								x2="5065.269"
 								y2="1116.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<use
+								id="flag329"
 								xlink:href="#Right1Flag"
 								x="0"
 								y="0"
@@ -7871,27 +8105,24 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
+								id="ledger330"
 								x1="5016.031"
 								y1="1088"
 								x2="5081.682"
 								y2="1088"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="ledger331"
 								x1="5016.031"
 								y1="1120"
 								x2="5081.682"
 								y2="1120"
 								style="stroke:black; stroke-width:4px" />
-							<text
-								x="5048.856"
-								y="908.8"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~12</text>
 						</g>
 					</g>
 					<g
 						class="rest"
+						id="rest332"
 						score:alignmentX="5239.279"
 						score:msDuration="813">
 						<text
@@ -7902,6 +8133,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord333"
 						score:alignmentX="5464.626">
 						<score:midiChord>
 							<basicChords>
@@ -7959,8 +8191,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics334">
 							<line
+								id="stem335"
 								x1="5481.039"
 								y1="988.8"
 								x2="5481.039"
@@ -7977,33 +8210,31 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
+								id="ledger336"
 								x1="5431.801"
 								y1="1088"
 								x2="5497.451"
 								y2="1088"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="ledger337"
 								x1="5431.801"
 								y1="1120"
 								x2="5497.451"
 								y2="1120"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="ledger338"
 								x1="5431.801"
 								y1="1152"
 								x2="5497.451"
 								y2="1152"
 								style="stroke:black; stroke-width:4px" />
-							<text
-								x="5464.626"
-								y="908.8"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~12</text>
 						</g>
 					</g>
 					<g
 						class="rest"
+						id="rest339"
 						score:alignmentX="5686.369"
 						score:msDuration="700">
 						<text
@@ -8012,27 +8243,39 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">‰</text>
 					</g>
+					<line
+						id="barline340"
+						x1="5896.395"
+						y1="928"
+						x2="5896.395"
+						y2="1056"
+						style="stroke:black; stroke-width:8px" />
 					<g
-						class="beamBlock">
+						id="beamBlock341">
 						<path
+							id="beam342"
 							fill="white"
 							opacity="0.65"
 							d="M 5996.217 837.12 L 6034.617 838.5836 6034.617 858.7435 5996.217 857.28 z" />
 						<path
+							id="beam343"
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
 							d="M 5996.217 850.56 L 6034.617 852.0236 6034.617 865.4636 5996.217 864 z" />
 						<path
+							id="beam344"
 							fill="white"
 							opacity="0.65"
 							d="M 5996.217 805.12 L 6519.499 825.0643 6519.499 845.2242 5996.217 825.28 z" />
 						<path
+							id="beam345"
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
 							d="M 5996.217 818.56 L 6519.499 838.5043 6519.499 851.9443 5996.217 832 z" />
 						<path
+							id="beam346"
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
@@ -8040,6 +8283,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord347"
 						score:alignmentX="5979.805">
 						<score:midiChord>
 							<basicChords>
@@ -8077,8 +8321,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="69" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics348">
 							<line
+								id="stem349"
 								x1="5996.217"
 								y1="786.56"
 								x2="5996.217"
@@ -8094,16 +8339,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="944"
 								font-size="125.44"
 								font-family="CLicht">#</text>
-							<text
-								x="5979.805"
-								y="767.36"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~7</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord350"
 						score:alignmentX="6110.625">
 						<score:midiChord>
 							<basicChords>
@@ -8141,8 +8381,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="58" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics351">
 							<line
+								id="stem352"
 								x1="6127.038"
 								y1="791.5461"
 								x2="6127.038"
@@ -8158,16 +8399,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="960"
 								font-size="125.44"
 								font-family="CLicht">#</text>
-							<text
-								x="6110.625"
-								y="772.3461"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~7</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord353"
 						score:alignmentX="6241.445">
 						<score:midiChord>
 							<basicChords>
@@ -8209,8 +8445,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="81" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics354">
 							<line
+								id="stem355"
 								x1="6257.858"
 								y1="796.5321"
 								x2="6257.858"
@@ -8221,16 +8458,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="976"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
-							<text
-								x="6241.445"
-								y="777.3322"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~8</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord356"
 						score:alignmentX="6372.266">
 						<score:midiChord>
 							<basicChords>
@@ -8272,8 +8504,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="46" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics357">
 							<line
+								id="stem358"
 								x1="6388.678"
 								y1="801.5182"
 								x2="6388.678"
@@ -8284,16 +8517,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="992"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
-							<text
-								x="6372.266"
-								y="782.3182"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~8</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord359"
 						score:alignmentX="6503.086">
 						<score:midiChord>
 							<basicChords>
@@ -8339,8 +8567,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="92" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics360">
 							<line
+								id="stem361"
 								x1="6519.499"
 								y1="806.5043"
 								x2="6519.499"
@@ -8351,16 +8580,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="1008"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
-							<text
-								x="6503.086"
-								y="787.3043"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~9</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord362"
 						score:alignmentX="6633.906">
 						<score:midiChord>
 							<basicChords>
@@ -8406,8 +8630,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="35" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics363">
 							<line
+								id="stem364"
 								x1="6650.319"
 								y1="811.4904"
 								x2="6650.319"
@@ -8423,16 +8648,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="1040"
 								font-size="125.44"
 								font-family="CLicht">#</text>
-							<text
-								x="6633.906"
-								y="792.2903"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~9</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord365"
 						score:alignmentX="6796.431">
 						<score:midiChord>
 							<basicChords>
@@ -8482,8 +8702,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="104" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics366">
 							<line
+								id="stem367"
 								x1="6812.844"
 								y1="817.6848"
 								x2="6812.844"
@@ -8499,16 +8720,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="1056"
 								font-size="125.44"
 								font-family="CLicht">#</text>
-							<text
-								x="6796.431"
-								y="798.4848"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~10</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord368"
 						score:alignmentX="6990.661">
 						<score:midiChord>
 							<basicChords>
@@ -8558,8 +8774,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="23" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics369">
 							<line
+								id="stem370"
 								x1="7007.074"
 								y1="825.0876"
 								x2="7007.074"
@@ -8575,16 +8792,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="1072"
 								font-size="125.44"
 								font-family="CLicht">#</text>
-							<text
-								x="6990.661"
-								y="805.8876"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~10</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord371"
 						score:alignmentX="7184.891">
 						<score:midiChord>
 							<basicChords>
@@ -8638,8 +8850,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="115" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics372">
 							<line
+								id="stem373"
 								x1="7201.303"
 								y1="832.4905"
 								x2="7201.303"
@@ -8651,21 +8864,17 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
+								id="ledger374"
 								x1="7152.065"
 								y1="1088"
 								x2="7217.716"
 								y2="1088"
 								style="stroke:black; stroke-width:4px" />
-							<text
-								x="7184.891"
-								y="813.2905"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~11</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord375"
 						score:alignmentX="7379.12">
 						<score:midiChord>
 							<basicChords>
@@ -8719,8 +8928,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="12" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics376">
 							<line
+								id="stem377"
 								x1="7395.533"
 								y1="839.8933"
 								x2="7395.533"
@@ -8732,21 +8942,17 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
+								id="ledger378"
 								x1="7346.295"
 								y1="1088"
 								x2="7411.945"
 								y2="1088"
 								style="stroke:black; stroke-width:4px" />
-							<text
-								x="7379.12"
-								y="820.6934"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~11</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord379"
 						score:alignmentX="7585.342">
 						<score:midiChord>
 							<basicChords>
@@ -8804,8 +9010,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="126" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics380">
 							<line
+								id="stem381"
 								x1="7601.754"
 								y1="988.8"
 								x2="7601.754"
@@ -8817,27 +9024,24 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
+								id="ledger382"
 								x1="7552.517"
 								y1="1088"
 								x2="7618.167"
 								y2="1088"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="ledger383"
 								x1="7552.517"
 								y1="1120"
 								x2="7618.167"
 								y2="1120"
 								style="stroke:black; stroke-width:4px" />
-							<text
-								x="7585.342"
-								y="908.8"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~12</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord384"
 						score:alignmentX="7825.657">
 						<score:midiChord>
 							<basicChords>
@@ -8895,8 +9099,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics385">
 							<line
+								id="stem386"
 								x1="7842.069"
 								y1="988.8"
 								x2="7842.069"
@@ -8913,33 +9118,31 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
+								id="ledger387"
 								x1="7792.832"
 								y1="1088"
 								x2="7858.482"
 								y2="1088"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="ledger388"
 								x1="7792.832"
 								y1="1120"
 								x2="7858.482"
 								y2="1120"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="ledger389"
 								x1="7792.832"
 								y1="1152"
 								x2="7858.482"
 								y2="1152"
 								style="stroke:black; stroke-width:4px" />
-							<text
-								x="7825.657"
-								y="908.8"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~12</text>
 						</g>
 					</g>
 					<g
 						class="rest"
+						id="rest390"
 						score:alignmentX="8097.607"
 						score:msDuration="10500">
 						<text
@@ -8948,39 +9151,52 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">∑</text>
 					</g>
+					<line
+						id="barline391"
+						x1="11031.99"
+						y1="926"
+						x2="11031.99"
+						y2="1058"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
 				class="inputStaff"
-				id="p1_sys1_staff9"
+				id="sys1staff9"
 				score:staffName="Input">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys1staff9stafflines">
 					<line
+						id="staffline392"
 						x1="434.56"
 						y1="1312"
 						x2="11032"
 						y2="1312"
 						style="stroke:black; stroke-width:6px" />
 					<line
+						id="staffline393"
 						x1="434.56"
 						y1="1360"
 						x2="11032"
 						y2="1360"
 						style="stroke:black; stroke-width:6px" />
 					<line
+						id="staffline394"
 						x1="434.56"
 						y1="1408"
 						x2="11032"
 						y2="1408"
 						style="stroke:black; stroke-width:6px" />
 					<line
+						id="staffline395"
 						x1="434.56"
 						y1="1456"
 						x2="11032"
 						y2="1456"
 						style="stroke:black; stroke-width:6px" />
 					<line
+						id="staffline396"
 						x1="434.56"
 						y1="1504"
 						x2="11032"
@@ -8988,13 +9204,23 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						style="stroke:black; stroke-width:6px" />
 				</g>
 				<g
-					class="inputVoice">
+					class="inputVoice"
+					id="sys1staff9voice1">
 					<use
+						id="clef397"
 						xlink:href="#trebleClef"
 						x="0"
 						y="0"
 						transform="translate(434.56,1456) scale(188.16)" />
+					<line
+						id="barline398"
+						x1="587.36"
+						y1="1312"
+						x2="587.36"
+						y2="1504"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName399"
 						x="249.28"
 						y="1446.4"
 						text-anchor="middle"
@@ -9002,6 +9228,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						font-family="Times New Roman">Input</text>
 					<g
 						class="inputChord"
+						id="inputChord400"
 						score:alignmentX="708.0109"
 						score:msDuration="150">
 						<inputControls
@@ -9019,14 +9246,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics401">
 							<line
+								id="stem402"
 								x1="683.3919"
 								y1="1293.544"
 								x2="683.3919"
 								y2="1514.899"
 								style="stroke:black; stroke-width:6px; stroke-linecap:round" />
 							<use
+								id="flag403"
 								xlink:href="#Left3Flags"
 								x="0"
 								y="0"
@@ -9045,6 +9274,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest404"
 						score:alignmentX="794.9008"
 						score:msDuration="1350">
 						<text
@@ -9055,6 +9285,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="inputChord"
+						id="inputChord405"
 						score:alignmentX="1169.094"
 						score:msDuration="175">
 						<score:inputNotes>
@@ -9068,14 +9299,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics406">
 							<line
+								id="stem407"
 								x1="1144.475"
 								y1="1317.544"
 								x2="1144.475"
 								y2="1538.899"
 								style="stroke:black; stroke-width:6px; stroke-linecap:round" />
 							<use
+								id="flag408"
 								xlink:href="#Left3Flags"
 								x="0"
 								y="0"
@@ -9094,6 +9327,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest409"
 						score:alignmentX="1255.984"
 						score:msDuration="1325">
 						<text
@@ -9104,6 +9338,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="inputChord"
+						id="inputChord410"
 						score:alignmentX="1623.247"
 						score:msDuration="203">
 						<score:inputNotes>
@@ -9117,14 +9352,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics411">
 							<line
+								id="stem412"
 								x1="1598.628"
 								y1="1341.544"
 								x2="1598.628"
 								y2="1515.859"
 								style="stroke:black; stroke-width:6px; stroke-linecap:round" />
 							<use
+								id="flag413"
 								xlink:href="#Left2Flags"
 								x="0"
 								y="0"
@@ -9138,6 +9375,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest414"
 						score:alignmentX="1710.137"
 						score:msDuration="1297">
 						<text
@@ -9148,6 +9386,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="inputChord"
+						id="inputChord415"
 						score:alignmentX="2069.639"
 						score:msDuration="237">
 						<score:inputNotes>
@@ -9161,14 +9400,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics416">
 							<line
+								id="stem417"
 								x1="2045.021"
 								y1="1365.544"
 								x2="2045.021"
 								y2="1539.859"
 								style="stroke:black; stroke-width:6px; stroke-linecap:round" />
 							<use
+								id="flag418"
 								xlink:href="#Left2Flags"
 								x="0"
 								y="0"
@@ -9182,6 +9423,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest419"
 						score:alignmentX="2156.529"
 						score:msDuration="1263">
 						<text
@@ -9192,6 +9434,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="inputChord"
+						id="inputChord420"
 						score:alignmentX="2506.607"
 						score:msDuration="276">
 						<score:inputNotes>
@@ -9205,14 +9448,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics421">
 							<line
+								id="stem422"
 								x1="2481.989"
 								y1="1389.544"
 								x2="2481.989"
 								y2="1563.859"
 								style="stroke:black; stroke-width:6px; stroke-linecap:round" />
 							<use
+								id="flag423"
 								xlink:href="#Left2Flags"
 								x="0"
 								y="0"
@@ -9226,6 +9471,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest424"
 						score:alignmentX="2593.497"
 						score:msDuration="1224">
 						<text
@@ -9236,6 +9482,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="inputChord"
+						id="inputChord425"
 						score:alignmentX="2932.766"
 						score:msDuration="321">
 						<score:inputNotes>
@@ -9249,14 +9496,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics426">
 							<line
+								id="stem427"
 								x1="2957.385"
 								y1="1252.141"
 								x2="2957.385"
 								y2="1426.456"
 								style="stroke:black; stroke-width:6px; stroke-linecap:round" />
 							<use
+								id="flag428"
 								xlink:href="#Right2Flags"
 								x="0"
 								y="0"
@@ -9275,6 +9524,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest429"
 						score:alignmentX="3044.052"
 						score:msDuration="1179">
 						<text
@@ -9285,6 +9535,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="inputChord"
+						id="inputChord430"
 						score:alignmentX="3370.847"
 						score:msDuration="374">
 						<score:inputNotes>
@@ -9298,14 +9549,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics431">
 							<line
+								id="stem432"
 								x1="3395.466"
 								y1="1276.141"
 								x2="3395.466"
 								y2="1450.456"
 								style="stroke:black; stroke-width:6px; stroke-linecap:round" />
 							<use
+								id="flag433"
 								xlink:href="#Right2Flags"
 								x="0"
 								y="0"
@@ -9324,6 +9577,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest434"
 						score:alignmentX="3489.442"
 						score:msDuration="1126">
 						<text
@@ -9334,6 +9588,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="inputChord"
+						id="inputChord435"
 						score:alignmentX="3801.546"
 						score:msDuration="435">
 						<score:inputNotes>
@@ -9347,14 +9602,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics436">
 							<line
+								id="stem437"
 								x1="3826.165"
 								y1="1299.181"
 								x2="3826.165"
 								y2="1474.456"
 								style="stroke:black; stroke-width:6px; stroke-linecap:round" />
 							<use
+								id="flag438"
 								xlink:href="#Right1Flag"
 								x="0"
 								y="0"
@@ -9373,6 +9630,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest439"
 						score:alignmentX="3922.12"
 						score:msDuration="1065">
 						<text
@@ -9383,6 +9641,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="inputChord"
+						id="inputChord440"
 						score:alignmentX="4217.316"
 						score:msDuration="507">
 						<score:inputNotes>
@@ -9396,14 +9655,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics441">
 							<line
+								id="stem442"
 								x1="4241.935"
 								y1="1323.181"
 								x2="4241.935"
 								y2="1498.456"
 								style="stroke:black; stroke-width:6px; stroke-linecap:round" />
 							<use
+								id="flag443"
 								xlink:href="#Right1Flag"
 								x="0"
 								y="0"
@@ -9417,6 +9678,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest444"
 						score:alignmentX="4357.847"
 						score:msDuration="993">
 						<text
@@ -9427,6 +9689,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="inputChord"
+						id="inputChord445"
 						score:alignmentX="4633.087"
 						score:msDuration="590">
 						<score:inputNotes>
@@ -9440,14 +9703,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics446">
 							<line
+								id="stem447"
 								x1="4657.706"
 								y1="1347.181"
 								x2="4657.706"
 								y2="1522.456"
 								style="stroke:black; stroke-width:6px; stroke-linecap:round" />
 							<use
+								id="flag448"
 								xlink:href="#Right1Flag"
 								x="0"
 								y="0"
@@ -9461,6 +9726,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest449"
 						score:alignmentX="4796.624"
 						score:msDuration="910">
 						<text
@@ -9471,6 +9737,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="inputChord"
+						id="inputChord450"
 						score:alignmentX="5048.856"
 						score:msDuration="687">
 						<score:inputNotes>
@@ -9484,14 +9751,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics451">
 							<line
+								id="stem452"
 								x1="5073.476"
 								y1="1371.181"
 								x2="5073.476"
 								y2="1546.456"
 								style="stroke:black; stroke-width:6px; stroke-linecap:round" />
 							<use
+								id="flag453"
 								xlink:href="#Right1Flag"
 								x="0"
 								y="0"
@@ -9502,6 +9771,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="188.16"
 								font-family="CLicht">œ</text>
 							<line
+								id="ledger454"
 								x1="4999.619"
 								y1="1552"
 								x2="5098.094"
@@ -9511,6 +9781,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest455"
 						score:alignmentX="5239.279"
 						score:msDuration="813">
 						<text
@@ -9521,6 +9792,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="inputChord"
+						id="inputChord456"
 						score:alignmentX="5464.626"
 						score:msDuration="800">
 						<score:inputNotes>
@@ -9534,8 +9806,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics457">
 							<line
+								id="stem458"
 								x1="5489.245"
 								y1="1403.2"
 								x2="5489.245"
@@ -9552,12 +9825,14 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="188.16"
 								font-family="CLicht">#</text>
 							<line
+								id="ledger459"
 								x1="5415.388"
 								y1="1552"
 								x2="5513.864"
 								y2="1552"
 								style="stroke:black; stroke-width:6px" />
 							<line
+								id="ledger460"
 								x1="5415.388"
 								y1="1600"
 								x2="5513.864"
@@ -9567,6 +9842,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest461"
 						score:alignmentX="5686.369"
 						score:msDuration="700">
 						<text
@@ -9575,8 +9851,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="188.16"
 							font-family="CLicht">‰</text>
 					</g>
+					<line
+						id="barline462"
+						x1="5896.395"
+						y1="1312"
+						x2="5896.395"
+						y2="1504"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="inputChord"
+						id="inputChord463"
 						score:alignmentX="5979.805"
 						score:msDuration="1500">
 						<score:inputNotes>
@@ -9592,8 +9876,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics464">
 							<line
+								id="stem465"
 								x1="6004.424"
 								y1="1331.2"
 								x2="6004.424"
@@ -9608,6 +9893,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="inputChord"
+						id="inputChord466"
 						score:alignmentX="6708.949"
 						score:msDuration="1500">
 						<score:inputNotes>
@@ -9623,8 +9909,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics467">
 							<line
+								id="stem468"
 								x1="6733.568"
 								y1="1331.2"
 								x2="6733.568"
@@ -9639,6 +9926,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="inputChord"
+						id="inputChord469"
 						score:alignmentX="7264.1"
 						score:msDuration="1500">
 						<score:inputNotes>
@@ -9652,8 +9940,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics470">
 							<line
+								id="stem471"
 								x1="7288.719"
 								y1="1331.2"
 								x2="7288.719"
@@ -9668,6 +9957,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="inputChord"
+						id="inputChord472"
 						score:alignmentX="7689.838"
 						score:msDuration="1500">
 						<score:inputNotes>
@@ -9681,8 +9971,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics473">
 							<line
+								id="stem474"
 								x1="7714.458"
 								y1="1331.2"
 								x2="7714.458"
@@ -9697,6 +9988,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="inputChord"
+						id="inputChord475"
 						score:alignmentX="8105.607"
 						score:msDuration="1500">
 						<score:inputNotes>
@@ -9710,8 +10002,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics476">
 							<line
+								id="stem477"
 								x1="8130.226"
 								y1="1331.2"
 								x2="8130.226"
@@ -9726,6 +10019,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="inputChord"
+						id="inputChord478"
 						score:alignmentX="8521.375"
 						score:msDuration="1500">
 						<score:inputNotes>
@@ -9739,8 +10033,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics479">
 							<line
+								id="stem480"
 								x1="8545.994"
 								y1="1331.2"
 								x2="8545.994"
@@ -9755,6 +10050,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="inputChord"
+						id="inputChord481"
 						score:alignmentX="8937.146"
 						score:msDuration="1500">
 						<score:inputNotes>
@@ -9768,8 +10064,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics482">
 							<line
+								id="stem483"
 								x1="8961.765"
 								y1="1331.2"
 								x2="8961.765"
@@ -9784,6 +10081,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="inputChord"
+						id="inputChord484"
 						score:alignmentX="9352.914"
 						score:msDuration="1500">
 						<score:inputNotes>
@@ -9797,8 +10095,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics485">
 							<line
+								id="stem486"
 								x1="9377.533"
 								y1="1331.2"
 								x2="9377.533"
@@ -9813,6 +10112,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest487"
 						score:alignmentX="9756.682"
 						score:msDuration="4500">
 						<text
@@ -9821,130 +10121,42 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="188.16"
 							font-family="CLicht">∑</text>
 					</g>
-				</g>
-			</g>
-			<g
-				class="barlines">
-				<g
-					class="barline">
 					<line
-						x1="587.36"
-						y1="928"
-						x2="587.36"
-						y2="1056"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="5896.395"
-						y1="928"
-						x2="5896.395"
-						y2="1056"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="11031.99"
-						y1="926"
-						x2="11031.99"
-						y2="1058"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="587.36"
-						y1="1056"
-						x2="587.36"
-						y2="1312"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="587.36"
-						y1="1312"
-						x2="587.36"
-						y2="1504"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="5896.395"
-						y1="1312"
-						x2="5896.395"
-						y2="1504"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
+						id="barline488"
 						x1="11031.99"
 						y1="1310"
 						x2="11031.99"
 						y2="1506"
-						style="stroke:#000000; stroke-width:8px" />
+						style="stroke:black; stroke-width:8px" />
 				</g>
+			</g>
+			<g
+				id="sys1connectors">
+				<line
+					x1="587.36"
+					y1="1056"
+					x2="587.36"
+					y2="1312"
+					style="stroke:black; stroke-width:8px" />
 			</g>
 		</g>
 		<g
 			class="system"
-			id="page1_system2">
-			<g
-				class="markers">
-				<g
-					class="startMarker">
-					<line
-						x1="0"
-						y1="0"
-						x2="0"
-						y2="0"
-						style="stroke-width:1px" />
-					<circle
-						cx="0"
-						cy="0"
-						r="0"
-						style="stroke-width:1px" />
-				</g>
-				<g
-					class="runningMarker">
-					<line
-						x1="0"
-						y1="0"
-						x2="0"
-						y2="0"
-						style="stroke-width:1px" />
-				</g>
-				<g
-					class="endMarker">
-					<line
-						x1="0"
-						y1="0"
-						x2="0"
-						y2="0"
-						style="stroke-width:1px" />
-					<rect
-						x="0"
-						y="0"
-						width="0"
-						height="0"
-						style="stroke-width:1px" />
-				</g>
-			</g>
+			id="sys2">
 			<g
 				class="outputStaff"
-				id="p1_sys2_staff1"
+				id="sys2invisibleStaff1"
 				score:invisible="1">
 				<g
-					class="outputVoice">
+					class="outputVoice"
+					id="sys2staff1voice1">
 					<g
 						class="rest"
+						id="rest489"
 						score:msDuration="1500" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord490">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -9983,7 +10195,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord491">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -10022,7 +10235,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord492">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -10065,7 +10279,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord493">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -10108,7 +10323,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord494">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -10155,7 +10371,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord495">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -10202,7 +10419,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord496">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -10253,7 +10471,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord497">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -10304,7 +10523,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord498">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -10359,7 +10579,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord499">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -10414,7 +10635,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord500">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -10473,7 +10695,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord501">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -10533,23 +10756,28 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest502"
 						score:msDuration="3000" />
 					<g
 						class="rest"
+						id="rest503"
 						score:msDuration="6000" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys2_staff2"
+				id="sys2invisibleStaff2"
 				score:invisible="1">
 				<g
-					class="outputVoice">
+					class="outputVoice"
+					id="sys2staff2voice1">
 					<g
 						class="rest"
+						id="rest504"
 						score:msDuration="3000" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord505">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -10587,7 +10815,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord506">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -10625,7 +10854,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord507">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -10667,7 +10897,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord508">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -10709,7 +10940,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord509">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -10755,7 +10987,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord510">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -10801,7 +11034,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord511">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -10851,7 +11085,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord512">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -10901,7 +11136,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord513">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -10955,7 +11191,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord514">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -11009,7 +11246,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord515">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -11067,7 +11305,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord516">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -11126,23 +11365,28 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest517"
 						score:msDuration="1500" />
 					<g
 						class="rest"
+						id="rest518"
 						score:msDuration="6000" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys2_staff3"
+				id="sys2invisibleStaff3"
 				score:invisible="1">
 				<g
-					class="outputVoice">
+					class="outputVoice"
+					id="sys2staff3voice1">
 					<g
 						class="rest"
+						id="rest519"
 						score:msDuration="4500" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord520">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -11176,7 +11420,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord521">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -11214,7 +11459,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord522">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -11256,7 +11502,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord523">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -11302,7 +11549,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord524">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -11352,7 +11600,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord525">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -11406,7 +11655,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord526">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -11464,7 +11714,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord527">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -11522,7 +11773,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord528">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -11580,7 +11832,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord529">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -11638,7 +11891,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord530">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -11696,7 +11950,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord531">
 						<score:midiChord>
 							<basicChords>
 								<basicChord
@@ -11755,23 +12010,28 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest532"
 						score:msDuration="6000" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys2_staff4"
+				id="sys2invisibleStaff4"
 				score:invisible="1">
 				<g
-					class="outputVoice">
+					class="outputVoice"
+					id="sys2staff4voice1">
 					<g
 						class="rest"
+						id="rest533"
 						score:msDuration="5950" />
 					<g
 						class="rest"
+						id="rest534"
 						score:msDuration="50" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord535">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -11787,7 +12047,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord536">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -11803,7 +12064,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord537">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -11819,7 +12081,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord538">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -11835,7 +12098,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord539">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -11851,7 +12115,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord540">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -11867,7 +12132,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord541">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -11883,7 +12149,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord542">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -11899,7 +12166,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord543">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -11915,7 +12183,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord544">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -11931,7 +12200,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord545">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -11947,7 +12217,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord546">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -11964,23 +12235,28 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest547"
 						score:msDuration="4500" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys2_staff5"
+				id="sys2invisibleStaff5"
 				score:invisible="1">
 				<g
-					class="outputVoice">
+					class="outputVoice"
+					id="sys2staff5voice1">
 					<g
 						class="rest"
+						id="rest548"
 						score:msDuration="5950" />
 					<g
 						class="rest"
+						id="rest549"
 						score:msDuration="1550" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord550">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -11997,7 +12273,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord551">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -12014,7 +12291,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord552">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -12031,7 +12309,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord553">
 						<score:midiChord
 							pitchWheelDeviation="13">
 							<basicChords>
@@ -12048,7 +12327,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord554">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -12065,7 +12345,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord555">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -12082,7 +12363,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord556">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -12099,7 +12381,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord557">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -12116,7 +12399,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord558">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -12133,7 +12417,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord559">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -12150,7 +12435,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord560">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -12167,7 +12453,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord561">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -12185,23 +12472,28 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest562"
 						score:msDuration="3000" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys2_staff6"
+				id="sys2invisibleStaff6"
 				score:invisible="1">
 				<g
-					class="outputVoice">
+					class="outputVoice"
+					id="sys2staff6voice1">
 					<g
 						class="rest"
+						id="rest563"
 						score:msDuration="5950" />
 					<g
 						class="rest"
+						id="rest564"
 						score:msDuration="3050" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord565">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -12241,7 +12533,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord566">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -12277,7 +12570,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord567">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -12321,7 +12615,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord568">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -12353,7 +12648,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord569">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -12401,7 +12697,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord570">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -12429,7 +12726,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord571">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -12481,7 +12779,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord572">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -12505,7 +12804,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord573">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -12561,7 +12861,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord574">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -12581,7 +12882,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord575">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -12641,7 +12943,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord576">
 						<score:midiChord
 							pitchWheelDeviation="5">
 							<basicChords>
@@ -12662,23 +12965,28 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest577"
 						score:msDuration="1500" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys2_staff7"
+				id="sys2invisibleStaff7"
 				score:invisible="1">
 				<g
-					class="outputVoice">
+					class="outputVoice"
+					id="sys2staff7voice1">
 					<g
 						class="rest"
+						id="rest578"
 						score:msDuration="5950" />
 					<g
 						class="rest"
+						id="rest579"
 						score:msDuration="4550" />
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord580">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -12694,7 +13002,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord581">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -12733,7 +13042,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord582">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -12777,7 +13087,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord583">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -12809,7 +13120,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord584">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -12857,7 +13169,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord585">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -12885,7 +13198,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord586">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -12937,7 +13251,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord587">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -12961,7 +13276,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord588">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -13017,7 +13333,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord589">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -13037,7 +13354,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord590">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -13097,7 +13415,8 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						</score:midiChord>
 					</g>
 					<g
-						class="outputChord">
+						class="outputChord"
+						id="outputChord591">
 						<score:midiChord
 							pitchWheelDeviation="1">
 							<basicChords>
@@ -13135,97 +13454,121 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys2_staff8"
+				id="sys2staff8"
 				score:staffName="pal. 1">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys2staff8stafflines">
 					<line
-						x1="400"
-						y1="2208"
-						x2="11032"
-						y2="2208"
-						style="stroke:black; stroke-width:4px" />
-					<line
-						x1="400"
-						y1="2240"
-						x2="11032"
-						y2="2240"
-						style="stroke:black; stroke-width:4px" />
-					<line
+						id="staffline592"
 						x1="400"
 						y1="2272"
 						x2="11032"
 						y2="2272"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline593"
 						x1="400"
 						y1="2304"
 						x2="11032"
 						y2="2304"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline594"
 						x1="400"
 						y1="2336"
 						x2="11032"
 						y2="2336"
 						style="stroke:black; stroke-width:4px" />
+					<line
+						id="staffline595"
+						x1="400"
+						y1="2368"
+						x2="11032"
+						y2="2368"
+						style="stroke:black; stroke-width:4px" />
+					<line
+						id="staffline596"
+						x1="400"
+						y1="2400"
+						x2="11032"
+						y2="2400"
+						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice">
+					class="outputVoice"
+					id="sys2staff8voice1">
 					<use
+						id="clef597"
 						xlink:href="#bassClef8"
 						x="0"
 						y="0"
-						transform="translate(449.6,2240) scale(125.44)" />
+						transform="translate(449.6,2304) scale(125.44)" />
+					<line
+						id="barline598"
+						x1="552.8"
+						y1="2272"
+						x2="552.8"
+						y2="2400"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName599"
 						x="232"
-						y="2297.6"
+						y="2361.6"
 						text-anchor="middle"
 						font-size="80"
 						font-family="Times New Roman">pal. 1</text>
 					<g
-						id="barnumber44">
+						id="barNumber600">
 						<text
+							id="number601"
 							x="552.8"
-							y="1901.901"
+							y="1965.901"
 							text-anchor="middle"
 							font-size="64"
 							font-family="Arial">3</text>
 						<rect
+							id="box602"
 							x="507.056"
-							y="1834.461"
+							y="1898.461"
 							width="91.48804"
 							height="89.43994"
 							style="stroke:black; stroke-width:4.8px; fill:none" />
 					</g>
 					<g
-						class="beamBlock">
+						id="beamBlock603">
 						<path
+							id="beam604"
 							fill="white"
 							opacity="0.65"
-							d="M 652.6226 2117.12 L 691.0226 2118.104 691.0226 2138.264 652.6226 2137.28 z" />
+							d="M 652.6226 2181.12 L 691.0226 2182.104 691.0226 2202.264 652.6226 2201.28 z" />
 						<path
+							id="beam605"
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 652.6226 2130.56 L 691.0226 2131.544 691.0226 2144.984 652.6226 2144 z" />
+							d="M 652.6226 2194.56 L 691.0226 2195.544 691.0226 2208.984 652.6226 2208 z" />
 						<path
+							id="beam606"
 							fill="white"
 							opacity="0.65"
-							d="M 652.6226 2085.12 L 1257.75 2100.632 1257.75 2120.792 652.6226 2105.28 z" />
+							d="M 652.6226 2149.12 L 1257.75 2164.632 1257.75 2184.792 652.6226 2169.28 z" />
 						<path
+							id="beam607"
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 652.6226 2098.56 L 1257.75 2114.072 1257.75 2127.511 652.6226 2112 z" />
+							d="M 652.6226 2162.56 L 1257.75 2178.072 1257.75 2191.511 652.6226 2176 z" />
 						<path
+							id="beam608"
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 652.6226 2066.56 L 2733.237 2119.893 2733.237 2133.333 652.6226 2080 z" />
+							d="M 652.6226 2130.56 L 2733.237 2183.893 2733.237 2197.333 652.6226 2144 z" />
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord609"
 						score:alignmentX="636.2099">
 						<score:midiChord>
 							<basicChords>
@@ -13263,33 +13606,29 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="69" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics610">
 							<line
+								id="stem611"
 								x1="652.6226"
-								y1="2066.56"
+								y1="2130.56"
 								x2="652.6226"
-								y2="2220.304"
+								y2="2284.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="617.7972"
-								y="2224"
+								y="2288"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<text
 								x="578.625"
-								y="2224"
+								y="2288"
 								font-size="125.44"
 								font-family="CLicht">#</text>
-							<text
-								x="636.2099"
-								y="2047.36"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~7</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord612"
 						score:alignmentX="767.0297">
 						<score:midiChord>
 							<basicChords>
@@ -13327,33 +13666,29 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="58" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics613">
 							<line
+								id="stem614"
 								x1="783.4424"
-								y1="2069.913"
+								y1="2133.913"
 								x2="783.4424"
-								y2="2236.304"
+								y2="2300.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="748.6171"
-								y="2240"
+								y="2304"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<text
 								x="709.4448"
-								y="2240"
+								y="2304"
 								font-size="125.44"
 								font-family="CLicht">#</text>
-							<text
-								x="767.0297"
-								y="2050.713"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~7</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord615"
 						score:alignmentX="902.1096">
 						<score:midiChord>
 							<basicChords>
@@ -13395,28 +13730,24 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="81" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics616">
 							<line
+								id="stem617"
 								x1="918.5222"
-								y1="2073.376"
+								y1="2137.376"
 								x2="918.5222"
-								y2="2252.304"
+								y2="2316.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="883.6969"
-								y="2256"
+								y="2320"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
-							<text
-								x="902.1096"
-								y="2054.176"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~8</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord618"
 						score:alignmentX="1058.582">
 						<score:midiChord>
 							<basicChords>
@@ -13458,28 +13789,24 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="46" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics619">
 							<line
+								id="stem620"
 								x1="1074.995"
-								y1="2077.387"
+								y1="2141.387"
 								x2="1074.995"
-								y2="2268.304"
+								y2="2332.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="1040.169"
-								y="2272"
+								y="2336"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
-							<text
-								x="1058.582"
-								y="2058.187"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~8</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord621"
 						score:alignmentX="1241.337">
 						<score:midiChord>
 							<basicChords>
@@ -13525,28 +13852,24 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="92" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics622">
 							<line
+								id="stem623"
 								x1="1257.75"
-								y1="2082.072"
+								y1="2146.072"
 								x2="1257.75"
-								y2="2284.304"
+								y2="2348.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="1222.924"
-								y="2288"
+								y="2352"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
-							<text
-								x="1241.337"
-								y="2062.872"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~9</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord624"
 						score:alignmentX="1454.042">
 						<score:midiChord>
 							<basicChords>
@@ -13592,33 +13915,29 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="35" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics625">
 							<line
+								id="stem626"
 								x1="1470.454"
-								y1="2087.524"
+								y1="2151.524"
 								x2="1470.454"
-								y2="2316.304"
+								y2="2380.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="1435.629"
-								y="2320"
+								y="2384"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<text
 								x="1396.457"
-								y="2320"
+								y="2384"
 								font-size="125.44"
 								font-family="CLicht">#</text>
-							<text
-								x="1454.042"
-								y="2068.324"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~9</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord627"
 						score:alignmentX="1701.586">
 						<score:midiChord>
 							<basicChords>
@@ -13668,33 +13987,29 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="104" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics628">
 							<line
+								id="stem629"
 								x1="1717.999"
-								y1="2093.869"
+								y1="2157.869"
 								x2="1717.999"
-								y2="2332.304"
+								y2="2396.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="1683.174"
-								y="2336"
+								y="2400"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<text
 								x="1644.001"
-								y="2336"
+								y="2400"
 								font-size="125.44"
 								font-family="CLicht">#</text>
-							<text
-								x="1701.586"
-								y="2074.669"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~10</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord630"
 						score:alignmentX="1990.083">
 						<score:midiChord>
 							<basicChords>
@@ -13744,33 +14059,29 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="23" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics631">
 							<line
+								id="stem632"
 								x1="2006.495"
-								y1="2101.264"
+								y1="2165.264"
 								x2="2006.495"
-								y2="2348.304"
+								y2="2412.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="1971.67"
-								y="2352"
+								y="2416"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<text
 								x="1932.498"
-								y="2352"
+								y="2416"
 								font-size="125.44"
 								font-family="CLicht">#</text>
-							<text
-								x="1990.083"
-								y="2082.064"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~10</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord633"
 						score:alignmentX="2325.643">
 						<score:midiChord>
 							<basicChords>
@@ -13824,34 +14135,31 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="115" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics634">
 							<line
+								id="stem635"
 								x1="2342.056"
-								y1="2109.866"
+								y1="2173.866"
 								x2="2342.056"
-								y2="2364.304"
+								y2="2428.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="2307.23"
-								y="2368"
+								y="2432"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
+								id="ledger636"
 								x1="2292.818"
-								y1="2368"
+								y1="2432"
 								x2="2358.468"
-								y2="2368"
+								y2="2432"
 								style="stroke:black; stroke-width:4px" />
-							<text
-								x="2325.643"
-								y="2090.666"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~11</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord637"
 						score:alignmentX="2716.824">
 						<score:midiChord>
 							<basicChords>
@@ -13905,34 +14213,31 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="12" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics638">
 							<line
+								id="stem639"
 								x1="2733.237"
-								y1="2119.893"
+								y1="2183.893"
 								x2="2733.237"
-								y2="2380.304"
+								y2="2444.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="2698.412"
-								y="2384"
+								y="2448"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
+								id="ledger640"
 								x1="2683.999"
-								y1="2368"
+								y1="2432"
 								x2="2749.65"
-								y2="2368"
+								y2="2432"
 								style="stroke:black; stroke-width:4px" />
-							<text
-								x="2716.824"
-								y="2100.693"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~11</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord641"
 						score:alignmentX="3171.573">
 						<score:midiChord>
 							<basicChords>
@@ -13990,40 +14295,38 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="126" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics642">
 							<line
+								id="stem643"
 								x1="3187.985"
-								y1="2268.8"
+								y1="2332.8"
 								x2="3187.985"
-								y2="2396.304"
+								y2="2460.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="3153.16"
-								y="2400"
+								y="2464"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
+								id="ledger644"
 								x1="3138.748"
-								y1="2368"
+								y1="2432"
 								x2="3204.398"
-								y2="2368"
+								y2="2432"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="ledger645"
 								x1="3138.748"
-								y1="2400"
+								y1="2464"
 								x2="3204.398"
-								y2="2400"
+								y2="2464"
 								style="stroke:black; stroke-width:4px" />
-							<text
-								x="3171.573"
-								y="2188.8"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~12</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord646"
 						score:alignmentX="3701.501">
 						<score:midiChord>
 							<basicChords>
@@ -14081,129 +14384,175 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								pan="0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics647">
 							<line
+								id="stem648"
 								x1="3717.914"
-								y1="2268.8"
+								y1="2332.8"
 								x2="3717.914"
-								y2="2428.304"
+								y2="2492.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
 								x="3683.089"
-								y="2432"
+								y="2496"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<text
 								x="3630.521"
-								y="2432"
+								y="2496"
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
-								x1="3668.676"
-								y1="2368"
-								x2="3734.326"
-								y2="2368"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="3668.676"
-								y1="2400"
-								x2="3734.326"
-								y2="2400"
-								style="stroke:black; stroke-width:4px" />
-							<line
+								id="ledger649"
 								x1="3668.676"
 								y1="2432"
 								x2="3734.326"
 								y2="2432"
 								style="stroke:black; stroke-width:4px" />
-							<text
-								x="3701.501"
-								y="2188.8"
-								text-anchor="middle"
-								font-size="94.08"
-								font-family="Estrangelo Edessa">~12</text>
 							<line
+								id="ledger650"
+								x1="3668.676"
+								y1="2464"
+								x2="3734.326"
+								y2="2464"
+								style="stroke:black; stroke-width:4px" />
+							<line
+								id="ledger651"
+								x1="3668.676"
+								y1="2496"
+								x2="3734.326"
+								y2="2496"
+								style="stroke:black; stroke-width:4px" />
+							<line
+								id="extender652"
 								x1="3742.326"
-								y1="2432"
+								y1="2496"
 								x2="4449.559"
-								y2="2432"
+								y2="2496"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline653"
+						x1="4304.274"
+						y1="2272"
+						x2="4304.274"
+						y2="2400"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest654"
 						score:alignmentX="4472.638"
 						score:msDuration="4500">
 						<text
 							x="4454.359"
-							y="2272"
+							y="2336"
 							font-size="125.44"
 							font-family="CLicht">∑</text>
 					</g>
+					<line
+						id="barline655"
+						x1="7247.133"
+						y1="2272"
+						x2="7247.133"
+						y2="2400"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest656"
 						score:alignmentX="7302.279"
 						score:msDuration="6000">
 						<text
 							x="7284"
-							y="2272"
+							y="2336"
 							font-size="125.44"
 							font-family="CLicht">∑</text>
 					</g>
+					<line
+						id="endBarlineLeft657"
+						x1="11008.01"
+						y1="2270"
+						x2="11008.01"
+						y2="2402"
+						style="stroke:black; stroke-width:8px" />
+					<line
+						id="endBarlineRight658"
+						x1="11032.01"
+						y1="2270"
+						x2="11032.01"
+						y2="2402"
+						style="stroke:black; stroke-width:16px" />
 				</g>
 			</g>
 			<g
 				class="inputStaff"
-				id="p1_sys2_staff9"
+				id="sys2staff9"
 				score:staffName="in">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys2staff9stafflines">
 					<line
+						id="staffline659"
 						x1="400"
-						y1="2528"
+						y1="2592"
 						x2="11032"
-						y2="2528"
+						y2="2592"
 						style="stroke:black; stroke-width:6px" />
 					<line
+						id="staffline660"
 						x1="400"
-						y1="2576"
+						y1="2640"
 						x2="11032"
-						y2="2576"
+						y2="2640"
 						style="stroke:black; stroke-width:6px" />
 					<line
+						id="staffline661"
 						x1="400"
-						y1="2624"
+						y1="2688"
 						x2="11032"
-						y2="2624"
+						y2="2688"
 						style="stroke:black; stroke-width:6px" />
 					<line
+						id="staffline662"
 						x1="400"
-						y1="2672"
+						y1="2736"
 						x2="11032"
-						y2="2672"
+						y2="2736"
 						style="stroke:black; stroke-width:6px" />
 					<line
+						id="staffline663"
 						x1="400"
-						y1="2720"
+						y1="2784"
 						x2="11032"
-						y2="2720"
+						y2="2784"
 						style="stroke:black; stroke-width:6px" />
 				</g>
 				<g
-					class="inputVoice">
+					class="inputVoice"
+					id="sys2staff9voice1">
 					<use
+						id="clef664"
 						xlink:href="#trebleClef"
 						x="0"
 						y="0"
-						transform="translate(400,2672) scale(188.16)" />
+						transform="translate(400,2736) scale(188.16)" />
+					<line
+						id="barline665"
+						x1="552.8"
+						y1="2592"
+						x2="552.8"
+						y2="2784"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName666"
 						x="232"
-						y="2662.4"
+						y="2726.4"
 						text-anchor="middle"
 						font-size="120"
 						font-family="Times New Roman">in</text>
 					<g
 						class="inputChord"
+						id="inputChord667"
 						score:alignmentX="636.2099"
 						score:msDuration="1500">
 						<score:inputNotes>
@@ -14223,22 +14572,24 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics668">
 							<line
+								id="stem669"
 								x1="660.8289"
-								y1="2547.2"
+								y1="2611.2"
 								x2="660.8289"
-								y2="2714.456"
+								y2="2778.456"
 								style="stroke:black; stroke-width:6px; stroke-linecap:round" />
 							<text
 								x="608.5909"
-								y="2720"
+								y="2784"
 								font-size="188.16"
 								font-family="CLicht">œ</text>
 						</g>
 					</g>
 					<g
 						class="inputChord"
+						id="inputChord670"
 						score:alignmentX="1568.34"
 						score:msDuration="1500">
 						<score:inputNotes>
@@ -14258,22 +14609,24 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics671">
 							<line
+								id="stem672"
 								x1="1592.959"
-								y1="2547.2"
+								y1="2611.2"
 								x2="1592.959"
-								y2="2714.456"
+								y2="2778.456"
 								style="stroke:black; stroke-width:6px; stroke-linecap:round" />
 							<text
 								x="1540.721"
-								y="2720"
+								y="2784"
 								font-size="188.16"
 								font-family="CLicht">œ</text>
 						</g>
 					</g>
 					<g
 						class="inputChord"
+						id="inputChord673"
 						score:alignmentX="2485.172"
 						score:msDuration="1500">
 						<score:inputNotes>
@@ -14293,22 +14646,24 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics674">
 							<line
+								id="stem675"
 								x1="2509.791"
-								y1="2547.2"
+								y1="2611.2"
 								x2="2509.791"
-								y2="2714.456"
+								y2="2778.456"
 								style="stroke:black; stroke-width:6px; stroke-linecap:round" />
 							<text
 								x="2457.553"
-								y="2720"
+								y="2784"
 								font-size="188.16"
 								font-family="CLicht">œ</text>
 						</g>
 					</g>
 					<g
 						class="inputChord"
+						id="inputChord676"
 						score:alignmentX="3402.003"
 						score:msDuration="1500">
 						<score:inputNotes>
@@ -14328,28 +14683,38 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics677">
 							<line
+								id="stem678"
 								x1="3426.622"
-								y1="2547.2"
+								y1="2611.2"
 								x2="3426.622"
-								y2="2714.456"
+								y2="2778.456"
 								style="stroke:black; stroke-width:6px; stroke-linecap:round" />
 							<text
 								x="3374.384"
-								y="2720"
+								y="2784"
 								font-size="188.16"
 								font-family="CLicht">œ</text>
 							<line
+								id="extender679"
 								x1="3441.148"
-								y1="2720"
+								y1="2784"
 								x2="4441.493"
-								y2="2720"
+								y2="2784"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline680"
+						x1="4304.274"
+						y1="2592"
+						x2="4304.274"
+						y2="2784"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="inputChord"
+						id="inputChord681"
 						score:alignmentX="4480.638"
 						score:msDuration="1500">
 						<score:inputNotes>
@@ -14367,22 +14732,24 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics682">
 							<line
+								id="stem683"
 								x1="4505.257"
-								y1="2547.2"
+								y1="2611.2"
 								x2="4505.257"
-								y2="2714.456"
+								y2="2778.456"
 								style="stroke:black; stroke-width:6px; stroke-linecap:round" />
 							<text
 								x="4453.019"
-								y="2720"
+								y="2784"
 								font-size="188.16"
 								font-family="CLicht">œ</text>
 						</g>
 					</g>
 					<g
 						class="inputChord"
+						id="inputChord684"
 						score:alignmentX="5397.469"
 						score:msDuration="1500">
 						<score:inputNotes>
@@ -14400,22 +14767,24 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics685">
 							<line
+								id="stem686"
 								x1="5422.088"
-								y1="2547.2"
+								y1="2611.2"
 								x2="5422.088"
-								y2="2714.456"
+								y2="2778.456"
 								style="stroke:black; stroke-width:6px; stroke-linecap:round" />
 							<text
 								x="5369.85"
-								y="2720"
+								y="2784"
 								font-size="188.16"
 								font-family="CLicht">œ</text>
 						</g>
 					</g>
 					<g
 						class="inputChord"
+						id="inputChord687"
 						score:alignmentX="6314.301"
 						score:msDuration="1500">
 						<score:inputNotes>
@@ -14433,22 +14802,31 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics688">
 							<line
+								id="stem689"
 								x1="6338.92"
-								y1="2547.2"
+								y1="2611.2"
 								x2="6338.92"
-								y2="2714.456"
+								y2="2778.456"
 								style="stroke:black; stroke-width:6px; stroke-linecap:round" />
 							<text
 								x="6286.682"
-								y="2720"
+								y="2784"
 								font-size="188.16"
 								font-family="CLicht">œ</text>
 						</g>
 					</g>
+					<line
+						id="barline690"
+						x1="7247.133"
+						y1="2592"
+						x2="7247.133"
+						y2="2784"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="inputChord"
+						id="inputChord691"
 						score:alignmentX="7310.279"
 						score:msDuration="1500">
 						<score:inputNotes>
@@ -14466,152 +14844,63 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</inputNote>
 						</score:inputNotes>
 						<g
-							class="graphics">
+							id="graphics692">
 							<line
+								id="stem693"
 								x1="7334.898"
-								y1="2547.2"
+								y1="2611.2"
 								x2="7334.898"
-								y2="2714.456"
+								y2="2778.456"
 								style="stroke:black; stroke-width:6px; stroke-linecap:round" />
 							<text
 								x="7282.66"
-								y="2720"
+								y="2784"
 								font-size="188.16"
 								font-family="CLicht">œ</text>
 						</g>
 					</g>
 					<g
 						class="rest"
+						id="rest694"
 						score:alignmentX="8215.111"
 						score:msDuration="4500">
 						<text
 							x="8187.692"
-							y="2624"
+							y="2688"
 							font-size="188.16"
 							font-family="CLicht">∑</text>
 					</g>
+					<line
+						id="endBarlineLeft695"
+						x1="11008.01"
+						y1="2590"
+						x2="11008.01"
+						y2="2786"
+						style="stroke:black; stroke-width:8px" />
+					<line
+						id="endBarlineRight696"
+						x1="11032.01"
+						y1="2590"
+						x2="11032.01"
+						y2="2786"
+						style="stroke:black; stroke-width:16px" />
 				</g>
 			</g>
 			<g
-				class="barlines">
-				<g
-					class="barline">
-					<line
-						x1="552.8"
-						y1="2208"
-						x2="552.8"
-						y2="2336"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="4304.274"
-						y1="2208"
-						x2="4304.274"
-						y2="2336"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7247.133"
-						y1="2208"
-						x2="7247.133"
-						y2="2336"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="11008.01"
-						y1="2206"
-						x2="11008.01"
-						y2="2338"
-						style="stroke:#000000; stroke-width:8px" />
-					<line
-						x1="11032.01"
-						y1="2206"
-						x2="11032.01"
-						y2="2338"
-						style="stroke:#000000; stroke-width:16px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="552.8"
-						y1="2336"
-						x2="552.8"
-						y2="2528"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="552.8"
-						y1="2528"
-						x2="552.8"
-						y2="2720"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="4304.274"
-						y1="2528"
-						x2="4304.274"
-						y2="2720"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7247.133"
-						y1="2528"
-						x2="7247.133"
-						y2="2720"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="11008.01"
-						y1="2526"
-						x2="11008.01"
-						y2="2722"
-						style="stroke:#000000; stroke-width:8px" />
-					<line
-						x1="11032.01"
-						y1="2526"
-						x2="11032.01"
-						y2="2722"
-						style="stroke:#000000; stroke-width:16px" />
-				</g>
+				id="sys2connectors">
+				<line
+					x1="552.8"
+					y1="2400"
+					x2="552.8"
+					y2="2592"
+					style="stroke:black; stroke-width:8px" />
 			</g>
 		</g>
 	</g>
 	<g
 		inkscape:groupmode="layer"
 		id="layer3"
-		inkscape:label="score annotations"
-		style="display:inline" />
-	<g
-		inkscape:groupmode="layer"
-		id="layer4"
 		inkscape:label="user annotations"
 		style="display:inline"
 		sodipodi:insensitive="true" />
-	<g
-		inkscape:groupmode="layer"
-		id="layer5"
-		inkscape:label="transparent, clickable surface"
-		style="display:inline"
-		sodipodi:insensitive="true">
-		<rect
-			x="0"
-			y="0"
-			width="11432"
-			height="6976"
-			style="stroke:none; fill:#ffffff; fill-opacity:0" />
-	</g>
 </svg>

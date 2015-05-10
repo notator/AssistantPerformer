@@ -4,24 +4,22 @@
 	version="1.1"
 	width="1010"
 	height="1237"
-	viewBox="0 0 8080 9888"
-	onload="onLoad()">
-	<script
-		xlink:href="../../ap/SVG.js"
-		type="text/javascript"></script>
+	viewBox="0 0 8080 9896">
 	<sodipodi:namedview
 		inkscape:window-maximized="1"
-		inkscape:current-layer="layer3" />
-	<title>Song Six, page 1 of 13</title>
-	<metadata>
+		inkscape:current-layer="layer2" />
+	<title
+		id="pageTitle">Song Six, page 1 of 14</title>
+	<metadata
+		id="metadata">
 		<rdf:RDF>
 			<cc:Work
 				rdf:about="">
 				<dc:format>image/svg+xml</dc:format>
 				<dc:type
 					rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-				<dc:title>Song Six, page 1 of 13</dc:title>
-				<dc:date>Monday 27.04.2015, 16:38:13</dc:date>
+				<dc:title>Song Six, page 1 of 14</dc:title>
+				<dc:date>Saturday 09.05.2015, 12:48:24</dc:date>
 				<dc:creator>
 					<cc:Agent>
 						<dc:title>James Ingram</dc:title>
@@ -268,7 +266,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 	<g
 		inkscape:groupmode="layer"
 		id="layer1"
-		inkscape:label="boundary"
+		inkscape:label="frame"
 		style="display:inline"
 		sodipodi:insensitive="true">
 		<rect
@@ -281,22 +279,26 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 	<g
 		inkscape:groupmode="layer"
 		id="layer2"
-		inkscape:label="moritz"
+		inkscape:label="score"
 		style="display:inline"
 		sodipodi:insensitive="true">
 		<text
+			id="timeStamp"
 			x="80"
 			y="80"
 			font-size="72"
-			font-family="Arial">Song Six: page 1, Monday 27.04.2015, 16:38:12</text>
-		<g>
+			font-family="Arial">Song Six: page 1, Saturday 09.05.2015, 12:48:24</text>
+		<g
+			id="titles">
 			<text
+				id="mainTitle"
 				x="4040"
 				y="400"
 				text-anchor="middle"
 				font-size="256"
 				font-family="Estrangelo Edessa">Song Six</text>
 			<text
+				id="author"
 				x="7680"
 				y="400"
 				text-anchor="end"
@@ -305,79 +307,44 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 		</g>
 		<g
 			class="system"
-			id="page1_system1">
-			<g
-				class="markers">
-				<g
-					class="startMarker">
-					<line
-						x1="0"
-						y1="0"
-						x2="0"
-						y2="0"
-						style="stroke-width:1px" />
-					<circle
-						cx="0"
-						cy="0"
-						r="0"
-						style="stroke-width:1px" />
-				</g>
-				<g
-					class="runningMarker">
-					<line
-						x1="0"
-						y1="0"
-						x2="0"
-						y2="0"
-						style="stroke-width:1px" />
-				</g>
-				<g
-					class="endMarker">
-					<line
-						x1="0"
-						y1="0"
-						x2="0"
-						y2="0"
-						style="stroke-width:1px" />
-					<rect
-						x="0"
-						y="0"
-						width="0"
-						height="0"
-						style="stroke-width:1px" />
-				</g>
-			</g>
+			id="sys1">
 			<g
 				class="outputStaff"
-				id="p1_sys1_staff1"
+				id="sys1staff1"
 				score:staffName="Furies 1">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys1staff1stafflines">
 					<line
+						id="staffline1"
 						x1="633.12"
 						y1="704"
 						x2="7680"
 						y2="704"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline2"
 						x1="633.12"
 						y1="736"
 						x2="7680"
 						y2="736"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline3"
 						x1="633.12"
 						y1="768"
 						x2="7680"
 						y2="768"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline4"
 						x1="633.12"
 						y1="800"
 						x2="7680"
 						y2="800"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline5"
 						x1="633.12"
 						y1="832"
 						x2="7680"
@@ -386,14 +353,24 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 				</g>
 				<g
 					class="outputVoice"
+					id="sys1staff1voice1"
 					score:midiChannel="0"
 					score:masterVolume="100">
 					<use
+						id="clef6"
 						xlink:href="#bassClef"
 						x="0"
 						y="0"
 						transform="translate(633.12,736) scale(125.44)" />
+					<line
+						id="barline7"
+						x1="736.32"
+						y1="704"
+						x2="736.32"
+						y2="832"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName8"
 						x="348.56"
 						y="793.6"
 						text-anchor="middle"
@@ -401,6 +378,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						font-family="Times New Roman">Furies 1</text>
 					<g
 						class="rest"
+						id="rest9"
 						score:alignmentX="839.8452"
 						score:msDuration="8500">
 						<text
@@ -409,8 +387,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">∑</text>
 					</g>
+					<line
+						id="barline10"
+						x1="3246.933"
+						y1="704"
+						x2="3246.933"
+						y2="832"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest11"
 						score:alignmentX="3338.968"
 						score:msDuration="15398">
 						<text
@@ -419,39 +405,52 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">∑</text>
 					</g>
+					<line
+						id="barline12"
+						x1="7680.001"
+						y1="702"
+						x2="7680.001"
+						y2="834"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys1_staff2"
+				id="sys1staff2"
 				score:staffName="Furies 2">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys1staff2stafflines">
 					<line
+						id="staffline13"
 						x1="633.12"
 						y1="960"
 						x2="7680"
 						y2="960"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline14"
 						x1="633.12"
 						y1="992"
 						x2="7680"
 						y2="992"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline15"
 						x1="633.12"
 						y1="1024"
 						x2="7680"
 						y2="1024"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline16"
 						x1="633.12"
 						y1="1056"
 						x2="7680"
 						y2="1056"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline17"
 						x1="633.12"
 						y1="1088"
 						x2="7680"
@@ -460,14 +459,24 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 				</g>
 				<g
 					class="outputVoice"
+					id="sys1staff2voice1"
 					score:midiChannel="1"
 					score:masterVolume="100">
 					<use
+						id="clef18"
 						xlink:href="#bassClef"
 						x="0"
 						y="0"
 						transform="translate(633.12,992) scale(125.44)" />
+					<line
+						id="barline19"
+						x1="736.32"
+						y1="960"
+						x2="736.32"
+						y2="1088"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName20"
 						x="348.56"
 						y="1049.6"
 						text-anchor="middle"
@@ -475,6 +484,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						font-family="Times New Roman">Furies 2</text>
 					<g
 						class="rest"
+						id="rest21"
 						score:alignmentX="839.8452"
 						score:msDuration="8500">
 						<text
@@ -483,8 +493,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">∑</text>
 					</g>
+					<line
+						id="barline22"
+						x1="3246.933"
+						y1="960"
+						x2="3246.933"
+						y2="1088"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest23"
 						score:alignmentX="3338.968"
 						score:msDuration="15398">
 						<text
@@ -493,39 +511,52 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">∑</text>
 					</g>
+					<line
+						id="barline24"
+						x1="7680.001"
+						y1="958"
+						x2="7680.001"
+						y2="1090"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys1_staff3"
+				id="sys1staff3"
 				score:staffName="Furies 3">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys1staff3stafflines">
 					<line
+						id="staffline25"
 						x1="633.12"
 						y1="1216"
 						x2="7680"
 						y2="1216"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline26"
 						x1="633.12"
 						y1="1248"
 						x2="7680"
 						y2="1248"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline27"
 						x1="633.12"
 						y1="1280"
 						x2="7680"
 						y2="1280"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline28"
 						x1="633.12"
 						y1="1312"
 						x2="7680"
 						y2="1312"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline29"
 						x1="633.12"
 						y1="1344"
 						x2="7680"
@@ -534,14 +565,24 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 				</g>
 				<g
 					class="outputVoice"
+					id="sys1staff3voice1"
 					score:midiChannel="2"
 					score:masterVolume="100">
 					<use
+						id="clef30"
 						xlink:href="#bassClef2x8"
 						x="0"
 						y="0"
 						transform="translate(633.12,1248) scale(125.44)" />
+					<line
+						id="barline31"
+						x1="736.32"
+						y1="1216"
+						x2="736.32"
+						y2="1344"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName32"
 						x="348.56"
 						y="1305.6"
 						text-anchor="middle"
@@ -549,6 +590,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						font-family="Times New Roman">Furies 3</text>
 					<g
 						class="rest"
+						id="rest33"
 						score:alignmentX="839.8452"
 						score:msDuration="8500">
 						<text
@@ -557,8 +599,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">∑</text>
 					</g>
+					<line
+						id="barline34"
+						x1="3246.933"
+						y1="1216"
+						x2="3246.933"
+						y2="1344"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest35"
 						score:alignmentX="3338.968"
 						score:msDuration="15398">
 						<text
@@ -567,39 +617,52 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">∑</text>
 					</g>
+					<line
+						id="barline36"
+						x1="7680.001"
+						y1="1214"
+						x2="7680.001"
+						y2="1346"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys1_staff4"
+				id="sys1staff4"
 				score:staffName="Furies 4">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys1staff4stafflines">
 					<line
+						id="staffline37"
 						x1="633.12"
 						y1="1472"
 						x2="7680"
 						y2="1472"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline38"
 						x1="633.12"
 						y1="1504"
 						x2="7680"
 						y2="1504"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline39"
 						x1="633.12"
 						y1="1536"
 						x2="7680"
 						y2="1536"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline40"
 						x1="633.12"
 						y1="1568"
 						x2="7680"
 						y2="1568"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline41"
 						x1="633.12"
 						y1="1600"
 						x2="7680"
@@ -608,14 +671,24 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 				</g>
 				<g
 					class="outputVoice"
+					id="sys1staff4voice1"
 					score:midiChannel="3"
 					score:masterVolume="100">
 					<use
+						id="clef42"
 						xlink:href="#bassClef2x8"
 						x="0"
 						y="0"
 						transform="translate(633.12,1504) scale(125.44)" />
+					<line
+						id="barline43"
+						x1="736.32"
+						y1="1472"
+						x2="736.32"
+						y2="1600"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName44"
 						x="348.56"
 						y="1561.6"
 						text-anchor="middle"
@@ -623,6 +696,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						font-family="Times New Roman">Furies 4</text>
 					<g
 						class="rest"
+						id="rest45"
 						score:alignmentX="839.8452"
 						score:msDuration="4250">
 						<text
@@ -633,6 +707,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord46"
 						score:alignmentX="2039.389">
 						<score:midiChord
 							pitchWheelDeviation="3">
@@ -647,7 +722,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 127 127 100 100 80 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics47">
 							<text
 								x="2021.11"
 								y="1584"
@@ -669,12 +744,14 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
+								id="ledger48"
 								x1="1982.814"
 								y1="1632"
 								x2="2095.964"
 								y2="1632"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="ledger49"
 								x1="1982.814"
 								y1="1664"
 								x2="2095.964"
@@ -686,18 +763,21 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="94.08"
 								font-family="CLicht">F</text>
 							<line
+								id="extender50"
 								x1="2078.694"
 								y1="1584"
 								x2="6344.22"
 								y2="1584"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 							<line
+								id="extender51"
 								x1="2103.964"
 								y1="1616"
 								x2="6344.22"
 								y2="1616"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 							<line
+								id="extender52"
 								x1="2103.964"
 								y1="1680"
 								x2="6344.22"
@@ -705,8 +785,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline53"
+						x1="3246.933"
+						y1="1472"
+						x2="3246.933"
+						y2="1600"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest54"
 						score:alignmentX="6366.633"
 						score:msDuration="2500">
 						<text
@@ -717,6 +805,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord55"
 						score:alignmentX="7061.781">
 						<score:midiChord
 							pitchWheelDeviation="3">
@@ -731,7 +820,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 80 127 80 110 110 90 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics56">
 							<text
 								x="7043.501"
 								y="1584"
@@ -753,30 +842,35 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
+								id="ledger57"
 								x1="7005.206"
 								y1="1632"
 								x2="7118.356"
 								y2="1632"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="ledger58"
 								x1="7005.206"
 								y1="1664"
 								x2="7118.356"
 								y2="1664"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="extender59"
 								x1="7101.086"
 								y1="1584"
 								x2="7712"
 								y2="1584"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 							<line
+								id="extender60"
 								x1="7126.356"
 								y1="1616"
 								x2="7712"
 								y2="1616"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 							<line
+								id="extender61"
 								x1="7126.356"
 								y1="1680"
 								x2="7712"
@@ -784,39 +878,52 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline62"
+						x1="7680.001"
+						y1="1470"
+						x2="7680.001"
+						y2="1602"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys1_staff5"
+				id="sys1staff5"
 				score:staffName="R2M">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys1staff5stafflines">
 					<line
+						id="staffline63"
 						x1="633.12"
 						y1="1824"
 						x2="7680"
 						y2="1824"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline64"
 						x1="633.12"
 						y1="1856"
 						x2="7680"
 						y2="1856"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline65"
 						x1="633.12"
 						y1="1888"
 						x2="7680"
 						y2="1888"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline66"
 						x1="633.12"
 						y1="1920"
 						x2="7680"
 						y2="1920"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline67"
 						x1="633.12"
 						y1="1952"
 						x2="7680"
@@ -825,14 +932,24 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 				</g>
 				<g
 					class="outputVoice"
+					id="sys1staff5voice1"
 					score:midiChannel="4"
 					score:masterVolume="100">
 					<use
+						id="clef68"
 						xlink:href="#trebleClef"
 						x="0"
 						y="0"
 						transform="translate(633.1201,1920) scale(125.44)" />
+					<line
+						id="barline69"
+						x1="736.3201"
+						y1="1824"
+						x2="736.3201"
+						y2="1952"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName70"
 						x="348.56"
 						y="1913.6"
 						text-anchor="middle"
@@ -840,6 +957,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						font-family="Times New Roman">R2M</text>
 					<g
 						class="outputChord"
+						id="outputChord71"
 						score:alignmentX="847.8452">
 						<score:midiChord
 							hasChordOff="0">
@@ -852,8 +970,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</basicChords>
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics72">
 							<line
+								id="stem73"
 								x1="864.2579"
 								y1="1804.8"
 								x2="864.2579"
@@ -868,6 +987,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest74"
 						score:alignmentX="1449.377"
 						score:msDuration="2125">
 						<text
@@ -878,6 +998,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord75"
 						score:alignmentX="2039.389">
 						<score:midiChord
 							hasChordOff="0">
@@ -890,13 +1011,14 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</basicChords>
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics76">
 							<text
 								x="2021.11"
 								y="1920"
 								font-size="125.44"
 								font-family="CLicht">›</text>
 							<line
+								id="extender77"
 								x1="2078.694"
 								y1="1920"
 								x2="6344.22"
@@ -904,8 +1026,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline78"
+						x1="3246.933"
+						y1="1824"
+						x2="3246.933"
+						y2="1952"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest79"
 						score:alignmentX="6366.633"
 						score:msDuration="2500">
 						<text
@@ -916,6 +1046,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord80"
 						score:alignmentX="7061.781">
 						<score:midiChord
 							hasChordOff="0">
@@ -928,13 +1059,14 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</basicChords>
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics81">
 							<text
 								x="7043.501"
 								y="1920"
 								font-size="125.44"
 								font-family="CLicht">›</text>
 							<line
+								id="extender82"
 								x1="7101.086"
 								y1="1920"
 								x2="7712"
@@ -942,39 +1074,52 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline83"
+						x1="7680.001"
+						y1="1822"
+						x2="7680.001"
+						y2="1954"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys1_staff6"
+				id="sys1staff6"
 				score:staffName="Clytemnestra">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys1staff6stafflines">
 					<line
+						id="staffline84"
 						x1="633.12"
 						y1="2112"
 						x2="7680"
 						y2="2112"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline85"
 						x1="633.12"
 						y1="2144"
 						x2="7680"
 						y2="2144"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline86"
 						x1="633.12"
 						y1="2176"
 						x2="7680"
 						y2="2176"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline87"
 						x1="633.12"
 						y1="2208"
 						x2="7680"
 						y2="2208"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline88"
 						x1="633.12"
 						y1="2240"
 						x2="7680"
@@ -983,14 +1128,24 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 				</g>
 				<g
 					class="outputVoice"
+					id="sys1staff6voice1"
 					score:midiChannel="5"
 					score:masterVolume="100">
 					<use
+						id="clef89"
 						xlink:href="#trebleClef"
 						x="0"
 						y="0"
 						transform="translate(633.12,2208) scale(125.44)" />
+					<line
+						id="barline90"
+						x1="736.32"
+						y1="2112"
+						x2="736.32"
+						y2="2240"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName91"
 						x="348.56"
 						y="2201.6"
 						text-anchor="middle"
@@ -998,6 +1153,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						font-family="Times New Roman">Clytemnestra</text>
 					<g
 						class="rest"
+						id="rest92"
 						score:alignmentX="839.8452"
 						score:msDuration="8500">
 						<text
@@ -1006,8 +1162,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">∑</text>
 					</g>
+					<line
+						id="barline93"
+						x1="3246.933"
+						y1="2112"
+						x2="3246.933"
+						y2="2240"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest94"
 						score:alignmentX="3338.968"
 						score:msDuration="15398">
 						<text
@@ -1016,39 +1180,52 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">∑</text>
 					</g>
+					<line
+						id="barline95"
+						x1="7680.001"
+						y1="2110"
+						x2="7680.001"
+						y2="2242"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys1_staff7"
+				id="sys1staff7"
 				score:staffName="Wind 1">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys1staff7stafflines">
 					<line
+						id="staffline96"
 						x1="633.12"
 						y1="2368"
 						x2="7680"
 						y2="2368"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline97"
 						x1="633.12"
 						y1="2400"
 						x2="7680"
 						y2="2400"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline98"
 						x1="633.12"
 						y1="2432"
 						x2="7680"
 						y2="2432"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline99"
 						x1="633.12"
 						y1="2464"
 						x2="7680"
 						y2="2464"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline100"
 						x1="633.12"
 						y1="2496"
 						x2="7680"
@@ -1057,14 +1234,24 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 				</g>
 				<g
 					class="outputVoice"
+					id="sys1staff7voice1"
 					score:midiChannel="6"
 					score:masterVolume="100">
 					<use
+						id="clef101"
 						xlink:href="#bassClef8"
 						x="0"
 						y="0"
 						transform="translate(633.12,2400) scale(125.44)" />
+					<line
+						id="barline102"
+						x1="736.32"
+						y1="2368"
+						x2="736.32"
+						y2="2496"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName103"
 						x="348.56"
 						y="2457.6"
 						text-anchor="middle"
@@ -1072,6 +1259,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						font-family="Times New Roman">Wind 1</text>
 					<g
 						class="outputChord"
+						id="outputChord104"
 						score:alignmentX="847.8452">
 						<score:midiChord
 							pitchWheelDeviation="6">
@@ -1088,7 +1276,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 64 127 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics105">
 							<text
 								x="829.566"
 								y="2448"
@@ -1100,6 +1288,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="94.08"
 								font-family="CLicht">p</text>
 							<line
+								id="extender106"
 								x1="887.1503"
 								y1="2448"
 								x2="3306.394"
@@ -1107,8 +1296,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline107"
+						x1="3246.933"
+						y1="2368"
+						x2="3246.933"
+						y2="2496"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="outputChord"
+						id="outputChord108"
 						score:alignmentX="3401.919">
 						<score:midiChord
 							pitchWheelDeviation="6">
@@ -1125,7 +1322,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 38 64 38 127 127 64 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics109">
 							<text
 								x="3374.834"
 								y="2544"
@@ -1137,6 +1334,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
+								id="ledger110"
 								x1="3351.748"
 								y1="2528"
 								x2="3452.09"
@@ -1151,6 +1349,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord111"
 						score:alignmentX="4747.943">
 						<score:midiChord
 							pitchWheelDeviation="6">
@@ -1167,7 +1366,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 64 127 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics112">
 							<text
 								x="4729.664"
 								y="2448"
@@ -1187,6 +1386,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord113"
 						score:alignmentX="6956.645">
 						<score:midiChord
 							pitchWheelDeviation="6">
@@ -1203,7 +1403,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 64 127 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics114">
 							<text
 								x="6938.365"
 								y="2432"
@@ -1215,6 +1415,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="94.08"
 								font-family="CLicht">p</text>
 							<line
+								id="extender115"
 								x1="6995.95"
 								y1="2432"
 								x2="7712"
@@ -1222,39 +1423,52 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline116"
+						x1="7680.001"
+						y1="2366"
+						x2="7680.001"
+						y2="2498"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys1_staff8"
+				id="sys1staff8"
 				score:staffName="Wind 2">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys1staff8stafflines">
 					<line
+						id="staffline117"
 						x1="633.12"
 						y1="2688"
 						x2="7680"
 						y2="2688"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline118"
 						x1="633.12"
 						y1="2720"
 						x2="7680"
 						y2="2720"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline119"
 						x1="633.12"
 						y1="2752"
 						x2="7680"
 						y2="2752"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline120"
 						x1="633.12"
 						y1="2784"
 						x2="7680"
 						y2="2784"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline121"
 						x1="633.12"
 						y1="2816"
 						x2="7680"
@@ -1263,14 +1477,24 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 				</g>
 				<g
 					class="outputVoice"
+					id="sys1staff8voice1"
 					score:midiChannel="7"
 					score:masterVolume="100">
 					<use
+						id="clef122"
 						xlink:href="#bassClef8"
 						x="0"
 						y="0"
 						transform="translate(633.12,2720) scale(125.44)" />
+					<line
+						id="barline123"
+						x1="736.32"
+						y1="2688"
+						x2="736.32"
+						y2="2816"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName124"
 						x="348.56"
 						y="2777.6"
 						text-anchor="middle"
@@ -1278,6 +1502,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						font-family="Times New Roman">Wind 2</text>
 					<g
 						class="outputChord"
+						id="outputChord125"
 						score:alignmentX="847.8452">
 						<score:midiChord
 							pitchWheelDeviation="6">
@@ -1294,7 +1519,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 81 81 102 38 38 25 127 81 64 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics126">
 							<text
 								x="820.7599"
 								y="2912"
@@ -1306,18 +1531,21 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
+								id="ledger127"
 								x1="797.6746"
 								y1="2848"
 								x2="898.0158"
 								y2="2848"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="ledger128"
 								x1="797.6746"
 								y1="2880"
 								x2="898.0158"
 								y2="2880"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="ledger129"
 								x1="797.6746"
 								y1="2912"
 								x2="898.0158"
@@ -1332,6 +1560,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord130"
 						score:alignmentX="2585.817">
 						<score:midiChord
 							pitchWheelDeviation="6">
@@ -1348,7 +1577,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 127 127 38 64 38 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics131">
 							<text
 								x="2567.538"
 								y="2880"
@@ -1360,12 +1589,14 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
+								id="ledger132"
 								x1="2529.242"
 								y1="2848"
 								x2="2642.392"
 								y2="2848"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="ledger133"
 								x1="2529.242"
 								y1="2880"
 								x2="2642.392"
@@ -1377,6 +1608,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="94.08"
 								font-family="CLicht">p</text>
 							<line
+								id="extender134"
 								x1="2650.392"
 								y1="2880"
 								x2="4725.312"
@@ -1384,8 +1616,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline135"
+						x1="3246.933"
+						y1="2688"
+						x2="3246.933"
+						y2="2816"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="outputChord"
+						id="outputChord136"
 						score:alignmentX="4820.837">
 						<score:midiChord
 							pitchWheelDeviation="6">
@@ -1402,7 +1642,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 25 102 25 64 25 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics137">
 							<text
 								x="4793.752"
 								y="2928"
@@ -1414,18 +1654,21 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
+								id="ledger138"
 								x1="4770.667"
 								y1="2848"
 								x2="4871.008"
 								y2="2848"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="ledger139"
 								x1="4770.667"
 								y1="2880"
 								x2="4871.008"
 								y2="2880"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="ledger140"
 								x1="4770.667"
 								y1="2912"
 								x2="4871.008"
@@ -1440,6 +1683,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord141"
 						score:alignmentX="6395.357">
 						<score:midiChord
 							pitchWheelDeviation="6">
@@ -1456,13 +1700,14 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 25 64 25 102 25 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics142">
 							<text
 								x="6377.078"
 								y="2864"
 								font-size="125.44"
 								font-family="CLicht">›</text>
 							<line
+								id="ledger143"
 								x1="6338.782"
 								y1="2848"
 								x2="6451.933"
@@ -1474,6 +1719,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="94.08"
 								font-family="CLicht">P</text>
 							<line
+								id="extender144"
 								x1="6459.933"
 								y1="2864"
 								x2="7712"
@@ -1481,39 +1727,52 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline145"
+						x1="7680.001"
+						y1="2686"
+						x2="7680.001"
+						y2="2818"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys1_staff9"
+				id="sys1staff9"
 				score:staffName="Wind 3">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys1staff9stafflines">
 					<line
+						id="staffline146"
 						x1="633.12"
 						y1="3072"
 						x2="7680"
 						y2="3072"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline147"
 						x1="633.12"
 						y1="3104"
 						x2="7680"
 						y2="3104"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline148"
 						x1="633.12"
 						y1="3136"
 						x2="7680"
 						y2="3136"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline149"
 						x1="633.12"
 						y1="3168"
 						x2="7680"
 						y2="3168"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline150"
 						x1="633.12"
 						y1="3200"
 						x2="7680"
@@ -1522,14 +1781,24 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 				</g>
 				<g
 					class="outputVoice"
+					id="sys1staff9voice1"
 					score:midiChannel="8"
 					score:masterVolume="100">
 					<use
+						id="clef151"
 						xlink:href="#bassClef2x8"
 						x="0"
 						y="0"
 						transform="translate(633.12,3104) scale(125.44)" />
+					<line
+						id="barline152"
+						x1="736.32"
+						y1="3072"
+						x2="736.32"
+						y2="3200"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName153"
 						x="348.56"
 						y="3161.6"
 						text-anchor="middle"
@@ -1537,6 +1806,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						font-family="Times New Roman">Wind 3</text>
 					<g
 						class="outputChord"
+						id="outputChord154"
 						score:alignmentX="847.8452">
 						<score:midiChord
 							pitchWheelDeviation="6">
@@ -1553,7 +1823,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 64 127 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics155">
 							<text
 								x="829.566"
 								y="3216"
@@ -1566,8 +1836,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-family="CLicht">p</text>
 						</g>
 					</g>
+					<line
+						id="barline156"
+						x1="3246.933"
+						y1="3072"
+						x2="3246.933"
+						y2="3200"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="outputChord"
+						id="outputChord157"
 						score:alignmentX="3346.968">
 						<score:midiChord
 							pitchWheelDeviation="6">
@@ -1584,7 +1862,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 64 127 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics158">
 							<text
 								x="3328.688"
 								y="3216"
@@ -1599,6 +1877,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord159"
 						score:alignmentX="5505.484">
 						<score:midiChord
 							pitchWheelDeviation="6">
@@ -1615,7 +1894,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 64 127 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics160">
 							<text
 								x="5487.205"
 								y="3216"
@@ -1623,429 +1902,167 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-family="CLicht">›</text>
 						</g>
 					</g>
-				</g>
-			</g>
-			<g
-				class="barlines">
-				<g
-					class="barline">
 					<line
-						x1="736.32"
-						y1="704"
-						x2="736.32"
-						y2="832"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3246.933"
-						y1="704"
-						x2="3246.933"
-						y2="832"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680.001"
-						y1="702"
-						x2="7680.001"
-						y2="834"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="736.32"
-						y1="832"
-						x2="736.32"
-						y2="960"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3246.933"
-						y1="832"
-						x2="3246.933"
-						y2="960"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680.001"
-						y1="832"
-						x2="7680.001"
-						y2="960"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="736.32"
-						y1="960"
-						x2="736.32"
-						y2="1088"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3246.933"
-						y1="960"
-						x2="3246.933"
-						y2="1088"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680.001"
-						y1="958"
-						x2="7680.001"
-						y2="1090"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="736.32"
-						y1="1088"
-						x2="736.32"
-						y2="1216"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3246.933"
-						y1="1088"
-						x2="3246.933"
-						y2="1216"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680.001"
-						y1="1088"
-						x2="7680.001"
-						y2="1216"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="736.32"
-						y1="1216"
-						x2="736.32"
-						y2="1344"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3246.933"
-						y1="1216"
-						x2="3246.933"
-						y2="1344"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680.001"
-						y1="1214"
-						x2="7680.001"
-						y2="1346"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="736.32"
-						y1="1344"
-						x2="736.32"
-						y2="1472"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3246.933"
-						y1="1344"
-						x2="3246.933"
-						y2="1472"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680.001"
-						y1="1344"
-						x2="7680.001"
-						y2="1472"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="736.32"
-						y1="1472"
-						x2="736.32"
-						y2="1600"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="736.32"
-						y1="1600"
-						x2="736.32"
-						y2="1824"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="736.3201"
-						y1="1824"
-						x2="736.3201"
-						y2="1952"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3246.933"
-						y1="1824"
-						x2="3246.933"
-						y2="1952"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="736.3201"
-						y1="1952"
-						x2="736.3201"
-						y2="2112"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="736.32"
-						y1="2112"
-						x2="736.32"
-						y2="2240"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3246.933"
-						y1="2112"
-						x2="3246.933"
-						y2="2240"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680.001"
-						y1="2110"
-						x2="7680.001"
-						y2="2242"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="736.32"
-						y1="2240"
-						x2="736.32"
-						y2="2368"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="736.32"
-						y1="2368"
-						x2="736.32"
-						y2="2496"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="736.32"
-						y1="2496"
-						x2="736.32"
-						y2="2688"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3246.933"
-						y1="2496"
-						x2="3246.933"
-						y2="2688"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680.001"
-						y1="2496"
-						x2="7680.001"
-						y2="2688"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="736.32"
-						y1="2688"
-						x2="736.32"
-						y2="2816"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="736.32"
-						y1="2816"
-						x2="736.32"
-						y2="3072"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3246.933"
-						y1="2880"
-						x2="3246.933"
-						y2="3072"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680.001"
-						y1="2864"
-						x2="7680.001"
-						y2="3072"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="736.32"
-						y1="3072"
-						x2="736.32"
-						y2="3200"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3246.933"
-						y1="3072"
-						x2="3246.933"
-						y2="3200"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
+						id="barline161"
 						x1="7680.001"
 						y1="3070"
 						x2="7680.001"
 						y2="3202"
-						style="stroke:#000000; stroke-width:8px" />
+						style="stroke:black; stroke-width:8px" />
 				</g>
+			</g>
+			<g
+				id="sys1connectors">
+				<line
+					x1="736.32"
+					y1="832"
+					x2="736.32"
+					y2="960"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="3246.933"
+					y1="832"
+					x2="3246.933"
+					y2="960"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="7680.001"
+					y1="832"
+					x2="7680.001"
+					y2="960"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="736.32"
+					y1="1088"
+					x2="736.32"
+					y2="1216"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="3246.933"
+					y1="1088"
+					x2="3246.933"
+					y2="1216"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="7680.001"
+					y1="1088"
+					x2="7680.001"
+					y2="1216"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="736.32"
+					y1="1344"
+					x2="736.32"
+					y2="1472"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="3246.933"
+					y1="1344"
+					x2="3246.933"
+					y2="1472"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="7680.001"
+					y1="1344"
+					x2="7680.001"
+					y2="1472"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="736.32"
+					y1="1600"
+					x2="736.32"
+					y2="1824"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="736.3201"
+					y1="1952"
+					x2="736.3201"
+					y2="2112"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="736.32"
+					y1="2240"
+					x2="736.32"
+					y2="2368"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="736.32"
+					y1="2496"
+					x2="736.32"
+					y2="2688"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="3246.933"
+					y1="2496"
+					x2="3246.933"
+					y2="2688"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="7680.001"
+					y1="2496"
+					x2="7680.001"
+					y2="2688"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="736.32"
+					y1="2816"
+					x2="736.32"
+					y2="3072"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="3246.933"
+					y1="2880"
+					x2="3246.933"
+					y2="3072"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="7680.001"
+					y1="2864"
+					x2="7680.001"
+					y2="3072"
+					style="stroke:black; stroke-width:8px" />
 			</g>
 		</g>
 		<g
 			class="system"
-			id="page1_system2">
-			<g
-				class="markers">
-				<g
-					class="startMarker">
-					<line
-						x1="0"
-						y1="0"
-						x2="0"
-						y2="0"
-						style="stroke-width:1px" />
-					<circle
-						cx="0"
-						cy="0"
-						r="0"
-						style="stroke-width:1px" />
-				</g>
-				<g
-					class="runningMarker">
-					<line
-						x1="0"
-						y1="0"
-						x2="0"
-						y2="0"
-						style="stroke-width:1px" />
-				</g>
-				<g
-					class="endMarker">
-					<line
-						x1="0"
-						y1="0"
-						x2="0"
-						y2="0"
-						style="stroke-width:1px" />
-					<rect
-						x="0"
-						y="0"
-						width="0"
-						height="0"
-						style="stroke-width:1px" />
-				</g>
-			</g>
+			id="sys2">
 			<g
 				class="outputStaff"
-				id="p1_sys2_staff1"
+				id="sys2staff1"
 				score:staffName="F 1">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys2staff1stafflines">
 					<line
+						id="staffline162"
 						x1="400"
 						y1="3872"
 						x2="7680"
 						y2="3872"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline163"
 						x1="400"
 						y1="3904"
 						x2="7680"
 						y2="3904"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline164"
 						x1="400"
 						y1="3936"
 						x2="7680"
 						y2="3936"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline165"
 						x1="400"
 						y1="3968"
 						x2="7680"
 						y2="3968"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline166"
 						x1="400"
 						y1="4000"
 						x2="7680"
@@ -2053,27 +2070,39 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice">
+					class="outputVoice"
+					id="sys2staff1voice1">
 					<use
+						id="clef167"
 						xlink:href="#bassClef"
 						x="0"
 						y="0"
 						transform="translate(400,3904) scale(125.44)" />
+					<line
+						id="barline168"
+						x1="503.2"
+						y1="3872"
+						x2="503.2"
+						y2="4000"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName169"
 						x="232"
 						y="3961.6"
 						text-anchor="middle"
 						font-size="80"
 						font-family="Times New Roman">F 1</text>
 					<g
-						id="barnumber3">
+						id="barNumber170">
 						<text
+							id="number171"
 							x="503.2"
 							y="3680"
 							text-anchor="middle"
 							font-size="64"
 							font-family="Arial">3</text>
 						<rect
+							id="box172"
 							x="457.456"
 							y="3612.56"
 							width="91.48801"
@@ -2082,6 +2111,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest173"
 						score:alignmentX="595.2352"
 						score:msDuration="15398">
 						<text
@@ -2090,8 +2120,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">∑</text>
 					</g>
+					<line
+						id="barline174"
+						x1="3618.056"
+						y1="3872"
+						x2="3618.056"
+						y2="4000"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest175"
 						score:alignmentX="3710.091"
 						score:msDuration="20261">
 						<text
@@ -2100,39 +2138,52 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">∑</text>
 					</g>
+					<line
+						id="barline176"
+						x1="7680"
+						y1="3870"
+						x2="7680"
+						y2="4002"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys2_staff2"
+				id="sys2staff2"
 				score:staffName="F 2">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys2staff2stafflines">
 					<line
+						id="staffline177"
 						x1="400"
 						y1="4128"
 						x2="7680"
 						y2="4128"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline178"
 						x1="400"
 						y1="4160"
 						x2="7680"
 						y2="4160"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline179"
 						x1="400"
 						y1="4192"
 						x2="7680"
 						y2="4192"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline180"
 						x1="400"
 						y1="4224"
 						x2="7680"
 						y2="4224"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline181"
 						x1="400"
 						y1="4256"
 						x2="7680"
@@ -2140,13 +2191,23 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice">
+					class="outputVoice"
+					id="sys2staff2voice1">
 					<use
+						id="clef182"
 						xlink:href="#bassClef"
 						x="0"
 						y="0"
 						transform="translate(400,4160) scale(125.44)" />
+					<line
+						id="barline183"
+						x1="503.2"
+						y1="4128"
+						x2="503.2"
+						y2="4256"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName184"
 						x="232"
 						y="4217.6"
 						text-anchor="middle"
@@ -2154,6 +2215,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						font-family="Times New Roman">F 2</text>
 					<g
 						class="rest"
+						id="rest185"
 						score:alignmentX="595.2352"
 						score:msDuration="15398">
 						<text
@@ -2162,8 +2224,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">∑</text>
 					</g>
+					<line
+						id="barline186"
+						x1="3618.056"
+						y1="4128"
+						x2="3618.056"
+						y2="4256"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest187"
 						score:alignmentX="3710.091"
 						score:msDuration="20261">
 						<text
@@ -2172,39 +2242,52 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">∑</text>
 					</g>
+					<line
+						id="barline188"
+						x1="7680"
+						y1="4126"
+						x2="7680"
+						y2="4258"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys2_staff3"
+				id="sys2staff3"
 				score:staffName="F 3">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys2staff3stafflines">
 					<line
+						id="staffline189"
 						x1="400"
 						y1="4384"
 						x2="7680"
 						y2="4384"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline190"
 						x1="400"
 						y1="4416"
 						x2="7680"
 						y2="4416"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline191"
 						x1="400"
 						y1="4448"
 						x2="7680"
 						y2="4448"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline192"
 						x1="400"
 						y1="4480"
 						x2="7680"
 						y2="4480"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline193"
 						x1="400"
 						y1="4512"
 						x2="7680"
@@ -2212,13 +2295,23 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice">
+					class="outputVoice"
+					id="sys2staff3voice1">
 					<use
+						id="clef194"
 						xlink:href="#bassClef2x8"
 						x="0"
 						y="0"
 						transform="translate(400,4416) scale(125.44)" />
+					<line
+						id="barline195"
+						x1="503.2"
+						y1="4384"
+						x2="503.2"
+						y2="4512"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName196"
 						x="232"
 						y="4473.6"
 						text-anchor="middle"
@@ -2226,6 +2319,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						font-family="Times New Roman">F 3</text>
 					<g
 						class="rest"
+						id="rest197"
 						score:alignmentX="595.2352"
 						score:msDuration="15398">
 						<text
@@ -2234,8 +2328,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">∑</text>
 					</g>
+					<line
+						id="barline198"
+						x1="3618.056"
+						y1="4384"
+						x2="3618.056"
+						y2="4512"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest199"
 						score:alignmentX="3710.091"
 						score:msDuration="20261">
 						<text
@@ -2244,39 +2346,52 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">∑</text>
 					</g>
+					<line
+						id="barline200"
+						x1="7680"
+						y1="4382"
+						x2="7680"
+						y2="4514"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys2_staff4"
+				id="sys2staff4"
 				score:staffName="F 4">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys2staff4stafflines">
 					<line
+						id="staffline201"
 						x1="400"
 						y1="4640"
 						x2="7680"
 						y2="4640"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline202"
 						x1="400"
 						y1="4672"
 						x2="7680"
 						y2="4672"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline203"
 						x1="400"
 						y1="4704"
 						x2="7680"
 						y2="4704"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline204"
 						x1="400"
 						y1="4736"
 						x2="7680"
 						y2="4736"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline205"
 						x1="400"
 						y1="4768"
 						x2="7680"
@@ -2284,20 +2399,30 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice">
+					class="outputVoice"
+					id="sys2staff4voice1">
 					<use
+						id="clef206"
 						xlink:href="#bassClef2x8"
 						x="0"
 						y="0"
 						transform="translate(400,4672) scale(125.44)" />
+					<line
+						id="barline207"
+						x1="503.2"
+						y1="4640"
+						x2="503.2"
+						y2="4768"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName208"
 						x="232"
 						y="4729.6"
 						text-anchor="middle"
 						font-size="80"
 						font-family="Times New Roman">F 4</text>
 					<g
-						class="cautionaryChord">
+						id="cautionaryChord209">
 						<g>
 							<text
 								x="588.5051"
@@ -2320,12 +2445,14 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="100.352"
 								font-family="CLicht">b</text>
 							<line
+								id="ledger210"
 								x1="577.775"
 								y1="4800"
 								x2="628.6955"
 								y2="4800"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="ledger211"
 								x1="577.775"
 								y1="4832"
 								x2="628.6955"
@@ -2344,36 +2471,42 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								stroke-linecap="butt"
 								d="M 636.6955,4736.912 L 652.6955,4736.912 652.6955,4873.554 636.6955,4873.554" />
 							<line
+								id="extender212"
 								x1="491.2"
 								y1="4752"
 								x2="523.2"
 								y2="4752"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 							<line
+								id="extender213"
 								x1="491.2"
 								y1="4784"
 								x2="523.2"
 								y2="4784"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 							<line
+								id="extender214"
 								x1="491.2"
 								y1="4848"
 								x2="523.2"
 								y2="4848"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 							<line
+								id="extender215"
 								x1="652.6955"
 								y1="4752"
 								x2="2814.762"
 								y2="4752"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 							<line
+								id="extender216"
 								x1="652.6955"
 								y1="4784"
 								x2="2814.762"
 								y2="4784"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 							<line
+								id="extender217"
 								x1="652.6955"
 								y1="4848"
 								x2="2814.762"
@@ -2383,6 +2516,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest218"
 						score:alignmentX="2837.175"
 						score:msDuration="2500">
 						<text
@@ -2393,6 +2527,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord219"
 						score:alignmentX="3318.299">
 						<score:midiChord
 							pitchWheelDeviation="3">
@@ -2407,7 +2542,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 80 127 80 100 80 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics220">
 							<text
 								x="3300.02"
 								y="4752"
@@ -2429,30 +2564,35 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
+								id="ledger221"
 								x1="3261.724"
 								y1="4800"
 								x2="3374.874"
 								y2="4800"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="ledger222"
 								x1="3261.724"
 								y1="4832"
 								x2="3374.874"
 								y2="4832"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="extender223"
 								x1="3357.604"
 								y1="4752"
 								x2="5814.128"
 								y2="4752"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 							<line
+								id="extender224"
 								x1="3382.874"
 								y1="4784"
 								x2="5814.128"
 								y2="4784"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 							<line
+								id="extender225"
 								x1="3382.874"
 								y1="4848"
 								x2="5814.128"
@@ -2460,8 +2600,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline226"
+						x1="3618.056"
+						y1="4640"
+						x2="3618.056"
+						y2="4768"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest227"
 						score:alignmentX="5836.541"
 						score:msDuration="2500">
 						<text
@@ -2472,6 +2620,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord228"
 						score:alignmentX="6317.666">
 						<score:midiChord
 							pitchWheelDeviation="3">
@@ -2486,7 +2635,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 80 127 80 100 80 100 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics229">
 							<text
 								x="6299.386"
 								y="4752"
@@ -2508,30 +2657,35 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
+								id="ledger230"
 								x1="6261.09"
 								y1="4800"
 								x2="6374.241"
 								y2="4800"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="ledger231"
 								x1="6261.09"
 								y1="4832"
 								x2="6374.241"
 								y2="4832"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="extender232"
 								x1="6356.971"
 								y1="4752"
 								x2="7712"
 								y2="4752"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 							<line
+								id="extender233"
 								x1="6382.241"
 								y1="4784"
 								x2="7712"
 								y2="4784"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 							<line
+								id="extender234"
 								x1="6382.241"
 								y1="4848"
 								x2="7712"
@@ -2539,39 +2693,52 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline235"
+						x1="7680"
+						y1="4638"
+						x2="7680"
+						y2="4770"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys2_staff5"
+				id="sys2staff5"
 				score:staffName="R2M">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys2staff5stafflines">
 					<line
+						id="staffline236"
 						x1="400"
 						y1="4928"
 						x2="7680"
 						y2="4928"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline237"
 						x1="400"
 						y1="4960"
 						x2="7680"
 						y2="4960"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline238"
 						x1="400"
 						y1="4992"
 						x2="7680"
 						y2="4992"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline239"
 						x1="400"
 						y1="5024"
 						x2="7680"
 						y2="5024"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline240"
 						x1="400"
 						y1="5056"
 						x2="7680"
@@ -2579,20 +2746,30 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice">
+					class="outputVoice"
+					id="sys2staff5voice1">
 					<use
+						id="clef241"
 						xlink:href="#trebleClef"
 						x="0"
 						y="0"
 						transform="translate(400,5024) scale(125.44)" />
+					<line
+						id="barline242"
+						x1="503.2"
+						y1="4928"
+						x2="503.2"
+						y2="5056"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName243"
 						x="232"
 						y="5017.6"
 						text-anchor="middle"
 						font-size="80"
 						font-family="Times New Roman">R2M</text>
 					<g
-						class="cautionaryChord">
+						id="cautionaryChord244">
 						<g>
 							<text
 								x="588.5051"
@@ -2612,12 +2789,14 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								stroke-linecap="butt"
 								d="M 621.9794,4998.246 L 637.9794,4998.246 637.9794,5049.754 621.9794,5049.754" />
 							<line
+								id="extender245"
 								x1="491.2"
 								y1="5024"
 								x2="568.491"
 								y2="5024"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 							<line
+								id="extender246"
 								x1="637.9794"
 								y1="5024"
 								x2="2814.762"
@@ -2627,6 +2806,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest247"
 						score:alignmentX="2837.175"
 						score:msDuration="2500">
 						<text
@@ -2637,6 +2817,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord248"
 						score:alignmentX="3318.299">
 						<score:midiChord
 							hasChordOff="0">
@@ -2649,13 +2830,14 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</basicChords>
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics249">
 							<text
 								x="3300.02"
 								y="5024"
 								font-size="125.44"
 								font-family="CLicht">›</text>
 							<line
+								id="extender250"
 								x1="3357.604"
 								y1="5024"
 								x2="5814.128"
@@ -2663,8 +2845,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline251"
+						x1="3618.056"
+						y1="4928"
+						x2="3618.056"
+						y2="5056"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest252"
 						score:alignmentX="5836.541"
 						score:msDuration="2500">
 						<text
@@ -2675,6 +2865,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord253"
 						score:alignmentX="6317.666">
 						<score:midiChord
 							hasChordOff="0">
@@ -2687,13 +2878,14 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</basicChords>
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics254">
 							<text
 								x="6299.386"
 								y="5024"
 								font-size="125.44"
 								font-family="CLicht">›</text>
 							<line
+								id="extender255"
 								x1="6356.971"
 								y1="5024"
 								x2="7712"
@@ -2701,39 +2893,52 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline256"
+						x1="7680"
+						y1="4926"
+						x2="7680"
+						y2="5058"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys2_staff6"
+				id="sys2staff6"
 				score:staffName="Clyt.">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys2staff6stafflines">
 					<line
+						id="staffline257"
 						x1="400"
 						y1="5216"
 						x2="7680"
 						y2="5216"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline258"
 						x1="400"
 						y1="5248"
 						x2="7680"
 						y2="5248"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline259"
 						x1="400"
 						y1="5280"
 						x2="7680"
 						y2="5280"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline260"
 						x1="400"
 						y1="5312"
 						x2="7680"
 						y2="5312"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline261"
 						x1="400"
 						y1="5344"
 						x2="7680"
@@ -2741,13 +2946,23 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice">
+					class="outputVoice"
+					id="sys2staff6voice1">
 					<use
+						id="clef262"
 						xlink:href="#trebleClef"
 						x="0"
 						y="0"
 						transform="translate(400,5312) scale(125.44)" />
+					<line
+						id="barline263"
+						x1="503.2"
+						y1="5216"
+						x2="503.2"
+						y2="5344"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName264"
 						x="232"
 						y="5305.6"
 						text-anchor="middle"
@@ -2755,6 +2970,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						font-family="Times New Roman">Clyt.</text>
 					<g
 						class="rest"
+						id="rest265"
 						score:alignmentX="595.2352"
 						score:msDuration="15398">
 						<text
@@ -2763,8 +2979,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">∑</text>
 					</g>
+					<line
+						id="barline266"
+						x1="3618.056"
+						y1="5216"
+						x2="3618.056"
+						y2="5344"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest267"
 						score:alignmentX="3710.091"
 						score:msDuration="20261">
 						<text
@@ -2773,39 +2997,52 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">∑</text>
 					</g>
+					<line
+						id="barline268"
+						x1="7680"
+						y1="5214"
+						x2="7680"
+						y2="5346"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys2_staff7"
+				id="sys2staff7"
 				score:staffName="W 1">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys2staff7stafflines">
 					<line
+						id="staffline269"
 						x1="400"
 						y1="5472"
 						x2="7680"
 						y2="5472"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline270"
 						x1="400"
 						y1="5504"
 						x2="7680"
 						y2="5504"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline271"
 						x1="400"
 						y1="5536"
 						x2="7680"
 						y2="5536"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline272"
 						x1="400"
 						y1="5568"
 						x2="7680"
 						y2="5568"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline273"
 						x1="400"
 						y1="5600"
 						x2="7680"
@@ -2813,20 +3050,30 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice">
+					class="outputVoice"
+					id="sys2staff7voice1">
 					<use
+						id="clef274"
 						xlink:href="#bassClef8"
 						x="0"
 						y="0"
 						transform="translate(400,5504) scale(125.44)" />
+					<line
+						id="barline275"
+						x1="503.2"
+						y1="5472"
+						x2="503.2"
+						y2="5600"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName276"
 						x="232"
 						y="5561.6"
 						text-anchor="middle"
 						font-size="80"
 						font-family="Times New Roman">W 1</text>
 					<g
-						class="cautionaryChord">
+						id="cautionaryChord277">
 						<g>
 							<text
 								x="588.5051"
@@ -2846,12 +3093,14 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								stroke-linecap="butt"
 								d="M 621.9794,5510.246 L 637.9794,5510.246 637.9794,5561.754 621.9794,5561.754" />
 							<line
+								id="extender278"
 								x1="491.2"
 								y1="5536"
 								x2="568.491"
 								y2="5536"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 							<line
+								id="extender279"
 								x1="637.9794"
 								y1="5536"
 								x2="1748.315"
@@ -2861,6 +3110,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord280"
 						score:alignmentX="1805.646">
 						<score:midiChord
 							pitchWheelDeviation="6">
@@ -2877,7 +3127,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 81 81 102 38 38 25 127 81 64 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics281">
 							<text
 								x="1778.561"
 								y="5600"
@@ -2892,6 +3142,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord282"
 						score:alignmentX="2945.346">
 						<score:midiChord
 							pitchWheelDeviation="6">
@@ -2908,7 +3159,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 127 127 38 64 38 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics283">
 							<text
 								x="2927.066"
 								y="5584"
@@ -2925,6 +3176,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="94.08"
 								font-family="CLicht">p</text>
 							<line
+								id="extender284"
 								x1="2984.651"
 								y1="5584"
 								x2="4393.619"
@@ -2932,8 +3184,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline285"
+						x1="3618.056"
+						y1="5472"
+						x2="3618.056"
+						y2="5600"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="outputChord"
+						id="outputChord286"
 						score:alignmentX="4450.95">
 						<score:midiChord
 							pitchWheelDeviation="6">
@@ -2950,7 +3210,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 25 102 25 64 25 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics287">
 							<text
 								x="4423.864"
 								y="5616"
@@ -2965,6 +3225,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord288"
 						score:alignmentX="5483.34">
 						<score:midiChord
 							pitchWheelDeviation="6">
@@ -2981,7 +3242,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 25 64 25 102 25 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics289">
 							<text
 								x="5465.061"
 								y="5568"
@@ -2996,6 +3257,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord290"
 						score:alignmentX="6741.645">
 						<score:midiChord
 							pitchWheelDeviation="3">
@@ -3012,7 +3274,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 38 64 38 127 127 64 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics291">
 							<text
 								x="6714.56"
 								y="5616"
@@ -3029,6 +3291,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="94.08"
 								font-family="CLicht">P</text>
 							<line
+								id="extender292"
 								x1="6777.748"
 								y1="5616"
 								x2="7712"
@@ -3036,39 +3299,52 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline293"
+						x1="7680"
+						y1="5470"
+						x2="7680"
+						y2="5602"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys2_staff8"
+				id="sys2staff8"
 				score:staffName="W 2">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys2staff8stafflines">
 					<line
+						id="staffline294"
 						x1="400"
 						y1="5760"
 						x2="7680"
 						y2="5760"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline295"
 						x1="400"
 						y1="5792"
 						x2="7680"
 						y2="5792"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline296"
 						x1="400"
 						y1="5824"
 						x2="7680"
 						y2="5824"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline297"
 						x1="400"
 						y1="5856"
 						x2="7680"
 						y2="5856"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline298"
 						x1="400"
 						y1="5888"
 						x2="7680"
@@ -3076,20 +3352,30 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice">
+					class="outputVoice"
+					id="sys2staff8voice1">
 					<use
+						id="clef299"
 						xlink:href="#bassClef8"
 						x="0"
 						y="0"
 						transform="translate(400,5792) scale(125.44)" />
+					<line
+						id="barline300"
+						x1="503.2"
+						y1="5760"
+						x2="503.2"
+						y2="5888"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName301"
 						x="232"
 						y="5849.6"
 						text-anchor="middle"
 						font-size="80"
 						font-family="Times New Roman">W 2</text>
 					<g
-						class="cautionaryChord">
+						id="cautionaryChord302">
 						<g>
 							<text
 								x="588.5051"
@@ -3097,6 +3383,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="100.352"
 								font-family="CLicht">œ</text>
 							<line
+								id="ledger303"
 								x1="577.775"
 								y1="5920"
 								x2="628.6955"
@@ -3115,12 +3402,14 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								stroke-linecap="butt"
 								d="M 636.6955,5910.246 L 652.6955,5910.246 652.6955,5961.754 636.6955,5961.754" />
 							<line
+								id="extender304"
 								x1="491.2"
 								y1="5936"
 								x2="553.775"
 								y2="5936"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 							<line
+								id="extender305"
 								x1="652.6955"
 								y1="5936"
 								x2="990.4894"
@@ -3130,6 +3419,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord306"
 						score:alignmentX="1055.064">
 						<score:midiChord
 							pitchWheelDeviation="6">
@@ -3146,13 +3436,14 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 25 64 25 102 25 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics307">
 							<text
 								x="1036.785"
 								y="5936"
 								font-size="125.44"
 								font-family="CLicht">›</text>
 							<line
+								id="ledger308"
 								x1="998.4894"
 								y1="5920"
 								x2="1111.639"
@@ -3162,6 +3453,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord309"
 						score:alignmentX="2388.155">
 						<score:midiChord
 							pitchWheelDeviation="6">
@@ -3178,7 +3470,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 64 127 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics310">
 							<text
 								x="2369.875"
 								y="5888"
@@ -3195,6 +3487,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="94.08"
 								font-family="CLicht">p</text>
 							<line
+								id="extender311"
 								x1="2427.46"
 								y1="5888"
 								x2="4027.287"
@@ -3202,8 +3495,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline312"
+						x1="3618.056"
+						y1="5760"
+						x2="3618.056"
+						y2="5888"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="outputChord"
+						id="outputChord313"
 						score:alignmentX="4129.216">
 						<score:midiChord
 							pitchWheelDeviation="6">
@@ -3220,7 +3521,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 25 64 25 102 25 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics314">
 							<text
 								x="4110.937"
 								y="5936"
@@ -3232,6 +3533,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
+								id="ledger315"
 								x1="4072.641"
 								y1="5920"
 								x2="4185.792"
@@ -3246,6 +3548,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord316"
 						score:alignmentX="5462.307">
 						<score:midiChord
 							pitchWheelDeviation="6">
@@ -3262,13 +3565,14 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 81 81 102 38 38 25 127 81 64 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics317">
 							<text
 								x="5435.221"
 								y="5920"
 								font-size="125.44"
 								font-family="CLicht">w</text>
 							<line
+								id="ledger318"
 								x1="5412.136"
 								y1="5920"
 								x2="5512.477"
@@ -3283,6 +3587,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord319"
 						score:alignmentX="6669.781">
 						<score:midiChord
 							pitchWheelDeviation="3">
@@ -3299,7 +3604,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 127 127 38 64 38 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics320">
 							<text
 								x="6651.501"
 								y="5872"
@@ -3311,6 +3616,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="94.08"
 								font-family="CLicht">p</text>
 							<line
+								id="extender321"
 								x1="6709.086"
 								y1="5872"
 								x2="7712"
@@ -3318,39 +3624,52 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline322"
+						x1="7680"
+						y1="5758"
+						x2="7680"
+						y2="5890"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys2_staff9"
+				id="sys2staff9"
 				score:staffName="W 3">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys2staff9stafflines">
 					<line
+						id="staffline323"
 						x1="400"
 						y1="6080"
 						x2="7680"
 						y2="6080"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline324"
 						x1="400"
 						y1="6112"
 						x2="7680"
 						y2="6112"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline325"
 						x1="400"
 						y1="6144"
 						x2="7680"
 						y2="6144"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline326"
 						x1="400"
 						y1="6176"
 						x2="7680"
 						y2="6176"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline327"
 						x1="400"
 						y1="6208"
 						x2="7680"
@@ -3358,13 +3677,23 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice">
+					class="outputVoice"
+					id="sys2staff9voice1">
 					<use
+						id="clef328"
 						xlink:href="#bassClef2x8"
 						x="0"
 						y="0"
 						transform="translate(400,6112) scale(125.44)" />
+					<line
+						id="barline329"
+						x1="503.2"
+						y1="6080"
+						x2="503.2"
+						y2="6208"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName330"
 						x="232"
 						y="6169.6"
 						text-anchor="middle"
@@ -3372,6 +3701,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						font-family="Times New Roman">W 3</text>
 					<g
 						class="outputChord"
+						id="outputChord331"
 						score:alignmentX="603.2352">
 						<score:midiChord
 							pitchWheelDeviation="6">
@@ -3388,7 +3718,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 64 127 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics332">
 							<text
 								x="584.956"
 								y="6224"
@@ -3398,6 +3728,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord333"
 						score:alignmentX="2102.646">
 						<score:midiChord
 							pitchWheelDeviation="6">
@@ -3414,7 +3745,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 64 127 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics334">
 							<text
 								x="2084.366"
 								y="6224"
@@ -3422,8 +3753,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-family="CLicht">›</text>
 						</g>
 					</g>
+					<line
+						id="barline335"
+						x1="3618.056"
+						y1="6080"
+						x2="3618.056"
+						y2="6208"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="outputChord"
+						id="outputChord336"
 						score:alignmentX="3718.091">
 						<score:midiChord
 							pitchWheelDeviation="6">
@@ -3440,19 +3779,21 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 127 127 38 64 38 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics337">
 							<text
 								x="3699.812"
 								y="6272"
 								font-size="125.44"
 								font-family="CLicht">›</text>
 							<line
+								id="ledger338"
 								x1="3661.516"
 								y1="6240"
 								x2="3774.666"
 								y2="6240"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="ledger339"
 								x1="3661.516"
 								y1="6272"
 								x2="3774.666"
@@ -3467,6 +3808,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord340"
 						score:alignmentX="5076.11">
 						<score:midiChord
 							pitchWheelDeviation="6">
@@ -3483,19 +3825,21 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 127 127 38 64 38 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics341">
 							<text
 								x="5057.831"
 								y="6272"
 								font-size="125.44"
 								font-family="CLicht">›</text>
 							<line
+								id="ledger342"
 								x1="5019.535"
 								y1="6240"
 								x2="5132.685"
 								y2="6240"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="ledger343"
 								x1="5019.535"
 								y1="6272"
 								x2="5132.685"
@@ -3505,6 +3849,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord344"
 						score:alignmentX="6434.128">
 						<score:midiChord
 							pitchWheelDeviation="6">
@@ -3521,19 +3866,21 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 25 64 25 102 25 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics345">
 							<text
 								x="6407.043"
 								y="6272"
 								font-size="125.44"
 								font-family="CLicht">w</text>
 							<line
+								id="ledger346"
 								x1="6383.958"
 								y1="6240"
 								x2="6484.299"
 								y2="6240"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="ledger347"
 								x1="6383.958"
 								y1="6272"
 								x2="6484.299"
@@ -3546,402 +3893,167 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-family="CLicht">P</text>
 						</g>
 					</g>
-				</g>
-			</g>
-			<g
-				class="barlines">
-				<g
-					class="barline">
 					<line
-						x1="503.2"
-						y1="3872"
-						x2="503.2"
-						y2="4000"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3618.056"
-						y1="3872"
-						x2="3618.056"
-						y2="4000"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680"
-						y1="3870"
-						x2="7680"
-						y2="4002"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="4000"
-						x2="503.2"
-						y2="4128"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3618.056"
-						y1="4000"
-						x2="3618.056"
-						y2="4128"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680"
-						y1="4000"
-						x2="7680"
-						y2="4128"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="4128"
-						x2="503.2"
-						y2="4256"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3618.056"
-						y1="4128"
-						x2="3618.056"
-						y2="4256"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680"
-						y1="4126"
-						x2="7680"
-						y2="4258"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="4256"
-						x2="503.2"
-						y2="4384"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3618.056"
-						y1="4256"
-						x2="3618.056"
-						y2="4384"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680"
-						y1="4256"
-						x2="7680"
-						y2="4384"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="4384"
-						x2="503.2"
-						y2="4512"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3618.056"
-						y1="4384"
-						x2="3618.056"
-						y2="4512"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680"
-						y1="4382"
-						x2="7680"
-						y2="4514"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="4512"
-						x2="503.2"
-						y2="4640"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3618.056"
-						y1="4512"
-						x2="3618.056"
-						y2="4640"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680"
-						y1="4512"
-						x2="7680"
-						y2="4640"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="4768"
-						x2="503.2"
-						y2="4928"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="4928"
-						x2="503.2"
-						y2="5056"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3618.056"
-						y1="4928"
-						x2="3618.056"
-						y2="5056"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="5056"
-						x2="503.2"
-						y2="5216"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="5216"
-						x2="503.2"
-						y2="5344"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3618.056"
-						y1="5216"
-						x2="3618.056"
-						y2="5344"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680"
-						y1="5214"
-						x2="7680"
-						y2="5346"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="5344"
-						x2="503.2"
-						y2="5472"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="5600"
-						x2="503.2"
-						y2="5760"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3618.056"
-						y1="5600"
-						x2="3618.056"
-						y2="5760"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680"
-						y1="5616"
-						x2="7680"
-						y2="5760"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="5888"
-						x2="503.2"
-						y2="6080"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3618.056"
-						y1="5888"
-						x2="3618.056"
-						y2="6080"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680"
-						y1="5888"
-						x2="7680"
-						y2="6080"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="6080"
-						x2="503.2"
-						y2="6208"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3618.056"
-						y1="6080"
-						x2="3618.056"
-						y2="6208"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
+						id="barline348"
 						x1="7680"
 						y1="6078"
 						x2="7680"
 						y2="6210"
-						style="stroke:#000000; stroke-width:8px" />
+						style="stroke:black; stroke-width:8px" />
 				</g>
+			</g>
+			<g
+				id="sys2connectors">
+				<line
+					x1="503.2"
+					y1="4000"
+					x2="503.2"
+					y2="4128"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="3618.056"
+					y1="4000"
+					x2="3618.056"
+					y2="4128"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="7680"
+					y1="4000"
+					x2="7680"
+					y2="4128"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="503.2"
+					y1="4256"
+					x2="503.2"
+					y2="4384"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="3618.056"
+					y1="4256"
+					x2="3618.056"
+					y2="4384"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="7680"
+					y1="4256"
+					x2="7680"
+					y2="4384"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="503.2"
+					y1="4512"
+					x2="503.2"
+					y2="4640"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="3618.056"
+					y1="4512"
+					x2="3618.056"
+					y2="4640"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="7680"
+					y1="4512"
+					x2="7680"
+					y2="4640"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="503.2"
+					y1="4768"
+					x2="503.2"
+					y2="4928"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="503.2"
+					y1="5056"
+					x2="503.2"
+					y2="5216"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="503.2"
+					y1="5344"
+					x2="503.2"
+					y2="5472"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="503.2"
+					y1="5600"
+					x2="503.2"
+					y2="5760"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="3618.056"
+					y1="5600"
+					x2="3618.056"
+					y2="5760"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="7680"
+					y1="5616"
+					x2="7680"
+					y2="5760"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="503.2"
+					y1="5888"
+					x2="503.2"
+					y2="6080"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="3618.056"
+					y1="5888"
+					x2="3618.056"
+					y2="6080"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="7680"
+					y1="5888"
+					x2="7680"
+					y2="6080"
+					style="stroke:black; stroke-width:8px" />
 			</g>
 		</g>
 		<g
 			class="system"
-			id="page1_system3">
-			<g
-				class="markers">
-				<g
-					class="startMarker">
-					<line
-						x1="0"
-						y1="0"
-						x2="0"
-						y2="0"
-						style="stroke-width:1px" />
-					<circle
-						cx="0"
-						cy="0"
-						r="0"
-						style="stroke-width:1px" />
-				</g>
-				<g
-					class="runningMarker">
-					<line
-						x1="0"
-						y1="0"
-						x2="0"
-						y2="0"
-						style="stroke-width:1px" />
-				</g>
-				<g
-					class="endMarker">
-					<line
-						x1="0"
-						y1="0"
-						x2="0"
-						y2="0"
-						style="stroke-width:1px" />
-					<rect
-						x="0"
-						y="0"
-						width="0"
-						height="0"
-						style="stroke-width:1px" />
-				</g>
-			</g>
+			id="sys3">
 			<g
 				class="outputStaff"
-				id="p1_sys3_staff1"
+				id="sys3staff1"
 				score:staffName="F 1">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys3staff1stafflines">
 					<line
+						id="staffline349"
 						x1="400"
 						y1="6944"
 						x2="7680"
 						y2="6944"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline350"
 						x1="400"
 						y1="6976"
 						x2="7680"
 						y2="6976"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline351"
 						x1="400"
 						y1="7008"
 						x2="7680"
 						y2="7008"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline352"
 						x1="400"
 						y1="7040"
 						x2="7680"
 						y2="7040"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline353"
 						x1="400"
 						y1="7072"
 						x2="7680"
@@ -3949,27 +4061,39 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice">
+					class="outputVoice"
+					id="sys3staff1voice1">
 					<use
+						id="clef354"
 						xlink:href="#bassClef"
 						x="0"
 						y="0"
 						transform="translate(400,6976) scale(125.44)" />
+					<line
+						id="barline355"
+						x1="503.2"
+						y1="6944"
+						x2="503.2"
+						y2="7072"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName356"
 						x="232"
 						y="7033.6"
 						text-anchor="middle"
 						font-size="80"
 						font-family="Times New Roman">F 1</text>
 					<g
-						id="barnumber4">
+						id="barNumber357">
 						<text
+							id="number358"
 							x="503.2"
 							y="6752"
 							text-anchor="middle"
 							font-size="64"
 							font-family="Arial">5</text>
 						<rect
+							id="box359"
 							x="457.4561"
 							y="6684.56"
 							width="91.48798"
@@ -3978,6 +4102,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest360"
 						score:alignmentX="610.9272"
 						score:msDuration="2962">
 						<text
@@ -3986,8 +4111,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">Ó</text>
 					</g>
+					<line
+						id="barline361"
+						x1="1891.062"
+						y1="6944"
+						x2="1891.062"
+						y2="7072"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest362"
 						score:alignmentX="1984.982"
 						score:msDuration="4554">
 						<text
@@ -3996,8 +4129,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">∑</text>
 					</g>
+					<line
+						id="barline363"
+						x1="3889.394"
+						y1="6944"
+						x2="3889.394"
+						y2="7072"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest364"
 						score:alignmentX="3995.189"
 						score:msDuration="1999">
 						<text
@@ -4006,8 +4147,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">Ó</text>
 					</g>
+					<line
+						id="barline365"
+						x1="4830.844"
+						y1="6944"
+						x2="4830.844"
+						y2="7072"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest366"
 						score:alignmentX="4935.301"
 						score:msDuration="4061">
 						<text
@@ -4016,8 +4165,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">∑</text>
 					</g>
+					<line
+						id="barline367"
+						x1="6636.146"
+						y1="6944"
+						x2="6636.146"
+						y2="7072"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest368"
 						score:alignmentX="6741.941"
 						score:msDuration="2247">
 						<text
@@ -4026,39 +4183,52 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">Ó</text>
 					</g>
+					<line
+						id="barline369"
+						x1="7680"
+						y1="6942"
+						x2="7680"
+						y2="7074"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys3_staff2"
+				id="sys3staff2"
 				score:staffName="F 2">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys3staff2stafflines">
 					<line
+						id="staffline370"
 						x1="400"
 						y1="7200"
 						x2="7680"
 						y2="7200"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline371"
 						x1="400"
 						y1="7232"
 						x2="7680"
 						y2="7232"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline372"
 						x1="400"
 						y1="7264"
 						x2="7680"
 						y2="7264"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline373"
 						x1="400"
 						y1="7296"
 						x2="7680"
 						y2="7296"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline374"
 						x1="400"
 						y1="7328"
 						x2="7680"
@@ -4066,13 +4236,23 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice">
+					class="outputVoice"
+					id="sys3staff2voice1">
 					<use
+						id="clef375"
 						xlink:href="#bassClef"
 						x="0"
 						y="0"
 						transform="translate(400,7232) scale(125.44)" />
+					<line
+						id="barline376"
+						x1="503.2"
+						y1="7200"
+						x2="503.2"
+						y2="7328"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName377"
 						x="232"
 						y="7289.6"
 						text-anchor="middle"
@@ -4080,6 +4260,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						font-family="Times New Roman">F 2</text>
 					<g
 						class="rest"
+						id="rest378"
 						score:alignmentX="610.9272"
 						score:msDuration="2962">
 						<text
@@ -4088,8 +4269,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">Ó</text>
 					</g>
+					<line
+						id="barline379"
+						x1="1891.062"
+						y1="7200"
+						x2="1891.062"
+						y2="7328"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest380"
 						score:alignmentX="1984.982"
 						score:msDuration="4554">
 						<text
@@ -4098,8 +4287,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">∑</text>
 					</g>
+					<line
+						id="barline381"
+						x1="3889.394"
+						y1="7200"
+						x2="3889.394"
+						y2="7328"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest382"
 						score:alignmentX="3995.189"
 						score:msDuration="1999">
 						<text
@@ -4108,8 +4305,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">Ó</text>
 					</g>
+					<line
+						id="barline383"
+						x1="4830.844"
+						y1="7200"
+						x2="4830.844"
+						y2="7328"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest384"
 						score:alignmentX="4935.301"
 						score:msDuration="4061">
 						<text
@@ -4118,8 +4323,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">∑</text>
 					</g>
+					<line
+						id="barline385"
+						x1="6636.146"
+						y1="7200"
+						x2="6636.146"
+						y2="7328"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest386"
 						score:alignmentX="6741.941"
 						score:msDuration="2247">
 						<text
@@ -4128,39 +4341,52 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">Ó</text>
 					</g>
+					<line
+						id="barline387"
+						x1="7680"
+						y1="7198"
+						x2="7680"
+						y2="7330"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys3_staff3"
+				id="sys3staff3"
 				score:staffName="F 3">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys3staff3stafflines">
 					<line
+						id="staffline388"
 						x1="400"
 						y1="7456"
 						x2="7680"
 						y2="7456"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline389"
 						x1="400"
 						y1="7488"
 						x2="7680"
 						y2="7488"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline390"
 						x1="400"
 						y1="7520"
 						x2="7680"
 						y2="7520"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline391"
 						x1="400"
 						y1="7552"
 						x2="7680"
 						y2="7552"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline392"
 						x1="400"
 						y1="7584"
 						x2="7680"
@@ -4168,13 +4394,23 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice">
+					class="outputVoice"
+					id="sys3staff3voice1">
 					<use
+						id="clef393"
 						xlink:href="#bassClef2x8"
 						x="0"
 						y="0"
 						transform="translate(400,7488) scale(125.44)" />
+					<line
+						id="barline394"
+						x1="503.2"
+						y1="7456"
+						x2="503.2"
+						y2="7584"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName395"
 						x="232"
 						y="7545.6"
 						text-anchor="middle"
@@ -4182,6 +4418,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						font-family="Times New Roman">F 3</text>
 					<g
 						class="rest"
+						id="rest396"
 						score:alignmentX="610.9272"
 						score:msDuration="2962">
 						<text
@@ -4190,8 +4427,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">Ó</text>
 					</g>
+					<line
+						id="barline397"
+						x1="1891.062"
+						y1="7456"
+						x2="1891.062"
+						y2="7584"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest398"
 						score:alignmentX="1984.982"
 						score:msDuration="4554">
 						<text
@@ -4200,8 +4445,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">∑</text>
 					</g>
+					<line
+						id="barline399"
+						x1="3889.394"
+						y1="7456"
+						x2="3889.394"
+						y2="7584"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest400"
 						score:alignmentX="3995.189"
 						score:msDuration="1999">
 						<text
@@ -4210,8 +4463,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">Ó</text>
 					</g>
+					<line
+						id="barline401"
+						x1="4830.844"
+						y1="7456"
+						x2="4830.844"
+						y2="7584"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest402"
 						score:alignmentX="4935.301"
 						score:msDuration="4061">
 						<text
@@ -4220,8 +4481,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">∑</text>
 					</g>
+					<line
+						id="barline403"
+						x1="6636.146"
+						y1="7456"
+						x2="6636.146"
+						y2="7584"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest404"
 						score:alignmentX="6741.941"
 						score:msDuration="2247">
 						<text
@@ -4230,39 +4499,52 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">Ó</text>
 					</g>
+					<line
+						id="barline405"
+						x1="7680"
+						y1="7454"
+						x2="7680"
+						y2="7586"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys3_staff4"
+				id="sys3staff4"
 				score:staffName="F 4">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys3staff4stafflines">
 					<line
+						id="staffline406"
 						x1="400"
 						y1="7712"
 						x2="7680"
 						y2="7712"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline407"
 						x1="400"
 						y1="7744"
 						x2="7680"
 						y2="7744"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline408"
 						x1="400"
 						y1="7776"
 						x2="7680"
 						y2="7776"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline409"
 						x1="400"
 						y1="7808"
 						x2="7680"
 						y2="7808"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline410"
 						x1="400"
 						y1="7840"
 						x2="7680"
@@ -4270,20 +4552,30 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice">
+					class="outputVoice"
+					id="sys3staff4voice1">
 					<use
+						id="clef411"
 						xlink:href="#bassClef2x8"
 						x="0"
 						y="0"
 						transform="translate(400,7744) scale(125.44)" />
+					<line
+						id="barline412"
+						x1="503.2"
+						y1="7712"
+						x2="503.2"
+						y2="7840"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName413"
 						x="232"
 						y="7801.6"
 						text-anchor="middle"
 						font-size="80"
 						font-family="Times New Roman">F 4</text>
 					<g
-						class="cautionaryChord">
+						id="cautionaryChord414">
 						<g>
 							<text
 								x="590.4371"
@@ -4306,12 +4598,14 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="100.352"
 								font-family="CLicht">b</text>
 							<line
+								id="ledger415"
 								x1="579.707"
 								y1="7872"
 								x2="630.6275"
 								y2="7872"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="ledger416"
 								x1="579.707"
 								y1="7904"
 								x2="630.6275"
@@ -4330,36 +4624,42 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								stroke-linecap="butt"
 								d="M 638.6275,7808.912 L 654.6275,7808.912 654.6275,7945.554 638.6275,7945.554" />
 							<line
+								id="extender417"
 								x1="491.2"
 								y1="7824"
 								x2="525.132"
 								y2="7824"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 							<line
+								id="extender418"
 								x1="491.2"
 								y1="7856"
 								x2="525.132"
 								y2="7856"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 							<line
+								id="extender419"
 								x1="491.2"
 								y1="7920"
 								x2="525.132"
 								y2="7920"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 							<line
+								id="extender420"
 								x1="654.6275"
 								y1="7824"
 								x2="1891.062"
 								y2="7824"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 							<line
+								id="extender421"
 								x1="654.6275"
 								y1="7856"
 								x2="1891.062"
 								y2="7856"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 							<line
+								id="extender422"
 								x1="654.6275"
 								y1="7920"
 								x2="1891.062"
@@ -4367,8 +4667,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline423"
+						x1="1891.062"
+						y1="7712"
+						x2="1891.062"
+						y2="7840"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest424"
 						score:alignmentX="1984.982"
 						score:msDuration="3970">
 						<text
@@ -4379,6 +4687,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord425"
 						score:alignmentX="3632.252">
 						<score:midiChord
 							pitchWheelDeviation="3">
@@ -4393,7 +4702,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 80 127 80 80 100 100 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics426">
 							<text
 								x="3613.972"
 								y="7824"
@@ -4415,30 +4724,35 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="125.44"
 								font-family="CLicht">b</text>
 							<line
+								id="ledger427"
 								x1="3575.677"
 								y1="7872"
 								x2="3688.827"
 								y2="7872"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="ledger428"
 								x1="3575.677"
 								y1="7904"
 								x2="3688.827"
 								y2="7904"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="extender429"
 								x1="3671.557"
 								y1="7824"
 								x2="7233.526"
 								y2="7824"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 							<line
+								id="extender430"
 								x1="3696.827"
 								y1="7856"
 								x2="7233.526"
 								y2="7856"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 							<line
+								id="extender431"
 								x1="3696.827"
 								y1="7920"
 								x2="7233.526"
@@ -4446,8 +4760,30 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline432"
+						x1="3889.394"
+						y1="7712"
+						x2="3889.394"
+						y2="7840"
+						style="stroke:black; stroke-width:8px" />
+					<line
+						id="barline433"
+						x1="4830.844"
+						y1="7712"
+						x2="4830.844"
+						y2="7840"
+						style="stroke:black; stroke-width:8px" />
+					<line
+						id="barline434"
+						x1="6636.146"
+						y1="7712"
+						x2="6636.146"
+						y2="7840"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest435"
 						score:alignmentX="7252.737"
 						score:msDuration="996">
 						<text
@@ -4456,39 +4792,52 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">Œ</text>
 					</g>
+					<line
+						id="barline436"
+						x1="7680"
+						y1="7710"
+						x2="7680"
+						y2="7842"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys3_staff5"
+				id="sys3staff5"
 				score:staffName="R2M">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys3staff5stafflines">
 					<line
+						id="staffline437"
 						x1="400"
 						y1="8000"
 						x2="7680"
 						y2="8000"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline438"
 						x1="400"
 						y1="8032"
 						x2="7680"
 						y2="8032"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline439"
 						x1="400"
 						y1="8064"
 						x2="7680"
 						y2="8064"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline440"
 						x1="400"
 						y1="8096"
 						x2="7680"
 						y2="8096"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline441"
 						x1="400"
 						y1="8128"
 						x2="7680"
@@ -4496,20 +4845,30 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice">
+					class="outputVoice"
+					id="sys3staff5voice1">
 					<use
+						id="clef442"
 						xlink:href="#trebleClef"
 						x="0"
 						y="0"
 						transform="translate(400.0001,8096) scale(125.44)" />
+					<line
+						id="barline443"
+						x1="503.2"
+						y1="8000"
+						x2="503.2"
+						y2="8128"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName444"
 						x="232"
 						y="8089.6"
 						text-anchor="middle"
 						font-size="80"
 						font-family="Times New Roman">R2M</text>
 					<g
-						class="cautionaryChord">
+						id="cautionaryChord445">
 						<g>
 							<text
 								x="590.4371"
@@ -4529,12 +4888,14 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								stroke-linecap="butt"
 								d="M 623.9114,8070.246 L 639.9114,8070.246 639.9114,8121.754 623.9114,8121.754" />
 							<line
+								id="extender446"
 								x1="491.2"
 								y1="8096"
 								x2="570.423"
 								y2="8096"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 							<line
+								id="extender447"
 								x1="639.9114"
 								y1="8096"
 								x2="1891.062"
@@ -4542,8 +4903,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline448"
+						x1="1891.062"
+						y1="8000"
+						x2="1891.062"
+						y2="8128"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest449"
 						score:alignmentX="1984.982"
 						score:msDuration="3970">
 						<text
@@ -4554,6 +4923,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord450"
 						score:alignmentX="3632.252">
 						<score:midiChord
 							hasChordOff="0">
@@ -4566,13 +4936,14 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							</basicChords>
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics451">
 							<text
 								x="3613.972"
 								y="8096"
 								font-size="125.44"
 								font-family="CLicht">›</text>
 							<line
+								id="extender452"
 								x1="3671.557"
 								y1="8096"
 								x2="7233.526"
@@ -4580,8 +4951,30 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline453"
+						x1="3889.394"
+						y1="8000"
+						x2="3889.394"
+						y2="8128"
+						style="stroke:black; stroke-width:8px" />
+					<line
+						id="barline454"
+						x1="4830.844"
+						y1="8000"
+						x2="4830.844"
+						y2="8128"
+						style="stroke:black; stroke-width:8px" />
+					<line
+						id="barline455"
+						x1="6636.146"
+						y1="8000"
+						x2="6636.146"
+						y2="8128"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="rest"
+						id="rest456"
 						score:alignmentX="7252.737"
 						score:msDuration="996">
 						<text
@@ -4590,39 +4983,52 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">Œ</text>
 					</g>
+					<line
+						id="barline457"
+						x1="7680"
+						y1="7998"
+						x2="7680"
+						y2="8130"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys3_staff6"
+				id="sys3staff6"
 				score:staffName="Clyt.">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys3staff6stafflines">
 					<line
+						id="staffline458"
 						x1="400"
 						y1="8288"
 						x2="7680"
 						y2="8288"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline459"
 						x1="400"
 						y1="8320"
 						x2="7680"
 						y2="8320"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline460"
 						x1="400"
 						y1="8352"
 						x2="7680"
 						y2="8352"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline461"
 						x1="400"
 						y1="8384"
 						x2="7680"
 						y2="8384"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline462"
 						x1="400"
 						y1="8416"
 						x2="7680"
@@ -4630,13 +5036,23 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice">
+					class="outputVoice"
+					id="sys3staff6voice1">
 					<use
+						id="clef463"
 						xlink:href="#trebleClef"
 						x="0"
 						y="0"
 						transform="translate(400,8384) scale(125.44)" />
+					<line
+						id="barline464"
+						x1="503.2"
+						y1="8288"
+						x2="503.2"
+						y2="8416"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName465"
 						x="232"
 						y="8377.6"
 						text-anchor="middle"
@@ -4644,6 +5060,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						font-family="Times New Roman">Clyt.</text>
 					<g
 						class="outputChord"
+						id="outputChord466"
 						score:alignmentX="605.1672">
 						<score:midiChord
 							pitchWheelDeviation="1">
@@ -4658,8 +5075,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="65" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics467">
 							<line
+								id="stem468"
 								x1="621.5799"
 								y1="8268.8"
 								x2="621.5799"
@@ -4671,12 +5089,6 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="125.44"
 								font-family="CLicht">˙</text>
 							<text
-								x="605.1672"
-								y="8508.531"
-								text-anchor="middle"
-								font-size="62.72"
-								font-family="Arial">What!</text>
-							<text
 								x="551.8369"
 								y="8231.215"
 								font-size="94.08"
@@ -4685,6 +5097,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="rest"
+						id="rest469"
 						score:alignmentX="1360.571"
 						score:msDuration="1246">
 						<text
@@ -4693,8 +5106,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 							font-size="125.44"
 							font-family="CLicht">Œ</text>
 					</g>
+					<line
+						id="barline470"
+						x1="1891.062"
+						y1="8288"
+						x2="1891.062"
+						y2="8416"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="outputChord"
+						id="outputChord471"
 						score:alignmentX="1992.982">
 						<score:midiChord
 							pitchWheelDeviation="1">
@@ -4709,8 +5130,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="65" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics472">
 							<line
+								id="stem473"
 								x1="2009.395"
 								y1="8268.8"
 								x2="2009.395"
@@ -4721,16 +5143,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="8384"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
-							<text
-								x="1992.982"
-								y="8508.531"
-								text-anchor="middle"
-								font-size="62.72"
-								font-family="Arial">Slum-</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord474"
 						score:alignmentX="2483.938">
 						<score:midiChord
 							pitchWheelDeviation="1">
@@ -4745,14 +5162,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="65" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics475">
 							<line
+								id="stem476"
 								x1="2500.35"
 								y1="8263.454"
 								x2="2500.35"
 								y2="8380.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<use
+								id="flag477"
 								xlink:href="#Right1Flag"
 								x="0"
 								y="0"
@@ -4762,16 +5181,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="8384"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
-							<text
-								x="2483.938"
-								y="8508.531"
-								text-anchor="middle"
-								font-size="62.72"
-								font-family="Arial">ber</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord478"
 						score:alignmentX="2653.232">
 						<score:midiChord
 							pitchWheelDeviation="1">
@@ -4786,8 +5200,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="65" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics479">
 							<line
+								id="stem480"
 								x1="2669.645"
 								y1="8268.8"
 								x2="2669.645"
@@ -4798,16 +5213,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="8384"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
-							<text
-								x="2653.232"
-								y="8508.531"
-								text-anchor="middle"
-								font-size="62.72"
-								font-family="Arial">ye?</text>
 						</g>
 					</g>
 					<g
 						class="rest"
+						id="rest481"
 						score:alignmentX="3006.687"
 						score:msDuration="1515">
 						<text
@@ -4818,6 +5228,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord482"
 						score:alignmentX="3632.252">
 						<score:midiChord
 							pitchWheelDeviation="1">
@@ -4832,14 +5243,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="65" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics483">
 							<line
+								id="stem484"
 								x1="3648.664"
 								y1="8263.454"
 								x2="3648.664"
 								y2="8380.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<use
+								id="flag485"
 								xlink:href="#Right1Flag"
 								x="0"
 								y="0"
@@ -4849,26 +5262,30 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="8384"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
-							<text
-								x="3632.252"
-								y="8508.531"
-								text-anchor="middle"
-								font-size="62.72"
-								font-family="Arial">Is</text>
 						</g>
 					</g>
+					<line
+						id="barline486"
+						x1="3889.394"
+						y1="8288"
+						x2="3889.394"
+						y2="8416"
+						style="stroke:black; stroke-width:8px" />
 					<g
-						class="beamBlock">
+						id="beamBlock487">
 						<path
+							id="beam488"
 							fill="white"
 							opacity="0.65"
 							d="M 4005.841 8272.319 L 4156.968 8272.319 4156.968 8292.479 4005.841 8292.479 z" />
 						<path
+							id="beam489"
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
 							d="M 4005.841 8285.76 L 4156.968 8285.76 4156.968 8299.2 4005.841 8299.2 z" />
 						<path
+							id="beam490"
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
@@ -4876,6 +5293,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord491"
 						score:alignmentX="3989.429">
 						<score:midiChord
 							pitchWheelDeviation="1">
@@ -4890,8 +5308,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="65" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics492">
 							<line
+								id="stem493"
 								x1="4005.841"
 								y1="8253.76"
 								x2="4005.841"
@@ -4902,16 +5321,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="8384"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
-							<text
-								x="3989.429"
-								y="8508.531"
-								text-anchor="middle"
-								font-size="62.72"
-								font-family="Arial">this</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord494"
 						score:alignmentX="4140.555">
 						<score:midiChord
 							pitchWheelDeviation="1">
@@ -4926,8 +5340,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="65" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics495">
 							<line
+								id="stem496"
 								x1="4156.968"
 								y1="8253.76"
 								x2="4156.968"
@@ -4938,16 +5353,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="8384"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
-							<text
-								x="4140.555"
-								y="8508.531"
-								text-anchor="middle"
-								font-size="62.72"
-								font-family="Arial">a</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord497"
 						score:alignmentX="4290.443">
 						<score:midiChord
 							pitchWheelDeviation="1">
@@ -4962,8 +5372,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="65" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics498">
 							<line
+								id="stem499"
 								x1="4306.856"
 								y1="8268.8"
 								x2="4306.856"
@@ -4974,16 +5385,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="8384"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
-							<text
-								x="4290.443"
-								y="8508.531"
-								text-anchor="middle"
-								font-size="62.72"
-								font-family="Arial">time</text>
 						</g>
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord500"
 						score:alignmentX="4657.937">
 						<score:midiChord
 							pitchWheelDeviation="1">
@@ -4998,14 +5404,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="65" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics501">
 							<line
+								id="stem502"
 								x1="4674.35"
 								y1="8264.094"
 								x2="4674.35"
 								y2="8380.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<use
+								id="flag503"
 								xlink:href="#Right2Flags"
 								x="0"
 								y="0"
@@ -5015,16 +5423,18 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="8384"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
-							<text
-								x="4657.937"
-								y="8508.531"
-								text-anchor="middle"
-								font-size="62.72"
-								font-family="Arial">to</text>
 						</g>
 					</g>
+					<line
+						id="barline504"
+						x1="4830.844"
+						y1="8288"
+						x2="4830.844"
+						y2="8416"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="outputChord"
+						id="outputChord505"
 						score:alignmentX="4943.301">
 						<score:midiChord
 							pitchWheelDeviation="1">
@@ -5039,8 +5449,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="65" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics506">
 							<line
+								id="stem507"
 								x1="4959.714"
 								y1="8268.8"
 								x2="4959.714"
@@ -5051,16 +5462,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="8384"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
-							<text
-								x="4943.301"
-								y="8508.531"
-								text-anchor="middle"
-								font-size="62.72"
-								font-family="Arial">sleep?</text>
 						</g>
 					</g>
 					<g
 						class="rest"
+						id="rest508"
 						score:alignmentX="5512.276"
 						score:msDuration="1861">
 						<text
@@ -5071,6 +5477,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord509"
 						score:alignmentX="6274.95">
 						<score:midiChord
 							pitchWheelDeviation="1">
@@ -5085,8 +5492,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="65" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics510">
 							<line
+								id="stem511"
 								x1="6291.362"
 								y1="8268.8"
 								x2="6291.362"
@@ -5097,16 +5505,18 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="8384"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
-							<text
-								x="6274.95"
-								y="8508.531"
-								text-anchor="middle"
-								font-size="62.72"
-								font-family="Arial">While</text>
 						</g>
 					</g>
+					<line
+						id="barline512"
+						x1="6636.146"
+						y1="8288"
+						x2="6636.146"
+						y2="8416"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="outputChord"
+						id="outputChord513"
 						score:alignmentX="6736.181">
 						<score:midiChord
 							pitchWheelDeviation="1">
@@ -5121,8 +5531,9 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="65" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics514">
 							<line
+								id="stem515"
 								x1="6752.594"
 								y1="8268.8"
 								x2="6752.594"
@@ -5133,16 +5544,11 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="8384"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
-							<text
-								x="6736.181"
-								y="8508.531"
-								text-anchor="middle"
-								font-size="62.72"
-								font-family="Arial">I,</text>
 						</g>
 					</g>
 					<g
 						class="rest"
+						id="rest516"
 						score:alignmentX="7252.737"
 						score:msDuration="556">
 						<text
@@ -5153,6 +5559,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord517"
 						score:alignmentX="7482.317">
 						<score:midiChord
 							pitchWheelDeviation="1">
@@ -5167,14 +5574,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="65" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics518">
 							<line
+								id="stem519"
 								x1="7498.73"
 								y1="8263.454"
 								x2="7498.73"
 								y2="8380.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<use
+								id="flag520"
 								xlink:href="#Right1Flag"
 								x="0"
 								y="0"
@@ -5184,47 +5593,54 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								y="8384"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
-							<text
-								x="7482.317"
-								y="8508.531"
-								text-anchor="middle"
-								font-size="62.72"
-								font-family="Arial">dis-</text>
 						</g>
 					</g>
+					<line
+						id="barline521"
+						x1="7680"
+						y1="8286"
+						x2="7680"
+						y2="8418"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys3_staff7"
+				id="sys3staff7"
 				score:staffName="W 1">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys3staff7stafflines">
 					<line
+						id="staffline522"
 						x1="400"
 						y1="8576"
 						x2="7680"
 						y2="8576"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline523"
 						x1="400"
 						y1="8608"
 						x2="7680"
 						y2="8608"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline524"
 						x1="400"
 						y1="8640"
 						x2="7680"
 						y2="8640"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline525"
 						x1="400"
 						y1="8672"
 						x2="7680"
 						y2="8672"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline526"
 						x1="400"
 						y1="8704"
 						x2="7680"
@@ -5232,20 +5648,30 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice">
+					class="outputVoice"
+					id="sys3staff7voice1">
 					<use
+						id="clef527"
 						xlink:href="#bassClef8"
 						x="0"
 						y="0"
 						transform="translate(400,8608) scale(125.44)" />
+					<line
+						id="barline528"
+						x1="503.2"
+						y1="8576"
+						x2="503.2"
+						y2="8704"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName529"
 						x="232"
 						y="8665.6"
 						text-anchor="middle"
 						font-size="80"
 						font-family="Times New Roman">W 1</text>
 					<g
-						class="cautionaryChord">
+						id="cautionaryChord530">
 						<g>
 							<text
 								x="590.4371"
@@ -5270,6 +5696,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								stroke-linecap="butt"
 								d="M 623.9114,8681.141 L 639.9114,8681.141 639.9114,8758.859 623.9114,8758.859" />
 							<line
+								id="extender531"
 								x1="491.2"
 								y1="8720"
 								x2="539.2593"
@@ -5279,6 +5706,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord532"
 						score:alignmentX="678.8497">
 						<score:midiChord
 							pitchWheelDeviation="3">
@@ -5295,7 +5723,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 64 127 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics533">
 							<text
 								x="660.5704"
 								y="8608"
@@ -5307,6 +5735,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="94.08"
 								font-family="CLicht">p</text>
 							<line
+								id="extender534"
 								x1="718.1547"
 								y1="8608"
 								x2="4126.025"
@@ -5314,8 +5743,23 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline535"
+						x1="1891.062"
+						y1="8576"
+						x2="1891.062"
+						y2="8704"
+						style="stroke:black; stroke-width:8px" />
+					<line
+						id="barline536"
+						x1="3889.394"
+						y1="8576"
+						x2="3889.394"
+						y2="8704"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="outputChord"
+						id="outputChord537"
 						score:alignmentX="4165.33">
 						<score:midiChord
 							pitchWheelDeviation="3">
@@ -5332,7 +5776,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 64 127 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics538">
 							<text
 								x="4147.051"
 								y="8608"
@@ -5344,6 +5788,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="94.08"
 								font-family="CLicht">p</text>
 							<line
+								id="extender539"
 								x1="4204.635"
 								y1="8608"
 								x2="7712"
@@ -5351,39 +5796,66 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline540"
+						x1="4830.844"
+						y1="8576"
+						x2="4830.844"
+						y2="8704"
+						style="stroke:black; stroke-width:8px" />
+					<line
+						id="barline541"
+						x1="6636.146"
+						y1="8576"
+						x2="6636.146"
+						y2="8704"
+						style="stroke:black; stroke-width:8px" />
+					<line
+						id="barline542"
+						x1="7680"
+						y1="8574"
+						x2="7680"
+						y2="8706"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys3_staff8"
+				id="sys3staff8"
 				score:staffName="W 2">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys3staff8stafflines">
 					<line
+						id="staffline543"
 						x1="400"
 						y1="8864"
 						x2="7680"
 						y2="8864"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline544"
 						x1="400"
 						y1="8896"
 						x2="7680"
 						y2="8896"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline545"
 						x1="400"
 						y1="8928"
 						x2="7680"
 						y2="8928"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline546"
 						x1="400"
 						y1="8960"
 						x2="7680"
 						y2="8960"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline547"
 						x1="400"
 						y1="8992"
 						x2="7680"
@@ -5391,20 +5863,30 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice">
+					class="outputVoice"
+					id="sys3staff8voice1">
 					<use
+						id="clef548"
 						xlink:href="#bassClef8"
 						x="0"
 						y="0"
 						transform="translate(400.0001,8896) scale(125.44)" />
+					<line
+						id="barline549"
+						x1="503.2"
+						y1="8864"
+						x2="503.2"
+						y2="8992"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName550"
 						x="232"
 						y="8953.6"
 						text-anchor="middle"
 						font-size="80"
 						font-family="Times New Roman">W 2</text>
 					<g
-						class="cautionaryChord">
+						id="cautionaryChord551">
 						<g>
 							<text
 								x="590.4371"
@@ -5424,12 +5906,14 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								stroke-linecap="butt"
 								d="M 623.9114,8950.245 L 639.9114,8950.245 639.9114,9001.754 623.9114,9001.754" />
 							<line
+								id="extender552"
 								x1="491.2"
 								y1="8976"
 								x2="570.423"
 								y2="8976"
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 							<line
+								id="extender553"
 								x1="639.9114"
 								y1="8976"
 								x2="1607.558"
@@ -5439,6 +5923,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 					</g>
 					<g
 						class="outputChord"
+						id="outputChord554"
 						score:alignmentX="1664.889">
 						<score:midiChord
 							pitchWheelDeviation="3">
@@ -5455,7 +5940,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 25 64 25 102 25 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics555">
 							<text
 								x="1646.61"
 								y="8944"
@@ -5467,6 +5952,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="94.08"
 								font-family="CLicht">P</text>
 							<line
+								id="extender556"
 								x1="1704.194"
 								y1="8944"
 								x2="4651.785"
@@ -5474,8 +5960,23 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline557"
+						x1="1891.062"
+						y1="8864"
+						x2="1891.062"
+						y2="8992"
+						style="stroke:black; stroke-width:8px" />
+					<line
+						id="barline558"
+						x1="3889.394"
+						y1="8864"
+						x2="3889.394"
+						y2="8992"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="outputChord"
+						id="outputChord559"
 						score:alignmentX="4725.242">
 						<score:midiChord
 							pitchWheelDeviation="3">
@@ -5492,7 +5993,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 38 64 38 127 127 64 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics560">
 							<text
 								x="4698.157"
 								y="8976"
@@ -5509,6 +6010,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="94.08"
 								font-family="CLicht">P</text>
 							<line
+								id="extender561"
 								x1="4761.345"
 								y1="8976"
 								x2="6995.945"
@@ -5516,8 +6018,23 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline562"
+						x1="4830.844"
+						y1="8864"
+						x2="4830.844"
+						y2="8992"
+						style="stroke:black; stroke-width:8px" />
+					<line
+						id="barline563"
+						x1="6636.146"
+						y1="8864"
+						x2="6636.146"
+						y2="8992"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="outputChord"
+						id="outputChord564"
 						score:alignmentX="7069.403">
 						<score:midiChord
 							pitchWheelDeviation="3">
@@ -5534,7 +6051,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 25 102 25 64 25 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics565">
 							<text
 								x="7042.317"
 								y="8944"
@@ -5551,6 +6068,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="94.08"
 								font-family="CLicht">P</text>
 							<line
+								id="extender566"
 								x1="7105.506"
 								y1="8944"
 								x2="7712"
@@ -5558,39 +6076,52 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline567"
+						x1="7680"
+						y1="8862"
+						x2="7680"
+						y2="8994"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
 				class="outputStaff"
-				id="p1_sys3_staff9"
+				id="sys3staff9"
 				score:staffName="W 3">
 				<g
-					class="stafflines">
+					class="stafflines"
+					id="sys3staff9stafflines">
 					<line
+						id="staffline568"
 						x1="400"
 						y1="9152"
 						x2="7680"
 						y2="9152"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline569"
 						x1="400"
 						y1="9184"
 						x2="7680"
 						y2="9184"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline570"
 						x1="400"
 						y1="9216"
 						x2="7680"
 						y2="9216"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline571"
 						x1="400"
 						y1="9248"
 						x2="7680"
 						y2="9248"
 						style="stroke:black; stroke-width:4px" />
 					<line
+						id="staffline572"
 						x1="400"
 						y1="9280"
 						x2="7680"
@@ -5598,13 +6129,23 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						style="stroke:black; stroke-width:4px" />
 				</g>
 				<g
-					class="outputVoice">
+					class="outputVoice"
+					id="sys3staff9voice1">
 					<use
+						id="clef573"
 						xlink:href="#bassClef2x8"
 						x="0"
 						y="0"
 						transform="translate(400,9184) scale(125.44)" />
+					<line
+						id="barline574"
+						x1="503.2"
+						y1="9152"
+						x2="503.2"
+						y2="9280"
+						style="stroke:black; stroke-width:8px" />
 					<text
+						id="staffName575"
 						x="232"
 						y="9241.6"
 						text-anchor="middle"
@@ -5612,6 +6153,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 						font-family="Times New Roman">W 3</text>
 					<g
 						class="outputChord"
+						id="outputChord576"
 						score:alignmentX="605.1672">
 						<score:midiChord
 							pitchWheelDeviation="3">
@@ -5628,19 +6170,21 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 127 127 38 64 38 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics577">
 							<text
 								x="586.888"
 								y="9344"
 								font-size="125.44"
 								font-family="CLicht">›</text>
 							<line
+								id="ledger578"
 								x1="548.5923"
 								y1="9312"
 								x2="661.7422"
 								y2="9312"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="ledger579"
 								x1="548.5923"
 								y1="9344"
 								x2="661.7422"
@@ -5652,6 +6196,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="94.08"
 								font-family="CLicht">p</text>
 							<line
+								id="extender580"
 								x1="669.7422"
 								y1="9344"
 								x2="3609.876"
@@ -5659,8 +6204,16 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline581"
+						x1="1891.062"
+						y1="9152"
+						x2="1891.062"
+						y2="9280"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="outputChord"
+						id="outputChord582"
 						score:alignmentX="3649.181">
 						<score:midiChord
 							pitchWheelDeviation="3">
@@ -5677,7 +6230,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 64 127 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics583">
 							<text
 								x="3630.902"
 								y="9296"
@@ -5689,6 +6242,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="94.08"
 								font-family="CLicht">p</text>
 							<line
+								id="extender584"
 								x1="3688.486"
 								y1="9296"
 								x2="7124.16"
@@ -5696,8 +6250,30 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline585"
+						x1="3889.394"
+						y1="9152"
+						x2="3889.394"
+						y2="9280"
+						style="stroke:black; stroke-width:8px" />
+					<line
+						id="barline586"
+						x1="4830.844"
+						y1="9152"
+						x2="4830.844"
+						y2="9280"
+						style="stroke:black; stroke-width:8px" />
+					<line
+						id="barline587"
+						x1="6636.146"
+						y1="9152"
+						x2="6636.146"
+						y2="9280"
+						style="stroke:black; stroke-width:8px" />
 					<g
 						class="outputChord"
+						id="outputChord588"
 						score:alignmentX="7188.735">
 						<score:midiChord
 							pitchWheelDeviation="3">
@@ -5714,19 +6290,21 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								expressionSlider="0 127 127 38 64 38 0" />
 						</score:midiChord>
 						<g
-							class="graphics">
+							id="graphics589">
 							<text
 								x="7170.456"
 								y="9344"
 								font-size="125.44"
 								font-family="CLicht">›</text>
 							<line
+								id="ledger590"
 								x1="7132.16"
 								y1="9312"
 								x2="7245.311"
 								y2="9312"
 								style="stroke:black; stroke-width:4px" />
 							<line
+								id="ledger591"
 								x1="7132.16"
 								y1="9344"
 								x2="7245.311"
@@ -5738,6 +6316,7 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								font-size="94.08"
 								font-family="CLicht">p</text>
 							<line
+								id="extender592"
 								x1="7253.311"
 								y1="9344"
 								x2="7712"
@@ -5745,629 +6324,222 @@ Annotations, if there are any, have been made using Inkscape on the annotation l
 								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						id="barline593"
+						x1="7680"
+						y1="9150"
+						x2="7680"
+						y2="9282"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
-				class="barlines">
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="6944"
-						x2="503.2"
-						y2="7072"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="1891.062"
-						y1="6944"
-						x2="1891.062"
-						y2="7072"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3889.394"
-						y1="6944"
-						x2="3889.394"
-						y2="7072"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="4830.844"
-						y1="6944"
-						x2="4830.844"
-						y2="7072"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="6636.146"
-						y1="6944"
-						x2="6636.146"
-						y2="7072"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680"
-						y1="6942"
-						x2="7680"
-						y2="7074"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="7072"
-						x2="503.2"
-						y2="7200"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="1891.062"
-						y1="7072"
-						x2="1891.062"
-						y2="7200"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3889.394"
-						y1="7072"
-						x2="3889.394"
-						y2="7200"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="4830.844"
-						y1="7072"
-						x2="4830.844"
-						y2="7200"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="6636.146"
-						y1="7072"
-						x2="6636.146"
-						y2="7200"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680"
-						y1="7072"
-						x2="7680"
-						y2="7200"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="7200"
-						x2="503.2"
-						y2="7328"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="1891.062"
-						y1="7200"
-						x2="1891.062"
-						y2="7328"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3889.394"
-						y1="7200"
-						x2="3889.394"
-						y2="7328"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="4830.844"
-						y1="7200"
-						x2="4830.844"
-						y2="7328"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="6636.146"
-						y1="7200"
-						x2="6636.146"
-						y2="7328"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680"
-						y1="7198"
-						x2="7680"
-						y2="7330"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="7328"
-						x2="503.2"
-						y2="7456"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="1891.062"
-						y1="7328"
-						x2="1891.062"
-						y2="7456"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3889.394"
-						y1="7328"
-						x2="3889.394"
-						y2="7456"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="4830.844"
-						y1="7328"
-						x2="4830.844"
-						y2="7456"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="6636.146"
-						y1="7328"
-						x2="6636.146"
-						y2="7456"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680"
-						y1="7328"
-						x2="7680"
-						y2="7456"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="7456"
-						x2="503.2"
-						y2="7584"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="1891.062"
-						y1="7456"
-						x2="1891.062"
-						y2="7584"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3889.394"
-						y1="7456"
-						x2="3889.394"
-						y2="7584"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="4830.844"
-						y1="7456"
-						x2="4830.844"
-						y2="7584"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="6636.146"
-						y1="7456"
-						x2="6636.146"
-						y2="7584"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680"
-						y1="7454"
-						x2="7680"
-						y2="7586"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="7584"
-						x2="503.2"
-						y2="7712"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="1891.062"
-						y1="7584"
-						x2="1891.062"
-						y2="7712"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3889.394"
-						y1="7584"
-						x2="3889.394"
-						y2="7712"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="4830.844"
-						y1="7584"
-						x2="4830.844"
-						y2="7712"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="6636.146"
-						y1="7584"
-						x2="6636.146"
-						y2="7712"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680"
-						y1="7584"
-						x2="7680"
-						y2="7712"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="1891.062"
-						y1="7712"
-						x2="1891.062"
-						y2="7840"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680"
-						y1="7710"
-						x2="7680"
-						y2="7842"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="7840"
-						x2="503.2"
-						y2="8000"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="8000"
-						x2="503.2"
-						y2="8128"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="1891.062"
-						y1="8000"
-						x2="1891.062"
-						y2="8128"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3889.394"
-						y1="8000"
-						x2="3889.394"
-						y2="8128"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="4830.844"
-						y1="8000"
-						x2="4830.844"
-						y2="8128"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="6636.146"
-						y1="8000"
-						x2="6636.146"
-						y2="8128"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680"
-						y1="7998"
-						x2="7680"
-						y2="8130"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="8128"
-						x2="503.2"
-						y2="8288"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="8288"
-						x2="503.2"
-						y2="8416"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="1891.062"
-						y1="8288"
-						x2="1891.062"
-						y2="8416"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3889.394"
-						y1="8288"
-						x2="3889.394"
-						y2="8416"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="4830.844"
-						y1="8288"
-						x2="4830.844"
-						y2="8416"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="6636.146"
-						y1="8288"
-						x2="6636.146"
-						y2="8416"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680"
-						y1="8286"
-						x2="7680"
-						y2="8418"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="8416"
-						x2="503.2"
-						y2="8576"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="8704"
-						x2="503.2"
-						y2="8864"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="1891.062"
-						y1="8704"
-						x2="1891.062"
-						y2="8864"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3889.394"
-						y1="8704"
-						x2="3889.394"
-						y2="8864"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="4830.844"
-						y1="8704"
-						x2="4830.844"
-						y2="8864"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="6636.146"
-						y1="8704"
-						x2="6636.146"
-						y2="8864"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680"
-						y1="8704"
-						x2="7680"
-						y2="8864"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="8992"
-						x2="503.2"
-						y2="9152"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="1891.062"
-						y1="8992"
-						x2="1891.062"
-						y2="9152"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="3889.394"
-						y1="8992"
-						x2="3889.394"
-						y2="9152"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="4830.844"
-						y1="8992"
-						x2="4830.844"
-						y2="9152"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="6636.146"
-						y1="8992"
-						x2="6636.146"
-						y2="9152"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="7680"
-						y1="8992"
-						x2="7680"
-						y2="9152"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
-				<g
-					class="barline">
-					<line
-						x1="503.2"
-						y1="9152"
-						x2="503.2"
-						y2="9280"
-						style="stroke:#000000; stroke-width:8px" />
-				</g>
+				id="sys3connectors">
+				<line
+					x1="503.2"
+					y1="7072"
+					x2="503.2"
+					y2="7200"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="1891.062"
+					y1="7072"
+					x2="1891.062"
+					y2="7200"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="3889.394"
+					y1="7072"
+					x2="3889.394"
+					y2="7200"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="4830.844"
+					y1="7072"
+					x2="4830.844"
+					y2="7200"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="6636.146"
+					y1="7072"
+					x2="6636.146"
+					y2="7200"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="7680"
+					y1="7072"
+					x2="7680"
+					y2="7200"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="503.2"
+					y1="7328"
+					x2="503.2"
+					y2="7456"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="1891.062"
+					y1="7328"
+					x2="1891.062"
+					y2="7456"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="3889.394"
+					y1="7328"
+					x2="3889.394"
+					y2="7456"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="4830.844"
+					y1="7328"
+					x2="4830.844"
+					y2="7456"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="6636.146"
+					y1="7328"
+					x2="6636.146"
+					y2="7456"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="7680"
+					y1="7328"
+					x2="7680"
+					y2="7456"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="503.2"
+					y1="7584"
+					x2="503.2"
+					y2="7712"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="1891.062"
+					y1="7584"
+					x2="1891.062"
+					y2="7712"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="3889.394"
+					y1="7584"
+					x2="3889.394"
+					y2="7712"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="4830.844"
+					y1="7584"
+					x2="4830.844"
+					y2="7712"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="6636.146"
+					y1="7584"
+					x2="6636.146"
+					y2="7712"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="7680"
+					y1="7584"
+					x2="7680"
+					y2="7712"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="503.2"
+					y1="7840"
+					x2="503.2"
+					y2="8000"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="503.2"
+					y1="8128"
+					x2="503.2"
+					y2="8288"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="503.2"
+					y1="8416"
+					x2="503.2"
+					y2="8576"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="503.2"
+					y1="8704"
+					x2="503.2"
+					y2="8864"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="1891.062"
+					y1="8704"
+					x2="1891.062"
+					y2="8864"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="3889.394"
+					y1="8704"
+					x2="3889.394"
+					y2="8864"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="4830.844"
+					y1="8704"
+					x2="4830.844"
+					y2="8864"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="6636.146"
+					y1="8704"
+					x2="6636.146"
+					y2="8864"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="7680"
+					y1="8704"
+					x2="7680"
+					y2="8864"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="503.2"
+					y1="8992"
+					x2="503.2"
+					y2="9152"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="1891.062"
+					y1="8992"
+					x2="1891.062"
+					y2="9152"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="3889.394"
+					y1="8992"
+					x2="3889.394"
+					y2="9152"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="4830.844"
+					y1="8992"
+					x2="4830.844"
+					y2="9152"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="6636.146"
+					y1="8992"
+					x2="6636.146"
+					y2="9152"
+					style="stroke:black; stroke-width:8px" />
+				<line
+					x1="7680"
+					y1="8992"
+					x2="7680"
+					y2="9152"
+					style="stroke:black; stroke-width:8px" />
 			</g>
 		</g>
 	</g>
 	<g
 		inkscape:groupmode="layer"
 		id="layer3"
-		inkscape:label="score annotations"
-		style="display:inline" />
-	<g
-		inkscape:groupmode="layer"
-		id="layer4"
 		inkscape:label="user annotations"
 		style="display:inline"
 		sodipodi:insensitive="true" />
-	<g
-		inkscape:groupmode="layer"
-		id="layer5"
-		inkscape:label="transparent, clickable surface"
-		style="display:inline"
-		sodipodi:insensitive="true">
-		<rect
-			x="0"
-			y="0"
-			width="8080"
-			height="9888"
-			style="stroke:none; fill:#ffffff; fill-opacity:0" />
-	</g>
 </svg>
