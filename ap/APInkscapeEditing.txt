@@ -4,27 +4,29 @@ APInkscapeEditing.txt
 ******************************************************************
  
 Moritz creates scores in the score's root folder as:
-	a) a series of printable, page-numbered .svg pages (contained in an HTML file).
-	b) **TODO**: an un-numbered .svg file containing all the systems.
+	a) a series of printable .svg pages (contained in an HTML file) whose names end with "page <pageNumber>.svg".
+	b) an .svg file containing all the systems, whose name ends with "(complete).svg".
 These files are all overwritten without warning, when Moritz (re-)compiles the score.
-So, when adding annotations:
+
+When adding annotations:
 1. create a new "annotated" folder inside the score's root folder, and copy the page-numbered .svg files there.
-2. edit and save these annotated/page-numbered .svg files.
+2. edit and save these annotated, page-numbered .svg files.
    If more vertical space is needed, change the page height as follows:
       a) select the top element in Inkscape's XML editor
 	  b) in the editor's left panel, change the height value to an integral number of pixels as required, and the final viewBox value to (height * 8).
-	  c) either edit the rect on the frame layer (layer1)correspondingly, or delete the frame layer completely.
-3. Either manually copy all the systems to a new, single svg page having the name of the score without " Page <pageNumber>" (but with an .svg suffix),
+	  c) either edit the rect on the frame layer (layer1) correspondingly, or delete the frame layer completely.
+3. Inkscape can take some time to load very large scores, so it is probably better to edit the paged copy of the score, then either manually copy all
+   the systems to a new, single svg page -- having the name of the score without " Page <pageNumber>.svg", but with a "(complete).svg" suffix --,
    or **TODO**: Moritz provides a utility for moving systems from a series of page-numbered .svg files into a single .svg file containing
          all the systems. Use this on the result of editing the single pages. The resulting file will be saved next to the page-numbered
          .svg files. The utility preserves the annotations.
-
-**TODO** The Assistant Performer uses the first score it finds, when looking at locations in the following order:
-	1. score root file/annotated/un-numbered .svg file
-	2. score root file/annotated/page-numbered .svg files
-	3. score root file/un-numbered .svg file
-	4. score root file/page-numbered .svg files
-
+4. To play the annotated file, add it to the options list in the Assistant Performer's score selector.
+   The option value string must contain a page= item ending either with the word "(complete)" or the word "page".
+   This page= value is either the path from the Assistant Performer's "scores" folder to the complete svg score (without.svg suffix), or
+   the path to the first page (without the page number and .svg suffix). If page= ends with "page", then nPages= must also be defined, and the page
+   names will be automatically constructed by concatenating the page numbers. Page names then end with ...page 1.svg, ...page 2.svg etc.
+   The inputHandler= option must be defined for scores containing input voices. It selects one of the Assistant Performer's inputHandlers.
+   
 Scores can be edited as follows in Inkscape:
 
 1. The Assistant Performer ignores:

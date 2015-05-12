@@ -228,14 +228,6 @@ _AP.controls = (function(document, window)
         {
             case "toFront": // set main options visible with the appropriate controls enabled/disabled
             	globalElements.titleOptionsDiv.style.visibility = "visible";
-            	if(scoreIndex > 0)
-            	{
-            		globalElements.aboutScoreLinkDiv.style.display = "block";
-            	}
-            	else
-            	{
-            		globalElements.aboutScoreLinkDiv.style.display = "none";
-            	}
                 globalElements.globalSpeedDiv.style.display = "none";
                 globalElements.startRuntimeButton.style.display = "none";
                 globalElements.svgRuntimeControls.style.visibility = "hidden";
@@ -604,7 +596,6 @@ _AP.controls = (function(document, window)
             globalElements.inputDeviceSelect = document.getElementById("inputDeviceSelect");
             globalElements.scoreSelect = document.getElementById("scoreSelect");
             globalElements.outputDeviceSelect = document.getElementById("outputDeviceSelect");
-            globalElements.aboutScoreLinkDiv = document.getElementById("aboutScoreLinkDiv");
             globalElements.globalSpeedDiv = document.getElementById("globalSpeedDiv");
             globalElements.titleOptionsDiv = document.getElementById("titleOptionsDiv");
             globalElements.startRuntimeButton = document.getElementById("startRuntimeButton");
@@ -794,28 +785,23 @@ _AP.controls = (function(document, window)
     				for(i = 0; i < components.length; ++i)
     				{
     					components[i] = components[i].trim();
+    					if(components[i].slice(0, 5) === "page=")
+    					{
+    						scoreInfo.page = components[i].slice(5);
+    					}
+    					else if(components[i].slice(0, 7) === "nPages=")
+    					{
+    						scoreInfo.nPages = parseInt(components[i].slice(7), 10);
+    					}
+    					else if(components[i].slice(0, 13) === "inputHandler=")// e.g. "keyboard1"
+    					{
+    						scoreInfo.inputHandler = components[i].slice(13);
+    					}
+    					else
+    					{
+    						throw "Illegal score option.";
+    					}
     				}
-
-    				if((components.length === 1 && components[0] !== "choose a score")
-    				|| components.length !== 7
-					|| components[0].slice(0, 7) !== "folder="
-					|| components[1].slice(0, 6) !== "title="
-					|| components[2].slice(0, 7) !== "nPages="
-					|| components[3].slice(0, 14) !== "nOutputVoices="
-					|| components[4].slice(0, 13) !== "nInputVoices="
-					|| components[5].slice(0, 13) !== "inputHandler="
-					|| components[6].slice(0, 9) !== "aboutURL=")
-    				{
-    					throw "Illegal option value in assistantPerformer.html";
-    				}
-
-    				scoreInfo.folder = components[0].slice(7);
-    				scoreInfo.title = components[1].slice(6);
-    				scoreInfo.nPages = parseInt(components[2].slice(7), 10);
-    				scoreInfo.nOutputVoices = parseInt(components[3].slice(14), 10);
-    				scoreInfo.nInputVoices = parseInt(components[4].slice(13), 10);
-    				scoreInfo.inputHandler = components[5].slice(13); // e.g. "keyboard1[36..84]"
-    				scoreInfo.aboutURL = components[6].slice(9);
 
     				return scoreInfo;
     			}
@@ -829,60 +815,51 @@ _AP.controls = (function(document, window)
     			return scoreInfo;
     		}
 
-    		function setAboutLink(url)
+    		function embedPageCode(url)
     		{
-    			var aboutLinkElem = document.getElementById('aboutScoreLink');
-    			aboutLinkElem.setAttribute("href", url);
+    			var code = "<embed " +
+								"src=\'" + url + "\' " +
+								"content-type=\'image/svg+xml\' " +
+								"class=\'svgPage\' />";
+    			return code;
+    		}
+
+    		// Returns the URL of the scores directory. This can either be in the local server:
+    		// e.g. "file:///C:/xampp/htdocs/localAssistantPerformer/scores/"
+    		// or on the web:
+    		// e.g. "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/"
+    		function scoresURL(documentURL)
+    		{
+    			var
+				apIndex = documentURL.search("assistantPerformer.html"),
+				url = documentURL.slice(0, apIndex) + "scores/";
+
+    			return url;
     		}
 
     		function setPages(scoreInfo)
     		{
-    			var rootURL,
-                    folder = scoreInfo.folder, // e.g. "Study 3 sketch 2.1 - with input"
-					title = scoreInfo.title, // e.g. "Study 3 sketch 2"
-                    nPages = scoreInfo.nPages,
+    			var i, rootURL,
                     svgPagesFrame,
                     embedCode = "",
-                    pageURL,
-                    i;
-
-    			// Returns the URL of the scores directory. This can either be in the local server:
-    			// e.g. "file:///C:/xampp/htdocs/localAssistantPerformer/scores/"
-    			// or on the web:
-    			// e.g. "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/"
-    			function scoresURL(documentURL)
-    			{
-    				var
-                    apIndex = documentURL.search("assistantPerformer.html"),
-                    url = documentURL.slice(0, apIndex) + "scores/";
-
-    				return url;
-    			}
-
-    			function embedPageCode(url)
-    			{
-    				var code = "<embed " +
-                                    "src=\'" + url + "\' " +
-                                    "content-type=\'image/svg+xml\' " +
-                                    "class=\'svgPage\' />";
-    				return code;
-    			}
+					pageURL;
 
     			rootURL = scoresURL(document.URL);
 
-    			for(i = 0; i < nPages; ++i)
+    			if(scoreInfo.page.search("(complete)") >= 0)
     			{
-    				pageURL = rootURL + folder;
-    				pageURL = pageURL + "/";
-    				pageURL = pageURL + title;
-    				pageURL = pageURL + " page ";
-    				pageURL = pageURL + (i + 1).toString();
-    				pageURL = pageURL + ".svg";
-    				// e.g. "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Song Six/Song Six page 1.svg"
-    				// or   "file:///C:/xampp/htdocs/localAssistantPerformer/scores/Song Six/Song Six page 1.svg"
-
+    				pageURL = rootURL + scoreInfo.page + ".svg";
     				embedCode += embedPageCode(pageURL);
     			}
+    			else
+    			{
+    				for(i = 0; i < scoreInfo.nPages; ++i)
+    				{
+    					pageURL = rootURL + scoreInfo.page + " " + (i+1).toString(10) + ".svg";
+    					embedCode += embedPageCode(pageURL);
+    				}
+    			}
+
     			svgPagesFrame = document.getElementById('svgPagesFrame');
     			svgPagesFrame.innerHTML = embedCode;
     		}
@@ -915,8 +892,6 @@ _AP.controls = (function(document, window)
     		}
 
     		scoreInfo = getScoreInfo();
-
-    		setAboutLink(scoreInfo.aboutURL);
 
     		setPages(scoreInfo);
 

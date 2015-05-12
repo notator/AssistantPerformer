@@ -42,18 +42,24 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
 				<select id="scoreSelect"
 						class="deviceSelector" onchange="_AP.controls.doControl('scoreSelect')">
 					<option value="choose a score">choose a score</option>
-					<option value="folder=Song Six, title=Song Six, nPages=13, nOutputVoices=9, nInputVoices=0, inputHandler=none, aboutURL=http://james-ingram-act-two.de/compositions/songSix/aboutSongSix.html">Song Six</option>
-					<option value="folder=Study 2c3.1, title=Study 2c3.1, nPages=3, nOutputVoices=3, nInputVoices=0, inputHandler=none, aboutURL=http://james-ingram-act-two.de/compositions/study2/aboutStudy2.html">Study 2c3.1</option>
-					<option value="folder=Study 3 sketch 1, title=Study 3 sketch 1, nPages=2, nOutputVoices=8, nInputVoices=0, inputHandler=none, aboutURL=http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html">Study 3 sketch 1</option>
-					<option value="folder=Study 3 sketch 2.1 - with input, title=Study 3 sketch 2, nPages=2, nOutputVoices=8, nInputVoices=1, inputHandler=keyboard1, aboutURL=http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html">Study 3 sketch 2.1 - with input</option>
-					<option value="folder=Study 3 sketch 2.2 - less visible, title=Study 3 sketch 2, nPages=1, nOutputVoices=8, nInputVoices=1, inputHandler=keyboard1, aboutURL=http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html">Study 3 sketch 2.2 - less visible</option>
+					<option value="page=Song Six/Song Six (complete)">Song Six (scroll)</option>
+					<option value="page=Song Six/Song Six page, nPages=14">Song Six (pages)</option>
+					<option value="page=Study 2c3.1/Study 2c3.1 (complete)">Study 2c3.1 (scroll)</option>
+					<option value="page=Study 2c3.1/annotated/Study 2c3.1 (complete)">Study 2c3.1 (scroll, annotated)</option>
+					<option value="page=Study 2c3.1/Study 2c3.1 page, nPages=3">Study 2c3.1 (pages)</option>
+					<option value="page=Study 3 sketch 1/Study 3 sketch 1 (complete)">Study 3 sketch 1 (scroll)</option>
+					<option value="page=Study 3 sketch 1/Study 3 sketch 1 page, nPages=2">Study 3 sketch 1 (pages)</option>
+					<option value="page=Study 3 sketch 2.1 - with input/Study 3 sketch 2 (complete), inputHandler=keyboard1">Study 3 sketch 2.1 - with input (scroll)</option>
+					<option value="page=Study 3 sketch 2.1 - with input/Study 3 sketch 2 page, nPages=2, inputHandler=keyboard1">Study 3 sketch 2.1 - with input (pages)</option>
+					<option value="page=Study 3 sketch 2.2 - less visible/Study 3 sketch 2 (complete), inputHandler=keyboard1">Study 3 sketch 2.2 - less visible (scroll)</option>
+					<option value="page=Study 3 sketch 2.2 - less visible/Study 3 sketch 2 page, nPages=1, inputHandler=keyboard1">Study 3 sketch 2.2 - less visible (pages)</option>
 				</select>
 				<select id="outputDeviceSelect"
 						class="deviceSelector" onchange="_AP.controls.doControl('outputDeviceSelect')"></select>
 			</div>
-			<div id="aboutScoreLinkDiv" style="padding-top: 2px; display:none; text-align:center; font-size:11px">
+			<!--<div id="aboutScoreLinkDiv" style="padding-top: 2px; display:none; text-align:center; font-size:11px">
 				<a id="aboutScoreLink" href="" target="_blank">About this score...</a>
-			</div>
+			</div>-->
 			<div id="globalSpeedDiv" class="globalSpeedPanel" style="display:none;">
 				<div style="padding-top: 4px;">
 					<label id="globalSpeedInputNumberLabel1" for="globalSpeedInput">
