@@ -60,6 +60,7 @@ _AP.keyboard1 = (function()
 
 	currentMsPosIndex, // initialized to 0 when playing starts. Is the index in the following array.
 	allSeqMsPositions = [],
+	indexPlayed, // initialized to currentMsPosIndex when the index is played.
 	inputTracks,
 	outputTracks,
 	trackWorkers = [], // an array of webWorkers, one per outputTrack (=trackIndex).
@@ -342,7 +343,7 @@ _AP.keyboard1 = (function()
     				if(seq !== undefined)
     				{
     					chordIndex = seq.chordIndex;
-    					if(chordIndex === currentMsPosIndex || chordIndex === currentMsPosIndex + 1) // legato realization
+    					if(chordIndex === currentMsPosIndex || ((chordIndex === currentMsPosIndex + 1) && indexPlayed === currentMsPosIndex))  // legato realization
     					{
     						if(chordIndex === currentMsPosIndex + 1)
     						{
@@ -353,6 +354,7 @@ _AP.keyboard1 = (function()
     						}
     						// Start playing the seq using the inputControls set in its constructor.
     						seq.doNoteOn();
+    						indexPlayed = currentMsPosIndex;
     					}
     				}
     			}
@@ -750,6 +752,7 @@ _AP.keyboard1 = (function()
 			initAllSeqMsPositions(allSeqMsPositions, chordIndexPerInputTrack, inputTracks, trackIsOnArray, endMarkerMsPosInScore);
 	
 			currentMsPosIndex = 0; // the initial index in allSeqMsPositions to perform
+			indexPlayed = -1; // is set to currentMsPosIndex when the index is played
 
 			// initChordIndexPerInputTrack() *again*.
 			initChordIndexPerInputTrack(chordIndexPerInputTrack, inputTracks, startMarkerMsPosInScore, endMarkerMsPosInScore);
