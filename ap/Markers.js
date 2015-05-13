@@ -417,39 +417,42 @@ _AP.markers = (function ()
                 for (i = 0; i < system.staves.length; ++i)
                 {
                 	staff = system.staves[i];
-
-                	for(voiceIndex = 0; voiceIndex < staff.voices.length; ++voiceIndex)
+                	if(staff.isVisible)
                 	{
-                		if(trackIsOnArray[trackIndex] === true)
+                		for(voiceIndex = 0; voiceIndex < staff.voices.length; ++voiceIndex)
                 		{
-                			voice = staff.voices[voiceIndex];
-                			if(voice.class === "outputVoice" && isLivePerformance === false)
+                			if(trackIsOnArray[trackIndex] === true)
                 			{
-                				for(k = 0; k < voice.timeObjects.length; ++k)
+                				voice = staff.voices[voiceIndex];
+                				if(voice.class === "outputVoice" && isLivePerformance === false)
                 				{
-                					if(voice.timeObjects[k].msPosition > msPosition)
+                					for(k = 0; k < voice.timeObjects.length; ++k)
                 					{
-                						voiceTimeObjects.push(voice.timeObjects[k]);
-                						break;
+                						if(voice.timeObjects[k].msPosition > msPosition)
+                						{
+                							voiceTimeObjects.push(voice.timeObjects[k]);
+                							break;
+                						}
+                					}
+                				}
+                				else if(voice.class === "inputVoice" && isLivePerformance === true)
+                				{
+                					for(k = 0; k < voice.timeObjects.length; ++k)
+                					{
+                						if(voice.timeObjects[k].msPosition > msPosition)
+                						{
+                							voiceTimeObjects.push(voice.timeObjects[k]);
+                							break;
+                						}
                 					}
                 				}
                 			}
-                			else if(voice.class === "inputVoice" && isLivePerformance === true)
-                			{
-                				for(k = 0; k < voice.timeObjects.length; ++k)
-                				{
-                					if(voice.timeObjects[k].msPosition > msPosition)
-                					{
-                						voiceTimeObjects.push(voice.timeObjects[k]);
-                						break;
-                					}
-                				}
-                			}
+                			trackIndex++;
                 		}
-                		trackIndex++;
                 	}
                 }
-                // voiceTimeObjects now contains the next timeObject in each active voice.
+
+                // voiceTimeObjects now contains the next timeObject in each active, visible voice.
                 // Now find the one having the minimum msPosition.
                 nextTimeObject = voiceTimeObjects[0];
                 if (voiceTimeObjects.length > 1)

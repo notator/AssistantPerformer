@@ -264,10 +264,10 @@ _AP.score = (function (document)
         timeObjectsArray = getTimeObjectsArray(system),
         	timeObject;
 
-    	// This function sets the colours of the OutputStaves.
+    	// This function sets the colours of the visible OutputStaves.
     	// (there are no InputStaves in the system, when isLivePerformance === false)
-        // Staves have either one or two voices (=tracks). The tracks are 0-indexed channels from top
-        // to bottom of the system.
+    	// Staves have either one or two voices (=tracks).
+        // The tracks are 0-indexed channels from top to bottom of the system.
     	// If trackIsOnArray[trackIndex] is true, its stafflines are coloured black.
     	// If trackIsOnArray[trackIndex] is false, its stafflines are coloured pink.
 		// When the staff has one track, all its stafflines are coloured for the track.
@@ -313,39 +313,42 @@ _AP.score = (function (document)
         				{
         					break;
         				}
-        				stafflineColor = getColor(trackIsOnArray, trackIndex, isLivePerformance);
-        				staff.nameElem.style.fill = stafflineColor;
+        				if(staff.isVisible)
+        				{
+        					stafflineColor = getColor(trackIsOnArray, trackIndex, isLivePerformance);
+        					staff.nameElem.style.fill = stafflineColor;
 
-        				if(staff.voices.length === 1)
-        				{
-        					nLines = staff.svgStafflines.length;
-        					for(m = 0; m < nLines; ++m) // could be any number of lines
+        					if(staff.voices.length === 1)
         					{
-        						staff.svgStafflines[m].style.stroke = stafflineColor;
-        					}
-        					++trackIndex;
-        				}
-        				else if(staff.voices.length === 2 && staff.svgStafflines.length === 5) // the staff has two voices
-        				{
-        					for(k = 0; k < 2; ++k)
-        					{
-        						if(k === 0)
+        						nLines = staff.svgStafflines.length;
+        						for(m = 0; m < nLines; ++m) // could be any number of lines
         						{
-        							staff.svgStafflines[0].style.stroke = stafflineColor;
-        							staff.svgStafflines[1].style.stroke = stafflineColor;
-        							staff.svgStafflines[2].style.stroke = stafflineColor;
-        						}
-        						if(k === 1)
-        						{
-        							staff.svgStafflines[3].style.stroke = stafflineColor;
-        							staff.svgStafflines[4].style.stroke = stafflineColor;
+        							staff.svgStafflines[m].style.stroke = stafflineColor;
         						}
         						++trackIndex;
         					}
-        				}
-        				else
-        				{
-        					throw "Error: staff cannot have more than two voices! Two voice staves must have five lines.";
+        					else if(staff.voices.length === 2 && staff.svgStafflines.length === 5) // the staff has two voices
+        					{
+        						for(k = 0; k < 2; ++k)
+        						{
+        							if(k === 0)
+        							{
+        								staff.svgStafflines[0].style.stroke = stafflineColor;
+        								staff.svgStafflines[1].style.stroke = stafflineColor;
+        								staff.svgStafflines[2].style.stroke = stafflineColor;
+        							}
+        							if(k === 1)
+        							{
+        								staff.svgStafflines[3].style.stroke = stafflineColor;
+        								staff.svgStafflines[4].style.stroke = stafflineColor;
+        							}
+        							++trackIndex;
+        						}
+        					}
+        					else
+        					{
+        						throw "Error: staff cannot have more than two voices! Two voice staves must have five lines.";
+        					}
         				}
         			}
         		}
@@ -869,6 +872,7 @@ _AP.score = (function (document)
             	staff = {};
             	staffDy = systemDy + getDy(staffElem);
             	staff.class = staffElem.getAttribute("class");
+            	staff.isVisible = !(staffElem.getAttribute("score:invisible") === "1");
             	staff.voices = [];
             	system.staves.push(staff);
 
@@ -900,10 +904,9 @@ _AP.score = (function (document)
             			break;
             	}
 
-            	stafflinesElems = staffElem.getElementsByClassName("stafflines");
-            	staff.isVisible = (stafflinesElems.length > 0);
             	if(staff.isVisible)
             	{
+            		stafflinesElems = staffElem.getElementsByClassName("stafflines");
             		stafflineInfo = getStafflineInfo(stafflinesElems[0], staffDy);
             		system.left = stafflineInfo.left;
             		system.right = stafflineInfo.right;
@@ -914,21 +917,19 @@ _AP.score = (function (document)
 
             		setStaffColours(staff, isLivePerformance);
             		setVoiceCentreYs(staff.topLineY, staff.bottomLineY, staff.voices);
-            	}
 
-            	if(system.topLineY === undefined)
-            	{
-            		system.topLineY = staff.topLineY;
-            		system.bottomLineY = staff.bottomLineY;
-            	}
-            	else
-            	{
-            		system.topLineY = (system.topLineY < staff.topLineY) ? system.topLineY : staff.topLineY;
-            		system.bottomLineY = (system.bottomLineY > staff.bottomLineY) ? system.bottomLineY : staff.bottomLineY;
+            		if(system.topLineY === undefined)
+            		{
+            			system.topLineY = staff.topLineY;
+            			system.bottomLineY = staff.bottomLineY;
+            		}
+            		else
+            		{
+            			system.topLineY = (system.topLineY < staff.topLineY) ? system.topLineY : staff.topLineY;
+            			system.bottomLineY = (system.bottomLineY > staff.bottomLineY) ? system.bottomLineY : staff.bottomLineY;
+            		}
             	}
             }
-
-
 
             return system;
         }

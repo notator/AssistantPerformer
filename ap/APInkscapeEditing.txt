@@ -1,7 +1,7 @@
 ﻿
 APInkscapeEditing.txt
 
-******************************************************************
+******************************************************************************************************************
  
 Moritz creates scores in the score's root folder as:
 	a) a series of printable .svg pages (contained in an HTML file) whose names end with "page <pageNumber>.svg".
@@ -9,29 +9,35 @@ Moritz creates scores in the score's root folder as:
 These files are all overwritten without warning, when Moritz (re-)compiles the score.
 
 When adding annotations:
-1. create a new folder, called, for example "annotated", inside the score's root folder, and copy the page-numbered .svg files there.
+1. create a new folder, called for example "annotated", inside the score's root folder, and copy the
+   page-numbered .svg files there.
 2. edit and save these annotated, page-numbered .svg files.
    The height of individual pages can be changed as follows:
       a) select the top element in Inkscape's XML editor
-	  b) in the editor's left panel, change the height value to an integral number of pixels as required, and the final viewBox value to (height * 8).
+	  b) in the editor's left panel, change the height value to an integral number of pixels as required,
+	     and the final viewBox value to (height * 8).
 	  c) either edit the rect on the frame layer (layer1) correspondingly, or delete the frame layer completely.
-3. Inkscape can take some time to load very large scores, so it is probably better to edit and use the paged copy of the score.
-   If a "(scroll)" version is really needed, all the systems can be copied (in Inkscape) to a new, single svg page -- having the name
-   of the score plus " (scroll).svg" instead of " page <pageNumber>.svg". Note that page heights can be individually reduced, so as to emulate
-   scrolling in the Assistant Performer.
+3. Inkscape can take some time to load very large scores, so it is probably better to edit and use the paged copy
+   of the score. If a "(scroll)" version is really needed, all the systems can be copied (in Inkscape) to a new,
+   single svg page -- having the name of the score plus " (scroll).svg" instead of " page <pageNumber>.svg".
+   Note that page heights can be individually reduced, so as to emulate scrolling in the Assistant Performer.
 4. To play the annotated file, add it to the options list in the Assistant Performer's score selector.
-   The option value string must contain a path= item ending either with the word "(scroll)" or "(<nPages> pages)" -- e.g. "(3 pages)".
-   This path= value includes the complete path from the Assistant Performer's "scores" folder to the page(s) to be used, so it will include the name
-   of the folder containing the annotated page(s), if any. If separate pages are being used, their number will be retrieved from the integer following
-   the first '(' character in the path -- their names will end ...page 1.svg, ...page 2.svg etc.
-   The inputHandler= option must be defined for scores containing input voices. It selects one of the Assistant Performer's inputHandlers.
+   The option value string must contain a path= item ending either with the word "(scroll)" or "(<nPages> pages)"
+   -- e.g. "(3 pages)".
+   This path= value includes the complete path from the Assistant Performer's "scores" folder to the page(s) to
+   be used, so it will include the name of the folder containing the annotated page(s), if any. If separate pages
+   are being used, their number will be retrieved from the integer following the first '(' character in the path
+   -- the individual page file names will end ...page 1.svg, ...page 2.svg etc.
+   The inputHandler= option must be defined for scores containing input voices. It selects one of the Assistant
+   Performer's inputHandlers. If omitted, the inputHandler is given its default value "none".
    
 Scores can be edited as follows in Inkscape:
 
 1. The Assistant Performer ignores:
 	a) all layers except the 'score' layer.
-	b) all id attributes except those inside the <defs> element (used to identify particular clef and flag definitions).
-	   id attributes are, however useful as comments when editing in Inkscape, and should be maintained.
+	b) all id attributes except those inside the <defs> element (used to identify particular clef and flag
+	   definitions). id attributes are, however useful as comments when editing in Inkscape, and should be
+	   maintained.
 	b) all objects that have no class (see below).
 	d) all classes (e.g. barline) that are not listed below.
 	c) all attributes (e.g. color) that a classed object does not originally have.
@@ -39,13 +45,14 @@ Scores can be edited as follows in Inkscape:
 
 	ID attributes are not used by the Assistant Performer, but they are useful hints when editing in Inkscape,
 	so should also be maintained. Moritz uses the following conventions for the following groups:
-       system: sys<systemNumber> (sys1, sys2 etc.) The numbers are top to bottom, relative to the page.
-	   staff connectors: sys<systemNumber>connectors
-	   outputStaff and inputStaff: sys<systemNumber>staff<staffNumber> ( sys1staff3, sys4staff1 etc.)
+        system: sys<systemNumber> (sys1, sys2 etc.) The numbers are top to bottom, relative to the page.
+	    staff connectors: sys<systemNumber>connectors
+	    outputStaff and inputStaff: sys<systemNumber>staff<staffNumber> ( sys1staff3, sys4staff1 etc.)
 	       <staffNumber> is regardless of staff type, and is top to bottom, relative to the system.
-	   stafflines: sys<systemNumber>staff<staffNumber>stafflines ( sys1staff3stafflines, sys4staff1stafflines etc.)
-       outputVoice and inputVoice: sys<systemNumber>staff<staffNumber>voice<voiceNumber> ( sys1staff3voice1, sys4staff1voice2 etc.)
-           <voiceNumber> is either 1 or 2, and is top to bottom, relative to the staff.
+	    stafflines: sys<systemNumber>staff<staffNumber>stafflines ( sys1staff3stafflines, sys4staff1stafflines
+	    etc.)
+        outputVoice and inputVoice: sys<systemNumber>staff<staffNumber>voice<voiceNumber> ( sys1staff3voice1,
+	    sys4staff1voice2 etc.) <voiceNumber> is either 1 or 2, and is top to bottom, relative to the staff.
 
 2. Editing the 'score' layer:
    The following group types have a 'class' attribute, set by Moritz, that is used by the Assistant Performer:
@@ -64,8 +71,9 @@ Scores can be edited as follows in Inkscape:
    A simple edit session goes like this:   
    a) Unlock the 'score' layer.
    b) Ungroup the system to be edited.
-   c) Move the staff groups up and down as necessary (without ungrouping them), adding text, slurs etc. ad lib. in the
-      newly available space. Any new objects will be ignored by the Assistant Performer.
+   c) Move the staff groups up and down as necessary (without ungrouping them), adding text, slurs etc. ad lib.
+      in the newly available space. Any new objects will be ignored by the Assistant Performer. The height of
+	  the page can be adjusted as necessary (see above).
    d) To reconnect the staff connectors:
          1. ungroup the connectors group (id:sys<systemNumber>connectors)
 		 2. convert the selected lines to paths (using the Object to Path command from the Path menu).
