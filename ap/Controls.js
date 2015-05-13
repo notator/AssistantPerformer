@@ -781,17 +781,15 @@ _AP.controls = (function(document, window)
     			{
     				var i, scoreInfo = {}, components;
 
+    				scoreInfo.inputHandler = "none"; // default
+
     				components = infoString.split(",");
     				for(i = 0; i < components.length; ++i)
     				{
     					components[i] = components[i].trim();
-    					if(components[i].slice(0, 5) === "page=")
+    					if(components[i].slice(0, 5) === "path=")
     					{
-    						scoreInfo.page = components[i].slice(5);
-    					}
-    					else if(components[i].slice(0, 7) === "nPages=")
-    					{
-    						scoreInfo.nPages = parseInt(components[i].slice(7), 10);
+    						scoreInfo.path = components[i].slice(5);
     					}
     					else if(components[i].slice(0, 13) === "inputHandler=")// e.g. "keyboard1"
     					{
@@ -837,25 +835,54 @@ _AP.controls = (function(document, window)
     			return url;
     		}
 
+    		function getPathData(path)
+    		{
+    			var pathData = {}, components;
+
+    			components = path.split("(");
+    			if(components[0][components[0].length - 1] !== ' ')
+    			{
+    				alert("Error in pages path string:\nThere must be a space character before the '('");
+    			}
+    			pathData.basePath = components[0] + "page ";
+
+    			// the second search argument is a regular expression for a single ')' character.
+    			if(components[1].search("page") < 0 || components[1].search(/\)/i) < 0) 
+    			{
+    				alert("Error in pages path string:\nThe number of pages is not correctly defined in the final bracket.");
+    			}
+
+    			pathData.nPages = parseInt(components[1], 10);
+    			if(pathData.nPages === null || pathData.nPages === undefined || pathData.nPages < 1)
+    			{
+    				alert("Error in pages path string:\nIllegal number of pages.");
+    			}
+
+    			return pathData;
+    		}
+
     		function setPages(scoreInfo)
     		{
     			var i, rootURL,
                     svgPagesFrame,
                     embedCode = "",
+					pathData,
 					pageURL;
 
     			rootURL = scoresURL(document.URL);
 
-    			if(scoreInfo.page.search("(complete)") >= 0)
+    			if(scoreInfo.path.search("(complete)") >= 0)
     			{
-    				pageURL = rootURL + scoreInfo.page + ".svg";
+    				pageURL = rootURL + scoreInfo.path + ".svg";
     				embedCode += embedPageCode(pageURL);
     			}
     			else
     			{
-    				for(i = 0; i < scoreInfo.nPages; ++i)
+    				pathData = getPathData(scoreInfo.path);
+
+    				for(i = 0; i < pathData.nPages; ++i)
     				{
-    					pageURL = rootURL + scoreInfo.page + " " + (i+1).toString(10) + ".svg";
+    					pageURL = rootURL + pathData.basePath + (i + 1).toString(10) + ".svg";
     					embedCode += embedPageCode(pageURL);
     				}
     			}
