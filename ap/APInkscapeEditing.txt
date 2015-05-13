@@ -5,7 +5,7 @@ APInkscapeEditing.txt
  
 Moritz creates scores in the score's root folder as:
 	a) a series of printable .svg pages (contained in an HTML file) whose names end with "page <pageNumber>.svg".
-	b) an .svg file containing all the systems, whose name ends with "(complete).svg".
+	b) an .svg file containing all the systems, whose name ends with "(scroll).svg".
 These files are all overwritten without warning, when Moritz (re-)compiles the score.
 
 When adding annotations:
@@ -16,11 +16,11 @@ When adding annotations:
 	  b) in the editor's left panel, change the height value to an integral number of pixels as required, and the final viewBox value to (height * 8).
 	  c) either edit the rect on the frame layer (layer1) correspondingly, or delete the frame layer completely.
 3. Inkscape can take some time to load very large scores, so it is probably better to edit and use the paged copy of the score.
-   If a "(complete)", scrolling version is really needed, all the systems can be copied (in Inkscape) to a new, single svg page -- having the name
-   of the score plus " (complete).svg" instead of " page <pageNumber>.svg". Note that page heights can be individually reduced, so as to emulate
+   If a "(scroll)" version is really needed, all the systems can be copied (in Inkscape) to a new, single svg page -- having the name
+   of the score plus " (scroll).svg" instead of " page <pageNumber>.svg". Note that page heights can be individually reduced, so as to emulate
    scrolling in the Assistant Performer.
 4. To play the annotated file, add it to the options list in the Assistant Performer's score selector.
-   The option value string must contain a path= item ending either with the word "(complete)" or "(<nPages> pages)" -- e.g. "(3 pages)".
+   The option value string must contain a path= item ending either with the word "(scroll)" or "(<nPages> pages)" -- e.g. "(3 pages)".
    This path= value includes the complete path from the Assistant Performer's "scores" folder to the page(s) to be used, so it will include the name
    of the folder containing the annotated page(s), if any. If separate pages are being used, their number will be retrieved from the integer following
    the first '(' character in the path -- their names will end ...page 1.svg, ...page 2.svg etc.

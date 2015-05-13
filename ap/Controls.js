@@ -871,7 +871,7 @@ _AP.controls = (function(document, window)
 
     			rootURL = scoresURL(document.URL);
 
-    			if(scoreInfo.path.search("(complete)") >= 0)
+    			if(scoreInfo.path.search("(scroll)") >= 0)
     			{
     				pageURL = rootURL + scoreInfo.path + ".svg";
     				embedCode += embedPageCode(pageURL);
