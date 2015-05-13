@@ -732,31 +732,20 @@ _AP.controls = (function(document, window)
     	{
     		var scoreInfo;
 
-    		// Returns a scoreInfo object constructed from the id string of the score currently selected in the scoreSelector
-    		// (Defined in assistantPerformer.html.)
-    		// The id string contains the following items, each separated by a 'separator'. The 'separator' consists of a comma
-    		// and any amount of whitespace on either side.
-    		//    nameString followed by the separator 
-    		//    "nPages="  followed by the number of pages (an integer of any length) followed by the separator followed by
-    		//    "nOutputVoices="  followed by the number of output tracks (an integer of any length)  followed by the separator followed by
-    		//    "nInputVoices="  followed by the number of input tracks (an integer of any length)
-    		// for example:
-    		//    "Song Six, nPages=7, nOutputVoices=6"
-    		// The nameString is used (twice) to construct the URLs for the score pages, for example:
-    		// "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/Song Six/Song Six page 1.svg"
-    		// or
-    		// "file:///C:/xampp/htdocs/localAssistantPerformer/scores/Song Six/Song Six page 1.svg"
-    		//
-    		// The scoreInfo object returned by this function has the following attributes:
-    		//      scoreInfo.name (e.g. "Song Six"
-    		//      scoreInfo.nPages (e.g. 7)
-    		//      scoreInfo.nOutputVoices (e.g. 8)
-    		//      scoreInfo.nInputVoices (e.g. 1)
-    		//      scoreInfo.speedPercent (optional. If undefined, default is 100)
-    		// and optionally (if present)
-    		//      scoreInfo.trackInitialisationValues (optional maxVolumes and pitchWheelDeviations. If undefined, defaults are all 127 and/or all 2, see below)
-    		// and optionally (if present)
-    		//      scoreInfo.defaultPerformanceOptions (see below)
+    		// Returns a scoreInfo object having two attributes constructed from the value string in the scoreSelector's
+    		// currently selected options element. (See assistantPerformer.html.)
+    		// The option value string contains a path= setting and optionally, after a ',', an inputHandler= setting.
+    		// The returned attributes are:
+    		//      scoreInfo.path -- e.g. "Song Six/Song Six (scroll)" or "Song Six/Song Six (14 pages)"
+    		//      scoreInfo.inputHandler -- is "none", by default, if not set in the value string
+    		// The path= setting includes the complete path from the Assistant Performer's "scores" folder
+    		// to the page(s) to be used, and ends with either "(scroll)" or "(<nPages> pages)" -- e.g. "(14 pages)".
+    		// "Song Six/Song Six (scroll).svg" is a file. If separate pages are to be used, their paths will be:
+    		// "Song Six/Song Six page 1.svg", "Song Six/Song Six page 2.svg", "Song Six/Song Six page 3.svg" etc.
+    		// Note that if annotated page(s) are to be used, their path= value will includes the name of their
+    		// folder (e.g. "Song Six/annotated/Song Six (14 pages)").
+    		// If the score contains input voices, the inputHandler= option will be defined: It selects one of the
+    		// Assistant Performer's inputHandlers. If omitted, the inputHandler is given its default value "none".
     		function getScoreInfo()
     		{
     			var scoreSelectorElem = document.getElementById("scoreSelect"),
@@ -822,10 +811,13 @@ _AP.controls = (function(document, window)
     			return code;
     		}
 
-    		// Returns the URL of the scores directory. This can either be in the local server:
-    		// e.g. "file:///C:/xampp/htdocs/localAssistantPerformer/scores/"
+    		// Returns the URL of the scores directory. This can either be a file:
+    		// e.g. "file:///D:/Visual Studio/Projects/MyWebsite/james-ingram-act-two/open-source/assistantPerformer/scores/"
+    		// served from IIS:
+    		// e.g. "http://localhost:49560/james-ingram-act-two.de/open-source/assistantPerformer/scores/"
     		// or on the web:
     		// e.g. "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/"
+			// Note that Chrome needs to be started with its --allow-file-access-from-files flag to use the first of these.
     		function scoresURL(documentURL)
     		{
     			var
