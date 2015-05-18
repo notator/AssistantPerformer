@@ -348,7 +348,7 @@ _AP.keyboard1 = (function()
     						if(chordIndex === currentMsPosIndex + 1)
     						{
     							currentMsPosIndex++;
-    							reportMsPositionInScore(allSeqMsPositions[currentMsPosIndex].msPositionInScore);
+    							reportMsPositionInScore(allSeqMsPositions[currentMsPosIndex]);
     							advanceCurrentKeyIndicesTo(currentMsPosIndex); // see above
     							seq = keySeqs.seqs[keySeqs.index];
     						}
