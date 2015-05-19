@@ -21,6 +21,9 @@ nAllMoments,
 stopChord,
 stopNow,
 fadeLength,
+velocityFactor,
+sharedVelocity,
+overrideVelocity,
 speedFactor,
 
 init = function(trackIndexArg, channelIndexArg)
@@ -36,7 +39,10 @@ init = function(trackIndexArg, channelIndexArg)
 	stopNow = false;
 	fadeLength = -1;
 	currentMoment = null;
-	speedFactor = 1.0;
+	velocityFactor = 1;
+	sharedVelocity = 0;
+	overrideVelocity = 0;
+	speedFactor = 1;
 	trkStartTime = -1;
 },
 
@@ -120,10 +126,28 @@ tick = function()
 		for(i = 0; i < nMessages; ++i)
 		{
 			uint8Array = messages[i].data;
-			if(fadeLength > 0 && uint8Array[0] >= 0x90 && uint8Array[0] <= 0x9F)
+			if(uint8Array[0] >= 0x90 && uint8Array[0] <= 0x9F)
 			{
 				// a NoteOn
-				newVelocity = (uint8Array[2] * (nAllMoments + 1 - momentIndex) / fadeLength); // scale the velocity
+				newVelocity = uint8Array[2];
+				if(velocityFactor !== 1)
+				{
+					newVelocity *= velocityFactor;
+				}
+				else if(sharedVelocity > 0)
+				{
+					newVelocity = (newVelocity / 2) + sharedVelocity;
+				}
+				else if(overrideVelocity > 0)
+				{
+					newVelocity = overrideVelocity;
+				}
+
+				if(fadeLength > 0)
+				{
+					newVelocity = (newVelocity * (nAllMoments + 1 - momentIndex) / fadeLength); // scale the velocity
+				}
+
 				newVelocity = (newVelocity > 127) ? 127 : newVelocity | 0; // | 0 truncates to an int
 				uint8Array = new Uint8Array([uint8Array[0], uint8Array[1], newVelocity]);
 				//console.log("Changed velocity = " + newVelocity);
@@ -172,9 +196,63 @@ tick = function()
 },
 
 // play the trk according to its inputControls (set in "pushTrk").
-doNoteOn = function()
+doNoteOn = function(velocity)
 {
 	"use strict";
+
+	function setVelocityOption(velocityOption, velocity)
+	{
+		// By experiment, my E-MU keyboard never seems to send a velocity less than 20.
+		// This function spreads the incoming velocity range (20..127) over
+		// the range (16..127). Note that the returned value is not an integer.
+		function getCorrectedVelocity(velocity)
+		{
+			var ratio = 112 / 107;
+			velocity = (velocity > 21) ? velocity : 21;
+			velocity = ((velocity - 20) * ratio) + 15;
+			return velocity;
+		}
+
+		// Note that the returned velocityFactor is not an integer.
+		function getVelocityFactor(velocity)
+		{
+			var velocityFactor;
+
+			velocity = getCorrectedVelocity(velocity);
+			velocityFactor = velocity / 64;
+
+			return velocityFactor;
+		}
+
+		// The returned sharedVelocity is an integer.
+		function getSharedVelocity(velocity)
+		{
+			var sharedVelocity;
+
+			velocity = getCorrectedVelocity(velocity);
+			sharedVelocity = Math.round(velocity / 2);
+
+			return sharedVelocity;
+		}
+
+		velocityFactor = 1;
+		sharedVelocity = 0;
+		overrideVelocity = 0;
+		switch(velocityOption)
+		{
+			case "scale":
+				velocityFactor = getVelocityFactor(velocity);
+				break;
+			case "shared":
+				sharedVelocity = getSharedVelocity(velocity);
+				break;
+			case "override":
+				overrideVelocity = Math.round(getCorrectedVelocity(velocity));
+				break;
+			default:
+				break;
+		}
+	}
 
 	if(trkIndex < allTrks.length)
 	{
@@ -182,6 +260,10 @@ doNoteOn = function()
 		stopNow = false;
 
 		currentTrk = allTrks[trkIndex++];
+		if(currentTrk.inputControls.noteOnVel !== undefined)
+		{
+			setVelocityOption(currentTrk.inputControls.noteOnVel, velocity);
+		}
 		moments = currentTrk.moments;
 		nAllMoments = moments.length;
 		momentIndex = 0;
@@ -219,7 +301,7 @@ eventHandler = function(e)
 			stopNow = true;
 			break;
 		case "doNoteOn":
-			doNoteOn();
+			doNoteOn(msg.velocity);
 			break;
 		case "doNoteOff":
 			// console.log("worker received doNoteOff()");

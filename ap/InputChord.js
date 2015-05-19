@@ -100,6 +100,10 @@ _AP.inputChord = (function()
     				// This is the track index from the top of the score (i.e. the index in the trackIsOnArray).
 					// Need to check trackIsOn at performance time. 
     				trk.trackIndex = trackData.trackIndex;
+     				if(trkRefDefs[j].inputControls !== undefined)
+    				{
+    					trk.inputControls = trkRefDefs[j].inputControls; // can be undefined
+    				}
 
     				midiObjects = trackData.midiObjects;
     				midiObjectIndex = trackData.midiObjectIndex;

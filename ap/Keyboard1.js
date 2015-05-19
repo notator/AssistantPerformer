@@ -330,7 +330,7 @@ _AP.keyboard1 = (function()
     		}
     	}
 
-    	function handleNoteOn(key)
+    	function handleNoteOn(key, velocity)
     	{
     		var keyIndex = key - keyRange.bottomKey, keySeqs, chordIndex, seq;
 
@@ -353,7 +353,8 @@ _AP.keyboard1 = (function()
     							seq = keySeqs.seqs[keySeqs.index];
     						}
     						// Start playing the seq using the inputControls set in its constructor.
-    						seq.doNoteOn();
+    						console.log("velocity=" + velocity.toString(10));
+    						seq.doNoteOn(velocity);
     						indexPlayed = currentMsPosIndex;
     					}
     				}
@@ -373,7 +374,7 @@ _AP.keyboard1 = (function()
     				if(inputEvent.data[2] !== 0)
     				{
     					// setSpeedFactor is called inside handleNoteOn(...) because currentIndex needs to be >= 0.
-    					handleNoteOn(inputEvent.data[1]);
+    					handleNoteOn(inputEvent.data[1], inputEvent.data[2]);
     				}
     				else
     				{
