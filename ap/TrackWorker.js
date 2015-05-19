@@ -240,7 +240,7 @@ doNoteOn = function(velocity)
 		overrideVelocity = 0;
 		switch(velocityOption)
 		{
-			case "scale":
+			case "scaled":
 				velocityFactor = getVelocityFactor(velocity);
 				break;
 			case "shared":
