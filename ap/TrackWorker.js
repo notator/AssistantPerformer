@@ -246,7 +246,7 @@ doNoteOn = function(velocity)
 			case "shared":
 				sharedVelocity = getSharedVelocity(velocity);
 				break;
-			case "override":
+			case "overridden":
 				overrideVelocity = Math.round(getCorrectedVelocity(velocity));
 				break;
 			default:
