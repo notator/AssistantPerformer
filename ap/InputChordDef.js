@@ -40,21 +40,7 @@ _AP.inputChordDef = (function ()
 	//		trkRef.inputControls -- can be undefined
 	//
 	// An inputChordDef.inputControls sets the current values in the midi input channel permanently by cascading the current values.
-	// inputNote.inputControls and trkRef.inputControls cascade with the current values in the midi input channel, but do not change
-	// those values permanently.
-	// inputControls contain:
-	//		inputControls.noteOnKey -- possible values: "ignore", "transpose", "matchExactly" 
-	//		inputControls.noteOnVel -- possible values: "ignore", "scale"  
-	//		inputControls.noteOff -- possible values: "ignore", "stop", "stopNow", "fade", "shortFade"  
-	//		inputControls.shortFade  -- possible values: an integer >= 0. 
-	//		inputControls.pressure -- possible values: "ignore", "aftertouch", "channelPressure", "pitchWheel", "modulation", "volume", "pan"
-	//									               "expression", "timbre", "brightness", "effects", "tremolo", "chorus", "celeste", "phaser"
-	//		inputControls.pitchWheel -- possible values: same as pressure
-	//		inputControls.modulation -- possible values: same as pressure
-	//		inputControls.maxVolume -- possible values: 0..127
-	//		inputControls.minVolume -- possible values: 0..127
-	//		inputControls.speedOption -- possible values: "none", "noteOnKey", "noteOnVel", "pressure", "pitchWheel", "modulation"
-	//		inputControls.maxSpeedPercent -- possible values: an integer > 100
+	// inputNote.inputControls and trkRef.inputControls cascade with the current values, but do not change those values permanently.
 	InputChordDef = function (inputNotesNode)
 	{
 		function getInputNotes(inputNotesNode)

@@ -120,7 +120,54 @@ _AP.seq = (function()
 			var i, workerIndex, momsPerTrk,
 			momentsPerTrk = trkData.momentsPerTrk,
 			workersPerTrk = trkData.workersPerTrk,
-			inputControlsPerTrk = trkData.inputControlsPerTrk;
+			inputControlsPerTrk = trkData.inputControlsPerTrk,
+			minimumInputControls;
+
+			// Returns a new object having the same function as the argument,
+			// but with the minimum number of defined attributes.
+			// If any attribute is undefined or off in the argument,
+			// that attribute will be undefined in the returned object.
+			function getMinimumInputControls(inputControls)
+			{
+				var robj = {};
+
+				if(inputControls.noteOnVel !== undefined && inputControls.noteOnVel !== "off")
+				{
+					robj.noteOnVel = inputControls.noteOnVel;
+					robj.minVelocity = inputControls.minVelocity;
+				}
+				if(inputControls.noteOff !== undefined && inputControls.noteOff !== "off")
+				{
+					robj.noteOff = inputControls.noteOff;
+				}
+				if(inputControls.pressure !== undefined && inputControls.pressure !== "off")
+				{
+					robj.pressure = inputControls.pressure;
+				}
+				if(inputControls.pitchWheel !== undefined && inputControls.pitchWheel !== "off")
+				{
+					robj.pitchWheel = inputControls.pitchWheel;
+				}
+				if(inputControls.modulation !== undefined && inputControls.modulation !== "off")
+				{
+					robj.modulation = inputControls.modulation;
+				}
+				if(inputControls.maxVolume !== undefined)
+				{
+					robj.maxVolume = inputControls.maxVolume;
+				}
+				if(inputControls.minVolume !== undefined)
+				{
+					robj.minVolume = inputControls.minVolume;
+				}
+				if(inputControls.speedOption !== undefined && inputControls.speedOption !== "off")
+				{
+					robj.speedOption = inputControls.speedOption;
+					robj.maxSpeedPercent = inputControls.maxSpeedPercent;
+				}
+
+				return robj;
+			};
 
 			for(i = 0; i < momentsPerTrk.length; ++i)
 			{
@@ -130,8 +177,9 @@ _AP.seq = (function()
 				{
 					inputControls = inputControlsPerTrk[i].getCascadeOver(inputControls);
 				}
+				minimumInputControls = getMinimumInputControls(inputControls);
 				trackWorkers[workerIndex].hasCompleted = false;
-				trackWorkers[workerIndex].postMessage({ action: "pushTrk", moments: momsPerTrk, inputControls: inputControls });
+				trackWorkers[workerIndex].postMessage({ action: "pushTrk", moments: momsPerTrk, inputControls: minimumInputControls });
 			}
 			trkData.momentsPerTrk = undefined; // can be garbage collected
 		}

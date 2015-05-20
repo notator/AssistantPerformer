@@ -22,18 +22,17 @@ _AP.inputControls = (function ()
     var
     // InputControls constructor: argument can be an inputControls node from a document, or another InputControls object (to be cloned).
     // inputControls sets the performance options for a Seq, by individually overriding the current options in the Seq's Output Voice.
-	// contains: 
-    //		inputControls.noteOnKey -- possible values: "ignore", "transpose", "matchExactly" 
-    //		inputControls.noteOnVel -- possible values: "ignore", "scale"  
-    //		inputControls.noteOff -- possible values: "ignore", "stopChord", "stopNow", "fade", "shortFade"  
-    //		inputControls.shortFade  -- only defined if noteOff is set to "shortFade". Possible values: an integer >= 0. 
-    //		inputControls.pressure -- possible values: "ignore", "aftertouch", "channelPressure", "pitchWheel", "modulation", "volume", "pan"
+	// contains:  
+    //		inputControls.noteOnVel -- possible values: "off", "scaled", "shared", "overridden"
+	//		inputControls.minVelocity -- only defined if noteOnVel is defined and set to "scaled", "shared" or "overridden". Is in range [1..127].
+	//		inputControls.noteOff -- possible values: "off", "stopChord", "stopNow", "fade"   
+    //		inputControls.pressure -- possible values: "off", "aftertouch", "channelPressure", "pitchWheel", "modulation", "volume", "pan"
     //									               "expression", "timbre", "brightness", "effects", "tremolo", "chorus", "celeste", "phaser"
     //		inputControls.pitchWheel -- possible values: same as pressure
     //		inputControls.modulation -- possible values: same as pressure
     //		inputControls.maxVolume -- only defined if one of the above controllers is set to "volume". Possible values: 0..127
     //		inputControls.minVolume -- only defined if one of the above controllers is set to "volume". Possible values: 0..127
-    //		inputControls.speedOption -- possible values: "none", "noteOnKey", "noteOnVel", "pressure", "pitchWheel", "modulation"
+    //		inputControls.speedOption -- possible values: "off", "noteOnVel", "pressure", "pitchWheel", "modulation"
     //		inputControls.maxSpeedPercent -- only defined if speedOption is not "none". Possible values: an integer > 100
 	InputControls = function (arg)
 	{
@@ -49,21 +48,14 @@ _AP.inputControls = (function ()
 			if(arg instanceof InputControls)
 			{
 				// construct clone
-				if(arg.noteOnKey !== undefined)
-				{
-					this.noteOnKey = arg.noteOnKey;
-				}
 				if(arg.noteOnVel !== undefined)
 				{
 					this.noteOnVel = arg.noteOnVel;
+					this.minVelocity = arg.minVelocity;
 				}
 				if(arg.noteOff !== undefined)
 				{
 					this.noteOff = arg.noteOff;
-				}
-				if(arg.shortFade !== undefined)
-				{
-					this.shortFade = arg.shortFade;
 				}
 				if(arg.pressure !== undefined)
 				{
@@ -88,9 +80,6 @@ _AP.inputControls = (function ()
 				if(arg.speedOption !== undefined)
 				{
 					this.speedOption = arg.speedOption;
-				}
-				if(arg.maxSpeedPercent !== undefined)
-				{
 					this.maxSpeedPercent = arg.maxSpeedPercent;
 				}
 			}
@@ -99,42 +88,47 @@ _AP.inputControls = (function ()
 				inputControlsNode = arg;
 				attrLen = inputControlsNode.attributes.length;
 
+				// default values
+				this.noteOnVel = "off";
+				this.noteOff = "off";
+				this.pressure = "off";
+				this.pitchWheel = "off";
+				this.modulation = "off";
+				this.speedOption = "off";
+
 				for(i = 0; i < attrLen; ++i)
 				{
 					attr = inputControlsNode.attributes[i];
 					switch(attr.name)
 					{
-						case "noteOnKey": // undefined/default is "matchExactly" 
-							this.noteOnKey = attr.value;
-							break;
-						case "noteOnVel": // undefined/default is "ignore"
+						case "noteOnVel": // can be undefined
 							this.noteOnVel = attr.value;
 							break;
-						case "noteOff": // undefined/default is "ignore"
+						case "minVelocity": // is defined if noteOnVel is defined and not "off"
+							this.minVelocity = attr.value;
+							break;
+						case "noteOff": // can be undefined
 							this.noteOff = attr.value;
 							break;
-						case "shortFade": // undefined/default is 0
-							this.shortFade = parseInt(attr.value, 10);
-							break;
-						case "pressure": // undefined/default is "ignore"
+						case "pressure": // can be undefined
 							this.pressure = attr.value;
 							break;
-						case "pitchWheel": // undefined/default is "ignore"
+						case "pitchWheel": // can be undefined
 							this.pitchWheel = attr.value;
 							break;
-						case "modulation": // undefined/default is "ignore"
+						case "modulation": // can be undefined
 							this.modulation = attr.value;
 							break;
-						case "maxVolume": // undefined/default is 127
+						case "maxVolume": // is defined if either pressure, pitchwheel or modulation controls are set to control volume
 							this.maxVolume = parseInt(attr.value, 10);
 							break;
-						case "minVolume": // undefined/default is 0
+						case "minVolume": // is defined if either pressure, pitchwheel or modulation controls are set to control volume
 							this.minVolume = parseInt(attr.value, 10);
 							break;
-						case "speedOption": // undefined/default is "none"
+						case "speedOption": // can be undefined
 							this.speedOption = attr.value;
 							break;
-						case "maxSpeedPercent": // undefined/default is 200
+						case "maxSpeedPercent": // is defined if speedOption is defined and not "off"
 							this.maxSpeedPercent = parseInt(attr.value, 10);
 							break;
 						default:
@@ -163,22 +157,21 @@ _AP.inputControls = (function ()
 
     	console.assert(baseInputControls !== undefined, "Error. The baseInputControls argument cannot be undefined");
 
-    	if(this.noteOnKey !== undefined)
-    	{
-    		rval.noteOnKey = this.noteOnKey;
-    	}
-    	else if(baseInputControls.noteOnKey !== undefined)
-    	{
-    		rval.noteOnKey = baseInputControls.noteOnKey;
-    	}
-
     	if(this.noteOnVel !== undefined)
     	{
     		rval.noteOnVel = this.noteOnVel;
+    		if(rval.noteOnVel !== "off")
+    		{
+    			rval.minVelocity = this.minVelocity;
+    		}
     	}
     	else if(baseInputControls.noteOnVel !== undefined)
     	{
     		rval.noteOnVel = baseInputControls.noteOnVel;
+    		if(rval.noteOnVel !== "off")
+    		{
+    			rval.minVelocity = baseInputControls.minVelocity;
+    		}
     	}
 
     	if(this.noteOff !== undefined)
@@ -193,18 +186,10 @@ _AP.inputControls = (function ()
     	if(this.noteOff !== undefined)
     	{
     		rval.noteOff = this.noteOff;
-    		if(rval.noteOff === "shortFade")
-    		{
-    			rval.shortFade = this.shortFade;
-    		}
     	}
     	else if(baseInputControls.noteOff !== undefined)
     	{
     		rval.noteOff = baseInputControls.noteOff;
-    		if(rval.noteOff === "shortFade")
-    		{
-    			rval.shortFade = baseInputControls.shortFade;
-    		}
     	}
 
     	if(this.pressure !== undefined)
@@ -267,7 +252,7 @@ _AP.inputControls = (function ()
     	if(this.speedOption !== undefined)
     	{
     		rval.speedOption = this.speedOption;
-    		if(rval.speedOption !== "none")
+    		if(rval.speedOption !== "off")
     		{
     			rval.maxSpeedPercent = this.maxSpeedPercent;
     		}
@@ -275,7 +260,7 @@ _AP.inputControls = (function ()
     	else if(baseInputControls.speedOption !== undefined)
     	{
     		rval.speedOption = baseInputControls.speedOption;
-    		if(rval.speedOption !== "none")
+    		if(rval.speedOption !== "off")
     		{
     			rval.maxSpeedPercent = baseInputControls.maxSpeedPercent;
     		}
