@@ -508,12 +508,13 @@ _AP.keyboard1 = (function()
 
 			// Sets inputTracksInputControls to contain the performer's inputControls current in each inputTrack when the span starts.
 			// (Shunts in all inputObjects in all inputTracks (playing or not) from the start of the score.)
+			// Sets all otherwise undefined values to "off".
 			function initCurrentInputTracksInputControls(inputTracksInputControls, inputTracks, nOutputTracks, nTracks, startMarkerMsPosInScore)
 			{
 				var i, inputTrackIndex = 0, inputTrack, inputControls;
 
 				// Returns the most recent inputObject.InputControls object at or before startMarkerMsPosInScore.
-				// If there are no such InputControls objects, a new, empty InputControls object is returned.
+				// If there are no such InputControls objects, a new InputControls object having all values set to "off" is returned.
 				function getCurrentTrackInputControlsObj(inputObjects, startMarkerMsPosInScore)
 				{
 					var i, nInputObjects = inputObjects.length, inputObject, currentInputControls = null, returnInputControlsObj;
@@ -533,12 +534,20 @@ _AP.keyboard1 = (function()
 
 					if(currentInputControls !== null)
 					{
-						returnInputControlsObj = currentInputControls;
+						returnInputControlsObj = new _AP.inputControls.InputControls(currentInputControls);
 					}
 					else
 					{
 						returnInputControlsObj = new _AP.inputControls.InputControls(); // a new, empty InputControls object
 					}
+
+					returnInputControlsObj.noteOnVel = (returnInputControlsObj.noteOnVel !== undefined) ? returnInputControlsObj.noteOnVel : "off";
+					returnInputControlsObj.noteOff = (returnInputControlsObj.noteOff !== undefined) ? returnInputControlsObj.noteOff : "off";
+					returnInputControlsObj.pressure = (returnInputControlsObj.pressure !== undefined) ? returnInputControlsObj.pressure : "off";
+					returnInputControlsObj.pitchWheel = (returnInputControlsObj.pitchWheel !== undefined) ? returnInputControlsObj.pitchWheel : "off";
+					returnInputControlsObj.modulation = (returnInputControlsObj.modulation !== undefined) ? returnInputControlsObj.modulation : "off";
+					returnInputControlsObj.speedOption = (returnInputControlsObj.speedOption !== undefined) ? returnInputControlsObj.speedOption : "off";
+
 					return returnInputControlsObj;
 				}
 				
@@ -548,7 +557,7 @@ _AP.keyboard1 = (function()
 				{
 					inputTrack = inputTracks[inputTrackIndex++];
 					inputControls = getCurrentTrackInputControlsObj(inputTrack.inputObjects, startMarkerMsPosInScore);
-					inputTracksInputControls.push(inputControls); // default is an empty InputControls object.
+					inputTracksInputControls.push(inputControls); // default is an InputControls object having all values set to "off".
 				}
 			}
 
@@ -729,7 +738,7 @@ _AP.keyboard1 = (function()
 						inputChord = inputObjects[chordIndex];
 						if(inputChord.inputControls !== undefined)
 						{
-							shuntedChordInputControls[trackIndex] = inputChord.inputControls;
+							shuntedChordInputControls[trackIndex] = inputChord.inputControls.getCascadeOver(shuntedChordInputControls[trackIndex]);
 						}
 						inputChordInputControls = shuntedChordInputControls[trackIndex];
 

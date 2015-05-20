@@ -88,14 +88,6 @@ _AP.inputControls = (function ()
 				inputControlsNode = arg;
 				attrLen = inputControlsNode.attributes.length;
 
-				// default values
-				this.noteOnVel = "off";
-				this.noteOff = "off";
-				this.pressure = "off";
-				this.pitchWheel = "off";
-				this.modulation = "off";
-				this.speedOption = "off";
-
 				for(i = 0; i < attrLen; ++i)
 				{
 					attr = inputControlsNode.attributes[i];
