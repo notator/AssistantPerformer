@@ -18,10 +18,9 @@ a:visited
 
 p.header1
 {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: normal;
-    margin-top:14px;
-    margin-bottom:6px
+    margin:15px auto 10px auto;
 }
 
 .helpColour
@@ -36,6 +35,15 @@ select.deviceSelector
     width: 220px;
     margin-left: 8px;
     margin-right: 8px; 
+}
+
+div.globalSpeedPanel
+{
+    width:520px;
+    padding: 9px 0 6px 0;
+    margin:8px auto 9px auto;    
+    background-color: #FCFCFC;
+    border: 1px solid #008000;
 }
 
 div.options

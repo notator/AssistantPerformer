@@ -54,7 +54,10 @@ Scores can be edited as follows in Inkscape:
         outputVoice and inputVoice: sys<systemNumber>staff<staffNumber>voice<voiceNumber> ( sys1staff3voice1,
 	    sys4staff1voice2 etc.) <voiceNumber> is either 1 or 2, and is top to bottom, relative to the staff.
 
-2. Editing the 'score' layer:
+2. Editing text in Inkscape:
+   Inkscape has some quirks about entering text. See http://tavmjong.free.fr/INKSCAPE/MANUAL/html/Text-Creating.html
+
+3. Editing the 'score' layer:
    The following group types have a 'class' attribute, set by Moritz, that is used by the Assistant Performer:
         system,
 		outputStaff,
