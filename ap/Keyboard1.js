@@ -105,11 +105,13 @@ _AP.keyboard1 = (function()
 		{
 			case "stopped":
 				stopped = true;
-				inputDevice.removeEventListener("midimessage", handleMIDIInputEventForwardDeclaration);
+				inputDevice.removeEventListener("midimessage", handleMIDIInputEventForwardDeclaration, false);
+				inputDevice.close();
 				break;
 			case "running":
 				stopped = false;
-				inputDevice.addEventListener("midimessage", handleMIDIInputEventForwardDeclaration);
+				inputDevice.addEventListener("midimessage", handleMIDIInputEventForwardDeclaration, false);
+				inputDevice.open();
 				break;
 			default:
 				throw "Unknown sequence state!";

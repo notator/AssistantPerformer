@@ -214,7 +214,7 @@ _AP.controls = (function(document, window)
         }
         else
         {
-            options.outputDevice = outSelector.options[outSelector.selectedIndex].outputDevice;
+        	options.outputDevice = outSelector.options[outSelector.selectedIndex].outputDevice;
         }
     },
 
@@ -637,6 +637,7 @@ _AP.controls = (function(document, window)
         		//console.log('input id:', port.id, ' input name:', port.name);
         		option = document.createElement("option");
         		option.outputDevice = port;
+        		option.outputDevice.open();
         		option.text = port.name;
         		os.add(option, null);
         	}
