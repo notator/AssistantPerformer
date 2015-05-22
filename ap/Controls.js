@@ -195,17 +195,23 @@ _AP.controls = (function(document, window)
     // This function is called when the input or output device selectors change.
     setMIDIDevices = function()
     {
-        var
+        var i,
         inSelector = document.getElementById("inputDeviceSelect"),
         outSelector = document.getElementById("outputDeviceSelect");
 
+		// inputDevices are opened and closed by the input event handling module (e.g. Keyboard1)
         if(inSelector.selectedIndex === 0)
         {
             options.inputDevice = null;
         }
         else
         {
-            options.inputDevice = inSelector.options[inSelector.selectedIndex].inputDevice;
+        	options.inputDevice = inSelector.options[inSelector.selectedIndex].inputDevice;
+        }
+
+        for(i = 1; i < outSelector.options.length; ++i)
+        {
+        	outSelector.options[i].outputDevice.close();
         }
 
         if(outSelector.selectedIndex === 0)
@@ -215,6 +221,7 @@ _AP.controls = (function(document, window)
         else
         {
         	options.outputDevice = outSelector.options[outSelector.selectedIndex].outputDevice;
+        	options.outputDevice.open();
         }
     },
 
@@ -637,7 +644,6 @@ _AP.controls = (function(document, window)
         		//console.log('input id:', port.id, ' input name:', port.name);
         		option = document.createElement("option");
         		option.outputDevice = port;
-        		option.outputDevice.open();
         		option.text = port.name;
         		os.add(option, null);
         	}
