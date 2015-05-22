@@ -610,43 +610,48 @@ _AP.controls = (function(document, window)
             globalElements.svgPagesFrame = document.getElementById("svgPagesFrame");
         }
 
-    	// sets the options in the device selectors' menus
-        function setMIDIDeviceSelectors(midiAccess)
+    	// sets the options in the input device selector
+        function setMIDIInputDeviceSelector(midiAccess)
         {
         	var
 			option,
-            is = globalElements.inputDeviceSelect, // = document.getElementById("inputDeviceSelect")
-            os = globalElements.outputDeviceSelect, // = document.getElementById("outputDeviceSelect")
-			inputsIterator = midiAccess.inputs.values(),
-			outputsIterator = midiAccess.outputs.values(),
-			port,
-			data;
+            is = globalElements.inputDeviceSelect; // = document.getElementById("inputDeviceSelect")
+
+        	is.options.length = 0; // important when called by midiAccess.onstatechange 
 
         	option = document.createElement("option");
         	option.text = "choose a MIDI input device";
         	is.add(option, null);
-        	while((data = inputsIterator.next()).done !== true)
+        	midiAccess.inputs.forEach(function(port)
         	{
-        		port = data.value;
         		//console.log('input id:', port.id, ' input name:', port.name);
         		option = document.createElement("option");
         		option.inputDevice = port;
         		option.text = port.name;
         		is.add(option, null);
-        	}
+        	});
+        }
+
+    	// sets the options in the output device selector
+        function setMIDIOutputDeviceSelector(midiAccess)
+        {
+        	var
+			option,
+            os = globalElements.outputDeviceSelect; // = document.getElementById("outputDeviceSelect")
+
+        	os.options.length = 0; // important when called by midiAccess.onstatechange
 
         	option = document.createElement("option");
         	option.text = "choose a MIDI output device";
         	os.add(option, null);
-        	while((data = outputsIterator.next()).done !== true)
+        	midiAccess.outputs.forEach(function(port)
         	{
-        		port = data.value;
-        		//console.log('input id:', port.id, ' input name:', port.name);
+        		//console.log('output id:', port.id, ' output name:', port.name);
         		option = document.createElement("option");
         		option.outputDevice = port;
         		option.text = port.name;
         		os.add(option, null);
-        	}
+        	});
         }
 
         // resets the score selector in case the browser has cached the last value
@@ -700,11 +705,60 @@ _AP.controls = (function(document, window)
             svgPagesDiv.style.height = window.innerHeight - 43;
         }
 
+        function onMIDIDeviceStateChange(e)
+        {
+        	var
+			is = globalElements.inputDeviceSelect, // = document.getElementById("inputDeviceSelect")
+            os = globalElements.outputDeviceSelect, // = document.getElementById("outputDeviceSelect")
+			inputOptionsLength = is.options.length,
+			currentOutputDeviceIndex = os.selectedIndex;
+
+        	switch(e.port.type)
+        	{
+        		case "input":
+        			setMIDIInputDeviceSelector(midiAccess);
+        			if(inputOptionsLength < is.options.length)
+        			{
+        				// input device added
+        				is.selectedIndex = is.options.length - 1;
+        			}
+        			else
+        			{
+        				// input device removed
+        				is.selectedIndex = 0;
+        			}
+        			break;
+        		case "output":
+        			setMIDIOutputDeviceSelector(midiAccess);
+        			// Output devices are currently handled differently from the input devices...
+        			// (I don't want the output device selector's selected index to change 
+        			// every time the E-MU XBoard is connected or disconnected.)
+        			if(currentOutputDeviceIndex < os.options.length)
+        			{
+        				os.selectedIndex = currentOutputDeviceIndex;
+        			}
+        			else
+        			{
+        				os.SelectedIndex = 0;
+        			}
+        			break;
+        	}
+
+        	midiAccess.removeEventListener('statechange', onMIDIDeviceStateChange, false);
+        	setMIDIDevices();
+        	midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
+        }
+
+
         midiAccess = mAccess;
 
         getGlobalElements();
 
-        setMIDIDeviceSelectors(midiAccess);
+        setMIDIInputDeviceSelector(midiAccess);
+        setMIDIOutputDeviceSelector(midiAccess);
+
+    	// update the device selectors when devices get connected, disconnected, opened or closed
+        midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
 
         initScoreSelector(runningMarkerHeightChanged);
 
