@@ -594,6 +594,94 @@ _AP.controls = (function(document, window)
         }
     },
 
+    // sets the options in the input device selector
+	setMIDIInputDeviceSelector = function(midiAccess)
+	{
+		var
+		option,
+		is = globalElements.inputDeviceSelect; // = document.getElementById("inputDeviceSelect")
+
+		is.options.length = 0; // important when called by midiAccess.onstatechange 
+
+		option = document.createElement("option");
+		option.text = "choose a MIDI input device";
+		is.add(option, null);
+		midiAccess.inputs.forEach(function(port)
+		{
+			//console.log('input id:', port.id, ' input name:', port.name);
+			option = document.createElement("option");
+			option.inputDevice = port;
+			option.text = port.name;
+			is.add(option, null);
+		});
+	},
+
+	// sets the options in the output device selector
+	setMIDIOutputDeviceSelector = function(midiAccess)
+	{
+		var
+		option,
+		os = globalElements.outputDeviceSelect; // = document.getElementById("outputDeviceSelect")
+
+		os.options.length = 0; // important when called by midiAccess.onstatechange
+
+		option = document.createElement("option");
+		option.text = "choose a MIDI output device";
+		os.add(option, null);
+		midiAccess.outputs.forEach(function(port)
+		{
+			//console.log('output id:', port.id, ' output name:', port.name);
+			option = document.createElement("option");
+			option.outputDevice = port;
+			option.text = port.name;
+			os.add(option, null);
+		});
+	},
+
+	onMIDIDeviceStateChange = function(e)
+	{
+		var
+		is = globalElements.inputDeviceSelect, // = document.getElementById("inputDeviceSelect")
+		os = globalElements.outputDeviceSelect, // = document.getElementById("outputDeviceSelect")
+		inputOptionsLength = is.options.length,
+		currentOutputDeviceIndex = os.selectedIndex;
+
+		switch(e.port.type)
+		{
+			case "input":
+				setMIDIInputDeviceSelector(midiAccess);
+				if(inputOptionsLength < is.options.length)
+				{
+					// input device added
+					is.selectedIndex = is.options.length - 1;
+				}
+				else
+				{
+					// input device removed
+					is.selectedIndex = 0;
+				}
+				break;
+			case "output":
+				setMIDIOutputDeviceSelector(midiAccess);
+				// Output devices are currently handled differently from the input devices...
+				// (I don't want the output device selector's selected index to change 
+				// every time the E-MU XBoard is connected or disconnected.)
+				if(currentOutputDeviceIndex < os.options.length)
+				{
+					os.selectedIndex = currentOutputDeviceIndex;
+				}
+				else
+				{
+					os.SelectedIndex = 0;
+				}
+				break;
+		}
+
+		midiAccess.removeEventListener('statechange', onMIDIDeviceStateChange, false);
+		setMIDIDevices();
+		midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
+	},
+
     // Defines the window.svgLoaded(...) function.
     // Sets up the pop-up menues for scores and MIDI input and output devices.
     init = function(mAccess)
@@ -608,50 +696,6 @@ _AP.controls = (function(document, window)
             globalElements.startRuntimeButton = document.getElementById("startRuntimeButton");
             globalElements.svgRuntimeControls = document.getElementById("svgRuntimeControls");
             globalElements.svgPagesFrame = document.getElementById("svgPagesFrame");
-        }
-
-    	// sets the options in the input device selector
-        function setMIDIInputDeviceSelector(midiAccess)
-        {
-        	var
-			option,
-            is = globalElements.inputDeviceSelect; // = document.getElementById("inputDeviceSelect")
-
-        	is.options.length = 0; // important when called by midiAccess.onstatechange 
-
-        	option = document.createElement("option");
-        	option.text = "choose a MIDI input device";
-        	is.add(option, null);
-        	midiAccess.inputs.forEach(function(port)
-        	{
-        		//console.log('input id:', port.id, ' input name:', port.name);
-        		option = document.createElement("option");
-        		option.inputDevice = port;
-        		option.text = port.name;
-        		is.add(option, null);
-        	});
-        }
-
-    	// sets the options in the output device selector
-        function setMIDIOutputDeviceSelector(midiAccess)
-        {
-        	var
-			option,
-            os = globalElements.outputDeviceSelect; // = document.getElementById("outputDeviceSelect")
-
-        	os.options.length = 0; // important when called by midiAccess.onstatechange
-
-        	option = document.createElement("option");
-        	option.text = "choose a MIDI output device";
-        	os.add(option, null);
-        	midiAccess.outputs.forEach(function(port)
-        	{
-        		//console.log('output id:', port.id, ' output name:', port.name);
-        		option = document.createElement("option");
-        		option.outputDevice = port;
-        		option.text = port.name;
-        		os.add(option, null);
-        	});
         }
 
         // resets the score selector in case the browser has cached the last value
@@ -704,51 +748,6 @@ _AP.controls = (function(document, window)
             svgPagesDiv = document.getElementById("svgPagesFrame");
             svgPagesDiv.style.height = window.innerHeight - 43;
         }
-
-        function onMIDIDeviceStateChange(e)
-        {
-        	var
-			is = globalElements.inputDeviceSelect, // = document.getElementById("inputDeviceSelect")
-            os = globalElements.outputDeviceSelect, // = document.getElementById("outputDeviceSelect")
-			inputOptionsLength = is.options.length,
-			currentOutputDeviceIndex = os.selectedIndex;
-
-        	switch(e.port.type)
-        	{
-        		case "input":
-        			setMIDIInputDeviceSelector(midiAccess);
-        			if(inputOptionsLength < is.options.length)
-        			{
-        				// input device added
-        				is.selectedIndex = is.options.length - 1;
-        			}
-        			else
-        			{
-        				// input device removed
-        				is.selectedIndex = 0;
-        			}
-        			break;
-        		case "output":
-        			setMIDIOutputDeviceSelector(midiAccess);
-        			// Output devices are currently handled differently from the input devices...
-        			// (I don't want the output device selector's selected index to change 
-        			// every time the E-MU XBoard is connected or disconnected.)
-        			if(currentOutputDeviceIndex < os.options.length)
-        			{
-        				os.selectedIndex = currentOutputDeviceIndex;
-        			}
-        			else
-        			{
-        				os.SelectedIndex = 0;
-        			}
-        			break;
-        	}
-
-        	midiAccess.removeEventListener('statechange', onMIDIDeviceStateChange, false);
-        	setMIDIDevices();
-        	midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
-        }
-
 
         midiAccess = mAccess;
 
@@ -1198,6 +1197,8 @@ _AP.controls = (function(document, window)
     		// its start marker (which always starts on a chord) if a track is turned off.
     		tracksControl.init(tracksData.outputTracks.length, tracksData.inputTracks.length, options.livePerformance, score.refreshDisplay);
     	}
+
+    	midiAccess.removeEventListener('statechange', onMIDIDeviceStateChange, false);
 
         if(document.getElementById("inputDeviceSelect").selectedIndex === 0)
         {

@@ -18,7 +18,7 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
 		<p class="header1">
 			Assistant Performer
 		</p>
-		<div style="color: #8888FF; font-size: 12px">
+		<div class="helpText">
 			This page uses the <a href="http://www.w3.org/TR/webmidi/">Web-MIDI-API</a>, and is tested in the latest stable versions of Chrome and Firefox.<br />
 			Firefox currently requires the <a href="http://jazz-soft.net">Jazz</a> plug-in to be installed.<br />
 			Chrome v.43 implements the Web-MIDI-API natively. Earlier versions need the Web-MIDI-API flag (in chrome://flags) to be activated.<br />
@@ -32,9 +32,9 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
 			<div style="font-size: 14px;">
 				options
 			</div>
-			<div class="helpColour">
+			<!--<div class="helpText">
 				MIDI devices will only be recognized if they are connected and switched on before loading this page.
-			</div>
+			</div>-->
 			<div id="deviceAndScoreSelectors" style="margin-top: 6px">
 				<select id="inputDeviceSelect"
 						class="deviceSelector" onchange="_AP.controls.doControl('inputDeviceSelect')"></select>
