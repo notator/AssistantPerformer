@@ -1241,17 +1241,14 @@ _AP.score = (function (document)
 		inputChord, inputRest;
 
     	// Gets the timeObjects for both input and output voices. 
-    	// speed is a floating point number, greater than zero.
-    	// msDurations stored in the score are divided by speed.
-    	// Rounding errors are corrected, so that all voices in
-    	// a system continue to have the same msDuration.
+    	// msDurations are retrieved from the score (not changed by the current speed option).
     	function getOutputAndInputTimeObjects(speed)
     	{
     		var systemElem,
                 i, systemIndex,
                 lastSystemTimeObjects, finalBarlineMsPosition;
 
-    		function getSystemTimeObjects(system, viewBoxScale1, systemElem, speed)
+    		function getSystemTimeObjects(system, viewBoxScale1, systemElem)
     		{
     			var i, j, systemChildren, systemChildClass,
                     staff, staffChildren, staffChildClass, staffChild,
@@ -1262,113 +1259,10 @@ _AP.score = (function (document)
     			// There is a timeObject for every input and output chord or rest.
     			// All timeObjects are allocated alignmentX and msDuration fields.
 				// Chord timeObjects are allocated either a midiChordDef or an inputChordDef field depending on whether they are input or output chords.
-    			// Later in this program (as soon as all systems have been read), the msPosition of all timeObjects will appended to them.
-    			function getTimeObjects(noteObjectElems, speed)
+    			function getTimeObjects(noteObjectElems)
     			{
     				var timeObjects = [], noteObjectClass,
                         timeObject, i, j, length, noteObjectElem, chordChildElems;
-
-    				// timeObjects is an array of timeObject.
-    				// speed is a floating point number, greater than zero.
-    				// returns the new length of the voice in integer milliseconds
-    				function changeSpeed(timeObjects, speed)
-    				{
-    					// adjust the top level msDuration of each timeObject
-    					function adjustTotalDurations(timeObjects, speed)
-    					{
-    						var i, nTimeObjects = timeObjects.length, msFPDuration,
-                            msFPPositions = [];
-
-    						msFPPositions.push(0);
-    						for(i = 0; i < nTimeObjects; ++i)
-    						{
-    							msFPDuration = timeObjects[i].msDuration / speed;
-    							msFPPositions.push(msFPDuration + msFPPositions[i]);
-    						}
-
-    						for(i = 0; i < nTimeObjects; ++i)
-    						{
-    							timeObjects[i].msDuration = Math.round(msFPPositions[i + 1] - msFPPositions[i]);
-    						}
-    					}
-
-    					// adjust the msDuration of each object in each timeObject.midiChordDef.basicChordsArray,
-    					// correcting rounding errors to ensure that the sum of the durations of the
-    					// basicChords is exactly equal to the containing timeObject.msDuration (which has
-    					// already been adjusted).
-    					function adjustBasicChordDurations(timeObjects, speed)
-    					{
-    						var i, nTimeObjects = timeObjects.length;
-
-    						function adjustDurations(basicChords, speed, chordMsDuration)
-    						{
-    							var i, nBasicChords = basicChords.length, msFPDuration,
-                                msFPPositions = [], totalBasicMsDurations = 0,
-                                excessDuration;
-
-    							function correctRoundingError(basicChords, excessDuration)
-    							{
-    								while(excessDuration !== 0)
-    								{
-    									for(i = basicChords.length - 1; i >= 0; --i)
-    									{
-    										if(excessDuration > 0)
-    										{
-    											if(basicChords[i].msDuration > 1)
-    											{
-    												basicChords[i].msDuration -= 1;
-    												excessDuration -= 1;
-    											}
-    										}
-    										else if(excessDuration < 0)
-    										{
-    											basicChords[nBasicChords - 1].msDuration += 1;
-    											excessDuration += 1;
-    										}
-    										else
-    										{
-    											break;
-    										}
-    									}
-    								}
-    							}
-
-    							// get the speed changed (floating point) basic chord positions re start of chord.
-    							msFPPositions.push(0);
-    							for(i = 0; i < nBasicChords; ++i)
-    							{
-    								msFPDuration = basicChords[i].msDuration / speed;
-    								msFPPositions.push(msFPDuration + msFPPositions[i]);
-    							}
-
-    							// get the (integer) msDuration of each basic chord (possibly with rounding errors)
-    							// nMsPositions = nBasicChords + 1;
-    							for(i = 0; i < nBasicChords; ++i)
-    							{
-    								basicChords[i].msDuration = Math.round(msFPPositions[i + 1] - msFPPositions[i]);
-    								totalBasicMsDurations += basicChords[i].msDuration;
-    							}
-
-    							// if there is a rounding error, correct it.
-    							excessDuration = totalBasicMsDurations - chordMsDuration;
-    							if(excessDuration !== 0)
-    							{
-    								correctRoundingError(basicChords, excessDuration);
-    							}    
-    						}
-
-    						for(i = 0; i < nTimeObjects; ++i)
-    						{
-    							if(timeObjects[i].midiChordDef !== undefined)
-    							{
-    								adjustDurations(timeObjects[i].midiChordDef.basicChordsArray, speed, timeObjects[i].msDuration);
-    							}
-    						}
-    					}
-
-    					adjustTotalDurations(timeObjects, speed);
-    					adjustBasicChordDurations(timeObjects, speed);
-    				}
 
     				function getMsDuration(midiChordDef)
     				{
@@ -1422,11 +1316,6 @@ _AP.score = (function (document)
     					}
     				}
 
-    				if(speed !== 1)
-    				{
-    					changeSpeed(timeObjects, speed);
-    				}
-
     				return timeObjects;
     			}
 
@@ -1445,7 +1334,7 @@ _AP.score = (function (document)
     						if(staffChildClass === 'outputVoice' || staffChildClass === 'inputVoice')
     						{
     							voice = staff.voices[voiceIndex++];
-    							voice.timeObjects = getTimeObjects(staffChild.children, speed);
+    							voice.timeObjects = getTimeObjects(staffChild.children);
     						}
     					}
     					voiceIndex = 0;
@@ -1566,6 +1455,125 @@ _AP.score = (function (document)
     			}
     		}
 
+    		// voice.timeObjects is an array of timeObject.
+    		// speed is a floating point number, greater than zero.
+    		// timeObject.msPosition and timeObject.msDuration have the values set in the score (speed === 1).
+    		function changeSpeed(systems, speed)
+    		{
+    			var i, j, k, nSystems = systems.length, system, staff, voice;
+
+    			// adjust the top level msDuration of each timeObject
+				// the final timeObject is the final barline (msDuration = 0).
+    			function adjustTotalDurations(timeObjects, speed)
+    			{
+    				var i, nTimeObjects = timeObjects.length;
+
+    				for(i = 0; i < nTimeObjects; ++i)
+    				{
+    					timeObjects[i].msPosition = Math.round(timeObjects[i].msPosition / speed);
+    				}
+
+    				// the final timeObject is the final barline (msDuration = 0).
+    				for(i = 1; i < nTimeObjects; ++i)
+    				{
+    					timeObjects[i - 1].msDuration = timeObjects[i].msPosition - timeObjects[i-1].msPosition;
+    				}
+    			}
+
+    			// Adjust the msDuration of each object in each timeObject.midiChordDef.basicChordsArray,
+    			// correcting rounding errors to ensure that the sum of the durations of the
+    			// basicChords is exactly equal to the containing timeObject.msDuration (which has
+    			// already been adjusted).
+    			function adjustBasicChordDurations(timeObjects, speed)
+    			{
+    				var i, nTimeObjects = timeObjects.length;
+
+    				function adjustDurations(basicChords, speed, chordMsDuration)
+    				{
+    					var i, nBasicChords = basicChords.length, msFPDuration,
+						msFPPositions = [], totalBasicMsDurations = 0,
+						excessDuration;
+
+    					function correctRoundingError(basicChords, excessDuration)
+    					{
+    						while(excessDuration !== 0)
+    						{
+    							for(i = basicChords.length - 1; i >= 0; --i)
+    							{
+    								if(excessDuration > 0)
+    								{
+    									if(basicChords[i].msDuration > 1)
+    									{
+    										basicChords[i].msDuration -= 1;
+    										excessDuration -= 1;
+    									}
+    								}
+    								else if(excessDuration < 0)
+    								{
+    									basicChords[nBasicChords - 1].msDuration += 1;
+    									excessDuration += 1;
+    								}
+    								else
+    								{
+    									break;
+    								}
+    							}
+    						}
+    					}
+
+    					// get the speed changed (floating point) basic chord positions re start of chord.
+    					msFPPositions.push(0);
+    					for(i = 0; i < nBasicChords; ++i)
+    					{
+    						msFPDuration = basicChords[i].msDuration / speed;
+    						msFPPositions.push(msFPDuration + msFPPositions[i]);
+    					}
+
+    					// get the (integer) msDuration of each basic chord (possibly with rounding errors)
+    					// nMsPositions = nBasicChords + 1;
+    					for(i = 0; i < nBasicChords; ++i)
+    					{
+    						basicChords[i].msDuration = Math.round(msFPPositions[i + 1] - msFPPositions[i]);
+    						totalBasicMsDurations += basicChords[i].msDuration;
+    					}
+
+    					// if there is a rounding error, correct it.
+    					excessDuration = totalBasicMsDurations - chordMsDuration;
+    					if(excessDuration !== 0)
+    					{
+    						correctRoundingError(basicChords, excessDuration);
+    					}
+    				}
+
+    				for(i = 0; i < nTimeObjects; ++i)
+    				{
+    					if(timeObjects[i].midiChordDef !== undefined)
+    					{
+    						adjustDurations(timeObjects[i].midiChordDef.basicChordsArray, speed, timeObjects[i].msDuration);
+    					}
+    				}
+    			}
+
+    			for(i = 0; i < nSystems; ++i)
+    			{
+    				system = systems[i];
+    				system.endMsPosition = Math.round(system.endMsPosition / speed);
+    				for(j = 0; j < system.staves.length; ++j)
+    				{
+    					staff = system.staves[j];
+    					for(k = 0; k < staff.voices.length; ++k)
+    					{
+    						voice = staff.voices[k];
+    						adjustTotalDurations(voice.timeObjects, speed);
+    						if(voice.class === "outputVoice")
+    						{
+    							adjustBasicChordDurations(voice.timeObjects, speed);
+    						}							
+    					}
+    				}
+    			}
+    		}
+
     		/*************** end of getTimeObjects function definitions *****************************/
 
     		systemIndex = 0;
@@ -1576,12 +1584,17 @@ _AP.score = (function (document)
     			{
     				delete systems[systemIndex].msDuration; // is reset in the following function
     			}
-    			getSystemTimeObjects(systems[systemIndex], viewBoxScale, systemElem, speed);
+    			getSystemTimeObjects(systems[systemIndex], viewBoxScale, systemElem);
     			systemIndex++;
     		}
 
     		finalBarlineMsPosition = setMsPositions(systems);
     		setSystemMsPositionsAndAddFinalBarlineToEachVoice(systems, finalBarlineMsPosition);
+
+    		if(speed !== 1)
+    		{
+    			changeSpeed(systems, speed);
+    		}
 
     		lastSystemTimeObjects = systems[systems.length - 1].staves[0].voices[0].timeObjects;
     		finalBarlineInScore = lastSystemTimeObjects[lastSystemTimeObjects.length - 1]; // 'global' object

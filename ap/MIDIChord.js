@@ -548,7 +548,10 @@ _AP.midiChord = (function()
                             oIndex = fIndex * (Math.floor(originalLength / numberOfFinalValues));
                             finalValuesArray.push(originalValuesArray[oIndex]);
                         }
-                        finalValuesArray.push(originalValuesArray[originalLength - 1]);
+                        if(numberOfFinalValues > 1)
+                        {
+                        	finalValuesArray.push(originalValuesArray[originalLength - 1]);
+                        }
                     }
 
                     return finalValuesArray;
