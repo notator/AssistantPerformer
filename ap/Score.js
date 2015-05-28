@@ -347,7 +347,8 @@ _AP.score = (function (document)
         					}
         					else
         					{
-        						throw "Error: staff cannot have more than two voices! Two voice staves must have five lines.";
+        						throw "Error: staff cannot have more than two voices!\n" +
+										"Two voice staves must have five lines.";
         					}
         				}
         			}
@@ -1305,6 +1306,10 @@ _AP.score = (function (document)
     									break;
     							}
     						}
+    						if(timeObject.msDuration < 1)
+    						{
+    							throw "Error: The score contains chords having zero duration!";
+    						}
     						timeObjects.push(timeObject);
     					}
     					else if(noteObjectClass === 'rest')
@@ -1466,7 +1471,7 @@ _AP.score = (function (document)
 				// the final timeObject is the final barline (msDuration = 0).
     			function adjustTotalDurations(timeObjects, speed)
     			{
-    				var i, nTimeObjects = timeObjects.length;
+    				var i, msDuration, nTimeObjects = timeObjects.length;
 
     				for(i = 0; i < nTimeObjects; ++i)
     				{
@@ -1476,7 +1481,13 @@ _AP.score = (function (document)
     				// the final timeObject is the final barline (msDuration = 0).
     				for(i = 1; i < nTimeObjects; ++i)
     				{
-    					timeObjects[i - 1].msDuration = timeObjects[i].msPosition - timeObjects[i-1].msPosition;
+    					msDuration = timeObjects[i].msPosition - timeObjects[i-1].msPosition;
+    					if(msDuration < 1)
+    					{
+    						throw "Error: The speed has been set too high!\n\n" +
+								  "(Attempt to create a chord or rest having no duration.)";
+    					}
+    					timeObjects[i - 1].msDuration = msDuration;
     				}
     			}
 
@@ -1507,6 +1518,11 @@ _AP.score = (function (document)
     										basicChords[i].msDuration -= 1;
     										excessDuration -= 1;
     									}
+    									else
+    									{
+    										throw "Error: The speed has been set too high!\n\n" +
+												  "(Can't adjust the duration of a set of basicChords.)";
+    									}
     								}
     								else if(excessDuration < 0)
     								{
@@ -1534,6 +1550,11 @@ _AP.score = (function (document)
     					for(i = 0; i < nBasicChords; ++i)
     					{
     						basicChords[i].msDuration = Math.round(msFPPositions[i + 1] - msFPPositions[i]);
+    						if(basicChords[i].msDuration < 1)
+    						{
+    							throw "Error: The speed has been set too high!\n\n" +
+									  "(Attempt to create a basicChord with no duration.)";
+    						}
     						totalBasicMsDurations += basicChords[i].msDuration;
     					}
 
@@ -1593,7 +1614,7 @@ _AP.score = (function (document)
 
     		if(speed !== 1)
     		{
-    			changeSpeed(systems, speed);
+    			changeSpeed(systems, speed); // can throw an exception
     		}
 
     		lastSystemTimeObjects = systems[systems.length - 1].staves[0].voices[0].timeObjects;

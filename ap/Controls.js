@@ -1173,17 +1173,17 @@ _AP.controls = (function(document, window)
     		// tracksData will contain the following defined attributes:
     		//		inputTracks[]
     		//		outputTracks[]
-			//		if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
+    		//		if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
     		//			inputKeyRange.bottomKey
     		//			inputKeyRange.topKey
-    		tracksData = score.getTracksData(options.globalSpeed);
+    		tracksData = score.getTracksData(options.globalSpeed); // can throw an exception if the speed is too great
 
     		if(options.livePerformance)
     		{
     			player = options.inputHandler; // e.g. keyboard1 -- the "prepared piano"
     			player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
     			player.init(options.inputDevice, options.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
-			}
+    		}
     		else
     		{
     			player = sequence; // sequence is a namespace, not a class.
@@ -1200,8 +1200,6 @@ _AP.controls = (function(document, window)
     		tracksControl.init(tracksData.outputTracks.length, tracksData.inputTracks.length, options.livePerformance, score.refreshDisplay);
     	}
 
-    	midiAccess.removeEventListener('statechange', onMIDIDeviceStateChange, false);
-
         if(document.getElementById("inputDeviceSelect").selectedIndex === 0)
         {
             options.livePerformance = false;
@@ -1213,18 +1211,29 @@ _AP.controls = (function(document, window)
 
         options.globalSpeed = document.getElementById("globalSpeedInput").value / 100;
 
-        getTracksAndPlayer(score, options);
+    	try
+    	{
+    		// This function can throw an exception
+    		// (e.g. if an attempt is made to create an event that has no duration).
+    		getTracksAndPlayer(score, options);
 
-        score.refreshDisplay(); // undefined trackIsOnArray
+    		midiAccess.removeEventListener('statechange', onMIDIDeviceStateChange, false);
 
-        score.moveStartMarkerToTop(svgPagesDiv);
+    		score.refreshDisplay(); // undefined trackIsOnArray
 
-        setSvgControlsState('stopped');
+    		score.moveStartMarkerToTop(svgPagesDiv);
 
-        if(options.livePerformance === true)
-        {
-        	goControlClicked();
-        }
+    		setSvgControlsState('stopped');
+
+    		if(options.livePerformance === true)
+    		{
+    			goControlClicked();
+    		}
+    	}
+    	catch(errorMessage)
+		{
+    		alert(errorMessage);
+		}
     },
 
     publicAPI =
