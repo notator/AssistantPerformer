@@ -1122,7 +1122,9 @@ _AP.controls = (function(document, window)
 
         if(controlID === "gotoOptions")
         {
-            deleteSaveMIDIFileButton();
+        	deleteSaveMIDIFileButton();
+
+        	midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
 
             if(cl.gotoOptionsDisabled.getAttribute("opacity") !== SMOKE)
             {
