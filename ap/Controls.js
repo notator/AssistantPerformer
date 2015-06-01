@@ -20,7 +20,6 @@ _AP.controls = (function(document, window)
     "use strict";
 
     var
-    U = _AP.utilities,
     tracksControl = _AP.tracksControl,
     Score = _AP.score.Score,
     sequence = _AP.sequence,
@@ -240,11 +239,22 @@ _AP.controls = (function(document, window)
                 globalElements.svgRuntimeControls.style.visibility = "hidden";
                 globalElements.svgPagesFrame.style.visibility = "hidden";
 
+            	// Note that the midi input device does not have to be set in order to enable performance.
                 if(scoreIndex > 0 && outputDeviceIndex > 0)
                 {
-                    globalElements.globalSpeedDiv.style.display = "block";
-                    // Note that the midi input device does not have to be set in order to enable the start button.
-                    globalElements.startRuntimeButton.style.display = "initial";
+                	globalElements.globalSpeedDiv.style.display = "block";
+
+                	if(globalElements.globalSpeedInput.value <= 0)
+                	{
+                		globalElements.globalSpeedInput.style.backgroundColor = _AP.constants.INPUT_ERROR_COLOR;
+                		globalElements.startRuntimeButton.style.display = "none";
+                		alert("Error: The speed must be set to a value greater than 0%!");
+                	}
+                	else
+                	{
+                		globalElements.globalSpeedInput.style.backgroundColor = "#FFFFFF";
+                		globalElements.startRuntimeButton.style.display = "initial";
+                	}
                 }
                 break;
             case "toBack": // set svg controls and score visible
@@ -1080,18 +1090,13 @@ _AP.controls = (function(document, window)
             setMIDIDevices();
         }
 
-        if(controlID === "globalSpeedInput")
-        {
-            U.checkFloatRange(document.getElementById("globalSpeedInput"), 0.001, 800000);
-        }
-
         /**** controls in options panel ***/
         if(controlID === "inputDeviceSelect"
         || controlID === "scoreSelect"
         || controlID === "outputDeviceSelect"
         || controlID === "globalSpeedInput")
         {
-            setMainOptionsState("toFront"); // enables only the appropriate controls
+        	setMainOptionsState("toFront"); // enables only the appropriate controls
         }
 
         /*** SVG controls ***/
