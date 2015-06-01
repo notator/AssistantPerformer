@@ -688,14 +688,16 @@ _AP.controls = (function(document, window)
     {
         function getGlobalElements()
         {
+        	globalElements.titleOptionsDiv = document.getElementById("titleOptionsDiv");
             globalElements.inputDeviceSelect = document.getElementById("inputDeviceSelect");
             globalElements.scoreSelect = document.getElementById("scoreSelect");
             globalElements.outputDeviceSelect = document.getElementById("outputDeviceSelect");
             globalElements.globalSpeedDiv = document.getElementById("globalSpeedDiv");
-            globalElements.titleOptionsDiv = document.getElementById("titleOptionsDiv");
+            globalElements.globalSpeedInput = document.getElementById("globalSpeedInput");
             globalElements.startRuntimeButton = document.getElementById("startRuntimeButton");
-            globalElements.svgRuntimeControls = document.getElementById("svgRuntimeControls");
+
             globalElements.svgPagesFrame = document.getElementById("svgPagesFrame");
+            globalElements.svgRuntimeControls = document.getElementById("svgRuntimeControls");
         }
 
         // resets the score selector in case the browser has cached the last value
@@ -1200,16 +1202,8 @@ _AP.controls = (function(document, window)
     		tracksControl.init(tracksData.outputTracks.length, tracksData.inputTracks.length, options.livePerformance, score.refreshDisplay);
     	}
 
-        if(document.getElementById("inputDeviceSelect").selectedIndex === 0)
-        {
-            options.livePerformance = false;
-        }
-        else
-        {
-            options.livePerformance = true;
-        }
-
-        options.globalSpeed = document.getElementById("globalSpeedInput").value / 100;
+    	options.livePerformance = (globalElements.inputDeviceSelect.disabled === false); 
+    	options.globalSpeed = globalElements.globalSpeedInput.value / 100;
 
     	try
     	{
