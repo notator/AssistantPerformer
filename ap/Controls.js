@@ -592,8 +592,18 @@ _AP.controls = (function(document, window)
                     setPaused();
                 }
                 break;
-            case 'playing':
-            	setPlaying(options.livePerformance);
+        	case 'playing':
+        		try
+        		{
+        			setPlaying(options.livePerformance);
+        		}
+        		catch(errorMessage)
+        		{
+        			alert("ji: runtime browser error: \n\n" +
+					"browser's error message: \n" + errorMessage);
+        			//window.close();
+        			throw errorMessage;
+        		}
                 break;
             case 'settingStart':
                 setSettingStart();
@@ -784,13 +794,23 @@ _AP.controls = (function(document, window)
 	// Also, it is called automatically when assisted performances start.
 	goControlClicked = function()
 	{
-		if(svgControlsState === 'stopped' || svgControlsState === 'paused')
+		try
 		{
-			setSvgControlsState('playing');
+			if(svgControlsState === 'stopped' || svgControlsState === 'paused')
+			{
+				setSvgControlsState('playing');
+			}
+			else if(svgControlsState === 'playing')
+			{
+				setSvgControlsState('paused');
+			}
 		}
-		else if(svgControlsState === 'playing')
+		catch(errorMessage)
 		{
-			setSvgControlsState('paused');
+			alert("ji: error when Go control was clicked: \n\n" +
+			"browser's error message: \n" + errorMessage);
+			//window.close();
+			throw errorMessage;
 		}
 	},
 
