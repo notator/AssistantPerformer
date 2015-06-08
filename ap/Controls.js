@@ -1227,7 +1227,7 @@ _AP.controls = (function(document, window)
     		tracksControl.init(tracksData.outputTracks.length, tracksData.inputTracks.length, options.livePerformance, score.refreshDisplay);
     	}
 
-    	options.livePerformance = (globalElements.inputDeviceSelect.disabled === false); 
+    	options.livePerformance = (globalElements.inputDeviceSelect.disabled === false && globalElements.inputDeviceSelect.selectedIndex > 0); 
     	options.globalSpeed = globalElements.globalSpeedInput.value / 100;
 
     	try

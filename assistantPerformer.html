@@ -22,10 +22,16 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
 			This page uses the <a href="http://www.w3.org/TR/webmidi/">Web-MIDI-API</a>, and is tested in the latest stable versions of Chrome and Firefox.<br />
 			Firefox currently requires the <a href="http://jazz-soft.net">Jazz</a> plug-in to be installed.<br />
 			Chrome v.43 implements the Web-MIDI-API natively. Earlier versions need the Web-MIDI-API flag (in chrome://flags) to be activated.<br />
+			<span class="devText">
+				Caution: This application is being developed, and is therefore volatile. The current version may well contain bugs.<br />
+				Please use your browser's refresh button to check for the latest update.<br />
+				This version uploaded: 22.08.06.2015 (hour.day.month.year)
+			</span>
+			<br />
 			<a id="aboutAssistantPerformerLink"
-			   style="font-size: 11px;"
+			   style="font-size: 13px;"
 			   href="http://james-ingram-act-two.de/open-source/aboutAssistantPerformer.html">
-				More about this version of the Assistant Performer...
+				Usage and further information...
 			</a>
 		</div>
 		<div id="options" class="options">
@@ -60,15 +66,15 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
 				<a id="aboutScoreLink" href="" target="_blank">About this score...</a>
 			</div>-->
 			<div id="globalSpeedDiv" class="globalSpeedPanel" style="display:none;">
-					<label id="globalSpeedInputNumberLabel1" for="globalSpeedInput">
-						speed:
-					</label>
-					<input type="number" id="globalSpeedInput" value="100"
-						   onblur="_AP.controls.doControl('globalSpeedInput')"
-						   style="margin: 0 0 3px 0; width: 65px; vertical-align: middle;" />
-					<label id="globalSpeedInputNumberLabel2" for="globalSpeedInput">
-						% [Greater than 0%] Higher values lead to higher speed.
-					</label>
+				<label id="globalSpeedInputNumberLabel1" for="globalSpeedInput">
+					speed:
+				</label>
+				<input type="number" id="globalSpeedInput" value="100"
+					   onblur="_AP.controls.doControl('globalSpeedInput')"
+					   style="margin: 0 0 3px 0; width: 65px; vertical-align: middle;" />
+				<label id="globalSpeedInputNumberLabel2" for="globalSpeedInput">
+					% [Greater than 0%] Higher values lead to higher speed.
+				</label>
 			</div>
 			<input id="startRuntimeButton" type="button" class="startRuntimeButton" value="Start"
 				   onclick="_AP.controls.beginRuntime()"
