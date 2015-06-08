@@ -702,6 +702,18 @@ _AP.controls = (function(document, window)
 		midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
 	},
 
+    doAlertThrow = function(functionLocation, errorMessage)
+    {
+    	var msg = errorMessage;
+    	if(functionLocation !== "")
+    	{
+    		msg = msg + "\n\nError in " + functionLocation;
+		}
+    	alert(msg);
+
+    	throw errorMessage;
+    },
+
     // Defines the window.svgLoaded(...) function.
     // Sets up the pop-up menues for scores and MIDI input and output devices.
     init = function(mAccess)
@@ -771,23 +783,30 @@ _AP.controls = (function(document, window)
             svgPagesDiv.style.height = window.innerHeight - 43;
         }
 
-        midiAccess = mAccess;
+    	try
+    	{
+    		midiAccess = mAccess;
 
-        getGlobalElements();
+    		getGlobalElements();
 
-        setMIDIInputDeviceSelector(midiAccess);
-        setMIDIOutputDeviceSelector(midiAccess);
+    		setMIDIInputDeviceSelector(midiAccess);
+    		setMIDIOutputDeviceSelector(midiAccess);
 
-    	// update the device selectors when devices get connected, disconnected, opened or closed
-        midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
+    		// update the device selectors when devices get connected, disconnected, opened or closed
+    		midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
 
-        initScoreSelector(runningMarkerHeightChanged);
+    		initScoreSelector(runningMarkerHeightChanged);
 
-        setSvgPagesDivHeight();
+    		setSvgPagesDivHeight();
 
-        getControlLayers(document);
+    		getControlLayers(document);
 
-        setSvgControlsState('disabled');
+    		setSvgControlsState('disabled');
+    	}
+    	catch(errorMessage)
+    	{
+    		doAlertThrow("Controls.init()", errorMessage);
+    	}
     },
 
 	// The Go control can be clicked directly.
@@ -807,10 +826,7 @@ _AP.controls = (function(document, window)
 		}
 		catch(errorMessage)
 		{
-			alert("ji: error when Go control was clicked: \n\n" +
-			"browser's error message: \n" + errorMessage);
-			//window.close();
-			throw errorMessage;
+			doAlertThrow("Controls.goControlClicked()", errorMessage);
 		}
 	},
 
@@ -1084,82 +1100,89 @@ _AP.controls = (function(document, window)
             }
         }
 
-        if(controlID === "inputDeviceSelect")
-        {
-            setMIDIDevices();
-            if(globalElements.scoreSelect.selectedIndex > 0)
-            {
-            	setScore();
-            }
-        }
+    	try
+    	{
+    		if(controlID === "inputDeviceSelect")
+    		{
+    			setMIDIDevices();
+    			if(globalElements.scoreSelect.selectedIndex > 0)
+    			{
+    				setScore();
+    			}
+    		}
 
-        if(controlID === "scoreSelect")
-        {
-        	if(globalElements.scoreSelect.selectedIndex > 0)
-        	{
-        		setScore();
-        	}
-        	else
-        	{
-        		setMainOptionsState("toFront"); // hides startRuntimeButton
-        	}
-        }
+    		if(controlID === "scoreSelect")
+    		{
+    			if(globalElements.scoreSelect.selectedIndex > 0)
+    			{
+    				setScore();
+    			}
+    			else
+    			{
+    				setMainOptionsState("toFront"); // hides startRuntimeButton
+    			}
+    		}
 
-        if(controlID === "outputDeviceSelect")
-        {
-            setMIDIDevices();
-        }
+    		if(controlID === "outputDeviceSelect")
+    		{
+    			setMIDIDevices();
+    		}
 
-        /**** controls in options panel ***/
-        if(controlID === "inputDeviceSelect"
-        || controlID === "scoreSelect"
-        || controlID === "outputDeviceSelect"
-        || controlID === "globalSpeedInput")
-        {
-        	setMainOptionsState("toFront"); // enables only the appropriate controls
-        }
+    		/**** controls in options panel ***/
+    		if(controlID === "inputDeviceSelect"
+			|| controlID === "scoreSelect"
+			|| controlID === "outputDeviceSelect"
+			|| controlID === "globalSpeedInput")
+    		{
+    			setMainOptionsState("toFront"); // enables only the appropriate controls
+    		}
 
-        /*** SVG controls ***/
-        if(cl.performanceButtonsDisabled.getAttribute("opacity") !== SMOKE)
-        {
-            switch(controlID)
-            {
-                case "goControl":
-                    goControlClicked();
-                    break;
-                case "stopControl":
-                    stopControlClicked();
-                    break;
-                case "setStartControl":
-                    setStartControlClicked();
-                    break;
-                case "setEndControl":
-                    setEndControlClicked();
-                    break;
-                case "sendStartToBeginningControl":
-                    sendStartToBeginningControlClicked();
-                    break;
-                case "sendStopToEndControl":
-                    sendStopToEndControlClicked();
-                    break;
-                default:
-                    break;
-            }
-        }
+    		/*** SVG controls ***/
+    		if(cl.performanceButtonsDisabled.getAttribute("opacity") !== SMOKE)
+    		{
+    			switch(controlID)
+    			{
+    				case "goControl":
+    					goControlClicked();
+    					break;
+    				case "stopControl":
+    					stopControlClicked();
+    					break;
+    				case "setStartControl":
+    					setStartControlClicked();
+    					break;
+    				case "setEndControl":
+    					setEndControlClicked();
+    					break;
+    				case "sendStartToBeginningControl":
+    					sendStartToBeginningControlClicked();
+    					break;
+    				case "sendStopToEndControl":
+    					sendStopToEndControlClicked();
+    					break;
+    				default:
+    					break;
+    			}
+    		}
 
-        if(controlID === "gotoOptions")
-        {
-        	deleteSaveMIDIFileButton();
+    		if(controlID === "gotoOptions")
+    		{
+    			deleteSaveMIDIFileButton();
 
-        	midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
+    			midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
 
-            if(cl.gotoOptionsDisabled.getAttribute("opacity") !== SMOKE)
-            {
-                setSvgControlsState('disabled');
-                score.moveStartMarkerToTop(svgPagesDiv);
-                scoreHasJustBeenSelected = false;
-            }
-        }
+    			if(cl.gotoOptionsDisabled.getAttribute("opacity") !== SMOKE)
+    			{
+    				setSvgControlsState('disabled');
+    				score.moveStartMarkerToTop(svgPagesDiv);
+    				scoreHasJustBeenSelected = false;
+    			}
+    		}
+    	}
+    	catch(errorMessage)
+    	{
+    		doAlertThrow("Controls.doControl()", errorMessage);
+    	}
     },
 
     // functions for adjusting the appearance of the score options
@@ -1250,9 +1273,9 @@ _AP.controls = (function(document, window)
     		}
     	}
     	catch(errorMessage)
-		{
-    		alert(errorMessage);
-		}
+    	{
+    		doAlertThrow("", errorMessage);
+    	}
     },
 
     publicAPI =
