@@ -23,7 +23,8 @@ _AP.utilities = (function()
     INPUT_ERROR_COLOR = _AP.constants.INPUT_ERROR_COLOR,
     // The numberInput argument is an html5 input element of type 'number'.
     // If the element's value is empty, not a number, less than min or greater than max,
-    // its background colour is set to INPUT_ERROR_COLOR and it is given a jiError attribute.
+    // its background colour is set to INPUT_ERROR_COLOR and it is given a true boolean jiError attribute.
+	// Otherwise, the background colour is set to white and jiError is set to null (for garbage collector).
     checkFloatRange = function (numberInput, min, max)
     {
         var floatValue = parseFloat(numberInput.value);
@@ -35,13 +36,14 @@ _AP.utilities = (function()
         else
         {
             numberInput.style.backgroundColor = "#FFFFFF";
-            numberInput.jiError = undefined;
+            numberInput.jiError = null;
         }
     },
 
     // The numberInput argument is an html5 input element of type 'number'.
     // If the element's value is empty, not an integer, less than min or greater than max,
-    // its background colour is set to INPUT_ERROR_COLOR and it is given a jiError attribute.
+    // its background colour is set to INPUT_ERROR_COLOR and it is given a true boolean jiError attribute.
+	// Otherwise, the background colour is set to white and jiError is set to null (for garbage collector).
     checkIntRange = function(numberInput, min, max)
     {
         var
@@ -56,7 +58,7 @@ _AP.utilities = (function()
         else
         {
             numberInput.style.backgroundColor = "#FFFFFF";
-            numberInput.jiError = undefined;
+            numberInput.jiError = null;
         }
     },
 

@@ -181,7 +181,7 @@ _AP.seq = (function()
 				trackWorkers[workerIndex].hasCompleted = false;
 				trackWorkers[workerIndex].postMessage({ action: "pushTrk", moments: momsPerTrk, inputControls: minimumInputControls });
 			}
-			trkData.momentsPerTrk = undefined; // can be garbage collected
+			trkData.momentsPerTrk = null; // can be garbage collected
 		}
 
 		trkData = getTrkData(seqTrks, seqPositionInScore);
