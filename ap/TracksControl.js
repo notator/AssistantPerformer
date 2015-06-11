@@ -204,17 +204,16 @@ _AP.tracksControl = (function (document)
 	    }
 	},
 
-	// Returns a read-only array containing all the track on/off states.
-    // The tracks' state cannot be set by changing values in the returned array.
+	// Pushes the track on/off states as booleans into the argument (which is an empty array).
+	// The tracks' state cannot be set by changing values in the returned array.
     // This function is called by the trackOnOff function below.
-	getTrackIsOnArray = function ()
+	getReadOnlyTrackIsOnArray = function(readOnlyArray)
 	{
-		var i, readOnlyArray = [];
+		var i;
 		for(i = 0; i < trackCtlElems.length; ++i)
 		{
 			readOnlyArray.push(trackCtlElems[i].state === "on"); // "disabled" and "off" are both "off" here
 		}
-		return readOnlyArray;
 	},
 
     // called by user by clicking on screen.
@@ -223,7 +222,8 @@ _AP.tracksControl = (function (document)
     	var
 		trackIndex = parseInt(trackNumberStr, 10),
     	bulletOffLayer = document.getElementById(bulletOffID),
-        thisIsTheLastPlayingInputOrOutputTrack;
+        thisIsTheLastPlayingInputOrOutputTrack,
+    	readOnlyTrackIsOnArray = [];
 
         function isTheLastPlayingInputOrOutputTrack(trackIndex)
         {
@@ -279,7 +279,8 @@ _AP.tracksControl = (function (document)
         	// scoreRefresh is a callback that tells the score to redraw itself
             if(scoreRefresh !== null)
             {
-            	scoreRefresh(getTrackIsOnArray());
+            	getReadOnlyTrackIsOnArray(readOnlyTrackIsOnArray)
+            	scoreRefresh(readOnlyTrackIsOnArray);
             }
         }
     },

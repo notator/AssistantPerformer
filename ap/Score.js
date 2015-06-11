@@ -67,11 +67,18 @@ _AP.score = (function (document)
 
     finalBarlineInScore,
 
-	// Returns a clone of the trackIsOnArray.
-    // The tracks' states cannot be set by changing values in the returned array.
-	getTrackIsOnArray = function()
+	// Pushes the values in the trackIsOnArray into the argument (which is an empty array).
+    // The returnArray will be garbage collected when it is finished with.
+	// This rigmarole so that values in the trackIsOnArray can't be changed except by the tracksControl.
+	getReadOnlyTrackIsOnArray = function(returnArray)
 	{
-		return trackIsOnArray.slice(0);
+		var i;
+		console.assert(returnArray.length === 0);
+
+		for(i = 0; i < trackIsOnArray.length; ++i)
+		{
+			returnArray.push(trackIsOnArray[i]);
+		}
 	},
 
     // Sends a noteOff to all notes on all channels on the midi output device.
@@ -1846,7 +1853,7 @@ _AP.score = (function (document)
         // functions which return the current start and end times.
         this.startMarkerMsPosition = startMarkerMsPosition;
         this.endMarkerMsPosition = endMarkerMsPosition;
-        this.getTrackIsOnArray = getTrackIsOnArray;
+        this.getReadOnlyTrackIsOnArray = getReadOnlyTrackIsOnArray;
 
         // Called when the start button is clicked in the top options panel,
         // and when setOptions button is clicked at the top of the score.

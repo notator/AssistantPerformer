@@ -453,7 +453,7 @@ _AP.controls = (function(document, window)
 
         function setPlaying(isLivePerformance)
         {
-            var sequenceRecording;
+            var sequenceRecording, trackIsOnArray = [];
 
             deleteSaveMIDIFileButton();
 
@@ -469,8 +469,9 @@ _AP.controls = (function(document, window)
                 // either at the start marker, or somewhere paused.
                 score.setRunningMarkers();
                 score.moveStartMarkerToTop(svgPagesDiv);
+                score.getReadOnlyTrackIsOnArray(trackIsOnArray);
 
-                player.play(score.getTrackIsOnArray(), score.startMarkerMsPosition(), score.endMarkerMsPosition(), sequenceRecording);
+                player.play(trackIsOnArray, score.startMarkerMsPosition(), score.endMarkerMsPosition(), sequenceRecording);
             }
 
             if(isLivePerformance === true)
