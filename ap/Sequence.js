@@ -21,7 +21,6 @@
 *       isPaused()
 *       isRunning()
 *       
-*       finishSpanSilently()
 *       setSpeedFactor()
 */
 
@@ -36,6 +35,7 @@ _AP.sequence = (function(window)
     "use strict";
     var
     outputDevice,
+	sendWithTimeStamp = true,
 	tracks,
 
     speedFactor = 1.0, // nextMoment(), setSpeedFactor()
@@ -83,8 +83,16 @@ _AP.sequence = (function(window)
 
 	resetChannel = function(outputDevice, channelIndex)
 	{
-		outputDevice.send(allControllersOffMessages[channelIndex], performance.now());
-		outputDevice.send(allNotesOffMessages[channelIndex], performance.now());
+		if(sendWithTimeStamp)
+		{
+			outputDevice.send(allControllersOffMessages[channelIndex], performance.now());
+			outputDevice.send(allNotesOffMessages[channelIndex], performance.now());
+		}
+		else
+		{
+			outputDevice.send(allControllersOffMessages[channelIndex]);
+			outputDevice.send(allNotesOffMessages[channelIndex]);
+		}
 	},
 
     setState = function(state)
@@ -157,43 +165,17 @@ _AP.sequence = (function(window)
         }
     },
 
-    // nextMoment is used by tick(), resume(), play(), finishSpanSilently().
+    // nextMoment is used by tick(), resume(), play().
     // Returns the earliest track.nextMoment or null.
     // Null is returned if there are no more moments or if the sequence is paused or stopped.
     nextMoment = function()
     {
         var
-        track, nTracks = tracks.length, trackMsPos,
-        nextMomtMsPos,
-        nextMomt = null,
-        inLoopPhase = false;
+        track, nTracks = tracks.length,
+        nextMomtMsPos, trackNextMomtMsPos,
+        nextMomt = null;
 
-        // Returns the looping track having the earliest nextMsPosition (= the position of the first unsent Moment in the track),
-        // or null if the earliest nextMsPosition is >= endMarkerMsPosition.
-        function getNextLoopingTrack(tracks, nTracks)
-        {
-            var track, i, nextTrack = null, nextMomt = null, trackMsPos, nextMomtMsPos = Number.MAX_VALUE;
-
-            for(i = 0; i < nTracks; ++i)
-            {
-                track = tracks[i];
-                if(track.isPerforming)
-                {
-                    trackMsPos = track.currentMsPosition(); // returns Number.MAX_VALUE at end of track
-
-                    // ACHTUNG: inLoopPhase is true. Check track.currentMidiObject.msPositionInScore here! (c.f. the function below)
-                    if((track.currentMidiObject.msPositionInScore < endMarkerMsPosition) && (trackMsPos < nextMomtMsPos))
-                    {
-                        nextTrack = track;
-                        nextMomtMsPos = trackMsPos;
-                    }
-                }
-            }
-
-            return { track: nextTrack, nextMomtMsPos: nextMomtMsPos };
-        }
-
-        // Returns the (non-looping) track having the earliest nextMsPosition (= the position of the first unsent Moment in the track),
+        // Returns the track having the earliest nextMsPosition (= the position of the first unsent Moment in the track),
         // or null if the earliest nextMsPosition is >= endMarkerMsPosition.
         function getNextTrack(tracks, nTracks)
         {
@@ -206,7 +188,6 @@ _AP.sequence = (function(window)
                 {
                     trackMsPos = track.currentMsPosition(); // returns Number.MAX_VALUE at end of track
 
-                    // ACHTUNG: inLoopPhase is false. Check trackMsPos here (c.f. the above function)
                     if((trackMsPos < endMarkerMsPosition) && (trackMsPos < nextMomtMsPos))
                     {
                         nextTrack = track;
@@ -215,19 +196,10 @@ _AP.sequence = (function(window)
                 }
             }
 
-            return { track: nextTrack, nextMomtMsPos: nextMomtMsPos };
+            return nextTrack;
         }
 
-        if(inLoopPhase)
-        {
-            trackMsPos = getNextLoopingTrack(tracks, nTracks);
-        }
-        else
-        {
-            trackMsPos = getNextTrack(tracks, nTracks);
-        }
-
-        track = trackMsPos.track;
+        track = getNextTrack(tracks, nTracks);
 
         if(track === null)
         {
@@ -235,39 +207,30 @@ _AP.sequence = (function(window)
         }
         else
         {
-            nextMomt = track.currentMoment;
-            track.advanceCurrentMoment(inLoopPhase);
+        	nextMomt = track.currentMoment;
+        	trackNextMomtMsPos = track.currentMsPosition();
+            track.advanceCurrentMoment(false);
         }
 
         if(!stopped && !paused)
         {
-            if(inLoopPhase === false)
+        	nextMomtMsPos = trackNextMomtMsPos;
+
+            if((nextMomt.chordStart || nextMomt.restStart)
+            && (nextMomtMsPos > lastReportedMsPosition))
             {
-                nextMomtMsPos = trackMsPos.nextMomtMsPos;
-
-                if((nextMomt.chordStart || nextMomt.restStart)
-                && (nextMomtMsPos > lastReportedMsPosition))
-                {
-                    // the position will be reported by tick() when nextMomt is sent.
-                    msPositionToReport = nextMomtMsPos;
-                    //console.log("msPositionToReport=%i", msPositionToReport);
-                }
-
-                if(previousTimestamp === null)
-                {
-                    nextMomt.timestamp = startTimeAdjustedForPauses;
-                }
-                else
-                {
-                    nextMomt.timestamp = ((nextMomtMsPos - previousMomtMsPos) * speedFactor) + previousTimestamp;
-                }
+                // the position will be reported by tick() when nextMomt is sent.
+                msPositionToReport = nextMomtMsPos;
+                //console.log("msPositionToReport=%i", msPositionToReport);
             }
-            else // inLoopPhase === true
-            {
-                nextMomtMsPos = trackMsPos.nextMomtMsPos;
-                nextMomt.timestamp = ((nextMomtMsPos - previousMomtMsPos) * speedFactor) + previousTimestamp;
 
-                //console.log("inLoopPhase: endMarkerMsPosition=%i, nextMomtMsPos=%i", endMarkerMsPosition, nextMomtMsPos);
+            if(previousTimestamp === null)
+            {
+                nextMomt.timestamp = startTimeAdjustedForPauses;
+            }
+            else
+            {
+                nextMomt.timestamp = ((nextMomtMsPos - previousMomtMsPos) * speedFactor) + previousTimestamp;
             }
 
             previousTimestamp = nextMomt.timestamp;
@@ -309,7 +272,7 @@ _AP.sequence = (function(window)
     tick = function()
     {
         var
-        PREQUEUE = 0, // needs to be set to a larger value later. See above.
+        PREQUEUE = 0, // Setting this to 20ms leads to dropouts. But does this need to be set to something larger than 0? See above.
         now = performance.now(),
         delay;
 
@@ -322,9 +285,19 @@ _AP.sequence = (function(window)
             messages = moment.messages,
             i, nMessages = messages.length, timestamp = moment.timestamp;
 
-            for(i = 0; i < nMessages; ++i)
+            if(sendWithTimeStamp)
             {
-                outputDevice.send(messages[i].data, timestamp);
+            	for(i = 0; i < nMessages; ++i)
+            	{
+            		outputDevice.send(messages[i].data, timestamp);
+            	}
+            }
+            else
+            {
+            	for(i = 0; i < nMessages; ++i)
+            	{
+            		outputDevice.send(messages[i].data);
+            	}
             }
         }
 
@@ -334,9 +307,11 @@ _AP.sequence = (function(window)
         }
 
         delay = currentMoment.timestamp - now; // compensates for inaccuracies in setTimeout
+
         ////console.log("tick: delay1=%f", delay);
         ////console.log("currentMoment.msPositionInScore=%i", currentMoment.msPositionInScore);
-        ////console.log("currentMoment.timestamp=%f", currentMoment.timestamp);
+    	////console.log("currentMoment.timestamp=%f", currentMoment.timestamp);
+
         // send all messages that are due between now and PREQUEUE ms later. 
         while(delay <= PREQUEUE)
         {
@@ -357,7 +332,9 @@ _AP.sequence = (function(window)
                     // These values are adjusted relative to the first moment.timestamp
                     // before saving them in a Standard MIDI File.
                     // (i.e. the value of the earliest timestamp in the recording is
-                    // subtracted from all the timestamps in the recording) 
+                	// subtracted from all the timestamps in the recording)
+
+					// Commenting out the following line makes no difference to the point at which Chrome crashes (14.06.2015).
                     sequenceRecording.trackRecordings[currentMoment.messages[0].channel()].addLiveScoreMoment(currentMoment);
                 }
             }
@@ -505,7 +482,7 @@ _AP.sequence = (function(window)
 
         for(channelIndex = 0; channelIndex < trackIsOnArray.length; channelIndex++)
         {
-        	if(trackIsOnArray[channelIndex] == true)
+        	if(trackIsOnArray[channelIndex] === true)
         	{
         		resetChannel(outputDevice, channelIndex);
         	}
@@ -521,95 +498,6 @@ _AP.sequence = (function(window)
         lastReportedMsPosition = -1;
 
         run();
-    },
-
-    // Immediately sends all the span's NOTE_OFF commands that happen
-    // before endOfSpanMsPosition, and then calls stop().
-    // Other commands (NOTE_ON, AFTERTOUCH, CONTROL_CHANGE, PROGRAM_CHANGE, CHANNEL_PRESSURE, PITCH_WHEEL) are NOT sent.
-    // Called in assisted performances when a NOTE_OFF arrives before a span has finished.
-    // The sent noteOff messages are recorded.
-    finishSpanSilently = function(endOfSpanMsPosition)
-    {
-        var
-        i, nTracks = tracks.length, track,
-        lastMsPos, lastTrackMomentMsPositionInScore,
-        now = performance.now(),
-        noteOffsMoment;
-
-        function addNoteOffs(moment, noteOffsMoment)
-        {
-            var CMD = _AP.constants.COMMAND,
-            messages = moment.messages,
-            i, nMessages = messages.length, message, command;
-
-            for(i = 0; i < nMessages; ++i)
-            {
-                message = messages[i];
-                command = message.command();
-                if(command === CMD.NOTE_OFF || (command === CMD.NOTE_ON && message.data[2] === 0))
-                {
-                    noteOffsMoment.messages.push(message);
-                }
-            }
-        }
-
-        function sendMessages(moment)
-        {
-            var
-            messages = moment.messages,
-            i, nMessages = messages.length;
-
-            for(i = 0; i < nMessages; ++i)
-            {
-                outputDevice.send(messages[i].data, moment.timestamp);
-            }
-        }
-
-
-        for(i = 0; i < nTracks; ++i)
-        {
-            track = tracks[i];
-            // track.currentMoment is null when the complete track has no more moments
-            // if track.currentMoment !== null then track.currentMidiObject should also be !== null!
-            if(track.isPerforming)
-            {
-                noteOffsMoment = new _AP.moment.Moment(0);
-                lastTrackMomentMsPositionInScore = Number.MAX_VALUE;
-
-                while(true)
-                {
-                    lastMsPos = track.currentMsPosition();
-                    if(lastMsPos >= endOfSpanMsPosition)
-                    {
-                        break;
-                    }
-                    lastTrackMomentMsPositionInScore = lastMsPos; // the last msPosition before the end marker
-                    addNoteOffs(track.currentMoment, noteOffsMoment);
-                    track.advanceCurrentMoment(); // undefined argument: means don't loop midiChords.
-                }
-
-                if(track.currentMsPosition() === endOfSpanMsPosition)
-                {
-                    addNoteOffs(track.currentMoment, noteOffsMoment);
-                }
-
-                if(lastTrackMomentMsPositionInScore < endOfSpanMsPosition)
-                {
-                    noteOffsMoment.timestamp = now;
-                    sendMessages(noteOffsMoment);
-
-                    if(sequenceRecording !== undefined && sequenceRecording !== null && noteOffsMoment.messages.length > 0)
-                    {
-                        sequenceRecording.trackRecordings[noteOffsMoment.messages[0].channel()].addLiveScoreMoment(noteOffsMoment);
-                    }
-
-                    // previousMomtMsPos is used in the next span when setting the next moment's timestamp
-                    previousMomtMsPos = (previousMomtMsPos > lastTrackMomentMsPositionInScore) ? previousMomtMsPos : lastTrackMomentMsPositionInScore;
-                }
-            }
-        }
-
-        stop();
     },
 
     setSpeedFactor = function(factor)
@@ -629,7 +517,6 @@ _AP.sequence = (function(window)
         isPaused: isPaused,
         isRunning: isRunning,
 
-        finishSpanSilently: finishSpanSilently,
         setSpeedFactor: setSpeedFactor
     };
     // end var
