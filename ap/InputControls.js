@@ -25,7 +25,7 @@ _AP.inputControls = (function ()
 	// contains:  
     //		inputControls.noteOnVel -- possible values: "off", "scaled", "shared", "overridden"
 	//		inputControls.minVelocity -- only defined if noteOnVel is defined and set to "scaled", "shared" or "overridden". Is in range [1..127].
-	//		inputControls.noteOff -- possible values: "off", "stopChord", "stopNow", "fade"   
+	//		inputControls.noteOff -- possible values: "off", "stopChord", "stopNow", "fade", "holdAll", "holdLast"   
     //		inputControls.pressure -- possible values: "off", "aftertouch", "channelPressure", "pitchWheel", "modulation", "volume", "pan"
     //									               "expression", "timbre", "brightness", "effects", "tremolo", "chorus", "celeste", "phaser"
     //		inputControls.pitchWheel -- possible values: same as pressure

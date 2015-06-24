@@ -36,7 +36,8 @@ _AP.seq = (function()
 {
 	"use strict";
 	var
-	// A seq is an object having the following attributes
+	// A seq is an array of parallel trks. Each trk is a section of a track in the score.
+	// Each Seq has the following attributes:
 	// Used publicly at runtime: 
 	//   seq.chordIndex -- The index in allSeqMsPositions of the seq's noteOn position.
 	//   seq.nextChordIndex -- The index in allSeqMsPositions of the following chord in any inputTrack.

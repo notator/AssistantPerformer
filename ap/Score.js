@@ -1514,8 +1514,12 @@ _AP.score = (function (document)
 
     					function correctRoundingError(basicChords, excessDuration)
     					{
+    						var changed;
+
     						while(excessDuration !== 0)
     						{
+    							changed = false;
+
     							for(i = basicChords.length - 1; i >= 0; --i)
     							{
     								if(excessDuration > 0)
@@ -1524,22 +1528,25 @@ _AP.score = (function (document)
     									{
     										basicChords[i].msDuration -= 1;
     										excessDuration -= 1;
-    									}
-    									else
-    									{
-    										throw "Error: The speed has been set too high!\n\n" +
-												  "(Can't adjust the duration of a set of basicChords.)";
+    										changed = true;
     									}
     								}
     								else if(excessDuration < 0)
     								{
     									basicChords[nBasicChords - 1].msDuration += 1;
     									excessDuration += 1;
+    									changed = true;
     								}
     								else
     								{
     									break;
     								}
+    							}
+
+    							if(excessDuration !== 0 && !changed)
+    							{
+    								throw "Error: The speed has been set too high!\n\n" +
+											"(Can't adjust the duration of a set of basicChords.)";
     							}
     						}
     					}

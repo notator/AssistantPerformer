@@ -20,6 +20,8 @@ nAllMoments,
 // private, can be set at runtime
 stopChord,
 stopNow,
+holdOption,
+stopHold,
 fadeLength,
 velocityFactor,
 sharedVelocity,
@@ -37,6 +39,8 @@ init = function(trackIndexArg, channelIndexArg)
 	momentIndex = 0;
 	stopChord = false;
 	stopNow = false;
+	holdOption = false;
+	stopHold = false;
 	fadeLength = -1;
 	currentMoment = null;
 	velocityFactor = 1;
@@ -44,6 +48,23 @@ init = function(trackIndexArg, channelIndexArg)
 	overrideVelocity = 0;
 	speedFactor = 1;
 	trkStartTime = -1;
+},
+
+trkCompleted = function()
+{
+	"use strict";
+
+	if(!holdOption || stopHold)
+	{
+		if(trkIndex < (allTrks.length - 1))
+		{
+			postMessage({ action: "trkCompleted", channelIndex: channelIndex });
+		}
+		else
+		{
+			postMessage({ action: "workerCompleted", trackIndex: trackIndex, channelIndex: channelIndex });
+		}
+	}
 },
 
 doNoteOff = function()
@@ -55,6 +76,19 @@ doNoteOff = function()
 	function setFade()
 	{
 		fadeLength = nAllMoments + 1 - momentIndex;
+	}
+
+	function doStopHold()
+	{
+		stopHold = true;
+		if(currentMoment === null)
+		{
+			trkCompleted(); // silence the trk
+		}
+		else
+		{
+			stopNow = true;  // stop immediately, without playing the remainder of the current midiChord or midiRest.
+		}
 	}
 
 	if(noteOffOption !== undefined)
@@ -70,9 +104,14 @@ doNoteOff = function()
 			case "fade":
 				setFade(); // fade the velocity to zero at the end of the trk
 				break;
+			case "holdAll":
+				doStopHold();
+				break;
+			case "holdLast":
+				doStopHold();
+				break;
 			default:
 				throw (">>>>>>>>>> Illegal noteOff option: " + noteOffOption + " <<<<<<<<<<");
-				break;
 		}
 	}
 },
@@ -97,22 +136,6 @@ tick = function()
 {
 	"use strict";
 	var delay;
-
-	function trkCompleted()
-	{
-		var isLastTrk;
-		
-		isLastTrk = (trkIndex === allTrks.length);
-
-		if(isLastTrk === false)
-		{
-			postMessage({ action: "trkCompleted", channelIndex: channelIndex });
-		}
-		else
-		{
-			postMessage({ action: "workerCompleted", trackIndex: trackIndex, channelIndex: channelIndex });
-		}
-	}
 
 	function sendMessages(moment)
 	{
@@ -147,7 +170,7 @@ tick = function()
 				}
 
 				newVelocity = (newVelocity > 127) ? 127 : newVelocity | 0; // | 0 truncates to an int
-				uint8Array = new Uint8Array([uint8Array[0], uint8Array[1], newVelocity]);
+				uint8Array[2] = newVelocity;
 				//console.log("Changed velocity = " + newVelocity);
 			}
 			postMessage({ action: "midiMessage", midiMessage: uint8Array });
@@ -251,7 +274,6 @@ doNoteOn = function(velocity)
 				break;
 			default:
 				throw (">>>>>>>>>> Illegal velocity option: " + velocityOption + " <<<<<<<<<<");
-				break;
 		}
 	}
 
@@ -265,6 +287,10 @@ doNoteOn = function(velocity)
 		{
 			setVelocityOption(currentTrk.inputControls.noteOnVel, currentTrk.inputControls.minVelocity, velocity);
 		}
+
+		holdOption = (currentTrk.inputControls.noteOff === "holdAll" || currentTrk.inputControls.noteOff === "holdLast");
+		stopHold = false;		
+
 		moments = currentTrk.moments;
 		nAllMoments = moments.length;
 		momentIndex = 0;
@@ -286,6 +312,82 @@ eventHandler = function(e)
 
 	var msg = e.data;
 
+	function messageIsNoteOff(message)
+	{
+		var data0, rval = false;
+
+		data0 = message.data[0];
+		if(((data0 >= 0x90 && data0 <= 0x9F) && message.data[1] === 0) // NoteOn, velocity 0
+		|| (data0 >= 0x80 && data0 <= 0x8F)) // NoteOff
+		{
+			rval = true;
+		}
+
+		return rval;
+	}
+
+	function removeNoteOffMessages(moment)
+	{
+		var i, newMessages = [], oldMessages = moment.messages;
+
+		for(i = 0; i < oldMessages.length; ++i)
+		{
+			if(!messageIsNoteOff(oldMessages[i]))
+			{
+				newMessages.push(oldMessages[i]);
+			}
+		}
+		moment.messages = newMessages;
+	}
+
+	// Removes all noteOff messages from the final moment that contains any.
+	function removeFinalNoteOffMessages(msg)
+	{
+		var
+		i,
+		lastNoteOffMomentIndex = msg.moments.length, // an impossible value
+		moments = msg.moments;
+
+		function momentContainsNoteOffMessage(moment)
+		{
+			var i, messages = moment.messages, rval = false;
+
+			for(i = 0; i < messages.length; ++i)
+			{
+				if(messageIsNoteOff(messages[i]))
+				{
+					rval = true;
+					break;
+				}
+			}
+			return rval;
+		}
+
+		for(i = moments.length - 1; i > 0; --i)
+		{
+			if(momentContainsNoteOffMessage(moments[i]))
+			{
+				lastNoteOffMomentIndex = i;
+				break;
+			}
+		}
+
+		if(lastNoteOffMomentIndex < moments.length)
+		{
+			removeNoteOffMessages(moments[lastNoteOffMomentIndex]);
+		}
+	}
+
+	function removeAllNoteOffMessages(msg)
+	{
+		var i, moments = msg.moments;
+
+		for(i=0; i < moments.length;++i)
+		{
+			removeNoteOffMessages(moments[i]);
+		}
+	}
+
 	switch(msg.action)
 	{
 		case "init":
@@ -296,16 +398,19 @@ eventHandler = function(e)
 			//    msg.moments;
 			//    msg.inputControls; inputControls is an object containing only the necessary fields (no "off" values).
 			allTrks.push(msg);
-			break;
-		case "stopNow":
-			// console.log("worker received noteOn(): stopping immediately");
-			stopNow = true;
+			if(msg.inputControls.noteOff === "holdLast")
+			{
+				removeFinalNoteOffMessages(msg);
+			}
+			if(msg.inputControls.noteOff === "holdAll")
+			{
+				removeAllNoteOffMessages(msg);
+			}
 			break;
 		case "doNoteOn":
 			doNoteOn(msg.velocity);
 			break;
-		case "doNoteOff":
-			// console.log("worker received doNoteOff()");
+		case "doNoteOff": 
 			doNoteOff();
 			break;
 		case "setSpeedFactor":

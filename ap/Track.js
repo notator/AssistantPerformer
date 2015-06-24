@@ -22,7 +22,7 @@
  *      finalBarlineMsPosition()
  *      setForSpan(startMarkerMsPositionInScore, endMarkerMsPositionInScore)
  *      currentMsPosition()
- *      advanceCurrentMoment(inLoopPhase)
+ *      advanceCurrentMoment()
  */
 
 /*jslint bitwise: false, nomen: true, plusplus: true, white: true */
@@ -116,7 +116,8 @@ _AP.track = (function()
     				midiChord.setToFirstStartMarker(startMarkerMsPositionInScore);
     				break;
     			}
-    			else if(midiChord.msPositionInScore > startMarkerMsPositionInScore)
+
+    			if(midiChord.msPositionInScore > startMarkerMsPositionInScore)
     			{
     				// a MidiRest straddles the startMarker. 
     				midiChord.setToStartAtBeginning();
@@ -154,44 +155,27 @@ _AP.track = (function()
     // Returns Number.MAX_VALUE at end of track.
     Track.prototype.currentMsPosition = function()
     {
-        var msPos,
+    	var msPos = Number.MAX_VALUE,
             cmObj = this.currentTimeObject,
             cMom = this.currentMoment;
 
-        if(cmObj !== null)
+    	if(cmObj !== null)
         {
-        	if(cMom === null)
+        	if(cmObj instanceof _AP.midiChord.MidiChord)
         	{
-        		if(this.class === "outputTrack")
-        		{
-        			throw "currentMoment should not be null for a midiObject (in an outputTrack).";
-        		}
-        		// an input timeObject
+        		msPos = cmObj.msPositionInScore + cMom.msPositionInChord;
+        	}
+        	else
+        	{
+        		// a rest
         		msPos = cmObj.msPositionInScore;
         	}
-            if(cmObj.msDurationOfRepeats !== undefined)
-            {
-                // a chord
-                msPos = cmObj.msPositionInScore + cmObj.msDurationOfRepeats + cMom.msPositionInChord;
-            }
-            else
-            {
-                // a rest
-                msPos = cmObj.msPositionInScore;
-            }
         }
-        else
-        {
-            return Number.MAX_VALUE; // end of track
-        }
+
         return msPos;
     };
 
-    // If the inLoopPhase argument is undefined or false, or currentMidiChord._repeat is false, the currentMidiChord will not repeat, and
-    // track.currentMidiChord will be advanced when necessary. This is as if the track contained a single, flat sequence of moments.
-    // If both inLoopPhase and currentMidiChord._repeat are true, currentMoment will cycle through the currentMidiChord's moments, and
-    // never be set to null. In this case, this.currentTimeObject will not be advanced by this function.
-    Track.prototype.advanceCurrentMoment = function(inLoopPhase)
+    Track.prototype.advanceCurrentMoment = function()
     {
     	var currentIndex;
 
@@ -200,7 +184,7 @@ _AP.track = (function()
     		throw "Can't advance moments in input tracks. InputTracks don't have moments.";
     	}
 
-        this.currentMoment = this.currentTimeObject.advanceCurrentMoment(inLoopPhase);
+        this.currentMoment = this.currentTimeObject.advanceCurrentMoment();
 
     	// MidiRests, and MidiChords that have ended, return null.
         if(this.currentMoment === null)

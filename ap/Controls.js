@@ -314,9 +314,8 @@ _AP.controls = (function(document, window)
     reportEndOfPerformance = function(sequenceRecording, performanceMsDuration)
     {
         var
-        scoreName = globalElements.scoreSelect.value;
+        scoreName = globalElements.scoreSelect.options[globalElements.scoreSelect.selectedIndex].text;
         
-
         // Moment timestamps in the recording are shifted so as to be relative to the beginning of the
         // recording. Returns false if the if the sequenceRecording is undefined, null or has no moments.
         function setTimestampsRelativeToSequenceRecording(sequenceRecording)

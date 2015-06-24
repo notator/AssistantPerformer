@@ -38,7 +38,6 @@ _AP.midiChordDef = (function ()
 
 	// Any of the attributes can be undefined.
     // Default values:
-	//  repeat = false
     //  hasChordOff = true
     //  pitchWheelDeviation = unchanged (or 2)
     //  minBasicChordMsDuration = 1 (millisecond)
@@ -57,17 +56,6 @@ _AP.midiChordDef = (function ()
 
             switch (a.name)
             {
-                case "repeat":
-                    if(a.value === "0")
-                    {
-                        attributes.repeat = false;
-                    }
-                    else if(a.value === "1")
-                    {
-                        attributes.repeat = true;
-                    }
-                    // if "repeat" does not occur, attributes.repeat will be false
-                    break;
                 case "hasChordOff":
                     if(a.value === "0")
                     {

@@ -209,7 +209,7 @@ _AP.sequence = (function(window)
         {
         	nextMomt = track.currentMoment;
         	trackNextMomtMsPos = track.currentMsPosition();
-            track.advanceCurrentMoment(false);
+            track.advanceCurrentMoment();
         }
 
         if(!stopped && !paused)
