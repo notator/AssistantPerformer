@@ -364,6 +364,18 @@ _AP.keyboard1 = (function()
     		}
     	}
 
+    	function handleController(data)
+    	{
+    		var i, nWorkers = trackWorkers.length;
+
+    		for(i = 0; i < nWorkers; ++i)
+    		{
+    			// Each trackWorker simply sets the low nibble of data[0] to its channel,
+    			// before posting the data back to handleMidiMessage as a midiMessage.
+    			trackWorkers[i].postMessage({ action: "doController", data: data });
+    		}
+    	}
+
     	inputEvent = getInputEvent(msg.data, performance.now());
 
     	if(inputEvent.data !== undefined)
@@ -385,6 +397,21 @@ _AP.keyboard1 = (function()
     				break;
     			case CMD.NOTE_OFF:
     				handleNoteOff(inputEvent.data[1]);
+    				break;
+    			case CMD.CHANNEL_PRESSURE: // produced by both R2M and E-MU XBoard49 when using "aftertouch"
+    				// CHANNEL_PRESSURE.data[1] is the amount of pressure 0..127.
+    				handleController(inputEvent.data);
+    				break;
+    			case CMD.AFTERTOUCH: // produced by the EWI breath controller
+    				// AFTERTOUCH.data[1] is the MIDIpitch to which to apply the aftertouch
+    				// AFTERTOUCH.data[2] is the amount of pressure 0..127.
+    				handleController(inputEvent.data);
+    				break;
+    			case CMD.PITCH_WHEEL: // EWI pitch bend up/down controllers, EMU pitch wheel
+    				handleController(inputEvent.data);
+    				break;
+    			case CMD.CONTROL_CHANGE: // sent when other controller values change.
+    				handleController(inputEvent.data);
     				break;
     			default:
     				break;

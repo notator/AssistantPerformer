@@ -388,6 +388,15 @@ eventHandler = function(e)
 		}
 	}
 
+	// Set the data argument's channel (the low nibble of data[0]) to this worker's channel,
+	// then post the data back as a midiMessage. 
+	function doController(data)
+	{
+		data[0] &= 0xF0;
+		data[0] += channelIndex;
+		postMessage({ action: "midiMessage", midiMessage: data });
+	}
+
 	switch(msg.action)
 	{
 		case "init":
@@ -410,8 +419,11 @@ eventHandler = function(e)
 		case "doNoteOn":
 			doNoteOn(msg.velocity);
 			break;
-		case "doNoteOff": 
+		case "doNoteOff":
 			doNoteOff();
+			break;
+		case "doController":
+			doController(msg.data);
 			break;
 		case "setSpeedFactor":
 			speedFactor = msg.factor;
