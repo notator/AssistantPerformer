@@ -19,13 +19,19 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
 			Assistant Performer
 		</p>
 		<div class="helpText">
-			This page uses the <a href="http://www.w3.org/TR/webmidi/">Web-MIDI-API</a>, and is tested in the latest stable versions of Chrome and Firefox.<br />
-			Firefox currently requires the <a href="http://jazz-soft.net">Jazz</a> plug-in to be installed.<br />
-			Chrome v.43 implements the Web-MIDI-API natively. Earlier versions need the Web-MIDI-API flag (in chrome://flags) to be activated.<br />
-			<span class="devText">
+			This web application uses the <a href="http://www.w3.org/TR/webmidi/">Web-MIDI-API</a>, and is usually tested in the latest stable versions of Firefox and Chrome on Windows 10.<br />
+			Firefox requires the <a href="http://jazz-soft.net">Jazz</a> plug-in to be installed, but Jazz is currently not working with Windows 10, so I have a problem testing in Firefox.<br />
+			Chrome v.43 and later implement the Web-MIDI-API natively, so there is no problem there.<br />
+			<span class="blueHelpText">
+				Note that it is not possible to display or play scores unless a valid MIDI output device has been selected, but that<br />
+				Chrome specifically prevents the use of the Microsoft GS Wavetable Synth (part of the Windows operating system).<br />
+				On Windows, an alternative to using a hardware MIDI synthesizer is to install the free
+				<a id="VirtualMIDISynthLink" href="http://coolsoft.altervista.org/en/virtualmidisynth">Virtual MIDI Synth</a>.
+			</span><br />
+			<span class="redHelpText">
 				Caution: This application is being developed, and is therefore volatile. The current version may well contain bugs.<br />
 				Please use your browser's refresh button to check for the latest update.<br />
-				This version uploaded: 11.11.06.2015 (hour.day.month.year)
+				This version uploaded: 00.14.08.2015 (hour.day.month.year)
 			</span>
 			<br />
 			<a id="aboutAssistantPerformerLink"
