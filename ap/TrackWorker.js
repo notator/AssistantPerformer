@@ -56,7 +56,7 @@ trkCompleted = function()
 
 	if(!holdOption || stopHold)
 	{
-		if(trkIndex < (allTrks.length - 1))
+		if(trkIndex < (allTrks.length))
 		{
 			postMessage({ action: "trkCompleted", channelIndex: channelIndex });
 		}
