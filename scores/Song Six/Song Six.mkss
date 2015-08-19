@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!--file created: Wednesday 12.08.2015, 12:22:54-->
+<!--file created: Tuesday 18.08.2015, 16:17:57-->
 <moritzKrystalScore xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://james-ingram-act-two.de/open-source/XMLSchemas/moritzKrystalScore.xsd">
 	<metadata>
@@ -29,12 +29,12 @@
 		gap="4"
 		minGapsBetweenStaves="8"
 		minGapsBetweenSystems="6"
-		voiceIndicesPerStaff="0, 1, 2, 3, 4, 5, 6, 7, 8 "
-		clefsPerStaff="b, b, b2, b2, t, t, b1, b1, b2"
-		stafflinesPerStaff="5,  5,  5,  5,  5,  5,  5,  5,  5"
-		staffGroups="4,  1,  1,  3"
-		longStaffNames="Furies 1, Furies 2, Furies 3, Furies 4, R2M, Clytemnestra, Wind 1, Wind 2, Wind 3"
-		shortStaffNames="F 1, F 2, F 3, F 4, R2M, Clyt., W 1, W 2, W 3"
+		voiceIndicesPerStaff="0, 1, 2, 3, 4, 5, 6, 7 "
+		clefsPerStaff="b, b, b2, b2, t, b1, b1, b2"
+		stafflinesPerStaff="5,  5,  5,  5,  5,  5,  5,  5"
+		staffGroups="4,  1,  3"
+		longStaffNames="Furies 1, Furies 2, Furies 3, Furies 4, Clytemnestra, Wind 1, Wind 2, Wind 3"
+		shortStaffNames="F 1, F 2, F 3, F 4, Clyt., W 1, W 2, W 3"
 		systemStartBars="1, 3, 5, 10, 15, 21, 24, 29, 35, 41, 43, 44, 45, 51, 56, 61, 65, 67, 73, 78, 84, 90, 92, 94, 96, 101, 104, 105" />
 	<krystals>
 		<krystal
@@ -95,15 +95,6 @@
 			<pitchwheelDeviations>20,20,20,20,20,20,20</pitchwheelDeviations>
 			<pitchwheelEnvelopes>64:64:50:75:50:55:64,64:78,64:30:78:64:40:64,64:72:50:70:64,64:76:50:64,64:50:64,64:75</pitchwheelEnvelopes>
 			<expressionEnvelopes>0:127:127:100:100:80:0,0:80:127:80:110:110:90:0,0:80:127:80:100:80:0,0:80:127:80:100:80:100:0,0:80:127:80:80:100:100:0,0:80:127:100:80:100:90:0,0:80:127:80:90:100:100:80:0</expressionEnvelopes>
-			<audioFiles>
-				<file>5947ms.c26.ToadGrowl.2.wav</file>
-				<file>8109ms.x2.HummingbirdGrowl.1.wav</file>
-				<file></file>
-				<file></file>
-				<file></file>
-				<file></file>
-				<file></file>
-			</audioFiles>
 		</palette>
 		<palette
 			name="03 F3 feathers  [domain 7 ]"
@@ -121,15 +112,6 @@
 			<pitchwheelEnvelopes>64:35:64,64:94:64,64:0:64,64:127:64,64:10,64,64</pitchwheelEnvelopes>
 			<panEnvelopes>64:20:64,64:115:64,64:0:64,64:127:64,64:0,127,0</panEnvelopes>
 			<expressionEnvelopes>0:64:127:127:0,0:64:127:127:0,0:64:127:127:0,0:64:127:127:0,0:64:127:127:0,0:64:127:127:0,0:64:127:127:0</expressionEnvelopes>
-			<audioFiles>
-				<file>6196ms.x3.GrouseFeathers.1.wav</file>
-				<file></file>
-				<file></file>
-				<file></file>
-				<file></file>
-				<file></file>
-				<file></file>
-			</audioFiles>
 			<ornamentNumbers>7,5,4,3,2,1,0</ornamentNumbers>
 			<ornamentSettings>
 				<numBasicChordDefs>7</numBasicChordDefs>
@@ -167,15 +149,6 @@
 			<pitchwheelDeviations>30,30,30,30,30,30,30</pitchwheelDeviations>
 			<pitchwheelEnvelopes>64:64:64:60,64:64:64:60,64:64:64:60,64:64:64:60,64:64:64:60,64:64:64:60,64:64:64:60</pitchwheelEnvelopes>
 			<expressionEnvelopes>127:100:20,127:100:20,127:100:20,127:100:20,127:100:20,127:100:20,127:100:20</expressionEnvelopes>
-			<audioFiles>
-				<file>992ms.a1.GrackleGrowl.1.wav</file>
-				<file></file>
-				<file></file>
-				<file></file>
-				<file></file>
-				<file></file>
-				<file></file>
-			</audioFiles>
 			<ornamentNumbers>0,1,2,3,4,5,6</ornamentNumbers>
 			<ornamentSettings>
 				<numBasicChordDefs>7</numBasicChordDefs>
@@ -213,15 +186,6 @@
 			<pitchwheelEnvelopes>0:64:64:64:64:64,0:64:64:64:64:64,0:64:64:64:64:64,0:64:64:64:64:64,0:64:64:64:64:64,0:64:64:64:64:64,64</pitchwheelEnvelopes>
 			<panEnvelopes>64,43,85,21,106,0,127</panEnvelopes>
 			<expressionEnvelopes>30:64:64:64,30:64:64:64,30:64:64:64,30:64:64:64,30:64:64:64,30:64:64:64,64</expressionEnvelopes>
-			<audioFiles>
-				<file>584ms.a1.GrackleFeathers.1.wav</file>
-				<file></file>
-				<file></file>
-				<file></file>
-				<file></file>
-				<file></file>
-				<file></file>
-			</audioFiles>
 			<ornamentNumbers>7,6,5,4,3,2,1</ornamentNumbers>
 			<ornamentSettings>
 				<numBasicChordDefs>7</numBasicChordDefs>
@@ -258,20 +222,6 @@
 			<pitchwheelDeviations>5,5,5,5,5,5,5,5,5,5,5,5</pitchwheelDeviations>
 			<pitchwheelEnvelopes>95:64:64:64:50:55,95:64:64:64:95:55,110:60,120:80:80:80:120:64:100:55,120:81:81:81:81:97,64:32,55:50:64:64:64:95,55:95:64:64:64:95,60:110,55:100:64:120:80:80:80:120,97:81:81:81:81:120,32:64</pitchwheelEnvelopes>
 			<panEnvelopes>0,12,23,35,46,58,69,81,92,104,115,127</panEnvelopes>
-			<audioFiles>
-				<file>bbp1single.bb1.2.wav</file>
-				<file>bbp1single.bb1.3.wav</file>
-				<file>bbp1single.bb1.4.wav</file>
-				<file>bbp1single.bb1.8.wav</file>
-				<file>bbp1single.bb1.9.wav</file>
-				<file>bbp1single.bb1.10.wav</file>
-				<file>bbp1single.bb2.3.wav</file>
-				<file>bbp1single.bb8.5.wav</file>
-				<file>bbp1single.bb8.7.wav</file>
-				<file></file>
-				<file></file>
-				<file></file>
-			</audioFiles>
 		</palette>
 		<palette
 			name="07 F3 chirps1  [domain 12 ]"
@@ -287,20 +237,6 @@
 			<pitchwheelEnvelopes>95:64:64:64:50:55,95:64:64:64:95:55,110:60,120:41:41:41:120:64:120:127:100:71,120:81:81:81:81:97,64:32,55:50:64:64:64:95,55:95:64:64:64:95,60:110,120:41:41:41:120:64:120:127:100:71,97:81:81:81:81:120,32:64</pitchwheelEnvelopes>
 			<panEnvelopes>0,12,23,35,46,58,69,81,92,104,115,127</panEnvelopes>
 			<expressionEnvelopes>127:50:127:50:127:50:127:50:127:50:127:50:127:50:127:50:127:50:127:50:50:50:50:50:50:50:50:50,50:50:50:50:50:50:50:50:50:127:50:127:50:127:50:127:50:127:50:127:50:127:50:127,50:50:50:50:50:50:50:50:50:127:50:127:50:127:50:127:50:127:50:127:50:127:50:127,50:50:50:50:50:50:50:50:50:127:50:127:50:127:50:127:50:127:50:127:50:127:50:127,50:50:50:50:50:50:50:50:50:127:50:127:50:127:50:127:50:127:50:127:50:127:50:127,50:50:50:50:50:50:50:50:50:127:50:127:50:127:50:127:50:127:50:127:50:127:50:127:50:127:50:127,127:50:127:50:127:50:127:50:127:50:127:50:127:50:127:50:127:50:127:50:50:50:50:50:50:50:50:50,50:50:50:50:50:50:50:50:50:127:50:127:50:127:50:127:50:127:50:127:50:127:50:127,50:50:50:50:50:50:50:50:50:127:50:127:50:127:50:127:50:127:50:127:50:127:50:127,50:50:50:50:50:50:50:50:50:127:50:127:50:127:50:127:50:127:50:127:50:127:50:127,50:50:50:50:50:50:50:50:50:127:50:127:50:127:50:127:50:127:50:127:50:127:50:127,50:50:50:50:50:50:50:50:50:127:50:127:50:127:50:127:50:127:50:127:50:127:50:127:50:127:50:127</expressionEnvelopes>
-			<audioFiles>
-				<file>bbp2warble.bb1.7.wav</file>
-				<file>bbp2warble.bb2.2.wav</file>
-				<file>bbp2warble.bb8.6.wav</file>
-				<file>bbp2warble.bb8.1.wav</file>
-				<file></file>
-				<file></file>
-				<file></file>
-				<file></file>
-				<file></file>
-				<file></file>
-				<file></file>
-				<file></file>
-			</audioFiles>
 		</palette>
 		<palette
 			name="08 F2 chirps2 [domain 12 ]"
@@ -315,20 +251,6 @@
 			<pitchwheelDeviations>5,5,5,5,5,5,5,5,5,5,5,5</pitchwheelDeviations>
 			<pitchwheelEnvelopes>18:20:40:40:64:5,0:0:73:73,99:10:8:64,127:50,100:64:110:80:120:90,127:127:81:81,79:32,32:64,32:64:0:64:127:127,11:11:81:81,32:64,81:11</pitchwheelEnvelopes>
 			<panEnvelopes>0,12,23,35,46,58,69,81,92,104,115,127</panEnvelopes>
-			<audioFiles>
-				<file>bbp3chirrup.bb1.5.wav</file>
-				<file>bbp3chirrup.bb2.1.wav</file>
-				<file>bbp3chirrup.bb8.4.wav</file>
-				<file>bbp3chirrup.bb8.2.wav</file>
-				<file></file>
-				<file></file>
-				<file></file>
-				<file></file>
-				<file></file>
-				<file></file>
-				<file></file>
-				<file></file>
-			</audioFiles>
 			<ornamentNumbers>7,6,8,5,9,4,10,3,11,2,12,2</ornamentNumbers>
 			<ornamentSettings>
 				<numBasicChordDefs>12</numBasicChordDefs>

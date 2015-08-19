@@ -31,11 +31,11 @@ _AP.inputChordDef = (function ()
     // Each inputNote in the inputChordDef.inputNotes[] has the following fields:
     //		inputNote.notatedKey (compulsory int)
 	//		inputNote.inputControls -- can be undefined
-    //		inputNote.trkRefs (an array of trkRef)
+    //		inputNote.seq (an array of trkRef)
 	//
-	// Each trkRef in inputNote.trkRefs has the following fields:
+	// Each trkRef in inputNote.seq has the following fields:
 	//		trkRef.midiChannel (compulsory int >= 0. The midiChannel of the voice containing the referenced Trk. )	
-	//		trkRef.length (compulsory int >= 0. The length of the referenced Trk.)
+	//		trkRef.length (compulsory int >= 0. The number of MidiChords and Rests the referenced Trk.)
 	//		trkRef.msOffset (compulsory int >= 0 -- if attribute is not present, is 0 by default)
 	//		trkRef.inputControls -- can be undefined
 	//
@@ -56,15 +56,15 @@ _AP.inputChordDef = (function ()
 					childNodes = inputNoteDef.childNodes,
 					i;
 
-				function getTrkRefs(trkRefsNode)
+				function getSeq(seqNode)
 				{
 					var trkRefsArray = [], trkRef,
-					trkRefNode = trkRefsNode.firstElementChild;
+					trkRefNode = seqNode.firstElementChild;
 
 					function getTrkRef(trkRefNode)
 					{
 						var i, attr,
-						trkRef = {},
+						trkRef = { msOffset: 0},
 						attrLen = trkRefNode.attributes.length,
 						childNodes = trkRefNode.childNodes;
 
@@ -74,12 +74,12 @@ _AP.inputChordDef = (function ()
 							switch(attr.name)
 							{
 								//		trkRef.midiChannel (compulsory int >= 0. The midiChannel of the voice containing the referenced Trk. )	
-								//		trkRef.length (compulsory int >= 0. The length of the referenced Trk.)
+								//		trkRef.length (compulsory int >= 0. The number of midiChords and rests in the referenced Trk.)
 								//		trkRef.msOffset (compulsory int >= 0 -- if attribute is not present, is 0 by default)
 								case "midiChannel":
 									trkRef.midiChannel = parseInt(attr.value, 10);
 									break;
-								case "length":
+								case "durationsCount":
 									trkRef.length = parseInt(attr.value, 10);
 									break;
 								case "msOffset":
@@ -135,13 +135,13 @@ _AP.inputChordDef = (function ()
 							// inputNote.inputControls can be undefined
 							inputNote.inputControls = new InputControls(childNodes[i]);
 							break;
-						case "trkRefs":
-							inputNote.trkRefs = getTrkRefs(childNodes[i]);
+						case "seq":
+							inputNote.seq = getSeq(childNodes[i]);
 							break;
 					}
 				}
 
-				console.assert(inputNote.trkRefs !== undefined, "inputNote.trkRefs must be defined!");
+				console.assert(inputNote.seq !== undefined, "inputNote.seq must be defined!");
 
 				return inputNote;
 			}

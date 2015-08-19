@@ -84,16 +84,13 @@ _AP.inputChord = (function()
     			{
     				inputNote.inputControls = inputNoteDef.inputControls; // can be undefined
     			}
-    			trkRefDefs = inputNoteDef.trkRefs;
+    			trkRefDefs = inputNoteDef.seq;
     			for(j = 0; j < trkRefDefs.length; ++j)
     			{
     				trkRefDef = trkRefDefs[j];
     				trk = [];
-    				if(trkRefDef.mOffset !== undefined)
-    				{
-    					trk.msOffset = trkRefDef.mOffset; // can be undefined
-    				}
-    				trkMsPosition = (trkRefDef.mOffset === undefined) ? msPosition: msPosition + trkRefDef.mOffset;
+    				trk.msOffset = trkRefDef.msOffset; // usually 0, never undefined
+    				trkMsPosition = msPosition + trkRefDef.msOffset;
 
     				trackData = getTrackData(outputTracks, trkRefDef.midiChannel, trkMsPosition);
 

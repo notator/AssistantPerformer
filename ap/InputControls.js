@@ -21,19 +21,31 @@ _AP.inputControls = (function ()
     "use strict";
     var
     // InputControls constructor: argument can be an inputControls node from a document, or another InputControls object (to be cloned).
-    // inputControls sets the performance options for a Seq, by individually overriding the current options in the Seq's Output Voice.
-	// contains:  
-    //		inputControls.noteOnVel -- possible values: "off", "scaled", "shared", "overridden"
-	//		inputControls.minVelocity -- only defined if noteOnVel is defined and set to "scaled", "shared" or "overridden". Is in range [1..127].
-	//		inputControls.noteOff -- possible values: "off", "stopChord", "stopNow", "fade", "holdAll", "holdLast"   
-    //		inputControls.pressure -- possible values: "off", "aftertouch", "channelPressure", "pitchWheel", "modulation", "volume", "pan"
-    //									               "expression", "timbre", "brightness", "effects", "tremolo", "chorus", "celeste", "phaser"
-    //		inputControls.pitchWheel -- possible values: same as pressure
-    //		inputControls.modulation -- possible values: same as pressure
-    //		inputControls.maxVolume -- only defined if one of the above controllers is set to "volume". Possible values: 0..127
-    //		inputControls.minVolume -- only defined if one of the above controllers is set to "volume". Possible values: 0..127
-    //		inputControls.speedOption -- possible values: "off", "noteOnVel", "pressure", "pitchWheel", "modulation"
-    //		inputControls.maxSpeedPercent -- only defined if speedOption is not "none". Possible values: an integer > 100
+    // An InputControls object sets performance options for a Trk, inputNote (=seq), or inputChord (=voice).
+    //    trk.InputOptions temporarily override inputNote.InputOptions
+    //    inputNote.InputOptions temporarily override inputChord.InputOptions
+    //    inputChord.InputOptions change the global InputOptions vor the containing voice.
+	//
+	// Default options are:
+	//    noteOnMsg = "trkOn"
+	//    noteOffMsg = "trkOff"
+	//    trkOff = "stopNow"
+	// All other defaults are undefined.
+	//
+	// Possible options, and their available values in the constructors argument, are:
+	//    noteOnMsg -- "undefined", "trkOn", "trkOff"
+	//    noteOffMsg -- "undefined", "trkOn", "trkOff"
+    //    trkVel -- possible values: "scaled", "shared", "overridden"
+	//    minVelocity -- defined if trkVel is defined. Is in range [1..127].
+	//    trkOff -- possible values: "undefined", "stopChord", "stopNow", "fade", "holdAll", "holdLast"   
+    //    pressure -- possible values: "aftertouch", "channelPressure", "pitchWheel", "modulation", "volume", "pan"
+    //				                   "expression", "timbre", "brightness", "effects", "tremolo", "chorus", "celeste", "phaser"
+    //    pitchWheel -- possible values: same as pressure
+    //    modulation -- possible values: same as pressure
+    //    maxVolume -- defined if one of the above controllers is set to "volume". Possible values: 0..127
+    //    minVolume -- defined if one of the above controllers is set to "volume". Possible values: 0..127
+    //    speedOption -- possible values: "noteOnKey", "noteOnVel", "pressure", "pitchWheel", "modulation"
+    //    maxSpeedPercent -- defined if speedOption is defined. Possible values: an integer > 100
 	InputControls = function (arg)
 	{
 		if (!(this instanceof InputControls))
@@ -41,92 +53,59 @@ _AP.inputControls = (function ()
 			return new InputControls(arg);
 		}
 
+		// defaults
+		this.noteOnMsg = "trkOn";
+		this.noteOffMsg = "trkOff";
+		this.trkOff = "stopNow";
+
 		var i, attr, attrLen, inputControlsNode;
 
-		if(arg !== undefined) // undefined returns an empty InputControls object
-		{
-			if(arg instanceof InputControls)
-			{
-				// construct clone
-				if(arg.noteOnVel !== undefined)
-				{
-					this.noteOnVel = arg.noteOnVel;
-					this.minVelocity = arg.minVelocity;
-				}
-				if(arg.noteOff !== undefined)
-				{
-					this.noteOff = arg.noteOff;
-				}
-				if(arg.pressure !== undefined)
-				{
-					this.pressure = arg.pressure;
-				}
-				if(arg.pitchWheel !== undefined)
-				{
-					this.pitchWheel = arg.pitchWheel;
-				}
-				if(arg.modulation !== undefined)
-				{
-					this.modulation = arg.modulation;
-				}
-				if(arg.maxVolume !== undefined)
-				{
-					this.maxVolume = arg.maxVolume;
-				}
-				if(arg.minVolume !== undefined)
-				{
-					this.minVolume = arg.minVolume;
-				}
-				if(arg.speedOption !== undefined)
-				{
-					this.speedOption = arg.speedOption;
-					this.maxSpeedPercent = arg.maxSpeedPercent;
-				}
-			}
-			else // construct from document
-			{
-				inputControlsNode = arg;
-				attrLen = inputControlsNode.attributes.length;
+		inputControlsNode = arg;
+		attrLen = inputControlsNode.attributes.length;
 
-				for(i = 0; i < attrLen; ++i)
-				{
-					attr = inputControlsNode.attributes[i];
-					switch(attr.name)
-					{
-						case "noteOnVel": // can be undefined
-							this.noteOnVel = attr.value;
-							break;
-						case "minVelocity": // is defined if noteOnVel is defined and not "off"
-							this.minVelocity = attr.value;
-							break;
-						case "noteOff": // can be undefined
-							this.noteOff = attr.value;
-							break;
-						case "pressure": // can be undefined
-							this.pressure = attr.value;
-							break;
-						case "pitchWheel": // can be undefined
-							this.pitchWheel = attr.value;
-							break;
-						case "modulation": // can be undefined
-							this.modulation = attr.value;
-							break;
-						case "maxVolume": // is defined if either pressure, pitchwheel or modulation controls are set to control volume
-							this.maxVolume = parseInt(attr.value, 10);
-							break;
-						case "minVolume": // is defined if either pressure, pitchwheel or modulation controls are set to control volume
-							this.minVolume = parseInt(attr.value, 10);
-							break;
-						case "speedOption": // can be undefined
-							this.speedOption = attr.value;
-							break;
-						case "maxSpeedPercent": // is defined if speedOption is defined and not "off"
-							this.maxSpeedPercent = parseInt(attr.value, 10);
-							break;
-						default:
-							throw (">>>>>>>>>> Illegal InputControls attribute <<<<<<<<<<");
-					}
-				}
+		for(i = 0; i < attrLen; ++i)
+		{
+			attr = inputControlsNode.attributes[i];
+			switch(attr.name)
+			{
+				case "noteOnMsg":
+					this.noteOnMsg = attr.value;
+					break;
+				case "noteOffMsg":
+					this.noteOffMsg = attr.value;
+					break;
+				case "trkVel": // can be undefined
+					this.trkVel = attr.value;
+					break;
+				case "minVelocity": // is defined if noteOnVel is defined
+					this.minVelocity = attr.value;
+					break;
+				case "trkOff": // is defined if the either noteOnMsg nor noteOffMsg has the value "trkOff"
+					this.trkOff = attr.value;
+					break;
+				case "pressure": // can be undefined
+					this.pressure = attr.value;
+					break;
+				case "pitchWheel": // can be undefined
+					this.pitchWheel = attr.value;
+					break;
+				case "modulation": // can be undefined
+					this.modulation = attr.value;
+					break;
+				case "maxVolume": // is defined if either pressure, pitchwheel or modulation controls are set to control volume
+					this.maxVolume = parseInt(attr.value, 10);
+					break;
+				case "minVolume": // is defined if either pressure, pitchwheel or modulation controls are set to control volume
+					this.minVolume = parseInt(attr.value, 10);
+					break;
+				case "speedOption": // can be undefined
+					this.speedOption = attr.value;
+					break;
+				case "maxSpeedPercent": // is defined if speedOption is defined
+					this.maxSpeedPercent = parseInt(attr.value, 10);
+					break;
+				default:
+					throw (">>>>>>>>>> Illegal InputControls attribute <<<<<<<<<<");
 			}
 		}
         return this;
@@ -137,128 +116,6 @@ _AP.inputControls = (function ()
     {
         // public InputControls(inputControlsNode) constructor.
         InputControls: InputControls
-    };
-
-	// Returns a new inputControls object that is the result of cascading this inputControls object over the
-    // baseInputControls argument. An exception is thrown if the argument is undefined.
-	// The returned inputControls object only contains the attributes contained in this and/or the argument.
-	// (Attributes that are missing in both this and the argument will be missing in the returned inputControls.)
-    InputControls.prototype.getCascadeOver = function(baseInputControls)
-    {
-    	var rval = {};
-
-    	console.assert(baseInputControls !== undefined, "Error. The baseInputControls argument cannot be undefined");
-
-    	if(this.noteOnVel !== undefined)
-    	{
-    		rval.noteOnVel = this.noteOnVel;
-    		if(rval.noteOnVel !== "off")
-    		{
-    			rval.minVelocity = this.minVelocity;
-    		}
-    	}
-    	else if(baseInputControls.noteOnVel !== undefined)
-    	{
-    		rval.noteOnVel = baseInputControls.noteOnVel;
-    		if(rval.noteOnVel !== "off")
-    		{
-    			rval.minVelocity = baseInputControls.minVelocity;
-    		}
-    	}
-
-    	if(this.noteOff !== undefined)
-    	{
-    		rval.noteOff = this.noteOff;
-    	}
-    	else if(baseInputControls.noteOff !== undefined)
-    	{
-    		rval.noteOff = baseInputControls.noteOff;
-    	}
-
-    	if(this.noteOff !== undefined)
-    	{
-    		rval.noteOff = this.noteOff;
-    	}
-    	else if(baseInputControls.noteOff !== undefined)
-    	{
-    		rval.noteOff = baseInputControls.noteOff;
-    	}
-
-    	if(this.pressure !== undefined)
-    	{
-    		rval.pressure = this.pressure;
-    		if(rval.pressure === "volume")
-    		{
-    			rval.maxVolume = this.maxVolume;
-    			rval.minVolume = this.minVolume;
-    		}
-    	}
-    	else if(baseInputControls.pressure !== undefined)
-    	{
-    		rval.pressure = baseInputControls.pressure;
-    		if(rval.pressure === "volume")
-    		{
-    			rval.maxVolume = baseInputControls.maxVolume;
-    			rval.minVolume = baseInputControls.minVolume;
-    		}
-    	}
-
-    	if(this.pitchWheel !== undefined)
-    	{
-    		rval.pitchWheel = this.pitchWheel;
-    		if(rval.pitchWheel === "volume")
-    		{
-    			rval.maxVolume = this.maxVolume;
-    			rval.minVolume = this.minVolume;
-    		}
-    	}
-    	else if(baseInputControls.pitchWheel !== undefined)
-    	{
-    		rval.pitchWheel = baseInputControls.pitchWheel;
-    		if(rval.pitchWheel === "volume")
-    		{
-    			rval.maxVolume = baseInputControls.maxVolume;
-    			rval.minVolume = baseInputControls.minVolume;
-    		}
-    	}
-
-    	if(this.modulation !== undefined)
-    	{
-    		rval.modulation = this.modulation;
-    		if(rval.modulation === "volume")
-    		{
-    			rval.maxVolume = this.maxVolume;
-    			rval.minVolume = this.minVolume;
-    		}
-    	}
-    	else if(baseInputControls.modulation !== undefined)
-    	{
-    		rval.modulation = baseInputControls.modulation;
-    		if(rval.modulation === "volume")
-    		{
-    			rval.maxVolume = baseInputControls.maxVolume;
-    			rval.minVolume = baseInputControls.minVolume;
-    		}
-    	}
-
-    	if(this.speedOption !== undefined)
-    	{
-    		rval.speedOption = this.speedOption;
-    		if(rval.speedOption !== "off")
-    		{
-    			rval.maxSpeedPercent = this.maxSpeedPercent;
-    		}
-    	}
-    	else if(baseInputControls.speedOption !== undefined)
-    	{
-    		rval.speedOption = baseInputControls.speedOption;
-    		if(rval.speedOption !== "off")
-    		{
-    			rval.maxSpeedPercent = baseInputControls.maxSpeedPercent;
-    		}
-    	}
-
-    	return rval;
     };
 
     return publicAPI;

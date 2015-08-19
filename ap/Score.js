@@ -169,7 +169,7 @@ _AP.score = (function (document)
 			inputNotes = inputChordDef.inputNotes;
 			for(i = 0; i < inputNotes.length; ++i)
 			{
-				trkRefs = inputNotes[i].trkRefs;
+				trkRefs = inputNotes[i].seq;
 				for(j = 0; j < trkRefs.length; ++j)
 				{
 					midiChannel = trkRefs[j].midiChannel;

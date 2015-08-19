@@ -543,17 +543,17 @@ _AP.keyboard1 = (function()
 				var i, inputTrackIndex = 0, inputTrack, inputControls;
 
 				// Returns the most recent inputObject.InputControls object at or before startMarkerMsPosInScore.
-				// If there are no such InputControls objects, a new InputControls object having all values set to "off" is returned.
+				// If there are no such InputControls objects, a new default InputControls object is returned.
 				function getCurrentTrackInputControlsObj(inputObjects, startMarkerMsPosInScore)
 				{
-					var i, nInputObjects = inputObjects.length, inputObject, currentInputControls = null, returnInputControlsObj;
+					var i, nInputObjects = inputObjects.length, inputObject, returnInputControlsObj = null;
 
 					for(i = 0; i < nInputObjects; ++i)
 					{
 						inputObject = inputObjects[i];
 						if(inputObject.inputControls !== undefined)
 						{
-							currentInputControls = inputObject.inputControls;
+							returnInputControlsObj = inputObject.inputControls;
 						}
 						if(inputObject.msPositionInScore >= startMarkerMsPosInScore)
 						{
@@ -561,21 +561,10 @@ _AP.keyboard1 = (function()
 						}
 					}
 
-					if(currentInputControls !== null)
+					if(returnInputControlsObj == null)
 					{
-						returnInputControlsObj = new _AP.inputControls.InputControls(currentInputControls);
+						returnInputControlsObj = new _AP.inputControls.InputControls({}); // a new, default InputControls object
 					}
-					else
-					{
-						returnInputControlsObj = new _AP.inputControls.InputControls(); // a new, empty InputControls object
-					}
-
-					returnInputControlsObj.noteOnVel = (returnInputControlsObj.noteOnVel !== undefined) ? returnInputControlsObj.noteOnVel : "off";
-					returnInputControlsObj.noteOff = (returnInputControlsObj.noteOff !== undefined) ? returnInputControlsObj.noteOff : "off";
-					returnInputControlsObj.pressure = (returnInputControlsObj.pressure !== undefined) ? returnInputControlsObj.pressure : "off";
-					returnInputControlsObj.pitchWheel = (returnInputControlsObj.pitchWheel !== undefined) ? returnInputControlsObj.pitchWheel : "off";
-					returnInputControlsObj.modulation = (returnInputControlsObj.modulation !== undefined) ? returnInputControlsObj.modulation : "off";
-					returnInputControlsObj.speedOption = (returnInputControlsObj.speedOption !== undefined) ? returnInputControlsObj.speedOption : "off";
 
 					return returnInputControlsObj;
 				}
@@ -737,7 +726,7 @@ _AP.keyboard1 = (function()
 
 						if(inputNote.inputControls !== undefined)
 						{
-							noteInputControls = inputNote.inputControls.getCascadeOver(chordInputControls);
+							noteInputControls = inputNote.inputControls;
 						}
 						else
 						{
@@ -767,7 +756,7 @@ _AP.keyboard1 = (function()
 						inputChord = inputObjects[chordIndex];
 						if(inputChord.inputControls !== undefined)
 						{
-							shuntedChordInputControls[trackIndex] = inputChord.inputControls.getCascadeOver(shuntedChordInputControls[trackIndex]);
+							shuntedChordInputControls[trackIndex] = inputChord.inputControls;
 						}
 						inputChordInputControls = shuntedChordInputControls[trackIndex];
 
