@@ -19,22 +19,8 @@ _AP.namespace('_AP.midiChordDef');
 _AP.midiChordDef = (function ()
 {
     "use strict";
-    var
-    // The argument is a string containing a list of integers separated by single spaces
-    // This function returns the corresponding array of numbers.
-    numberArray = function (numberList)
-    {
-        var stringArray = numberList.split(' '),
-            len = stringArray.length,
-            numArray = [],
-            i;
-
-        for (i = 0; i < len; ++i)
-        {
-            numArray.push(parseInt(stringArray[i], 10));
-        }
-        return numArray;
-    },
+	var
+	numberArray = _AP.utilities.numberArray,
 
 	// Any of the attributes can be undefined.
     // Default values:

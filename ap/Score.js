@@ -1308,9 +1308,6 @@ _AP.score = (function (document)
     									timeObject.inputChordDef = new InputChordDef(chordChildElems[j]);
     									timeObject.msDuration = parseInt(noteObjectElem.getAttribute('score:msDuration'), 10);
     									break;
-    								case 'inputControls':
-    									timeObject.inputControls = new InputControls(chordChildElems[j]);
-    									break;
     							}
     						}
     						if(timeObject.msDuration < 1)

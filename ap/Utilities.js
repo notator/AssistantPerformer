@@ -21,6 +21,21 @@ _AP.utilities = (function()
     // begin var
     var
     INPUT_ERROR_COLOR = _AP.constants.INPUT_ERROR_COLOR,
+	// The argument is a string containing a list of integers separated by single spaces
+    // This function returns the corresponding array of numbers.
+    numberArray = function(numberList)
+    {
+    	var stringArray = numberList.split(' '),
+            len = stringArray.length,
+            numArray = [],
+            i;
+
+    	for(i = 0; i < len; ++i)
+    	{
+    		numArray.push(parseInt(stringArray[i], 10));
+    	}
+    	return numArray;
+    },
     // The numberInput argument is an html5 input element of type 'number'.
     // If the element's value is empty, not a number, less than min or greater than max,
     // its background colour is set to INPUT_ERROR_COLOR and it is given a true boolean jiError attribute.
@@ -155,6 +170,7 @@ _AP.utilities = (function()
 
     publicAPI =
     {
+    	numberArray: numberArray,
         checkFloatRange: checkFloatRange,
         checkIntRange: checkIntRange,
         setDefaultValueToBlue: setDefaultValueToBlue,

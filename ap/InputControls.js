@@ -21,70 +21,51 @@ _AP.inputControls = (function ()
     "use strict";
     var
     // InputControls constructor: argument can be an inputControls node from a document, or another InputControls object (to be cloned).
-    // An InputControls object sets performance options for a Trk, inputNote (=seq), or inputChord (=voice).
-    //    trk.InputOptions temporarily override inputNote.InputOptions
-    //    inputNote.InputOptions temporarily override inputChord.InputOptions
-    //    inputChord.InputOptions change the global InputOptions vor the containing voice.
+    // An InputControls object sets performance options for a trk, seq (=inputNote), or inputChord (=voice).
+    //    trk.inputOptions temporarily override seq.inputOptions
+    //    seq.inputOptions temporarily override inputNote.inputOptions
+	//    inputNote.inputOptions temporarily override inputChord.inputOptions
+    //    inputChord.inputOptions change the global inputOptions vor the containing voice.
 	//
-	// Default options are:
-	//    noteOnMsg = "trkOn"
-	//    noteOffMsg = "trkOff"
-	//    trkOff = "stopNow"
-	// All other defaults are undefined.
+	// Default InputControl objects have no defined fields.
 	//
-	// Possible options, and their available values in the constructors argument, are:
-	//    noteOnMsg -- "undefined", "trkOn", "trkOff"
-	//    noteOffMsg -- "undefined", "trkOn", "trkOff"
-    //    trkVel -- possible values: "scaled", "shared", "overridden"
-	//    minVelocity -- defined if trkVel is defined. Is in range [1..127].
-	//    trkOff -- possible values: "undefined", "stopChord", "stopNow", "fade", "holdAll", "holdLast"   
+	// Possible fields (all are attributes in score files), and their available values, are:
+    //    velocity -- possible values: "scaled", "shared", "overridden"  
     //    pressure -- possible values: "aftertouch", "channelPressure", "pitchWheel", "modulation", "volume", "pan"
     //				                   "expression", "timbre", "brightness", "effects", "tremolo", "chorus", "celeste", "phaser"
+	//    trkOff -- possible values: "undefined", "stopChord", "stopNow", "fade", "holdAll", "holdLast"
     //    pitchWheel -- possible values: same as pressure
     //    modulation -- possible values: same as pressure
-    //    maxVolume -- defined if one of the above controllers is set to "volume". Possible values: 0..127
-    //    minVolume -- defined if one of the above controllers is set to "volume". Possible values: 0..127
-    //    speedOption -- possible values: "noteOnKey", "noteOnVel", "pressure", "pitchWheel", "modulation"
-    //    maxSpeedPercent -- defined if speedOption is defined. Possible values: an integer > 100
-	InputControls = function (arg)
+	//    speedOption -- possible values: "noteOnKey", "noteOnVel", "pressure", "pitchWheel", "modulation"
+	//    minVelocity -- an integer in range [1..127]. Defined if velocity is defined. 
+    //    maxVolume -- an integer in range [1..127]. Defined if one of the above controllers is set to "volume".
+    //    minVolume -- an integer in range [1..127]. Defined if one of the above controllers is set to "volume".
+    //    maxSpeedPercent -- an integer > 100. Defined if speedOption is defined.
+	InputControls = function (inputControlsNode)
 	{
 		if (!(this instanceof InputControls))
 		{
-			return new InputControls(arg);
+			return new InputControls(inputControlsNode);
 		}
 
-		// defaults
-		this.noteOnMsg = "trkOn";
-		this.noteOffMsg = "trkOff";
-		this.trkOff = "stopNow";
+		var i, attributes = inputControlsNode.attributes, attr, attrLen;
 
-		var i, attr, attrLen, inputControlsNode;
+		console.assert(attributes !== undefined && attributes.length > 0);
 
-		inputControlsNode = arg;
-		attrLen = inputControlsNode.attributes.length;
-
+		attrLen = attributes.length;
 		for(i = 0; i < attrLen; ++i)
 		{
-			attr = inputControlsNode.attributes[i];
+			attr = attributes[i];
 			switch(attr.name)
 			{
-				case "noteOnMsg":
-					this.noteOnMsg = attr.value;
-					break;
-				case "noteOffMsg":
-					this.noteOffMsg = attr.value;
-					break;
-				case "trkVel": // can be undefined
-					this.trkVel = attr.value;
-					break;
-				case "minVelocity": // is defined if noteOnVel is defined
-					this.minVelocity = attr.value;
-					break;
-				case "trkOff": // is defined if the either noteOnMsg nor noteOffMsg has the value "trkOff"
-					this.trkOff = attr.value;
+				case "velocity": // can be undefined
+					this.velocity = attr.value;
 					break;
 				case "pressure": // can be undefined
 					this.pressure = attr.value;
+					break;
+				case "trkOff": // is defined if the either noteOnMsg nor noteOffMsg has the value "trkOff"
+					this.trkOff = attr.value;
 					break;
 				case "pitchWheel": // can be undefined
 					this.pitchWheel = attr.value;
@@ -92,14 +73,17 @@ _AP.inputControls = (function ()
 				case "modulation": // can be undefined
 					this.modulation = attr.value;
 					break;
+				case "speedOption": // can be undefined
+					this.speedOption = attr.value;
+					break;
+				case "minVelocity": // is defined if noteOnVel is defined
+					this.minVelocity = parseInt(attr.value, 10);
+					break;
 				case "maxVolume": // is defined if either pressure, pitchwheel or modulation controls are set to control volume
 					this.maxVolume = parseInt(attr.value, 10);
 					break;
 				case "minVolume": // is defined if either pressure, pitchwheel or modulation controls are set to control volume
 					this.minVolume = parseInt(attr.value, 10);
-					break;
-				case "speedOption": // can be undefined
-					this.speedOption = attr.value;
 					break;
 				case "maxSpeedPercent": // is defined if speedOption is defined
 					this.maxSpeedPercent = parseInt(attr.value, 10);
