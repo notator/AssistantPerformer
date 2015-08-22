@@ -38,19 +38,17 @@ _AP.inputChordDef = (function ()
 	//
 	// inputNote.noteOn has the following fields:
 	//      inputNote.noteOn.trkOffs[] -- undefined or an array of channel indices.
-	//		inputNote.noteOn.inputControls -- undefined or an InputControls object
 	//		inputNote.noteOn.seq -- undefined or an array of trkRef (see below)
 	//
 	// if defined, inputNote.noteOff has the same fields as inputNote.noteOn:
 	//      inputNote.noteOff.trkOffs[] -- undefined or an array of channel indices.
-	//		inputNote.noteOff.inputControls -- undefined or an InputControls object
 	//		inputNote.noteOff.seq -- undefined or an array of trkRef
 	//
 	// Each trkRef in inputNote.noteOn.seq (and inputNote.noteOff.seq) has the following fields:
+	//		trkRef.inputControls -- undefined or an InputControls object
 	//		trkRef.midiChannel (compulsory int >= 0. The midiChannel of the voice containing the referenced Trk. )
 	//		trkRef.msPosition (compulsory int >= 0. The msPositionInScore of the referenced Trk)
 	//		trkRef.length (compulsory int >= 0. The number of MidiChords and Rests the referenced Trk.)
-	//		trkRef.inputControls -- undefined or an InputControls object
 	//
 	// An inputChordDef.inputControls sets the current values in the midi input channel until further notice.
 	// InputControls at lower levels temporarily override the inputControls at higher levels.
@@ -248,6 +246,66 @@ _AP.inputChordDef = (function ()
         // public InputChordDef(inputNotesNode) constructor.
         InputChordDef: InputChordDef
     };
+
+	// returns an array of output midi channel indices
+	InputChordDef.prototype.referencedOutputMidiChannels = function()
+	{
+		var i, j, inputNote, nInputNotes = this.inputNotes.length, nonUniqueOutputChannels = [], returnArray = [];
+
+		function outChannels(noteOnOff)
+		{
+			var seqLen, trkRef, outputChannels = [];
+
+			if(noteOnOff.trkOffs !== undefined)
+			{
+				outputChannels = outputChannels.concat(noteOnOff.trkOffs);
+			}
+			if(noteOnOff.seq !== undefined)
+			{
+				seqLen = noteOnOff.seq.trkRefs.length;
+				for(j = 0; j < seqLen; ++j)
+				{
+					trkRef = noteOnOff.seq.trkRefs[j];
+					outputChannels = outputChannels.concat(trkRef.midiChannel);
+				}
+			}
+			return outputChannels;
+		}
+
+		function uniqueOutputChannels(nonUniqueOutputChannels)
+		{
+			var i, nAllOutputChannels = nonUniqueOutputChannels.length, rVal = [];
+			for(i = 0; i < nAllOutputChannels; ++i)
+			{
+				if(rVal.indexOf(nonUniqueOutputChannels[i]) < 0)
+				{
+					rVal.push(nonUniqueOutputChannels[i]);
+				}
+			}
+			return rVal;
+		}
+
+		for(i = 0; i < nInputNotes; ++i)
+		{
+			inputNote = this.inputNotes[i];
+			if(inputNote.noteOn !== undefined)
+			{
+				nonUniqueOutputChannels = nonUniqueOutputChannels.concat(outChannels(inputNote.noteOn));
+			}
+			if(inputNote.pressure !== undefined)
+			{
+				nonUniqueOutputChannels = nonUniqueOutputChannels.concat(inputNote.pressure);
+			}
+			if(inputNote.noteOff !== undefined)
+			{
+				nonUniqueOutputChannels = nonUniqueOutputChannels.concat(outChannels(inputNote.noteOff));
+			}
+		}
+
+		returnArray = uniqueOutputChannels(nonUniqueOutputChannels);
+
+		return returnArray;
+	};
 
     return publicAPI;
 

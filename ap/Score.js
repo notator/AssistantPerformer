@@ -162,29 +162,23 @@ _AP.score = (function (document)
 
 		function hasPerformingTrack(inputChordDef, midiChannelPerOutputTrack, trackIsOnArray)
 		{
-			var i, j, outputTrackFound = false, inputNotes, trkRefs, midiChannel;
+			var i, j, outputTrackFound = false, outputMidiChannels, trkRefs, midiChannel;
 
 			console.assert(inputChordDef !== undefined, "inputChordDef must be defined.");
 
-			inputNotes = inputChordDef.inputNotes;
-			for(i = 0; i < inputNotes.length; ++i)
+			outputMidiChannels = inputChordDef.referencedOutputMidiChannels();
+			for(i = 0; i < outputMidiChannels.length; ++i)
 			{
-				trkRefs = inputNotes[i].seq;
-				for(j = 0; j < trkRefs.length; ++j)
+				if(trackIsOnArray[midiChannelPerOutputTrack.indexOf(outputMidiChannels[i])])
 				{
-					midiChannel = trkRefs[j].midiChannel;
-					if(trackIsOnArray[midiChannelPerOutputTrack.indexOf(midiChannel)])
-					{
-						outputTrackFound = true;
-						break;
-					}
+					outputTrackFound = true;
+					break;
 				}
 				if(outputTrackFound === true)
 				{
 					break;
 				}
 			}
-
 			return outputTrackFound;
 		}
 
@@ -1688,6 +1682,21 @@ _AP.score = (function (document)
         {
         	var outputTrackIndex = 0, inputTrackIndex = 0, staffIndex, voiceIndex, nStaves = system0staves.length, staff, voice;
 
+        	// returns the array of output track index per midiChannel index
+        	function getTrackIndexPerMidiChannel(outputTracks)
+        	{
+        		var i, rArray = [], nOutputTracks = outputTracks.length;
+        		for(i = 0; i < nOutputTracks; ++i)
+        		{
+        			rArray.push(0);
+        		}
+        		for(i = 0; i < nOutputTracks; ++i)
+        		{
+        			rArray[outputTracks[i].midiChannel] = i;
+        		}
+        		return rArray;
+        	}
+
         	for(staffIndex = 0; staffIndex < nStaves; ++staffIndex)
         	{
         		staff = system0staves[staffIndex];
@@ -1710,6 +1719,7 @@ _AP.score = (function (document)
         			}
         		}
         	}
+        	outputTracks.trackIndexPerMidiChannel = getTrackIndexPerMidiChannel(outputTracks);
         }
 
         function getInputKeyRange(inputTracks)

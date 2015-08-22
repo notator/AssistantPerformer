@@ -36,14 +36,13 @@ _AP.inputChord = (function()
     	//      .noteOff -- undefined (or see below)
     	//
     	//		.noteOn and .noteOff can have the following fields:
-    	//			.trkOffs[] -- undefined or an array of channel indices.
-    	//			.inputControls -- undefined or an InputControls object
-    	//			.seq -- undefined (or an array of trkRef)
+    	//			.trkOffs[] -- undefined or an array of channel indices
+    	//			.seq -- undefined or an array of trkRef
     	//				A trkRef has the following fields:
+    	//					.inputControls -- undefined or an InputControls object
     	//					.midiChannel (compulsory int >= 0. The midiChannel of the voice containing the referenced Trk. )
     	//					.msPosition (compulsory int >= 0. The msPositionInScore of the referenced Trk.)
     	//					.length (compulsory int >= 0. The number of MidiChords and Rests the referenced Trk.)
-    	//					.inputControls -- undefined or an InputControls object
 		//------------------------------------------------------------------------------
     	// getInputNotes() Returns:
     	// An array of inputNote objects, each of which may have the following fields:
@@ -53,31 +52,46 @@ _AP.inputChord = (function()
     	//		.noteOff -- undefined (or see below)
     	//
     	//		.noteOn and .noteOff can have the following fields:
-    	//			.inputControls -- undefined or an InputControls object.
     	//			.trkOffs[] -- undefined or an array of channel indices to be sent trkOff messages.
-		//			.trks[] -- undefined or an array of (parallel) trks to be sent trkOn messages.
+    	//			.trks[] -- undefined or an array of (parallel) trks to be sent trkOn messages.
+    	//
+    	//			each trk in trks[] can have the following fields:
+    	//				.inputControls -- undefined or an InputControls object.
+    	//				.trackIndex -- compulsory. The index of the track in the score (top to bottom)
+    	//		   ???? .midiObjectIndex -- compulsory (Do I really need this in the trk definition??). The index of the first object in the trk in the whole track.midiObjects array.
+    	//				.midiObjects -- compulsory. The array of midiChords and Rests in the trk.
     	function getInputNotes(inputNoteDefs, outputTracks, chordMsPositionInScore)
     	{
     		var i, nInputNoteDefs = inputNoteDefs.length, inputNoteDef,
 				inputNote, inputNotes = [];
 
+    		function trackIndices(trackIndexPerMidiChannel, midiChannelIndices)
+    		{
+    			var i, indices = [], nIndices = midiChannelIndices.length;
+
+    			for(i = 0; i < nIndices; ++i)
+    			{
+    				indices.push(trackIndexPerMidiChannel[midiChannelIndices[i]]);
+    			}
+    			return indices;
+    		}
+
     		// The noteInfo argument can have the following fields:
-    		//		.inputControls -- undefined or an InputControls object
-    		//      .trkOffs[] -- undefined or an array of channel indices.
+    		//      .trkOffs[] -- undefined or an array of midi channel indices.
     		//		.seq -- undefined or an array of trkRef (Achtung: trkRef)
-    		// Returns an object which may have the following fields:
+    		// Returns a Seq which may have the following fields:
     		//			.inputControls -- undefined or an InputControls object.
-    		//			.trkOffs[] -- undefined or an array of channel indices (to be sent trkOff messages).
+    		//			.trkOffs[] -- undefined or an array of track indices (top to bottom, to be sent trkOff messages).
     		//			.trks[] -- undefined or an array of (parallel) trks (to be sent trkOn messages).
-    		// A Trk object may have the following fields:
-    		//		.inputControls -- undefined or an InputControls object.
-    		//		.trackIndex -- compulsory. The index of the track in the score (top to bottom)
-    		// ???? .midiObjectIndex -- compulsory (Do I really need this in the trk definition??). The index of the first object in the trk in the whole track.midiObjects array.
-    		//		.midiObjects -- compulsory. The array of midiChords and Rests in the trk.
-    		function getNoteMomentInfo(noteInfo, outputTracks, chordMsPositionInScore)
+    		//			 A Trk object may have the following fields:
+    		//				.inputControls -- undefined or an InputControls object.
+    		//				.trackIndex -- compulsory. The index of the track in the score (top to bottom)
+    		//		   ???? .midiObjectIndex -- compulsory (??). The index of the first object in the trk in the whole track.midiObjects array.
+    		//				.msOffset -- compulsory. Usually 0. The msDurationInScore between this InputNote and the first midiObject in the trk.
+    		//				.midiObjects -- compulsory. The array of midiChords and Rests in the trk.
+    		function getSeq(noteInfo, outputTracks, chordMsPositionInScore)
     		{
     			var rval = {};
-
     			// Argument 1 is an array of trkRef. A trkRef has the following fields:
     			//		.inputControls -- undefined or an InputControls object
     			//		.midiChannel (compulsory int >= 0. The midiChannel of the voice containing the referenced Trk. )
@@ -93,32 +107,11 @@ _AP.inputChord = (function()
     			//		.midiObjects -- compulsory. The array of midiChords and Rests in the trk.
     			function getTrks(trkRefs, outputTracks, chordMsPositionInScore)
     			{
-    				var trk, trks = [], i, trkRef, nTrkRefs = trkRefs.length, outputTrack;
+    				var trk, trks = [], i, trkRef, nTrkRefs = trkRefs.length, trackMidiObjects;
 
-    				function getTrackIndex(midiChannel, outputTracks)
+    				function getMidiObjectIndex(trkMsPosition, midiObjects)
     				{
-    					var found = false, i, nOutputTracks = outputTracks.length, trackIndex;
-
-    					for(i = 0; i < nOutputTracks; ++i)
-    					{
-    						outputTrack = outputTracks[i];
-    						if(outputTrack.midiChannel === midiChannel)
-    						{
-    							trackIndex = i;
-    							found = true;
-    							break;
-    						}
-    					}
-    					if(found === false)
-    					{
-    						throw "InputChord.js: Can't find the output track referenced by this midi channel!";
-    					}
-    					return trackIndex;
-    				}
-
-    				function getMidiObjectIndex(trkMsPosition, outputTrack)
-    				{
-    					var found = false, midiObjectIndex, midiObjects = outputTrack.midiObjects;
+    					var found = false, midiObjectIndex;
 
     					for(midiObjectIndex = 0; midiObjectIndex < midiObjects.length; ++midiObjectIndex)
     					{
@@ -135,13 +128,13 @@ _AP.inputChord = (function()
     					return midiObjectIndex;
     				}
 
-    				function getMidiObjects(trackIndex, startIndex, length, outputTracks)
+    				function getMidiObjects(startIndex, length, trackMidiObjects)
     				{
     					var midiObjects = [], i, midiObjIndex = startIndex;
 
     					for(i=0; i < length; ++i)
     					{
-    						midiObjects.push(outputTracks[trackIndex][midiObjIndex++]);
+    						midiObjects.push(trackMidiObjects[midiObjIndex++]);
     					}
     					return midiObjects;
     				}
@@ -155,10 +148,11 @@ _AP.inputChord = (function()
     					{
     						trk.inputControls = trkRef.inputControls;
     					}
-    					trk.trackIndex = getTrackIndex(trkRef.midiChannel, outputTracks);
-    					trk.midiObjectIndex = getMidiObjectIndex(trkRef.msPosition, outputTracks[trk.trackIndex]);
-    					trk.msOffset = outputTracks[trk.trackIndex][trk.midiObjectIndex].msPositionInScore - chordMsPositionInScore;
-    					trk.midiObjects = getMidiObjects(trk.trackIndex, trk.midiObjectIndex, trkRef.length, outputTracks);
+    					trk.trackIndex = outputTracks.trackIndexPerMidiChannel[trkRef.midiChannel];
+    					trackMidiObjects = outputTracks[trk.trackIndex].midiObjects;
+    					trk.midiObjectIndex = getMidiObjectIndex(trkRef.msPosition, trackMidiObjects);
+    					trk.msOffset = trackMidiObjects[trk.midiObjectIndex].msPositionInScore - chordMsPositionInScore;
+    					trk.midiObjects = getMidiObjects(trk.midiObjectIndex, trkRef.length, trackMidiObjects);
 
     					trks.push(trk);
     				}
@@ -166,17 +160,17 @@ _AP.inputChord = (function()
     				return trks;
     			}
 
-    			if(noteInfo.inputControls !== undefined)
-    			{
-    				rval.inputControls = noteInfo.inputControls;
-    			}
     			if(noteInfo.trkOffs !== undefined)
     			{
-    				rval.trkOffs = noteInfo.trkOffs;
+    				rval.trkOffs = trackIndices(outputTracks.trackIndexPerMidiChannel, noteInfo.trkOffs);
     			}
     			if(noteInfo.seq !== undefined)
     			{
-    				rval.trks = getTrks(noteInfo.seq, outputTracks, chordMsPositionInScore);
+    				if(noteInfo.seq.inputControls !== undefined)
+    				{
+    					rval.inputControls = noteInfo.seq.inputControls;
+    				}
+    				rval.trks = getTrks(noteInfo.seq.trkRefs, outputTracks, chordMsPositionInScore);
     			}
 
     			return rval;
@@ -193,15 +187,15 @@ _AP.inputChord = (function()
     			}
     			if(inputNoteDef.noteOn !== undefined)
     			{
-    				inputNote.noteOn = getNoteMomentInfo(inputNoteDef.noteOn, outputTracks);
+    				inputNote.noteOn = getSeq(inputNoteDef.noteOn, outputTracks, chordMsPositionInScore);
     			}
-    			if(inputNoteDef.pressureChannels !== undefined)
+    			if(inputNoteDef.pressure !== undefined)
     			{
-    				inputNote.pressureChannels = inputNoteDef.pressure;
+    				inputNote.pressureTracks = trackIndices(outputTracks.trackIndexPerMidiChannel, inputNoteDef.pressure);
     			}
     			if(inputNoteDef.noteOff !== undefined)
     			{
-    				inputNote.noteOff = getNoteMomentInfo(inputNoteDef.noteOff, outputTracks, chordMsPositionInScore);
+    				inputNote.noteOff = getSeq(inputNoteDef.noteOff, outputTracks, chordMsPositionInScore);
     			}
     			inputNotes.push(inputNote);
     		}
