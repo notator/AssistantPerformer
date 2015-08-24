@@ -33,15 +33,15 @@ _AP.inputChordDef = (function ()
 	//		inputNote.notatedKey (a number. The MIDI index of the notated key.)
 	//		inputNote.inputControls -- undefined or an InputControls object
     //		inputNote.noteOn -- undefined or see below
-	//      inputNote.pressure[] -- undefined or an array of channel indices.
+	//      inputNote.pressure[] -- undefined or an array of midi channel indices.
 	//      inputNote.noteOff -- undefined or see below
 	//
 	// inputNote.noteOn has the following fields:
-	//      inputNote.noteOn.trkOffs[] -- undefined or an array of channel indices.
+	//      inputNote.noteOn.midiChannelOffs[] -- undefined or an array of midi channel indices.
 	//		inputNote.noteOn.seq -- undefined or an array of trkRef (see below)
 	//
 	// if defined, inputNote.noteOff has the same fields as inputNote.noteOn:
-	//      inputNote.noteOff.trkOffs[] -- undefined or an array of channel indices.
+	//      inputNote.noteOff.midiChannelOffs[] -- undefined or an array of midi channel indices.
 	//		inputNote.noteOff.seq -- undefined or an array of trkRef
 	//
 	// Each trkRef in inputNote.noteOn.seq (and inputNote.noteOff.seq) has the following fields:
@@ -136,7 +136,7 @@ _AP.inputChordDef = (function ()
 					if(noteOnOrNoteOffNode.attributes.length > 0)
 					{
 						trkOffsString = noteOnOrNoteOffNode.attributes[0].value;
-						returnObject.trkOffs = numberArray(trkOffsString);
+						returnObject.midiChannelOffs = numberArray(trkOffsString);
 					}
 					childNodes = noteOnOrNoteOffNode.childNodes;
 					for(i = 0; i < childNodes.length; ++i)
@@ -155,13 +155,13 @@ _AP.inputChordDef = (function ()
 				function getPressureChannels(pressureNode)
 				{					
 					var returnObject;
-					if(pressureNode.attributes.length > 0 && pressureNode.attributes[0].name === "channels")
+					if(pressureNode.attributes.length > 0 && pressureNode.attributes[0].name === "midiChannels")
 					{
 						returnObject = numberArray(pressureNode.attributes[0].value);
 					}
 					else
 					{
-						console.assert(false, "The pressure node must have a channels attribute.");
+						console.assert(false, "The pressure node must have a midiChannels attribute.");
 					}
 					return returnObject;
 				}
@@ -256,9 +256,9 @@ _AP.inputChordDef = (function ()
 		{
 			var seqLen, trkRef, outputChannels = [];
 
-			if(noteOnOff.trkOffs !== undefined)
+			if(noteOnOff.midiChannelOffs !== undefined)
 			{
-				outputChannels = outputChannels.concat(noteOnOff.trkOffs);
+				outputChannels = outputChannels.concat(noteOnOff.midiChannelOffs);
 			}
 			if(noteOnOff.seq !== undefined)
 			{
