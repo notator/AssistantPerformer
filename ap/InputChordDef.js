@@ -71,7 +71,7 @@ _AP.inputChordDef = (function ()
 
 				function getNoteOnOrNoteOff(noteOnOrNoteOffNode)
 				{
-					var i, trkOffsString, childNodes, returnObject = {};
+					var i, midiChannelOffsString, childNodes, returnObject = {};
 
 					function getSeq(seqNode)
 					{
@@ -135,8 +135,8 @@ _AP.inputChordDef = (function ()
 
 					if(noteOnOrNoteOffNode.attributes.length > 0)
 					{
-						trkOffsString = noteOnOrNoteOffNode.attributes[0].value;
-						returnObject.midiChannelOffs = numberArray(trkOffsString);
+						midiChannelOffsString = noteOnOrNoteOffNode.attributes[0].value;
+						returnObject.midiChannelOffs = numberArray(midiChannelOffsString);
 					}
 					childNodes = noteOnOrNoteOffNode.childNodes;
 					for(i = 0; i < childNodes.length; ++i)

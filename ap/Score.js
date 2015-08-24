@@ -27,7 +27,6 @@ _AP.score = (function (document)
     Track = _AP.track.Track,
 
     Markers = _AP.markers,
-    InputControls = _AP.inputControls.InputControls,
 	InputChordDef = _AP.inputChordDef.InputChordDef,
 	InputChord = _AP.inputChord.InputChord,
 	InputRest = _AP.inputRest.InputRest,
@@ -162,7 +161,7 @@ _AP.score = (function (document)
 
 		function hasPerformingTrack(inputChordDef, midiChannelPerOutputTrack, trackIsOnArray)
 		{
-			var i, j, outputTrackFound = false, outputMidiChannels, trkRefs, midiChannel;
+			var i, j, outputTrackFound = false, outputMidiChannels;
 
 			console.assert(inputChordDef !== undefined, "inputChordDef must be defined.");
 
@@ -1042,6 +1041,22 @@ _AP.score = (function (document)
         	}
         }
 
+        function getSVGElem(svgPage)
+        {
+        	var i, children = svgPage.children, svgElem;
+
+        	for(i = 0; i < children.length; ++i)
+        	{
+        		if(children[i].nodeName === 'svg')
+        		{
+        			svgElem = children[i];
+        			break;
+        		}
+        	}
+
+        	return svgElem;
+        }
+
     	// Sets the global viewBox object and the sizes and positions of the objects on page 2 (the div that is originally invisible)
 		// Returns the viewBox in the final page of the score.
         function setGraphics()
@@ -1075,7 +1090,8 @@ _AP.score = (function (document)
         	for(i = 0; i < nPages; ++i)
         	{
         		svgPage = svgPageEmbeds[i].getSVGDocument();
-        		viewBox = getViewBox(svgPage.children[0]); // global
+        		svgElem = getSVGElem(svgPage);
+        		viewBox = getViewBox(svgElem); // global
         		embedsWidth = Math.ceil(viewBox.width / viewBox.scale);
         		svgPageEmbeds[i].style.width = embedsWidth.toString();
         		svgPageEmbeds[i].style.height = (Math.ceil(viewBox.height / viewBox.scale)).toString();
@@ -1103,7 +1119,7 @@ _AP.score = (function (document)
         for(i = 0; i < nPages; ++i)
         {
         	svgPage = svgPageEmbeds[i].getSVGDocument();
-        	svgElem = svgPage.children[0];
+        	svgElem = getSVGElem(svgPage);
 
         	svgChildren = svgElem.children;
 			pageSystems = [];

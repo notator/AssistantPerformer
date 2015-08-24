@@ -77,9 +77,9 @@ _AP.inputChord = (function()
     		}
 
     		// The noteInfo argument can have the following fields:
-    		//      .trkOffs[] -- undefined or an array of midi channel indices.
-    		//		.seq -- undefined or an array of trkRef (Achtung: trkRef)
-    		// Returns a Seq which may have the following fields:
+    		//      .midiChannelOffs[] -- undefined or an array of midi channel indices.
+    		//		.seq -- undefined or an array of trkRef (Achtung: trkRef) with an optional InputControls
+    		// Returns an object which may have the following fields:
     		//			.inputControls -- undefined or an InputControls object.
     		//			.trkOffs[] -- undefined or an array of track indices (top to bottom, to be sent trkOff messages).
     		//			.trks[] -- undefined or an array of (parallel) trks (to be sent trkOn messages).
@@ -89,9 +89,10 @@ _AP.inputChord = (function()
     		//		   ???? .midiObjectIndex -- compulsory (??). The index of the first object in the trk in the whole track.midiObjects array.
     		//				.msOffset -- compulsory. Usually 0. The msDurationInScore between this InputNote and the first midiObject in the trk.
     		//				.midiObjects -- compulsory. The array of midiChords and Rests in the trk.
-    		function getSeq(noteInfo, outputTracks, chordMsPositionInScore)
+    		function getNoteInfo(noteInfo, outputTracks, chordMsPositionInScore)
     		{
     			var rval = {};
+
     			// Argument 1 is an array of trkRef. A trkRef has the following fields:
     			//		.inputControls -- undefined or an InputControls object
     			//		.midiChannel (compulsory int >= 0. The midiChannel of the voice containing the referenced Trk. )
@@ -160,9 +161,9 @@ _AP.inputChord = (function()
     				return trks;
     			}
 
-    			if(noteInfo.trkOffs !== undefined)
+    			if(noteInfo.midiChannelOffs !== undefined)
     			{
-    				rval.trkOffs = trackIndices(outputTracks.trackIndexPerMidiChannel, noteInfo.trkOffs);
+    				rval.trkOffs = trackIndices(outputTracks.trackIndexPerMidiChannel, noteInfo.midiChannelOffs);
     			}
     			if(noteInfo.seq !== undefined)
     			{
@@ -187,7 +188,7 @@ _AP.inputChord = (function()
     			}
     			if(inputNoteDef.noteOn !== undefined)
     			{
-    				inputNote.noteOn = getSeq(inputNoteDef.noteOn, outputTracks, chordMsPositionInScore);
+    				inputNote.noteOn = getNoteInfo(inputNoteDef.noteOn, outputTracks, chordMsPositionInScore);
     			}
     			if(inputNoteDef.pressure !== undefined)
     			{
@@ -195,7 +196,7 @@ _AP.inputChord = (function()
     			}
     			if(inputNoteDef.noteOff !== undefined)
     			{
-    				inputNote.noteOff = getSeq(inputNoteDef.noteOff, outputTracks, chordMsPositionInScore);
+    				inputNote.noteOff = getNoteInfo(inputNoteDef.noteOff, outputTracks, chordMsPositionInScore);
     			}
     			inputNotes.push(inputNote);
     		}
