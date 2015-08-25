@@ -488,7 +488,7 @@ _AP.keyboard1 = (function()
 				}
 			}
 
-			// Sets chordIndexPerInputTrack to contain the first chordIndex in each track's midiObjects
+			// Sets chordIndexPerInputTrack to contain the first chordIndex in each inputTrack's inputObjects
 			// at or after startMarkerMsPosInScore and before endMarkerMsPosInScore.
 			// If there is no such chord in a track, the index is set to -1.
 			function initChordIndexPerInputTrack(chordIndexPerInputTrack, inputTracks, startMarkerMsPosInScore, endMarkerMsPosInScore)
@@ -575,7 +575,7 @@ _AP.keyboard1 = (function()
 				{
 					inputTrack = inputTracks[inputTrackIndex++];
 					inputControls = getCurrentTrackInputControlsObj(inputTrack.inputObjects, startMarkerMsPosInScore);
-					inputTracksInputControls.push(inputControls); // default is an InputControls object having all values set to "off".
+					inputTracksInputControls.push(inputControls); // default is an InputControls object having no defined attributes.
 				}
 			}
 
@@ -722,7 +722,13 @@ _AP.keyboard1 = (function()
 					{
 						inputNote = inputNotes[i];
 
-						console.assert(inputNote.trks.length > 0, "Error: every inputNote must have at least one trk.");
+						// inputNote can have the following fields (all except .notatedKey can be undefined)
+						//	.inputControls
+						//	.notatedKey
+						//	.noteOn
+						//	.pressureTracks
+						//	.noteOff
+						console.assert(inputNote.notatedKey !== undefined, "Error: every inputNote must have a notatedKey.");
 
 						if(inputNote.inputControls !== undefined)
 						{
@@ -742,7 +748,7 @@ _AP.keyboard1 = (function()
 					}
 				}
 
-				/* begin getKeyData() */
+				/* begin initKeyData() */
 				initializeKeyData(keyData, keyRange.bottomKey, keyRange.topKey);
 
 				inputChordData = getNextInputChordData(inputTracks, chordIndexPerInputTrack, endMarkerMsPosInScore);
@@ -777,6 +783,7 @@ _AP.keyboard1 = (function()
 			initCurrentInputTracksInputControls(inputTracksInputControls, inputTracks, nOutputTracks, nTracks, startMarkerMsPosInScore);
 
 			initChordIndexPerInputTrack(chordIndexPerInputTrack, inputTracks, startMarkerMsPosInScore, endMarkerMsPosInScore);
+
 			initAllSeqMsPositions(allSeqMsPositions, chordIndexPerInputTrack, inputTracks, trackIsOnArray, endMarkerMsPosInScore);
 	
 			currentMsPosIndex = 0; // the initial index in allSeqMsPositions to perform
