@@ -28,12 +28,12 @@ sharedVelocity,
 overrideVelocity,
 speedFactor,
 
-init = function(trackIndexArg, channelIndexArg)
+init = function(trackIndexArg)
 {
 	"use strict";
 
 	trackIndex = trackIndexArg;
-	channelIndex = channelIndexArg;
+	channelIndex = trackIndex; // ! ji 25.08.2015
 	allTrks = [];
 	trkIndex = 0;
 	momentIndex = 0;
@@ -400,7 +400,7 @@ eventHandler = function(e)
 	switch(msg.action)
 	{
 		case "init":
-			init(msg.trackIndex, msg.channelIndex);
+			init(msg.trackIndex);
 			break;
 		case "pushTrk":
 			// msg (=trk) has the following attributes:

@@ -476,15 +476,65 @@ _AP.keyboard1 = (function()
 			outputTrackMidiChannels = [],
 			inputTracksInputControls = [];
 
-			function initOutputTrackMidiChannels(outputTrackMidiChannels, outputTracks)
+			function initTrackWorkers(trackWorkers, nOutputTracks)
 			{
-				var i;
+				var i, worker;
 
-				outputTrackMidiChannels.length = [];
+				trackWorkers.length = 0;
 
-				for(i = 0; i < outputTracks.length; i++)
+				for(i = 0; i < nOutputTracks; i++)
 				{
-					outputTrackMidiChannels.push(outputTracks[i].midiChannel);
+					worker = new window.Worker("ap/TrackWorker.js");
+					worker.addEventListener("message", handleTrackMessage);
+					worker.postMessage({ action: "init", trackIndex: i });
+					// worker.hasCompleted is set to false when a trk is added (in the Seq constructor),
+					// and back to true when the worker says that it has completed its last trk.
+					worker.hasCompleted = true; 
+					trackWorkers.push(worker);
+				}
+			}
+
+			// Sets inputTracksInputControls to contain the performer's inputControls current in each inputTrack when the span starts.
+			// (Shunts in all inputObjects in all inputTracks (playing or not) from the start of the score.)
+			// Sets all otherwise undefined values to a default (empty) InputControls object.
+			function initCurrentInputTracksInputControls(inputTracksInputControls, inputTracks, nOutputTracks, nTracks, startMarkerMsPosInScore)
+			{
+				var i, inputTrackIndex = 0, inputTrack, inputControls;
+
+				// Returns the most recent inputObject.InputControls object at or before startMarkerMsPosInScore.
+				// If there are no such InputControls objects, a new default InputControls object is returned.
+				function getCurrentTrackInputControlsObj(inputObjects, startMarkerMsPosInScore)
+				{
+					var i, nInputObjects = inputObjects.length, inputObject, returnInputControlsObj = null;
+
+					for(i = 0; i < nInputObjects; ++i)
+					{
+						inputObject = inputObjects[i];
+						if(inputObject.inputControls !== undefined)
+						{
+							returnInputControlsObj = inputObject.inputControls;
+						}
+						if(inputObject.msPositionInScore >= startMarkerMsPosInScore)
+						{
+							break;
+						}
+					}
+
+					if(returnInputControlsObj == null)
+					{
+						returnInputControlsObj = new _AP.inputControls.InputControls({}); // a new, empty InputControls object
+					}
+
+					return returnInputControlsObj;
+				}
+				
+				inputTracksInputControls.length = 0;
+
+				for(i = nOutputTracks; i < nTracks; ++i)
+				{
+					inputTrack = inputTracks[inputTrackIndex++];
+					inputControls = getCurrentTrackInputControlsObj(inputTrack.inputObjects, startMarkerMsPosInScore);
+					inputTracksInputControls.push(inputControls); // default is an InputControls object having no defined attributes.
 				}
 			}
 
@@ -514,68 +564,6 @@ _AP.keyboard1 = (function()
 
 					}
 					chordIndexPerInputTrack.push(initialChordIndex);
-				}
-			}
-
-			function initTrackWorkers(trackWorkers, outputTrackMidiChannels)
-			{
-				var i, worker;
-
-				trackWorkers.length = 0;
-
-				for(i = 0; i < outputTrackMidiChannels.length; i++)
-				{
-					worker = new window.Worker("ap/TrackWorker.js");
-					worker.addEventListener("message", handleTrackMessage);
-					worker.postMessage({ action: "init", trackIndex: i, channelIndex: outputTrackMidiChannels[i] });
-					// worker.hasCompleted is set to false when a trk is added (in the Seq constructor),
-					// and back to true when the worker says that it has completed its last trk.
-					worker.hasCompleted = true; 
-					trackWorkers.push(worker);
-				}
-			}
-
-			// Sets inputTracksInputControls to contain the performer's inputControls current in each inputTrack when the span starts.
-			// (Shunts in all inputObjects in all inputTracks (playing or not) from the start of the score.)
-			// Sets all otherwise undefined values to "off".
-			function initCurrentInputTracksInputControls(inputTracksInputControls, inputTracks, nOutputTracks, nTracks, startMarkerMsPosInScore)
-			{
-				var i, inputTrackIndex = 0, inputTrack, inputControls;
-
-				// Returns the most recent inputObject.InputControls object at or before startMarkerMsPosInScore.
-				// If there are no such InputControls objects, a new default InputControls object is returned.
-				function getCurrentTrackInputControlsObj(inputObjects, startMarkerMsPosInScore)
-				{
-					var i, nInputObjects = inputObjects.length, inputObject, returnInputControlsObj = null;
-
-					for(i = 0; i < nInputObjects; ++i)
-					{
-						inputObject = inputObjects[i];
-						if(inputObject.inputControls !== undefined)
-						{
-							returnInputControlsObj = inputObject.inputControls;
-						}
-						if(inputObject.msPositionInScore >= startMarkerMsPosInScore)
-						{
-							break;
-						}
-					}
-
-					if(returnInputControlsObj == null)
-					{
-						returnInputControlsObj = new _AP.inputControls.InputControls({}); // a new, default InputControls object
-					}
-
-					return returnInputControlsObj;
-				}
-				
-				inputTracksInputControls.length = 0;
-
-				for(i = nOutputTracks; i < nTracks; ++i)
-				{
-					inputTrack = inputTracks[inputTrackIndex++];
-					inputControls = getCurrentTrackInputControlsObj(inputTrack.inputObjects, startMarkerMsPosInScore);
-					inputTracksInputControls.push(inputControls); // default is an InputControls object having no defined attributes.
 				}
 			}
 
@@ -776,9 +764,7 @@ _AP.keyboard1 = (function()
 
 			/*** begin initPlay() ***/
 
-			initOutputTrackMidiChannels(outputTrackMidiChannels, outputTracks);
-
-			initTrackWorkers(trackWorkers, outputTrackMidiChannels); // must be done before creating the Seqs
+			initTrackWorkers(trackWorkers, nOutputTracks); // must be done before creating the Seqs
 
 			initCurrentInputTracksInputControls(inputTracksInputControls, inputTracks, nOutputTracks, nTracks, startMarkerMsPosInScore);
 
