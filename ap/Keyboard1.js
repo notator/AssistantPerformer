@@ -473,7 +473,6 @@ _AP.keyboard1 = (function()
 			nOutputTracks = outputTracks.length,
 			nTracks = nOutputTracks + inputTracks.length,
 			chordIndexPerInputTrack = [],
-			outputTrackMidiChannels = [],
 			inputTracksInputControls = [];
 
 			function initTrackWorkers(trackWorkers, nOutputTracks)
@@ -520,7 +519,7 @@ _AP.keyboard1 = (function()
 						}
 					}
 
-					if(returnInputControlsObj == null)
+					if(returnInputControlsObj === null)
 					{
 						returnInputControlsObj = new _AP.inputControls.InputControls({}); // a new, empty InputControls object
 					}
@@ -568,13 +567,15 @@ _AP.keyboard1 = (function()
 			}
 
 			// Called by both the following functions.
-			// Returns an object having the attributes trackIndex, chordIndex and msPositionInScore.
+			// Returns an object having the attributes trackIndex, chordIndex, noteOnSeqPosition and noteOffSeqPosition.
 			// trackIndex and chordIndex, are the location of the chord in the inputTracks, whereby
 			// the top inputTrack has trackIndex === 0.
+			// noteOnSeqPosition and noteOffSeqPosition are defined if seqs are to be sent from the noteOn and noteOff
+			// positions respectively.
 			// Returns null when there are no more inputChords earlier than endMarkerMsPosInScore.
 			function getNextInputChordData(inputTracks, chordIndexPerInputTrack, endMarkerMsPosInScore)
 			{
-				var i, trackIndex, msPos,
+				var i, trackIndex, msPos, inputChord, inputNote, inputNotes, nInputNotes,
 					minMsPos = Number.MAX_VALUE, inputChordData = null;
 
 				// Returns -1 if there is no chord before endMarkerMsPosInScore.
@@ -617,8 +618,22 @@ _AP.keyboard1 = (function()
 					inputChordData = {};
 					inputChordData.trackIndex = trackIndex;
 					inputChordData.chordIndex = chordIndexPerInputTrack[trackIndex];
-					inputChordData.msPositionInScore = inputTracks[trackIndex].inputObjects[chordIndexPerInputTrack[trackIndex]].msPositionInScore;
-
+					inputChord = inputTracks[trackIndex].inputObjects[chordIndexPerInputTrack[trackIndex]];
+					inputNotes = inputChord.inputNotes;
+					nInputNotes = inputNotes.length;
+					for(i = 0; i < nInputNotes; ++i)
+					{
+						inputNote = inputNotes[i];
+						if(inputNote.noteOn !== undefined && inputNote.noteOn.seq !== undefined)
+						{
+							inputChordData.noteOnSeqPosition = inputChord.msPositionInScore;
+						}
+						if(inputNote.noteOff !== undefined && inputNote.noteOff.seq !== undefined)
+						{
+							inputChordData.noteOffSeqPosition = inputChord.msPositionInScore + inputChord.msDurationInScore;
+						}
+					}
+					
 					chordIndexPerInputTrack[trackIndex] = incrementChordIndex(inputTracks[trackIndex].inputObjects, chordIndexPerInputTrack[trackIndex], endMarkerMsPosInScore);
 				}
 
@@ -627,7 +642,7 @@ _AP.keyboard1 = (function()
 
 			function initAllSeqMsPositions(allSeqMsPositions, chordIndexPerInputTrack, inputTracks, trackIsOnArray, endMarkerMsPosInScore)
 			{
-				var trackIndex, msPositionInScore, inputChordData;
+				var trackIndex, inputChordData;
 
 				allSeqMsPositions.length = 0;
 
@@ -635,16 +650,33 @@ _AP.keyboard1 = (function()
 				while(inputChordData !== null)
 				{
 					trackIndex = inputChordData.trackIndex;
-					msPositionInScore = inputChordData.msPositionInScore;
 					if(trackIsOnArray[trackIndex])
 					{
-						if(allSeqMsPositions.length === 0 || allSeqMsPositions[allSeqMsPositions.length - 1] < msPositionInScore)
+						if(inputChordData.noteOnSeqPosition !== undefined)
 						{
-							allSeqMsPositions.push(msPositionInScore);
+							allSeqMsPositions.push(inputChordData.noteOnSeqPosition);
+						}
+						if(inputChordData.noteOffSeqPosition !== undefined)
+						{
+							allSeqMsPositions.push(inputChordData.noteOffSeqPosition);
 						}
 					}
 					inputChordData = getNextInputChordData(inputTracks, chordIndexPerInputTrack, endMarkerMsPosInScore);
 				}
+
+				// remove duplicates
+				allSeqMsPositions = allSeqMsPositions.reduce(function(a, b)
+				{
+					if(a.indexOf(b) < 0)
+					{
+						a.push(b);
+					}
+					return a;
+				}, []);
+
+				// numeric sort
+				allSeqMsPositions.sort(function(a, b) { return a - b; });
+
 				allSeqMsPositions.push(endMarkerMsPosInScore);
 			}
 
