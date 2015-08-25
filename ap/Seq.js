@@ -46,13 +46,13 @@ _AP.seq = (function()
 	// Used privately (by the prototype functions) at runtime: 
 	//   seq.trackWorkers -- The array of all the trackWorkers, one per output track in the score.
 	//   seq.workersPerTrk -- An array containing the trackIndex (in the trackWorkers array) of each trackWorker in the Seq.
-	Seq = function(seqPositionInScore, chordIndex, nextChordIndex, seqTrks, inputControls, trackWorkers)
+	Seq = function(seqPositionInScore, chordIndex, nextChordIndex, seqTrks, trackWorkers)
 	{
-		var trkData;
+		var trkData, inputControls = seqTrks.inputControls;
 
 		if(!(this instanceof Seq))
 		{
-			return new Seq(seqPositionInScore, chordIndex, nextChordIndex, seqTrks, inputControls, trackWorkers);
+			return new Seq(seqPositionInScore, chordIndex, nextChordIndex, seqTrks, trackWorkers);
 		}
 
 		console.assert(chordIndex !== undefined, "chordIndex must be defined.");
@@ -73,7 +73,7 @@ _AP.seq = (function()
 
 			for(i = 0; i < seqTrks.length; ++i)
 			{
-				trkMidiObjects = seqTrks[i];
+				trkMidiObjects = seqTrks[i].midiObjects;
 				trkMoments = [];
 				for(j = 0; j < trkMidiObjects.length; ++j)
 				{

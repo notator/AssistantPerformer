@@ -693,12 +693,18 @@ _AP.keyboard1 = (function()
 					var keyData;
 
 					keyDatas.length = 0; // the keyboard1.keyDatas array
-					// create an empty keySeqs object per midi keyData
+					// create an empty keyData object per midi key
 					for(i = bottomKey; i <= topKey; ++i) // keyRange was set in keyboard1.init().
 					{
 						keyData = {};
 						keyData.seqs = [];
 						keyData.seqs.index = 0;
+						keyData.onTrkOffss = [];
+						keyData.onTrkOffss.index = 0;
+						keyData.pressureTrackss = [];
+						keyData.pressureTrackss.index = 0;
+						keyData.offTrkOffss = [];
+						keyData.offTrkOffss.index = 0;
 
 						keyDatas.push(keyData);
 					}
@@ -728,8 +734,7 @@ _AP.keyboard1 = (function()
 				// Appends seqs to the keyData.seqs in each keyData in the keyDatas array, 
 				// and possibly sets keyData.onTrkOffs and/or keyData.offTrackOffs.
 				//
-				//keyData is an object, relating to a keyboard key, having the following fields:
-				//keyData.seqs.index	// Has been initialized to 0. The current index in the keyData.seqs array.	
+				//keyData is an object, relating to a keyboard key, having the following fields:	
 				//keyData.seqs[] An array of seq for this span -- initialized here.
 				//      		This array is ordered by msPositionInScore.
 				//      		There is a seq for each inputNote.noteOn.seq and inputNote.noteOn.seq related to the inputNote.notatedKey,
@@ -737,9 +742,16 @@ _AP.keyboard1 = (function()
 				//				the seq is simply not created.
 				//      		Each seq contains new Trks that are initialised with clones of midiChords and pointers to midiRests
 				//      		in the containing tracks.
-				//keyData.onTrkOffs // optional. An array of trkOff objects. A trkOff object points at a trk, and has trackIndex and
-				//							msPosition attributes.
-				//keyData.offTrkOffs // optional. An array of trkOff objects			
+				//keyData.seqs.index	// Has been initialized to 0. The current index in the keyData.seqs array.
+				//keyData.onTrkOffss[] // An array of onTrkOffs objects each of which contains trkOff objects.
+				//                      A trkOff object points at a trk, and has trackIndex and msPosition attributes.
+				//keyData.onTrkOffss.index	// Has been initialized to 0. The current index in the keyData.onTrkOffss array.
+				//keyData.pressureTrackss[] // optional. An array of trackIndex pointing	at tracks that will be sent pressure info.
+				//keyData.pressureTrackss.index	// Has been initialized to 0. The current index in the keyData.pressureTrackss array.
+				//keyData.offTrkOffss[] // An array of offTrkOffs objects each of which contains trkOff objects.
+				//keyData.offTrkOffss.index	// Has been initialized to 0. The current index in the keyData.offTrkOffss array.
+				//
+				//Each of the above keyData.arrays is given an inputControls attribute.
 				function setKeyDatas(keyDatas, trackWorkers, inputChord, inputChordIndices, chordInputControls, bottomKey)
 				{
 					var i, inputNotes, inputNote, keyData, seq, noteInputControls, seqInputControls;
@@ -766,47 +778,55 @@ _AP.keyboard1 = (function()
 							noteInputControls = chordInputControls;
 						}
 
-						// keyData.seqs.index has already been initialized to 0 for all keyData.seqs.
+						// The keyData...index fields have all been initialized to 0.
 						// Seqs are being created in chronological order, so can push each seq's trks into the trackWorkers.
 						keyData = keyDatas[inputNote.notatedKey - bottomKey];
 						if(inputNote.noteOn !== undefined)
 						{
 							if(inputNote.noteOn.seq !== undefined)
 							{
-								if(inputNote.noteOn.seq.inputControls !== undefined)
+								if(inputNote.noteOn.seq.inputControls === undefined)
 								{
-									seqInputControls = inputNote.noteOn.seq.inputControls;
+									inputNote.noteOn.seq.inputControls = noteInputControls;
 								}
-								else
-								{
-									seqInputControls = noteInputControls;
-								}
-								seq = new _AP.seq.Seq(inputChord.msPositionInScore, inputChordIndices.chordIndex, inputChordIndices.nextChordIndex, inputNote.noteOn.seq, seqInputControls, trackWorkers);
+								seq = new _AP.seq.Seq(inputChord.msPositionInScore, inputChordIndices.chordIndex, inputChordIndices.nextChordIndex, inputNote.noteOn.seq, trackWorkers);
 								keyData.seqs.push(seq);
 							}
 							if(inputNote.noteOn.trkOffs !== undefined)
 							{
-								keyData.onTrkOffs = inputNote.noteOn.trkOffs;
+								if(inputNote.noteOn.trkOffs.inputControls === undefined)
+								{
+									inputNote.noteOn.trkOffs.inputControls = noteInputControls;
+								}
+								keyData.onTrkOffss.push(inputNote.noteOn.trkOffs);
 							}
+						}
+						if(inputNote.pressureTracks != undefined)
+						{
+							if(inputNote.pressureTracks.inputControls === undefined)
+							{
+								inputNote.pressureTracks.inputControls = noteInputControls;
+							}
+							keyData.pressureTrackss.push(inputNote.pressureTracks);
 						}
 						if(inputNote.noteOff !== undefined)
 						{
 							if(inputNote.noteOff.seq !== undefined)
 							{
-								if(inputNote.noteOff.seq.inputControls !== undefined)
+								if(inputNote.noteOff.seq.inputControls === undefined)
 								{
-									seqInputControls = inputNote.noteOff.seq.inputControls;
-								}
-								else
-								{
-									seqInputControls = noteInputControls;
+									inputNote.noteOff.seq.inputControls = noteInputControls;
 								}
 								seq = new _AP.seq.Seq(inputChord.msPositionInScore + inputChord.msDurationInScore, inputChordIndices.chordIndex, inputChordIndices.nextChordIndex, inputNote.noteOff.seq, seqInputControls, trackWorkers);
 								keyData.seqs.push(seq);
 							}
 							if(inputNote.noteOff.trkOffs !== undefined)
 							{
-								keyData.offTrkOffs = inputNote.noteOff.trkOffs;
+								if(inputNote.noteOff.trkOffs.inputControls === undefined)
+								{
+									inputNote.noteOff.trkOffs.inputControls = noteInputControls;
+								}
+								keyData.offTrkOffss.push(inputNote.noteOff.trkOffs);
 							}
 						}
 					}
