@@ -735,7 +735,7 @@ _AP.keyboard1 = (function()
 					//      			Each seq contains new Tracks that are initialised with clones of midiChords and pointers to midiRests
 					//      			in the containing tracks.				
 					
-					var i, inputNotes, inputNote, keySeqs, seq, noteInputControls;
+					var i, inputNotes, inputNote, keySeqs, seq, noteInputControls, seqInputControls;
 
 					inputNotes = inputChord.inputNotes;
 					for(i = 0; i < inputNotes.length; ++i)
@@ -759,12 +759,35 @@ _AP.keyboard1 = (function()
 							noteInputControls = chordInputControls;
 						}
 
-						// keySeqs.index has already been initialized to 0.
+						// keySeqs.index has already been initialized to 0 for all keySeqs.
 						// Seqs are being created in chronological order, so can push the seq's trks into the trackWorkers.
-						seq = new _AP.seq.Seq(inputChord.msPositionInScore, inputChordIndices.chordIndex, inputChordIndices.nextChordIndex, inputNote.trks, noteInputControls, trackWorkers);
-
 						keySeqs = keyData[inputNote.notatedKey - bottomKey];
-						keySeqs.seqs.push(seq);
+						if(inputNote.noteOn !== undefined && inputNote.noteOn.seq !== undefined)
+						{
+							if(inputNote.noteOn.seq.inputControls !== undefined)
+							{
+								seqInputControls = inputNote.noteOn.seq.inputControls;
+							}
+							else
+							{
+								seqInputControls = noteInputControls;
+							}
+							seq = new _AP.seq.Seq(inputChord.msPositionInScore, inputChordIndices.chordIndex, inputChordIndices.nextChordIndex, inputNote.noteOn.seq, seqInputControls, trackWorkers);
+							keySeqs.seqs.push(seq);
+						}
+						if(inputNote.noteOff !== undefined && inputNote.noteOff.seq !== undefined)
+						{
+							if(inputNote.noteOff.seq.inputControls !== undefined)
+							{
+								seqInputControls = inputNote.noteOff.seq.inputControls;
+							}
+							else
+							{
+								seqInputControls = noteInputControls;
+							}
+							seq = new _AP.seq.Seq(inputChord.msPositionInScore + inputChord.msDurationInScore, inputChordIndices.chordIndex, inputChordIndices.nextChordIndex, inputNote.noteOff.seq, seqInputControls, trackWorkers);
+							keySeqs.seqs.push(seq);
+						}
 					}
 				}
 
