@@ -64,7 +64,7 @@ _AP.keyboard1 = (function()
 	inputTracks,
 	outputTracks,
 	trackWorkers = [], // an array of webWorkers, one per outputTrack (=trackIndex).
-	keyDatas = [],
+	noteInfoss = [],
 	keyRange, // keyRange.bottomKey and keyRange.topKey are the bottom and top input midi key values notated in the score.
 
 	reportEndOfSpan, // callback -- called here as reportEndOfSpan(sequenceRecording, performanceMsDuration);
@@ -283,10 +283,10 @@ _AP.keyboard1 = (function()
     	{
     		var i, keyData, seq;
 
-    		for(i = 0; i < keyDatas.length; ++i)
+    		for(i = 0; i < noteInfoss.length; ++i)
     		{
-    			keyData = keyDatas[i];
-    			if(keyData.seqs !== undefined) // some keyDatas may not have seqs...
+    			keyData = noteInfoss[i];
+    			if(keyData.seqs !== undefined) // some noteInfoss may not have seqs...
     			{
     				while(keyData.seqs.index > keyData.seqs.length)
     				{
@@ -312,7 +312,7 @@ _AP.keyboard1 = (function()
 
     		if(key >= keyRange.bottomKey && key <= keyRange.topKey)
     		{
-    			keyData = keyDatas[keyIndex]; // This is the same object as for the corresponding noteOn.
+    			keyData = noteInfoss[keyIndex]; // This is the same object as for the corresponding noteOn.
 				seq = keyData.seqs[keyData.seqs.index]; // (the key's currently playing seq).
     			if(seq !== undefined && seq.triggeredOn)// will be false if the key was pressed prematurely;
     			{
@@ -340,8 +340,8 @@ _AP.keyboard1 = (function()
 
     		if(key >= keyRange.bottomKey && key <= keyRange.topKey)
     		{
-    			keyData = keyDatas[keyIndex];
-    			if(keyData.seqs.length > keyData.seqs.index) // some keyDatas may not have seqs...
+    			keyData = noteInfoss[keyIndex];
+    			if(keyData.seqs.length > keyData.seqs.index) // some noteInfoss may not have seqs...
     			{
     				seq = keyData.seqs[keyData.seqs.index];
     				if(seq !== undefined)
@@ -469,7 +469,7 @@ _AP.keyboard1 = (function()
 	{
 		var channelIndex;
 
-		function initPlay(trackIsOnArray, keyDatas, allSeqMsPositions, trackWorkers, startMarkerMsPosInScore, endMarkerMsPosInScore)
+		function initPlay(trackIsOnArray, noteInfoss, allSeqMsPositions, trackWorkers, startMarkerMsPosInScore, endMarkerMsPosInScore)
 		{
 			var
 			nOutputTracks = outputTracks.length,
@@ -725,30 +725,22 @@ _AP.keyboard1 = (function()
 			}
 
 			// Creates new Seqs, pushes the seq.trks into the trackWorkers, and the seqs into 
-			function initKeyDatas(keyDatas, trackWorkers, allSeqMsPositions, chordIndexPerInputTrack, inputTracks, trackIsOnArray, shuntedChordInputControls, endMarkerMsPosInScore)
+			function initNoteInfoss(noteInfoss, trackWorkers, allSeqMsPositions, chordIndexPerInputTrack, inputTracks, trackIsOnArray, shuntedChordInputControls, endMarkerMsPosInScore)
 			{
 				var i, inputChordData, trackIndex, inputObjects, inputChord, chordIndex, inputChordInputControls,
 					inputChordIndices = {};
 
-				function initializeKeyDatas(keyDatas, bottomKey, topKey)
+				function initializeNoteInfoss(noteInfoss, bottomKey, topKey)
 				{
-					var keyData;
+					var noteInfos;
 
-					keyDatas.length = 0; // the keyboard1.keyDatas array
-					// create an empty keyData object per midi key
+					noteInfoss.length = 0; // the keyboard1.noteInfoss array
+					// create an empty noteInfos object per midi key
 					for(i = bottomKey; i <= topKey; ++i) // keyRange was set in keyboard1.init().
 					{
-						keyData = {};
-						keyData.seqs = [];
-						keyData.seqs.index = 0;
-						keyData.onTrkOffss = [];
-						keyData.onTrkOffss.index = 0;
-						keyData.pressureTrackss = [];
-						keyData.pressureTrackss.index = 0;
-						keyData.offTrkOffss = [];
-						keyData.offTrkOffss.index = 0;
-
-						keyDatas.push(keyData);
+						noteInfos = [];
+						noteInfos.index = 0;
+						noteInfoss.push(noteInfos);
 					}
 				}
 
@@ -773,28 +765,20 @@ _AP.keyboard1 = (function()
 					inputChordIndices.nextChordIndex = nextChordIndex;
 				}
 
-				// Appends seqs to the keyData.seqs in each keyData in the keyDatas array, 
-				// and possibly sets keyData.onTrkOffs and/or keyData.offTrackOffs.
-				//
-				//keyData is an object, relating to a keyboard key, having the following fields:	
-				//keyData.seqs[] An array of seq for this span -- initialized here.
-				//      		This array is ordered by msPositionInScore.
-				//      		There is a seq for each inputNote.noteOn.seq and inputNote.noteOn.seq related to the inputNote.notatedKey,
-				//				unless the seq's inputTrack has been turned off, or all its outputTracks have been turned off. In either case,
-				//				the seq is simply not created.
-				//      		Each seq contains new Trks that are initialised with clones of midiChords and pointers to midiRests
-				//      		in the containing tracks.
-				//keyData.seqs.index	// Has been initialized to 0. The current index in the keyData.seqs array.
-				//keyData.onTrkOffss[] // An array of onTrkOffs objects each of which contains trkOff objects.
-				//                      A trkOff object points at a trk, and has trackIndex and msPosition attributes.
-				//keyData.onTrkOffss.index	// Has been initialized to 0. The current index in the keyData.onTrkOffss array.
-				//keyData.pressureTrackss[] // optional. An array of trackIndex pointing	at tracks that will be sent pressure info.
-				//keyData.pressureTrackss.index	// Has been initialized to 0. The current index in the keyData.pressureTrackss array.
-				//keyData.offTrkOffss[] // An array of offTrkOffs objects each of which contains trkOff objects.
-				//keyData.offTrkOffss.index	// Has been initialized to 0. The current index in the keyData.offTrkOffss array.
-				//
-				//Each of the above keyData.arrays is given an inputControls attribute.
-				function setKeyDatas(keyDatas, trackWorkers, inputChord, inputChordIndices, chordInputControls, bottomKey)
+				// Appends noteInfo objects to each key's noteInfos array.
+				// noteInfo.inputControls // compulsory. The note-level inputControls (Can be overridden by lower level inputControls.)
+				// noteInfo.onSeq: Can be undefined. The seq to play when a noteOn arrives.
+				// noteInfo.offSeq: Can be undefined. The seq to play when a noteOff arrives.
+				//      		Each seq is an array of trks (that are initialised with clones of midiChords and pointers to midiRests).E
+				//              Each seq may have an inputControls attribute that overrides the noteInfo.inputControls.
+				// noteInfo.onTrkOffs: Can be undefined. An array of trkOff objects.
+				//                      Each trkOff object has trackIndex and msPosition attributes that identify a trk.
+				//                      Each trkOff may have an inputControls attribute that overrides the noteInfo.inputControls.
+				// noteInfo.pressures: Can be undefined.  An array of pressure objects identifying tracks that will be sent pressure info.
+				//                      Each pressure object has trackIndex attribute that identifies a track.
+				//                      Each pressure object may have an inputControls attribute that overrides the noteInfo.inputControls.
+				// noteInfo.offTrkOffs: Can be undefined. An array of trkOff objects (see noteInfo.onTrkOffs above).
+				function setNoteInfoss(noteInfoss, trackWorkers, inputChord, inputChordIndices, chordInputControls, bottomKey)
 				{
 					var i, inputNotes, inputNote, keyData, seq, noteInputControls, seqInputControls;
 
@@ -807,7 +791,7 @@ _AP.keyboard1 = (function()
 						//	.inputControls
 						//	.notatedKey
 						//	.noteOn
-						//	.pressureTracks
+						//	.pressures
 						//	.noteOff
 						console.assert(inputNote.notatedKey !== undefined, "Error: every inputNote must have a notatedKey.");
 
@@ -822,7 +806,7 @@ _AP.keyboard1 = (function()
 
 						// The keyData...index fields have all been initialized to 0.
 						// Seqs are being created in chronological order, so can push each seq's trks into the trackWorkers.
-						keyData = keyDatas[inputNote.notatedKey - bottomKey];
+						keyData = noteInfoss[inputNote.notatedKey - bottomKey];
 						if(inputNote.noteOn !== undefined)
 						{
 							if(inputNote.noteOn.seq !== undefined)
@@ -874,8 +858,8 @@ _AP.keyboard1 = (function()
 					}
 				}
 
-				/* begin initKeyDatas() */
-				initializeKeyDatas(keyDatas, keyRange.bottomKey, keyRange.topKey);
+				/* begin initNoteInfoss() */
+				initializeNoteInfoss(noteInfoss, keyRange.bottomKey, keyRange.topKey);
 
 				inputChordData = getNextInputChordData(inputTracks, chordIndexPerInputTrack, endMarkerMsPosInScore);
 				while(inputChordData !== null)
@@ -896,7 +880,7 @@ _AP.keyboard1 = (function()
 
 						setInputChordIndices(inputChordIndices, allSeqMsPositions, inputChord);
 
-						setKeyDatas(keyDatas, trackWorkers, inputChord, inputChordIndices, inputChordInputControls, keyRange.bottomKey);
+						setNoteInfoss(noteInfoss, trackWorkers, inputChord, inputChordIndices, inputChordInputControls, keyRange.bottomKey);
 					}
 					inputChordData = getNextInputChordData(inputTracks, chordIndexPerInputTrack, endMarkerMsPosInScore);
 				}
@@ -919,7 +903,7 @@ _AP.keyboard1 = (function()
 			// initChordIndexPerInputTrack() *again*.
 			initChordIndexPerInputTrack(chordIndexPerInputTrack, inputTracks, startMarkerMsPosInScore, endMarkerMsPosInScore);
 
-			initKeyDatas(keyDatas, trackWorkers, allSeqMsPositions, chordIndexPerInputTrack, inputTracks, trackIsOnArray, inputTracksInputControls, endMarkerMsPosInScore);
+			initNoteInfoss(noteInfoss, trackWorkers, allSeqMsPositions, chordIndexPerInputTrack, inputTracks, trackIsOnArray, inputTracksInputControls, endMarkerMsPosInScore);
 		}
 
 		sequenceRecording = recording;
@@ -929,7 +913,7 @@ _AP.keyboard1 = (function()
 			resetChannel(outputDevice, channelIndex);
 		}
 
-		initPlay(trackIsOnArray, keyDatas, allSeqMsPositions, trackWorkers, startMarkerMsPosInScore, endMarkerMsPosInScore);
+		initPlay(trackIsOnArray, noteInfoss, allSeqMsPositions, trackWorkers, startMarkerMsPosInScore, endMarkerMsPosInScore);
 
 		performanceStartTime = performance.now();
 		setState("running");

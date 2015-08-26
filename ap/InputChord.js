@@ -210,9 +210,9 @@ _AP.inputChord = (function()
     			{
     				inputNote.noteOn = getNoteInfo(inputNoteDef.noteOn, outputTracks, chordMsPositionInScore);
     			}
-    			if(inputNoteDef.pressure !== undefined)
+    			if(inputNoteDef.pressures !== undefined)
     			{
-    				inputNote.pressureTracks = trackIndices(outputTracks.trackIndexPerMidiChannel, inputNoteDef.pressure);
+    				inputNote.pressures = inputNoteDef.pressures;
     			}
     			if(inputNoteDef.noteOff !== undefined)
     			{

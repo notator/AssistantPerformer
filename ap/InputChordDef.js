@@ -21,7 +21,6 @@ _AP.inputChordDef = (function ()
     "use strict";
 	var
 	InputControls = _AP.inputControls.InputControls,
-	numberArray = _AP.utilities.numberArray,
 
     // InputChordDef constructor
     // The inputChordDef contains the inputChordDef information from the XML in a form that is easier to program with.
@@ -33,12 +32,15 @@ _AP.inputChordDef = (function ()
 	//		inputNote.notatedKey (a number. The MIDI index of the notated key.)
 	//		inputNote.inputControls -- undefined or an InputControls object
     //		inputNote.noteOn -- undefined or see below
-	//      inputNote.pressure[] -- undefined or an array of midi channel indices.
+	//      inputNote.pressures -- undefined or an array of pressure objects.
 	//      inputNote.noteOff -- undefined or see below
 	//
 	// if defined, inputNote.noteOn has the following fields:
 	//      inputNote.noteOn.trkOns -- undefined or an array of trkOn with a (possibly undefined) InputControls field.
 	//		inputNote.noteOn.trkOffs -- undefined or an array of trkOff with a (possibly undefined) InputControls field.
+	//
+	// if defined, inputNote.pressures contains pressure objects.
+	//      Each pressure object has a midiChannel and a (possibly undefined) InputControls field. 
 	//
 	// if defined, inputNote.noteOff has the same fields as inputNote.noteOn:
 	//      inputNote.noteOff.trkOns -- undefined or an array of trkOn with a (possibly undefined) InputControls field.
@@ -77,7 +79,7 @@ _AP.inputChordDef = (function ()
 				// returns an object that can have trkOns and trkOffs attributes
 				function getNoteOnOrNoteOff(noteOnOrNoteOffNode)
 				{
-					var i, midiChannelOffsString, childNodes, returnObject = {};
+					var i, childNodes, returnObject = {};
 
 					// returns an array of trkOn, possibly having an inputControls attribute 
 					function getTrkOns(trkOnsNode)
@@ -211,18 +213,38 @@ _AP.inputChordDef = (function ()
 					return returnObject;
 				}
 
-				function getPressureChannels(pressureNode)
+				function getPressures(pressuresNode)
 				{					
-					var returnObject;
-					if(pressureNode.attributes.length > 0 && pressureNode.attributes[0].name === "midiChannels")
+					var i, childNodes = pressuresNode.childNodes, pressure, pressures = [];
+
+					function getPressure(pressureNode)
 					{
-						returnObject = numberArray(pressureNode.attributes[0].value);
+						var i, pressure, attrs, childNodes = pressureNode.childNodes;
+
+						attrs = pressureNode.attributes;
+						console.assert(attrs.length === 1 && attrs[0].name === 'midiChannel');
+						pressure = {};
+						pressure.midiChannel = parseInt(attrs[0].value, 10);
+
+						for(i = 0; i < childNodes.length; ++i)
+						{
+							if(childNodes[i].nodeName === 'inputControls')
+							{
+								pressure.inputControls = new InputControls(childNodes[i]);
+							}
+						}
+						return pressure;
 					}
-					else
+
+					for(i = 0; i < childNodes.length; ++i)
 					{
-						console.assert(false, "The pressure node must have a midiChannels attribute.");
+						if(childNodes[i].nodeName === 'pressure')
+						{
+							pressure = getPressure(childNodes[i]);
+							pressures.push(pressure);
+						}
 					}
-					return returnObject;
+					return pressures;
 				}
 				
 				for(i = 0; i < attributesLength; ++i)
@@ -252,8 +274,8 @@ _AP.inputChordDef = (function ()
 						case "noteOn":
 							inputNote.noteOn = getNoteOnOrNoteOff(childNodes[i]);
 							break;
-						case "pressure":
-							inputNote.pressure = getPressureChannels(childNodes[i]);
+						case "pressures":
+							inputNote.pressures = getPressures(childNodes[i]);
 							break;
 						case "noteOff":
 							inputNote.noteOff = getNoteOnOrNoteOff(childNodes[i]);
@@ -313,21 +335,26 @@ _AP.inputChordDef = (function ()
 
 		function outChannels(noteOnOff)
 		{
-			var seqLen, trkRef, outputChannels = [];
+			var i,
+			trkOns = noteOnOff.trkOns, nTrkOns = trkOns.length,
+			trkOffs = noteOnOff.trkOffs, nTrkOffs = trkOffs.length,
+			outputChannels = [];
 
-			if(noteOnOff.midiChannelOffs !== undefined)
+			if(trkOns !== undefined)
 			{
-				outputChannels = outputChannels.concat(noteOnOff.midiChannelOffs);
-			}
-			if(noteOnOff.seq !== undefined)
-			{
-				seqLen = noteOnOff.seq.trkRefs.length;
-				for(j = 0; j < seqLen; ++j)
+				for(i = 0; i < nTrkOns; ++i)
 				{
-					trkRef = noteOnOff.seq.trkRefs[j];
-					outputChannels = outputChannels.concat(trkRef.midiChannel);
+					outputChannels.push(trkOns[i].midiChannel);
 				}
 			}
+			if(trkOffs !== undefined)
+			{
+				for(i = 0; i < nTrkOffs; ++i)
+				{
+					outputChannels.push(trkOffs[i].midiChannel);
+				}
+			}
+
 			return outputChannels;
 		}
 
@@ -351,9 +378,12 @@ _AP.inputChordDef = (function ()
 			{
 				nonUniqueOutputChannels = nonUniqueOutputChannels.concat(outChannels(inputNote.noteOn));
 			}
-			if(inputNote.pressure !== undefined)
+			if(inputNote.pressures !== undefined)
 			{
-				nonUniqueOutputChannels = nonUniqueOutputChannels.concat(inputNote.pressure);
+				for(j = 0; j < inputNote.pressures.length; ++j)
+				{
+					nonUniqueOutputChannels = nonUniqueOutputChannels.concat(inputNote.pressures[j].midiChannel);
+				}
 			}
 			if(inputNote.noteOff !== undefined)
 			{
