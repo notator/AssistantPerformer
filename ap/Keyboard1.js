@@ -756,20 +756,16 @@ _AP.keyboard1 = (function()
 					// noteInfo.offTrkOffs: Can be undefined. An array of trkOff objects (see noteInfo.onTrkOffs above).
 					function getNoteInfo(inputNote, chordInputControls)
 					{
-						var i, seqMsPosition, seq, pressure, noteInfo = {}, noteInputControls;
+						var i, seqMsPosition, seq, pressure, noteInfo = {};
 
 						// inputNote can have the following fields (all except .notatedKey can be undefined)
 						//	.notatedKey
 						//	.noteOn
 						//	.pressures
 						//	.noteOff
-						if(inputNote.inputControls !== undefined)
+						if(inputNote.inputControls === undefined)
 						{
-							noteInputControls = inputNote.inputControls;
-						}
-						else
-						{
-							noteInputControls = chordInputControls;
+							inputNote.inputControls = chordInputControls;
 						}
 
 						if(inputNote.noteOn !== undefined)
@@ -780,7 +776,7 @@ _AP.keyboard1 = (function()
 								seq = inputNote.noteOn.seq;
 								if(seq.inputControls === undefined)
 								{
-									seq.inputControls = noteInputControls;
+									seq.inputControls = inputNote.inputControls;
 								}
 								noteInfo.onSeq = new _AP.seq.Seq(seqMsPosition, inputChordIndices.chordIndex, inputChordIndices.nextChordIndex, seq, trackWorkers);
 							}
@@ -788,19 +784,23 @@ _AP.keyboard1 = (function()
 							{
 								if(inputNote.noteOn.trkOffs.inputControls === undefined)
 								{
-									inputNote.noteOn.trkOffs.inputControls = noteInputControls;
+									inputNote.noteOn.trkOffs.inputControls = inputNote.inputControls;
 								}
 								noteInfo.onTrkOffs = inputNote.noteOn.trkOffs;
 							}
 						}
 						if(inputNote.pressures !== undefined)
 						{
+							if(inputNote.pressures.inputControls === undefined)
+							{
+								inputNote.pressures.inputControls = inputNote.inputControls;
+							}
 							for(i = 0; i < inputNote.pressures.length; ++i)
 							{
 								pressure = inputNote.pressures[i];
 								if(pressure.inputControls === undefined)
 								{
-									pressure.inputControls = noteInputControls;
+									pressure.inputControls = inputNote.pressures.inputControls;
 								}
 							}
 							noteInfo.pressures = inputNote.pressures;
@@ -812,7 +812,7 @@ _AP.keyboard1 = (function()
 								seq = inputNote.noteOff.seq;
 								if(seq.inputControls === undefined)
 								{
-									seq.inputControls = noteInputControls;
+									seq.inputControls = inputNote.inputControls;
 								}
 								seqMsPosition = inputChord.msPositionInScore + inputChord.msDurationInScore;
 								noteInfo.offSeq = new _AP.seq.Seq(seqMsPosition, inputChordIndices.chordIndex, inputChordIndices.nextChordIndex, seq, trackWorkers);
@@ -821,7 +821,7 @@ _AP.keyboard1 = (function()
 							{
 								if(inputNote.noteOff.trkOffs.inputControls === undefined)
 								{
-									inputNote.noteOff.trkOffs.inputControls = noteInputControls;
+									inputNote.noteOff.trkOffs.inputControls = inputNote.inputControls;
 								}
 								noteInfo.offTrkOffs = inputNote.noteOff.trkOffs;
 							}

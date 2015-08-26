@@ -39,7 +39,7 @@ _AP.inputChordDef = (function ()
 	//      inputNote.noteOn.trkOns -- undefined or an array of trkOn with a (possibly undefined) InputControls field.
 	//		inputNote.noteOn.trkOffs -- undefined or an array of trkOff with a (possibly undefined) InputControls field.
 	//
-	// if defined, inputNote.pressures contains pressure objects.
+	// if defined, inputNote.pressures contains an array of pressure objects with a (possibly undefined) InputControls field.
 	//      Each pressure object has a midiChannel and a (possibly undefined) InputControls field. 
 	//
 	// if defined, inputNote.noteOff has the same fields as inputNote.noteOn:
@@ -72,14 +72,16 @@ _AP.inputChordDef = (function ()
 			{
 				var attr,
 					inputNote = {},
-					attributesLength = inputNoteNode.attributes.length,
+					attrs = inputNoteNode.attributes,
+					nAttributes = attrs.length,
 					childNodes = inputNoteNode.childNodes,
 					i;
 
 				// returns an object that can have trkOns and trkOffs attributes
 				function getNoteOnOrNoteOff(noteOnOrNoteOffNode)
 				{
-					var i, childNodes, returnObject = {};
+					var i, childNodes = noteOnOrNoteOffNode.childNodes, nChildNodes = childNodes.length,
+					returnObject = {};
 
 					// returns an array of trkOn, possibly having an inputControls attribute 
 					function getTrkOns(trkOnsNode)
@@ -196,8 +198,7 @@ _AP.inputChordDef = (function ()
 						return returnArray;
 					}
 
-					childNodes = noteOnOrNoteOffNode.childNodes;
-					for(i = 0; i < childNodes.length; ++i)
+					for(i = 0; i < nChildNodes; ++i)
 					{
 						switch(childNodes[i].nodeName)
 						{
@@ -238,19 +239,23 @@ _AP.inputChordDef = (function ()
 
 					for(i = 0; i < childNodes.length; ++i)
 					{
-						if(childNodes[i].nodeName === 'pressure')
+						switch(childNodes[i].nodeName)
 						{
-							pressure = getPressure(childNodes[i]);
-							pressures.push(pressure);
+							case 'inputControls':
+								pressures.inputControls = new InputControls(childNodes[i]);
+								break;
+							case 'pressure':
+								pressure = getPressure(childNodes[i]);
+								pressures.push(pressure);
+								break;
 						}
 					}
 					return pressures;
 				}
 				
-				for(i = 0; i < attributesLength; ++i)
+				for(i = 0; i < nAttributes; ++i)
 				{
-					attr = inputNoteNode.attributes[i];
-					// console.log(attr.name + " = " + attr.value);
+					attr = attrs[i];
 					switch(attr.name)
 					{
 						case "notatedKey":
