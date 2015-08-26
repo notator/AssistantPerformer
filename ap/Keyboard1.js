@@ -220,7 +220,7 @@ _AP.keyboard1 = (function()
     // b) assumes that RealTime messages will not interrupt the messages being received.    
     handleMIDIInputEvent = function(msg)
     {
-    	var inputEvent, command, inputPressure,
+    	var inputEvent, command,
     		CMD = _AP.constants.COMMAND;    	
 
     	// The returned object is either empty, or has .data and .receivedTime attributes,
@@ -278,19 +278,19 @@ _AP.keyboard1 = (function()
     		return inputEvent;
     	}
 
-    	// increment keyData.seq.index until all keyData.seqs are >= currentMsPosIndex
+    	// increment noteInfos.seq.index until all noteInfos.seqs are >= currentMsPosIndex
     	function advanceCurrentKeyIndicesTo(currentMsPosIndex)
     	{
-    		var i, keyData, seq;
+    		var i, noteInfos, seq;
 
     		for(i = 0; i < noteInfoss.length; ++i)
     		{
-    			keyData = noteInfoss[i];
-    			if(keyData.seqs !== undefined) // some noteInfoss may not have seqs...
+    			noteInfos = noteInfoss[i];
+    			if(noteInfos.seqs !== undefined) // some noteInfoss may not have seqs...
     			{
-    				while(keyData.seqs.index > keyData.seqs.length)
+    				while(noteInfos.seqs.index > noteInfos.seqs.length)
     				{
-    					seq = keyData.seqs[keyData.seqs.index];
+    					seq = noteInfos.seqs[noteInfos.seqs.index];
     					if(seq.chordIndex >= currentMsPosIndex)
     					{
     						break;
@@ -299,7 +299,7 @@ _AP.keyboard1 = (function()
     					{
     						seq.doNoteOff(); // stops according to the inputControls set in the seq's constructor
     					}
-    					keyData.seqs.index++;
+    					noteInfos.seqs.index++;
     				}
     			}
     		}
@@ -307,13 +307,13 @@ _AP.keyboard1 = (function()
 
     	function handleNoteOff(key)
     	{
-    		var keyIndex = key - keyRange.bottomKey, keyData, seq,
+    		var keyIndex = key - keyRange.bottomKey, noteInfos, seq,
 			nextChordIndex;
 
     		if(key >= keyRange.bottomKey && key <= keyRange.topKey)
     		{
-    			keyData = noteInfoss[keyIndex]; // This is the same object as for the corresponding noteOn.
-				seq = keyData.seqs[keyData.seqs.index]; // (the key's currently playing seq).
+    			noteInfos = noteInfoss[keyIndex]; // This is the same object as for the corresponding noteOn.
+				seq = noteInfos.seqs[noteInfos.seqs.index]; // (the key's currently playing seq).
     			if(seq !== undefined && seq.triggeredOn)// will be false if the key was pressed prematurely;
     			{
     				// stop() is called to stop the performance when hasCompleted is true for all the TrackWorkers.
@@ -336,14 +336,14 @@ _AP.keyboard1 = (function()
 
     	function handleNoteOn(key, velocity)
     	{
-    		var keyIndex = key - keyRange.bottomKey, keyData, chordIndex, seq;
+    		var keyIndex = key - keyRange.bottomKey, noteInfos, chordIndex, seq;
 
     		if(key >= keyRange.bottomKey && key <= keyRange.topKey)
     		{
-    			keyData = noteInfoss[keyIndex];
-    			if(keyData.seqs.length > keyData.seqs.index) // some noteInfoss may not have seqs...
+    			noteInfos = noteInfoss[keyIndex];
+    			if(noteInfos.seqs.length > noteInfos.seqs.index) // some noteInfoss may not have seqs...
     			{
-    				seq = keyData.seqs[keyData.seqs.index];
+    				seq = noteInfos.seqs[noteInfos.seqs.index];
     				if(seq !== undefined)
     				{
     					chordIndex = seq.chordIndex;
@@ -354,7 +354,7 @@ _AP.keyboard1 = (function()
     							currentMsPosIndex++;
     							reportMsPositionInScore(allSeqMsPositions[currentMsPosIndex]);
     							advanceCurrentKeyIndicesTo(currentMsPosIndex); // see above
-    							seq = keyData.seqs[keyData.seqs.index];
+    							seq = noteInfos.seqs[noteInfos.seqs.index];
     						}
     						// Start playing the seq using the inputControls set in its constructor.
     						console.log("velocity=" + velocity.toString(10));
@@ -581,35 +581,6 @@ _AP.keyboard1 = (function()
 				}
 			}
 
-			// Sets chordIndexPerInputTrack to contain the first chordIndex in each inputTrack's inputObjects
-			// at or after startMarkerMsPosInScore and before endMarkerMsPosInScore.
-			// If there is no such chord in a track, the index is set to -1.
-			function initChordIndexPerInputTrack(chordIndexPerInputTrack, inputTracks, startMarkerMsPosInScore, endMarkerMsPosInScore)
-			{
-				var i, j, initialChordIndex, inputObjects, inputObject;
-
-				chordIndexPerInputTrack.length = 0;
-
-				for(i = 0; i < inputTracks.length; i++)
-				{
-					inputObjects = inputTracks[i].inputObjects;
-					initialChordIndex = -1; // default, when no chord in range.
-					for(j = 0; j < inputObjects.length; j++)
-					{
-						inputObject = inputObjects[j];
-						if(inputObject instanceof _AP.inputChord.InputChord
-						&& inputObject.msPositionInScore >= startMarkerMsPosInScore
-						&& inputObject.msPositionInScore < endMarkerMsPosInScore)
-						{
-							initialChordIndex = j;
-							break;
-						}
-
-					}
-					chordIndexPerInputTrack.push(initialChordIndex);
-				}
-			}
-
 			// Called by both the following functions.
 			// Returns an object having the attributes trackIndex, chordIndex, noteOnSeqPosition and noteOffSeqPosition.
 			// trackIndex and chordIndex, are the location of the chord in the inputTracks, whereby
@@ -766,35 +737,32 @@ _AP.keyboard1 = (function()
 				}
 
 				// Appends noteInfo objects to each key's noteInfos array.
-				// noteInfo.inputControls // compulsory. The note-level inputControls (Can be overridden by lower level inputControls.)
-				// noteInfo.onSeq: Can be undefined. The seq to play when a noteOn arrives.
-				// noteInfo.offSeq: Can be undefined. The seq to play when a noteOff arrives.
-				//      		Each seq is an array of trks (that are initialised with clones of midiChords and pointers to midiRests).E
-				//              Each seq may have an inputControls attribute that overrides the noteInfo.inputControls.
-				// noteInfo.onTrkOffs: Can be undefined. An array of trkOff objects.
-				//                      Each trkOff object has trackIndex and msPosition attributes that identify a trk.
-				//                      Each trkOff may have an inputControls attribute that overrides the noteInfo.inputControls.
-				// noteInfo.pressures: Can be undefined.  An array of pressure objects identifying tracks that will be sent pressure info.
-				//                      Each pressure object has trackIndex attribute that identifies a track.
-				//                      Each pressure object may have an inputControls attribute that overrides the noteInfo.inputControls.
-				// noteInfo.offTrkOffs: Can be undefined. An array of trkOff objects (see noteInfo.onTrkOffs above).
 				function setNoteInfoss(noteInfoss, trackWorkers, inputChord, inputChordIndices, chordInputControls, bottomKey)
 				{
-					var i, inputNotes, inputNote, keyData, seq, noteInputControls, seqInputControls;
+					var i, inputNotes, nInputNotes, inputNote, noteInfo, noteInfos;
 
-					inputNotes = inputChord.inputNotes;
-					for(i = 0; i < inputNotes.length; ++i)
+					// Returns a noteInfo object which may have the following attributes:
+					// noteInfo.inputControls // compulsory. The note-level inputControls (Can be overridden by lower level inputControls.)
+					// noteInfo.onSeq: Can be undefined. The seq to play when a noteOn arrives.
+					// noteInfo.offSeq: Can be undefined. The seq to play when a noteOff arrives.
+					//      		Each seq is an array of trks (that are initialised with clones of midiChords and pointers to midiRests).E
+					//              Each seq may have an inputControls attribute that overrides the noteInfo.inputControls.
+					// noteInfo.onTrkOffs: Can be undefined. An array of trkOff objects.
+					//                      Each trkOff object has trackIndex and msPosition attributes that identify a trk.
+					//                      Each trkOff may have an inputControls attribute that overrides the noteInfo.inputControls.
+					// noteInfo.pressures: Can be undefined.  An array of pressure objects identifying tracks that will be sent pressure info.
+					//                      Each pressure object has trackIndex attribute that identifies a track.
+					//                      Each pressure object may have an inputControls attribute that overrides the noteInfo.inputControls.
+					// noteInfo.offTrkOffs: Can be undefined. An array of trkOff objects (see noteInfo.onTrkOffs above).
+					function getNoteInfo(inputNote, chordInputControls)
 					{
-						inputNote = inputNotes[i];
+						var i, seqMsPosition, seq, pressure, noteInfo = {}, noteInputControls;
 
 						// inputNote can have the following fields (all except .notatedKey can be undefined)
-						//	.inputControls
 						//	.notatedKey
 						//	.noteOn
 						//	.pressures
 						//	.noteOff
-						console.assert(inputNote.notatedKey !== undefined, "Error: every inputNote must have a notatedKey.");
-
 						if(inputNote.inputControls !== undefined)
 						{
 							noteInputControls = inputNote.inputControls;
@@ -804,19 +772,17 @@ _AP.keyboard1 = (function()
 							noteInputControls = chordInputControls;
 						}
 
-						// The keyData...index fields have all been initialized to 0.
-						// Seqs are being created in chronological order, so can push each seq's trks into the trackWorkers.
-						keyData = noteInfoss[inputNote.notatedKey - bottomKey];
 						if(inputNote.noteOn !== undefined)
 						{
 							if(inputNote.noteOn.seq !== undefined)
 							{
-								if(inputNote.noteOn.seq.inputControls === undefined)
+								seqMsPosition = inputChord.msPositionInScore;
+								seq = inputNote.noteOn.seq;
+								if(seq.inputControls === undefined)
 								{
-									inputNote.noteOn.seq.inputControls = noteInputControls;
+									seq.inputControls = noteInputControls;
 								}
-								seq = new _AP.seq.Seq(inputChord.msPositionInScore, inputChordIndices.chordIndex, inputChordIndices.nextChordIndex, inputNote.noteOn.seq, trackWorkers);
-								keyData.seqs.push(seq);
+								noteInfo.onSeq = new _AP.seq.Seq(seqMsPosition, inputChordIndices.chordIndex, inputChordIndices.nextChordIndex, seq, trackWorkers);
 							}
 							if(inputNote.noteOn.trkOffs !== undefined)
 							{
@@ -824,27 +790,32 @@ _AP.keyboard1 = (function()
 								{
 									inputNote.noteOn.trkOffs.inputControls = noteInputControls;
 								}
-								keyData.onTrkOffss.push(inputNote.noteOn.trkOffs);
+								noteInfo.onTrkOffs = inputNote.noteOn.trkOffs;
 							}
 						}
-						if(inputNote.pressureTracks != undefined)
+						if(inputNote.pressures !== undefined)
 						{
-							if(inputNote.pressureTracks.inputControls === undefined)
+							for(i = 0; i < inputNote.pressures.length; ++i)
 							{
-								inputNote.pressureTracks.inputControls = noteInputControls;
+								pressure = inputNote.pressures[i];
+								if(pressure.inputControls === undefined)
+								{
+									pressure.inputControls = noteInputControls;
+								}
 							}
-							keyData.pressureTrackss.push(inputNote.pressureTracks);
+							noteInfo.pressures = inputNote.pressures;
 						}
 						if(inputNote.noteOff !== undefined)
 						{
 							if(inputNote.noteOff.seq !== undefined)
 							{
-								if(inputNote.noteOff.seq.inputControls === undefined)
+								seq = inputNote.noteOff.seq;
+								if(seq.inputControls === undefined)
 								{
-									inputNote.noteOff.seq.inputControls = noteInputControls;
+									seq.inputControls = noteInputControls;
 								}
-								seq = new _AP.seq.Seq(inputChord.msPositionInScore + inputChord.msDurationInScore, inputChordIndices.chordIndex, inputChordIndices.nextChordIndex, inputNote.noteOff.seq, seqInputControls, trackWorkers);
-								keyData.seqs.push(seq);
+								seqMsPosition = inputChord.msPositionInScore + inputChord.msDurationInScore;
+								noteInfo.offSeq = new _AP.seq.Seq(seqMsPosition, inputChordIndices.chordIndex, inputChordIndices.nextChordIndex, seq, trackWorkers);
 							}
 							if(inputNote.noteOff.trkOffs !== undefined)
 							{
@@ -852,9 +823,27 @@ _AP.keyboard1 = (function()
 								{
 									inputNote.noteOff.trkOffs.inputControls = noteInputControls;
 								}
-								keyData.offTrkOffss.push(inputNote.noteOff.trkOffs);
+								noteInfo.offTrkOffs = inputNote.noteOff.trkOffs;
 							}
 						}
+						return noteInfo;
+					}
+
+					console.assert(inputChord.inputNotes !== undefined && inputChord.inputNotes.length > 0);
+					console.assert(chordInputControls !== undefined);
+					
+					inputNotes = inputChord.inputNotes;
+					nInputNotes = inputNotes.length;
+					for(i = 0; i < nInputNotes; ++i)
+					{
+						inputNote = inputNotes[i];
+
+						console.assert(inputNote.notatedKey !== undefined, "Error: every inputNote must have a notatedKey.");
+
+						noteInfo = getNoteInfo(inputNote, chordInputControls);
+						// The noteInfos.index fields have all been initialized to 0.
+						noteInfos = noteInfoss[inputNote.notatedKey - bottomKey];
+						noteInfos.push(noteInfo);
 					}
 				}
 

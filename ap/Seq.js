@@ -48,7 +48,7 @@ _AP.seq = (function()
 	//   seq.workersPerTrk -- An array containing the trackIndex (in the trackWorkers array) of each trackWorker in the Seq.
 	Seq = function(seqPositionInScore, chordIndex, nextChordIndex, seqTrks, trackWorkers)
 	{
-		var trkData, inputControls = seqTrks.inputControls;
+		var trkData;
 
 		if(!(this instanceof Seq))
 		{
@@ -57,7 +57,6 @@ _AP.seq = (function()
 
 		console.assert(chordIndex !== undefined, "chordIndex must be defined.");
 		console.assert(nextChordIndex !== undefined, "nextChordIndex must be defined.");
-		console.assert(inputControls !== undefined, "inputControls must be defined.");
 
 		// Returns an object having the following attributes:
 		//   momentsPerTrk: an array containing one array per Trk in the Seq.
@@ -68,14 +67,16 @@ _AP.seq = (function()
 		//   inputControlsPerTrk: null or an inputControls object (per Trk).
 		function getTrkData(seqTrks, seqPositionInScore)
 		{
-			var i, j, k, trkMoments, moment, trkMoment, trkMidiObjects, midiObject, midiObjectMsPosInSeq,
+			var i, j, k, trk, nTrkMidiObjects, trkMoments, moment, trkMoment, trkMidiObjects, midiObject, midiObjectMsPosInSeq,
 			momsPerTrk = [], wkrsPerTrack = [], inputCtrlsPerTrk = [];
 
 			for(i = 0; i < seqTrks.length; ++i)
 			{
-				trkMidiObjects = seqTrks[i].midiObjects;
+				trk = seqTrks[i];
+				trkMidiObjects = trk.midiObjects;
+				nTrkMidiObjects = trkMidiObjects.length;
 				trkMoments = [];
-				for(j = 0; j < trkMidiObjects.length; ++j)
+				for(j = 0; j < nTrkMidiObjects; ++j)
 				{
 					midiObject = trkMidiObjects[j];
 					midiObjectMsPosInSeq = midiObject.msPositionInScore - seqPositionInScore;
@@ -101,22 +102,15 @@ _AP.seq = (function()
 						}
 					}
 				}
-				if(trkMidiObjects.inputControls !== undefined)
-				{
-					inputCtrlsPerTrk.push(trkMidiObjects.inputControls);
-				}
-				else
-				{
-					inputCtrlsPerTrk.push(null);
-				}
 				momsPerTrk.push(trkMoments);
-				wkrsPerTrack.push(trkMidiObjects.trackIndex);
+				wkrsPerTrack.push(trk.trackIndex);
+				inputCtrlsPerTrk.push(trk.inputControls); // can be undefined
 			}
 			return { momentsPerTrk: momsPerTrk, workersPerTrk: wkrsPerTrack, inputControlsPerTrk: inputCtrlsPerTrk };
 		}
 
 		// Seqs are being created in chronological order, so can push the seq's trks into the trackWorkers.
-		function setWorkers(trackWorkers, trkData, inputControls)
+		function setWorkers(trackWorkers, trkData, seqInputControls)
 		{
 			var i, workerIndex, momsPerTrk,
 			momentsPerTrk = trkData.momentsPerTrk,
@@ -128,14 +122,14 @@ _AP.seq = (function()
 			{
 				workerIndex = workersPerTrk[i];
 				momsPerTrk = momentsPerTrk[i];
-				if(inputControlsPerTrk[i] !== null)
+				if(inputControlsPerTrk[i] !== undefined)
 				{
 					trkInputControls = inputControlsPerTrk[i];
 				}
 				else
 				{
-					trkInputControls = inputControls;
-				}
+					trkInputControls = seqInputControls; // can be undefined
+				}				
 				trackWorkers[workerIndex].hasCompleted = false;
 				trackWorkers[workerIndex].postMessage({ action: "pushTrk", moments: momsPerTrk, inputControls: trkInputControls });
 			}
@@ -144,7 +138,7 @@ _AP.seq = (function()
 
 		trkData = getTrkData(seqTrks, seqPositionInScore);
 
-		setWorkers(trackWorkers, trkData, inputControls);
+		setWorkers(trackWorkers, trkData, seqTrks.inputControls);
 
 		Object.defineProperty(this, "chordIndex", { value: chordIndex, writable: false });
 		Object.defineProperty(this, "nextChordIndex", { value: nextChordIndex, writable: false });
