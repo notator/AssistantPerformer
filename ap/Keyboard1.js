@@ -475,22 +475,64 @@ _AP.keyboard1 = (function()
 			nOutputTracks = outputTracks.length,
 			nTracks = nOutputTracks + inputTracks.length,
 			chordIndexPerInputTrack = [],
+			outputTrackMidiChannels = [],
 			inputTracksInputControls = [];
 
-			function initTrackWorkers(trackWorkers, nOutputTracks)
+			function initOutputTrackMidiChannels(outputTrackMidiChannels, outputTracks)
+			{
+				var i;
+
+				outputTrackMidiChannels.length = [];
+
+				for(i = 0; i < outputTracks.length; i++)
+				{
+					outputTrackMidiChannels.push(outputTracks[i].midiChannel);
+				}
+			}
+
+			// Sets chordIndexPerInputTrack to contain the first chordIndex in each inputTrack's inputObjects
+			// at or after startMarkerMsPosInScore and before endMarkerMsPosInScore.
+			// If there is no such chord in a track, the index is set to -1.
+			function initChordIndexPerInputTrack(chordIndexPerInputTrack, inputTracks, startMarkerMsPosInScore, endMarkerMsPosInScore)
+			{
+				var i, j, initialChordIndex, inputObjects, inputObject;
+
+				chordIndexPerInputTrack.length = 0;
+
+				for(i = 0; i < inputTracks.length; i++)
+				{
+					inputObjects = inputTracks[i].inputObjects;
+					initialChordIndex = -1; // default, when no chord in range.
+					for(j = 0; j < inputObjects.length; j++)
+					{
+						inputObject = inputObjects[j];
+						if(inputObject instanceof _AP.inputChord.InputChord
+						&& inputObject.msPositionInScore >= startMarkerMsPosInScore
+						&& inputObject.msPositionInScore < endMarkerMsPosInScore)
+						{
+							initialChordIndex = j;
+							break;
+						}
+
+					}
+					chordIndexPerInputTrack.push(initialChordIndex);
+				}
+			}
+
+			function initTrackWorkers(trackWorkers, outputTrackMidiChannels)
 			{
 				var i, worker;
 
 				trackWorkers.length = 0;
 
-				for(i = 0; i < nOutputTracks; i++)
+				for(i = 0; i < outputTrackMidiChannels.length; i++)
 				{
 					worker = new window.Worker("ap/TrackWorker.js");
 					worker.addEventListener("message", handleTrackMessage);
-					worker.postMessage({ action: "init", trackIndex: i });
+					worker.postMessage({ action: "init", trackIndex: i, channelIndex: outputTrackMidiChannels[i] });
 					// worker.hasCompleted is set to false when a trk is added (in the Seq constructor),
 					// and back to true when the worker says that it has completed its last trk.
-					worker.hasCompleted = true; 
+					worker.hasCompleted = true;
 					trackWorkers.push(worker);
 				}
 			}
@@ -861,8 +903,9 @@ _AP.keyboard1 = (function()
 			}
 
 			/*** begin initPlay() ***/
+			initOutputTrackMidiChannels(outputTrackMidiChannels, outputTracks);
 
-			initTrackWorkers(trackWorkers, nOutputTracks); // must be done before creating the Seqs
+			initTrackWorkers(trackWorkers, outputTrackMidiChannels); // must be done before creating the Seqs
 
 			initCurrentInputTracksInputControls(inputTracksInputControls, inputTracks, nOutputTracks, nTracks, startMarkerMsPosInScore);
 
