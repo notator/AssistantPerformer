@@ -13,13 +13,12 @@
 *
 * Functions (in prototype): 
 *
-*        // Called when the Seqs have been sorted into chronological order.
-*        setWorkers()
 * 
-*        // Called when a noteOn is sent and this is the current Seq.       
-*        play()
+*        // Called when a noteOn or noteOff starts this Seq.
+*        // noteOff calls this function with no argument (undefined performedVelocity)      
+*        start(performedVelocity)
 * 
-*        // Called when a noteOff is sent while the Seq is playing.
+*        // Called when a noteOn or noteOff stops this Seq.
 *        stop()  
 *  
 *        // sets the speed at which this Seq plays.     
@@ -41,14 +40,12 @@ _AP.seq = (function()
 	// Used publicly at runtime: 
 	//   seq.chordIndex -- The index in allSeqMsPositions of the seq's noteOn position.
 	//   seq.nextChordIndex -- The index in allSeqMsPositions of the following chord in any inputTrack.
+	//   seq.trks -- An array of trk.
 	//   seq.triggeredOn   -- Is set to true when the seq is triggered On. Default is false.
 	//   seq.triggeredOff  -- Is set to true when the seq is triggered Off. Default is false.
-	// Used privately (by the prototype functions) at runtime: 
-	//   seq.trackWorkers -- The array of all the trackWorkers, one per output track in the score.
-	//   seq.workersPerTrk -- An array containing the trackIndex (in the trackWorkers array) of each trackWorker in the Seq.
 	Seq = function(seqPositionInScore, chordIndex, nextChordIndex, seqTrks, trackWorkers)
 	{
-		var trkData;
+		var workers;
 
 		if(!(this instanceof Seq))
 		{
@@ -58,31 +55,28 @@ _AP.seq = (function()
 		console.assert(chordIndex !== undefined, "chordIndex must be defined.");
 		console.assert(nextChordIndex !== undefined, "nextChordIndex must be defined.");
 
-		// Returns an object having the following attributes:
-		//   momentsPerTrk: an array containing one array per Trk in the Seq.
-		//		Each contained array contains the trk's moments.
-		//		Each moment has a messages[] attribute -- an array containing midiMessages that are to be sent "synchronously",
-		//		and an msPositionInSeq attribute.
-		//   workersPerTrk: an array containing the trackIndex of each trackWorker (per Trk).
-		//   inputControlsPerTrk: null or an inputControls object (per Trk).
-		function getTrkData(seqTrks, seqPositionInScore)
+		// Pushes trks into their respective worker's trk array and returns an array of worker.
+		// The track parameters pushed are:
+		//  msPosition
+		//	moments // an array of moment. Each moment has a messages[] attribute and an msPositionInSeq attribute.
+		//  inputControls
+		function setAndGetWorkers(seqTrks, seqPositionInScore, trackWorkers)
 		{
-			var i, j, k, trk, nTrkMidiObjects, trkMoments, moment, trkMoment, trkMidiObjects, midiObject, midiObjectMsPosInSeq,
-			momsPerTrk = [], wkrsPerTrack = [], inputCtrlsPerTrk = [];
+			var i, nSeqTrks = seqTrks.length, trkDef, trkMsPos, trkMoments, trkInputControls, trkWorker, workers = [];
 
-			for(i = 0; i < seqTrks.length; ++i)
+			function getMoments(trkMidiObjects)
 			{
-				trk = seqTrks[i];
-				trkMidiObjects = trk.midiObjects;
+				var i, j, nTrkMidiObjects, trkMoments, moment, trkMoment, midiObject, midiObjectMsPosInSeq;
+
 				nTrkMidiObjects = trkMidiObjects.length;
 				trkMoments = [];
-				for(j = 0; j < nTrkMidiObjects; ++j)
+				for(i = 0; i < nTrkMidiObjects; ++i)
 				{
-					midiObject = trkMidiObjects[j];
+					midiObject = trkMidiObjects[i];
 					midiObjectMsPosInSeq = midiObject.msPositionInScore - seqPositionInScore;
-					for(k = 0; k < midiObject.moments.length; ++k)
+					for(j = 0; j < midiObject.moments.length; ++j)
 					{
-						moment = midiObject.moments[k];
+						moment = midiObject.moments[j];
 						// midiRests have a single moment, but its messages array can be empty.
 						if(moment.messages.length > 0)
 						{
@@ -102,49 +96,31 @@ _AP.seq = (function()
 						}
 					}
 				}
-				momsPerTrk.push(trkMoments);
-				wkrsPerTrack.push(trk.trackIndex);
-				inputCtrlsPerTrk.push(trk.inputControls); // can be undefined
+				return trkMoments;
 			}
-			return { momentsPerTrk: momsPerTrk, workersPerTrk: wkrsPerTrack, inputControlsPerTrk: inputCtrlsPerTrk };
-		}
 
-		// Seqs are being created in chronological order, so can push the seq's trks into the trackWorkers.
-		function setWorkers(trackWorkers, trkData, seqInputControls)
-		{
-			var i, workerIndex, momsPerTrk,
-			momentsPerTrk = trkData.momentsPerTrk,
-			workersPerTrk = trkData.workersPerTrk,
-			inputControlsPerTrk = trkData.inputControlsPerTrk,
-			trkInputControls;
-
-			for(i = 0; i < momentsPerTrk.length; ++i)
+			for(i = 0; i < nSeqTrks; ++i)
 			{
-				workerIndex = workersPerTrk[i];
-				momsPerTrk = momentsPerTrk[i];
-				if(inputControlsPerTrk[i] !== undefined)
-				{
-					trkInputControls = inputControlsPerTrk[i];
-				}
-				else
-				{
-					trkInputControls = seqInputControls; // can be undefined
-				}				
-				trackWorkers[workerIndex].hasCompleted = false;
-				trackWorkers[workerIndex].postMessage({ action: "pushTrk", moments: momsPerTrk, inputControls: trkInputControls });
+				trkDef = seqTrks[i]; 
+
+				trkMsPos = seqPositionInScore + trkDef.msOffset;
+				trkMoments = getMoments(trkDef.midiObjects);
+				trkInputControls = trkDef.inputControls;
+
+				trkWorker = trackWorkers[trkDef.trackIndex];
+
+				trkWorker.postMessage({ action: "pushTrk", msPosition: trkMsPos, moments: trkMoments, inputControls: trkInputControls });
+
+				workers.push(trkWorker);
 			}
-			trkData.momentsPerTrk = null; // can be garbage collected
+			return workers;
 		}
 
-		trkData = getTrkData(seqTrks, seqPositionInScore);
-
-		setWorkers(trackWorkers, trkData, seqTrks.inputControls);
+		workers = setAndGetWorkers(seqTrks, seqPositionInScore, trackWorkers);
 
 		Object.defineProperty(this, "chordIndex", { value: chordIndex, writable: false });
 		Object.defineProperty(this, "nextChordIndex", { value: nextChordIndex, writable: false });
-		Object.defineProperty(this, "trackWorkers", { value: trackWorkers, writable: false });
-		Object.defineProperty(this, "workersPerTrk", { value: trkData.workersPerTrk, writable: false });
-
+		Object.defineProperty(this, "workers", { value: workers, writable: false });
 		Object.defineProperty(this, "triggeredOn", { value: false, writable: true });
 		Object.defineProperty(this, "triggeredOff", { value: false, writable: true });
 	},
@@ -155,60 +131,48 @@ _AP.seq = (function()
 	};
 	// end var
 
-	// Called when a noteOn is sent and this is the current Seq.
-	Seq.prototype.doNoteOn = function(performedVelocity)
+	// Called when a noteOn or noteOff starts this Seq.
+	// noteOff calls this function with no argument (undefined performedVelocity)
+	Seq.prototype.start = function(performedVelocity)
 	{
-		var trackWorkers = this.trackWorkers,
-			workersPerTrk = this.workersPerTrk;
+		var i, worker, nWorkers = this.workers.length;
 
-		function postStopImmediately(trackWorkers, workersPerTrk)
+		for(i = 0; i < nWorkers; ++i)
 		{
-			var i;
-			for(i = 0; i < workersPerTrk.length; ++i)
-			{
-				trackWorkers[workersPerTrk[i]].postMessage({ action: "stopImmediately" });
-			}
+			worker = this.workers[i];
+			worker.postMessage({ action: "stopImmediately" });
+			// Maybe call
+			//    setTimeout(...), 2);
+			// to give the worker more time to stop.
+			// (trackWorkers throw exceptions if they are busy when the following function is called.)
+			worker.postMessage({ action: "start", velocity: performedVelocity }); // plays according to the inputControls set in the seq's constructor
+
+			this.triggeredOn = true; // triggeredOn is used when shunting.
 		}
-
-		function postPlay(trackWorkers, workersPerTrk, performedVelocity)
-		{
-			var i;
-			for(i = 0; i < workersPerTrk.length; ++i)
-			{
-				trackWorkers[workersPerTrk[i]].postMessage({ action: "doNoteOn", velocity: performedVelocity }); // plays according to the inputControls set in the seq's constructor
-			}
-		}
-
-		postStopImmediately(trackWorkers, workersPerTrk);
-
-		// Maybe call
-		//    setTimeout(postPlay(trackWorkers, workersPerTrk), 2);
-		// to give the worker more time to stop.
-		// (trackWorkers throw exceptions if they are busy when this function is called.)
-		postPlay(trackWorkers, workersPerTrk, performedVelocity);
-
-		this.triggeredOn = true; // triggeredOn is used when shunting.
 	};
 
-	// Called when a noteOff is sent while the Seq is playing.
-	Seq.prototype.doNoteOff = function()
+	// Called when a noteOn or noteOff stops this seq.
+	Seq.prototype.stop = function()
 	{
-		var i, workersPerTrk = this.workersPerTrk;
+		var i, worker, nWorkers = this.workers.length;
 
-		for(i = 0; i < workersPerTrk.length; ++i)
+		for(i = 0; i < nWorkers; ++i)
 		{
-			this.trackWorkers[workersPerTrk[i]].postMessage({ action: "doNoteOff" }); // stops according to the inputControls set in the seq's constructor
+			worker = this.workers[i];
+			worker.postMessage({ action: "stop" }); // stops according to the inputControls set in the seq's constructor
 		}
+
 		this.triggeredOff = true; // triggeredOff is used when shunting.
 	};
 
 	Seq.prototype.setSpeedFactor = function(factor)
 	{
-		var i, workersPerTrk = this.workersPerTrk;
+		var i, worker, nWorkers = this.workers.length;
 
-		for(i = 0; i < workersPerTrk.length; ++i)
+		for(i = 0; i < nWorkers; ++i)
 		{
-			this.trackWorkers[workersPerTrk[i]].postMessage({ action: "setSpeedFactor", factor: factor });
+			worker = this.workers[i];
+			worker.postMessage({ action: "setSpeedFactor", factor: factor });
 		}
 	};
 

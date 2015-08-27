@@ -65,17 +65,6 @@ _AP.inputChord = (function()
     		var i, nInputNoteDefs = inputNoteDefs.length, inputNoteDef,
 				inputNote, inputNotes = [];
 
-    		function trackIndices(trackIndexPerMidiChannel, midiChannelIndices)
-    		{
-    			var i, indices = [], nIndices = midiChannelIndices.length;
-
-    			for(i = 0; i < nIndices; ++i)
-    			{
-    				indices.push(trackIndexPerMidiChannel[midiChannelIndices[i]]);
-    			}
-    			return indices;
-    		}
-
     		// The noteInfo argument can have the following fields:
     		//      noteInfo.trkOns -- undefined or an array of trkOn with a (possibly undefined) InputControls field.
     		//		noteInfo.trkOffs -- undefined or an array of trkOff with a (possibly undefined) InputControls field.
@@ -197,6 +186,31 @@ _AP.inputChord = (function()
     			return rval;
     		}
 
+    		function getPressures(pressures, trackIndexPerMidiChannel)
+    		{
+    			var i, nPressures = pressures.length, pressure, pressr, pressrs = [];
+
+    			if(pressures.inputControls !== undefined)
+    			{
+    				pressrs.inputControls = pressures.inputControls;
+    			}
+    			
+    			for(i = 0; i < nPressures; ++i)
+    			{
+    				pressr = {};
+    				pressure = pressures[i];
+    				if(pressure.inputControls !== undefined)
+    				{
+    					pressr.inputControls = pressure.inputControls;
+    				}
+    				pressr.trackIndex = trackIndexPerMidiChannel[pressure.midiChannel];
+
+    				pressrs.push(pressr);
+    			}
+
+    			return pressrs;
+    		}
+
     		for(i = 0; i < nInputNoteDefs; ++i)
     		{
     			inputNoteDef = inputNoteDefs[i];
@@ -212,7 +226,7 @@ _AP.inputChord = (function()
     			}
     			if(inputNoteDef.pressures !== undefined)
     			{
-    				inputNote.pressures = inputNoteDef.pressures;
+    				inputNote.pressures = getPressures(inputNoteDef.pressures, outputTracks.trackIndexPerMidiChannel);
     			}
     			if(inputNoteDef.noteOff !== undefined)
     			{

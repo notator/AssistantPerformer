@@ -404,8 +404,9 @@ eventHandler = function(e)
 			break;
 		case "pushTrk":
 			// msg (=trk) has the following attributes:
-			//    msg.moments;
-			//    msg.inputControls; inputControls is an object containing only the necessary fields (no "off" values).
+			//    msg.msPosition
+			//    msg.moments
+			//    msg.inputControls
 			allTrks.push(msg);
 			if(msg.inputControls.noteOff === "holdLast")
 			{

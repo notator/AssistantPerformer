@@ -745,18 +745,85 @@ _AP.keyboard1 = (function()
 					// noteInfo.inputControls // compulsory. The note-level inputControls (Can be overridden by lower level inputControls.)
 					// noteInfo.onSeq: Can be undefined. The seq to play when a noteOn arrives.
 					// noteInfo.offSeq: Can be undefined. The seq to play when a noteOff arrives.
-					//      		Each seq is an array of trks (that are initialised with clones of midiChords and pointers to midiRests).E
-					//              Each seq may have an inputControls attribute that overrides the noteInfo.inputControls.
+					//                  See Seq.js for the attributes defined for a Seq.
 					// noteInfo.onTrkOffs: Can be undefined. An array of trkOff objects.
-					//                      Each trkOff object has trackIndex and msPosition attributes that identify a trk.
-					//                      Each trkOff may have an inputControls attribute that overrides the noteInfo.inputControls.
+					//                      Each trkOff object has worker and msPosition attributes that identify the trk to be turned off.
+					//                      Each trkOff must have an inputControls attribute that has an "trkOff" option.
 					// noteInfo.pressures: Can be undefined.  An array of pressure objects identifying tracks that will be sent pressure info.
-					//                      Each pressure object has trackIndex attribute that identifies a track.
-					//                      Each pressure object may have an inputControls attribute that overrides the noteInfo.inputControls.
+					//                      Each pressure object has a worker attribute that identifies the track to be sent pressure info.
+					//                      Each pressure object must have an inputControls attribute that has a "pressure" option.
 					// noteInfo.offTrkOffs: Can be undefined. An array of trkOff objects (see noteInfo.onTrkOffs above).
-					function getNoteInfo(inputNote, chordInputControls)
+					function getNoteInfo(inputNote, chordInputControls, trackWorkers)
 					{
 						var i, seqMsPosition, seq, pressure, noteInfo = {};
+
+						function setTrkOffInputControls(trkOffs, inputNoteInputControls)
+						{
+							var i, trkOff, nTrkOffs = trkOffs.length;
+
+							if(trkOffs.inputControls === undefined)
+							{
+								trkOffs.inputControls = inputNoteInputControls;
+							}
+
+							for(i = 0; i < nTrkOffs; ++i)
+							{
+								trkOff = trkOffs[i];
+								if(trkOff.inputControls === undefined)
+								{
+									trkOff.inputControls = trkOffs.inputControls;
+								}
+							}
+						}
+
+						function getTrkOffs(trkOffsDef, trackWorkers)
+						{
+							var i, trkOffDef, nTrkOffsDef = trkOffsDef.length, trkOff, trkOffs = [];
+
+							for(i = 0; i < nTrkOffsDef; ++i)
+							{
+								trkOffDef = trkOffsDef[i];
+
+								trkOff = {};
+								trkOff.msPosition = trkOffDef.msPosition;
+								trkOff.worker = trackWorkers[trkOffDef.trackIndex];
+								trkOff.inputControls = trkOffDef.inputControls;
+
+								trkOffs.push(trkOff);
+							}
+							return trkOffs;
+						}
+
+						function getPressures(pressureDefs, trackWorkers, inputNoteInputControls)
+						{
+							var i, pressureDef, nPressureDefs = pressureDefs.length, pressure, pressures = [], defaultInputControls = inputNoteInputControls;
+
+							if(pressureDefs.inputControls !== undefined)
+							{
+								defaultInputControls = pressureDefs.inputControls;
+							}
+
+							for(i = 0; i < nPressureDefs; ++i)
+							{
+								pressureDef = pressureDefs[i];
+
+								pressure = {};
+
+								pressure.worker = trackWorkers[pressureDef.trackIndex];
+
+								if(pressureDef.inputControls === undefined)
+								{
+									pressure.inputControls = defaultInputControls;
+								}
+								else
+								{
+									pressure.inputControls = pressureDef.inputControls;
+								}
+
+								pressures.push(pressure);
+							}
+							return pressures;							
+						}
 
 						// inputNote can have the following fields (all except .notatedKey can be undefined)
 						//	.notatedKey
@@ -782,28 +849,13 @@ _AP.keyboard1 = (function()
 							}
 							if(inputNote.noteOn.trkOffs !== undefined)
 							{
-								if(inputNote.noteOn.trkOffs.inputControls === undefined)
-								{
-									inputNote.noteOn.trkOffs.inputControls = inputNote.inputControls;
-								}
-								noteInfo.onTrkOffs = inputNote.noteOn.trkOffs;
+								setTrkOffInputControls(inputNote.noteOn.trkOffs, inputNote.inputControls);
+								noteInfo.onTrkOffs = getTrkOffs(inputNote.noteOn.trkOffs, trackWorkers);
 							}
 						}
 						if(inputNote.pressures !== undefined)
 						{
-							if(inputNote.pressures.inputControls === undefined)
-							{
-								inputNote.pressures.inputControls = inputNote.inputControls;
-							}
-							for(i = 0; i < inputNote.pressures.length; ++i)
-							{
-								pressure = inputNote.pressures[i];
-								if(pressure.inputControls === undefined)
-								{
-									pressure.inputControls = inputNote.pressures.inputControls;
-								}
-							}
-							noteInfo.pressures = inputNote.pressures;
+							noteInfo.pressures = getPressures(inputNote.pressures, trackWorkers, inputNote.inputControls);
 						}
 						if(inputNote.noteOff !== undefined)
 						{
@@ -819,11 +871,8 @@ _AP.keyboard1 = (function()
 							}
 							if(inputNote.noteOff.trkOffs !== undefined)
 							{
-								if(inputNote.noteOff.trkOffs.inputControls === undefined)
-								{
-									inputNote.noteOff.trkOffs.inputControls = inputNote.inputControls;
-								}
-								noteInfo.offTrkOffs = inputNote.noteOff.trkOffs;
+								setTrkOffInputControls(inputNote.noteOff.trkOffs, inputNote.inputControls);
+								noteInfo.offTrkOffs = getTrkOffs(inputNote.noteOff.trkOffs, trackWorkers);
 							}
 						}
 						return noteInfo;
@@ -840,7 +889,7 @@ _AP.keyboard1 = (function()
 
 						console.assert(inputNote.notatedKey !== undefined, "Error: every inputNote must have a notatedKey.");
 
-						noteInfo = getNoteInfo(inputNote, chordInputControls);
+						noteInfo = getNoteInfo(inputNote, chordInputControls, trackWorkers);
 						// The noteInfos.index fields have all been initialized to 0.
 						noteInfos = noteInfoss[inputNote.notatedKey - bottomKey];
 						noteInfos.push(noteInfo);
@@ -878,7 +927,7 @@ _AP.keyboard1 = (function()
 			/*** begin initPlay() ***/
 			initOutputTrackMidiChannels(outputTrackMidiChannels, outputTracks);
 
-			initTrackWorkers(trackWorkers, outputTrackMidiChannels); // must be done before creating the Seqs
+			initTrackWorkers(trackWorkers, outputTrackMidiChannels); // must be done before creating the noteInfos
 
 			initCurrentInputTracksInputControls(inputTracksInputControls, inputTracks, nOutputTracks, nTracks, startMarkerMsPosInScore);
 
