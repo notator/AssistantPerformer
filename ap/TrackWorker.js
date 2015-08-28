@@ -71,7 +71,7 @@ doNoteOff = function()
 {
 	"use strict";
 
-	var noteOffOption = currentTrk.inputControls.noteOff;
+	var noteOffOption = currentTrk.trkOptions.noteOff;
 
 	function setFade()
 	{
@@ -216,7 +216,7 @@ tick = function()
 	setTimeout(tick, delay);  // schedules the next tick.
 },
 
-// play the trk according to its inputControls (set in "pushTrk").
+// play the trk according to its trkOptions (set in "pushTrk").
 doNoteOn = function(velocity)
 {
 	"use strict";
@@ -283,12 +283,12 @@ doNoteOn = function(velocity)
 		stopNow = false;
 
 		currentTrk = allTrks[trkIndex++];
-		if(currentTrk.inputControls.noteOnVel !== undefined)
+		if(currentTrk.trkOptions.noteOnVel !== undefined)
 		{
-			setVelocityOption(currentTrk.inputControls.noteOnVel, currentTrk.inputControls.minVelocity, velocity);
+			setVelocityOption(currentTrk.trkOptions.noteOnVel, currentTrk.trkOptions.minVelocity, velocity);
 		}
 
-		holdOption = (currentTrk.inputControls.noteOff === "holdAll" || currentTrk.inputControls.noteOff === "holdLast");
+		holdOption = (currentTrk.trkOptions.noteOff === "holdAll" || currentTrk.trkOptions.noteOff === "holdLast");
 		stopHold = false;		
 
 		moments = currentTrk.moments;
@@ -406,13 +406,13 @@ eventHandler = function(e)
 			// msg (=trk) has the following attributes:
 			//    msg.msPosition
 			//    msg.moments
-			//    msg.inputControls
+			//    msg.trkOptions
 			allTrks.push(msg);
-			if(msg.inputControls.noteOff === "holdLast")
+			if(msg.trkOptions.noteOff === "holdLast")
 			{
 				removeFinalNoteOffMessages(msg);
 			}
-			if(msg.inputControls.noteOff === "holdAll")
+			if(msg.trkOptions.noteOff === "holdAll")
 			{
 				removeAllNoteOffMessages(msg);
 			}

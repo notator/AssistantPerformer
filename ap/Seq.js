@@ -9,7 +9,7 @@
 * The _AP.seq namespace containing:
 * 
 *        // Seq constructor
-*        Seq(seqPositionInScore, inputChordIndices, seqTrks, inputControls)
+*        Seq(seqPositionInScore, inputChordIndices, seqTrks, trkOptions)
 *
 * Functions (in prototype): 
 *
@@ -59,10 +59,10 @@ _AP.seq = (function()
 		// The track parameters pushed are:
 		//  msPosition
 		//	moments // an array of moment. Each moment has a messages[] attribute and an msPositionInSeq attribute.
-		//  inputControls
+		//  trkOptions
 		function setAndGetWorkers(seqTrks, seqPositionInScore, trackWorkers)
 		{
-			var i, nSeqTrks = seqTrks.length, trkDef, trkMsPos, trkMoments, trkInputControls, trkWorker, workers = [];
+			var i, nSeqTrks = seqTrks.length, trkDef, trkMsPos, trkMoments, trkOptions, trkWorker, workers = [];
 
 			function getMoments(trkMidiObjects)
 			{
@@ -105,11 +105,11 @@ _AP.seq = (function()
 
 				trkMsPos = seqPositionInScore + trkDef.msOffset;
 				trkMoments = getMoments(trkDef.midiObjects);
-				trkInputControls = trkDef.inputControls;
+				trkOptions = trkDef.trkOptions;
 
 				trkWorker = trackWorkers[trkDef.trackIndex];
 
-				trkWorker.postMessage({ action: "pushTrk", msPosition: trkMsPos, moments: trkMoments, inputControls: trkInputControls });
+				trkWorker.postMessage({ action: "pushTrk", msPosition: trkMsPos, moments: trkMoments, trkOptions: trkOptions });
 
 				workers.push(trkWorker);
 			}
@@ -145,7 +145,7 @@ _AP.seq = (function()
 			//    setTimeout(...), 2);
 			// to give the worker more time to stop.
 			// (trackWorkers throw exceptions if they are busy when the following function is called.)
-			worker.postMessage({ action: "start", velocity: performedVelocity }); // plays according to the inputControls set in the seq's constructor
+			worker.postMessage({ action: "start", velocity: performedVelocity }); // plays according to the trkOptions set in the seq's constructor
 
 			this.triggeredOn = true; // triggeredOn is used when shunting.
 		}
@@ -159,7 +159,7 @@ _AP.seq = (function()
 		for(i = 0; i < nWorkers; ++i)
 		{
 			worker = this.workers[i];
-			worker.postMessage({ action: "stop" }); // stops according to the inputControls set in the seq's constructor
+			worker.postMessage({ action: "stop" }); // stops according to the trkOptions set in the seq's constructor
 		}
 
 		this.triggeredOff = true; // triggeredOff is used when shunting.

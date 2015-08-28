@@ -5,29 +5,29 @@
  *  Code licensed under MIT
  *  https://github.com/notator/assistant-performer/blob/master/License.md
  *
- *  ap/InputControls.js
+ *  ap/TrkOptions.js
  *  Public interface contains:
- *     InputControls(inputControlsNode) // Chord definition constructor. Reads the XML in the inputControlsNode. 
+ *     TrkOptions(trkOptionsNode) // Chord definition constructor. Reads the XML in the trkOptionsNode. 
  *  
  */
 
 /*jslint bitwise: false, nomen: false, plusplus: true, white: true */
 /*global _AP: false,  window: false,  document: false, performance: false, console: false, alert: false, XMLHttpRequest: false */
 
-_AP.namespace('_AP.inputControls');
+_AP.namespace('_AP.trkOptions');
 
-_AP.inputControls = (function ()
+_AP.trkOptions = (function ()
 {
     "use strict";
     var
-    // InputControls constructor: argument can be an inputControls node from a document, or another InputControls object (to be cloned).
-    // An InputControls object sets performance options for a trk, seq (=inputNote), or inputChord (=voice).
+    // TrkOptions constructor: argument can be an trkOptions node from a document, or another TrkOptions object (to be cloned).
+    // An TrkOptions object sets performance options for a trk, seq (=inputNote), or inputChord (=voice).
     //    trk.inputOptions temporarily override seq.inputOptions
     //    seq.inputOptions temporarily override inputNote.inputOptions
 	//    inputNote.inputOptions temporarily override inputChord.inputOptions
     //    inputChord.inputOptions change the global inputOptions vor the containing voice.
 	//
-	// Default InputControl objects have no defined fields.
+	// Default TrkOptions objects have no defined fields.
 	//
 	// Possible fields (all are attributes in score files), and their available values, are:
     //    velocity -- possible values: "scaled", "shared", "overridden"  
@@ -41,14 +41,14 @@ _AP.inputControls = (function ()
     //    maxVolume -- an integer in range [1..127]. Defined if one of the above controllers is set to "volume".
     //    minVolume -- an integer in range [1..127]. Defined if one of the above controllers is set to "volume".
     //    maxSpeedPercent -- an integer > 100. Defined if speedOption is defined.
-	InputControls = function (inputControlsNode)
+	TrkOptions = function (trkOptionsNode)
 	{
-		if (!(this instanceof InputControls))
+		if (!(this instanceof TrkOptions))
 		{
-			return new InputControls(inputControlsNode);
+			return new TrkOptions(trkOptionsNode);
 		}
 
-		var i, attributes = inputControlsNode.attributes, attr, attrLen;
+		var i, attributes = trkOptionsNode.attributes, attr, attrLen;
 
 		console.assert(attributes !== undefined && attributes.length > 0);
 
@@ -58,38 +58,51 @@ _AP.inputControls = (function ()
 			attr = attributes[i];
 			switch(attr.name)
 			{
-				case "velocity": // can be undefined
+				// options sent trkOn message
+				case "velocity":
 					this.velocity = attr.value;
 					break;
-				case "pressure": // can be undefined
-					this.pressure = attr.value;
-					break;
-				case "trkOff": // is defined if the either noteOnMsg nor noteOffMsg has the value "trkOff"
-					this.trkOff = attr.value;
-					break;
-				case "pitchWheel": // can be undefined
-					this.pitchWheel = attr.value;
-					break;
-				case "modulation": // can be undefined
-					this.modulation = attr.value;
-					break;
-				case "speedOption": // can be undefined
-					this.speedOption = attr.value;
-					break;
-				case "minVelocity": // is defined if noteOnVel is defined
+				case "minVelocity": // is defined if velocity is defined
 					this.minVelocity = parseInt(attr.value, 10);
 					break;
-				case "maxVolume": // is defined if either pressure, pitchwheel or modulation controls are set to control volume
+
+				// option sent with pressure message (see maxVolume and minVolume below)
+				case "pressure":
+					this.pressure = attr.value;
+					break;
+
+				// option sent with trkOff message
+				case "trkOff":
+					this.trkOff = attr.value;
+					break;
+
+				// option sent with pitchWheel message (when the physical pitchWheel moves)
+				case "pitchWheel": // can be undefined  (see maxVolume and minVolume below)
+					this.pitchWheel = attr.value;
+					break;
+				// option sent with modulation message (when the physical modulation wheel moves)
+				case "modulation": // can be undefined  (see maxVolume and minVolume below)
+					this.modulation = attr.value;
+					break;
+
+				// options sent if either pressure, pitchWheel or modulation messages are set to control volume
+				case "maxVolume":
 					this.maxVolume = parseInt(attr.value, 10);
 					break;
-				case "minVolume": // is defined if either pressure, pitchwheel or modulation controls are set to control volume
+				case "minVolume":
 					this.minVolume = parseInt(attr.value, 10);
+					break;
+
+				// options sent when the changeSpeed message is sent
+				case "speedOption":
+					this.speedOption = attr.value;
 					break;
 				case "maxSpeedPercent": // is defined if speedOption is defined
 					this.maxSpeedPercent = parseInt(attr.value, 10);
 					break;
+
 				default:
-					throw (">>>>>>>>>> Illegal InputControls attribute <<<<<<<<<<");
+					throw (">>>>>>>>>> Illegal TrkOptions attribute <<<<<<<<<<");
 			}
 		}
         return this;
@@ -98,8 +111,8 @@ _AP.inputControls = (function ()
     // public API
     publicAPI =
     {
-        // public InputControls(inputControlsNode) constructor.
-        InputControls: InputControls
+        // public TrkOptions(trkOptionsNode) constructor.
+        TrkOptions: TrkOptions
     };
 
     return publicAPI;

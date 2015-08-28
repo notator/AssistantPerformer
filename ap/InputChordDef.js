@@ -20,45 +20,45 @@ _AP.inputChordDef = (function ()
 {
     "use strict";
 	var
-	InputControls = _AP.inputControls.InputControls,
+	TrkOptions = _AP.trkOptions.TrkOptions,
 
     // InputChordDef constructor
     // The inputChordDef contains the inputChordDef information from the XML in a form that is easier to program with.
     // The InputChordDef has the following fields:
-	//		inputChordDef.inputControls -- undefined or an InputControls object
+	//		inputChordDef.trkOptions -- undefined or an TrkOptions object
     //		inputChordDef.inputNotes[] -- see below
     //
     // Each inputNote in the inputChordDef.inputNotes[] has the following fields:
 	//		inputNote.notatedKey (a number. The MIDI index of the notated key.)
-	//		inputNote.inputControls -- undefined or an InputControls object
+	//		inputNote.trkOptions -- undefined or an TrkOptions object
     //		inputNote.noteOn -- undefined or see below
 	//      inputNote.pressures -- undefined or an array of pressure objects.
 	//      inputNote.noteOff -- undefined or see below
 	//
 	// if defined, inputNote.noteOn has the following fields:
-	//      inputNote.noteOn.trkOns -- undefined or an array of trkOn with a (possibly undefined) InputControls field.
-	//		inputNote.noteOn.trkOffs -- undefined or an array of trkOff with a (possibly undefined) InputControls field.
+	//      inputNote.noteOn.trkOns -- undefined or an array of trkOn with a (possibly undefined) TrkOptions field.
+	//		inputNote.noteOn.trkOffs -- undefined or an array of trkOff with a (possibly undefined) TrkOptions field.
 	//
-	// if defined, inputNote.pressures contains an array of pressure objects with a (possibly undefined) InputControls field.
-	//      Each pressure object has a midiChannel and a (possibly undefined) InputControls field. 
+	// if defined, inputNote.pressures contains an array of pressure objects with a (possibly undefined) TrkOptions field.
+	//      Each pressure object has a midiChannel and a (possibly undefined) TrkOptions field. 
 	//
 	// if defined, inputNote.noteOff has the same fields as inputNote.noteOn:
-	//      inputNote.noteOff.trkOns -- undefined or an array of trkOn with a (possibly undefined) InputControls field.
-	//		inputNote.noteOff.trkOffs -- undefined or an array of trkOff with a (possibly undefined) InputControls field.
+	//      inputNote.noteOff.trkOns -- undefined or an array of trkOn with a (possibly undefined) TrkOptions field.
+	//		inputNote.noteOff.trkOffs -- undefined or an array of trkOff with a (possibly undefined) TrkOptions field.
 	//
 	// if defined, trkOn has the following fields:
-	//		trkOn.inputControls -- undefined or an InputControls object
+	//		trkOn.trkOptions -- undefined or an TrkOptions object
 	//		trkOn.midiChannel (compulsory int >= 0. The midiChannel of the voice containing the referenced Trk. )
 	//		trkOn.msPosition (compulsory int >= 0. The msPositionInScore of the referenced Trk)
 	//		trkOn.nMidiObjects (compulsory int >= 0. The number of MidiChords and Rests in the referenced Trk.)
 	//
 	// if defined, trkOff has the following fields:
-	//		trkOn.inputControls -- undefined or an InputControls object
+	//		trkOn.trkOptions -- undefined or an TrkOptions object
 	//		trkOn.midiChannel (compulsory int >= 0. The midiChannel of the voice containing the referenced Trk. )
 	//		trkOn.msPosition (compulsory int >= 0. The msPositionInScore of the referenced Trk)
 	//
-	// An inputChordDef.inputControls sets the current values in the midi input channel until further notice.
-	// InputControls at lower levels temporarily override the inputControls at higher levels.
+	// An inputChordDef.trkOptions sets the current values in the midi input channel until further notice.
+	// TrkOptions at lower levels temporarily override the trkOptions at higher levels.
 	InputChordDef = function (inputNotesNode)
 	{
 		var chordDef;
@@ -83,7 +83,7 @@ _AP.inputChordDef = (function ()
 					var i, childNodes = noteOnOrNoteOffNode.childNodes, nChildNodes = childNodes.length,
 					returnObject = {};
 
-					// returns an array of trkOn, possibly having an inputControls attribute 
+					// returns an array of trkOn, possibly having an trkOptions attribute 
 					function getTrkOns(trkOnsNode)
 					{
 						var i, childNodes, returnArray = [];
@@ -116,9 +116,9 @@ _AP.inputChordDef = (function ()
 
 							for(i = 0; i < childNodes.length; ++i)
 							{
-								if(childNodes[i].nodeName === "inputControls")
+								if(childNodes[i].nodeName === "trkOptions")
 								{
-									trkOn.inputControls = new InputControls(childNodes[i]);
+									trkOn.trkOptions = new TrkOptions(childNodes[i]);
 									break;
 								}
 							}
@@ -131,8 +131,8 @@ _AP.inputChordDef = (function ()
 						{
 							switch(childNodes[i].nodeName)
 							{
-								case 'inputControls':
-									returnArray.inputControls = new InputControls(childNodes[i]);
+								case 'trkOptions':
+									returnArray.trkOptions = new TrkOptions(childNodes[i]);
 									break;
 								case 'trkOn':
 									returnArray.push(getTrkOn(childNodes[i]));
@@ -142,7 +142,7 @@ _AP.inputChordDef = (function ()
 						return returnArray;
 					}
 
-					// returns an array of trkOn, possibly having an inputControls attribute
+					// returns an array of trkOn, possibly having an trkOptions attribute
 					function getTrkOffs(trkOffsNode)
 					{
 						var i, childNodes, returnArray = [];
@@ -172,9 +172,9 @@ _AP.inputChordDef = (function ()
 
 							for(i = 0; i < childNodes.length; ++i)
 							{
-								if(childNodes[i].nodeName === "inputControls")
+								if(childNodes[i].nodeName === "trkOptions")
 								{
-									trkOff.inputControls = new InputControls(childNodes[i]);
+									trkOff.trkOptions = new TrkOptions(childNodes[i]);
 									break;
 								}
 							}
@@ -187,8 +187,8 @@ _AP.inputChordDef = (function ()
 						{
 							switch(childNodes[i].nodeName)
 							{
-								case 'inputControls':
-									returnArray.inputControls = new InputControls(childNodes[i]);
+								case 'trkOptions':
+									returnArray.trkOptions = new TrkOptions(childNodes[i]);
 									break;
 								case 'trkOff':
 									returnArray.push(getTrkOff(childNodes[i]));
@@ -229,9 +229,9 @@ _AP.inputChordDef = (function ()
 
 						for(i = 0; i < childNodes.length; ++i)
 						{
-							if(childNodes[i].nodeName === 'inputControls')
+							if(childNodes[i].nodeName === 'trkOptions')
 							{
-								pressure.inputControls = new InputControls(childNodes[i]);
+								pressure.trkOptions = new TrkOptions(childNodes[i]);
 							}
 						}
 						return pressure;
@@ -241,8 +241,8 @@ _AP.inputChordDef = (function ()
 					{
 						switch(childNodes[i].nodeName)
 						{
-							case 'inputControls':
-								pressures.inputControls = new InputControls(childNodes[i]);
+							case 'trkOptions':
+								pressures.trkOptions = new TrkOptions(childNodes[i]);
 								break;
 							case 'pressure':
 								pressure = getPressure(childNodes[i]);
@@ -272,9 +272,9 @@ _AP.inputChordDef = (function ()
 				{
 					switch(childNodes[i].nodeName)
 					{
-						case "inputControls":
-							// inputNote.inputControls can be undefined
-							inputNote.inputControls = new InputControls(childNodes[i]);
+						case "trkOptions":
+							// inputNote.trkOptions can be undefined
+							inputNote.trkOptions = new TrkOptions(childNodes[i]);
 							break;
 						case "noteOn":
 							inputNote.noteOn = getNoteOnOrNoteOff(childNodes[i]);
@@ -296,8 +296,8 @@ _AP.inputChordDef = (function ()
 			{
 				switch(childNodes[i].nodeName)
 				{
-					case 'inputControls':
-						returnValue.inputControls = new InputControls(childNodes[i]);
+					case 'trkOptions':
+						returnValue.trkOptions = new TrkOptions(childNodes[i]);
 						break;
 					case 'inputNote':
 						returnValue.inputNotes.push(getInputNote(childNodes[i]));
@@ -314,9 +314,9 @@ _AP.inputChordDef = (function ()
 		}
 
 		chordDef = getChordDef(inputNotesNode);
-		if(chordDef.inputControls !== undefined)
+		if(chordDef.trkOptions !== undefined)
 		{
-			this.inputControls = chordDef.inputControls;
+			this.trkOptions = chordDef.trkOptions;
 		}
 		
 		console.assert(chordDef.inputNotes.length > 0);

@@ -30,7 +30,7 @@ _AP.inputChord = (function()
     	// getInputNotes() Arguments:
     	// Each object in the inputNoteDefs argument contains the following fields
     	//		.notatedKey (a number. The MIDI index of the notated key.)
-    	//		.inputControls -- undefined or an InputControls object
+    	//		.trkOptions -- undefined or an TrkOptions object
     	//		.noteOn -- undefined (or see below)
     	//      .pressure[] -- undefined or an array of channel indices.
     	//      .noteOff -- undefined (or see below)
@@ -39,14 +39,14 @@ _AP.inputChord = (function()
     	//			.trkOffs[] -- undefined or an array of channel indices
     	//			.seq -- undefined or an array of trkRef
     	//				A trkRef has the following fields:
-    	//					.inputControls -- undefined or an InputControls object
+    	//					.trkOptions -- undefined or an TrkOptions object
     	//					.midiChannel (compulsory int >= 0. The midiChannel of the voice containing the referenced Trk. )
     	//					.msPosition (compulsory int >= 0. The msPositionInScore of the referenced Trk.)
     	//					.length (compulsory int >= 0. The number of MidiChords and Rests the referenced Trk.)
 		//------------------------------------------------------------------------------
     	// getInputNotes() Returns:
     	// An array of inputNote objects, each of which may have the following fields:
-    	//		.inputControls  -- undefined or an InputControls object
+    	//		.trkOptions  -- undefined or an TrkOptions object
     	//		.noteOn -- undefined (or see below)
     	//		.pressureChannels -- undefined or an array of channel indices
     	//		.noteOff -- undefined (or see below)
@@ -56,7 +56,7 @@ _AP.inputChord = (function()
     	//			.trks[] -- undefined or an array of (parallel) trks to be sent trkOn messages.
     	//
     	//			each trk in trks[] can have the following fields:
-    	//				.inputControls -- undefined or an InputControls object.
+    	//				.trkOptions -- undefined or an TrkOptions object.
     	//				.trackIndex -- compulsory. The index of the track in the score (top to bottom)
     	//		   ???? .midiObjectIndex -- compulsory (Do I really need this in the trk definition??). The index of the first object in the trk in the whole track.midiObjects array.
     	//				.midiObjects -- compulsory. The array of midiChords and Rests in the trk.
@@ -66,14 +66,14 @@ _AP.inputChord = (function()
 				inputNote, inputNotes = [];
 
     		// The noteInfo argument can have the following fields:
-    		//      noteInfo.trkOns -- undefined or an array of trkOn with a (possibly undefined) InputControls field.
-    		//		noteInfo.trkOffs -- undefined or an array of trkOff with a (possibly undefined) InputControls field.
+    		//      noteInfo.trkOns -- undefined or an array of trkOn with a (possibly undefined) TrkOptions field.
+    		//		noteInfo.trkOffs -- undefined or an array of trkOff with a (possibly undefined) TrkOptions field.
 			// The above trkOns and trkOffs have midiChannel fields that are converted to trackIndices in the returned object.
     		// Returns an object which may have the following fields:
     		//			.trkOffs -- undefined or an array of trkOffs (the trackIndex and msPositionInScore of each trk to be sent a trkOff message).
     		//			.seq -- undefined or an array of (parallel) trks (to be sent trkOn messages).
     		//			 A Trk object may have the following fields:
-    		//				.inputControls -- undefined or an InputControls object.
+    		//				.trkOptions -- undefined or an TrkOptions object.
     		//				.trackIndex -- compulsory. The index of the track in the score (top to bottom)
     		//		   ???? .midiObjectIndex -- compulsory (??). The index of the first object in the trk in the whole track.midiObjects array.
     		//				.msOffset -- compulsory. Usually 0. The msDurationInScore between this InputNote and the first midiObject in the trk.
@@ -83,15 +83,15 @@ _AP.inputChord = (function()
     			var rval = {};
 
     			// Argument 1 is an array of trkOn. A trkOn has the following fields:
-    			//		.inputControls -- undefined or an InputControls object
+    			//		.trkOptions -- undefined or an TrkOptions object
     			//		.midiChannel (compulsory int >= 0. The midiChannel of the voice containing the referenced Trk. )
     			//		.msPosition (compulsory int >= 0. The msPositionInScore of the referenced Trk.)
     			//		.nMidiObjects (compulsory int >= 0. The number of MidiChords and Rests the referenced Trk.)
-				// The trkOns array may itself have an inputControls attribute.
+				// The trkOns array may itself have an trkOptions attribute.
 				//
-    			// returns an array of trk (!) that may have an InputControls attribute.
+    			// returns an array of trk (!) that may have an TrkOptions attribute.
     			// A Trk object may have the following fields:
-    			//		.inputControls -- undefined or an InputControls object.
+    			//		.trkOptions -- undefined or an TrkOptions object.
     			//		.trackIndex -- compulsory. The index of the track in the score (top to bottom)
     			// ???? .midiObjectIndex -- compulsory (??). The index of the first object in the trk in the whole track.midiObjects array.
 				//		.msOffset -- compulsory. Usually 0. The msDurationInScore between this InputNote and the first midiObject in the trk.
@@ -135,9 +135,9 @@ _AP.inputChord = (function()
     					trkOn = trkOns[i];
     					trk = {};
 						
-    					if(trkOn.inputControls !== undefined)
+    					if(trkOn.trkOptions !== undefined)
     					{
-    						trk.inputControls = trkOn.inputControls;
+    						trk.trkOptions = trkOn.trkOptions;
     					}
     					trk.trackIndex = outputTracks.trackIndexPerMidiChannel[trkOn.midiChannel];
     					trackMidiObjects = outputTracks[trk.trackIndex].midiObjects;
@@ -148,9 +148,9 @@ _AP.inputChord = (function()
     					trks.push(trk);
     				}
 
-    				if(trkOns.inputControls !== undefined)
+    				if(trkOns.trkOptions !== undefined)
     				{
-    					trks.inputControls = trkOns.inputControls;
+    					trks.trkOptions = trkOns.trkOptions;
     				}
 
     				return trks;
@@ -167,9 +167,9 @@ _AP.inputChord = (function()
     					tOff.msPosition = trkOffs[i].msPosition;
     					tOffs.push(tOff);						
     				}
-    				if(trkOffs.inputControls !== undefined)
+    				if(trkOffs.trkOptions !== undefined)
     				{
-    					tOffs.inputControls = trkOffs.inputControls;
+    					tOffs.trkOptions = trkOffs.trkOptions;
     				}
     				return tOffs;
     			}
@@ -190,18 +190,18 @@ _AP.inputChord = (function()
     		{
     			var i, nPressures = pressures.length, pressure, pressr, pressrs = [];
 
-    			if(pressures.inputControls !== undefined)
+    			if(pressures.trkOptions !== undefined)
     			{
-    				pressrs.inputControls = pressures.inputControls;
+    				pressrs.trkOptions = pressures.trkOptions;
     			}
     			
     			for(i = 0; i < nPressures; ++i)
     			{
     				pressr = {};
     				pressure = pressures[i];
-    				if(pressure.inputControls !== undefined)
+    				if(pressure.trkOptions !== undefined)
     				{
-    					pressr.inputControls = pressure.inputControls;
+    					pressr.trkOptions = pressure.trkOptions;
     				}
     				pressr.trackIndex = trackIndexPerMidiChannel[pressure.midiChannel];
 
@@ -216,9 +216,9 @@ _AP.inputChord = (function()
     			inputNoteDef = inputNoteDefs[i];
     			inputNote = {};
     			inputNote.notatedKey = inputNoteDef.notatedKey;
-    			if(inputNoteDef.inputControls !== undefined)
+    			if(inputNoteDef.trkOptions !== undefined)
     			{
-    				inputNote.inputControls = inputNoteDef.inputControls;
+    				inputNote.trkOptions = inputNoteDef.trkOptions;
     			}
     			if(inputNoteDef.noteOn !== undefined)
     			{
@@ -246,9 +246,9 @@ _AP.inputChord = (function()
         // The timeObject takes the global speed option into account.
         Object.defineProperty(this, "msPositionInScore", { value: timeObject.msPosition, writable: false });
         Object.defineProperty(this, "msDurationInScore", { value: timeObject.msDuration, writable: false });
-        if(timeObject.inputChordDef.inputControls !== undefined)
+        if(timeObject.inputChordDef.trkOptions !== undefined)
         {
-        	Object.defineProperty(this, "inputControls", { value: timeObject.inputChordDef.inputControls, writable: false });
+        	Object.defineProperty(this, "trkOptions", { value: timeObject.inputChordDef.trkOptions, writable: false });
         }
 
         inputNotes = getInputNotes(timeObject.inputChordDef.inputNotes, outputTracks, timeObject.msPosition);

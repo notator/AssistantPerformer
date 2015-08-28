@@ -143,7 +143,7 @@ _AP.tracksControl = (function (document)
 	    }
 
 	    // Called if this is not a live performance 
-	    function disableInputControls()
+	    function disableTrkOptions()
 	    {
 	    	var i;
 
@@ -200,7 +200,7 @@ _AP.tracksControl = (function (document)
 
 	    if(isLivePerformance === false)
 	    {
-	    	disableInputControls();
+	    	disableTrkOptions();
 	    }
 	},
 
