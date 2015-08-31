@@ -156,9 +156,9 @@ var eventHandler = function(e)
 			}
 		}
 
-		if(msg.options && msg.options.pedal) // if undefined, do nothing
+		if(msg.trk.options && msg.trk.options.pedal) // if undefined, do nothing
 		{
-			switch(msg.options.pedal)
+			switch(msg.trk.options.pedal)
 			{
 				case "holdLast":
 					removeFinalNoteOffMessages(msg.trk.moments);
