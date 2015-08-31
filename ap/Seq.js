@@ -62,7 +62,7 @@ _AP.seq = (function()
 		//  trkOptions
 		function setAndGetWorkers(seqTrks, seqPositionInScore, trackWorkers)
 		{
-			var i, nSeqTrks = seqTrks.length, trkDef, trkWorker, workers = [], trk, pedalOption;
+			var i, nSeqTrks = seqTrks.length, trkDef, trkWorker, workers = [], trk;
 
 			function getMoments(trkMidiObjects)
 			{
@@ -106,12 +106,11 @@ _AP.seq = (function()
 
 				trk.msPosition = seqPositionInScore + trkDef.msOffset;
 				trk.moments = getMoments(trkDef.midiObjects);
-
-				pedalOption = trkDef.trkOptions.pedal;
+				trk.options = trkDef.trkOptions;
 
 				trkWorker = trackWorkers[trkDef.trackIndex];
 
-				trkWorker.postMessage({ action: "pushTrk", trk: trk, pedalOption: pedalOption });
+				trkWorker.postMessage({ action: "pushTrk", trk: trk });
 
 				workers.push(trkWorker);
 			}
@@ -142,12 +141,11 @@ _AP.seq = (function()
 		for(i = 0; i < nWorkers; ++i)
 		{
 			worker = this.workers[i];
-			worker.postMessage({ action: "stopImmediately" });
 			// Maybe call
 			//    setTimeout(...), 2);
 			// to give the worker more time to stop.
 			// (trackWorkers throw exceptions if they are busy when the following function is called.)
-			worker.postMessage({ action: "start", velocity: performedVelocity }); // plays according to the trkOptions set in the seq's constructor
+			worker.postMessage({ action: "start", velocity: performedVelocity });
 
 			this.triggeredOn = true; // triggeredOn is used when shunting.
 		}

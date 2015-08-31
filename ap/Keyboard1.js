@@ -361,7 +361,7 @@ _AP.keyboard1 = (function()
     						}
     						// Start playing the seq using the trkOptions set in its constructor.
     						console.log("velocity=" + velocity.toString(10));
-    						seq.doNoteOn(velocity);
+    						seq.start(velocity);
     						indexPlayed = currentMsPosIndex;
     					}
     				}
