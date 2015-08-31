@@ -399,7 +399,7 @@ _AP.keyboard1 = (function()
 
     		for(i = 0; i < nWorkers; ++i)
     		{
-    			trackWorkers[i].postMessage({ action: "doPitchWheel", value: data });
+    			trackWorkers[i].postMessage({ action: "doPitchWheel", data1: data[1], data2: data[2] });
     		}
     	}
 

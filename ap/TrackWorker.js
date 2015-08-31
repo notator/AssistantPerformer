@@ -453,15 +453,13 @@ var eventHandler = function(e)
 	}
 
 	/***************************************/
-	/* case "doPitchWheel": */
-	function doPitchWheel(pitchWheelMessage)
+
+	// Keyboard1 calls:
+	// worker.postMessage({ action: "doPitchWheel", data1: data[1], data2: data[2] });
+	// case "doPitchWheel": */
+	function doPitchWheel(msg)
 	{
-		// pitchWheelMessage has fields:
-		//   action
-		//   midiMessage -- the original pitchWheel message (a Uint8Array)
-		//   parameter -- "pitch", "pan" or "speed" (here "pitch")
-		//   deviation
-		var msg, inMessage = pitchWheelMessage.midiMessage;
+		var pitchWheelOption;
 
 		/// Sets both RegisteredParameter controls to 0 (zero). This is standard MIDI for selecting the
 		/// pitch wheel so that it can be set by the subsequent DataEntry messages.
@@ -476,65 +474,71 @@ var eventHandler = function(e)
 			postMessage({ action: "midiMessage", midiMessage: msg });
 			msg = new Message(CMD.CONTROL_CHANGE + channel, CTL.DATA_ENTRY_COARSE, deviation);
 			postMessage({ action: "midiMessage", midiMessage: msg });
+
+			pitchWheelDeviation = deviation;
 		}
 
-		if(pitchWheelDeviation !== pitchWheelMessage.deviation)
+		function _doPitchWheel(data1, data2)
 		{
-			setPitchWheelDeviation(pitchWheelMessage.deviation, channelIndex);
-			pitchWheelDeviation = pitchWheelMessage.deviation;
+			// currentTrk.options.pitchWheelDeviation is defined if currentTrack.options.pitchWheel is defined
+			if(pitchWheelDeviation !== currentTrk.options.pitchWheelDeviation)
+			{
+				setPitchWheelDeviation(currentTrk.options.pitchWheelDeviation, channelIndex);
+			}
+			msg = new Message(CMD.PITCH_WHEEL + channelIndex, data1, data2);
+			postMessage({ action: "midiMessage", midiMessage: msg });
 		}
 
-		msg = new Message(CMD.PITCH_WHEEL + channelIndex, inMessage[1], inMessage[2]);
-		postMessage({ action: "midiMessage", midiMessage: msg });
-	}
-
-	function doPan(pitchWheelMessage)
-	{
-		// pitchWheelMessage has fields:
-		//   action
-		//   midiMessage -- the original pitchWheel message (a Uint8Array)
-		//   parameter -- "pitch", "pan" or "speed" (here "pan")
-		//   deviation
-		var msg, newValue, factor,
-		inValue = pitchWheelMessage.midiMessage[1], // only need the hi byte
-		origin = pitchWheelMessage.deviation;
-
-		if(inValue < 0x80)
+		function doPanOption(value)  // value is in range 0..127
 		{
-			factor = origin / 0x80;
-			newValue = inValue * factor;
+			var origin, factor, newValue;
+
+			origin = currentTrk.options.panOrigin; // is defined if pitchWheelOption is "pan"
+			if(value < 0x80)
+			{
+				factor = origin / 0x80;
+				newValue = value * factor;
+			}
+			else
+			{
+				factor = (0xFF - origin) / 0x7F;
+				newValue = origin + ((value - 0x80) * factor);
+			}
+			msg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.PAN, newValue);
+			postMessage({ action: "midiMessage", midiMessage: msg });
 		}
-		else 
+
+		function doSpeedOption(value) // value is in range 0..127
 		{
-			factor = (0xFF - origin) / 0x7F;
-			newValue = origin + ((inValue - 0x80) * factor);
+			var speedDeviation = currentTrk.options.speedDeviation, // a float value > 1.0F
+			factor = Math.pwr(speedDeviation, 1 / 64);
+
+			// e.g. if speedDeviation is 2
+			// factor = 2^(1/64) = 1.01088...
+			// value is in range 0..127.
+			// if original value is 0, speedFactor = 1.01088^(-64) = 0.5
+			// if original value is 64, speedfactor = 1.01088^(0) = 1.0
+			// if original value is 127, speedFactor = 1.01088^(64) = 2.0 = maxSpeedFactor
+
+			value -= 64; // if value was 64, speedfactor is 1.
+			speedFactor = Math.pwr(factor, value);
+			// nothing more to do! speedFactor is used in tick() to calculate delays.
 		}
 
-		msg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.PAN, newValue);
-		postMessage({ action: "midiMessage", midiMessage: msg });
-	}
+		pitchWheelOption = currentTrk.options.pitchWheel;
 
-	function doSpeed(pitchWheelMessage)
-	{
-		// pitchWheelMessage has fields:
-		//   action
-		//   midiMessage -- the original pitchWheel message (a Uint8Array)
-		//   parameter -- "pitch", "pan" or "speed" (here "speed")
-		//   deviation -- here a float > 1.0F
-		var value = pitchWheelMessage.midiMessage[1], // only need the hi byte
-		maxSpeedFactor = pitchWheelMessage.deviation, // a float value > 1.0F
-		factor = Math.pwr(maxSpeedFactor, 1 / 64);
-
-		value -= 64; // if value was 64, speedfactor is 1.
-		speedFactor = Math.pwr(factor, value);
-		// nothing more to do! speedFactor is used in tick() to calculate delays.
-
-		// e.g. if maxSpeedFactor is 2
-		// factor = 2^(1/64) = 1.01088...
-		// value is in range 0..127.
-		// if original value is 0, speedFactor = 1.01088^(-64) = 0.5
-		// if original value is 64, speedfactor = 1.01088^(0) = 1.0
-		// if original value is 127, speedFactor = 1.01088^(64) = 2.0 = maxSpeedFactor
+		switch(pitchWheelOption)
+		{
+			case "pitchWheel":
+				_doPitchWheel(msg.data1, msg.data2);
+				break;
+			case "pan":
+				doPanOption(msg.data1);  // data1, the hi byte, is in range 0..127
+				break;
+			case "speed":
+				doSpeedOption(msg.data1); // data1, the hi byte, is in range 0..127
+				break;
+		}
 	}
 
 	/****************************************/
@@ -590,24 +594,8 @@ var eventHandler = function(e)
 			break;
 
 		// called by changes to pitchWheel
-		// pwMessage has fields:
-		//   action (here "doPitchWheel")
-		//   midiMessage -- the original pitchWheel message (a 3 byte Uint8Array)
-		//   parameter -- "pitch", "pan" or "speed"
-		//   deviation -- meaning depends on parameter
 		case "doPitchWheel":
-			switch(msg.parameter)
-			{
-				case "pitch":
-					doPitchWheel(msg);
-					break;
-				case "pan":
-					doPan(msg);
-					break;
-				case "speed":
-					doSpeed(msg);
-					break;
-			}
+			doPitchWheel(msg);
 			break;
 
 		case "stop":
