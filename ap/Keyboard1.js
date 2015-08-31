@@ -369,15 +369,37 @@ _AP.keyboard1 = (function()
     		}
     	}
 
-    	function handleController(data)
+    	// called when channel pressure changes
+    	// Achtung: value is data[1]
+    	function handleChannelPressure(data)
     	{
     		var i, nWorkers = trackWorkers.length;
 
     		for(i = 0; i < nWorkers; ++i)
     		{
-    			// Each trackWorker simply sets the low nibble of data[0] to its channel,
-    			// before posting the data back to handleMidiMessage as a midiMessage.
-    			trackWorkers[i].postMessage({ action: "doController", data: data });
+    			trackWorkers[i].postMessage({ action: "doController", controller: "pressure", value: data[1] }); // Achtung: data[1]
+    		}
+    	}
+
+    	// called when modulation wheel changes
+    	// Achtung: value is data[2]
+    	function handleModWheel(data)
+    	{
+    		var i, nWorkers = trackWorkers.length;
+
+    		for(i = 0; i < nWorkers; ++i)
+    		{
+    			trackWorkers[i].postMessage({ action: "doController", controller: "modWheel", value: data[2] }); // Achtung: data[2]
+    		}
+    	}
+
+    	function handlePitchWheel(data)
+    	{
+    		var i, nWorkers = trackWorkers.length;
+
+    		for(i = 0; i < nWorkers; ++i)
+    		{
+    			trackWorkers[i].postMessage({ action: "doPitchWheel", value: data });
     		}
     	}
 
@@ -392,7 +414,6 @@ _AP.keyboard1 = (function()
     			case CMD.NOTE_ON:
     				if(inputEvent.data[2] !== 0)
     				{
-    					// setSpeedFactor is called inside handleNoteOn(...) because currentIndex needs to be >= 0.
     					handleNoteOn(inputEvent.data[1], inputEvent.data[2]);
     				}
     				else
@@ -405,18 +426,18 @@ _AP.keyboard1 = (function()
     				break;
     			case CMD.CHANNEL_PRESSURE: // produced by both R2M and E-MU XBoard49 when using "aftertouch"
     				// CHANNEL_PRESSURE.data[1] is the amount of pressure 0..127.
-    				handleController(inputEvent.data);
+    				handleChannelPressure(inputEvent.data);
     				break;
     			case CMD.AFTERTOUCH: // produced by the EWI breath controller
     				// AFTERTOUCH.data[1] is the MIDIpitch to which to apply the aftertouch
     				// AFTERTOUCH.data[2] is the amount of pressure 0..127.
-    				handleController(inputEvent.data);
+    				// not supported
     				break;
     			case CMD.PITCH_WHEEL: // EWI pitch bend up/down controllers, EMU pitch wheel
-    				handleController(inputEvent.data);
+    				handlePitchWheel(inputEvent.data);
     				break;
-    			case CMD.CONTROL_CHANGE: // sent when other controller values change.
-    				handleController(inputEvent.data);
+    			case CMD.CONTROL_CHANGE: // sent when the EMU ModWheel changes.
+    				handleModWheel(inputEvent.data);
     				break;
     			default:
     				break;
@@ -758,7 +779,7 @@ _AP.keyboard1 = (function()
 					// noteInfo.offTrkOffs: Can be undefined. An array of trkOff objects (see noteInfo.onTrkOffs above).
 					function getNoteInfo(inputNote, chordTrkOptions, trackWorkers)
 					{
-						var i, seqMsPosition, seq, pressure, noteInfo = {};
+						var i, seqMsPosition, seq, noteInfo = {};
 
 						function setTrkOffTrkOptions(trkOffs, inputNoteTrkOptions)
 						{

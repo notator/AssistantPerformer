@@ -387,12 +387,28 @@ var eventHandler = function(e)
 
 	/****************************************/
 
+	// Keyboard1 calls either:
+	// worker.postMessage({ action: "doController", controller: "pressure", value: data[1] });
+	// or
+	// worker.postMessage({ action: "doController", controller: "modWheel", value: data[2] });
 	// Construct the midiMessage and then post it back. 
-	function doController(controller, value)
+	function doController(msg)
 	{
-		var msg;
+		var volumeValue, controller = msg.controller, value = msg.value, option;
 
-		switch(controller)
+		// argument is in range 0..127
+		// returned value is in range currentTrk.options.minVolume..currentTrk.options.maxVolume.
+		function getVolumeValue(value)
+		{
+			var range = currentTrk.options.maxVolume - currentTrk.options.minVolume,
+			factor = range / 127,
+			volumeValue = currentTrk.options.minVolume + (value * factor);
+			return volumeValue;
+		}
+
+		option = (controller === "modWheel") ? currentTrk.options.modulation : currentTrk.options.pressure;
+
+		switch(option)
 		{
 			case "aftertouch":	// Note that this option results in channelPressure messages!
 				msg = new Message(CMD.CHANNEL_PRESSURE + channelIndex, value);
@@ -404,10 +420,8 @@ var eventHandler = function(e)
 				msg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.MODWHEEL, value);
 				break;
 			case "volume":
-				msg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.VOLUME, value);
-				break;
-			case "pan":
-				msg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.PAN, value);
+				volumeValue = getVolumeValue(value);
+				msg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.VOLUME, volumeValue);
 				break;
 			case "expression":
 				msg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.EXPRESSION, value);
@@ -436,14 +450,6 @@ var eventHandler = function(e)
 		}
 
 		postMessage({ action: "midiMessage", midiMessage: msg });
-	}
-
-	function doControllerVolume(minVolume, maxVolume, value)
-	{
-		value = (value < minVolume) ? minVolume : value;
-		value = (value > maxVolume) ? maxVolume : value;
-
-		doController("volume", value);
 	}
 
 	/***************************************/
@@ -578,13 +584,9 @@ var eventHandler = function(e)
 			start(msg);
 			break;
 
-		// called by changes to pressure and modWheel (when not controlling Volume)
+		// called by changes to channel pressure or modWheel controls 
 		case "doController":
-			doController(msg.controller, msg.value);
-			break;
-		// called by changes to pressure, and modWheel, when controlling Volume
-		case "doControllerVolume":
-			doControllerVolume(msg.volumeValue, msg.minVolume, msg.maxVolume);
+			doController(msg);
 			break;
 
 		// called by changes to pitchWheel

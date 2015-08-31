@@ -61,12 +61,10 @@ _AP.trkOptions = (function ()
 			attr = attributes[i];
 			switch(attr.name)
 			{
-				// options sent with pushTrk message (in the Seq constructor)
 				case "pedal":
 					this.pedal = attr.value;
 					break;
 
-				// options sent with doNoteOn message
 				case "velocity":
 					this.velocity = attr.value;
 					break;
@@ -74,32 +72,27 @@ _AP.trkOptions = (function ()
 					this.minVelocity = parseInt(attr.value, 10);
 					break;
 
-				// option sent with pressure message (see maxVolume and minVolume below)
 				case "pressure":
 					this.pressure = attr.value;
 					break;
 
-				// option sent with pushTrk message
 				case "pedal":
 					this.pedal = attr.value;
 					break;
 
-				// option sent with trkOff message
 				case "trkOff":
 					this.trkOff = attr.value;
 					break;
 
-				// option sent with pitchWheel message (when the physical pitchWheel moves)
 				case "pitchWheel": // can be undefined
 					this.pitchWheel = attr.value;
 					break;
 
-				// option sent with modulation message (when the physical modulation wheel moves)
-				case "modulation": // can be undefined  (see maxVolume and minVolume below)
+				case "modulation": // can be undefined  (see also maxVolume and minVolume below)
 					this.modulation = attr.value;
 					break;
 
-				// options sent if either pressure, or modulation messages are set to control volume
+				// options set if either pressure, or modulation messages are set to control volume
 				case "minVolume":
 					this.minVolume = parseInt(attr.value, 10);
 					break;
