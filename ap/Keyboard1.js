@@ -152,10 +152,13 @@ _AP.keyboard1 = (function()
 		}
 	},
 
-	resetChannel = function(outputDevice, channelIndex)
+ 	resetChannel = function(outputDevice, channelIndex, letSound)
 	{
-		outputDevice.send(allControllersOffMessages[channelIndex], performance.now());
-		outputDevice.send(allNotesOffMessages[channelIndex], performance.now());
+		if(letSound === false)
+		{
+			outputDevice.send(allControllersOffMessages[channelIndex], performance.now());
+			outputDevice.send(allNotesOffMessages[channelIndex], performance.now());
+		}
 	},
 
 	// trackWorkers send their messages here.
@@ -202,11 +205,11 @@ _AP.keyboard1 = (function()
 				break;
 			case "trkCompleted":
 				// TrackWorkers send this message to say that they are not going to send any more midiMessages from a trk (that is not the last).
-				resetChannel(outputDevice, msg.channelIndex);
+				resetChannel(outputDevice, msg.channelIndex, msg.letSound);
 				break;
 			case "workerCompleted":
 				// TrackWorkers send this message to say that they are not going to send any more midiMessages from their final trk.
-				resetChannel(outputDevice, msg.channelIndex);
+				resetChannel(outputDevice, msg.channelIndex, msg.letSound);
 				workerHasCompleted(msg.trackIndex);
 				break;
 			default:
@@ -577,7 +580,7 @@ _AP.keyboard1 = (function()
 				{
 					inputTrack = inputTracks[inputTrackIndex++];
 					trkOptions = getCurrentTrackTrkOptionsObj(inputTrack.inputObjects, startMarkerMsPosInScore);
-					inputTracksTrkOptions.push(trkOptions); // default is an TrkOptions object having no defined attributes.
+					inputTracksTrkOptions.push(trkOptions); // default is a TrkOptions object having no defined attributes.
 				}
 			}
 
@@ -757,7 +760,7 @@ _AP.keyboard1 = (function()
 					{
 						var i, seqMsPosition, seq, pressure, noteInfo = {};
 
-						function setTrkOffMsgOptions(trkOffs, inputNoteTrkOptions)
+						function setTrkOffTrkOptions(trkOffs, inputNoteTrkOptions)
 						{
 							var i, trkOff, nTrkOffs = trkOffs.length;
 
@@ -849,7 +852,7 @@ _AP.keyboard1 = (function()
 							}
 							if(inputNote.noteOn.trkOffs !== undefined)
 							{
-								setTrkOffMsgOptions(inputNote.noteOn.trkOffs, inputNote.trkOptions);
+								setTrkOffTrkOptions(inputNote.noteOn.trkOffs, inputNote.trkOptions);
 								noteInfo.onTrkOffs = getTrkOffs(inputNote.noteOn.trkOffs, trackWorkers);
 							}
 						}
@@ -871,7 +874,7 @@ _AP.keyboard1 = (function()
 							}
 							if(inputNote.noteOff.trkOffs !== undefined)
 							{
-								setTrkOffMsgOptions(inputNote.noteOff.trkOffs, inputNote.trkOptions);
+								setTrkOffTrkOptions(inputNote.noteOff.trkOffs, inputNote.trkOptions);
 								noteInfo.offTrkOffs = getTrkOffs(inputNote.noteOff.trkOffs, trackWorkers);
 							}
 						}

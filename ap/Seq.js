@@ -62,7 +62,7 @@ _AP.seq = (function()
 		//  trkOptions
 		function setAndGetWorkers(seqTrks, seqPositionInScore, trackWorkers)
 		{
-			var i, nSeqTrks = seqTrks.length, trkDef, trkMsPos, trkMoments, trkOptions, trkWorker, workers = [];
+			var i, nSeqTrks = seqTrks.length, trkDef, trkWorker, workers = [], trk, pedalOption;
 
 			function getMoments(trkMidiObjects)
 			{
@@ -102,14 +102,16 @@ _AP.seq = (function()
 			for(i = 0; i < nSeqTrks; ++i)
 			{
 				trkDef = seqTrks[i]; 
+				trk = {};
 
-				trkMsPos = seqPositionInScore + trkDef.msOffset;
-				trkMoments = getMoments(trkDef.midiObjects);
-				trkOptions = trkDef.trkOptions;
+				trk.msPosition = seqPositionInScore + trkDef.msOffset;
+				trk.moments = getMoments(trkDef.midiObjects);
+
+				pedalOption = trkDef.trkOptions.pedal;
 
 				trkWorker = trackWorkers[trkDef.trackIndex];
 
-				trkWorker.postMessage({ action: "pushTrk", msPosition: trkMsPos, moments: trkMoments, trkOptions: trkOptions });
+				trkWorker.postMessage({ action: "pushTrk", trk: trk, pedalOption: pedalOption });
 
 				workers.push(trkWorker);
 			}

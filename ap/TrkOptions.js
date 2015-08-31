@@ -30,17 +30,20 @@ _AP.trkOptions = (function ()
 	// Default TrkOptions objects have no defined fields.
 	//
 	// Possible fields (all are attributes in score files), and their available values, are:
+	//    pedal -- possible values: "holdAll", "holdLast"
     //    velocity -- possible values: "scaled", "shared", "overridden"  
-    //    pressure -- possible values: "aftertouch", "channelPressure", "pitchWheel", "modulation", "volume", "pan"
+    //    pressure -- possible values: "aftertouch", "channelPressure", "modulation", "volume",
     //				                   "expression", "timbre", "brightness", "effects", "tremolo", "chorus", "celeste", "phaser"
-	//    trkOff -- possible values: "undefined", "stopChord", "stopNow", "fade", "holdAll", "holdLast"
-    //    pitchWheel -- possible values: same as pressure
+	//    trkOff -- possible values: "undefined", "stopChord", "stopNow", "fade"
+    //    pitchWheel -- "pitch", "speed" or "pan".
     //    modulation -- possible values: same as pressure
-	//    speedOption -- possible values: "noteOnKey", "noteOnVel", "pressure", "pitchWheel", "modulation"
 	//    minVelocity -- an integer in range [1..127]. Defined if velocity is defined. 
     //    maxVolume -- an integer in range [1..127]. Defined if one of the above controllers is set to "volume".
     //    minVolume -- an integer in range [1..127]. Defined if one of the above controllers is set to "volume".
     //    maxSpeedPercent -- an integer > 100. Defined if speedOption is defined.
+	//    pitchWheelDeviation -- the number of semitones deviation when pitchWheel="pitch"
+	//    speedDeviation -- the speed factor when pitchWheel="speed"
+	//    panOrigin -- the position around which pitchWheel="pan" moves (range 0..127, centre is 64)
 	TrkOptions = function (trkOptionsNode)
 	{
 		if (!(this instanceof TrkOptions))
@@ -58,7 +61,12 @@ _AP.trkOptions = (function ()
 			attr = attributes[i];
 			switch(attr.name)
 			{
-				// options sent trkOn message
+				// options sent with pushTrk message (in the Seq constructor)
+				case "pedal":
+					this.pedal = attr.value;
+					break;
+
+				// options sent with doNoteOn message
 				case "velocity":
 					this.velocity = attr.value;
 					break;
@@ -71,34 +79,42 @@ _AP.trkOptions = (function ()
 					this.pressure = attr.value;
 					break;
 
+				// option sent with pushTrk message
+				case "pedal":
+					this.pedal = attr.value;
+					break;
+
 				// option sent with trkOff message
 				case "trkOff":
 					this.trkOff = attr.value;
 					break;
 
 				// option sent with pitchWheel message (when the physical pitchWheel moves)
-				case "pitchWheel": // can be undefined  (see maxVolume and minVolume below)
+				case "pitchWheel": // can be undefined
 					this.pitchWheel = attr.value;
 					break;
+
 				// option sent with modulation message (when the physical modulation wheel moves)
 				case "modulation": // can be undefined  (see maxVolume and minVolume below)
 					this.modulation = attr.value;
 					break;
 
-				// options sent if either pressure, pitchWheel or modulation messages are set to control volume
-				case "maxVolume":
-					this.maxVolume = parseInt(attr.value, 10);
-					break;
+				// options sent if either pressure, or modulation messages are set to control volume
 				case "minVolume":
 					this.minVolume = parseInt(attr.value, 10);
 					break;
-
-				// options sent when the changeSpeed message is sent
-				case "speedOption":
-					this.speedOption = attr.value;
+				case "maxVolume":
+					this.maxVolume = parseInt(attr.value, 10);
 					break;
-				case "maxSpeedPercent": // is defined if speedOption is defined
-					this.maxSpeedPercent = parseInt(attr.value, 10);
+
+				case "pitchWheelDeviation":
+					this.pitchWheelDeviation = parseInt(attr.value, 10); 
+					break;
+				case "speedDeviation":
+					this.speedDeviation = parseFloat(attr.value, 10);
+					break;
+				case "panOrigin":
+					this.panOrigin = parseInt(attr.value, 10); // (range 0..127, centre is 64)
 					break;
 
 				default:
