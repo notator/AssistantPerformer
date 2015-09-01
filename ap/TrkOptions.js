@@ -88,8 +88,8 @@ _AP.trkOptions = (function ()
 					this.pitchWheel = attr.value;
 					break;
 
-				case "modulation": // can be undefined  (see also maxVolume and minVolume below)
-					this.modulation = attr.value;
+				case "modWheel": // can be undefined  (see also maxVolume and minVolume below)
+					this.modWheel = attr.value;
 					break;
 
 				// options set if either pressure, or modulation messages are set to control volume

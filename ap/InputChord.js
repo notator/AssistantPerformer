@@ -186,29 +186,29 @@ _AP.inputChord = (function()
     			return rval;
     		}
 
-    		function getPressures(pressures, trackIndexPerMidiChannel)
+    		function getTrackOpts(channelOpts, trackIndexPerMidiChannel)
     		{
-    			var i, nPressures = pressures.length, pressure, pressr, pressrs = [];
+    			var i, nChannelOpts = channelOpts.length, channelOpt, trackOpt, trackOpts = [];
 
-    			if(pressures.trkOptions !== undefined)
+    			if(channelOpts.trkOptions !== undefined)
     			{
-    				pressrs.trkOptions = pressures.trkOptions;
+    				trackOpts.trkOptions = channelOpts.trkOptions;
     			}
     			
-    			for(i = 0; i < nPressures; ++i)
+    			for(i = 0; i < nChannelOpts; ++i)
     			{
-    				pressr = {};
-    				pressure = pressures[i];
-    				if(pressure.trkOptions !== undefined)
+    				trackOpt = {};
+    				channelOpt = channelOpts[i];
+    				if(channelOpt.trkOptions !== undefined)
     				{
-    					pressr.trkOptions = pressure.trkOptions;
+    					trackOpt.trkOptions = channelOpt.trkOptions;
     				}
-    				pressr.trackIndex = trackIndexPerMidiChannel[pressure.midiChannel];
+    				trackOpt.trackIndex = trackIndexPerMidiChannel[channelOpt.midiChannel];
 
-    				pressrs.push(pressr);
+    				trackOpts.push(trackOpt);
     			}
 
-    			return pressrs;
+    			return trackOpts;
     		}
 
     		for(i = 0; i < nInputNoteDefs; ++i)
@@ -226,7 +226,15 @@ _AP.inputChord = (function()
     			}
     			if(inputNoteDef.pressures !== undefined)
     			{
-    				inputNote.pressures = getPressures(inputNoteDef.pressures, outputTracks.trackIndexPerMidiChannel);
+    				inputNote.pressures = getTrackOpts(inputNoteDef.pressures, outputTracks.trackIndexPerMidiChannel);
+    			}
+    			if(inputNoteDef.pitchWheels !== undefined)
+    			{
+    				inputNote.pitchWheels = getTrackOpts(inputNoteDef.pitchWheels, outputTracks.trackIndexPerMidiChannel);
+    			}
+    			if(inputNoteDef.modWheels !== undefined)
+    			{
+    				inputNote.modWheels = getTrackOpts(inputNoteDef.modWheels, outputTracks.trackIndexPerMidiChannel);
     			}
     			if(inputNoteDef.noteOff !== undefined)
     			{

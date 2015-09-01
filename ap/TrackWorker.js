@@ -2,17 +2,19 @@
 /*jslint bitwise: true, nomen: true, plusplus: true, white: true, continue: true */
 /*global _AP: false,  window: false,  document: false, performance: false, console: false, alert: false, postMessage: false, setTimeout: false */
 
+importScripts("_AP_MIDI_Constants.js", "_AP_MIDI_Message.js");
+
 /****************************************/
 // Aug. 2015
-var eventHandler = function(e)
+eventHandler = function(e)
 {
 	"use strict";
 
 	var msg = e.data,
 
-	CMD = _AP.constants.COMMAND,
-	CTL = _AP.constants.CONTROL,
-	Message = _AP.message.Message,
+	CMD = _AP_MIDI_Constants.COMMAND,
+	CTL = _AP_MIDI_Constants.CONTROL,
+	Message = _AP_MIDI_Message.Message,
 
 	trackIndex,
 	channelIndex,
@@ -44,7 +46,8 @@ var eventHandler = function(e)
 	// worker.postMessage({ action: "init", trackIndex: i, channelIndex: outputTrackMidiChannels[i] });
 	function init(msg)
 	{
-		console.assert(msg.trackIndex && msg.channelIndex, "TrackWorker.init(): illegal msg");
+		console.assert(msg.trackIndex !== undefined && msg.trackIndex >= 0 && msg.trackIndex < 16);
+		console.assert(msg.channelIndex !== undefined && msg.channelIndex >= 0 && msg.channelIndex < 16);
 
 		trackIndex = msg.trackIndex;
 		channelIndex = msg.channelIndex;

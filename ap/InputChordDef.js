@@ -84,7 +84,7 @@ _AP.inputChordDef = (function ()
 					returnObject = {};
 
 					// returns an array of trkOn, possibly having an trkOptions attribute 
-					function getTrkOns(trkOnsNode)
+					function getOnSeq(trkOnsNode)
 					{
 						var i, childNodes, returnArray = [];
 
@@ -143,7 +143,7 @@ _AP.inputChordDef = (function ()
 					}
 
 					// returns an array of trkOn, possibly having an trkOptions attribute
-					function getTrkOffs(trkOffsNode)
+					function getOffSeq(trkOffsNode)
 					{
 						var i, childNodes, returnArray = [];
 
@@ -202,11 +202,11 @@ _AP.inputChordDef = (function ()
 					{
 						switch(childNodes[i].nodeName)
 						{
-							case 'trkOns':
-								returnObject.trkOns = getTrkOns(childNodes[i]);
+							case 'onSeq':
+								returnObject.onSeq = getOnSeq(childNodes[i]);
 								break;
-							case 'trkOffs':
-								returnObject.trkOffs = getTrkOffs(childNodes[i]);
+							case 'offSeq':
+								returnObject.offSeq = getOffSeq(childNodes[i]);
 								break;
 						}
 					}
@@ -214,27 +214,27 @@ _AP.inputChordDef = (function ()
 					return returnObject;
 				}
 
-				function getPressures(pressuresNode)
-				{					
-					var i, childNodes = pressuresNode.childNodes, pressure, pressures = [];
+				function getChannels(channelsNode)
+				{
+					var i, childNodes = channelsNode.childNodes, channelOptions, channels = [];
 
-					function getPressure(pressureNode)
+					function getChannelOptions(channelNode)
 					{
-						var i, pressure, attrs, childNodes = pressureNode.childNodes;
+						var i, channelOptions, attrs, childNodes = channelNode.childNodes;
 
-						attrs = pressureNode.attributes;
+						attrs = channelNode.attributes;
 						console.assert(attrs.length === 1 && attrs[0].name === 'midiChannel');
-						pressure = {};
-						pressure.midiChannel = parseInt(attrs[0].value, 10);
+						channelOptions = {};
+						channelOptions.midiChannel = parseInt(attrs[0].value, 10);
 
 						for(i = 0; i < childNodes.length; ++i)
 						{
 							if(childNodes[i].nodeName === 'trkOptions')
 							{
-								pressure.trkOptions = new TrkOptions(childNodes[i]);
+								channelOptions.trkOptions = new TrkOptions(childNodes[i]);
 							}
 						}
-						return pressure;
+						return channelOptions;
 					}
 
 					for(i = 0; i < childNodes.length; ++i)
@@ -242,15 +242,15 @@ _AP.inputChordDef = (function ()
 						switch(childNodes[i].nodeName)
 						{
 							case 'trkOptions':
-								pressures.trkOptions = new TrkOptions(childNodes[i]);
+								channels.trkOptions = new TrkOptions(childNodes[i]);
 								break;
-							case 'pressure':
-								pressure = getPressure(childNodes[i]);
-								pressures.push(pressure);
+							case 'channel':
+								channelOptions = getChannelOptions(childNodes[i]);
+								channels.push(channelOptions);
 								break;
 						}
 					}
-					return pressures;
+					return channels;
 				}
 				
 				for(i = 0; i < nAttributes; ++i)
@@ -280,7 +280,13 @@ _AP.inputChordDef = (function ()
 							inputNote.noteOn = getNoteOnOrNoteOff(childNodes[i]);
 							break;
 						case "pressures":
-							inputNote.pressures = getPressures(childNodes[i]);
+							inputNote.pressures = getChannels(childNodes[i]);
+							break;
+						case "pitchWheels":
+							inputNote.pitchWheels = getChannels(childNodes[i]);
+							break;
+						case "modWheels":
+							inputNote.modWheels = getChannels(childNodes[i]);
 							break;
 						case "noteOff":
 							inputNote.noteOff = getNoteOnOrNoteOff(childNodes[i]);
@@ -341,22 +347,22 @@ _AP.inputChordDef = (function ()
 		function outChannels(noteOnOff)
 		{
 			var i,
-			trkOns = noteOnOff.trkOns, nTrkOns = trkOns.length,
-			trkOffs = noteOnOff.trkOffs, nTrkOffs = trkOffs.length,
+			onSeq = noteOnOff.onSeq, nTrkOns = onSeq.length,
+			offSeq = noteOnOff.offSeq, nTrkOffs = offSeq.length,
 			outputChannels = [];
 
-			if(trkOns !== undefined)
+			if(onSeq !== undefined)
 			{
 				for(i = 0; i < nTrkOns; ++i)
 				{
-					outputChannels.push(trkOns[i].midiChannel);
+					outputChannels.push(onSeq[i].midiChannel);
 				}
 			}
-			if(trkOffs !== undefined)
+			if(offSeq !== undefined)
 			{
 				for(i = 0; i < nTrkOffs; ++i)
 				{
-					outputChannels.push(trkOffs[i].midiChannel);
+					outputChannels.push(offSeq[i].midiChannel);
 				}
 			}
 
@@ -388,6 +394,20 @@ _AP.inputChordDef = (function ()
 				for(j = 0; j < inputNote.pressures.length; ++j)
 				{
 					nonUniqueOutputChannels = nonUniqueOutputChannels.concat(inputNote.pressures[j].midiChannel);
+				}
+			}
+			if(inputNote.pitchWheels !== undefined)
+			{
+				for(j = 0; j < inputNote.pitchWheels.length; ++j)
+				{
+					nonUniqueOutputChannels = nonUniqueOutputChannels.concat(inputNote.pitchWheels[j].midiChannel);
+				}
+			}
+			if(inputNote.modWheels !== undefined)
+			{
+				for(j = 0; j < inputNote.modWheels.length; ++j)
+				{
+					nonUniqueOutputChannels = nonUniqueOutputChannels.concat(inputNote.modWheels[j].midiChannel);
 				}
 			}
 			if(inputNote.noteOff !== undefined)
