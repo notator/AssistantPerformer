@@ -96,9 +96,9 @@ _AP.inputChord = (function()
     			// ???? .midiObjectIndex -- compulsory (??). The index of the first object in the trk in the whole track.midiObjects array.
 				//		.msOffset -- compulsory. Usually 0. The msDurationInScore between this InputNote and the first midiObject in the trk.
     			//		.midiObjects -- compulsory. The array of midiChords and Rests in the trk.
-    			function getSeq(trkOns, outputTracks, chordMsPositionInScore)
+    			function getOnSeq(onSeq, outputTracks, chordMsPositionInScore)
     			{
-    				var trk, trks = [], i, trkOn, nTrkOns = trkOns.length, trackMidiObjects;
+    				var trk, trks = [], i, trkOn, nTrkOns = onSeq.length, trackMidiObjects;
 
     				function getMidiObjectIndex(trkMsPosition, midiObjects)
     				{
@@ -132,7 +132,7 @@ _AP.inputChord = (function()
 
     				for(i = 0; i < nTrkOns; ++i)
     				{
-    					trkOn = trkOns[i];
+    					trkOn = onSeq[i];
     					trk = {};
 						
     					if(trkOn.trkOptions !== undefined)
@@ -148,39 +148,39 @@ _AP.inputChord = (function()
     					trks.push(trk);
     				}
 
-    				if(trkOns.trkOptions !== undefined)
+    				if(onSeq.trkOptions !== undefined)
     				{
-    					trks.trkOptions = trkOns.trkOptions;
+    					trks.trkOptions = onSeq.trkOptions;
     				}
 
     				return trks;
     			}
 
-    			function getTrkOffs(trkOffs, trackIndexPerMidiChannel)
+    			function getOffSeq(offSeq, trackIndexPerMidiChannel)
     			{
-    				var i, nTrkOffs = trkOffs.length, tOff, tOffs = [];
+    				var i, nTrkOffs = offSeq.length, tOff, tOffs = [];
 
     				for(i=0; i < nTrkOffs; ++i)
     				{
     					tOff = {};
-    					tOff.trackIndex = trackIndexPerMidiChannel[trkOffs[i].midiChannel];
-    					tOff.msPosition = trkOffs[i].msPosition;
+    					tOff.trackIndex = trackIndexPerMidiChannel[offSeq[i].midiChannel];
+    					tOff.msPosition = offSeq[i].msPosition;
     					tOffs.push(tOff);						
     				}
-    				if(trkOffs.trkOptions !== undefined)
+    				if(offSeq.trkOptions !== undefined)
     				{
-    					tOffs.trkOptions = trkOffs.trkOptions;
+    					tOffs.trkOptions = offSeq.trkOptions;
     				}
     				return tOffs;
     			}
 
-    			if(noteInfo.trkOns !== undefined)
+    			if(noteInfo.onSeq !== undefined)
     			{
-    				rval.seq = getSeq(noteInfo.trkOns, outputTracks, chordMsPositionInScore);
+    				rval.onSeq = getOnSeq(noteInfo.onSeq, outputTracks, chordMsPositionInScore);
     			}
-    			if(noteInfo.trkOffs !== undefined)
+    			if(noteInfo.offSeq !== undefined)
     			{
-    				rval.trkOffs = getTrkOffs(noteInfo.trkOffs, outputTracks.trackIndexPerMidiChannel);
+    				rval.offSeq = getOffSeq(noteInfo.offSeq, outputTracks.trackIndexPerMidiChannel);
     			}
 
     			return rval;

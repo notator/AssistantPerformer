@@ -663,11 +663,11 @@ _AP.keyboard1 = (function()
 					for(i = 0; i < nInputNotes; ++i)
 					{
 						inputNote = inputNotes[i];
-						if(inputNote.noteOn !== undefined && inputNote.noteOn.seq !== undefined)
+						if(inputNote.noteOn !== undefined && inputNote.noteOn.onSeq !== undefined)
 						{
 							inputChordData.noteOnSeqPosition = inputChord.msPositionInScore;
 						}
-						if(inputNote.noteOff !== undefined && inputNote.noteOff.seq !== undefined)
+						if(inputNote.noteOff !== undefined && inputNote.noteOff.onSeq !== undefined)
 						{
 							inputChordData.noteOffSeqPosition = inputChord.msPositionInScore + inputChord.msDurationInScore;
 						}
