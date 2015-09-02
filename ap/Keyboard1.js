@@ -59,12 +59,12 @@ _AP.keyboard1 = (function()
 	outputDevice,
 
 	currentMsPosIndex, // initialized to 0 when playing starts. Is the index in the following array.
-	allSeqMsPositions = [],
+	verticalNoteArrays = [],
 	indexPlayed, // initialized to currentMsPosIndex when the index is played.
 	inputTracks,
 	outputTracks,
 	trackWorkers = [], // an array of webWorkers, one per outputTrack (=trackIndex).
-	noteInfoss = [],
+	keyNoteArrays = [],
 	keyRange, // keyRange.bottomKey and keyRange.topKey are the bottom and top input midi key values notated in the score.
 
 	reportEndOfSpan, // callback -- called here as reportEndOfSpan(sequenceRecording, performanceMsDuration);
@@ -286,10 +286,10 @@ _AP.keyboard1 = (function()
     	{
     		var i, noteInfos, seq;
 
-    		for(i = 0; i < noteInfoss.length; ++i)
+    		for(i = 0; i < keyNoteArrays.length; ++i)
     		{
-    			noteInfos = noteInfoss[i];
-    			if(noteInfos.seqs !== undefined) // some noteInfoss may not have seqs...
+    			noteInfos = keyNoteArrays[i];
+    			if(noteInfos.seqs !== undefined) // some keyNoteArrays may not have seqs...
     			{
     				while(noteInfos.seqs.index > noteInfos.seqs.length)
     				{
@@ -315,20 +315,20 @@ _AP.keyboard1 = (function()
 
     		if(key >= keyRange.bottomKey && key <= keyRange.topKey)
     		{
-    			noteInfos = noteInfoss[keyIndex]; // This is the same object as for the corresponding noteOn.
+    			noteInfos = keyNoteArrays[keyIndex]; // This is the same object as for the corresponding noteOn.
 				seq = noteInfos.seqs[noteInfos.seqs.index]; // (the key's currently playing seq).
     			if(seq !== undefined && seq.triggeredOn)// will be false if the key was pressed prematurely;
     			{
     				// stop() is called to stop the performance when hasCompleted is true for all the TrackWorkers.
 
-    				if(currentMsPosIndex < allSeqMsPositions.length - 1)
+    				if(currentMsPosIndex < verticalNoteArrays.length - 1)
     				{
     					seq.doNoteOff();  // stops the seq according to the trkOptions set in the its constructor
-    					nextChordIndex = seq.nextChordIndex; // The index, in allSeqMsPositions, of the following chord (in any input track).
+    					nextChordIndex = seq.nextChordIndex; // The index, in verticalNoteArrays, of the following chord (in any input track).
     					while(currentMsPosIndex < nextChordIndex) // advance until currentMsPosIndex === nextChordIndex
     					{
     						currentMsPosIndex++;
-    						reportMsPositionInScore(allSeqMsPositions[currentMsPosIndex]);
+    						reportMsPositionInScore(verticalNoteArrays[currentMsPosIndex]);
     					
     						advanceCurrentKeyIndicesTo(currentMsPosIndex);
     					}
@@ -343,8 +343,8 @@ _AP.keyboard1 = (function()
 
     		if(key >= keyRange.bottomKey && key <= keyRange.topKey)
     		{
-    			noteInfos = noteInfoss[keyIndex];
-    			if(noteInfos.seqs.length > noteInfos.seqs.index) // some noteInfoss may not have seqs...
+    			noteInfos = keyNoteArrays[keyIndex];
+    			if(noteInfos.seqs.length > noteInfos.seqs.index) // some keyNoteArrays may not have seqs...
     			{
     				seq = noteInfos.seqs[noteInfos.seqs.index];
     				if(seq !== undefined)
@@ -355,7 +355,7 @@ _AP.keyboard1 = (function()
     						if(chordIndex === currentMsPosIndex + 1)
     						{
     							currentMsPosIndex++;
-    							reportMsPositionInScore(allSeqMsPositions[currentMsPosIndex]);
+    							reportMsPositionInScore(verticalNoteArrays[currentMsPosIndex]);
     							advanceCurrentKeyIndicesTo(currentMsPosIndex); // see above
     							seq = noteInfos.seqs[noteInfos.seqs.index];
     						}
@@ -493,67 +493,24 @@ _AP.keyboard1 = (function()
 	{
 		var channelIndex;
 
-		function initPlay(trackIsOnArray, noteInfoss, allSeqMsPositions, trackWorkers, startMarkerMsPosInScore, endMarkerMsPosInScore)
+		function initPlay(trackIsOnArray, keyNoteArrays, verticalNoteArrays, trackWorkers, startMarkerMsPosInScore, endMarkerMsPosInScore)
 		{
 			var
 			nOutputTracks = outputTracks.length,
 			nTracks = nOutputTracks + inputTracks.length,
-			chordIndexPerInputTrack = [],
-			outputTrackMidiChannels = [],
 			inputTracksTrkOptions = [];
 
-			function initOutputTrackMidiChannels(outputTrackMidiChannels, outputTracks)
-			{
-				var i;
-
-				outputTrackMidiChannels.length = [];
-
-				for(i = 0; i < outputTracks.length; i++)
-				{
-					outputTrackMidiChannels.push(outputTracks[i].midiChannel);
-				}
-			}
-
-			// Sets chordIndexPerInputTrack to contain the first chordIndex in each inputTrack's inputObjects
-			// at or after startMarkerMsPosInScore and before endMarkerMsPosInScore.
-			// If there is no such chord in a track, the index is set to -1.
-			function initChordIndexPerInputTrack(chordIndexPerInputTrack, inputTracks, startMarkerMsPosInScore, endMarkerMsPosInScore)
-			{
-				var i, j, initialChordIndex, inputObjects, inputObject;
-
-				chordIndexPerInputTrack.length = 0;
-
-				for(i = 0; i < inputTracks.length; i++)
-				{
-					inputObjects = inputTracks[i].inputObjects;
-					initialChordIndex = -1; // default, when no chord in range.
-					for(j = 0; j < inputObjects.length; j++)
-					{
-						inputObject = inputObjects[j];
-						if(inputObject instanceof _AP.inputChord.InputChord
-						&& inputObject.msPositionInScore >= startMarkerMsPosInScore
-						&& inputObject.msPositionInScore < endMarkerMsPosInScore)
-						{
-							initialChordIndex = j;
-							break;
-						}
-
-					}
-					chordIndexPerInputTrack.push(initialChordIndex);
-				}
-			}
-
-			function initTrackWorkers(trackWorkers, outputTrackMidiChannels)
+			function initTrackWorkers(trackWorkers, outputTracks)
 			{
 				var i, worker;
 
 				trackWorkers.length = 0;
 
-				for(i = 0; i < outputTrackMidiChannels.length; i++)
+				for(i = 0; i < outputTracks.length; i++)
 				{
 					worker = new window.Worker("ap/TrackWorker.js");
 					worker.addEventListener("message", handleTrackMessage);
-					worker.postMessage({ action: "init", trackIndex: i, channelIndex: outputTrackMidiChannels[i] });
+					worker.postMessage({ action: "init", trackIndex: i, channelIndex: outputTracks[i].midiChannel });
 					// worker.hasCompleted is set to false when a trk is added (in the Seq constructor),
 					// and back to true when the worker says that it has completed its last trk.
 					worker.hasCompleted = true;
@@ -605,151 +562,153 @@ _AP.keyboard1 = (function()
 				}
 			}
 
-			// Called by both the following functions.
-			// Returns an object having the attributes trackIndex, chordIndex, noteOnSeqPosition and noteOffSeqPosition.
-			// trackIndex and chordIndex, are the location of the chord in the inputTracks, whereby
-			// the top inputTrack has trackIndex === 0.
-			// noteOnSeqPosition and noteOffSeqPosition are defined if seqs are to be sent from the noteOn and noteOff
-			// positions respectively.
-			// Returns null when there are no more inputChords earlier than endMarkerMsPosInScore.
-			function getNextInputChordData(inputTracks, chordIndexPerInputTrack, endMarkerMsPosInScore)
+			// Returns an array of (array of performed inputNote), ordered by msPosition (without the endMarkerMsPosInScore).
+			// The contained arrays contain all the performing inputNotes that start at a particular msPosition, regardless of inputTrack.
+			function getVerticalNoteArrays(inputTracks, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore)
 			{
-				var i, trackIndex, msPos, inputChord, inputNote, inputNotes, nInputNotes,
-					minMsPos = Number.MAX_VALUE, inputChordData = null;
+				var trackIndex, nTracks, ioIndex, inputObjects, nInputObjects, msPosition, inputChord,
+					verticalNotesArrays = [], performedNotes, vArray, i, nPerformedNotes;
 
-				// Returns -1 if there is no chord before endMarkerMsPosInScore.
-				function incrementChordIndex(inputObjects, currentChordIndex, endMarkerMsPosInScore)
+				function getPerformedNotes(inputNotes, trackIsOnArray)
 				{
-					var i, inputObject, nextIndex = currentChordIndex + 1, returnIndex = -1;
+					var performedNotes = [], i, nInputNotes = inputNotes.length;
 
-					for(i = nextIndex; i < inputObjects.length; i++)
+					function usesTrack(inputNote, trackIsOnArray)
 					{
-						inputObject = inputObjects[i];
-						if(inputObject.msPositionInScore >= endMarkerMsPosInScore)
+						var rval = false;
+
+						function hasTrack(trkArray, trackIsOnArray)
 						{
-							break;
+							var rval = false, i, nTrks = trkArray.length;
+							for(i = 0; i < nTrks; ++i)
+							{
+								if(trackIsOnArray[trkArray[i].trackIndex])
+								{
+									rval = true;
+									break;
+								}
+							}
+							return rval;
 						}
-						if(inputObject instanceof _AP.inputChord.InputChord)
+
+						if(hasTrack(inputNote.noteOn.onSeq, trackIsOnArray)
+						|| hasTrack(inputNote.noteOff.offSeq, trackIsOnArray)
+						|| hasTrack(inputNote.noteOff.onSeq, trackIsOnArray)
+						|| hasTrack(inputNote.noteOn.offSeq, trackIsOnArray)
+						|| hasTrack(inputNote.pressures, trackIsOnArray)
+						|| hasTrack(inputNote.pitchWheels, trackIsOnArray)
+						|| hasTrack(inputNote.modWheels, trackIsOnArray))
 						{
-							returnIndex = i;
-							break;
+							rval = true;
 						}
+						return rval;
 					}
 
-					return returnIndex;
-				}
-
-				for(i = 0; i < inputTracks.length; i++)
-				{
-					if(chordIndexPerInputTrack[i] !== -1)
-					{
-						msPos = inputTracks[i].inputObjects[chordIndexPerInputTrack[i]].msPositionInScore;
-						if(msPos < endMarkerMsPosInScore && msPos < minMsPos)
-						{
-							minMsPos = msPos;
-							trackIndex = i;
-						}
-					}
-				}
-
-				if(minMsPos < Number.MAX_VALUE)
-				{
-					inputChordData = {};
-					inputChordData.trackIndex = trackIndex;
-					inputChordData.chordIndex = chordIndexPerInputTrack[trackIndex];
-					inputChord = inputTracks[trackIndex].inputObjects[chordIndexPerInputTrack[trackIndex]];
-					inputNotes = inputChord.inputNotes;
-					nInputNotes = inputNotes.length;
 					for(i = 0; i < nInputNotes; ++i)
 					{
-						inputNote = inputNotes[i];
-						if(inputNote.noteOn !== undefined && inputNote.noteOn.onSeq !== undefined)
+						if(usesTrack(inputNotes[i], trackIsOnArray))
 						{
-							inputChordData.noteOnSeqPosition = inputChord.msPositionInScore;
-						}
-						if(inputNote.noteOff !== undefined && inputNote.noteOff.onSeq !== undefined)
-						{
-							inputChordData.noteOffSeqPosition = inputChord.msPositionInScore + inputChord.msDurationInScore;
+							performedNotes.push(inputNotes[i]);
 						}
 					}
-					
-					chordIndexPerInputTrack[trackIndex] = incrementChordIndex(inputTracks[trackIndex].inputObjects, chordIndexPerInputTrack[trackIndex], endMarkerMsPosInScore);
+
+					return performedNotes;
 				}
 
-				return inputChordData;
-			}
-
-			function initAllSeqMsPositions(allSeqMsPositions, chordIndexPerInputTrack, inputTracks, trackIsOnArray, endMarkerMsPosInScore)
-			{
-				var trackIndex, inputChordData;
-
-				allSeqMsPositions.length = 0;
-
-				inputChordData = getNextInputChordData(inputTracks, chordIndexPerInputTrack, endMarkerMsPosInScore);
-				while(inputChordData !== null)
+				function findVArray(verticalNotesArrays, msPosition)
 				{
-					trackIndex = inputChordData.trackIndex;
+					var i, nArrays = verticalNotesArrays.length, vArray = null;
+
+					for(i = 0; i < nArrays; ++i)
+					{
+						if(verticalNotesArrays[i].msPosition === msPosition)
+						{
+							vArray = verticalNotesArrays[i];
+							break;
+						}
+					}
+
+					return vArray;
+				}
+
+				nTracks = inputTracks.length;
+				for(trackIndex = 0; trackIndex < nTracks; ++trackIndex)
+				{
 					if(trackIsOnArray[trackIndex])
 					{
-						if(inputChordData.noteOnSeqPosition !== undefined)
+						inputObjects = inputTracks[trackIndex].inputObjects;
+						nInputObjects = inputObjects.length;
+						for(ioIndex = 0; ioIndex < nInputObjects; ++ioIndex)
 						{
-							allSeqMsPositions.push(inputChordData.noteOnSeqPosition);
-						}
-						if(inputChordData.noteOffSeqPosition !== undefined)
-						{
-							allSeqMsPositions.push(inputChordData.noteOffSeqPosition);
+							if(inputObjects[ioIndex] instanceof _AP.inputChord.InputChord)
+							{
+								inputChord = inputObjects[ioIndex];
+								msPosition = inputChord.msPositionInScore;
+
+								if(msPosition >= startMarkerMsPosInScore && msPosition < endMarkerMsPosInScore)
+								{
+									performedNotes = getPerformedNotes(inputChord.inputNotes, trackIsOnArray);
+									if(performedNotes.length > 0)
+									{
+										nPerformedNotes = performedNotes.length;
+										vArray = findVArray(verticalNotesArrays, msPosition);
+										if(vArray === null)
+										{
+											vArray = [];
+											vArray.msPosition = msPosition;
+											verticalNotesArrays.push(vArray);
+										}
+										for(i = 0; i < nPerformedNotes; ++i)
+										{
+											vArray.push(performedNotes[i]);
+										}
+									}
+								}
+							}
 						}
 					}
-					inputChordData = getNextInputChordData(inputTracks, chordIndexPerInputTrack, endMarkerMsPosInScore);
 				}
 
-				// remove duplicates
-				allSeqMsPositions = allSeqMsPositions.reduce(function(a, b)
-				{
-					if(a.indexOf(b) < 0)
-					{
-						a.push(b);
-					}
-					return a;
-				}, []);
+				// sort by msPositions
+				verticalNotesArrays.sort(function(a, b) { return a.msPosition - b.msPosition; });
 
-				// numeric sort
-				allSeqMsPositions.sort(function(a, b) { return a - b; });
-
-				allSeqMsPositions.push(endMarkerMsPosInScore);
+				return verticalNotesArrays;
 			}
 
-			// Creates new Seqs, pushes the seq.trks into the trackWorkers, and the seqs into 
-			function initNoteInfoss(noteInfoss, trackWorkers, allSeqMsPositions, chordIndexPerInputTrack, inputTracks, trackIsOnArray, shuntedChordTrkOptions, endMarkerMsPosInScore)
+			// Creates an array of Note for each Key in the played range.
+			// Also creates Seq objects for each note, and initialises the trackWorkers with the Seqs' trks,
+			// The Seq constructor posts pushTrk messages to the appropriate trackWorkers.
+			// Each trackWorker puts each incoming trk into an array, ordered by msPosition.
+			function initKeyNoteArrays(keyNoteArrays, trackWorkers, verticalNoteArrays, inputTracks, trackIsOnArray, shuntedChordTrkOptions, endMarkerMsPosInScore)
 			{
 				var i, inputChordData, trackIndex, inputObjects, inputChord, chordIndex, inputChordTrkOptions,
 					inputChordIndices = {};
 
-				function initializeNoteInfoss(noteInfoss, bottomKey, topKey)
+				function initializeNoteInfoss(keyNoteArrays, bottomKey, topKey)
 				{
 					var noteInfos;
 
-					noteInfoss.length = 0; // the keyboard1.noteInfoss array
+					keyNoteArrays.length = 0; // the keyboard1.keyNoteArrays array
 					// create an empty noteInfos object per midi key
 					for(i = bottomKey; i <= topKey; ++i) // keyRange was set in keyboard1.init().
 					{
 						noteInfos = [];
 						noteInfos.index = 0;
-						noteInfoss.push(noteInfos);
+						keyNoteArrays.push(noteInfos);
 					}
 				}
 
-				function setInputChordIndices(inputChordIndices, allSeqMsPositions, inputChord)
+				function setInputChordIndices(inputChordIndices, verticalNoteArrays, inputChord)
 				{
 					var i, startMsPos = inputChord.msPositionInScore, endMsPos, chordIndex, nextChordIndex = -1;
 					
 					endMsPos = startMsPos + inputChord.msDurationInScore;
 
-					chordIndex = allSeqMsPositions.indexOf(startMsPos);
+					chordIndex = verticalNoteArrays.indexOf(startMsPos);
 
-					for(i = chordIndex; i < allSeqMsPositions.length; i++)
+					for(i = chordIndex; i < verticalNoteArrays.length; i++)
 					{
-						if(allSeqMsPositions[i] >= endMsPos)
+						if(verticalNoteArrays[i] >= endMsPos)
 						{
 							nextChordIndex = i;
 							break;
@@ -761,7 +720,7 @@ _AP.keyboard1 = (function()
 				}
 
 				// Appends noteInfo objects to each key's noteInfos array.
-				function setNoteInfoss(noteInfoss, trackWorkers, inputChord, inputChordIndices, chordTrkOptions, bottomKey)
+				function setNoteInfoss(keyNoteArrays, trackWorkers, inputChord, inputChordIndices, chordTrkOptions, bottomKey)
 				{
 					var i, inputNotes, nInputNotes, inputNote, noteInfo, noteInfos;
 
@@ -915,15 +874,15 @@ _AP.keyboard1 = (function()
 
 						noteInfo = getNoteInfo(inputNote, chordTrkOptions, trackWorkers);
 						// The noteInfos.index fields have all been initialized to 0.
-						noteInfos = noteInfoss[inputNote.notatedKey - bottomKey];
+						noteInfos = keyNoteArrays[inputNote.notatedKey - bottomKey];
 						noteInfos.push(noteInfo);
 					}
 				}
 
-				/* begin initNoteInfoss() */
-				initializeNoteInfoss(noteInfoss, keyRange.bottomKey, keyRange.topKey);
+				/* begin initKeyNoteArrays() */
+				initializeNoteInfoss(keyNoteArrays, keyRange.bottomKey, keyRange.topKey);
 
-				inputChordData = getNextInputChordData(inputTracks, chordIndexPerInputTrack, endMarkerMsPosInScore);
+				inputChordData = null; //getNextInputChordData(inputTracks, chordIndexPerInputTrack, endMarkerMsPosInScore);
 				while(inputChordData !== null)
 				{
 					trackIndex = inputChordData.trackIndex;
@@ -940,32 +899,26 @@ _AP.keyboard1 = (function()
 
 						console.assert(inputChordTrkOptions !== undefined);
 
-						setInputChordIndices(inputChordIndices, allSeqMsPositions, inputChord);
+						setInputChordIndices(inputChordIndices, verticalNoteArrays, inputChord);
 
-						setNoteInfoss(noteInfoss, trackWorkers, inputChord, inputChordIndices, inputChordTrkOptions, keyRange.bottomKey);
+						setNoteInfoss(keyNoteArrays, trackWorkers, inputChord, inputChordIndices, inputChordTrkOptions, keyRange.bottomKey);
 					}
-					inputChordData = getNextInputChordData(inputTracks, chordIndexPerInputTrack, endMarkerMsPosInScore);
+					inputChordData = null; // getNextInputChordData(inputTracks, chordIndexPerInputTrack, endMarkerMsPosInScore);
 				}
 			}
 
 			/*** begin initPlay() ***/
-			initOutputTrackMidiChannels(outputTrackMidiChannels, outputTracks);
 
-			initTrackWorkers(trackWorkers, outputTrackMidiChannels); // must be done before creating the noteInfos
+			initTrackWorkers(trackWorkers, outputTracks); // must be done before creating the noteInfos
 
 			initCurrentInputTracksTrkOptions(inputTracksTrkOptions, inputTracks, nOutputTracks, nTracks, startMarkerMsPosInScore);
 
-			initChordIndexPerInputTrack(chordIndexPerInputTrack, inputTracks, startMarkerMsPosInScore, endMarkerMsPosInScore);
+			verticalNoteArrays = getVerticalNoteArrays(inputTracks, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
 
-			initAllSeqMsPositions(allSeqMsPositions, chordIndexPerInputTrack, inputTracks, trackIsOnArray, endMarkerMsPosInScore);
-	
-			currentMsPosIndex = 0; // the initial index in allSeqMsPositions to perform
+			currentMsPosIndex = 0; // the initial index in verticalNoteArrays to perform
 			indexPlayed = -1; // is set to currentMsPosIndex when the index is played
 
-			// initChordIndexPerInputTrack() *again*.
-			initChordIndexPerInputTrack(chordIndexPerInputTrack, inputTracks, startMarkerMsPosInScore, endMarkerMsPosInScore);
-
-			initNoteInfoss(noteInfoss, trackWorkers, allSeqMsPositions, chordIndexPerInputTrack, inputTracks, trackIsOnArray, inputTracksTrkOptions, endMarkerMsPosInScore);
+			initKeyNoteArrays(keyNoteArrays, trackWorkers, verticalNoteArrays, inputTracks, trackIsOnArray, inputTracksTrkOptions, endMarkerMsPosInScore);
 		}
 
 		sequenceRecording = recording;
@@ -975,7 +928,7 @@ _AP.keyboard1 = (function()
 			resetChannel(outputDevice, channelIndex);
 		}
 
-		initPlay(trackIsOnArray, noteInfoss, allSeqMsPositions, trackWorkers, startMarkerMsPosInScore, endMarkerMsPosInScore);
+		initPlay(trackIsOnArray, keyNoteArrays, verticalNoteArrays, trackWorkers, startMarkerMsPosInScore, endMarkerMsPosInScore);
 
 		performanceStartTime = performance.now();
 		setState("running");
