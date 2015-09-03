@@ -4,43 +4,44 @@
 
 importScripts("_AP_MIDI_Constants.js", "_AP_MIDI_Message.js");
 
+var
+CMD = _AP_MIDI_Constants.COMMAND,
+CTL = _AP_MIDI_Constants.CONTROL,
+Message = _AP_MIDI_Message.Message,
+
+trackIndex,
+channelIndex,
+
+allTrks,
+trkIndex,
+currentTrk,
+trkStartTime,
+
+// currentTrk.moments
+moments,
+momentIndex,
+currentMoment,
+nMoments,
+
+// runtime variables
+stopChord,
+stopNow,
+fadeLength,
+letSound,
+velocityFactor,
+sharedVelocity,
+overrideVelocity,
+speedFactor,
+
+pitchWheelDeviation,
+
 /****************************************/
 // Aug. 2015
 eventHandler = function(e)
 {
 	"use strict";
 
-	var msg = e.data,
-
-	CMD = _AP_MIDI_Constants.COMMAND,
-	CTL = _AP_MIDI_Constants.CONTROL,
-	Message = _AP_MIDI_Message.Message,
-
-	trackIndex,
-	channelIndex,
-
-	allTrks,
-	trkIndex,
-	currentTrk,
-	trkStartTime,
-
-	// currentTrk.moments
-	moments,
-	momentIndex,
-	currentMoment,
-	nMoments,
-
-	// runtime variables
-	stopChord,
-	stopNow,
-	fadeLength,
-	letSound,
-	velocityFactor,
-	sharedVelocity,
-	overrideVelocity,
-	speedFactor,
-
-	pitchWheelDeviation;
+	var msg = e.data;
 
 	// Keyboard1 sends:
 	// worker.postMessage({ action: "init", trackIndex: i, channelIndex: outputTrackMidiChannels[i] });
@@ -77,12 +78,16 @@ eventHandler = function(e)
 
 	/****************************************/
 	// Seq constructor sends:
-	// trkWorker.postMessage({ action: "pushTrk", trk: trk });
+	// worker.postMessage({ action: "pushTrk", msPosition: msPosition, moments: moments, options: options });
+	// Set a new trk object's attributes to msPosition, moments and options,
+	// Then add it to the allTrks array maintaining the allTrks array in order of msPosition.
 	function pushTrk(msg)
 	{
-		// msg has the following attributes:
-		//    msg.trk -- fields: trk.msPosition, trk.moments, trk.options
-		console.assert(msg.trk, "TrackWorker.pushTrk(): illegal msg");
+		var insertAtIndex,
+			msPosition = msg.msPosition,
+			moments = msg.moments,
+			options = msg.options,
+			trk = {};
 
 		function messageIsNoteOff(message)
 		{
@@ -115,9 +120,7 @@ eventHandler = function(e)
 		// Removes all noteOff messages from the final moment that contains any.
 		function removeFinalNoteOffMessages(moments)
 		{
-			var
-			i,
-			lastNoteOffMomentIndex = moments.length; // an impossible value
+			var	i, lastNoteOffMomentIndex = moments.length; // an impossible value
 
 			function momentContainsNoteOffMessage(moment)
 			{
@@ -159,29 +162,63 @@ eventHandler = function(e)
 			}
 		}
 
-		if(msg.trk.options && msg.trk.options.pedal) // if undefined, do nothing
+		function findInsertionIndex(currentTrks, msPosition)
 		{
-			switch(msg.trk.options.pedal)
+			var i, nTrks = currentTrks.length, insIndex = nTrks;
+
+			if(nTrks > 0 && currentTrks[nTrks - 1].msPosition > msPosition)
+			{
+				if(currentTrks[0].msPosition < msPosition)
+				{
+					for(i = nTrks - 1; i >= 1; --i)
+					{
+						console.assert(currentTrks[i].msPosition !== msPosition,
+							"Error in TrackWorker.pushTrk(): Attempt to push a trk at an existing position!");
+						if((currentTrks[i - 1].msPosition < msPosition) && (currentTrks[i].msPosition > msPosition))
+						{
+							insIndex = i;
+							break;
+						}
+					}
+				}
+				else
+				{
+					insIndex = 0;
+				}
+			}
+
+			return insIndex;
+		}
+
+		if(options && options.pedal) // if undefined, do nothing
+		{
+			switch(options.pedal)
 			{
 				case "holdLast":
-					removeFinalNoteOffMessages(msg.trk.moments);
+					removeFinalNoteOffMessages(moments);
 					letSound = true;
 					break;
 				case "holdAll":
-					removeAllNoteOffMessages(msg.trk.moments);
+					removeAllNoteOffMessages(moments);
 					letSound = true;
 					break;
 				case "holdAllStop":
-					removeAllNoteOffMessages(msg.trk.moments);
+					removeAllNoteOffMessages(moments);
 					letSound = false;
 					break;
 				default:
-					console.assert(false, "TrackWorker.pushTrk(): illegal option -- " + msg.options.pedal);
+					console.assert(false, "TrackWorker.pushTrk(): illegal option -- " + options.pedal);
 					break;
 			}
 		}
 
-		allTrks.push(msg.trk);
+		insertAtIndex = findInsertionIndex(allTrks, msPosition);
+
+		trk.msPosition = msPosition;
+		trk.moments = moments;
+		trk.options = options;
+
+		allTrks.splice(insertAtIndex, 0, trk);
 	}
 
 	// Seq.prototype.start calls:
@@ -549,7 +586,7 @@ eventHandler = function(e)
 	// Aug. 2015
 	function doNoteOff()
 	{
-		var noteOffOption = currentTrk.trkOptions.noteOff;
+		var noteOffOption = currentTrk.options.noteOff;
 
 		function setFade()
 		{

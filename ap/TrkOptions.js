@@ -20,21 +20,19 @@ _AP.trkOptions = (function ()
 {
     "use strict";
     var
-    // TrkOptions constructor: argument can be an trkOptions node from a document, or another TrkOptions object (to be cloned).
+    // If the argument is undefined, or has no attributes, or no valid attributes, a default (empty) TrkObjects object is returned.
     // An TrkOptions object sets performance options for a trk, seq (=inputNote), or inputChord (=voice).
-    //    trk.inputOptions temporarily override seq.inputOptions
-    //    seq.inputOptions temporarily override inputNote.inputOptions
-	//    inputNote.inputOptions temporarily override inputChord.inputOptions
-    //    inputChord.inputOptions change the global inputOptions vor the containing voice.
-	//
-	// Default TrkOptions objects have no defined fields.
+    //    trk.trkOptions temporarily override seq.trkOptions
+    //    seq.trkOptions temporarily override inputNote.trkOptions
+	//    inputNote.trkOptions temporarily override inputChord.trkOptions
+    //    inputChord.trkOptions change the global trkOptions for the containing voice.
 	//
 	// Possible fields (all are attributes in score files), and their available values, are:
 	//    pedal -- possible values: "holdAll", "holdLast"
     //    velocity -- possible values: "scaled", "shared", "overridden"  
-    //    pressure -- possible values: "aftertouch", "channelPressure", "modulation", "volume",
+	//    trkOff -- possible values: "stopChord", "stopNow", "fade"
+	//    pressure -- possible values: "aftertouch", "channelPressure", "modulation", "volume",
     //				                   "expression", "timbre", "brightness", "effects", "tremolo", "chorus", "celeste", "phaser"
-	//    trkOff -- possible values: "undefined", "stopChord", "stopNow", "fade"
     //    pitchWheel -- "pitch", "speed" or "pan".
     //    modulation -- possible values: same as pressure
 	//    minVelocity -- an integer in range [1..127]. Defined if velocity is defined. 
@@ -51,67 +49,71 @@ _AP.trkOptions = (function ()
 			return new TrkOptions(trkOptionsNode);
 		}
 
-		var i, attributes = trkOptionsNode.attributes, attr, attrLen;
+		var i, attributes, attr, attrLen,
+		hasValidArg = !(trkOptionsNode === undefined || trkOptionsNode.attributes === undefined || trkOptionsNode.attributes.length === 0);
 
-		console.assert(attributes !== undefined && attributes.length > 0);
-
-		attrLen = attributes.length;
-		for(i = 0; i < attrLen; ++i)
+		if(hasValidArg)
 		{
-			attr = attributes[i];
-			switch(attr.name)
+			attributes = trkOptionsNode.attributes
+
+			attrLen = attributes.length;
+			for(i = 0; i < attrLen; ++i)
 			{
-				case "pedal":
-					this.pedal = attr.value;
-					break;
+				attr = attributes[i];
+				switch(attr.name)
+				{
+					case "pedal":
+						this.pedal = attr.value;
+						break;
 
-				case "velocity":
-					this.velocity = attr.value;
-					break;
-				case "minVelocity": // is defined if velocity is defined
-					this.minVelocity = parseInt(attr.value, 10);
-					break;
+					case "velocity":
+						this.velocity = attr.value;
+						break;
+					case "minVelocity": // is defined if velocity is defined
+						this.minVelocity = parseInt(attr.value, 10);
+						break;
 
-				case "pressure":
-					this.pressure = attr.value;
-					break;
+					case "pressure":
+						this.pressure = attr.value;
+						break;
 
-				case "pedal":
-					this.pedal = attr.value;
-					break;
+					case "pedal":
+						this.pedal = attr.value;
+						break;
 
-				case "trkOff":
-					this.trkOff = attr.value;
-					break;
+					case "trkOff":
+						this.trkOff = attr.value;
+						break;
 
-				case "pitchWheel": // can be undefined
-					this.pitchWheel = attr.value;
-					break;
+					case "pitchWheel": // can be undefined
+						this.pitchWheel = attr.value;
+						break;
 
-				case "modWheel": // can be undefined  (see also maxVolume and minVolume below)
-					this.modWheel = attr.value;
-					break;
+					case "modWheel": // can be undefined  (see also maxVolume and minVolume below)
+						this.modWheel = attr.value;
+						break;
 
-				// options set if either pressure, or modulation messages are set to control volume
-				case "minVolume":
-					this.minVolume = parseInt(attr.value, 10);
-					break;
-				case "maxVolume":
-					this.maxVolume = parseInt(attr.value, 10);
-					break;
+						// options set if either pressure, or modulation messages are set to control volume
+					case "minVolume":
+						this.minVolume = parseInt(attr.value, 10);
+						break;
+					case "maxVolume":
+						this.maxVolume = parseInt(attr.value, 10);
+						break;
 
-				case "pitchWheelDeviation":
-					this.pitchWheelDeviation = parseInt(attr.value, 10); 
-					break;
-				case "speedDeviation":
-					this.speedDeviation = parseFloat(attr.value, 10);
-					break;
-				case "panOrigin":
-					this.panOrigin = parseInt(attr.value, 10); // (range 0..127, centre is 64)
-					break;
+					case "pitchWheelDeviation":
+						this.pitchWheelDeviation = parseInt(attr.value, 10);
+						break;
+					case "speedDeviation":
+						this.speedDeviation = parseFloat(attr.value, 10);
+						break;
+					case "panOrigin":
+						this.panOrigin = parseInt(attr.value, 10); // (range 0..127, centre is 64)
+						break;
 
-				default:
-					throw (">>>>>>>>>> Illegal TrkOptions attribute <<<<<<<<<<");
+					default:
+						throw (">>>>>>>>>> Illegal TrkOptions attribute <<<<<<<<<<");
+				}
 			}
 		}
         return this;

@@ -38,31 +38,24 @@ _AP.seq = (function()
 	// A seq is an array of parallel trks. Each trk is a section of a track in the score.
 	// Each Seq has the following attributes:
 	// Used publicly at runtime: 
-	//   seq.chordIndex -- The index in allSeqMsPositions of the seq's noteOn position.
-	//   seq.nextChordIndex -- The index in allSeqMsPositions of the following chord in any inputTrack.
 	//   seq.trks -- An array of trk.
-	//   seq.triggeredOn   -- Is set to true when the seq is triggered On. Default is false.
-	//   seq.triggeredOff  -- Is set to true when the seq is triggered Off. Default is false.
-	Seq = function(seqPositionInScore, chordIndex, nextChordIndex, seqTrks, trackWorkers)
+	Seq = function(seqPositionInScore, trks, trackWorkers)
 	{
 		var workers;
 
 		if(!(this instanceof Seq))
 		{
-			return new Seq(seqPositionInScore, chordIndex, nextChordIndex, seqTrks, trackWorkers);
+			return new Seq(seqPositionInScore, trks, trackWorkers);
 		}
-
-		console.assert(chordIndex !== undefined, "chordIndex must be defined.");
-		console.assert(nextChordIndex !== undefined, "nextChordIndex must be defined.");
 
 		// Pushes trks into their respective worker's trk array and returns an array of worker.
 		// The track parameters pushed are:
 		//  msPosition
 		//	moments // an array of moment. Each moment has a messages[] attribute and an msPositionInSeq attribute.
 		//  trkOptions
-		function setAndGetWorkers(seqTrks, seqPositionInScore, trackWorkers)
+		function setAndGetWorkers(seqPositionInScore, trks, trackWorkers)
 		{
-			var i, nSeqTrks = seqTrks.length, trkDef, trkWorker, workers = [], trk;
+			var i, nTrks = trks.length, trkDef, trkWorker, workers = [], msPosition, moments, options;
 
 			function getMoments(trkMidiObjects)
 			{
@@ -99,31 +92,28 @@ _AP.seq = (function()
 				return trkMoments;
 			}
 
-			for(i = 0; i < nSeqTrks; ++i)
+			for(i = 0; i < nTrks; ++i)
 			{
-				trkDef = seqTrks[i]; 
-				trk = {};
+				trkDef = trks[i]; 
 
-				trk.msPosition = seqPositionInScore + trkDef.msOffset;
-				trk.moments = getMoments(trkDef.midiObjects);
-				trk.options = trkDef.trkOptions;
+				msPosition = seqPositionInScore + trkDef.msOffset;
+				moments = getMoments(trkDef.midiObjects);
+				options = trkDef.trkOptions;
+
+				// options is an object having either no attributes or a pedal attribute and/or velocity and minVelocity attributes.
 
 				trkWorker = trackWorkers[trkDef.trackIndex];
 
-				trkWorker.postMessage({ action: "pushTrk", trk: trk });
+				trkWorker.postMessage({ action: "pushTrk", msPosition: msPosition, moments: moments, options: options });
 
 				workers.push(trkWorker);
 			}
 			return workers;
 		}
 
-		workers = setAndGetWorkers(seqTrks, seqPositionInScore, trackWorkers);
+		workers = setAndGetWorkers(seqPositionInScore, trks, trackWorkers);
 
-		Object.defineProperty(this, "chordIndex", { value: chordIndex, writable: false });
-		Object.defineProperty(this, "nextChordIndex", { value: nextChordIndex, writable: false });
 		Object.defineProperty(this, "workers", { value: workers, writable: false });
-		Object.defineProperty(this, "triggeredOn", { value: false, writable: true });
-		Object.defineProperty(this, "triggeredOff", { value: false, writable: true });
 	},
 
 	API =
@@ -146,8 +136,6 @@ _AP.seq = (function()
 			// to give the worker more time to stop.
 			// (trackWorkers throw exceptions if they are busy when the following function is called.)
 			worker.postMessage({ action: "start", velocity: performedVelocity });
-
-			this.triggeredOn = true; // triggeredOn is used when shunting.
 		}
 	};
 
@@ -161,8 +149,6 @@ _AP.seq = (function()
 			worker = this.workers[i];
 			worker.postMessage({ action: "stop" }); // stops according to the trkOptions set in the seq's constructor
 		}
-
-		this.triggeredOff = true; // triggeredOff is used when shunting.
 	};
 
 	Seq.prototype.setSpeedFactor = function(factor)
