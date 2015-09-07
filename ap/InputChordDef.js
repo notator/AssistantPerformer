@@ -253,7 +253,7 @@ _AP.inputChordDef = (function ()
 								noteOnOrNoteOff.seq = getSeq(childNodes[i]);
 								break;
 							case 'pressures':
-								noteOnOrNoteOff.pressures = getChannelRefs(childNodes[i]);
+								noteOnOrNoteOff.pressures = getChannelRefs(childNodes[i]); // NoteOff never has a pressures element
 								break;
 							case 'pitchWheels':
 								noteOnOrNoteOff.pitchWheels = getChannelRefs(childNodes[i]);
