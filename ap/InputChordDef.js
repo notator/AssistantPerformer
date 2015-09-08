@@ -355,22 +355,51 @@ _AP.inputChordDef = (function ()
 		function outChannels(noteOnOff)
 		{
 			var i,
-			onSeq = noteOnOff.onSeq, nTrkOns = onSeq.length,
-			offSeq = noteOnOff.offSeq, nTrkOffs = offSeq.length,
+			seq = noteOnOff.seq, nSeqTrks,
+			pressures = noteOnOff.pressures, nPressures,
+			pitchWheels = noteOnOff.pitchWheels, nPitchWheels,
+			modWheels = noteOnOff.modWheels, nModWheels,
+			trkOffs = noteOnOff.trkOffs, nTrkOffs,
 			outputChannels = [];
 
-			if(onSeq !== undefined)
+			if(seq !== undefined)
 			{
-				for(i = 0; i < nTrkOns; ++i)
+				nSeqTrks = seq.length;
+				for(i = 0; i < nSeqTrks; ++i)
 				{
-					outputChannels.push(onSeq[i].midiChannel);
+					outputChannels.push(seq[i].midiChannel);
 				}
 			}
-			if(offSeq !== undefined)
+			if(pressures !== undefined)
 			{
+				nPressures = pressures.length
+				for(i = 0; i < nPressures; ++i)
+				{
+					outputChannels.push(pressures[i].midiChannel);
+				}
+			}
+			if(pitchWheels !== undefined)
+			{
+				nPitchWheels = pitchWheels.length
+				for(i = 0; i < nPitchWheels; ++i)
+				{
+					outputChannels.push(pitchWheels[i].midiChannel);
+				}
+			}
+			if(modWheels !== undefined)
+			{
+				nModWheels = modWheels.length
+				for(i = 0; i < nModWheels; ++i)
+				{
+					outputChannels.push(modWheels[i].midiChannel);
+				}
+			}
+			if(trkOffs !== undefined)
+			{
+				nTrkOffs = trkOffs.length
 				for(i = 0; i < nTrkOffs; ++i)
 				{
-					outputChannels.push(offSeq[i].midiChannel);
+					outputChannels.push(trkOffs[i].midiChannel);
 				}
 			}
 
@@ -396,27 +425,6 @@ _AP.inputChordDef = (function ()
 			if(inputNote.noteOn !== undefined)
 			{
 				nonUniqueOutputChannels = nonUniqueOutputChannels.concat(outChannels(inputNote.noteOn));
-			}
-			if(inputNote.pressures !== undefined)
-			{
-				for(j = 0; j < inputNote.pressures.length; ++j)
-				{
-					nonUniqueOutputChannels = nonUniqueOutputChannels.concat(inputNote.pressures[j].midiChannel);
-				}
-			}
-			if(inputNote.pitchWheels !== undefined)
-			{
-				for(j = 0; j < inputNote.pitchWheels.length; ++j)
-				{
-					nonUniqueOutputChannels = nonUniqueOutputChannels.concat(inputNote.pitchWheels[j].midiChannel);
-				}
-			}
-			if(inputNote.modWheels !== undefined)
-			{
-				for(j = 0; j < inputNote.modWheels.length; ++j)
-				{
-					nonUniqueOutputChannels = nonUniqueOutputChannels.concat(inputNote.modWheels[j].midiChannel);
-				}
 			}
 			if(inputNote.noteOff !== undefined)
 			{

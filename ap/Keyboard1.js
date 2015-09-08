@@ -544,13 +544,15 @@ _AP.keyboard1 = (function()
 							return rval;
 						}
 
-						if(hasTrack(inputNote.noteOn.onSeq, trackIsOnArray)
-						|| hasTrack(inputNote.noteOff.offSeq, trackIsOnArray)
-						|| hasTrack(inputNote.noteOff.onSeq, trackIsOnArray)
-						|| hasTrack(inputNote.noteOn.offSeq, trackIsOnArray)
-						|| hasTrack(inputNote.pressures, trackIsOnArray)
-						|| hasTrack(inputNote.pitchWheels, trackIsOnArray)
-						|| hasTrack(inputNote.modWheels, trackIsOnArray))
+						if(hasTrack(inputNote.noteOn.seq, trackIsOnArray)
+						|| hasTrack(inputNote.noteOff.trkOffs, trackIsOnArray)
+						|| hasTrack(inputNote.noteOn.pressures, trackIsOnArray)
+						|| hasTrack(inputNote.noteOn.pitchWheels, trackIsOnArray)
+						|| hasTrack(inputNote.noteOn.modWheels, trackIsOnArray)
+						|| hasTrack(inputNote.noteOn.trkOffs, trackIsOnArray)
+						|| hasTrack(inputNote.noteOff.seq, trackIsOnArray)
+						|| hasTrack(inputNote.noteOff.pitchWheels, trackIsOnArray)
+						|| hasTrack(inputNote.noteOff.modWheels, trackIsOnArray))
 						{
 							rval = true;
 						}
@@ -585,7 +587,7 @@ _AP.keyboard1 = (function()
 
 				function setNoteOnOffTrkOptions(note, chordTrkOptions)
 				{
-					function setOnSeqTrkOptions(seq, noteOnOffTrkOptions, noteTrkOptions, chordTrkOptions)
+					function setSeqTrkOptions(seq, noteOnOffTrkOptions, noteTrkOptions, chordTrkOptions)
 					{
 						var i, nTrks = seq.length, trk,
 							seqOptions = seq.trkOptions;
@@ -616,14 +618,14 @@ _AP.keyboard1 = (function()
 						}
 					}
 
-					function reduceOnSeqTrkOptions(onSeq)
+					function reduceSeqTrkOptions(seq)
 					{
-						var i, nTrks = onSeq.length, trk, trkOptions,
+						var i, nTrks = seq.length, trk, trkOptions,
 							reducedTrkOptions;
 
 						for(i = 0; i < nTrks; ++i)
 						{
-							trk = onSeq[i];
+							trk = seq[i];
 							trkOptions = trk.trkOptions;
 							reducedTrkOptions = new _AP.trkOptions.TrkOptions();
 							if(trkOptions.velocity)
@@ -643,16 +645,16 @@ _AP.keyboard1 = (function()
 						}
 					}
 
-					if(note.noteOn && note.noteOn.onSeq)
+					if(note.noteOn && note.noteOn.seq)
 					{
-						setOnSeqTrkOptions(note.noteOn.onSeq, note.noteOn.trkOptions, note.trkOptions, chordTrkOptions);
-						reduceOnSeqTrkOptions(note.noteOn.onSeq);
+						setSeqTrkOptions(note.noteOn.seq, note.noteOn.trkOptions, note.trkOptions, chordTrkOptions);
+						reduceSeqTrkOptions(note.noteOn.seq);
 					}
 
-					if(note.noteOff && note.noteOff.onSeq)
+					if(note.noteOff && note.noteOff.seq)
 					{
-						setOnSeqTrkOptions(note.noteOff.onSeq, note.noteOff.trkOptions, note.trkOptions, chordTrkOptions);
-						reduceOnSeqTrkOptions(note.noteOff.onSeq);
+						setSeqTrkOptions(note.noteOff.seq, note.noteOff.trkOptions, note.trkOptions, chordTrkOptions);
+						reduceSeqTrkOptions(note.noteOff.seq);
 					}				
 				}
 
@@ -843,13 +845,13 @@ _AP.keyboard1 = (function()
 				// Seq = function(seqPositionInScore, seqTrks, trackWorkers)
 				function setSeqs(note, msPosition, trackWorkers)
 				{
-					if(note.noteOn && note.noteOn.onSeq)
+					if(note.noteOn && note.noteOn.seq)
 					{
-						note.noteOnSeq = new _AP.seq.Seq(msPosition, note.noteOn.onSeq, trackWorkers);
+						note.noteOnSeq = new _AP.seq.Seq(msPosition, note.noteOn.seq, trackWorkers);
 					}
-					if(note.noteOff && note.noteOff.onSeq)
+					if(note.noteOff && note.noteOff.seq)
 					{
-						note.noteOffSeq = new _AP.seq.Seq(msPosition + note.msDuration, note.noteOff.onSeq, trackWorkers);
+						note.noteOffSeq = new _AP.seq.Seq(msPosition + note.msDuration, note.noteOff.seq, trackWorkers);
 					}
 				}
 
