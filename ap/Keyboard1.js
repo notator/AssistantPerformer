@@ -587,181 +587,126 @@ _AP.keyboard1 = (function()
 
 				function setNoteOnOffTrkOptions(note, chordTrkOptions)
 				{
-					function setSeqTrkOptions(seq, noteOnOffTrkOptions, noteTrkOptions, chordTrkOptions)
+					function setTrkOptions(noteOnOff, noteTrkOptions, chordTrkOptions)
 					{
-						var i, nTrks = seq.length, trk,
-							seqOptions = seq.trkOptions;
-
-						if(!seqOptions)
+						function getOption(optStr, trkTrkOptions, seqControlsTrkOptions, noteTrkOptions, chordTrkOptions)
 						{
-							if(noteOnOffTrkOptions)
+							var option;
+							if(trkTrkOptions !== undefined && trkTrkOptions.hasOwnProperty(optStr))
 							{
-								seqOptions = noteOnOffTrkOptions;
+								option = trkTrkOptions[optStr];
 							}
-							else if(noteTrkOptions)
+							else if(seqControlsTrkOptions !== undefined && seqControlsTrkOptions.hasOwnProperty(optStr))
 							{
-								seqOptions = noteTrkOptions;
+								option = seqControlsTrkOptions[optStr];
 							}
-							else
+							else if(noteTrkOptions !== undefined && noteTrkOptions.hasOwnProperty(optStr))
 							{
-								seqOptions = chordTrkOptions;
+								option = noteTrkOptions[optStr];
+							}
+							else if(chordTrkOptions !== undefined && chordTrkOptions.hasOwnProperty(optStr))
+							{
+								option = chordTrkOptions[optStr];
+							}
+							return option;
+
+						}
+
+						// Seqs use the options: pedal, velocity and trkOff
+						function setSeqTrkOptions(seq, noteTrkOptions, chordTrkOptions)
+						{
+							var i, nTrks = seq.length, newTrkOptions, seqTrkOptions = seq.trkOptions, trkTrkOptions,
+								pedalOpt, velocityOpt, minVelocityOpt, trkOffOpt;
+
+							for(i = 0; i < nTrks; ++i)
+							{
+								newTrkOptions = {};
+								trkTrkOptions = seq[i].trkOptions;
+								pedalOpt = getOption("pedal", trkTrkOptions, seqTrkOptions, noteTrkOptions, chordTrkOptions);
+								if(pedalOpt !== undefined)
+								{
+									newTrkOptions.pedal = pedalOpt;
+								}
+								velocityOpt = getOption("velocity", trkTrkOptions, seqTrkOptions, noteTrkOptions, chordTrkOptions);
+								if(velocityOpt !== undefined)
+								{
+									minVelocityOpt = getOption("minVelocity", trkTrkOptions, seqTrkOptions, noteTrkOptions, chordTrkOptions);
+									newTrkOptions.velocity = velocityOpt;
+									newTrkOptions.minVelocity = minVelocityOpt;
+								}
+								trkOffOpt = getOption("trkOff", trkTrkOptions, seqTrkOptions, noteTrkOptions, chordTrkOptions);
+								if(trkOffOpt !== undefined)
+								{
+									newTrkOptions.trkOff = trkOffOpt;
+								}
+								seq[i].trkOptions = newTrkOptions;
 							}
 						}
 
-						for(i = 0; i < nTrks; ++i)
+						function setControlTrkOptions(optionString, controls, noteTrkOptions, chordTrkOptions)
 						{
-							trk = seq[i];
-							if(!trk.trkOptions)
+							var i, nControls = controls.length, newTrkOptions,
+								controlsTrkOptions = controls.trkOptions, trkTrkOptions,
+								option, minVolumeOpt, maxVolumeOpt;
+
+							for(i = 0; i < nControls; ++i)
 							{
-								trk.trkOptions = seqOptions;
+								newTrkOptions = {};
+								trkTrkOptions = controls[i].trkOptions;
+								option = getOption(optionString, trkTrkOptions, controlsTrkOptions, noteTrkOptions, chordTrkOptions);
+								if(option !== undefined)
+								{
+									newTrkOptions[optionString] = option;
+									switch(option)
+									{
+										case "volume":
+											newTrkOptions.minVolume = getOption("minVolume", trkTrkOptions, controlsTrkOptions, noteTrkOptions, chordTrkOptions);
+											newTrkOptions.maxVolume = getOption("maxVolume", trkTrkOptions, controlsTrkOptions, noteTrkOptions, chordTrkOptions);
+											break;
+										case "pitch":
+											newTrkOptions.pitchWheelDeviation = getOption("pitchWheelDeviation", trkTrkOptions, controlsTrkOptions, noteTrkOptions, chordTrkOptions);
+											break;
+										case "pan":
+											newTrkOptions.panOrigin = getOption("panOrigin", trkTrkOptions, controlsTrkOptions, noteTrkOptions, chordTrkOptions);
+											break;
+										case "speed":
+											newTrkOptions.speedDeviation = getOption("speedDeviation", trkTrkOptions, controlsTrkOptions, noteTrkOptions, chordTrkOptions);
+											break;
+										default:
+											break;
+									}
+								}
+								controls[i].trkOptions = newTrkOptions;
 							}
+						}
+
+						if(noteOnOff.seq !== undefined)
+						{
+							setSeqTrkOptions(noteOnOff.seq, chordTrkOptions);
+						}
+						if(noteOnOff.pressures !== undefined)
+						{
+							setControlTrkOptions("pressure", noteOnOff.pressures, noteTrkOptions, chordTrkOptions);
+						}
+						if(noteOnOff.pitchWheels !== undefined)
+						{
+							setControlTrkOptions("pitchWheel", noteOnOff.pitchWheels, noteTrkOptions, chordTrkOptions);
+						}
+						if(noteOnOff.modWheels !== undefined)
+						{
+							setControlTrkOptions("modWheel", noteOnOff.modWheels, noteTrkOptions, chordTrkOptions);
 						}
 					}
 
-					function reduceSeqTrkOptions(seq)
+					if(note.noteOn)
 					{
-						var i, nTrks = seq.length, trk, trkOptions,
-							reducedTrkOptions;
-
-						for(i = 0; i < nTrks; ++i)
-						{
-							trk = seq[i];
-							trkOptions = trk.trkOptions;
-							reducedTrkOptions = new _AP.trkOptions.TrkOptions();
-							if(trkOptions.velocity)
-							{
-								reducedTrkOptions.velocity = trkOptions.velocity;
-								reducedTrkOptions.minVelocity = trkOptions.minVelocity;
-							}
-							if(trkOptions.pedal)
-							{
-								reducedTrkOptions.pedal = trkOptions.pedal;
-							}
-							if(trkOptions.trkOff)
-							{
-								reducedTrkOptions.trkOff = trkOptions.trkOff;
-							}
-							trk.trkOptions = reducedTrkOptions;
-						}
+						setTrkOptions(note.noteOn, note.trkOptions, chordTrkOptions);
 					}
 
-					if(note.noteOn && note.noteOn.seq)
+					if(note.noteOff)
 					{
-						setSeqTrkOptions(note.noteOn.seq, note.noteOn.trkOptions, note.trkOptions, chordTrkOptions);
-						reduceSeqTrkOptions(note.noteOn.seq);
-					}
-
-					if(note.noteOff && note.noteOff.seq)
-					{
-						setSeqTrkOptions(note.noteOff.seq, note.noteOff.trkOptions, note.trkOptions, chordTrkOptions);
-						reduceSeqTrkOptions(note.noteOff.seq);
+						setTrkOptions(note.noteOff, note.trkOptions, chordTrkOptions);
 					}				
-				}
-
-				function setControllerTrkOptions(note, chordTrkOptions)
-				{
-					function setChannels(channels, noteTrkOptions, chordTrkOptions)
-					{
-						var i, nChannels = channels.length, channel,
-							channelsOptions = channels.trkOptions;
-
-						if(!channelsOptions)
-						{
-							if(noteTrkOptions)
-							{
-								channelsOptions = noteTrkOptions;
-							}
-							else
-							{
-								channelsOptions = chordTrkOptions;
-							}
-						}
-
-						for(i = 0; i < nChannels; ++i)
-						{
-							channel = channels[i];
-							if(!channel.trkOptions)
-							{
-								channel.trkOptions = channelsOptions;
-							}
-						}
-					}
-
-					function reduceScalarControls(scalarControls)
-					{
-						var i, nControls = scalarControls.length, channel, trkOptions, reducedTrkOptions;
-
-						for(i = 0; i < nControls; ++i)
-						{
-							channel = scalarControls[i];
-							trkOptions = channel.trkOptions;
-							reducedTrkOptions = new _AP.trkOptions.TrkOptions();
-							if(trkOptions.pressure)
-							{
-								reducedTrkOptions.pressure = trkOptions.pressure;
-								if(reducedTrkOptions.pressure === "volume")
-								{
-									reducedTrkOptions.minVolume = trkOptions.minVolume;
-									reducedTrkOptions.maxVolume = trkOptions.maxVolume;
-								}
-							}
-							if(trkOptions.modWheel)
-							{
-								reducedTrkOptions.modWheel = trkOptions.modWheel;
-								if(reducedTrkOptions.modWheel === "volume")
-								{
-									reducedTrkOptions.minVolume = trkOptions.minVolume;
-									reducedTrkOptions.maxVolume = trkOptions.maxVolume;
-								}
-							}
-							channel.trkOptions = reducedTrkOptions;
-						}
-					}
-
-					function reducePitchWheels(pitchWheels)
-					{
-						var i, nPitchWheelChannels = pitchWheels.length, channel, trkOptions, reducedTrkOptions;
-
-						for(i = 0; i < nPitchWheelChannels; ++i)
-						{
-							channel = pitchWheels[i];
-							trkOptions = channel.trkOptions;
-							reducedTrkOptions = new _AP.trkOptions.TrkOptions();
-							if(trkOptions.pitchWheel)
-							{
-								reducedTrkOptions.pitchWheel = trkOptions.pitchWheel;
-								if(reducedTrkOptions.pitchWheel === "pitch")
-								{
-									reducedTrkOptions.pitchWheelDeviation = trkOptions.pitchWheelDeviation;
-								}
-								if(reducedTrkOptions.pitchWheel === "pan")
-								{
-									reducedTrkOptions.panOrigin = trkOptions.panOrigin;
-								}
-								if(reducedTrkOptions.pitchWheel === "speed")
-								{
-									reducedTrkOptions.speedDeviation = trkOptions.speedDeviation;
-								}
-							}
-							channel.trkOptions = reducedTrkOptions;
-						}
-					}
-
-					if(note.pressures)
-					{
-						setChannels(note.pressures, note.trkOptions, chordTrkOptions);
-						reduceScalarControls(note.pressures);
-					}
-					if(note.pitchWheels)
-					{
-						setChannels(note.pitchWheels, note.trkOptions, chordTrkOptions);
-						reducePitchWheels(note.pitchWheels);
-					}
-					if(note.modWheels)
-					{
-						setChannels(note.modWheels, note.trkOptions, chordTrkOptions);
-						reduceScalarControls(note.modWheels);
-					}
 				}
 
 				nTracks = inputTracks.length;
@@ -799,7 +744,6 @@ _AP.keyboard1 = (function()
 											performedNote = performedNotes[i];
 											performedNote.msDuration = msDuration;
 											setNoteOnOffTrkOptions(performedNote, chordTrkOptions);
-											setControllerTrkOptions(performedNote, chordTrkOptions);
 											vArray.push(performedNote);
 										}
 									}
