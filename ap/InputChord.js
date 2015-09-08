@@ -216,7 +216,7 @@ _AP.inputChord = (function()
         Object.defineProperty(this, "msDurationInScore", { value: timeObject.msDuration, writable: false });
         if(timeObject.inputChordDef.trkOptions !== undefined)
         {
-        	Object.defineProperty(this, "trkOptions", { value: timeObject.inputChordDef.trkOptions, writable: false });
+        	Object.defineProperty(this, "trkOptions", { value: timeObject.inputChordDef.trkOptions, writable: true });
         }
 
         inputNotes = getInputNotes(timeObject.inputChordDef.inputNotes, outputTracks, timeObject.msPosition);

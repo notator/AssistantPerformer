@@ -516,11 +516,14 @@ _AP.keyboard1 = (function()
 			// Returns an array of (array of performed inputNote), ordered by msPosition (without the endMarkerMsPosInScore).
 			// Each contained array has an msPosition attribute, and contains all the performing inputNotes that start at that msPosition,
 			// regardless of inputTrack. All the msPositions are >= startMarkerMsPosInScore and < endMarkerMsPosInScore.
-			// Each performedNote is given a trkOptions attribute.
+			// Each trk is given a trkOptions attribute object containing the options it needs. These depend on whether the
+			// trk is inside a seq, pressures, pitchWheels or modWheels object.
+			// The trkOptions objects that have been consumed, and are no longer to be used, are set to undefined.
 			function getVerticalInputNoteArrays(inputTracks, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore)
 			{
 				var trackIndex, nTracks, ioIndex, inputObjects, nInputObjects, msPosition, msDuration, inputChord,
-					verticalNotesArrays = [], performedNote, performedNotes, vArray, i, nPerformedNotes, chordTrkOptions;
+					verticalNotesArrays = [], performedNote, performedNotes, vArray, i, nPerformedNotes,
+					chordTrkOptions, previousChordTrkOptions;
 
 				function getPerformedNotes(inputNotes, trackIsOnArray)
 				{
@@ -641,6 +644,7 @@ _AP.keyboard1 = (function()
 								}
 								seq[i].trkOptions = newTrkOptions;
 							}
+							seq.trkOptions = undefined;
 						}
 
 						function setControlTrkOptions(optionString, controls, noteTrkOptions, chordTrkOptions)
@@ -678,6 +682,7 @@ _AP.keyboard1 = (function()
 								}
 								controls[i].trkOptions = newTrkOptions;
 							}
+							controls.trkOptions = undefined;
 						}
 
 						if(noteOnOff.seq !== undefined)
@@ -706,7 +711,8 @@ _AP.keyboard1 = (function()
 					if(note.noteOff)
 					{
 						setTrkOptions(note.noteOff, note.trkOptions, chordTrkOptions);
-					}				
+					}
+					note.trkOptions = undefined;
 				}
 
 				nTracks = inputTracks.length;
@@ -714,6 +720,7 @@ _AP.keyboard1 = (function()
 				{
 					if(trackIsOnArray[trackIndex])
 					{
+						previousChordTrkOptions = null;
 						inputObjects = inputTracks[trackIndex].inputObjects;
 						nInputObjects = inputObjects.length;
 						for(ioIndex = 0; ioIndex < nInputObjects; ++ioIndex)
@@ -723,7 +730,19 @@ _AP.keyboard1 = (function()
 								inputChord = inputObjects[ioIndex];
 								msPosition = inputChord.msPositionInScore;
 								msDuration = inputChord.msDurationInScore;
-								chordTrkOptions = (inputChord.trkOptions) ? inputChord.trkOptions : new _AP.trkOptions.TrkOptions({});
+								if(inputChord.trkOptions)
+								{
+									chordTrkOptions = inputChord.trkOptions;
+								}
+								else if(previousChordTrkOptions !== null)
+								{
+									chordTrkOptions = previousChordTrkOptions;
+								}
+								else
+								{
+									chordTrkOptions = new _AP.trkOptions.TrkOptions({});
+								}
+								previousChordTrkOptions = chordTrkOptions;
 
 								if(msPosition >= startMarkerMsPosInScore && msPosition < endMarkerMsPosInScore)
 								{
@@ -749,6 +768,7 @@ _AP.keyboard1 = (function()
 									}
 								}
 							}
+							inputChord.trkOptions = undefined;
 						}
 					}
 				}
