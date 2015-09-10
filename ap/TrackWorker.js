@@ -626,30 +626,76 @@ eventHandler = function(e)
 
 	switch(msg.action)
 	{
+		// initialize this worker (set up global variables etc.)
 		case "init":
 			init(msg);
 			break;
 
+		// called when loading this worker with trks
 		case "pushTrk":
 			pushTrk(msg);
 			break;
 
+		// called to start a trk playing.
 		case "start":
 			start(msg);
 			break;
 
-		// called by changes to channel pressure or modWheel controls 
-		case "doController":
-			doController(msg);
-			break;
-
-		// called by changes to pitchWheel
-		case "doPitchWheel":
-			doPitchWheel(msg);
-			break;
-
+		// called to stop a playing trk.
 		case "stop":
-			doNoteOff(msg.trkOff);
+			//stop();
+			break;
+
+		// Called by running changes to the channel pressure or modWheel controls
+		// in Keyboard1.handleChannelPressure() and handleModWheel().
+		// Uses the current pressure or ModWheel control.
+		// worker.postMessage({ action: "doController", control: "pressure", value: data[1] });
+		// or
+		// worker.postMessage({ action: "doController", control: "modWheel", value: data[2] });
+		case "doController":
+			//doController(msg); // msg.control (either "pressure" or "modWheel") and msg.value
+			break;
+
+		// Called by running changes to the pitchWheel control
+		// in Keyboard1.handlePitchWheel().
+		// Uses the current pitchWheel control.
+		case "doPitchWheel":
+			//doPitchWheel(msg); // msg.data1, msg.data2
+			break;
+
+		// called when the controller associated with pressure is changed
+		case "setPressureOption":
+			//setPressureToControl(msg); // msg.control
+			break;
+
+		// called when the controller associated with pressure is changed to volume
+		case "setPressureVolumeOption":
+			//setPressureToVolume(msg); // msg.minVolume and msg.maxVolume
+			break;
+
+		// called when the controller associated with the pitchWheel is changed
+		case "setPitchWheelPitchOption":
+			//setPitchWheelToPitch(msg); // msg.pitchWheelDeviation
+			break;
+
+			// called when the controller associated with the pitchWheel is changed
+		case "setPitchWheelPanOption":
+			//setPitchWheelToPan(msg); // msg.panOrigin
+			break;
+
+			// called when the controller associated with the pitchWheel is changed
+		case "setPitchWheelSpeedOption":
+			//setPitchWheelToSpeed(msg); // msg.speedDeviation
+			break;
+
+			// called when the controller associated with the modWheel is changed
+		case "setModWheelOption":
+			//setModWheelToControl(msg); // msg.control
+			break;
+
+			// called when the controller associated with the modWheel is changed
+		case "setModWheelVolumeOption":
+			//setModWheelToVolume(msg); // msg.minVolume and msg.maxVolume
 			break;
 	}
 };

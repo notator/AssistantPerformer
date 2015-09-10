@@ -282,128 +282,218 @@ _AP.keyboard1 = (function()
     		return inputEvent;
     	}
 
-    	function playNoteOnOrOff(noteOnOrOff, performedVelocity)
+    	// This function is called with zero performedVelocity when playing noteOffs.
+		// The key's noteOn or noteOff is removed from noteOnOrOffs after it is used.
+    	function playKeyNoteOnOrOff(noteOnOrOffs, key, performedVelocity)
     	{
-    		function doPressures(pressures)
+    		var i, nNoteOnOrOffs, noteOnOrOff, workers = trackWorkers;
+
+    		function doPressures(pressures, workers)
     		{
-    			// TODO;
-    		}
-    		function doPitchWheels(pitchWheels)
-    		{
-    			// TODO;
-    		}
-    		function doModWheels(modWheels)
-    		{
-    			// TODO;
-    		}
-    		function doTrkOffs(trkOffs)
-    		{
-    			var i, tosLength = trkOffs.length;
-    			for(i = 0; i < tosLength; ++i)
+    			var i, nPressures = pressures.length, pressureOption;
+    			for(i = 0; i < nPressures; ++i)
     			{
-    				trackWorkers[trkOffs[i].trackIndex].postMessage({ action: "stop" });
+    				pressureOption = pressures[i];
+    				if(pressureOption.trkOptions.pressure === "volume")
+    				{
+    					workers[pressureOption.trackIndex].postMessage({ "action": "setPressureVolumeOption", "minVolume": pressureOption.trkOptions.minVolume, "maxVolume": pressureOption.trkOptions.maxVolume });
+    				}
+    				else
+    				{
+    					workers[pressureOption.trackIndex].postMessage({ "action": "setPressureOption", "control": pressureOption.trkOptions.pressure });
+    				}
     			}
     		}
-    		if(noteOnOrOff.seq)
+
+    		function doPitchWheels(pitchWheels, workers)
     		{
-    			noteOnOrOff.seq.start(performedVelocity);
+    			var i, nPitchWheels = pitchWheels.length, pitchWheelOption;
+    			for(i = 0; i < nPitchWheels; ++i)
+    			{
+    				pitchWheelOption = pitchWheels[i];
+    				switch(pitchWheelOption.trkOptions.pitchWheel)
+    				{
+    					case "pitch":
+    						workers[pitchWheelOption.trackIndex].postMessage({ "action": "setPitchWheelPitchOption", "pitchWheelDeviation": pitchWheelOption.trkOptions.pitchWheelDeviation });
+    						break;
+    					case "pan":
+    						workers[pitchWheelOption.trackIndex].postMessage({ "action": "setPitchWheelPanOption", "panOrigin": pitchWheelOption.trkOptions.panOrigin });
+    						break;
+    					case "speed":
+    						workers[pitchWheelOption.trackIndex].postMessage({ "action": "setPitchWheelSpeedOption", "speedDeviation": pitchWheelOption.trkOptions.speedDeviation });
+    						break;
+    				}
+    			}
     		}
-    		if(noteOnOrOff.pressures)
+
+    		function doModWheels(modWheels, workers)
     		{
-    			doPressures(noteOnOrOff.pressures);
+    			var i, nModWheels = modWheels.length, modWheelOption;
+    			for(i = 0; i < nModWheels; ++i)
+    			{
+    				modWheelOption = modWheels[i];
+    				if(modWheelOption.trkOptions.modWheel === "volume")
+    				{
+    					workers[modWheelOption.trackIndex].postMessage({ "action": "setModWheelVolumeOption", "minVolume": modWheelOption.trkOptions.minVolume, "maxVolume": modWheelOption.trkOptions.maxVolume });
+    				}
+    				else
+    				{
+    					workers[modWheelOption.trackIndex].postMessage({ "action": "setModWheelOption", "control": modWheelOption.trkOptions.modWheel });
+    				}
+    			}
     		}
-    		if(noteOnOrOff.pitchWheels)
+
+    		function doTrkOffs(trkOffs, workers)
     		{
-    			doPitchWheels(noteOnOrOff.pitchWheels);
+				var i, nTrkOffs = trkOffs.length;
+    			for(i = 0; i < nTrkOffs; ++i)
+    			{
+    				workers[trkOffs[i].trackIndex].postMessage({ "action": "stop" });
+    			}
     		}
-    		if(noteOnOrOff.modWheels)
+
+    		function removeNoteOnOrOff(noteOnOrOffs, key)
     		{
-    			doModWheels(noteOnOrOff.modWheels);
-    		}
-    		if(noteOnOrOff.trkOffs)
+    			var i, nNoteOnOrOffs = noteOnOrOffs.length, noteOnOrOff, index;
+    			for(i = 0; i < nNoteOnOrOffs; ++i)
+    			{
+    				noteOnOrOff = noteOnOrOffs[i];
+    				if(noteOnOrOff.notatedKey === key)
+    				{
+    					index = i;
+    					break;
+    				}
+    			}
+    			
+    			noteOnOrOffs.splice(index, 1);
+			}
+
+    		if(noteOnOrOffs && noteOnOrOffs.length > 0)
     		{
-    			doTrkOffs(noteOnOrOff.trkOffs);
+    			nNoteOnOrOffs = noteOnOrOffs.length;
+    			for(i = 0; i < nNoteOnOrOffs; ++i)
+    			{
+    				noteOnOrOff = noteOnOrOffs[i];
+    				if(key === noteOnOrOff.notatedKey)
+    				{
+    					if(noteOnOrOff.seq)
+    					{
+    						noteOnOrOff.seq.start(performedVelocity);
+    					}
+    					if(noteOnOrOff.pressures)
+    					{
+    						doPressures(noteOnOrOff.pressures, workers);
+    					}
+    					if(noteOnOrOff.pitchWheels)
+    					{
+    						doPitchWheels(noteOnOrOff.pitchWheels, workers);
+    					}
+    					if(noteOnOrOff.modWheels)
+    					{
+    						doModWheels(noteOnOrOff.modWheels, workers);
+    					}
+    					if(noteOnOrOff.trkOffs)
+    					{
+    						doTrkOffs(noteOnOrOff.trkOffs, workers);
+    					}
+    					break;
+    				}
+    			}
+    			removeNoteOnOrOff(noteOnOrOffs, key);
     		}
     	}
 
-    	// increment noteInfos.seq.index until all noteInfos.seqs are >= currentInstantIndex
-    	function advanceCurrentKeyIndicesTo(currentInstantIndex)
+
+    	// Increment each keyInstantIndices.index until pointing at >= currentInstantIndex
+    	function advanceKeyInstantIndicesTo(keyInstantIndices, currentInstantIndex)
     	{
-    		var i, keyNoteOnOrOffs, noteOnOrOff;
+    		var i, instantIndices, nKeys;
 
-    		for(i = 0; i < keyInstantIndices.length; ++i)
+    		nKeys = keyInstantIndices.length;
+    		for(i = 0; i < nKeys; ++i)
     		{
-    			keyNoteOnOrOffs = keyInstantIndices[i];
-    			if(keyNoteOnOrOffs !== undefined) // some keyInstantIndices may not have keyNoteOnOrOffs...
+    			instantIndices = keyInstantIndices[i];
+    			if(instantIndices) // some keys may not have instantIndices...
     			{
-    				while(keyNoteOnOrOffs.index < keyNoteOnOrOffs.length)
+    				while((instantIndices.index < instantIndices.keyOnIndices.length)
+					&& (instantIndices[instantIndices.index] < currentInstantIndex))
     				{
-    					noteOnOrOff = keyNoteOnOrOffs[keyNoteOnOrOffs.index];
-    					if(noteOnOrOff.msPosIndex >= currentInstantIndex)
-    					{
-    						break;
-    					}
-
-    					playNoteOnOrOff(noteOnOrOff, 0);
-
-    					keyNoteOnOrOffs.index++;
+    					instantIndices.index++;
     				}
     			}
     		}
     	}
 
+    	// This function is called either by a real performed NoteOff or by a performed NoteOn having zero velocity.
     	function handleNoteOff(key)
     	{
-    		var keyIndex = key - keyRange.bottomKey, keyNoteOnOrOffs, noteOff, index;
+    		var keyIndex = key - keyRange.bottomKey, thisKeyInstantIndices, keyOffIndices,
+    			instant, instantIndex;
 
     		if(key >= keyRange.bottomKey && key <= keyRange.topKey)
     		{
-    			keyNoteOnOrOffs = keyInstantIndices[keyIndex];
-    			if(keyNoteOnOrOffs.length > keyNoteOnOrOffs.index) // some keyInstantIndices may not have seqs...
+    			thisKeyInstantIndices = keyInstantIndices[keyIndex];
+    			if(thisKeyInstantIndices)
     			{
-    				noteOff = keyNoteOnOrOffs[keyNoteOnOrOffs.index++];
-    				index = noteOff.msPosIndex;
-    				if(index === currentInstantIndex || ((index === currentInstantIndex + 1) && indexPlayed === currentInstantIndex))  // legato realization
+    				keyOffIndices = thisKeyInstantIndices.keyOffIndices;
+    				if(keyOffIndices.length > thisKeyInstantIndices.index)
     				{
-    					if(index === currentInstantIndex + 1)
+    					// thisKeyInstantIndices.index is incremented by advanceKeyInstantIndicesTo(keyInstantIndices, currentInstantIndex)
+    					instantIndex = keyOffIndices[thisKeyInstantIndices.index];
+    					if(instantIndex === currentInstantIndex || ((instantIndex === currentInstantIndex + 1) && indexPlayed === currentInstantIndex))
     					{
-    						currentInstantIndex++;
-    						reportMsPositionInScore(instants[currentInstantIndex].msPosition);
-    						advanceCurrentKeyIndicesTo(currentInstantIndex); // see above
+    						instant = instants[instantIndex];
+    						playKeyNoteOnOrOff(instant.noteOffs, key, 0); // the key's noteOff is removed after being played
+
+    						currentInstantIndex = instantIndex;
+    						indexPlayed = instantIndex;
+
+    						if(instant.noteOns === undefined)
+    						{
+    							currentInstantIndex++;
+    							reportMsPositionInScore(instants[currentInstantIndex].msPosition);
+    							advanceKeyInstantIndicesTo(keyInstantIndices, currentInstantIndex); // see above
+    						}
     					}
-    					// Note that performedVelocity is 0 when this function is called by either
-    					// a real NoteOff or a NoteOn masquerading as a NoteOff.
-    					playNoteOnOrOff(noteOff, 0);
-    					indexPlayed = currentInstantIndex;
     				}
     			}
     		}
     	}
 
-    	// Note that velocity will be 0 when this function is called by either
-    	// a real NoteOff or a NoteOn masquerading as a NoteOff. 
+		// performedVelocity is always greater than 0 (otherwise handleNoteOff() is called)
     	function handleNoteOn(key, performedVelocity)
     	{
-    		var keyIndex = key - keyRange.bottomKey, keyNoteOnOrOffs, noteOnOrOff, index;
+    		var keyIndex = key - keyRange.bottomKey, thisKeyInstantIndices, keyOnIndices,
+    			instant, instantIndex;
 
     		if(key >= keyRange.bottomKey && key <= keyRange.topKey)
     		{
-    			keyNoteOnOrOffs = keyInstantIndices[keyIndex];
-    			if(keyNoteOnOrOffs.length > keyNoteOnOrOffs.index) // some keyInstantIndices may not have seqs...
+    			thisKeyInstantIndices = keyInstantIndices[keyIndex];
+    			if(thisKeyInstantIndices)
     			{
-    				noteOnOrOff = keyNoteOnOrOffs[keyNoteOnOrOffs.index++];
-    				index = noteOnOrOff.msPosIndex;
-    				if(index === currentInstantIndex || ((index === currentInstantIndex + 1) && indexPlayed === currentInstantIndex))  // legato realization
+    				keyOnIndices = thisKeyInstantIndices.keyOnIndices;
+    				if(keyOnIndices.length > thisKeyInstantIndices.index)
     				{
-    					if(index === currentInstantIndex + 1)
+    					// thisKeyInstantIndices.index is incremented by advanceKeyInstantIndicesTo(keyInstantIndices, currentInstantIndex)
+    					instantIndex = keyOnIndices[thisKeyInstantIndices.index];
+    					if(instantIndex === currentInstantIndex || ((instantIndex === currentInstantIndex + 1) && indexPlayed === currentInstantIndex))
     					{
-    						currentInstantIndex++;
-    						reportMsPositionInScore(instants[currentInstantIndex].msPosition);
-    						advanceCurrentKeyIndicesTo(currentInstantIndex); // see above
+    						instant = instants[instantIndex];
+    						playKeyNoteOnOrOff(instant.noteOffs, key, 0); // the key's noteOff is removed after being played
+    						playKeyNoteOnOrOff(instant.noteOns, key, performedVelocity);  // the key's noteOn is removed after being played
+			
+    						currentInstantIndex = instantIndex;
+    						indexPlayed = instantIndex;
+
+    						if(instant.noteOns.length === 0)
+    						{
+    							currentInstantIndex++;
+    							reportMsPositionInScore(instants[currentInstantIndex].msPosition);
+    							advanceKeyInstantIndicesTo(keyInstantIndices, currentInstantIndex); // see above
+    						}
+
+    						console.log("performedVelocity=" + performedVelocity.toString(10));
     					}
-    					console.log("performedVelocity=" + performedVelocity.toString(10));
-    					playNoteOnOrOff(noteOnOrOff, performedVelocity);
-    					indexPlayed = currentInstantIndex;
     				}
     			}
     		}
@@ -417,7 +507,7 @@ _AP.keyboard1 = (function()
 
     		for(i = 0; i < nWorkers; ++i)
     		{
-    			trackWorkers[i].postMessage({ action: "doController", controller: "pressure", value: data[1] }); // Achtung: data[1]
+    			trackWorkers[i].postMessage({ action: "doController", control: "pressure", value: data[1] }); // Achtung: data[1]
     		}
     	}
 
@@ -429,7 +519,7 @@ _AP.keyboard1 = (function()
 
     		for(i = 0; i < nWorkers; ++i)
     		{
-    			trackWorkers[i].postMessage({ action: "doController", controller: "modWheel", value: data[2] }); // Achtung: data[2]
+    			trackWorkers[i].postMessage({ action: "doController", control: "modWheel", value: data[2] }); // Achtung: data[2]
     		}
     	}
 
