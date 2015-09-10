@@ -58,13 +58,14 @@ _AP.keyboard1 = (function()
 	inputDevice,
 	outputDevice,
 
-	currentMsPosIndex, // initialized to 0 when playing starts. Is the index in the following array.
-	verticalNoteArrays = [],
-	indexPlayed, // initialized to currentMsPosIndex when the index is played.
+	currentInstantIndex, // initialized to 0 when playing starts. Is the index in the following array (used while performing).
+	instants = [],
+	indexPlayed, // set to currentInstantIndex when instants[currentInstantIndex] is played.
+
 	inputTracks,
 	outputTracks,
 	trackWorkers = [], // an array of webWorkers, one per outputTrack (=trackIndex).
-	keyNoteArrays = [],
+	keyInstantIndices = [],
 	keyRange, // keyRange.bottomKey and keyRange.topKey are the bottom and top input midi key values notated in the score.
 
 	reportEndOfSpan, // callback -- called here as reportEndOfSpan(sequenceRecording, performanceMsDuration);
@@ -195,7 +196,7 @@ _AP.keyboard1 = (function()
 				// TODO: recording
 				//if(sequenceRecording !== undefined && sequenceRecording !== null)
 				//{
-				//	// The moments are recorded with their current (absolute DOMHRT) timestamp values.
+				//	// The instants are recorded with their current (absolute DOMHRT) timestamp values.
 				//	// These values are adjusted relative to the first moment.timestamp
 				//	// before saving them in a Standard MIDI File.
 				//	// (i.e. the value of the earliest timestamp in the recording is
@@ -281,28 +282,71 @@ _AP.keyboard1 = (function()
     		return inputEvent;
     	}
 
-    	// increment noteInfos.seq.index until all noteInfos.seqs are >= currentMsPosIndex
-    	function advanceCurrentKeyIndicesTo(currentMsPosIndex)
+    	function playNoteOnOrOff(noteOnOrOff, performedVelocity)
     	{
-    		var i, noteInfos, seq;
-
-    		for(i = 0; i < keyNoteArrays.length; ++i)
+    		function doPressures(pressures)
     		{
-    			noteInfos = keyNoteArrays[i];
-    			if(noteInfos.seqs !== undefined) // some keyNoteArrays may not have seqs...
+    			// TODO;
+    		}
+    		function doPitchWheels(pitchWheels)
+    		{
+    			// TODO;
+    		}
+    		function doModWheels(modWheels)
+    		{
+    			// TODO;
+    		}
+    		function doTrkOffs(trkOffs)
+    		{
+    			var i, tosLength = trkOffs.length;
+    			for(i = 0; i < tosLength; ++i)
     			{
-    				while(noteInfos.seqs.index > noteInfos.seqs.length)
+    				trackWorkers[trkOffs[i].trackIndex].postMessage({ action: "stop" });
+    			}
+    		}
+    		if(noteOnOrOff.seq)
+    		{
+    			noteOnOrOff.seq.start(performedVelocity);
+    		}
+    		if(noteOnOrOff.pressures)
+    		{
+    			doPressures(noteOnOrOff.pressures);
+    		}
+    		if(noteOnOrOff.pitchWheels)
+    		{
+    			doPitchWheels(noteOnOrOff.pitchWheels);
+    		}
+    		if(noteOnOrOff.modWheels)
+    		{
+    			doModWheels(noteOnOrOff.modWheels);
+    		}
+    		if(noteOnOrOff.trkOffs)
+    		{
+    			doTrkOffs(noteOnOrOff.trkOffs);
+    		}
+    	}
+
+    	// increment noteInfos.seq.index until all noteInfos.seqs are >= currentInstantIndex
+    	function advanceCurrentKeyIndicesTo(currentInstantIndex)
+    	{
+    		var i, keyNoteOnOrOffs, noteOnOrOff;
+
+    		for(i = 0; i < keyInstantIndices.length; ++i)
+    		{
+    			keyNoteOnOrOffs = keyInstantIndices[i];
+    			if(keyNoteOnOrOffs !== undefined) // some keyInstantIndices may not have keyNoteOnOrOffs...
+    			{
+    				while(keyNoteOnOrOffs.index < keyNoteOnOrOffs.length)
     				{
-    					seq = noteInfos.seqs[noteInfos.seqs.index];
-    					if(seq.chordIndex >= currentMsPosIndex)
+    					noteOnOrOff = keyNoteOnOrOffs[keyNoteOnOrOffs.index];
+    					if(noteOnOrOff.msPosIndex >= currentInstantIndex)
     					{
     						break;
     					}
-    					if(seq.triggeredOn === true && seq.triggeredOff === false)
-    					{
-    						seq.doNoteOff(); // stops according to the trkOptions set in the seq's constructor
-    					}
-    					noteInfos.seqs.index++;
+
+    					playNoteOnOrOff(noteOnOrOff, 0);
+
+    					keyNoteOnOrOffs.index++;
     				}
     			}
     		}
@@ -310,60 +354,56 @@ _AP.keyboard1 = (function()
 
     	function handleNoteOff(key)
     	{
-    		var keyIndex = key - keyRange.bottomKey, noteInfos, seq,
-			nextChordIndex;
+    		var keyIndex = key - keyRange.bottomKey, keyNoteOnOrOffs, noteOff, index;
 
     		if(key >= keyRange.bottomKey && key <= keyRange.topKey)
     		{
-    			noteInfos = keyNoteArrays[keyIndex]; // This is the same object as for the corresponding noteOn.
-				seq = noteInfos.seqs[noteInfos.seqs.index]; // (the key's currently playing seq).
-    			if(seq !== undefined && seq.triggeredOn)// will be false if the key was pressed prematurely;
+    			keyNoteOnOrOffs = keyInstantIndices[keyIndex];
+    			if(keyNoteOnOrOffs.length > keyNoteOnOrOffs.index) // some keyInstantIndices may not have seqs...
     			{
-    				// stop() is called to stop the performance when hasCompleted is true for all the TrackWorkers.
-
-    				if(currentMsPosIndex < verticalNoteArrays.length - 1)
+    				noteOff = keyNoteOnOrOffs[keyNoteOnOrOffs.index++];
+    				index = noteOff.msPosIndex;
+    				if(index === currentInstantIndex || ((index === currentInstantIndex + 1) && indexPlayed === currentInstantIndex))  // legato realization
     				{
-    					seq.doNoteOff();  // stops the seq according to the trkOptions set in the its constructor
-    					nextChordIndex = seq.nextChordIndex; // The index, in verticalNoteArrays, of the following chord (in any input track).
-    					while(currentMsPosIndex < nextChordIndex) // advance until currentMsPosIndex === nextChordIndex
+    					if(index === currentInstantIndex + 1)
     					{
-    						currentMsPosIndex++;
-    						reportMsPositionInScore(verticalNoteArrays[currentMsPosIndex]);
-    					
-    						advanceCurrentKeyIndicesTo(currentMsPosIndex);
+    						currentInstantIndex++;
+    						reportMsPositionInScore(instants[currentInstantIndex].msPosition);
+    						advanceCurrentKeyIndicesTo(currentInstantIndex); // see above
     					}
+    					// Note that performedVelocity is 0 when this function is called by either
+    					// a real NoteOff or a NoteOn masquerading as a NoteOff.
+    					playNoteOnOrOff(noteOff, 0);
+    					indexPlayed = currentInstantIndex;
     				}
     			}
     		}
     	}
 
-    	function handleNoteOn(key, velocity)
+    	// Note that velocity will be 0 when this function is called by either
+    	// a real NoteOff or a NoteOn masquerading as a NoteOff. 
+    	function handleNoteOn(key, performedVelocity)
     	{
-    		var keyIndex = key - keyRange.bottomKey, noteInfos, chordIndex, seq;
+    		var keyIndex = key - keyRange.bottomKey, keyNoteOnOrOffs, noteOnOrOff, index;
 
     		if(key >= keyRange.bottomKey && key <= keyRange.topKey)
     		{
-    			noteInfos = keyNoteArrays[keyIndex];
-    			if(noteInfos.seqs.length > noteInfos.seqs.index) // some keyNoteArrays may not have seqs...
+    			keyNoteOnOrOffs = keyInstantIndices[keyIndex];
+    			if(keyNoteOnOrOffs.length > keyNoteOnOrOffs.index) // some keyInstantIndices may not have seqs...
     			{
-    				seq = noteInfos.seqs[noteInfos.seqs.index];
-    				if(seq !== undefined)
+    				noteOnOrOff = keyNoteOnOrOffs[keyNoteOnOrOffs.index++];
+    				index = noteOnOrOff.msPosIndex;
+    				if(index === currentInstantIndex || ((index === currentInstantIndex + 1) && indexPlayed === currentInstantIndex))  // legato realization
     				{
-    					chordIndex = seq.chordIndex;
-    					if(chordIndex === currentMsPosIndex || ((chordIndex === currentMsPosIndex + 1) && indexPlayed === currentMsPosIndex))  // legato realization
+    					if(index === currentInstantIndex + 1)
     					{
-    						if(chordIndex === currentMsPosIndex + 1)
-    						{
-    							currentMsPosIndex++;
-    							reportMsPositionInScore(verticalNoteArrays[currentMsPosIndex]);
-    							advanceCurrentKeyIndicesTo(currentMsPosIndex); // see above
-    							seq = noteInfos.seqs[noteInfos.seqs.index];
-    						}
-    						// Start playing the seq using the trkOptions set in its constructor.
-    						console.log("velocity=" + velocity.toString(10));
-    						seq.start(velocity);
-    						indexPlayed = currentMsPosIndex;
+    						currentInstantIndex++;
+    						reportMsPositionInScore(instants[currentInstantIndex].msPosition);
+    						advanceCurrentKeyIndicesTo(currentInstantIndex); // see above
     					}
+    					console.log("performedVelocity=" + performedVelocity.toString(10));
+    					playNoteOnOrOff(noteOnOrOff, performedVelocity);
+    					indexPlayed = currentInstantIndex;
     				}
     			}
     		}
@@ -421,8 +461,8 @@ _AP.keyboard1 = (function()
     					handleNoteOff(inputEvent.data[1]);
     				}
     				break;
-    			case CMD.NOTE_OFF:
-    				handleNoteOff(inputEvent.data[1]);
+				case CMD.NOTE_OFF:
+					handleNoteOff(inputEvent.data[1]);
     				break;
     			case CMD.CHANNEL_PRESSURE: // produced by both R2M and E-MU XBoard49 when using "aftertouch"
     				// CHANNEL_PRESSURE.data[1] is the amount of pressure 0..127.
@@ -487,375 +527,480 @@ _AP.keyboard1 = (function()
 	//
 	// trackIsOnArray[trackIndex] returns a boolean which determines whether each output or input
 	// track will be played or not. This array is read only.
-	// recording is a Sequence to which timestamped moments are added as they are performed.
+	// recording is a Sequence to which timestamped instants are added as they are performed.
 	// It should be an empty Sequence having the same number of output tracks as the score.
 	play = function(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, recording)
 	{
 		var channelIndex;
 
-		function initPlay(trackIsOnArray, keyNoteArrays, verticalNoteArrays, trackWorkers, startMarkerMsPosInScore, endMarkerMsPosInScore)
+		function initPlay(trackIsOnArray, keyInstantIndices, instants, trackWorkers, startMarkerMsPosInScore, endMarkerMsPosInScore)
 		{
-			function initTrackWorkers(trackWorkers, outputTracks)
-			{
-				var i, worker;
-
-				trackWorkers.length = 0;
-
-				for(i = 0; i < outputTracks.length; i++)
-				{
-					worker = new window.Worker("ap/TrackWorker.js");
-					worker.addEventListener("message", handleTrackMessage);
-					worker.postMessage({ action: "init", trackIndex: i, channelIndex: outputTracks[i].midiChannel });
-					// worker.hasCompleted is set to false when a trk is added (in the Seq constructor),
-					// and back to true when the worker says that it has completed its last trk.
-					worker.hasCompleted = true;
-					trackWorkers.push(worker);
-				}
-			}
-
-			// Returns an array of (array of performed inputNote), ordered by msPosition (without the endMarkerMsPosInScore).
-			// Each contained array has an msPosition attribute, and contains all the performing inputNotes that start at that msPosition,
+			// Sets instants to contain an array of objects having noteOns and noteOffs array attributes (the arrays are undefined if empty).
+			// The instants are ordered by msPosition, and do not contain the endMarkerMsPosInScore.
+			// Each instant has an msPosition attribute, and contains all the NoteOns and NoteOffs at that msPosition,
 			// regardless of inputTrack. All the msPositions are >= startMarkerMsPosInScore and < endMarkerMsPosInScore.
 			// Each trk is given a trkOptions attribute object containing the options it needs. These depend on whether the
 			// trk is inside a seq, pressures, pitchWheels or modWheels object.
-			// The trkOptions objects that have been consumed, and are no longer to be used, are set to undefined.
-			function getVerticalInputNoteArrays(inputTracks, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore)
+			// The trkOptions objects that have been consumed, and are no longer required, are set to undefined.
+			function setInstants(instants, inputTracks, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore)
 			{
-				var trackIndex, nTracks, ioIndex, inputObjects, nInputObjects, msPosition, msDuration, inputChord,
-					verticalNotesArrays = [], performedNote, performedNotes, vArray, i, nPerformedNotes,
-					chordTrkOptions, previousChordTrkOptions;
+				var notesMoments, i, j, nNotesMoments,
+					vNotesArray, nVNotes, note;
 
-				function getPerformedNotes(inputNotes, trackIsOnArray)
+				function findObjectAtMsPosition(verticalArrays, msPosition)
 				{
-					var performedNotes = [], i, nInputNotes = inputNotes.length;
+					var i, nArrays = verticalArrays.length, moment = null;
 
-					function usesTrack(inputNote, trackIsOnArray)
+					for(i = 0; i < nArrays; ++i)
 					{
-						var rval = false;
-
-						function hasTrack(trkArray, trackIsOnArray)
+						if(verticalArrays[i].msPosition === msPosition)
 						{
-							var rval = false, i, nTrks = trkArray.length;
-							for(i = 0; i < nTrks; ++i)
+							moment = verticalArrays[i];
+							break;
+						}
+					}
+					return moment;
+				}
+
+				// Returns an array of (array of inputNotes), ordered by msPosition (without the endMarkerMsPosInScore).
+				// Each contained array has an msPosition attribute, and contains all the inputNotes at that msPosition,
+				// regardless of inputTrack. All the msPositions are >= startMarkerMsPosInScore and < endMarkerMsPosInScore.
+				// Each trk is given a trkOptions attribute object containing the options it needs.
+				// These depend on whether the trk is inside a seq, pressures, pitchWheels or modWheels object.
+				// The trkOptions objects that have been consumed are no longer needed are set to undefined.
+				function getNotesMoments(inputTracks, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore)
+				{
+					var trackIndex, nTracks, ioIndex, inputObjects, nInputObjects, msPosition, msDuration, inputChord,
+						notesMoments = [], performedNote, performedNotes, moment, i, nPerformedNotes,
+						chordTrkOptions, previousChordTrkOptions;
+
+					function getPerformedNotes(inputNotes, trackIsOnArray)
+					{
+						var performedNotes = [], i, nInputNotes = inputNotes.length;
+
+						function usesTrack(inputNote, trackIsOnArray)
+						{
+							var rval = false;
+
+							function hasTrack(trkArray, trackIsOnArray)
 							{
-								if(trackIsOnArray[trkArray[i].trackIndex])
+								var rval = false, i, nTrks = trkArray.length;
+								for(i = 0; i < nTrks; ++i)
 								{
-									rval = true;
-									break;
+									if(trackIsOnArray[trkArray[i].trackIndex])
+									{
+										rval = true;
+										break;
+									}
 								}
+								return rval;
+							}
+
+							if(hasTrack(inputNote.noteOn.seq, trackIsOnArray)
+							|| hasTrack(inputNote.noteOff.trkOffs, trackIsOnArray)
+							|| hasTrack(inputNote.noteOn.pressures, trackIsOnArray)
+							|| hasTrack(inputNote.noteOn.pitchWheels, trackIsOnArray)
+							|| hasTrack(inputNote.noteOn.modWheels, trackIsOnArray)
+							|| hasTrack(inputNote.noteOn.trkOffs, trackIsOnArray)
+							|| hasTrack(inputNote.noteOff.seq, trackIsOnArray)
+							|| hasTrack(inputNote.noteOff.pitchWheels, trackIsOnArray)
+							|| hasTrack(inputNote.noteOff.modWheels, trackIsOnArray))
+							{
+								rval = true;
 							}
 							return rval;
 						}
 
-						if(hasTrack(inputNote.noteOn.seq, trackIsOnArray)
-						|| hasTrack(inputNote.noteOff.trkOffs, trackIsOnArray)
-						|| hasTrack(inputNote.noteOn.pressures, trackIsOnArray)
-						|| hasTrack(inputNote.noteOn.pitchWheels, trackIsOnArray)
-						|| hasTrack(inputNote.noteOn.modWheels, trackIsOnArray)
-						|| hasTrack(inputNote.noteOn.trkOffs, trackIsOnArray)
-						|| hasTrack(inputNote.noteOff.seq, trackIsOnArray)
-						|| hasTrack(inputNote.noteOff.pitchWheels, trackIsOnArray)
-						|| hasTrack(inputNote.noteOff.modWheels, trackIsOnArray))
+						for(i = 0; i < nInputNotes; ++i)
 						{
-							rval = true;
+							if(usesTrack(inputNotes[i], trackIsOnArray))
+							{
+								performedNotes.push(inputNotes[i]);
+							}
 						}
-						return rval;
+
+						return performedNotes;
 					}
 
-					for(i = 0; i < nInputNotes; ++i)
+					function setNoteOnOffTrkOptions(note, chordTrkOptions)
 					{
-						if(usesTrack(inputNotes[i], trackIsOnArray))
+						function setTrkOptions(noteOnOff, noteTrkOptions, chordTrkOptions)
 						{
-							performedNotes.push(inputNotes[i]);
-						}
-					}
-
-					return performedNotes;
-				}
-
-				function findVArray(verticalNotesArrays, msPosition)
-				{
-					var i, nArrays = verticalNotesArrays.length, vArray = null;
-
-					for(i = 0; i < nArrays; ++i)
-					{
-						if(verticalNotesArrays[i].msPosition === msPosition)
-						{
-							vArray = verticalNotesArrays[i];
-							break;
-						}
-					}
-					return vArray;
-				}
-
-				function setNoteOnOffTrkOptions(note, chordTrkOptions)
-				{
-					function setTrkOptions(noteOnOff, noteTrkOptions, chordTrkOptions)
-					{
-						function getOption(optStr, trkTrkOptions, seqControlsTrkOptions, noteTrkOptions, chordTrkOptions)
-						{
-							var option;
-							if(trkTrkOptions !== undefined && trkTrkOptions.hasOwnProperty(optStr))
+							function getOption(optStr, trkTrkOptions, seqControlsTrkOptions, noteTrkOptions, chordTrkOptions)
 							{
-								option = trkTrkOptions[optStr];
-							}
-							else if(seqControlsTrkOptions !== undefined && seqControlsTrkOptions.hasOwnProperty(optStr))
-							{
-								option = seqControlsTrkOptions[optStr];
-							}
-							else if(noteTrkOptions !== undefined && noteTrkOptions.hasOwnProperty(optStr))
-							{
-								option = noteTrkOptions[optStr];
-							}
-							else if(chordTrkOptions !== undefined && chordTrkOptions.hasOwnProperty(optStr))
-							{
-								option = chordTrkOptions[optStr];
-							}
-							return option;
-
-						}
-
-						// Seqs use the options: pedal, velocity and trkOff
-						function setSeqTrkOptions(seq, noteTrkOptions, chordTrkOptions)
-						{
-							var i, nTrks = seq.length, newTrkOptions, seqTrkOptions = seq.trkOptions, trkTrkOptions,
-								pedalOpt, velocityOpt, minVelocityOpt, trkOffOpt;
-
-							for(i = 0; i < nTrks; ++i)
-							{
-								newTrkOptions = {};
-								trkTrkOptions = seq[i].trkOptions;
-								pedalOpt = getOption("pedal", trkTrkOptions, seqTrkOptions, noteTrkOptions, chordTrkOptions);
-								if(pedalOpt !== undefined)
+								var option;
+								if(trkTrkOptions !== undefined && trkTrkOptions.hasOwnProperty(optStr))
 								{
-									newTrkOptions.pedal = pedalOpt;
+									option = trkTrkOptions[optStr];
 								}
-								velocityOpt = getOption("velocity", trkTrkOptions, seqTrkOptions, noteTrkOptions, chordTrkOptions);
-								if(velocityOpt !== undefined)
+								else if(seqControlsTrkOptions !== undefined && seqControlsTrkOptions.hasOwnProperty(optStr))
 								{
-									minVelocityOpt = getOption("minVelocity", trkTrkOptions, seqTrkOptions, noteTrkOptions, chordTrkOptions);
-									newTrkOptions.velocity = velocityOpt;
-									newTrkOptions.minVelocity = minVelocityOpt;
+									option = seqControlsTrkOptions[optStr];
 								}
-								trkOffOpt = getOption("trkOff", trkTrkOptions, seqTrkOptions, noteTrkOptions, chordTrkOptions);
-								if(trkOffOpt !== undefined)
+								else if(noteTrkOptions !== undefined && noteTrkOptions.hasOwnProperty(optStr))
 								{
-									newTrkOptions.trkOff = trkOffOpt;
+									option = noteTrkOptions[optStr];
 								}
-								seq[i].trkOptions = newTrkOptions;
+								else if(chordTrkOptions !== undefined && chordTrkOptions.hasOwnProperty(optStr))
+								{
+									option = chordTrkOptions[optStr];
+								}
+								return option;
+
 							}
-							seq.trkOptions = undefined;
-						}
 
-						function setControlTrkOptions(optionString, controls, noteTrkOptions, chordTrkOptions)
-						{
-							var i, nControls = controls.length, newTrkOptions,
-								controlsTrkOptions = controls.trkOptions, trkTrkOptions,
-								option, minVolumeOpt, maxVolumeOpt;
-
-							for(i = 0; i < nControls; ++i)
+							// Seqs use the options: pedal, velocity and trkOff
+							function setSeqTrkOptions(seq, noteTrkOptions, chordTrkOptions)
 							{
-								newTrkOptions = {};
-								trkTrkOptions = controls[i].trkOptions;
-								option = getOption(optionString, trkTrkOptions, controlsTrkOptions, noteTrkOptions, chordTrkOptions);
-								if(option !== undefined)
+								var i, nTrks = seq.length, newTrkOptions, seqTrkOptions = seq.trkOptions, trkTrkOptions,
+									pedalOpt, velocityOpt, minVelocityOpt, trkOffOpt;
+
+								for(i = 0; i < nTrks; ++i)
 								{
-									newTrkOptions[optionString] = option;
-									switch(option)
+									newTrkOptions = {};
+									trkTrkOptions = seq[i].trkOptions;
+									pedalOpt = getOption("pedal", trkTrkOptions, seqTrkOptions, noteTrkOptions, chordTrkOptions);
+									if(pedalOpt !== undefined)
 									{
-										case "volume":
-											newTrkOptions.minVolume = getOption("minVolume", trkTrkOptions, controlsTrkOptions, noteTrkOptions, chordTrkOptions);
-											newTrkOptions.maxVolume = getOption("maxVolume", trkTrkOptions, controlsTrkOptions, noteTrkOptions, chordTrkOptions);
-											break;
-										case "pitch":
-											newTrkOptions.pitchWheelDeviation = getOption("pitchWheelDeviation", trkTrkOptions, controlsTrkOptions, noteTrkOptions, chordTrkOptions);
-											break;
-										case "pan":
-											newTrkOptions.panOrigin = getOption("panOrigin", trkTrkOptions, controlsTrkOptions, noteTrkOptions, chordTrkOptions);
-											break;
-										case "speed":
-											newTrkOptions.speedDeviation = getOption("speedDeviation", trkTrkOptions, controlsTrkOptions, noteTrkOptions, chordTrkOptions);
-											break;
-										default:
-											break;
+										newTrkOptions.pedal = pedalOpt;
 									}
-								}
-								controls[i].trkOptions = newTrkOptions;
-							}
-							controls.trkOptions = undefined;
-						}
-
-						if(noteOnOff.seq !== undefined)
-						{
-							setSeqTrkOptions(noteOnOff.seq, chordTrkOptions);
-						}
-						if(noteOnOff.pressures !== undefined)
-						{
-							setControlTrkOptions("pressure", noteOnOff.pressures, noteTrkOptions, chordTrkOptions);
-						}
-						if(noteOnOff.pitchWheels !== undefined)
-						{
-							setControlTrkOptions("pitchWheel", noteOnOff.pitchWheels, noteTrkOptions, chordTrkOptions);
-						}
-						if(noteOnOff.modWheels !== undefined)
-						{
-							setControlTrkOptions("modWheel", noteOnOff.modWheels, noteTrkOptions, chordTrkOptions);
-						}
-					}
-
-					if(note.noteOn)
-					{
-						setTrkOptions(note.noteOn, note.trkOptions, chordTrkOptions);
-					}
-
-					if(note.noteOff)
-					{
-						setTrkOptions(note.noteOff, note.trkOptions, chordTrkOptions);
-					}
-					note.trkOptions = undefined;
-				}
-
-				nTracks = inputTracks.length;
-				for(trackIndex = 0; trackIndex < nTracks; ++trackIndex)
-				{
-					if(trackIsOnArray[trackIndex])
-					{
-						previousChordTrkOptions = null;
-						inputObjects = inputTracks[trackIndex].inputObjects;
-						nInputObjects = inputObjects.length;
-						for(ioIndex = 0; ioIndex < nInputObjects; ++ioIndex)
-						{
-							if(inputObjects[ioIndex] instanceof _AP.inputChord.InputChord)
-							{
-								inputChord = inputObjects[ioIndex];
-								msPosition = inputChord.msPositionInScore;
-								msDuration = inputChord.msDurationInScore;
-								if(inputChord.trkOptions)
-								{
-									chordTrkOptions = inputChord.trkOptions;
-								}
-								else if(previousChordTrkOptions !== null)
-								{
-									chordTrkOptions = previousChordTrkOptions;
-								}
-								else
-								{
-									chordTrkOptions = new _AP.trkOptions.TrkOptions({});
-								}
-								previousChordTrkOptions = chordTrkOptions;
-
-								if(msPosition >= startMarkerMsPosInScore && msPosition < endMarkerMsPosInScore)
-								{
-									performedNotes = getPerformedNotes(inputChord.inputNotes, trackIsOnArray);
-
-									if(performedNotes.length > 0)
+									velocityOpt = getOption("velocity", trkTrkOptions, seqTrkOptions, noteTrkOptions, chordTrkOptions);
+									if(velocityOpt !== undefined)
 									{
-										nPerformedNotes = performedNotes.length;
-										vArray = findVArray(verticalNotesArrays, msPosition);
-										if(vArray === null)
+										minVelocityOpt = getOption("minVelocity", trkTrkOptions, seqTrkOptions, noteTrkOptions, chordTrkOptions);
+										newTrkOptions.velocity = velocityOpt;
+										newTrkOptions.minVelocity = minVelocityOpt;
+									}
+									trkOffOpt = getOption("trkOff", trkTrkOptions, seqTrkOptions, noteTrkOptions, chordTrkOptions);
+									if(trkOffOpt !== undefined)
+									{
+										newTrkOptions.trkOff = trkOffOpt;
+									}
+									seq[i].trkOptions = newTrkOptions;
+								}
+								seq.trkOptions = undefined;
+							}
+
+							function setControlTrkOptions(optionString, controls, noteTrkOptions, chordTrkOptions)
+							{
+								var i, nControls = controls.length, newTrkOptions,
+									controlsTrkOptions = controls.trkOptions, trkTrkOptions,
+									option;
+
+								for(i = 0; i < nControls; ++i)
+								{
+									newTrkOptions = {};
+									trkTrkOptions = controls[i].trkOptions;
+									option = getOption(optionString, trkTrkOptions, controlsTrkOptions, noteTrkOptions, chordTrkOptions);
+									if(option !== undefined)
+									{
+										newTrkOptions[optionString] = option;
+										switch(option)
 										{
-											vArray = [];
-											vArray.msPosition = msPosition;
-											verticalNotesArrays.push(vArray);
+											case "volume":
+												newTrkOptions.minVolume = getOption("minVolume", trkTrkOptions, controlsTrkOptions, noteTrkOptions, chordTrkOptions);
+												newTrkOptions.maxVolume = getOption("maxVolume", trkTrkOptions, controlsTrkOptions, noteTrkOptions, chordTrkOptions);
+												break;
+											case "pitch":
+												newTrkOptions.pitchWheelDeviation = getOption("pitchWheelDeviation", trkTrkOptions, controlsTrkOptions, noteTrkOptions, chordTrkOptions);
+												break;
+											case "pan":
+												newTrkOptions.panOrigin = getOption("panOrigin", trkTrkOptions, controlsTrkOptions, noteTrkOptions, chordTrkOptions);
+												break;
+											case "speed":
+												newTrkOptions.speedDeviation = getOption("speedDeviation", trkTrkOptions, controlsTrkOptions, noteTrkOptions, chordTrkOptions);
+												break;
+											default:
+												break;
 										}
-										for(i = 0; i < nPerformedNotes; ++i)
+									}
+									controls[i].trkOptions = newTrkOptions;
+								}
+								controls.trkOptions = undefined;
+							}
+
+							if(noteOnOff.seq !== undefined)
+							{
+								setSeqTrkOptions(noteOnOff.seq, chordTrkOptions);
+							}
+							if(noteOnOff.pressures !== undefined)
+							{
+								setControlTrkOptions("pressure", noteOnOff.pressures, noteTrkOptions, chordTrkOptions);
+							}
+							if(noteOnOff.pitchWheels !== undefined)
+							{
+								setControlTrkOptions("pitchWheel", noteOnOff.pitchWheels, noteTrkOptions, chordTrkOptions);
+							}
+							if(noteOnOff.modWheels !== undefined)
+							{
+								setControlTrkOptions("modWheel", noteOnOff.modWheels, noteTrkOptions, chordTrkOptions);
+							}
+						}
+
+						if(note.noteOn)
+						{
+							setTrkOptions(note.noteOn, note.trkOptions, chordTrkOptions);
+						}
+
+						if(note.noteOff)
+						{
+							setTrkOptions(note.noteOff, note.trkOptions, chordTrkOptions);
+						}
+						note.trkOptions = undefined;
+					}
+
+					nTracks = inputTracks.length;
+					for(trackIndex = 0; trackIndex < nTracks; ++trackIndex)
+					{
+						if(trackIsOnArray[trackIndex])
+						{
+							previousChordTrkOptions = null;
+							inputObjects = inputTracks[trackIndex].inputObjects;
+							nInputObjects = inputObjects.length;
+							for(ioIndex = 0; ioIndex < nInputObjects; ++ioIndex)
+							{
+								if(inputObjects[ioIndex] instanceof _AP.inputChord.InputChord)
+								{
+									inputChord = inputObjects[ioIndex];
+									msPosition = inputChord.msPositionInScore;
+									msDuration = inputChord.msDurationInScore;
+									if(inputChord.trkOptions)
+									{
+										chordTrkOptions = inputChord.trkOptions;
+									}
+									else if(previousChordTrkOptions !== null)
+									{
+										chordTrkOptions = previousChordTrkOptions;
+									}
+									else
+									{
+										chordTrkOptions = new _AP.trkOptions.TrkOptions({});
+									}
+									previousChordTrkOptions = chordTrkOptions;
+
+									if(msPosition >= startMarkerMsPosInScore && msPosition < endMarkerMsPosInScore)
+									{
+										performedNotes = getPerformedNotes(inputChord.inputNotes, trackIsOnArray);
+
+										if(performedNotes.length > 0)
 										{
-											performedNote = performedNotes[i];
-											performedNote.msDuration = msDuration;
-											setNoteOnOffTrkOptions(performedNote, chordTrkOptions);
-											vArray.push(performedNote);
+											nPerformedNotes = performedNotes.length;
+											moment = findObjectAtMsPosition(notesMoments, msPosition);
+											if(moment === null)
+											{
+												moment = [];
+												moment.msPosition = msPosition;
+												notesMoments.push(moment);
+											}
+											for(i = 0; i < nPerformedNotes; ++i)
+											{
+												performedNote = performedNotes[i];
+												performedNote.msDuration = msDuration;
+												setNoteOnOffTrkOptions(performedNote, chordTrkOptions);
+												moment.push(performedNote);
+											}
 										}
 									}
 								}
+								inputChord.trkOptions = undefined;
 							}
-							inputChord.trkOptions = undefined;
 						}
+					}
+
+					// sort by msPositions
+					notesMoments.sort(function(a, b) { return a.msPosition - b.msPosition; });
+
+					return notesMoments;
+				}
+
+				function pushNoteOn(instants, noteOn, notatedKey, msPosition)
+				{
+					var instant;
+
+					if(noteOn !== undefined)
+					{
+						instant = findObjectAtMsPosition(instants, msPosition);
+						if(instant === null)
+						{
+							instant = {};
+							instant.msPosition = msPosition;
+							instants.push(instant);
+						}
+						if(instant.noteOns === undefined)
+						{
+							instant.noteOns = [];
+						}
+
+						noteOn.notatedKey = notatedKey;
+						instant.noteOns.push(noteOn);
+					}
+				}
+
+				function pushNoteOff(instants, noteOff, notatedKey, msPosition)
+				{
+					var instant;
+
+					if(noteOff !== undefined)
+					{
+						instant = findObjectAtMsPosition(instants, msPosition);
+						if(instant === null)
+						{
+							instant = {};
+							instant.msPosition = msPosition;
+							instants.push(instant);
+						}
+						if(instant.noteOffs === undefined)
+						{
+							instant.noteOffs = [];
+						}
+						noteOff.notatedKey = notatedKey;
+						instant.noteOffs.push(noteOff);
+					}
+				}
+
+				instants.length = 0;
+				notesMoments = getNotesMoments(inputTracks, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
+				nNotesMoments = notesMoments.length;
+				for(i = 0; i < nNotesMoments; ++i)
+				{
+					vNotesArray = notesMoments[i];
+					nVNotes = vNotesArray.length;
+					for(j = 0; j < nVNotes; ++j)
+					{
+						note = vNotesArray[j];
+						pushNoteOn(instants, note.noteOn, note.notatedKey, vNotesArray.msPosition);
+						pushNoteOff(instants, note.noteOff, note.notatedKey, vNotesArray.msPosition + note.msDuration);
 					}
 				}
 
 				// sort by msPositions
-				verticalNotesArrays.sort(function(a, b) { return a.msPosition - b.msPosition; });
-
-				return verticalNotesArrays;
+				instants.sort(function(a, b) { return a.msPosition - b.msPosition; });
 			}
 
-			// Creates an array of Note for each Key in the played range.
-			// Also creates Seq objects for each note, and initialises the trackWorkers with the Seqs' trks,
+			// Replaces noteOn.seq and noteOff.seq definitions by Seq objects.
 			// The Seq constructor posts pushTrk messages to the appropriate trackWorkers.
-			// Each trackWorker puts each incoming trk into an array, ordered by msPosition.
-			function initKeyNoteArrays(keyNoteArrays, trackWorkers, verticalNoteArrays)
+			// The seqs are being constructed in order of msPosition, so the trackWorkers' trks
+			// are also in order of msPosition.
+			function setSeqsAndTrackWorkers(instants, trackWorkers, outputTracks)
 			{
-				var vnaIndex, nVerticalNoteArrays, vnArray, noteIndex, nNotes, note;
+				var i, instantIndex, nInstants = instants.length, instant, nNoteOns, nNoteOffs, noteOn, noteOff;
 
-				function initializeKeyNoteArrays(keyNoteArrays, bottomKey, topKey)
+				function initTrackWorkers(trackWorkers, outputTracks)
 				{
-					var i, notes;
+					var i, worker;
 
-					keyNoteArrays.length = 0; // the keyboard1.keyNoteArrays array
-					// create an empty notes object per midi key
-					for(i = bottomKey; i <= topKey; ++i) // keyRange was set in keyboard1.init().
+					trackWorkers.length = 0;
+
+					for(i = 0; i < outputTracks.length; i++)
 					{
-						notes = [];
-						notes.index = 0;
-						keyNoteArrays.push(notes);
+						worker = new window.Worker("ap/TrackWorker.js");
+						worker.addEventListener("message", handleTrackMessage);
+						worker.postMessage({ action: "init", trackIndex: i, channelIndex: outputTracks[i].midiChannel });
+						// worker.hasCompleted is set to false when a trk is added (in the Seq constructor),
+						// and back to true when the worker says that it has completed its last trk.
+						worker.hasCompleted = true;
+						trackWorkers.push(worker);
 					}
 				}
 
-				// Each Seq has the following attributes:
-				// Used publicly at runtime: 
-				//   seq.trks -- An array of trk.
-				//   seq.triggeredOn   -- Is set to true when the seq is triggered On. Default is false.
-				//   seq.triggeredOff  -- Is set to true when the seq is triggered Off. Default is false.
-				// Seq = function(seqPositionInScore, seqTrks, trackWorkers)
-				function setSeqs(note, msPosition, trackWorkers)
+				function setSeq(msPosition, noteOnOrOff, trackWorkers)
 				{
-					if(note.noteOn && note.noteOn.seq)
+					if(noteOnOrOff.seq)
 					{
-						note.noteOnSeq = new _AP.seq.Seq(msPosition, note.noteOn.seq, trackWorkers);
-					}
-					if(note.noteOff && note.noteOff.seq)
-					{
-						note.noteOffSeq = new _AP.seq.Seq(msPosition + note.msDuration, note.noteOff.seq, trackWorkers);
+						noteOnOrOff.seq = new _AP.seq.Seq(msPosition, noteOnOrOff.seq, trackWorkers);
 					}
 				}
 
-				/* begin initKeyNoteArrays() */
-				initializeKeyNoteArrays(keyNoteArrays, keyRange.bottomKey, keyRange.topKey); // keyRange was set in keyboard1.init().
+				initTrackWorkers(trackWorkers, outputTracks);
 
-				nVerticalNoteArrays = verticalNoteArrays.length;
-				for(vnaIndex = 0; vnaIndex < nVerticalNoteArrays; ++vnaIndex)
+				for(instantIndex = 0; instantIndex < nInstants; ++instantIndex)
 				{
-					vnArray = verticalNoteArrays[vnaIndex];
-					nNotes = vnArray.length;
-					for(noteIndex = 0; noteIndex < nNotes; ++noteIndex)
+					instant = instants[instantIndex];
+					if(instant.noteOffs)
 					{
-						note = vnArray[noteIndex];
-						setSeqs(note, vnArray.msPosition, trackWorkers);
-						keyNoteArrays[note.notatedKey - keyRange.bottomKey].push(note);
+						nNoteOffs = instant.noteOffs.length;
+						for(i = 0; i < nNoteOffs; ++i)
+						{
+							noteOff = instant.noteOffs[i];
+							setSeq(instant.msPosition, noteOff, trackWorkers);
+						}
+					}
+					if(instant.noteOns)
+					{
+						nNoteOns = instant.noteOns.length;
+						for(i = 0; i < nNoteOns; ++i)
+						{
+							noteOn = instant.noteOns[i];
+							setSeq(instant.msPosition, noteOn, trackWorkers);
+						}
 					}
 				}
 			}
 
-			/*** begin initPlay() ***/
+			// Creates a keyOnIndices and keyOffIndices array of instant indices for each Key in the played range.
+			function setKeyInstantIndices(keyInstantIndices, instants)
+			{
+				var i, instantIndex, nInstants = instants.length, instant, nOnOrOffs, noteOn, noteOff;
 
-			initTrackWorkers(trackWorkers, outputTracks); // must be done before creating the verticalNoteArrays
+				function initializeKeyInstantIndices(keyInstantIndices, bottomKey, topKey)
+				{
+					var i, keyIndices;
 
-			verticalNoteArrays = getVerticalInputNoteArrays(inputTracks, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
+					keyInstantIndices.length = 0; // the keyboard1.keyInstantIndices array
+					for(i = bottomKey; i <= topKey; ++i)
+					{
+						keyIndices = {};
+						keyIndices.keyOnIndices = [];
+						keyIndices.keyOffIndices = [];
+						keyIndices.index = 0; // index in both the above arrays
+						keyInstantIndices.push(keyIndices);
+					}
+				}
 
-			currentMsPosIndex = 0; // the initial index in verticalNoteArrays to perform
-			indexPlayed = -1; // is set to currentMsPosIndex when the index is played
+				initializeKeyInstantIndices(keyInstantIndices, keyRange.bottomKey, keyRange.topKey); // keyRange was set in keyboard1.init().
 
-			initKeyNoteArrays(keyNoteArrays, trackWorkers, verticalNoteArrays);
+				for(instantIndex = 0; instantIndex < nInstants; ++instantIndex)
+				{
+					instant = instants[instantIndex];
+					if(instant.noteOffs)
+					{
+						nOnOrOffs = instant.noteOffs.length;
+						for(i = 0; i < nOnOrOffs; ++i)
+						{
+							noteOff = instant.noteOffs[i];
+							keyInstantIndices[noteOff.notatedKey - keyRange.bottomKey].keyOffIndices.push(instantIndex);
+						}
+					}
+					if(instant.noteOns)
+					{
+						nOnOrOffs = instant.noteOns.length;
+						for(i = 0; i < nOnOrOffs; ++i)
+						{
+							noteOn = instant.noteOns[i];
+							keyInstantIndices[noteOn.notatedKey - keyRange.bottomKey].keyOnIndices.push(instantIndex);
+						}
+					}
+				}
+			}
+
+			setInstants(instants, inputTracks, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
+
+			setSeqsAndTrackWorkers(instants, trackWorkers, outputTracks);
+
+			setKeyInstantIndices(keyInstantIndices, instants);
+
+			currentInstantIndex = 0; // the initial index in instants to perform
+			indexPlayed = -1; // is set to currentInstantIndex when instants[currentInstantIndex] is played
 		}
 
 		sequenceRecording = recording;
 
 		for(channelIndex = 0; channelIndex < outputTracks.length; channelIndex++)
 		{
-			resetChannel(outputDevice, channelIndex);
+			resetChannel(outputDevice, channelIndex, false);
 		}
 
-		initPlay(trackIsOnArray, keyNoteArrays, verticalNoteArrays, trackWorkers, startMarkerMsPosInScore, endMarkerMsPosInScore);
+		initPlay(trackIsOnArray, keyInstantIndices, instants, trackWorkers, startMarkerMsPosInScore, endMarkerMsPosInScore);
 
 		performanceStartTime = performance.now();
 		setState("running");

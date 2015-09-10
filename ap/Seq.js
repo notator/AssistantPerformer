@@ -123,7 +123,8 @@ _AP.seq = (function()
 	// end var
 
 	// Called when a noteOn or noteOff starts this Seq.
-	// noteOff calls this function with no argument (undefined performedVelocity)
+	// If started by a noteOff, performedVelocity will be 0,
+	// and any trk velocity options will be ignored!
 	Seq.prototype.start = function(performedVelocity)
 	{
 		var i, worker, nWorkers = this.workers.length;
@@ -136,18 +137,6 @@ _AP.seq = (function()
 			// to give the worker more time to stop.
 			// (trackWorkers throw exceptions if they are busy when the following function is called.)
 			worker.postMessage({ action: "start", velocity: performedVelocity });
-		}
-	};
-
-	// Called when a noteOn or noteOff stops this seq.
-	Seq.prototype.stop = function()
-	{
-		var i, worker, nWorkers = this.workers.length;
-
-		for(i = 0; i < nWorkers; ++i)
-		{
-			worker = this.workers[i];
-			worker.postMessage({ action: "stop" }); // stops according to the trkOptions set in the seq's constructor
 		}
 	};
 

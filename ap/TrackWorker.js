@@ -55,7 +55,7 @@ eventHandler = function(e)
 
 		allTrks = [];
 		trkIndex = 0;
-		// currentTrk = 0; initialised in start (from trkIndex)
+		//currentTrk = 0; initialised in start (from trkIndex)
 		trkStartTime = -1;
 
 		// currentTrk.moments
@@ -223,11 +223,11 @@ eventHandler = function(e)
 
 	// Seq.prototype.start calls:
 	// worker.postMessage({ action: "start", velocity: performedVelocity });
+	// Note that NoteOffs call this function with velocity set to 0,
+	// and that in this case trk velocity options are ignored.
 	function start(msg)
 	{
 		var performedVelocity, minVelocity;
-
-		console.assert(msg.velocity, "TrackWorker.start(msg): illegal msg");
 
 		function _start()
 		{
@@ -345,15 +345,6 @@ eventHandler = function(e)
 
 			if(trkIndex < allTrks.length)
 			{
-				stopChord = false;
-				stopNow = false;
-
-				currentTrk = allTrks[trkIndex++];
-
-				moments = currentTrk.moments;
-				nMoments = moments.length;
-				momentIndex = 0;
-
 				trkStartTime = performance.now();
 
 				currentMoment = nextMoment();
@@ -400,29 +391,48 @@ eventHandler = function(e)
 			return sharedVelocity;
 		}
 
-		if(currentTrk.options && currentTrk.options.velocity)
+		if(trkIndex < allTrks.length)
 		{
-			velocityFactor = 1;
-			sharedVelocity = 0;
-			overrideVelocity = 0;
-			performedVelocity = msg.velocity;
-			minVelocity = currentTrk.options.minVelocity; // is defined if options.velocity is defined
-			switch(currentTrk.options.velocity)
+			stopChord = false;
+			stopNow = false;
+
+			if(currentTrk !== undefined && currentTrk.isRunning === true)
 			{
-				case "scaled":
-					velocityFactor = getVelocityFactor(performedVelocity, minVelocity);
-					break;
-				case "shared":
-					sharedVelocity = getSharedVelocity(performedVelocity, minVelocity);
-					break;
-				case "overridden":
-					overrideVelocity = getCorrectedVelocity(performedVelocity, minVelocity);
-					break;
-				default:
-					console.assert(false, "TrackWorker.doNoteOnVelocity(): illegal option -- " + currentTrk.options.velocity);
+				currentTrk.isRunning = false;
+				trkIndex++;
 			}
+
+			currentTrk = allTrks[trkIndex];
+			currentTrk.isRunning = true;
+
+			moments = currentTrk.moments;
+			nMoments = moments.length;
+			momentIndex = 0;
+
+			if(currentTrk.options && currentTrk.options.velocity && msg.velocity > 0)
+			{
+				velocityFactor = 1;
+				sharedVelocity = 0;
+				overrideVelocity = 0;
+				performedVelocity = msg.velocity;
+				minVelocity = currentTrk.options.minVelocity; // is defined if options.velocity is defined
+				switch(currentTrk.options.velocity)
+				{
+					case "scaled":
+						velocityFactor = getVelocityFactor(performedVelocity, minVelocity);
+						break;
+					case "shared":
+						sharedVelocity = getSharedVelocity(performedVelocity, minVelocity);
+						break;
+					case "overridden":
+						overrideVelocity = getCorrectedVelocity(performedVelocity, minVelocity);
+						break;
+					default:
+						console.assert(false, "TrackWorker.doNoteOnVelocity(): illegal option -- " + currentTrk.options.velocity);
+				}
+			}
+			_start();
 		}
-		_start();
 	}
 
 	/****************************************/
