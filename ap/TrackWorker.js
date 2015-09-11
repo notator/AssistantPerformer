@@ -24,6 +24,9 @@ currentMoment,
 nMoments,
 
 // runtime variables
+pressureOption,
+pitchWheelOption,
+modWheelOption,
 stopChord,
 stopNow,
 fadeLength,
@@ -65,6 +68,13 @@ eventHandler = function(e)
 		// nMoments; initialized in start (= currentTrk.moments.length)
 
 		// runtime variables
+		pressureOption = {};
+		pressureOption.control = "channelPressure";
+		pitchWheelOption = {};
+		pitchWheelOption.control = "pitch";
+		pitchWheelOption.pitchWheelDeviation = 2;
+		modWheelOption = {};
+		modWheelOption.control = "modulation";
 		stopChord = false;
 		stopNow = false;
 		fadeLength = -1;
@@ -438,27 +448,27 @@ eventHandler = function(e)
 	/****************************************/
 
 	// Keyboard1 calls either:
-	// worker.postMessage({ action: "doController", controller: "pressure", value: data[1] });
+	// worker.postMessage({ action: "doController", control: "pressure", value: data[1] });
 	// or
-	// worker.postMessage({ action: "doController", controller: "modWheel", value: data[2] });
+	// worker.postMessage({ action: "doController", control: "modWheel", value: data[2] });
 	// Construct the midiMessage and then post it back. 
 	function doController(msg)
 	{
-		var volumeValue, controller = msg.controller, value = msg.value, option;
+		var volumeValue, value = msg.value, options;
 
 		// argument is in range 0..127
 		// returned value is in range currentTrk.options.minVolume..currentTrk.options.maxVolume.
-		function getVolumeValue(value)
+		function getVolumeValue(value, minVolume, maxVolume)
 		{
-			var range = currentTrk.options.maxVolume - currentTrk.options.minVolume,
+			var range = maxVolume - minVolume,
 			factor = range / 127,
-			volumeValue = currentTrk.options.minVolume + (value * factor);
+			volumeValue = minVolume + (value * factor);
 			return volumeValue;
 		}
 
-		option = (controller === "modWheel") ? currentTrk.options.modulation : currentTrk.options.pressure;
+		options = (msg.control === "modWheel") ? modWheelOption : pressureOption;
 
-		switch(option)
+		switch(options.control)
 		{
 			case "aftertouch":	// Note that this option results in channelPressure messages!
 				msg = new Message(CMD.CHANNEL_PRESSURE + channelIndex, value);
@@ -470,7 +480,7 @@ eventHandler = function(e)
 				msg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.MODWHEEL, value);
 				break;
 			case "volume":
-				volumeValue = getVolumeValue(value);
+				volumeValue = getVolumeValue(value, options.minVolume, options.maxVolume);
 				msg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.VOLUME, volumeValue);
 				break;
 			case "expression":
@@ -509,8 +519,6 @@ eventHandler = function(e)
 	// case "doPitchWheel": */
 	function doPitchWheel(msg)
 	{
-		var pitchWheelOption;
-
 		/// Sets both RegisteredParameter controls to 0 (zero). This is standard MIDI for selecting the
 		/// pitch wheel so that it can be set by the subsequent DataEntry messages.
 		/// A DataEntryFine message is not set, because it is not needed and has no effect anyway.
@@ -575,9 +583,7 @@ eventHandler = function(e)
 			// nothing more to do! speedFactor is used in tick() to calculate delays.
 		}
 
-		pitchWheelOption = currentTrk.options.pitchWheel;
-
-		switch(pitchWheelOption)
+		switch(pitchWheelOption.control)
 		{
 			case "pitchWheel":
 				_doPitchWheel(msg.data1, msg.data2);
@@ -592,9 +598,9 @@ eventHandler = function(e)
 	}
 
 	/****************************************/
-	/* case "doNoteOff": */
+	/* case "stop": */
 	// Aug. 2015
-	function doNoteOff()
+	function stop()
 	{
 		var noteOffOption = currentTrk.options.noteOff;
 
@@ -643,7 +649,7 @@ eventHandler = function(e)
 
 		// called to stop a playing trk.
 		case "stop":
-			//stop();
+			stop();
 			break;
 
 		// Called by running changes to the channel pressure or modWheel controls
@@ -653,49 +659,56 @@ eventHandler = function(e)
 		// or
 		// worker.postMessage({ action: "doController", control: "modWheel", value: data[2] });
 		case "doController":
-			//doController(msg); // msg.control (either "pressure" or "modWheel") and msg.value
+			doController(msg); // msg.control (either "pressure" or "modWheel") and msg.value
 			break;
 
 		// Called by running changes to the pitchWheel control
 		// in Keyboard1.handlePitchWheel().
 		// Uses the current pitchWheel control.
 		case "doPitchWheel":
-			//doPitchWheel(msg); // msg.data1, msg.data2
+			doPitchWheel(msg); // msg.data1, msg.data2
 			break;
 
-		// called when the controller associated with pressure is changed
+		// called when the control associated with pressure is changed
 		case "setPressureOption":
-			//setPressureToControl(msg); // msg.control
+			pressureOption.control = msg.control;
 			break;
 
-		// called when the controller associated with pressure is changed to volume
+		// called when the control associated with pressure is changed to volume
 		case "setPressureVolumeOption":
-			//setPressureToVolume(msg); // msg.minVolume and msg.maxVolume
+			pressureOption.control = "volume";
+			pressureOption.minVolume = msg.minVolume;
+			pressureOption.maxVolume = msg.maxVolume;
 			break;
 
-		// called when the controller associated with the pitchWheel is changed
+		// called when the control associated with the pitchWheel is changed
 		case "setPitchWheelPitchOption":
-			//setPitchWheelToPitch(msg); // msg.pitchWheelDeviation
+			pitchWheelOption.control = "pitch";
+			pitchWheelOption.pitchWheelDeviation = msg.pitchWheelDeviation;
 			break;
 
-			// called when the controller associated with the pitchWheel is changed
+		// called when the control associated with the pitchWheel is changed
 		case "setPitchWheelPanOption":
-			//setPitchWheelToPan(msg); // msg.panOrigin
+			pitchWheelOption.control = "pan";
+			pitchWheelOption.panOrigin = msg.panOrigin;
 			break;
 
-			// called when the controller associated with the pitchWheel is changed
+		// called when the control associated with the pitchWheel is changed
 		case "setPitchWheelSpeedOption":
-			//setPitchWheelToSpeed(msg); // msg.speedDeviation
+			pitchWheelOption.control = "speed";
+			pitchWheelOption.speedDeviation = msg.speedDeviation;
 			break;
 
-			// called when the controller associated with the modWheel is changed
+		// called when the control associated with the modWheel is changed
 		case "setModWheelOption":
-			//setModWheelToControl(msg); // msg.control
+			modWheelOption.control = msg.control;
 			break;
 
-			// called when the controller associated with the modWheel is changed
+		// called when the control associated with the modWheel is changed
 		case "setModWheelVolumeOption":
-			//setModWheelToVolume(msg); // msg.minVolume and msg.maxVolume
+			modWheelOption.control = "volume";
+			modWheelOption.minVolume = msg.minVolume;
+			modWheelOption.maxVolume = msg.maxVolume;
 			break;
 	}
 };

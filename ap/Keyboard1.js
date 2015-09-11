@@ -500,7 +500,8 @@ _AP.keyboard1 = (function()
     					else if(instantIndex > currentInstantIndex)
     					{
     						// The key has been released too early.
-    						// Advance silently, shunting controler options and playing noteOffs but not noteOns, to instantIndex
+    						// Advance silently to instantIndex.
+    						// Controller options are shunted. Seqs are stopped but not started. 
     						tempInstantIndex = currentInstantIndex;
     						while(tempInstantIndex < instantIndex)
     						{
