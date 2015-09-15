@@ -452,9 +452,9 @@ eventHandler = function(e)
 	// or
 	// worker.postMessage({ action: "doController", control: "modWheel", value: data[2] });
 	// Construct the midiMessage and then post it back. 
-	function doController(msg)
+	function doController(inMsg)
 	{
-		var volumeValue, value = msg.value, options;
+		var volumeValue, value = inMsg.value, options, outMsg;
 
 		// argument is in range 0..127
 		// returned value is in range currentTrk.options.minVolume..currentTrk.options.maxVolume.
@@ -466,50 +466,53 @@ eventHandler = function(e)
 			return volumeValue;
 		}
 
-		options = (msg.control === "modWheel") ? modWheelOption : pressureOption;
+		options = (inMsg.control === "modWheel") ? modWheelOption : pressureOption;
 
 		switch(options.control)
 		{
 			case "aftertouch":	// Note that this option results in channelPressure messages!
-				msg = new Message(CMD.CHANNEL_PRESSURE + channelIndex, value);
+				outMsg = new Message(CMD.CHANNEL_PRESSURE + channelIndex, value);
 				break;
 			case "channelPressure":
-				msg = new Message(CMD.CHANNEL_PRESSURE + channelIndex, value);
+				outMsg = new Message(CMD.CHANNEL_PRESSURE + channelIndex, value);
 				break;
 			case "modulation":
-				msg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.MODWHEEL, value);
+				outMsg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.MODWHEEL, value);
 				break;
 			case "volume":
 				volumeValue = getVolumeValue(value, options.minVolume, options.maxVolume);
-				msg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.VOLUME, volumeValue);
+				outMsg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.VOLUME, volumeValue);
 				break;
 			case "expression":
-				msg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.EXPRESSION, value);
+				outMsg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.EXPRESSION, value);
 				break;
 			case "timbre":
-				msg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.TIMBRE, value);
+				outMsg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.TIMBRE, value);
 				break;
 			case "brightness":
-				msg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.BRIGHTNESS, value);
+				outMsg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.BRIGHTNESS, value);
 				break;
 			case "effects":
-				msg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.EFFECTS, value);
+				outMsg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.EFFECTS, value);
 				break;
 			case "tremolo":
-				msg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.TREMOLO, value);
+				outMsg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.TREMOLO, value);
 				break;
 			case "chorus":
-				msg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.CHORUS, value);
+				outMsg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.CHORUS, value);
 				break;
 			case "celeste":
-				msg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.CELESTE, value);
+				outMsg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.CELESTE, value);
 				break;
 			case "phaser":
-				msg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.PHASER, value);
+				outMsg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.PHASER, value);
 				break;
 		}
 
-		postMessage({ action: "midiMessage", midiMessage: msg });
+		if(outMsg)
+		{
+			postMessage({ action: "midiMessage", midiMessage: outMsg.data });
+		}
 	}
 
 	/***************************************/
@@ -527,11 +530,11 @@ eventHandler = function(e)
 		{
 			var msg;
 			msg = new Message(CMD.CONTROL_CHANGE + channel, CTL.REGISTERED_PARAMETER_COARSE, 0);
-			postMessage({ action: "midiMessage", midiMessage: msg });
+			postMessage({ action: "midiMessage", midiMessage: msg.data });
 			msg = new Message(CMD.CONTROL_CHANGE + channel, CTL.REGISTERED_PARAMETER_FINE, 0);
-			postMessage({ action: "midiMessage", midiMessage: msg });
+			postMessage({ action: "midiMessage", midiMessage: msg.data });
 			msg = new Message(CMD.CONTROL_CHANGE + channel, CTL.DATA_ENTRY_COARSE, deviation);
-			postMessage({ action: "midiMessage", midiMessage: msg });
+			postMessage({ action: "midiMessage", midiMessage: msg.data });
 
 			pitchWheelDeviation = deviation;
 		}
@@ -539,19 +542,19 @@ eventHandler = function(e)
 		function _doPitchWheel(data1, data2)
 		{
 			// currentTrk.options.pitchWheelDeviation is defined if currentTrack.options.pitchWheel is defined
-			if(pitchWheelDeviation !== currentTrk.options.pitchWheelDeviation)
+			if(pitchWheelDeviation !== pitchWheelOption.pitchWheelDeviation)
 			{
-				setPitchWheelDeviation(currentTrk.options.pitchWheelDeviation, channelIndex);
+				setPitchWheelDeviation(pitchWheelOption.pitchWheelDeviation, channelIndex);
 			}
 			msg = new Message(CMD.PITCH_WHEEL + channelIndex, data1, data2);
-			postMessage({ action: "midiMessage", midiMessage: msg });
+			postMessage({ action: "midiMessage", midiMessage: msg.data });
 		}
 
 		function doPanOption(value)  // value is in range 0..127
 		{
 			var origin, factor, newValue;
 
-			origin = currentTrk.options.panOrigin; // is defined if pitchWheelOption is "pan"
+			origin = pitchWheelOption.panOrigin; // is defined if pitchWheelOption is "pan"
 			if(value < 0x80)
 			{
 				factor = origin / 0x80;
@@ -563,13 +566,13 @@ eventHandler = function(e)
 				newValue = origin + ((value - 0x80) * factor);
 			}
 			msg = new Message(CMD.CONTROL_CHANGE + channelIndex, CTL.PAN, newValue);
-			postMessage({ action: "midiMessage", midiMessage: msg });
+			postMessage({ action: "midiMessage", midiMessage: msg.data });
 		}
 
 		function doSpeedOption(value) // value is in range 0..127
 		{
-			var speedDeviation = currentTrk.options.speedDeviation, // a float value > 1.0F
-			factor = Math.pwr(speedDeviation, 1 / 64);
+			var speedDeviation = pitchWheelOption.speedDeviation, // a float value > 1.0F
+			factor = Math.pow(speedDeviation, 1 / 64);
 
 			// e.g. if speedDeviation is 2
 			// factor = 2^(1/64) = 1.01088...
@@ -579,7 +582,7 @@ eventHandler = function(e)
 			// if original value is 127, speedFactor = 1.01088^(64) = 2.0 = maxSpeedFactor
 
 			value -= 64; // if value was 64, speedfactor is 1.
-			speedFactor = Math.pwr(factor, value);
+			speedFactor = Math.pow(factor, value);
 			// nothing more to do! speedFactor is used in tick() to calculate delays.
 		}
 
