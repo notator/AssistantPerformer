@@ -460,18 +460,24 @@ _AP.keyboard1 = (function()
     	// Increment each keyInstantIndices.index until pointing at >= currentInstantIndex
     	function advanceKeyInstantIndicesTo(keyInstantIndices, currentInstantIndex)
     	{
-    		var i, instantIndices, nKeys;
+    		var i, kOnOffIndices, nKeys;
 
     		nKeys = keyInstantIndices.length;
     		for(i = 0; i < nKeys; ++i)
     		{
-    			instantIndices = keyInstantIndices[i];
-    			if(instantIndices) // some keys may not have instantIndices...
+    			kOnOffIndices = keyInstantIndices[i];
+    			if(kOnOffIndices) // some keys may not have kOnOffIndices...
     			{
-    				while((instantIndices.index < instantIndices.keyOnIndices.length)
-					&& (instantIndices[instantIndices.index] < currentInstantIndex))
+    				while(kOnOffIndices.index < kOnOffIndices.keyOnIndices.length)
     				{
-    					instantIndices.index++;
+    					if((kOnOffIndices.keyOnIndices[kOnOffIndices.index] >= currentInstantIndex))
+    					{
+    						break;
+    					}
+    					else
+    					{
+    						kOnOffIndices.index++;
+    					}
     				}
     			}
     		}
@@ -506,8 +512,8 @@ _AP.keyboard1 = (function()
     						{
     							currentInstantIndex++;
     							reportMsPositionInScore(instants[currentInstantIndex].msPosition);
-    							advanceKeyInstantIndicesTo(keyInstantIndices, currentInstantIndex); // see above
     						}
+    						advanceKeyInstantIndicesTo(keyInstantIndices, currentInstantIndex); // see above
     					}
     					else if(instantIndex > currentInstantIndex)
     					{
@@ -560,7 +566,6 @@ _AP.keyboard1 = (function()
     						{
     							currentInstantIndex++;
     							reportMsPositionInScore(instants[currentInstantIndex].msPosition);
-    							advanceKeyInstantIndicesTo(keyInstantIndices, currentInstantIndex); // see above
     						}
 
     						console.log("performedVelocity=" + performedVelocity.toString(10));
@@ -697,16 +702,17 @@ _AP.keyboard1 = (function()
 		function initPlay(trackIsOnArray, keyInstantIndices, instants, trackWorkers, startMarkerMsPosInScore, endMarkerMsPosInScore)
 		{
 			// Sets instants to contain an array of objects having noteOns and noteOffs array attributes (the arrays are undefined if empty).
-			// The instants are ordered by msPosition, and do not contain the endMarkerMsPosInScore.
+			// The instants are ordered by msPosition, and contain an instant for the endMarkerMsPosInScore. (If there are no noteOffs at
+			// endMarkerMsPosInScore, an empty instant is added.)
 			// Each instant has an msPosition attribute, and contains all the NoteOns and NoteOffs at that msPosition,
-			// regardless of inputTrack. All the msPositions are >= startMarkerMsPosInScore and < endMarkerMsPosInScore.
+			// regardless of inputTrack. All the msPositions are >= startMarkerMsPosInScore and <= endMarkerMsPosInScore.
 			// Each trk is given a trkOptions attribute object containing the options it needs. These depend on whether the
 			// trk is inside a seq, pressures, pitchWheels or modWheels object.
 			// The trkOptions objects that have been consumed, and are no longer required, are set to undefined.
 			function setInstants(instants, inputTracks, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore)
 			{
 				var notesMoments, i, j, nNotesMoments,
-					vNotesArray, nVNotes, note;
+					vNotesArray, nVNotes, note, instant;
 
 				function findObjectAtMsPosition(verticalArrays, msPosition)
 				{
@@ -1036,6 +1042,13 @@ _AP.keyboard1 = (function()
 
 				// sort by msPositions
 				instants.sort(function(a, b) { return a.msPosition - b.msPosition; });
+
+				if(instants[instants.length - 1].msPosition < endMarkerMsPosInScore)
+				{
+					instant = {};
+					instant.msPosition = endMarkerMsPosInScore;
+					instants.push(instant);
+				}
 			}
 
 			// Replaces noteOn.seq and noteOff.seq definitions by Seq objects.
@@ -1057,9 +1070,8 @@ _AP.keyboard1 = (function()
 						worker = new window.Worker("ap/TrackWorker.js");
 						worker.addEventListener("message", handleTrackMessage);
 						worker.postMessage({ action: "init", trackIndex: i, channelIndex: outputTracks[i].midiChannel });
-						// worker.hasCompleted is set to false when a trk is added (in the Seq constructor),
-						// and back to true when the worker says that it has completed its last trk.
-						worker.hasCompleted = true;
+						// worker.hasCompleted is set to true when the worker says that it has completed its last trk.
+						worker.hasCompleted = false;
 						trackWorkers.push(worker);
 					}
 				}

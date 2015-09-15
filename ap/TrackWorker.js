@@ -200,27 +200,27 @@ eventHandler = function(e)
 			return insIndex;
 		}
 
-		if(options && options.pedal) // if undefined, do nothing
-		{
-			switch(options.pedal)
-			{
-				case "holdLast":
-					removeFinalNoteOffMessages(moments);
-					letSound = true;
-					break;
-				case "holdAll":
-					removeAllNoteOffMessages(moments);
-					letSound = true;
-					break;
-				case "holdAllStop":
-					removeAllNoteOffMessages(moments);
-					letSound = false;
-					break;
-				default:
-					console.assert(false, "TrackWorker.pushTrk(): illegal option -- " + options.pedal);
-					break;
-			}
-		}
+		//if(options && options.pedal) // if undefined, do nothing
+		//{
+		//	switch(options.pedal)
+		//	{
+		//		case "holdLast":
+		//			removeFinalNoteOffMessages(moments);
+		//			letSound = true;
+		//			break;
+		//		case "holdAll":
+		//			removeAllNoteOffMessages(moments);
+		//			letSound = true;
+		//			break;
+		//		case "holdAllStop":
+		//			removeAllNoteOffMessages(moments);
+		//			letSound = false;
+		//			break;
+		//		default:
+		//			console.assert(false, "TrackWorker.pushTrk(): illegal option -- " + options.pedal);
+		//			break;
+		//	}
+		//}
 
 		insertAtIndex = findInsertionIndex(allTrks, msPosition);
 
@@ -309,7 +309,7 @@ eventHandler = function(e)
 
 				function trkCompleted(letSound)
 				{
-					if(trkIndex < (allTrks.length))
+					if(trkIndex < (allTrks.length - 1))
 					{
 						postMessage({ action: "trkCompleted", channelIndex: channelIndex, letSound: letSound });
 					}
