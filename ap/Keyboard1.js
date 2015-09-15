@@ -708,7 +708,6 @@ _AP.keyboard1 = (function()
 			// regardless of inputTrack. All the msPositions are >= startMarkerMsPosInScore and <= endMarkerMsPosInScore.
 			// Each trk is given a trkOptions attribute object containing the options it needs. These depend on whether the
 			// trk is inside a seq, pressures, pitchWheels or modWheels object.
-			// The trkOptions objects that have been consumed, and are no longer required, are set to undefined.
 			function setInstants(instants, inputTracks, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore)
 			{
 				var notesMoments, i, j, nNotesMoments,
@@ -734,7 +733,6 @@ _AP.keyboard1 = (function()
 				// regardless of inputTrack. All the msPositions are >= startMarkerMsPosInScore and < endMarkerMsPosInScore.
 				// Each trk is given a trkOptions attribute object containing the options it needs.
 				// These depend on whether the trk is inside a seq, pressures, pitchWheels or modWheels object.
-				// The trkOptions objects that have been consumed are no longer needed are set to undefined.
 				function getNotesMoments(inputTracks, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore)
 				{
 					var trackIndex, nTracks, ioIndex, inputObjects, nInputObjects, msPosition, msDuration, inputChord,
@@ -763,13 +761,13 @@ _AP.keyboard1 = (function()
 								return rval;
 							}
 
-							if(hasTrack(inputNote.noteOn.seq, trackIsOnArray)
+							if(hasTrack(inputNote.noteOn.seqDef, trackIsOnArray)
 							|| hasTrack(inputNote.noteOff.trkOffs, trackIsOnArray)
 							|| hasTrack(inputNote.noteOn.pressures, trackIsOnArray)
 							|| hasTrack(inputNote.noteOn.pitchWheels, trackIsOnArray)
 							|| hasTrack(inputNote.noteOn.modWheels, trackIsOnArray)
 							|| hasTrack(inputNote.noteOn.trkOffs, trackIsOnArray)
-							|| hasTrack(inputNote.noteOff.seq, trackIsOnArray)
+							|| hasTrack(inputNote.noteOff.seqDef, trackIsOnArray)
 							|| hasTrack(inputNote.noteOff.pitchWheels, trackIsOnArray)
 							|| hasTrack(inputNote.noteOff.modWheels, trackIsOnArray))
 							{
@@ -817,15 +815,15 @@ _AP.keyboard1 = (function()
 							}
 
 							// Seqs use the options: pedal, velocity and trkOff
-							function setSeqTrkOptions(seq, noteTrkOptions, chordTrkOptions)
+							function setSeqTrkOptions(seqDef, noteTrkOptions, chordTrkOptions)
 							{
-								var i, nTrks = seq.length, newTrkOptions, seqTrkOptions = seq.trkOptions, trkTrkOptions,
+								var i, nTrks = seqDef.length, newTrkOptions, seqTrkOptions = seqDef.trkOptions, trkTrkOptions,
 									pedalOpt, velocityOpt, minVelocityOpt, trkOffOpt;
 
 								for(i = 0; i < nTrks; ++i)
 								{
 									newTrkOptions = {};
-									trkTrkOptions = seq[i].trkOptions;
+									trkTrkOptions = seqDef[i].trkOptions;
 									pedalOpt = getOption("pedal", trkTrkOptions, seqTrkOptions, noteTrkOptions, chordTrkOptions);
 									if(pedalOpt !== undefined)
 									{
@@ -843,9 +841,8 @@ _AP.keyboard1 = (function()
 									{
 										newTrkOptions.trkOff = trkOffOpt;
 									}
-									seq[i].trkOptions = newTrkOptions;
+									seqDef[i].trkOptions = newTrkOptions;
 								}
-								seq.trkOptions = undefined;
 							}
 
 							function setControlTrkOptions(optionString, controls, noteTrkOptions, chordTrkOptions)
@@ -883,12 +880,11 @@ _AP.keyboard1 = (function()
 									}
 									controls[i].trkOptions = newTrkOptions;
 								}
-								controls.trkOptions = undefined;
 							}
 
-							if(noteOnOff.seq !== undefined)
+							if(noteOnOff.seqDef !== undefined)
 							{
-								setSeqTrkOptions(noteOnOff.seq, chordTrkOptions);
+								setSeqTrkOptions(noteOnOff.seqDef, chordTrkOptions);
 							}
 							if(noteOnOff.pressures !== undefined)
 							{
@@ -913,7 +909,6 @@ _AP.keyboard1 = (function()
 						{
 							setTrkOptions(note.noteOff, note.trkOptions, chordTrkOptions);
 						}
-						note.trkOptions = undefined;
 					}
 
 					nTracks = inputTracks.length;
@@ -969,7 +964,6 @@ _AP.keyboard1 = (function()
 										}
 									}
 								}
-								inputChord.trkOptions = undefined;
 							}
 						}
 					}
@@ -1051,11 +1045,11 @@ _AP.keyboard1 = (function()
 				}
 			}
 
-			// Replaces noteOn.seq and noteOff.seq definitions by Seq objects.
+			// Constructs noteOn.seq and noteOff.seq from noteOn.seqDef and noteOff.seqDef objects.
 			// The Seq constructor posts pushTrk messages to the appropriate trackWorkers.
 			// The seqs are being constructed in order of msPosition, so the trackWorkers' trks
 			// are also in order of msPosition.
-			function setSeqsAndTrackWorkers(instants, trackWorkers, outputTracks)
+			function setSeqsAndTrackWorkers(instants, trackWorkers, trackIsOnArray, outputTracks)
 			{
 				var i, instantIndex, nInstants = instants.length, instant, nNoteOns, nNoteOffs, noteOn, noteOff;
 
@@ -1070,17 +1064,19 @@ _AP.keyboard1 = (function()
 						worker = new window.Worker("ap/TrackWorker.js");
 						worker.addEventListener("message", handleTrackMessage);
 						worker.postMessage({ action: "init", trackIndex: i, channelIndex: outputTracks[i].midiChannel });
-						// worker.hasCompleted is set to true when the worker says that it has completed its last trk.
-						worker.hasCompleted = false;
+						// worker.hasCompleted is set to false when it is given trks to play (in the Seq constructor),
+						// and back to true when the worker says that it has completed its last trk.
+						worker.hasCompleted = true; // used to find out if the performance has completed.
+
 						trackWorkers.push(worker);
 					}
 				}
 
 				function setSeq(msPosition, noteOnOrOff, trackWorkers)
 				{
-					if(noteOnOrOff.seq)
+					if(noteOnOrOff.seqDef)
 					{
-						noteOnOrOff.seq = new _AP.seq.Seq(msPosition, noteOnOrOff.seq, trackWorkers);
+						noteOnOrOff.seq = new _AP.seq.Seq(msPosition, noteOnOrOff.seqDef, trackWorkers);
 					}
 				}
 
@@ -1158,7 +1154,7 @@ _AP.keyboard1 = (function()
 
 			setInstants(instants, inputTracks, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
 
-			setSeqsAndTrackWorkers(instants, trackWorkers, outputTracks);
+			setSeqsAndTrackWorkers(instants, trackWorkers, trackIsOnArray, outputTracks);
 
 			setKeyInstantIndices(keyInstantIndices, instants);
 

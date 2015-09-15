@@ -35,7 +35,7 @@ _AP.inputChord = (function()
     	//      .noteOff -- undefined (or see below)
     	//
     	//		.noteOn and .noteOff can have the following fields:
-    	//			.seq -- undefined or an array of trkRef, which may have a trkOptions attribute.
+    	//			.seqDef -- undefined or an array of trkRef, which may have a trkOptions attribute.
     	//				Each trkRef has the following fields:
     	//					.trkOptions -- undefined or an TrkOptions object
     	//					.midiChannel (compulsory int >= 0. The midiChannel of the voice containing the referenced Trk. )
@@ -157,9 +157,9 @@ _AP.inputChord = (function()
     				return tOffs;
     			}
 
-    			if(noteInfo.seq !== undefined)
+    			if(noteInfo.seqDef !== undefined)
     			{
-    				noteOnOrOff.seq = getSeq(noteInfo.seq, outputTracks, chordMsPositionInScore);
+    				noteOnOrOff.seqDef = getSeq(noteInfo.seqDef, outputTracks, chordMsPositionInScore);
     			}
 
     			if(noteInfo.pressures !== undefined)

@@ -106,6 +106,8 @@ _AP.seq = (function()
 
 				trkWorker.postMessage({ action: "pushTrk", msPosition: msPosition, moments: moments, options: options });
 
+				trkWorker.hasCompleted = false;
+
 				workers.push(trkWorker);
 			}
 			return workers;

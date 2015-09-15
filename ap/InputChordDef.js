@@ -35,14 +35,14 @@ _AP.inputChordDef = (function ()
 	//      inputNote.noteOff -- undefined or see below
 	//
 	// if defined, inputNote.noteOn has the following fields:
-	//      inputNote.noteOn.seq -- is undefined or an array of trkRef with a (possibly undefined) TrkOptions field.
+	//      inputNote.noteOn.seqDef -- is undefined or an array of trkRef with a (possibly undefined) TrkOptions field.
 	//		inputNote.noteOn.pressures -- is undefined or an array of midiChannel with a (possibly undefined) TrkOptions field.
 	//		inputNote.noteOn.pitchWheels -- is undefined or an array of midiChannel with a (possibly undefined) TrkOptions field.
 	//		inputNote.noteOn.modWheels -- is undefined or an array of midiChannel with a (possibly undefined) TrkOptions field.
 	//		inputNote.noteOn.trkOffs -- is undefined or an array of trkOff.
 	//
 	// if defined, inputNote.noteOff has no pressures field, but otherwise the same fields as inputNote.noteOn:
-	//      inputNote.noteOff.seq -- is undefined or an array of trkRef with a (possibly undefined) TrkOptions field.
+	//      inputNote.noteOff.seqDef -- is undefined or an array of trkRef with a (possibly undefined) TrkOptions field.
 	//		inputNote.noteOff.pitchWheels -- is undefined or an array of midiChannel with a (possibly undefined) TrkOptions field.
 	//		inputNote.noteOff.modWheels -- is undefined or an array of midiChannel with a (possibly undefined) TrkOptions field.
 	//		inputNote.noteOff.trkOffs -- is undefined or an array of trkOff.
@@ -50,12 +50,12 @@ _AP.inputChordDef = (function ()
 	// A trkRef, which has the element name "trk" in the score, has the following fields:
 	//		trkOn.trkOptions -- undefined or an TrkOptions object
 	//		trkOn.midiChannel (compulsory int >= 0. The midiChannel of the voice containing the referenced Trk. )
-	//		trkOn.msPosition (compulsory int >= 0 in seq and trkOffs, otherwise omitted). The msPositionInScore of the referenced Trk.
-	//		trkOn.nMidiObjects (compulsory int >= 0 in seq elements, otherwise omitted). The number of MidiChords and Rests in the referenced Trk.)
+	//		trkOn.msPosition (compulsory int >= 0 in seqDef and trkOffs, otherwise omitted). The msPositionInScore of the referenced Trk.
+	//		trkOn.nMidiObjects (compulsory int >= 0 in seqDef elements, otherwise omitted). The number of MidiChords and Rests in the referenced Trk.)
 	//
 	// A trkOff, which also has the element name "trk" in the score, has the following fields:
 	//		trkOn.midiChannel (compulsory int >= 0. The midiChannel of the voice containing the referenced Trk. )
-	//		trkOn.msPosition (compulsory int >= 0 in seq and trkOffs, otherwise omitted). The msPositionInScore of the referenced Trk.
+	//		trkOn.msPosition (compulsory int >= 0 in seqDef and trkOffs, otherwise omitted). The msPositionInScore of the referenced Trk.
 	//
 	// An inputChordDef.trkOptions sets the current values in the midi input channel until further notice.
 	// Individual TrkOptions at lower levels temporarily override individual trkOptions at higher levels.
@@ -77,7 +77,7 @@ _AP.inputChordDef = (function ()
 					childNodes = inputNoteNode.childNodes,
 					i;
 
-				// returns an object that can have seq, pressures, pitchWheels, modWheels and trkOff attributes
+				// returns an object that can have seqDef, pressures, pitchWheels, modWheels and trkOff attributes
 				function getNoteOnOrNoteOff(noteOnOrNoteOffNode)
 				{
 					var i, childNodes = noteOnOrNoteOffNode.childNodes, nChildNodes = childNodes.length,
@@ -86,7 +86,7 @@ _AP.inputChordDef = (function ()
 					// returns an array of trkRef, possibly having an trkOptions attribute 
 					function getSeq(seqNode)
 					{
-						var i, childNodes, seq = [];
+						var i, childNodes, seqDef = [];
 
 						function getSeqTrk(seqTrkNode)
 						{
@@ -110,7 +110,7 @@ _AP.inputChordDef = (function ()
 										seqTrk.nMidiObjects = parseInt(attr.value, 10);
 										break;
 									default:
-										console.assert(false, "Illegal attribute for trk element in seq.");
+										console.assert(false, "Illegal attribute for trk element in seqDef.");
 								}
 							}
 
@@ -132,14 +132,14 @@ _AP.inputChordDef = (function ()
 							switch(childNodes[i].nodeName)
 							{
 								case 'trkOptions':
-									seq.trkOptions = new TrkOptions(childNodes[i]);
+									seqDef.trkOptions = new TrkOptions(childNodes[i]);
 									break;
 								case 'trk':
-									seq.push(getSeqTrk(childNodes[i]));
+									seqDef.push(getSeqTrk(childNodes[i]));
 									break;
 							}
 						}
-						return seq;
+						return seqDef;
 					}
 
 					function getChannelRefs(channelRefsNode)
@@ -250,7 +250,7 @@ _AP.inputChordDef = (function ()
 						switch(childNodes[i].nodeName)
 						{
 							case 'seq':
-								noteOnOrNoteOff.seq = getSeq(childNodes[i]);
+								noteOnOrNoteOff.seqDef = getSeq(childNodes[i]);
 								break;
 							case 'pressures':
 								noteOnOrNoteOff.pressures = getChannelRefs(childNodes[i]); // NoteOff never has a pressures element
@@ -355,19 +355,19 @@ _AP.inputChordDef = (function ()
 		function outChannels(noteOnOff)
 		{
 			var i,
-			seq = noteOnOff.seq, nSeqTrks,
+			seqDef = noteOnOff.seqDef, nSeqTrks,
 			pressures = noteOnOff.pressures, nPressures,
 			pitchWheels = noteOnOff.pitchWheels, nPitchWheels,
 			modWheels = noteOnOff.modWheels, nModWheels,
 			trkOffs = noteOnOff.trkOffs, nTrkOffs,
 			outputChannels = [];
 
-			if(seq !== undefined)
+			if(seqDef !== undefined)
 			{
-				nSeqTrks = seq.length;
+				nSeqTrks = seqDef.length;
 				for(i = 0; i < nSeqTrks; ++i)
 				{
-					outputChannels.push(seq[i].midiChannel);
+					outputChannels.push(seqDef[i].midiChannel);
 				}
 			}
 			if(pressures !== undefined)
