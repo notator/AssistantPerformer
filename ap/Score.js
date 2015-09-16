@@ -1219,7 +1219,7 @@ _AP.score = (function (document)
     	{
     		// Move runningMarker to msPosition in the next system.
     		runningMarker.setVisible(false);
-    		if(runningMarker.systemIndex() < (systems.length - 1))
+    		if(runningMarker.systemIndex() < (systems.length - 1) && endMarkerMsPosition() > systems[runningMarker.systemIndex()].endMsPosition)
     		{
     			runningMarker = systems[runningMarker.systemIndex() + 1].runningMarker;
     			runningMarker.moveTo(msPosition);
