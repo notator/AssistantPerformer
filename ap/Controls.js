@@ -191,39 +191,6 @@ _AP.controls = (function(document, window)
         }
     },
 
-    // This function is called when the input or output device selectors change.
-    setMIDIDevices = function()
-    {
-        var i,
-        inSelector = document.getElementById("inputDeviceSelect"),
-        outSelector = document.getElementById("outputDeviceSelect");
-
-		// inputDevices are opened and closed by the input event handling module (e.g. Keyboard1)
-        if(inSelector.selectedIndex === 0)
-        {
-            options.inputDevice = null;
-        }
-        else
-        {
-        	options.inputDevice = inSelector.options[inSelector.selectedIndex].inputDevice;
-        }
-
-        for(i = 1; i < outSelector.options.length; ++i)
-        {
-        	outSelector.options[i].outputDevice.close();
-        }
-
-        if(outSelector.selectedIndex === 0)
-        {
-            options.outputDevice = null;
-        }
-        else
-        {
-        	options.outputDevice = outSelector.options[outSelector.selectedIndex].outputDevice;
-        	options.outputDevice.open();
-        }
-    },
-
     setMainOptionsState = function(mainOptionsState)
     {
         var
@@ -685,7 +652,7 @@ _AP.controls = (function(document, window)
 				setMIDIOutputDeviceSelector(midiAccess);
 				// Output devices are currently handled differently from the input devices...
 				// (I don't want the output device selector's selected index to change 
-				// every time the E-MU XBoard is connected or disconnected.)
+				// every time an input device is connected or disconnected.)
 				if(currentOutputDeviceIndex < os.options.length)
 				{
 					os.selectedIndex = currentOutputDeviceIndex;
@@ -696,10 +663,6 @@ _AP.controls = (function(document, window)
 				}
 				break;
 		}
-
-		midiAccess.removeEventListener('statechange', onMIDIDeviceStateChange, false);
-		setMIDIDevices();
-		midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
 	},
 
     doAlertThrow = function(functionLocation, errorMessage)
@@ -1102,14 +1065,16 @@ _AP.controls = (function(document, window)
 
     	try
     	{
-    		if(controlID === "inputDeviceSelect")
-    		{
-    			setMIDIDevices();
-    			if(globalElements.scoreSelect.selectedIndex > 0)
-    			{
-    				setScore();
-    			}
-    		}
+    		// setMIDIDevices is now called in beginRuntime().
+    		// There is no reason to react here to the inputDeviceSelect changing.
+    		//if(controlID === "inputDeviceSelect")
+    		//{
+    		//	//setMIDIDevices();
+    		//	if(globalElements.scoreSelect.selectedIndex > 0)
+    		//	{
+    		//		setScore();
+    		//	}
+    		//}
 
     		if(controlID === "scoreSelect")
     		{
@@ -1123,10 +1088,12 @@ _AP.controls = (function(document, window)
     			}
     		}
 
-    		if(controlID === "outputDeviceSelect")
-    		{
-    			setMIDIDevices();
-    		}
+    		// setMIDIDevices is now called in beginRuntime().
+			// There is no reason to react here to the outputDeviceSelect changing.
+    		//if(controlID === "outputDeviceSelect")
+    		//{
+    		//	//setMIDIDevices();
+    		//}
 
     		/**** controls in options panel ***/
     		if(controlID === "inputDeviceSelect"
@@ -1210,6 +1177,38 @@ _AP.controls = (function(document, window)
     // It does not require a MIDI input.
     beginRuntime = function()
     {
+    	function setMIDIDevices(options)
+    	{
+    		var i,
+			inSelector = document.getElementById("inputDeviceSelect"),
+			outSelector = document.getElementById("outputDeviceSelect");
+
+    		// inputDevices are opened and closed by the input event handling module (e.g. Keyboard1)
+    		if(inSelector.selectedIndex === 0)
+    		{
+    			options.inputDevice = null;
+    		}
+    		else
+    		{
+    			options.inputDevice = inSelector.options[inSelector.selectedIndex].inputDevice;
+    		}
+
+    		for(i = 1; i < outSelector.options.length; ++i)
+    		{
+    			outSelector.options[i].outputDevice.close();
+    		}
+
+    		if(outSelector.selectedIndex === 0)
+    		{
+    			options.outputDevice = null;
+    		}
+    		else
+    		{
+    			options.outputDevice = outSelector.options[outSelector.selectedIndex].outputDevice;
+    			options.outputDevice.open();
+    		}
+    	}
+
     	function getTracksAndPlayer(score, options)
     	{
     		var tracksData;
@@ -1255,6 +1254,8 @@ _AP.controls = (function(document, window)
 
     	try
     	{
+    		setMIDIDevices(options);
+
     		// This function can throw an exception
     		// (e.g. if an attempt is made to create an event that has no duration).
     		getTracksAndPlayer(score, options);
