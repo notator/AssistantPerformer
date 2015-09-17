@@ -51,6 +51,27 @@ _AP.sequenceRecording = (function ()
         SequenceRecording: SequenceRecording
     };
 
+	// The data argument is a Uint8Array 
+    SequenceRecording.prototype.addLiveMessage = function(data, timestamp)
+    {
+    	var trackIndex = data[0] & 0xF,
+    		message;
+		
+    	switch(data.length)
+    	{
+    		case 1:
+    			message = new _AP.message.Message(data[0]);
+    			break;
+    		case 2:
+    			message = new _AP.message.Message(data[0], data[1]);
+    			break;
+    		case 3:
+    			message = new _AP.message.Message(data[0], data[1], data[2]);
+    			break;
+    	}
+    	this.trackRecordings[trackIndex].addLiveMessage(message, timestamp);
+    };
+
     return publicSequenceRecordingAPI;
 
 } ());

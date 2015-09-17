@@ -183,6 +183,47 @@ _AP.trackRecording = (function ()
         }
     };
 
+	// Add the message (a Message object) to a moment at the end of this TrackRecording
+	// using the (absolute) timestamp to determine whether to add the message
+	// to the last (existing) moment or to create a new moment.
+	// Note that messages are recorded with their current (absolute DOMHRT) timestamp values.
+	// These values are adjusted relative to the first timestamp in the recording before saving them in a Standard MIDI File.
+	// In other words: the value of the earliest timestamp in the recording is subtracted from all the timestamps
+	// in the recording before saving the file. 
+    TrackRecording.prototype.addLiveMessage = function(message, timestamp)
+    {
+    	var moments = this.moments, lastMoment, lastMomentTimestamp;
+
+    	function addNewMoment(moments, message, timestamp)
+    	{
+    		var newMoment = new _AP.moment.Moment(0); // msPositionInScore is irrelevant here
+
+    		newMoment.timestamp = timestamp;
+    		newMoment.messages.push(message);
+    		moments.push(newMoment);
+    	}
+
+    	if(moments.length === 0)
+    	{
+    		addNewMoment(moments, message, timestamp);
+    	}
+    	else
+    	{
+    		lastMoment = moments[moments.length - 1];
+    		lastMomentTimestamp = lastMoment.timestamp;
+
+    		if(timestamp > lastMomentTimestamp)
+    		{
+    			addNewMoment(moments, message, timestamp);
+    		}
+    		else if(timestamp <= lastMomentTimestamp)
+    		{
+    			// See the comment above.
+    			lastMoment.messages.push(message);
+    		}
+    	}
+    };
+
     // Add a moment to the end of this TrackRecording using the moment's (absolute) timestamp
     // field to determine whether or not to merge the moment with the current last
     // moment in the trackRecording.

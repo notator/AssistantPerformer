@@ -333,8 +333,6 @@ _AP.sequence = (function(window)
                     // before saving them in a Standard MIDI File.
                     // (i.e. the value of the earliest timestamp in the recording is
                 	// subtracted from all the timestamps in the recording)
-
-					// Commenting out the following line makes no difference to the point at which Chrome crashes (14.06.2015).
                     sequenceRecording.trackRecordings[currentMoment.messages[0].channel()].addLiveScoreMoment(currentMoment);
                 }
             }

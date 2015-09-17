@@ -165,7 +165,7 @@ _AP.keyboard1 = (function()
 	// trackWorkers send their messages here.
 	handleTrackMessage = function(e)
 	{
-		var msg = e.data;
+		var msg = e.data, timestamp;
 
 		function workerHasCompleted(trackIndex)
 		{
@@ -204,17 +204,16 @@ _AP.keyboard1 = (function()
 				{
 					console.log("msg length = ", msg.midiMessage.length);
 				}
-				outputDevice.send(msg.midiMessage, performance.now());
-				// TODO: recording
-				//if(sequenceRecording !== undefined && sequenceRecording !== null)
-				//{
-				//	// The instants are recorded with their current (absolute DOMHRT) timestamp values.
-				//	// These values are adjusted relative to the first moment.timestamp
-				//	// before saving them in a Standard MIDI File.
-				//	// (i.e. the value of the earliest timestamp in the recording is
-				//	// subtracted from all the timestamps in the recording) 
-				//	sequenceRecording.trackRecordings[currentMoment.messages[0].channel()].addLiveScoreMoment(currentMoment);
-				//}
+				timestamp = performance.now();
+				outputDevice.send(msg.midiMessage, timestamp);
+				if(sequenceRecording !== undefined && sequenceRecording !== null)
+				{
+					// The messages are recorded with their current (absolute DOMHRT) timestamp values.
+					// These values are adjusted relative to the first timestamp in the recording before saving them in a Standard MIDI File.
+					// In other words: the value of the earliest timestamp in the recording is subtracted from all the timestamps
+					// in the recording before saving the file. 
+					sequenceRecording.addLiveMessage(msg.midiMessage, timestamp);
+				}
 				break;
 			case "trkCompleted":
 				// TrackWorkers send this message to say that they are not going to send any more midiMessages from a trk (that is not the last).

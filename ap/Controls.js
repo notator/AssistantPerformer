@@ -176,8 +176,11 @@ _AP.controls = (function(document, window)
 
                     a.onmouseout = function() // there is an event argument, but it is ignored
                     {
-                        var img = document.getElementById("saveImg");
-                        img.src = "images/saveMouseOut.png";
+                    	var img = document.getElementById("saveImg");
+                    	if(img !== null)
+                    	{
+                    		img.src = "images/saveMouseOut.png";
+						}
                     };
 
                     a.onclick = function() // there is an event argument, but it is ignored
