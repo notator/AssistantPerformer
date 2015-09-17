@@ -1256,7 +1256,7 @@ _AP.score = (function (document)
         staffIndex, nStaves, staff,
         sysIndex, nSystems = systems.length, system,
         midiChordDef, midiChord, midiRest,
-		inputChord, inputRest;
+		inputChord, inputRest, carriedForwardOptions;
 
     	// Gets the timeObjects for both input and output voices. 
     	// msDurations are retrieved from the score (not changed by the current speed option).
@@ -1831,6 +1831,14 @@ _AP.score = (function (document)
             				else
             				{
             					inputChord = new InputChord(timeObject, outputTracks); // the outputTracks should already be complete here
+            					if(inputChord.trkOptions)
+            					{
+            						carriedForwardOptions = inputChord.trkOptions.getCarriedForwardOptions();
+            					}
+            					else
+            					{
+            						inputChord.trkOptions = carriedForwardOptions;
+            					}
             					inputTrack.inputObjects.push(inputChord);
             				}
             			}
