@@ -38,17 +38,14 @@ _AP.inputChord = (function()
     	//			.seqDef -- undefined or an array of trkRef, which may have a trkOptions attribute.
     	//				Each trkRef has the following fields:
     	//					.trkOptions -- undefined or an TrkOptions object
-    	//					.midiChannel (compulsory int >= 0. The midiChannel of the voice containing the referenced Trk. )
+    	//					.trackIndex (compulsory int >= 0. The trackIndex of the voice containing the referenced Trk. )
     	//					.msPosition (compulsory int >= 0. The msPositionInScore of the referenced Trk.)
     	//					.length (compulsory int >= 0. The number of MidiChords and Rests the referenced Trk.)
-    	//			.pressures -- undefined or an array of midiChannel, which may have a trkOptions attribute.
-    	//			.pitchWheels -- undefined or an array of midiChannel, which may have a trkOptions attribute.
-    	//			.modWheels -- undefined or an array of midiChannel, which may have a trkOptions attribute.
-    	//			.trkOffs -- undefined or an array of trkOff, each of which has a .midiChannel and a .msPosition attribute
+    	//			.trkOffs -- undefined or an array of trkOff, each of which has a .trackIndex and a .msPosition attribute
 		//------------------------------------------------------------------------------
     	// getInputNotes() Returns:
     	// An array of inputNote objects, the fields of which have been copied from the corresponding inputNoteDefs (see above)
-    	// but with midiChannel values converted to trackIndices:
+    	// but with trackIndex values converted to trackIndices:
     	function getInputNotes(inputNoteDefs, outputTracks, chordMsPositionInScore)
     	{
     		var i, nInputNoteDefs = inputNoteDefs.length, inputNoteDef,
@@ -101,7 +98,7 @@ _AP.inputChord = (function()
     					{
     						trk.trkOptions = trkOn.trkOptions;
     					}
-    					trk.trackIndex = outputTracks.trackIndexPerMidiChannel[trkOn.midiChannel];
+    					trk.trackIndex = trkOn.trackIndex;
     					trackMidiObjects = outputTracks[trk.trackIndex].midiObjects;
     					trk.midiObjectIndex = getMidiObjectIndex(trkOn.msPosition, trackMidiObjects);
     					trk.msOffset = trackMidiObjects[trk.midiObjectIndex].msPositionInScore - chordMsPositionInScore;
@@ -118,66 +115,14 @@ _AP.inputChord = (function()
     				return trks;
     			}
 
-    			function getTrackOpts(channelOpts, trackIndexPerMidiChannel)
-    			{
-    				var i, nChannelOpts = channelOpts.length, channelOpt, trackOpt, trackOpts = [];
-
-    				if(channelOpts.trkOptions !== undefined)
-    				{
-    					trackOpts.trkOptions = channelOpts.trkOptions;
-    				}
-
-    				for(i = 0; i < nChannelOpts; ++i)
-    				{
-    					trackOpt = {};
-    					channelOpt = channelOpts[i];
-    					if(channelOpt.trkOptions !== undefined)
-    					{
-    						trackOpt.trkOptions = channelOpt.trkOptions;
-    					}
-    					trackOpt.trackIndex = trackIndexPerMidiChannel[channelOpt.midiChannel];
-
-    					trackOpts.push(trackOpt);
-    				}
-
-    				return trackOpts;
-    			}
-
-    			function getOffTrks(offTrks, trackIndexPerMidiChannel)
-    			{
-    				var i, nTrkOffs = offTrks.length, tOff, tOffs = [];
-
-    				for(i=0; i < nTrkOffs; ++i)
-    				{
-    					tOff = {};
-    					tOff.trackIndex = trackIndexPerMidiChannel[offTrks[i].midiChannel];
-    					tOff.msPosition = offTrks[i].msPosition;
-    					tOffs.push(tOff);						
-    				}
-    				return tOffs;
-    			}
-
     			if(noteInfo.seqDef !== undefined)
     			{
     				noteOnOrOff.seqDef = getSeq(noteInfo.seqDef, outputTracks, chordMsPositionInScore);
     			}
 
-    			if(noteInfo.pressures !== undefined)
-    			{
-    				noteOnOrOff.pressures = getTrackOpts(noteInfo.pressures, outputTracks.trackIndexPerMidiChannel);
-    			}
-    			if(noteInfo.pitchWheels !== undefined)
-    			{
-    				noteOnOrOff.pitchWheels = getTrackOpts(noteInfo.pitchWheels, outputTracks.trackIndexPerMidiChannel);
-    			}
-    			if(noteInfo.modWheels !== undefined)
-    			{
-    				noteOnOrOff.modWheels = getTrackOpts(noteInfo.modWheels, outputTracks.trackIndexPerMidiChannel);
-    			}
-
     			if(noteInfo.trkOffs !== undefined)
     			{
-    				noteOnOrOff.trkOffs = getOffTrks(noteInfo.trkOffs, outputTracks.trackIndexPerMidiChannel);
+    				noteOnOrOff.trkOffs = noteInfo.trkOffs;
     			}
 
     			return noteOnOrOff;
@@ -214,9 +159,14 @@ _AP.inputChord = (function()
         // The timeObject takes the global speed option into account.
         Object.defineProperty(this, "msPositionInScore", { value: timeObject.msPosition, writable: false });
         Object.defineProperty(this, "msDurationInScore", { value: timeObject.msDuration, writable: false });
+        if(timeObject.inputChordDef.ccSettings !== undefined)
+        {
+        	Object.defineProperty(this, "ccSettings", { value: timeObject.inputChordDef.ccSettings, writable: false });
+        }
+
         if(timeObject.inputChordDef.trkOptions !== undefined)
         {
-        	Object.defineProperty(this, "trkOptions", { value: timeObject.inputChordDef.trkOptions, writable: true });
+        	Object.defineProperty(this, "trkOptions", { value: timeObject.inputChordDef.trkOptions, writable: false });
         }
 
         inputNotes = getInputNotes(timeObject.inputChordDef.inputNotes, outputTracks, timeObject.msPosition);

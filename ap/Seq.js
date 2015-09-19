@@ -140,18 +140,7 @@ _AP.seq = (function()
 			// (trackWorkers throw exceptions if they are busy when the following function is called.)
 			worker.postMessage({ action: "start", velocity: performedVelocity });
 		}
-	};
-
-	Seq.prototype.setSpeedFactor = function(factor)
-	{
-		var i, worker, nWorkers = this.workers.length;
-
-		for(i = 0; i < nWorkers; ++i)
-		{
-			worker = this.workers[i];
-			worker.postMessage({ action: "setSpeedFactor", factor: factor });
-		}
-	};
+	};  
 
 	return API;
 

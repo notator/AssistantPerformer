@@ -8,30 +8,20 @@
  *  ap/TrkOptions.js
  * 
  *  TrkOptions object constructor. Reads the XML in its trkOptionsNode argument.
- *  If the argument is undefined, or has no attributes, or no valid attributes, a default (empty) TrkObjects object is returned.
+ *  If the argument is undefined, or has no attributes, or no valid attributes, a default (empty) TrkOptions object is returned.
  *     TrkOptions(trkOptionsNode); 
  *     
  *  A TrkOptions object sets performance options for a trk, seq (=inputNote), or inputChord (=voice).
  *     trk.trkOptions temporarily override seq.trkOptions
  *     seq.trkOptions temporarily override inputNote.trkOptions
  *     inputNote.trkOptions temporarily override inputChord.trkOptions
- *     inputChord.trkOptions change the global trkOptions for the containing voice, except that continuous controller options are not carried forward.
+ *     inputChord.trkOptions change the global trkOptions for the containing voice (i.e. they are carried forward).
  *
  * Possible fields (all are attributes in score files), and their available values, are:
  *     pedal -- possible values: "holdAll", "holdLast"
  *     velocity -- possible values: "scaled", "shared", "overridden"  
- *     trkOff -- possible values: "stopChord", "stopNow", "fade"
- *     pressure -- possible values: "aftertouch", "channelPressure", "modulation", "volume",
- *                                  "expression", "timbre", "brightness", "effects", "tremolo", "chorus", "celeste", "phaser"
- *     pitchWheel -- "pitch", "speed" or "pan".
- *     modWheel -- possible values: same as pressure
  *     minVelocity -- an integer in range [1..127]. Defined if velocity is defined. 
- *     maxVolume -- an integer in range [1..127]. Defined if one of the above controllers is set to "volume".
- *     minVolume -- an integer in range [1..127]. Defined if one of the above controllers is set to "volume".
- *     maxSpeedPercent -- an integer > 100. Defined if speedOption is defined.
- *     pitchWheelDeviation -- the number of semitones deviation when pitchWheel="pitch"
- *     speedDeviation -- the speed factor when pitchWheel="speed"
- *     panOrigin -- the position around which pitchWheel="pan" moves (range 0..127, centre is 64)
+ *     trkOff -- possible values: "stopChord", "stopNow", "fade"
  */
 
 /*jslint bitwise: false, nomen: false, plusplus: true, white: true */
@@ -77,39 +67,6 @@ _AP.trkOptions = (function ()
 					case "trkOff":
 						this.trkOff = attr.value;
 						break;
-
-					case "pressure":
-						this.pressure = attr.value;
-						break;
-
-					case "pitchWheel": // can be undefined
-						this.pitchWheel = attr.value;
-						break;
-
-					case "modWheel": // can be undefined  (see also maxVolume and minVolume below)
-						this.modWheel = attr.value;
-						break;
-
-						// options set if either pressure, or modulation messages are set to control volume
-					case "minVolume":
-						this.minVolume = parseInt(attr.value, 10);
-						break;
-					case "maxVolume":
-						this.maxVolume = parseInt(attr.value, 10);
-						break;
-
-					case "pitchWheelDeviation":
-						this.pitchWheelDeviation = parseInt(attr.value, 10);
-						break;
-					case "speedDeviation":
-						this.speedDeviation = parseFloat(attr.value, 10);
-						break;
-					case "panOrigin":
-						this.panOrigin = parseInt(attr.value, 10); // (range 0..127, centre is 64)
-						break;
-
-					default:
-						throw (">>>>>>>>>> Illegal TrkOptions attribute <<<<<<<<<<");
 				}
 			}
 		}
@@ -121,9 +78,7 @@ _AP.trkOptions = (function ()
         TrkOptions: TrkOptions
     };
 
-	// Returns a clone of the caller, without the continuous controller options.
-	// The continuous controller options are not carried forward.
-    TrkOptions.prototype.getCarriedForwardOptions = function()
+    TrkOptions.prototype.clone = function()
     {
     	var cfOptions = new TrkOptions();
 

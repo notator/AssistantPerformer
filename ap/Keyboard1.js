@@ -82,6 +82,10 @@ _AP.keyboard1 = (function()
 	allControllersOffMessages = [],
 	allNotesOffMessages = [],
 
+	trackPressureOptions = [],
+	trackPitchWheelOptions = [],
+	trackModWheelOptions = [],
+
 	initChannelResetMessages = function(nOutputChannels)
 	{
 		var byte1, channelIndex,
@@ -162,10 +166,25 @@ _AP.keyboard1 = (function()
 		}
 	},
 
+	sendMIDIMessage = function(uint8array)
+	{
+		var timestamp = performance.now(), recording = sequenceRecording;
+
+		outputDevice.send(uint8array, timestamp);
+		if(recording !== undefined && recording !== null)
+		{
+			// The messages are recorded with their current (absolute DOMHRT) timestamp values.
+			// These values are adjusted relative to the first timestamp in the recording before saving them in a Standard MIDI File.
+			// In other words: the value of the earliest timestamp in the recording is subtracted from all the timestamps
+			// in the recording before saving the file. 
+			recording.addLiveMessage(uint8array, timestamp);
+		}
+	},
+
 	// trackWorkers send their messages here.
 	handleTrackMessage = function(e)
 	{
-		var msg = e.data, timestamp;
+		var msg = e.data;
 
 		function workerHasCompleted(trackIndex)
 		{
@@ -204,16 +223,7 @@ _AP.keyboard1 = (function()
 				{
 					console.log("msg length = ", msg.midiMessage.length);
 				}
-				timestamp = performance.now();
-				outputDevice.send(msg.midiMessage, timestamp);
-				if(sequenceRecording !== undefined && sequenceRecording !== null)
-				{
-					// The messages are recorded with their current (absolute DOMHRT) timestamp values.
-					// These values are adjusted relative to the first timestamp in the recording before saving them in a Standard MIDI File.
-					// In other words: the value of the earliest timestamp in the recording is subtracted from all the timestamps
-					// in the recording before saving the file. 
-					sequenceRecording.addLiveMessage(msg.midiMessage, timestamp);
-				}
+				sendMIDIMessage(msg.midiMessage);
 				break;
 			case "trkCompleted":
 				// TrackWorkers send this message to say that they are not going to send any more midiMessages from a trk (that is not the last).
@@ -293,61 +303,6 @@ _AP.keyboard1 = (function()
     		return inputEvent;
     	}
 
-    	function doPressures(pressures, workers)
-    	{
-    		var i, nPressures = pressures.length, pressureOption;
-    		for(i = 0; i < nPressures; ++i)
-    		{
-    			pressureOption = pressures[i];
-    			if(pressureOption.trkOptions.pressure === "volume")
-    			{
-    				workers[pressureOption.trackIndex].postMessage({ "action": "setPressureVolumeOption", "minVolume": pressureOption.trkOptions.minVolume, "maxVolume": pressureOption.trkOptions.maxVolume });
-    			}
-    			else
-    			{
-    				workers[pressureOption.trackIndex].postMessage({ "action": "setPressureOption", "control": pressureOption.trkOptions.pressure });
-    			}
-    		}
-    	}
-
-    	function doPitchWheels(pitchWheels, workers)
-    	{
-    		var i, nPitchWheels = pitchWheels.length, pitchWheelOption;
-    		for(i = 0; i < nPitchWheels; ++i)
-    		{
-    			pitchWheelOption = pitchWheels[i];
-    			switch(pitchWheelOption.trkOptions.pitchWheel)
-    			{
-    				case "pitch":
-    					workers[pitchWheelOption.trackIndex].postMessage({ "action": "setPitchWheelPitchOption", "pitchWheelDeviation": pitchWheelOption.trkOptions.pitchWheelDeviation });
-    					break;
-    				case "pan":
-    					workers[pitchWheelOption.trackIndex].postMessage({ "action": "setPitchWheelPanOption", "panOrigin": pitchWheelOption.trkOptions.panOrigin });
-    					break;
-    				case "speed":
-    					workers[pitchWheelOption.trackIndex].postMessage({ "action": "setPitchWheelSpeedOption", "speedDeviation": pitchWheelOption.trkOptions.speedDeviation });
-    					break;
-    			}
-    		}
-    	}
-
-    	function doModWheels(modWheels, workers)
-    	{
-    		var i, nModWheels = modWheels.length, modWheelOption;
-    		for(i = 0; i < nModWheels; ++i)
-    		{
-    			modWheelOption = modWheels[i];
-    			if(modWheelOption.trkOptions.modWheel === "volume")
-    			{
-    				workers[modWheelOption.trackIndex].postMessage({ "action": "setModWheelVolumeOption", "minVolume": modWheelOption.trkOptions.minVolume, "maxVolume": modWheelOption.trkOptions.maxVolume });
-    			}
-    			else
-    			{
-    				workers[modWheelOption.trackIndex].postMessage({ "action": "setModWheelOption", "control": modWheelOption.trkOptions.modWheel });
-    			}
-    		}
-    	}
-
     	function doTrkOffs(trkOffs, workers)
     	{
     		var i, nTrkOffs = trkOffs.length;
@@ -391,18 +346,6 @@ _AP.keyboard1 = (function()
     					{
     						noteOnOrOff.seq.start(performedVelocity);
     					}
-    					if(noteOnOrOff.pressures)
-    					{
-    						doPressures(noteOnOrOff.pressures, workers);
-    					}
-    					if(noteOnOrOff.pitchWheels)
-    					{
-    						doPitchWheels(noteOnOrOff.pitchWheels, workers);
-    					}
-    					if(noteOnOrOff.modWheels)
-    					{
-    						doModWheels(noteOnOrOff.modWheels, workers);
-    					}
     					if(noteOnOrOff.trkOffs)
     					{
     						doTrkOffs(noteOnOrOff.trkOffs, workers);
@@ -414,12 +357,12 @@ _AP.keyboard1 = (function()
     		}
     	}
 
-		// Sends all the info except seqs to the trackWorkers.
-    	function sendSilentInfo(instant)
+		// Sends all the trkOffs at this instant.
+    	function sendAllTrkOffsAtInstant(instant)
     	{
     		var workers = trackWorkers;
 
-    		function sendSilentAttributes(noteOnOrOffs, workers)
+    		function sendTrkOffs(noteOnOrOffs, workers)
     		{
     			var i, noteOnOrOff, nNoteOnOrOffs = noteOnOrOffs.length;
 
@@ -427,18 +370,6 @@ _AP.keyboard1 = (function()
     			{
     				noteOnOrOff = noteOnOrOffs[i];
 
-    				if(noteOnOrOff.pressures)
-    				{
-    					doPressures(noteOnOrOff.pressures, workers);
-    				}
-    				if(noteOnOrOff.pitchWheels)
-    				{
-    					doPitchWheels(noteOnOrOff.pitchWheels, workers);
-    				}
-    				if(noteOnOrOff.modWheels)
-    				{
-    					doModWheels(noteOnOrOff.modWheels, workers);
-    				}
     				if(noteOnOrOff.trkOffs)
     				{
     					doTrkOffs(noteOnOrOff.trkOffs, workers);
@@ -448,11 +379,126 @@ _AP.keyboard1 = (function()
 
     		if(instant.noteOffs)
     		{
-    			sendSilentAttributes(instant.noteOffs, workers);
+    			sendTrkOffs(instant.noteOffs, workers);
     		}
     		if(instant.noteOns)
     		{
-    			sendSilentAttributes(instant.noteOns, workers);
+    			sendTrkOffs(instant.noteOns, workers);
+    		}
+    	}
+
+    	// The ccSettings argument is an array that contains a set of control settings per output track.
+    	// In this argument, a track's settings or subsettings (pressure, pitchWheel or modWheel) may be
+    	// undefined, in which case the corresponding running track settings remain unchanged.
+    	// The running track settings are never undefined.
+    	// If a running track pressure.control, pitchWheel.control or modWheel.control is set to 'disabled',
+    	// that control will be disabled (i.e. not do anything).
+    	function setContinuousControllerOptions(ccSettings)
+    	{
+    		var i, nTracks = trackWorkers.length;
+			
+    		function setTrackSettings(trackIndex, trackCCSettings)
+    		{
+    			function getPressureOption(trackPressureOption, trackCCSettings)
+    			{
+    				var returnPressureSettings = {};
+
+    				console.assert(trackCCSettings.pressure !== undefined, "Error: pressure settings may not be undefined here.");
+
+    				returnPressureSettings.control = trackCCSettings.pressure; // can be 'disabled'
+    				if(returnPressureSettings.control === 'volume')
+    				{
+    					returnPressureSettings.minVolume = trackCCSettings.minVolume;
+    					returnPressureSettings.maxVolume = trackCCSettings.maxVolume;
+    				}
+    				return returnPressureSettings;
+    			}
+    			function getModWheelOption(trackModWheelOption, trackCCSettings)
+    			{
+    				var returnModWheelSettings = {};
+
+    				console.assert(trackCCSettings.modWheel !== undefined, "Error: modWheel settings may not be undefined here.");
+
+    				returnModWheelSettings.control = trackCCSettings.modWheel; // can be 'disabled'
+    				if(returnModWheelSettings.control === 'volume')
+    				{
+    					returnModWheelSettings.minVolume = trackCCSettings.minVolume;
+    					returnModWheelSettings.maxVolume = trackCCSettings.maxVolume;
+    				}
+    				return returnModWheelSettings;
+    			}
+    			function getPitchWheelOption(trackIndex, trackPitchWheelOption, trackCCSettings)
+    			{
+    				/// Sets both RegisteredParameter controls to 0 (zero). This is standard MIDI for selecting the
+    				/// pitch wheel so that it can be set by the subsequent DataEntry messages.
+    				/// A DataEntryFine message is not set, because it is not needed and has no effect anyway.
+    				/// However, RegisteredParameterFine MUST be set, otherwise the messages as a whole have no effect!
+    				function sendPitchWheelDeviationMessages(trackIndex, deviation)
+    				{
+    					var msg,
+							CMD = _AP.constants.COMMAND,
+							CTL = _AP.constants.CONTROL,
+							Message = _AP.message.Message;
+
+    					msg = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.REGISTERED_PARAMETER_COARSE, 0);
+    					sendMIDIMessage(msg.data);
+
+    					msg = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.REGISTERED_PARAMETER_FINE, 0);
+    					sendMIDIMessage(msg.data);
+
+    					msg = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.DATA_ENTRY_COARSE, deviation);
+    					sendMIDIMessage(msg.data);
+    				}
+
+    				var rval = {};
+
+    				console.assert(trackCCSettings.pitchWheel !== undefined, "Error: pitchWheel settings may not be undefined here.");
+
+    				rval.control = trackCCSettings.pitchWheel; // can be 'disabled'
+    				switch(rval.control)
+    				{
+    					case 'pitch':
+    						rval.pitchWheelDeviation = trackCCSettings.pitchWheelDeviation;
+    						if(trackPitchWheelOption.pitchWheelDeviation !== rval.pitchWheelDeviation)
+    						{
+    							sendPitchWheelDeviationMessages(trackIndex, rval.pitchWheelDeviation);
+    						}
+    						break;
+    					case 'pan':
+    						rval.panOrigin = pitchWheelSettings.panOrigin;
+    						break;
+    					case 'speed':
+    						rval.speedDeviation = pitchWheelSettings.speedDeviation;
+    						break;
+    					case 'disabled':
+    						break;
+    				}
+
+    				return rval;
+    			}
+
+    			console.assert(trackCCSettings !== undefined, "Error: trackCCSettings may not be undefined here.");
+
+    			if(trackCCSettings.pressure !== undefined)
+    			{
+    				trackPressureOptions[trackIndex] = getPressureOption(trackPressureOptions[trackIndex], trackCCSettings);
+    			}
+    			if(trackCCSettings.pitchWheel !== undefined)
+    			{
+    				trackPitchWheelOptions[trackIndex] = getPitchWheelOption(trackIndex, trackPitchWheelOptions[trackIndex], trackCCSettings);
+    			}
+    			if(trackCCSettings.modWheel !== undefined)
+    			{
+    				trackModWheelOptions[trackIndex] = getModWheelOption(trackModWheelOptions[trackIndex], trackCCSettings);
+    			}
+    		}
+
+    		for(i = 0; i < nTracks; ++i)
+    		{
+    			if(ccSettings[i] !== undefined)
+    			{
+    				setTrackSettings(i, ccSettings[i]);
+    			}
     		}
     	}
 
@@ -473,10 +519,7 @@ _AP.keyboard1 = (function()
     					{
     						break;
     					}
-    					else
-    					{
-    						kOnOffIndices.index++;
-    					}
+    					kOnOffIndices.index++;
     				}
     			}
     		}
@@ -524,7 +567,7 @@ _AP.keyboard1 = (function()
     						{
     							instant = instants[tempInstantIndex];
     							reportMsPositionInScore(instants[tempInstantIndex].msPosition);
-    							sendSilentInfo(instant);
+    							sendAllTrkOffsAtInstant(instant);
     							currentInstantIndex = tempInstantIndex++;
     						}
     						indexPlayed = currentInstantIndex;
@@ -555,7 +598,12 @@ _AP.keyboard1 = (function()
     					if(instantIndex === currentInstantIndex || ((instantIndex === currentInstantIndex + 1) && indexPlayed === currentInstantIndex))
     					{
     						instant = instants[instantIndex];
+
     						playKeyNoteOnOrOff(instant.noteOffs, key, 0); // the key's noteOff is removed after being played
+    						if(instant.ccSettings)
+    						{
+    							setContinuousControllerOptions(instant.ccSettings);
+    						}
     						playKeyNoteOnOrOff(instant.noteOns, key, performedVelocity);  // the key's noteOn is removed after being played
 			
     						currentInstantIndex = instantIndex;
@@ -573,16 +621,87 @@ _AP.keyboard1 = (function()
     			}
     		}
     	}
+ 
+    	// Used by handleChannelPressure(...) and handleModWheel(...).
+		function doController(trackIndex, control, value)
+		{
+			var volumeValue, options, message,
+				CMD = _AP.constants.COMMAND,
+				CTL = _AP.constants.CONTROL,
+				Message = _AP.message.Message;
+
+			// argument is in range 0..127
+			// returned value is in range currentTrk.options.minVolume..currentTrk.options.maxVolume.
+			function getVolumeValue(value, minVolume, maxVolume)
+			{
+				var range = maxVolume - minVolume,
+				factor = range / 127,
+				volumeValue = minVolume + (value * factor);
+				return volumeValue;
+			}
+
+			options = (control === "modWheel") ? trackModWheelOptions[trackIndex] : trackPressureOptions[trackIndex];
+			console.assert(options.control !== 'disabled', "Error: option.control cannot be disabled here.");
+
+			switch(options.control)
+			{
+				case 'aftertouch':	// Note that this option results in channelPressure messages!
+					message = new Message(CMD.CHANNEL_PRESSURE + trackIndex, value);
+					break;
+				case 'channelPressure':
+					message = new Message(CMD.CHANNEL_PRESSURE + trackIndex, value);
+					break;
+				case 'modulation':
+					message = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.MODWHEEL, value);
+					break;
+				case 'volume':
+					volumeValue = getVolumeValue(value, options.minVolume, options.maxVolume);
+					message = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.VOLUME, volumeValue);
+					break;
+				case 'expression':
+					message = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.EXPRESSION, value);
+					break;
+				case 'timbre':
+					message = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.TIMBRE, value);
+					break;
+				case 'brightness':
+					message = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.BRIGHTNESS, value);
+					break;
+				case 'effects':
+					message = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.EFFECTS, value);
+					break;
+				case 'tremolo':
+					message = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.TREMOLO, value);
+					break;
+				case 'chorus':
+					message = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.CHORUS, value);
+					break;
+				case 'celeste':
+					message = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.CELESTE, value);
+					break;
+				case 'phaser':
+					message = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.PHASER, value);
+					break;
+			}
+
+			if(message)
+			{
+				sendMIDIMessage(message.data);
+			}
+		}
 
     	// called when channel pressure changes
     	// Achtung: value is data[1]
     	function handleChannelPressure(data)
     	{
-    		var i, nWorkers = trackWorkers.length;
+    		var i, nTracks = trackWorkers.length;
 
-    		for(i = 0; i < nWorkers; ++i)
+    		for(i = 0; i < nTracks; ++i)
     		{
-    			trackWorkers[i].postMessage({ action: "doController", control: "pressure", value: data[1] }); // Achtung: data[1]
+    			if(trackPressureOptions[i].control !== 'disabled')
+    			{
+    				doController(i, "pressure", data[1]); // Achtung: value is data[1]
+    			}
     		}
     	}
 
@@ -590,21 +709,91 @@ _AP.keyboard1 = (function()
     	// Achtung: value is data[2]
     	function handleModWheel(data)
     	{
-    		var i, nWorkers = trackWorkers.length;
+    		var i, nTracks = trackWorkers.length;
 
-    		for(i = 0; i < nWorkers; ++i)
+    		for(i = 0; i < nTracks; ++i)
     		{
-    			trackWorkers[i].postMessage({ action: "doController", control: "modWheel", value: data[2] }); // Achtung: data[2]
+    			if(trackModWheelOptions[i].control !== 'disabled')
+    			{
+    				doController(i, "modWheel", data[2]); // Achtung: value is data[2]
+    			}
     		}
     	}
 
+		// called when the pitchWheel changes
     	function handlePitchWheel(data)
     	{
-    		var i, nWorkers = trackWorkers.length;
+    		var i, nTracks = trackWorkers.length;
 
-    		for(i = 0; i < nWorkers; ++i)
+    		function doPitchOption(trackIndex, data1, data2)
     		{
-    			trackWorkers[i].postMessage({ action: "doPitchWheel", data1: data[1], data2: data[2] });
+    			var	msg = new _AP.message.Message(_AP.constants.COMMAND.PITCH_WHEEL + trackIndex, data1, data2);
+    			sendMIDIMessage(msg.data);
+    		}
+
+    		function doPanOption(trackIndex, value, panOrigin)  // value is in range 0..127
+    		{
+    			var factor, newValue,
+    				CMD = _AP.constants.COMMAND,
+					CTL = _AP.constants.CONTROL,
+					Message = _AP.message.Message;
+
+    			if(value < 0x80)
+    			{
+    				factor = panOrigin / 0x80;
+    				newValue = value * factor;
+    			}
+    			else
+    			{
+    				factor = (0xFF - panOrigin) / 0x7F;
+    				newValue = panOrigin + ((value - 0x80) * factor);
+    			}
+
+    			msg = new Message(CMD.CONTROL_CHANGE + trackIndex, CTL.PAN, newValue);
+
+    			sendMIDIMessage(msg.data);
+    		}
+
+    		function doSpeedOption(trackIndex, value, speedDeviation) // value is in range 0..127
+    		{
+				var speedFactor, factor = Math.pow(speedDeviation, 1 / 64);
+
+    			// e.g. if speedDeviation is 2
+    			// factor = 2^(1/64) = 1.01088...
+    			// value is in range 0..127.
+    			// if original value is 0, speedFactor = 1.01088^(-64) = 0.5
+    			// if original value is 64, speedfactor = 1.01088^(0) = 1.0
+    			// if original value is 127, speedFactor = 1.01088^(64) = 2.0 = maxSpeedFactor
+
+    			value -= 64; // if value was 64, speedfactor is 1.
+    			speedFactor = Math.pow(factor, value);
+    			// nothing more to do! speedFactor is used in tick() to calculate delays.
+    			trackWorkers[trackIndex].postMessage({action: "changeSpeed", speedFactor: speedFactor});
+    		}
+
+    		function doOption(trackIndex, pitchWheelOption)
+    		{
+    			switch(pitchWheelOption.control)
+    			{
+    				case "pitch":
+    					doPitchOption(trackIndex, data[1], data[2]);
+    					break;
+    				case "pan":
+    					doPanOption(trackIndex, data[1], trackPitchWheelOptions[trackIndex].panOrigin);  // data1, the hi byte, is in range 0..127
+    					break;
+    				case "speed":
+    					doSpeedOption(trackIndex, data[1], trackPitchWheelOptions[trackIndex].speedDeviation); // data1, the hi byte, is in range 0..127
+    					break;
+    			}
+
+			}
+
+    		for(i = 0; i < nTracks; ++i)
+    		{
+    			if(trackPitchWheelOptions[i].control !== 'disabled')
+    			{
+    				doOption(i, trackPitchWheelOptions[i]);
+    			}
     		}
     	}
 
@@ -696,7 +885,38 @@ _AP.keyboard1 = (function()
 	// It should be an empty Sequence having the same number of output tracks as the score.
 	play = function(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, recording)
 	{
-		var channelIndex;
+		function resetChannels(outputDevice, nTracks)
+		{
+			var trackIndex;
+
+			for(trackIndex = 0; trackIndex < nTracks; trackIndex++)
+			{
+				resetChannel(outputDevice, trackIndex, false);
+			}
+		}
+
+		// The continuous controllers do nothing by default.
+		function resetContinuousControllerOptions(nTracks)
+		{
+			var trackIndex, pressureOption, pitchWheelOption, modWheelOption;
+
+			trackPressureOptions.length = 0;
+			trackPitchWheelOptions.length = 0;
+			trackModWheelOptions.length = 0;
+
+			for(trackIndex = 0; trackIndex < nTracks; ++trackIndex)
+			{
+				pressureOption = {};
+				pressureOption.control = 'disabled';
+				trackPressureOptions.push(pressureOption);
+				pitchWheelOption = {};
+				pitchWheelOption.control = 'disabled';
+				trackPitchWheelOptions.push(pitchWheelOption);
+				modWheelOption = {};
+				modWheelOption.control = 'disabled';
+				trackModWheelOptions.push(modWheelOption);
+			}
+		}
 
 		function initPlay(trackIsOnArray, keyInstantIndices, instants, trackWorkers, startMarkerMsPosInScore, endMarkerMsPosInScore)
 		{
@@ -734,7 +954,7 @@ _AP.keyboard1 = (function()
 				// These depend on whether the trk is inside a seq, pressures, pitchWheels or modWheels object.
 				function getNotesMoments(inputTracks, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore)
 				{
-					var trackIndex, nTracks, ioIndex, inputObjects, nInputObjects, msPosition, msDuration, inputChord,
+					var trackIndex, nTracks, ioIndex, inputObjects, nInputObjects, msPosition, msDuration, ccSettings, inputChord,
 						notesMoments = [], performedNote, performedNotes, moment, i, nPerformedNotes,
 						chordTrkOptions, previousChordTrkOptions;
 
@@ -915,7 +1135,7 @@ _AP.keyboard1 = (function()
 					{
 						if(trackIsOnArray[trackIndex])
 						{
-							previousChordTrkOptions = null;
+							previousChordTrkOptions = new _AP.trkOptions.TrkOptions();
 							inputObjects = inputTracks[trackIndex].inputObjects;
 							nInputObjects = inputObjects.length;
 							for(ioIndex = 0; ioIndex < nInputObjects; ++ioIndex)
@@ -925,6 +1145,7 @@ _AP.keyboard1 = (function()
 									inputChord = inputObjects[ioIndex];
 									msPosition = inputChord.msPositionInScore;
 									msDuration = inputChord.msDurationInScore;
+									ccSettings = inputChord.ccSettings;
 									if(inputChord.trkOptions)
 									{
 										chordTrkOptions = inputChord.trkOptions;
@@ -932,10 +1153,6 @@ _AP.keyboard1 = (function()
 									else if(previousChordTrkOptions !== null)
 									{
 										chordTrkOptions = previousChordTrkOptions;
-									}
-									else
-									{
-										chordTrkOptions = new _AP.trkOptions.TrkOptions({});
 									}
 									previousChordTrkOptions = chordTrkOptions;
 
@@ -960,6 +1177,11 @@ _AP.keyboard1 = (function()
 												setNoteOnOffTrkOptions(performedNote, chordTrkOptions);
 												moment.push(performedNote);
 											}
+											if(ccSettings)
+											{
+												console.assert(moment.ccSettings === undefined, "Illegal simultaneous ccSettings!");
+												moment.ccSettings = ccSettings;
+											}
 										}
 									}
 								}
@@ -973,7 +1195,7 @@ _AP.keyboard1 = (function()
 					return notesMoments;
 				}
 
-				function pushNoteOn(instants, noteOn, notatedKey, msPosition)
+				function pushNoteOn(instants, noteOn, notatedKey, msPosition, ccSettings)
 				{
 					var instant;
 
@@ -984,6 +1206,7 @@ _AP.keyboard1 = (function()
 						{
 							instant = {};
 							instant.msPosition = msPosition;
+							instant.ccSettings = ccSettings;
 							instants.push(instant);
 						}
 						if(instant.noteOns === undefined)
@@ -1028,7 +1251,7 @@ _AP.keyboard1 = (function()
 					for(j = 0; j < nVNotes; ++j)
 					{
 						note = vNotesArray[j];
-						pushNoteOn(instants, note.noteOn, note.notatedKey, vNotesArray.msPosition);
+						pushNoteOn(instants, note.noteOn, note.notatedKey, vNotesArray.msPosition, vNotesArray.ccSettings);
 						pushNoteOff(instants, note.noteOff, note.notatedKey, vNotesArray.msPosition + note.msDuration);
 					}
 				}
@@ -1048,7 +1271,7 @@ _AP.keyboard1 = (function()
 			// The Seq constructor posts pushTrk messages to the appropriate trackWorkers.
 			// The seqs are being constructed in order of msPosition, so the trackWorkers' trks
 			// are also in order of msPosition.
-			function setSeqsAndTrackWorkers(instants, trackWorkers, trackIsOnArray, outputTracks)
+			function setSeqsAndTrackWorkers(instants, trackWorkers, outputTracks)
 			{
 				var i, instantIndex, nInstants = instants.length, instant, nNoteOns, nNoteOffs, noteOn, noteOff;
 
@@ -1153,7 +1376,7 @@ _AP.keyboard1 = (function()
 
 			setInstants(instants, inputTracks, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
 
-			setSeqsAndTrackWorkers(instants, trackWorkers, trackIsOnArray, outputTracks);
+			setSeqsAndTrackWorkers(instants, trackWorkers, outputTracks);
 
 			setKeyInstantIndices(keyInstantIndices, instants);
 
@@ -1163,10 +1386,9 @@ _AP.keyboard1 = (function()
 
 		sequenceRecording = recording;
 
-		for(channelIndex = 0; channelIndex < outputTracks.length; channelIndex++)
-		{
-			resetChannel(outputDevice, channelIndex, false);
-		}
+		resetChannels(outputDevice, outputTracks.length);
+
+		resetContinuousControllerOptions(outputTracks.length);
 
 		initPlay(trackIsOnArray, keyInstantIndices, instants, trackWorkers, startMarkerMsPosInScore, endMarkerMsPosInScore);
 

@@ -161,14 +161,14 @@ _AP.score = (function (document)
 
 		function hasPerformingTrack(inputChordDef, midiChannelPerOutputTrack, trackIsOnArray)
 		{
-			var i, j, outputTrackFound = false, outputMidiChannels;
+			var i, j, outputTrackFound = false, outputTrackIndices;
 
 			console.assert(inputChordDef !== undefined, "inputChordDef must be defined.");
 
-			outputMidiChannels = inputChordDef.referencedOutputMidiChannels();
-			for(i = 0; i < outputMidiChannels.length; ++i)
+			outputTrackIndices = inputChordDef.referencedOutputTrackIndices();
+			for(i = 0; i < outputTrackIndices.length; ++i)
 			{
-				if(trackIsOnArray[midiChannelPerOutputTrack.indexOf(outputMidiChannels[i])])
+				if(trackIsOnArray[outputTrackIndices[i]])
 				{
 					outputTrackFound = true;
 					break;
@@ -1256,7 +1256,7 @@ _AP.score = (function (document)
         staffIndex, nStaves, staff,
         sysIndex, nSystems = systems.length, system,
         midiChordDef, midiChord, midiRest,
-		inputChord, inputRest, carriedForwardOptions;
+		inputChord, inputRest;
 
     	// Gets the timeObjects for both input and output voices. 
     	// msDurations are retrieved from the score (not changed by the current speed option).
@@ -1280,8 +1280,17 @@ _AP.score = (function (document)
     			function getTimeObjects(noteObjectElems)
     			{
     				var timeObjects = [], noteObjectClass,
-                        timeObject, i, j, length, noteObjectElem, chordChildElems;
+                        timeObject, i, j, length, noteObjectElem, chordChildElems, outputTrackPerMidiChannel;
 
+    				function getInverseArray(midiChannelPerOutputTrack)
+    				{
+    					var midiChannel, n = midiChannelPerOutputTrack.length, rval = [];
+    					for(midiChannel = 0; midiChannel < n; ++midiChannel)
+    					{
+    						rval.push(midiChannelPerOutputTrack.indexOf(midiChannel));
+    					}
+    					return rval;
+    				}
     				function getMsDuration(midiChordDef)
     				{
     					var i,
@@ -1296,6 +1305,7 @@ _AP.score = (function (document)
     					return msDuration;
     				}
 
+    				outputTrackPerMidiChannel = getInverseArray(midiChannelPerOutputTrack);
     				length = noteObjectElems.length;
     				for(i = 0; i < length; ++i)
     				{
@@ -1315,7 +1325,7 @@ _AP.score = (function (document)
     									timeObject.msDuration = getMsDuration(timeObject.midiChordDef);
     									break;
     								case 'score:inputNotes':
-    									timeObject.inputChordDef = new InputChordDef(chordChildElems[j]);
+    									timeObject.inputChordDef = new InputChordDef(noteObjectElem, outputTrackPerMidiChannel);
     									timeObject.msDuration = parseInt(noteObjectElem.getAttribute('score:msDuration'), 10);
     									break;
     							}
@@ -1735,7 +1745,7 @@ _AP.score = (function (document)
         			}
         		}
         	}
-        	outputTracks.trackIndexPerMidiChannel = getTrackIndexPerMidiChannel(outputTracks);
+        	//outputTracks.trackIndexPerMidiChannel = getTrackIndexPerMidiChannel(outputTracks);
         }
 
         function getInputKeyRange(inputTracks)
@@ -1831,14 +1841,6 @@ _AP.score = (function (document)
             				else
             				{
             					inputChord = new InputChord(timeObject, outputTracks); // the outputTracks should already be complete here
-            					if(inputChord.trkOptions)
-            					{
-            						carriedForwardOptions = inputChord.trkOptions.getCarriedForwardOptions();
-            					}
-            					else
-            					{
-            						inputChord.trkOptions = carriedForwardOptions;
-            					}
             					inputTrack.inputObjects.push(inputChord);
             				}
             			}
