@@ -9,7 +9,6 @@ channelIndex,
 allTrks,
 trkIndex,
 currentTrk,
-trkStartTime,
 
 // currentTrk.moments
 moments,
@@ -53,7 +52,6 @@ eventHandler = function(e)
 		allTrks = [];
 		trkIndex = 0;
 		//currentTrk = 0; initialised in start (from trkIndex)
-		trkStartTime = -1;
 
 		// currentTrk.moments
 		// moments; initialized in pushTrk()
@@ -77,7 +75,8 @@ eventHandler = function(e)
 	// Seq constructor sends:
 	// worker.postMessage({ action: "pushTrk", msPosition: msPosition, moments: moments, options: options });
 	// Set a new trk object's attributes to msPosition, moments and options,
-	// Then add it to the allTrks array maintaining the allTrks array in order of msPosition.
+	// then add it to the allTrks array maintaining the allTrks array in order of msPosition.
+	// The options attribute is always a defined object, but it need not have any attributes.
 	function pushTrk(msg)
 	{
 		var insertAtIndex,
@@ -187,7 +186,9 @@ eventHandler = function(e)
 			return insIndex;
 		}
 
-		if(options && options.pedal) // if undefined, do nothing
+		console.assert(options !== undefined, "Error: options must be a defined object here (but it need not have any attributes).");
+
+		if(options.pedal) // if undefined, do nothing
 		{
 			switch(options.pedal)
 			{
@@ -213,6 +214,12 @@ eventHandler = function(e)
 
 		trk.msPosition = msPosition;
 		trk.moments = moments;
+		trk.previousMsPosInSeq = 0;
+
+		if(options.speed === undefined)
+		{
+			options.speed = 1; // default speed is as written in the score.
+		}
 		trk.options = options;
 
 		allTrks.splice(insertAtIndex, 0, trk);
@@ -221,7 +228,7 @@ eventHandler = function(e)
 	// Seq.prototype.start calls:
 	// worker.postMessage({ action: "start", velocity: performedVelocity });
 	// Note that NoteOffs call this function with velocity set to 0,
-	// and that in this case trk velocity options are ignored.
+	// and that in this case trk speed and velocity options are ignored.
 	function start(msg)
 	{
 		var performedVelocity, minVelocity;
@@ -291,7 +298,11 @@ eventHandler = function(e)
 
 				function getDelay(moment)
 				{
-					return (moment.msPositionInSeq - (performance.now() - trkStartTime)) / speedFactor;
+					var
+					delay = (moment.msPositionInSeq - currentTrk.previousMsPosInSeq) / speedFactor;
+					currentTrk.previousMsPosInSeq = moment.msPositionInSeq;
+
+					return delay;
 				}
 
 				function trkCompleted(letSound)
@@ -342,8 +353,6 @@ eventHandler = function(e)
 
 			if(trkIndex < allTrks.length)
 			{
-				trkStartTime = performance.now();
-
 				currentMoment = nextMoment();
 				if(currentMoment === null)
 				{
@@ -406,28 +415,34 @@ eventHandler = function(e)
 			nMoments = moments.length;
 			momentIndex = 0;
 
-			if(currentTrk.options && currentTrk.options.velocity && msg.velocity > 0)
+			if(msg.velocity > 0)
 			{
-				velocityFactor = 1;
-				sharedVelocity = 0;
-				overrideVelocity = 0;
-				performedVelocity = msg.velocity;
-				minVelocity = currentTrk.options.minVelocity; // is defined if options.velocity is defined
-				switch(currentTrk.options.velocity)
+				if(currentTrk.options.velocity)
 				{
-					case "scaled":
-						velocityFactor = getVelocityFactor(performedVelocity, minVelocity);
-						break;
-					case "shared":
-						sharedVelocity = getSharedVelocity(performedVelocity, minVelocity);
-						break;
-					case "overridden":
-						overrideVelocity = getCorrectedVelocity(performedVelocity, minVelocity);
-						break;
-					default:
-						console.assert(false, "TrackWorker.doNoteOnVelocity(): illegal option -- " + currentTrk.options.velocity);
+					velocityFactor = 1;
+					sharedVelocity = 0;
+					overrideVelocity = 0;
+					performedVelocity = msg.velocity;
+					minVelocity = currentTrk.options.minVelocity; // is defined if options.velocity is defined
+					switch(currentTrk.options.velocity)
+					{
+						case "scaled":
+							velocityFactor = getVelocityFactor(performedVelocity, minVelocity);
+							break;
+						case "shared":
+							sharedVelocity = getSharedVelocity(performedVelocity, minVelocity);
+							break;
+						case "overridden":
+							overrideVelocity = getCorrectedVelocity(performedVelocity, minVelocity);
+							break;
+						default:
+							console.assert(false, "TrackWorker.doNoteOnVelocity(): illegal option -- " + currentTrk.options.velocity);
+					}
 				}
+
+				speedFactor = currentTrk.options.speed;
 			}
+
 			_start();
 		}
 	}
@@ -489,7 +504,7 @@ eventHandler = function(e)
 
 		// called by Keyboard1 to change the speed at which the trk plays.
 		case "changeSpeed":
-			speedFactor = msg.speedFactor;
+			speedFactor = currentTrk.options.speed * msg.speedFactor;
 			break;
 	}
 };

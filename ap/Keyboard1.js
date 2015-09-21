@@ -1030,14 +1030,13 @@ _AP.keyboard1 = (function()
 									option = chordTrkOptions[optStr];
 								}
 								return option;
-
 							}
 
-							// Seqs use the options: pedal, velocity and trkOff
+							// Seqs use the options: pedal, velocity, speed and trkOff
 							function setSeqTrkOptions(seqDef, noteTrkOptions, chordTrkOptions)
 							{
 								var i, nTrks = seqDef.length, newTrkOptions, seqTrkOptions = seqDef.trkOptions, trkTrkOptions,
-									pedalOpt, velocityOpt, minVelocityOpt, trkOffOpt;
+									pedalOpt, velocityOpt, minVelocityOpt, speedOpt, trkOffOpt;
 
 								for(i = 0; i < nTrks; ++i)
 								{
@@ -1055,6 +1054,11 @@ _AP.keyboard1 = (function()
 										newTrkOptions.velocity = velocityOpt;
 										newTrkOptions.minVelocity = minVelocityOpt;
 									}
+									speedOpt = getOption("speed", trkTrkOptions, seqTrkOptions, noteTrkOptions, chordTrkOptions);
+									if(speedOpt !== undefined)
+									{
+										newTrkOptions.speed = speedOpt;
+									}
 									trkOffOpt = getOption("trkOff", trkTrkOptions, seqTrkOptions, noteTrkOptions, chordTrkOptions);
 									if(trkOffOpt !== undefined)
 									{
@@ -1064,58 +1068,9 @@ _AP.keyboard1 = (function()
 								}
 							}
 
-							function setControlTrkOptions(optionString, controls, noteTrkOptions, chordTrkOptions)
-							{
-								var i, nControls = controls.length, newTrkOptions,
-									controlsTrkOptions = controls.trkOptions, trkTrkOptions,
-									option;
-
-								for(i = 0; i < nControls; ++i)
-								{
-									newTrkOptions = {};
-									trkTrkOptions = controls[i].trkOptions;
-									option = getOption(optionString, trkTrkOptions, controlsTrkOptions, noteTrkOptions, chordTrkOptions);
-									if(option !== undefined)
-									{
-										newTrkOptions[optionString] = option;
-										switch(option)
-										{
-											case "volume":
-												newTrkOptions.minVolume = getOption("minVolume", trkTrkOptions, controlsTrkOptions, noteTrkOptions, chordTrkOptions);
-												newTrkOptions.maxVolume = getOption("maxVolume", trkTrkOptions, controlsTrkOptions, noteTrkOptions, chordTrkOptions);
-												break;
-											case "pitch":
-												newTrkOptions.pitchWheelDeviation = getOption("pitchWheelDeviation", trkTrkOptions, controlsTrkOptions, noteTrkOptions, chordTrkOptions);
-												break;
-											case "pan":
-												newTrkOptions.panOrigin = getOption("panOrigin", trkTrkOptions, controlsTrkOptions, noteTrkOptions, chordTrkOptions);
-												break;
-											case "speed":
-												newTrkOptions.speedDeviation = getOption("speedDeviation", trkTrkOptions, controlsTrkOptions, noteTrkOptions, chordTrkOptions);
-												break;
-											default:
-												break;
-										}
-									}
-									controls[i].trkOptions = newTrkOptions;
-								}
-							}
-
 							if(noteOnOff.seqDef !== undefined)
 							{
 								setSeqTrkOptions(noteOnOff.seqDef, chordTrkOptions);
-							}
-							if(noteOnOff.pressures !== undefined)
-							{
-								setControlTrkOptions("pressure", noteOnOff.pressures, noteTrkOptions, chordTrkOptions);
-							}
-							if(noteOnOff.pitchWheels !== undefined)
-							{
-								setControlTrkOptions("pitchWheel", noteOnOff.pitchWheels, noteTrkOptions, chordTrkOptions);
-							}
-							if(noteOnOff.modWheels !== undefined)
-							{
-								setControlTrkOptions("modWheel", noteOnOff.modWheels, noteTrkOptions, chordTrkOptions);
 							}
 						}
 

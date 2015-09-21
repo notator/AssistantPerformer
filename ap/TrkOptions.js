@@ -20,7 +20,8 @@
  * Possible fields (all are attributes in score files), and their available values, are:
  *     pedal -- possible values: "holdAll", "holdLast"
  *     velocity -- possible values: "scaled", "shared", "overridden"  
- *     minVelocity -- an integer in range [1..127]. Defined if velocity is defined. 
+ *     minVelocity -- an integer in range [1..127]. Defined if velocity is defined.
+ *     speed --  the value by which to divide output durations in the trk. (A float value greater than 0. Higher values mean higher speed.)  
  *     trkOff -- possible values: "stopChord", "stopNow", "fade"
  */
 
@@ -64,6 +65,10 @@ _AP.trkOptions = (function ()
 						this.minVelocity = parseInt(attr.value, 10);
 						break;
 
+					case "speed":
+						this.speed = parseFloat(attr.value, 10);
+						break;
+
 					case "trkOff":
 						this.trkOff = attr.value;
 						break;
@@ -91,6 +96,11 @@ _AP.trkOptions = (function ()
     	{
     		cfOptions.velocity = this.velocity;
     		cfOptions.minVelocity = this.minVelocity;
+    	}
+
+    	if(this.speed)
+    	{
+    		cfOptions.speed = this.speed;
     	}
 
     	if(this.trkOff)

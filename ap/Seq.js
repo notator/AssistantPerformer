@@ -100,7 +100,12 @@ _AP.seq = (function()
 				moments = getMoments(trkDef.midiObjects);
 				options = trkDef.trkOptions;
 
-				// options is an object having either no attributes or a pedal attribute and/or velocity and minVelocity attributes.
+				// options must be a defined object having zero or more of the following attributes:
+				//     pedal
+				//     velocity (and minVelocity) -- both or neither is defined
+				//     speed
+				//     noteOff
+				console.assert(options !== undefined, "Error: trkDef.trkOptions must be a valid object here.");
 
 				trkWorker = trackWorkers[trkDef.trackIndex];
 
