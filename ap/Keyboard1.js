@@ -1110,6 +1110,12 @@ _AP.keyboard1 = (function()
 									msPosition = inputChord.msPositionInScore;
 									msDuration = inputChord.msDurationInScore;
 									ccSettings = inputChord.ccSettings;
+
+									if(msPosition < startMarkerMsPosInScore && ccSettings !== undefined)
+									{
+										setContinuousControllerOptions(ccSettings); // shunt to startMarkerMsPosInScore;
+									}
+
 									if(inputChord.trkOptions)
 									{
 										chordTrkOptions = inputChord.trkOptions;
