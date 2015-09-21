@@ -133,6 +133,7 @@ _AP.inputChordDef = (function ()
 
 						default:
 							alert(">>>>>>>>>> Illegal ccSettings attribute <<<<<<<<<<");
+							console.assert(false);
 					}
 				}
 				return settings;

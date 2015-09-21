@@ -72,6 +72,10 @@ _AP.trkOptions = (function ()
 					case "trkOff":
 						this.trkOff = attr.value;
 						break;
+
+					default:
+						alert(">>>>>>>>>> Illegal trkOptions attribute <<<<<<<<<<");
+						console.assert(false);
 				}
 			}
 		}
