@@ -40,7 +40,8 @@ _AP.score = (function (document)
 	DISABLED_PINK_COLOR = "#FFBBBB",
 
     MAX_MIDI_CHANNELS = 16,
-	midiChannelPerOutputTrack = [], // only output tracks
+	outputTrackPerMidiChannel = [], // only output tracks
+
 	// This array is initialized to all tracks on (=true) when the score is loaded,
 	// and reset when the tracksControl calls refreshDisplay().
 	trackIsOnArray = [], // all tracks, including input tracks
@@ -153,13 +154,12 @@ _AP.score = (function (document)
 
 	// Returns the performing timeObject closest to alignmentX (in any performing input or output track, depending on findInput).
 	// If trackIndex is defined, the returned timeObject will be in that track.
-	findPerformingTimeObject = function(timeObjectsArray, midiChannelPerOutputTrack, trackIsOnArray, findInput, alignmentX, trackIndex)
+	findPerformingTimeObject = function(timeObjectsArray, nOutputTracks, trackIsOnArray, findInput, alignmentX, trackIndex)
 	{
 		var i, j, timeObjects, timeObject = null, timeObjectBefore = null, timeObjectAfter = null, returnTimeObject = null, nTimeObjects,
-		nOutputTracks = midiChannelPerOutputTrack.length, nAllTracks = timeObjectsArray.length,
-			deltaBefore = Number.MAX_VALUE, deltaAfter = Number.MAX_VALUE, startIndex, endIndex;
+			nAllTracks = timeObjectsArray.length, deltaBefore = Number.MAX_VALUE, deltaAfter = Number.MAX_VALUE, startIndex, endIndex;
 
-		function hasPerformingTrack(inputChordDef, midiChannelPerOutputTrack, trackIsOnArray)
+		function hasPerformingTrack(inputChordDef, trackIsOnArray)
 		{
 			var i, j, outputTrackFound = false, outputTrackIndices;
 
@@ -197,7 +197,7 @@ _AP.score = (function (document)
 						timeObject = timeObjects[j];
 						if((!findInput && timeObject.midiChordDef !== undefined)
 						|| (findInput && timeObject.inputChordDef !== undefined 
-							&& hasPerformingTrack(timeObject.inputChordDef, midiChannelPerOutputTrack, trackIsOnArray)))
+							&& hasPerformingTrack(timeObject.inputChordDef, trackIsOnArray)))
 						{
 							if(alignmentX === timeObject.alignmentX)
 							{
@@ -226,27 +226,29 @@ _AP.score = (function (document)
 		return returnTimeObject;
 	},
 	 
-	findPerformingInputTimeObject = function(timeObjectsArray, midiChannelPerOutputTrack, trackIsOnArray, alignmentX, trackIndex)
+	findPerformingInputTimeObject = function(timeObjectsArray, nOutputTracks, trackIsOnArray, alignmentX, trackIndex)
 	{
-		var returnTimeObject = findPerformingTimeObject(timeObjectsArray, midiChannelPerOutputTrack, trackIsOnArray, true, alignmentX, trackIndex);
+		var returnTimeObject = findPerformingTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, true, alignmentX, trackIndex);
 		return returnTimeObject;
 	},
 
-	findPerformingOutputTimeObject = function(timeObjectsArray, midiChannelPerOutputTrack, trackIsOnArray, alignmentX, trackIndex)
+	findPerformingOutputTimeObject = function(timeObjectsArray, nOutputTracks, trackIsOnArray, alignmentX, trackIndex)
 	{
-		var returnTimeObject = findPerformingTimeObject(timeObjectsArray, midiChannelPerOutputTrack, trackIsOnArray, false, alignmentX, trackIndex);
+		var returnTimeObject = findPerformingTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, false, alignmentX, trackIndex);
 		return returnTimeObject;
 	},
 
 	updateStartMarker = function(timeObjectsArray, timeObject)
 	{
+		var nOutputTracks = outputTrackPerMidiChannel.length;
+
 		if(isLivePerformance === false)
 		{
-			timeObject = findPerformingOutputTimeObject(timeObjectsArray, midiChannelPerOutputTrack, trackIsOnArray, timeObject.alignmentX);
+			timeObject = findPerformingOutputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, timeObject.alignmentX);
 		}
 		else
 		{
-			timeObject = findPerformingInputTimeObject(timeObjectsArray, midiChannelPerOutputTrack, trackIsOnArray, timeObject.alignmentX);
+			timeObject = findPerformingInputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, timeObject.alignmentX);
 		}
 
 		if(timeObject.msPosition < endMarker.msPosition())
@@ -261,8 +263,8 @@ _AP.score = (function (document)
     {
         var system = systems[startMarker.systemIndex()],
         startMarkerAlignmentX = startMarker.timeObject().alignmentX,
-        timeObjectsArray = getTimeObjectsArray(system),
-        	timeObject;
+        timeObjectsArray = getTimeObjectsArray(system), timeObject,
+        nOutputTracks = outputTrackPerMidiChannel.length;
 
     	// This function sets the colours of the visible OutputStaves.
     	// (there are no InputStaves in the system, when isLivePerformance === false)
@@ -367,11 +369,11 @@ _AP.score = (function (document)
 
         if(isLivePerformance)
         {
-        	timeObject = findPerformingInputTimeObject(timeObjectsArray, midiChannelPerOutputTrack, trackIsOnArray, startMarkerAlignmentX);
+        	timeObject = findPerformingInputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, startMarkerAlignmentX);
         }
         else
         {
-        	timeObject = findPerformingOutputTimeObject(timeObjectsArray, midiChannelPerOutputTrack, trackIsOnArray, startMarkerAlignmentX);
+        	timeObject = findPerformingOutputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, startMarkerAlignmentX);
 		}
         // move the start marker if necessary
         if(timeObject.alignmentX !== startMarkerAlignmentX)
@@ -387,7 +389,7 @@ _AP.score = (function (document)
             x = e.pageX,
             y = e.pageY + frame.originY,
             systemIndex, system,
-            timeObjectsArray, timeObject, trackIndex;
+            timeObjectsArray, timeObject, trackIndex, nOutputTracks = outputTrackPerMidiChannel.length;
 
         // x and y now use the <body> element as their frame of reference.
         // this is the same frame of reference as in the systems.
@@ -562,11 +564,11 @@ _AP.score = (function (document)
 
             if(isLivePerformance === true)
             {
-            	timeObject = findPerformingInputTimeObject(timeObjectsArray, midiChannelPerOutputTrack, trackIsOnArray, x, trackIndex);
+            	timeObject = findPerformingInputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, x, trackIndex);
             }
             else
             {
-            	timeObject = findPerformingOutputTimeObject(timeObjectsArray, midiChannelPerOutputTrack, trackIsOnArray, x, trackIndex);
+            	timeObject = findPerformingOutputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, x, trackIndex);
             }
 
             // timeObject is now the nearest performing chord to the click,
@@ -666,7 +668,7 @@ _AP.score = (function (document)
             }
 
             isLivePerformance = isLivePerformanceArg;
-            midiChannelPerOutputTrack = []; // reset global
+            outputTrackPerMidiChannel = []; // reset global
             trackIsOnArray = []; // reset global
         }
 
@@ -677,7 +679,7 @@ _AP.score = (function (document)
 				staffElems, staffElem, stafflinesElems,
 				outputVoiceElem, outputVoiceElems, inputVoiceElem, inputVoiceElems,				
                 staff, stafflineInfo,
-                voice;
+                voice, midiChannelPerOutputTrack = [];
 
         	function getStaffElems(systemElem)
         	{
@@ -746,10 +748,6 @@ _AP.score = (function (document)
         		{
         			outputVoice.midiChannel = parseInt(midiChannel, 10);
         			outputVoice.masterVolume = parseInt(masterVolume, 10);
-					
-        			// score variable: midiChannelPerOutputTrack[] is used with trackIsOnArray[]
-        			// when checking that inputNotes have at least one performing track
-        			midiChannelPerOutputTrack.push(outputVoice.midiChannel);
         		}
         	}
 
@@ -861,6 +859,16 @@ _AP.score = (function (document)
         		return dy;
         	}
 
+        	function getInverseArray(midiChannelPerOutputTrack)
+        	{
+        		var midiChannel, n = midiChannelPerOutputTrack.length, rval = [];
+        		for(midiChannel = 0; midiChannel < n; ++midiChannel)
+        		{
+        			rval.push(midiChannelPerOutputTrack.indexOf(midiChannel));
+        		}
+        		return rval;
+        	}
+
         	system = {};
         	systemDy = getDy(systemElem);
             system.staves = [];
@@ -889,6 +897,7 @@ _AP.score = (function (document)
             				voice.class = "outputVoice";
             				// the attributes are only defined in the first bar of the piece
             				getOutputVoiceAttributes(voice, outputVoiceElem);
+            				midiChannelPerOutputTrack.push(voice.midiChannel);
             				staff.voices.push(voice);
             			}
             			break;
@@ -930,6 +939,14 @@ _AP.score = (function (document)
             			system.bottomLineY = (system.bottomLineY > staff.bottomLineY) ? system.bottomLineY : staff.bottomLineY;
             		}
             	}
+            }
+
+            if(midiChannelPerOutputTrack[0] !== undefined) // is undefined on systems after the first.
+            {
+            	// score variable: outputTrackPerMidiChannel[] is used
+            	//    1. with trackIsOnArray[] when checking that inputNotes have at least one performing track.
+            	//    2. For quickly finding the number of outputTracks in the score.
+            	outputTrackPerMidiChannel = getInverseArray(midiChannelPerOutputTrack);
             }
 
             return system;
@@ -1280,17 +1297,8 @@ _AP.score = (function (document)
     			function getTimeObjects(noteObjectElems)
     			{
     				var timeObjects = [], noteObjectClass,
-                        timeObject, i, j, length, noteObjectElem, chordChildElems, outputTrackPerMidiChannel;
+                        timeObject, i, j, length, noteObjectElem, chordChildElems, otpmc = outputTrackPerMidiChannel;
 
-    				function getInverseArray(midiChannelPerOutputTrack)
-    				{
-    					var midiChannel, n = midiChannelPerOutputTrack.length, rval = [];
-    					for(midiChannel = 0; midiChannel < n; ++midiChannel)
-    					{
-    						rval.push(midiChannelPerOutputTrack.indexOf(midiChannel));
-    					}
-    					return rval;
-    				}
     				function getMsDuration(midiChordDef)
     				{
     					var i,
@@ -1305,7 +1313,6 @@ _AP.score = (function (document)
     					return msDuration;
     				}
 
-    				outputTrackPerMidiChannel = getInverseArray(midiChannelPerOutputTrack);
     				length = noteObjectElems.length;
     				for(i = 0; i < length; ++i)
     				{
@@ -1325,7 +1332,7 @@ _AP.score = (function (document)
     									timeObject.msDuration = getMsDuration(timeObject.midiChordDef);
     									break;
     								case 'score:inputNotes':
-    									timeObject.inputChordDef = new InputChordDef(noteObjectElem, outputTrackPerMidiChannel);
+    									timeObject.inputChordDef = new InputChordDef(noteObjectElem, otpmc);
     									timeObject.msDuration = parseInt(noteObjectElem.getAttribute('score:msDuration'), 10);
     									break;
     							}
@@ -1707,22 +1714,6 @@ _AP.score = (function (document)
         function setTrackAttributes(outputTracks, inputTracks, system0staves)
         {
         	var outputTrackIndex = 0, inputTrackIndex = 0, staffIndex, voiceIndex, nStaves = system0staves.length, staff, voice;
-
-        	// returns the array of output track index per midiChannel index
-        	function getTrackIndexPerMidiChannel(outputTracks)
-        	{
-        		var i, rArray = [], nOutputTracks = outputTracks.length;
-        		for(i = 0; i < nOutputTracks; ++i)
-        		{
-        			rArray.push(0);
-        		}
-        		for(i = 0; i < nOutputTracks; ++i)
-        		{
-        			rArray[outputTracks[i].midiChannel] = i;
-        		}
-        		return rArray;
-        	}
-
         	for(staffIndex = 0; staffIndex < nStaves; ++staffIndex)
         	{
         		staff = system0staves[staffIndex];
@@ -1745,7 +1736,6 @@ _AP.score = (function (document)
         			}
         		}
         	}
-        	//outputTracks.trackIndexPerMidiChannel = getTrackIndexPerMidiChannel(outputTracks);
         }
 
         function getInputKeyRange(inputTracks)

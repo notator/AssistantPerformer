@@ -79,7 +79,7 @@ _AP.inputChordDef = (function ()
 		{
 			var i, childElems = ccSettingsNode.children,
 			nChildElems = childElems.length,
-			ccSettings = [], defaultSettings, trackSettings, nTracks = outputTrackPerMidiChannel.length;
+			ccSettings = [], defaultSettings, trackSettings, nOutputTracks = outputTrackPerMidiChannel.length;
 
 			function getSettings(settingsNode, outputTrackPerMidiChannel, gettingDefault)
 			{
@@ -154,7 +154,7 @@ _AP.inputChordDef = (function ()
 
 			defaultSettings = getDefaultSettings(childElems, outputTrackPerMidiChannel);
 
-			for(i = 0; i < nTracks; ++i)
+			for(i = 0; i < nOutputTracks; ++i)
 			{
 				ccSettings.push(defaultSettings); // can be undefined (if there are no default settings)
 			}
