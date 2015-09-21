@@ -41,11 +41,11 @@
  *  
  *  if defined, inputNote.noteOn has the following fields:
  *     inputNote.noteOn.seqDef -- is undefined or an array of trkRef with a (possibly undefined) TrkOptions field.
- *     inputNote.noteOn.trkOffs -- is undefined or an array of trkOff.
+ *     inputNote.noteOn.trkOffs -- is undefined or an array of trackIndices
  *  
  *  if defined, inputNote.noteOff has no pressures field, but otherwise the same fields as inputNote.noteOn:
  *     inputNote.noteOff.seqDef -- is undefined or an array of trkRef with a (possibly undefined) TrkOptions field.
- *     inputNote.noteOff.trkOffs -- is undefined or an array of trkOff.
+ *     inputNote.noteOff.trkOffs -- is undefined or an array of trackIndices.
  *  
  *  A trkRef, which has the element name "trk" in the score, has the following fields:
  *     trkOn.trkOptions -- undefined or an TrkOptions object
@@ -249,42 +249,22 @@ _AP.inputChordDef = (function ()
 						return seqDef;
 					}
 
-					// returns an array of trkOff
+					// returns an array of trackIndices
 					function getTrkOffs(trkOffsNode)
 					{
-						var i, childNodes, trkOffs = [];
+						var i, midiChannelsString, midiChannels, trkOffs = [];
 
-						function getTrkOff(trkOffNode)
+						console.assert(trkOffsNode.attributes.length === 1 && trkOffsNode.attributes[0].name === "midiChannels",
+								"Error: The trkOffs element must always have a single 'midiChannels' attribute.");
+
+						midiChannelsString = trkOffsNode.attributes[0].value;
+						midiChannels = _AP.utilities.numberArray(midiChannelsString);
+						
+						for(i = 0; i < midiChannels.length; ++i)
 						{
-							var i, attr,
-							trkOff = {},
-							attrLen = trkOffNode.attributes.length,
-							childNodes = trkOffNode.childNodes;
-
-							for(i = 0; i < attrLen; ++i)
-							{
-								attr = trkOffNode.attributes[i];
-								switch(attr.name)
-								{
-									case "midiChannel":
-										trkOff.trackIndex = outputTrackPerMidiChannel[parseInt(attr.value, 10)];
-										break;
-								}
-							}
-
-							return trkOff;
+							trkOffs.push(outputTrackPerMidiChannel[midiChannels[i]]);
 						}
 
-						childNodes = trkOffsNode.childNodes;
-						for(i = 0; i < childNodes.length; ++i)
-						{
-							switch(childNodes[i].nodeName)
-							{
-								case 'trk':
-									trkOffs.push(getTrkOff(childNodes[i]));
-									break;
-							}
-						}
 						return trkOffs;
 					}
 
@@ -407,7 +387,7 @@ _AP.inputChordDef = (function ()
 				nTrkOffs = trkOffs.length;
 				for(i = 0; i < nTrkOffs; ++i)
 				{
-					outputIndices.push(trkOffs[i].trackIndex);
+					outputIndices.push(trkOffs[i]);
 				}
 			}
 

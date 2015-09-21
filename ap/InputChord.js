@@ -41,7 +41,7 @@ _AP.inputChord = (function()
     	//					.trackIndex (compulsory int >= 0. The trackIndex of the voice containing the referenced Trk. )
     	//					.msPosition (compulsory int >= 0. The msPositionInScore of the referenced Trk.)
     	//					.length (compulsory int >= 0. The number of MidiChords and Rests the referenced Trk.)
-    	//			.trkOffs -- undefined or an array of trkOff, each of which has a .trackIndex and a .msPosition attribute
+    	//			.trkOffs -- undefined or an array of trackIndex
 		//------------------------------------------------------------------------------
     	// getInputNotes() Returns:
     	// An array of inputNote objects, the fields of which have been copied from the corresponding inputNoteDefs (see above)

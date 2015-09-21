@@ -308,7 +308,7 @@ _AP.keyboard1 = (function()
     		var i, nTrkOffs = trkOffs.length;
     		for(i = 0; i < nTrkOffs; ++i)
     		{
-    			workers[trkOffs[i].trackIndex].postMessage({ "action": "stop" });
+    			workers[trkOffs[i]].postMessage({ "action": "stop" });
     		}
     	}
 
@@ -399,7 +399,7 @@ _AP.keyboard1 = (function()
 			
     		function setTrackSettings(trackIndex, trackCCSettings)
     		{
-    			function getPressureOption(trackPressureOption, trackCCSettings)
+    			function getPressureOption(trackCCSettings)
     			{
     				var returnPressureSettings = {};
 
@@ -413,7 +413,7 @@ _AP.keyboard1 = (function()
     				}
     				return returnPressureSettings;
     			}
-    			function getModWheelOption(trackModWheelOption, trackCCSettings)
+    			function getModWheelOption(trackCCSettings)
     			{
     				var returnModWheelSettings = {};
 
@@ -427,7 +427,7 @@ _AP.keyboard1 = (function()
     				}
     				return returnModWheelSettings;
     			}
-    			function getPitchWheelOption(trackIndex, trackPitchWheelOption, trackCCSettings)
+    			function getPitchWheelOption(trackCCSettings, trackIndex, currentPitchWheelDeviation)
     			{
     				/// Sets both RegisteredParameter controls to 0 (zero). This is standard MIDI for selecting the
     				/// pitch wheel so that it can be set by the subsequent DataEntry messages.
@@ -459,16 +459,16 @@ _AP.keyboard1 = (function()
     				{
     					case 'pitch':
     						rval.pitchWheelDeviation = trackCCSettings.pitchWheelDeviation;
-    						if(trackPitchWheelOption.pitchWheelDeviation !== rval.pitchWheelDeviation)
+    						if(currentPitchWheelDeviation !== rval.pitchWheelDeviation)
     						{
     							sendPitchWheelDeviationMessages(trackIndex, rval.pitchWheelDeviation);
     						}
     						break;
     					case 'pan':
-    						rval.panOrigin = pitchWheelSettings.panOrigin;
+    						rval.panOrigin = trackCCSettings.panOrigin;
     						break;
     					case 'speed':
-    						rval.speedDeviation = pitchWheelSettings.speedDeviation;
+    						rval.speedDeviation = trackCCSettings.speedDeviation;
     						break;
     					case 'disabled':
     						break;
@@ -481,15 +481,15 @@ _AP.keyboard1 = (function()
 
     			if(trackCCSettings.pressure !== undefined)
     			{
-    				trackPressureOptions[trackIndex] = getPressureOption(trackPressureOptions[trackIndex], trackCCSettings);
+    				trackPressureOptions[trackIndex] = getPressureOption(trackCCSettings);
     			}
     			if(trackCCSettings.pitchWheel !== undefined)
     			{
-    				trackPitchWheelOptions[trackIndex] = getPitchWheelOption(trackIndex, trackPitchWheelOptions[trackIndex], trackCCSettings);
+    				trackPitchWheelOptions[trackIndex] = getPitchWheelOption(trackCCSettings, trackIndex, trackPitchWheelOptions[trackIndex].pitchWheelDeviation);
     			}
     			if(trackCCSettings.modWheel !== undefined)
     			{
-    				trackModWheelOptions[trackIndex] = getModWheelOption(trackModWheelOptions[trackIndex], trackCCSettings);
+    				trackModWheelOptions[trackIndex] = getModWheelOption(trackCCSettings);
     			}
     		}
 
@@ -966,7 +966,7 @@ _AP.keyboard1 = (function()
 						{
 							var rval = false;
 
-							function hasTrack(trkArray, trackIsOnArray)
+							function seqHasTrack(trkArray, trackIsOnArray)
 							{
 								var rval = false, i, nTrks = trkArray.length;
 								for(i = 0; i < nTrks; ++i)
@@ -980,15 +980,24 @@ _AP.keyboard1 = (function()
 								return rval;
 							}
 
-							if(hasTrack(inputNote.noteOn.seqDef, trackIsOnArray)
-							|| hasTrack(inputNote.noteOff.trkOffs, trackIsOnArray)
-							|| hasTrack(inputNote.noteOn.pressures, trackIsOnArray)
-							|| hasTrack(inputNote.noteOn.pitchWheels, trackIsOnArray)
-							|| hasTrack(inputNote.noteOn.modWheels, trackIsOnArray)
-							|| hasTrack(inputNote.noteOn.trkOffs, trackIsOnArray)
-							|| hasTrack(inputNote.noteOff.seqDef, trackIsOnArray)
-							|| hasTrack(inputNote.noteOff.pitchWheels, trackIsOnArray)
-							|| hasTrack(inputNote.noteOff.modWheels, trackIsOnArray))
+							function trkOffsHasTrack(trackIndices, trackIsOnArray)
+							{
+								var rval = false, i, nTrks = trackIndices.length;
+								for(i = 0; i < nTrks; ++i)
+								{
+									if(trackIsOnArray[trackIndices[i]])
+									{
+										rval = true;
+										break;
+									}
+								}
+								return rval;
+							}
+
+							if(seqHasTrack(inputNote.noteOn.seqDef, trackIsOnArray)
+							|| trkOffsHasTrack(inputNote.noteOff.trkOffs, trackIsOnArray)
+							|| trkOffsHasTrack(inputNote.noteOn.trkOffs, trackIsOnArray)
+							|| seqHasTrack(inputNote.noteOff.seqDef, trackIsOnArray))
 							{
 								rval = true;
 							}
@@ -1070,7 +1079,7 @@ _AP.keyboard1 = (function()
 
 							if(noteOnOff.seqDef !== undefined)
 							{
-								setSeqTrkOptions(noteOnOff.seqDef, chordTrkOptions);
+								setSeqTrkOptions(noteOnOff.seqDef, noteTrkOptions, chordTrkOptions);
 							}
 						}
 
