@@ -452,28 +452,33 @@ eventHandler = function(e)
 	// Aug. 2015
 	function stop()
 	{
-		var noteOffOption = currentTrk.options.noteOff;
+		var noteOffOption;
 
 		function setFade()
 		{
 			fadeLength = nMoments + 1 - momentIndex;
 		}
 
-		if(noteOffOption !== undefined)
+		if(currentTrk && currentTrk.options)
 		{
-			switch(noteOffOption)
+			noteOffOption = currentTrk.options.noteOff;
+
+			if(noteOffOption !== undefined)
 			{
-				case "stopChord":
-					stopChord = true; // stop playing the trk at the following midiChord or midiRest.
-					break;
-				case "stopNow":
-					stopNow = true; // stop immediately, without playing the remainder of the current midiChord or midiRest.
-					break;
-				case "fade":
-					setFade(); // fade the velocity to zero at the end of the trk
-					break;
-				default:
-					throw (">>>>>>>>>> Illegal noteOff option: " + noteOffOption + " <<<<<<<<<<");
+				switch(noteOffOption)
+				{
+					case "stopChord":
+						stopChord = true; // stop playing the trk at the following midiChord or midiRest.
+						break;
+					case "stopNow":
+						stopNow = true; // stop immediately, without playing the remainder of the current midiChord or midiRest.
+						break;
+					case "fade":
+						setFade(); // fade the velocity to zero at the end of the trk
+						break;
+					default:
+						throw (">>>>>>>>>> Illegal noteOff option: " + noteOffOption + " <<<<<<<<<<");
+				}
 			}
 		}
 	}
