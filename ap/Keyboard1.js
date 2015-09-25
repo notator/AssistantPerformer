@@ -1052,12 +1052,12 @@ _AP.keyboard1 = (function()
 									newTrkOptions = {};
 									trkTrkOptions = seqDef[i].trkOptions;
 									pedalOpt = getOption("pedal", trkTrkOptions, seqTrkOptions, noteTrkOptions, chordTrkOptions);
-									if(pedalOpt && pedalOpt !== "disabled")
+									if(pedalOpt && pedalOpt !== "undefined")
 									{
 										newTrkOptions.pedal = pedalOpt;
 									}
 									velocityOpt = getOption("velocity", trkTrkOptions, seqTrkOptions, noteTrkOptions, chordTrkOptions);
-									if(velocityOpt && velocityOpt !== "disabled")
+									if(velocityOpt && velocityOpt !== "undefined")
 									{
 										minVelocityOpt = getOption("minVelocity", trkTrkOptions, seqTrkOptions, noteTrkOptions, chordTrkOptions);
 										newTrkOptions.velocity = velocityOpt;
@@ -1069,7 +1069,7 @@ _AP.keyboard1 = (function()
 										newTrkOptions.speed = speedOpt;
 									}
 									trkOffOpt = getOption("trkOff", trkTrkOptions, seqTrkOptions, noteTrkOptions, chordTrkOptions);
-									if(trkOffOpt && trkOffOpt !== "disabled")
+									if(trkOffOpt && trkOffOpt !== "undefined")
 									{
 										newTrkOptions.trkOff = trkOffOpt;
 									}
