@@ -19,7 +19,7 @@
 				<dc:type
 					rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
 				<dc:title>Study 3 sketch 2 (scroll)</dc:title>
-				<dc:date>Wednesday 19.08.2015, 19:54:45</dc:date>
+				<dc:date>Wednesday 30.09.2015, 12:43:03</dc:date>
 				<dc:creator>
 					<cc:Agent>
 						<dc:title>James Ingram</dc:title>
@@ -277,7 +277,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			x="32"
 			y="80"
 			font-size="72"
-			font-family="Arial">Study 3 sketch 2 (scroll), Wednesday 19.08.2015, 19:54:44</text>
+			font-family="Arial">Study 3 sketch 2 (scroll), Wednesday 30.09.2015, 12:42:52</text>
 		<g
 			id="titles">
 			<text
@@ -15733,20 +15733,51 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						id="inputChord2574"
 						score:alignmentX="708.2477"
 						score:msDuration="150">
-						<inputControls
-							trkVel="overridden"
-							minVelocity="19" />
+						<score:ccSettings>
+							<default
+								pressure="channelPressure"
+								pitchWheel="pitch"
+								pitchWheelDeviation="5"
+								modWheel="volume"
+								maxVolume="127"
+								minVolume="20" />
+						</score:ccSettings>
+						<score:trkOptions
+							velocity="scaled"
+							minVelocity="3"
+							pedal="holdAll"
+							speed="1.5"
+							trkOff="fade" />
 						<score:inputNotes>
 							<inputNote
 								notatedKey="80">
-								<seq>
-									<trkRef
-										midiChannel="0"
-										durationsCount="1" />
-								</seq>
-								<inputControls
-									trkVel="scaled"
-									minVelocity="20" />
+								<trkOptions
+									velocity="scaled"
+									minVelocity="2" />
+								<noteOn>
+									<seq>
+										<trkOptions
+											velocity="scaled"
+											minVelocity="3"
+											pedal="holdAll"
+											speed="2.1"
+											trkOff="undefined" />
+										<trk
+											midiChannel="0"
+											msPosition="0"
+											nMidiObjects="1">
+											<trkOptions
+												velocity="overridden"
+												minVelocity="4" />
+										</trk>
+									</seq>
+									<trkOffs
+										midiChannels="0 4 2 3 5" />
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="0 4 2 3 5" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -15795,11 +15826,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="78">
-								<seq>
-									<trkRef
-										midiChannel="0"
-										durationsCount="1" />
-								</seq>
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="0"
+											msPosition="1500"
+											nMidiObjects="1" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="0" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -15848,11 +15886,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="76">
-								<seq>
-									<trkRef
-										midiChannel="0"
-										durationsCount="1" />
-								</seq>
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="0"
+											msPosition="3000"
+											nMidiObjects="1" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="0" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -15896,11 +15941,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="74">
-								<seq>
-									<trkRef
-										midiChannel="0"
-										durationsCount="1" />
-								</seq>
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="0"
+											msPosition="4500"
+											nMidiObjects="1" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="0" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -15944,11 +15996,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="72">
-								<seq>
-									<trkRef
-										midiChannel="0"
-										durationsCount="1" />
-								</seq>
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="0"
+											msPosition="6000"
+											nMidiObjects="1" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="0" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -15992,11 +16051,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="70">
-								<seq>
-									<trkRef
-										midiChannel="0"
-										durationsCount="1" />
-								</seq>
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="0"
+											msPosition="7500"
+											nMidiObjects="1" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="0" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -16045,11 +16111,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="68">
-								<seq>
-									<trkRef
-										midiChannel="0"
-										durationsCount="1" />
-								</seq>
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="0"
+											msPosition="9000"
+											nMidiObjects="1" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="0" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -16098,11 +16171,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="66">
-								<seq>
-									<trkRef
-										midiChannel="0"
-										durationsCount="1" />
-								</seq>
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="0"
+											msPosition="10500"
+											nMidiObjects="1" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="0" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -16151,11 +16231,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="64">
-								<seq>
-									<trkRef
-										midiChannel="0"
-										durationsCount="1" />
-								</seq>
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="0"
+											msPosition="12000"
+											nMidiObjects="1" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="0" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -16199,11 +16286,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="62">
-								<seq>
-									<trkRef
-										midiChannel="0"
-										durationsCount="1" />
-								</seq>
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="0"
+											msPosition="13500"
+											nMidiObjects="1" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="0" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -16247,11 +16341,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="60">
-								<seq>
-									<trkRef
-										midiChannel="0"
-										durationsCount="1" />
-								</seq>
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="0"
+											msPosition="15000"
+											nMidiObjects="1" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="0" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -16302,11 +16403,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="58">
-								<seq>
-									<trkRef
-										midiChannel="0"
-										durationsCount="1" />
-								</seq>
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="0"
+											msPosition="16500"
+											nMidiObjects="1" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="0" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -16370,13 +16478,20 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="64">
-								<seq>
-									<trkRef
-										midiChannel="0"
-										durationsCount="12" />
-								</seq>
-								<inputControls
+								<trkOptions
 									trkOff="stopChord" />
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="0"
+											msPosition="18000"
+											nMidiObjects="12" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="0" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -16403,13 +16518,20 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="64">
-								<seq>
-									<trkRef
-										midiChannel="1"
-										durationsCount="12" />
-								</seq>
-								<inputControls
+								<trkOptions
 									trkOff="fade" />
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="1"
+											msPosition="19500"
+											nMidiObjects="12" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="1" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -16436,11 +16558,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="64">
-								<seq>
-									<trkRef
-										midiChannel="2"
-										durationsCount="12" />
-								</seq>
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="2"
+											msPosition="21000"
+											nMidiObjects="12" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="2" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -16467,11 +16596,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="64">
-								<seq>
-									<trkRef
-										midiChannel="3"
-										durationsCount="12" />
-								</seq>
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="3"
+											msPosition="22500"
+											nMidiObjects="12" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="3" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -16498,11 +16634,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="64">
-								<seq>
-									<trkRef
-										midiChannel="4"
-										durationsCount="12" />
-								</seq>
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="4"
+											msPosition="24000"
+											nMidiObjects="12" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="4" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -16529,11 +16672,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="64">
-								<seq>
-									<trkRef
-										midiChannel="5"
-										durationsCount="12" />
-								</seq>
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="5"
+											msPosition="25500"
+											nMidiObjects="12" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="5" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -16560,11 +16710,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="64">
-								<seq>
-									<trkRef
-										midiChannel="6"
-										durationsCount="12" />
-								</seq>
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="6"
+											msPosition="27000"
+											nMidiObjects="12" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="6" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -16591,11 +16748,18 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="64">
-								<seq>
-									<trkRef
-										midiChannel="7"
-										durationsCount="12" />
-								</seq>
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="7"
+											msPosition="28500"
+											nMidiObjects="12" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="7" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -24493,16 +24657,20 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="64">
-								<seq>
-									<trkRef
-										midiChannel="0"
-										durationsCount="12" />
-								</seq>
-								<inputControls
-									trkOff="fade"
-									pitchWheel="volume"
-									maxVolume="100"
-									minVolume="50" />
+								<trkOptions
+									trkOff="fade" />
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="0"
+											msPosition="34500"
+											nMidiObjects="12" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="0" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -24529,16 +24697,20 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="64">
-								<seq>
-									<trkRef
-										midiChannel="1"
-										durationsCount="12" />
-								</seq>
-								<inputControls
-									trkOff="fade"
-									pitchWheel="volume"
-									maxVolume="100"
-									minVolume="50" />
+								<trkOptions
+									trkOff="fade" />
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="1"
+											msPosition="36000"
+											nMidiObjects="12" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="1" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -24565,16 +24737,20 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="64">
-								<seq>
-									<trkRef
-										midiChannel="2"
-										durationsCount="12" />
-								</seq>
-								<inputControls
-									trkOff="fade"
-									pitchWheel="volume"
-									maxVolume="100"
-									minVolume="50" />
+								<trkOptions
+									trkOff="fade" />
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="2"
+											msPosition="37500"
+											nMidiObjects="12" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="2" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -24601,16 +24777,20 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="64">
-								<seq>
-									<trkRef
-										midiChannel="3"
-										durationsCount="12" />
-								</seq>
-								<inputControls
-									trkOff="fade"
-									pitchWheel="volume"
-									maxVolume="100"
-									minVolume="50" />
+								<trkOptions
+									trkOff="fade" />
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="3"
+											msPosition="39000"
+											nMidiObjects="12" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="3" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -24651,14 +24831,20 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="64">
-								<seq>
-									<trkRef
-										midiChannel="4"
-										durationsCount="12" />
-								</seq>
-								<inputControls
-									trkOff="fade"
-									pitchWheel="pitchWheel" />
+								<trkOptions
+									trkOff="stopChord" />
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="4"
+											msPosition="40500"
+											nMidiObjects="12" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="4" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -24685,14 +24871,20 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="64">
-								<seq>
-									<trkRef
-										midiChannel="5"
-										durationsCount="12" />
-								</seq>
-								<inputControls
-									trkOff="fade"
-									pitchWheel="pitchWheel" />
+								<trkOptions
+									trkOff="stopChord" />
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="5"
+											msPosition="42000"
+											nMidiObjects="12" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="5" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -24719,14 +24911,20 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="64">
-								<seq>
-									<trkRef
-										midiChannel="6"
-										durationsCount="12" />
-								</seq>
-								<inputControls
-									trkOff="fade"
-									pitchWheel="pitchWheel" />
+								<trkOptions
+									trkOff="stopChord" />
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="6"
+											msPosition="43500"
+											nMidiObjects="12" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="6" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
@@ -24760,15 +24958,20 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<score:inputNotes>
 							<inputNote
 								notatedKey="64">
-								<seq>
-									<trkRef
-										midiChannel="7"
-										durationsCount="12" />
-								</seq>
-								<inputControls
-									pitchWheel="pitchWheel"
-									speedOption="noteOnKey"
-									maxSpeedPercent="500" />
+								<trkOptions
+									speed="2.2" />
+								<noteOn>
+									<seq>
+										<trk
+											midiChannel="7"
+											msPosition="45000"
+											nMidiObjects="12" />
+									</seq>
+								</noteOn>
+								<noteOff>
+									<trkOffs
+										midiChannels="7" />
+								</noteOff>
 							</inputNote>
 						</score:inputNotes>
 						<g
