@@ -954,9 +954,9 @@ _AP.keyboard1 = (function()
 				// These depend on whether the trk is inside a seq, pressures, pitchWheels or modWheels object.
 				function getNotesMoments(inputTracks, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore)
 				{
-					var trackIndex, nTracks, ioIndex, inputObjects, nInputObjects, msPosition, msDuration, ccSettings, inputChord,
+					var trackIndex, nTracks, ioIndex, inputObjects, nInputObjects, msPosition, msDuration, inputChord,
 						notesMoments = [], performedNote, performedNotes, moment, i, nPerformedNotes,
-						chordTrkOptions, previousChordTrkOptions;
+						shuntedCCSettings = [], chordTrkOptions, previousChordTrkOptions;
 
 					function getPerformedNotes(inputNotes, trackIsOnArray)
 					{
@@ -1094,6 +1094,89 @@ _AP.keyboard1 = (function()
 						}
 					}
 
+					// Returns an object that is the result of shunting the individual attributes of the two arguments.
+					// If an individual ccSetting is defined, the returned object has that attribute and value.
+					// Else, if the attribute is defined in previousCCSetting, that attribute and value are used.
+					// If the attribute is not defined in either the ccSetting or the previousCCSetting, it is left undefined.
+					function getShuntedCCSettings(ccSettings, previousCCSettings)
+					{
+						var i, nSettings = ccSettings.length, ccs, prevccs, rval, rvals = [];
+
+						if(previousCCSettings.length === 0)
+						{
+							for(i = 0; i < nSettings; ++i)
+							{
+								previousCCSettings.push({});
+							}
+						}
+
+						for(i = 0; i < nSettings; ++i)
+						{
+							rval = {};
+							ccs = ccSettings[i];
+							prevccs = previousCCSettings[i];
+
+							if(ccs.trackIndex || prevccs.trackIndex)
+							{
+								rval.trackIndex = (ccs.trackIndex !== undefined) ? ccs.trackIndex : prevccs.trackIndex;
+							}
+							if(ccs.pressure || prevccs.pressure)
+							{
+								rval.pressure = (ccs.pressure !== undefined) ? ccs.pressure : prevccs.pressure;
+							}
+							if(ccs.pitchWheel || prevccs.pitchWheel)
+							{
+								rval.pitchWheel = (ccs.pitchWheel !== undefined) ? ccs.pitchWheel : prevccs.pitchWheel;
+							}
+							if(ccs.modWheel || prevccs.modWheel)
+							{
+								rval.modWheel = (ccs.modWheel !== undefined) ? ccs.modWheel : prevccs.modWheel;
+							}
+							if(ccs.minVolume || prevccs.minVolume)
+							{
+								rval.minVolume = (ccs.minVolume !== undefined) ? ccs.minVolume : prevccs.minVolume;
+							}
+							if(ccs.maxVolume || prevccs.maxVolume)
+							{
+								rval.maxVolume = (ccs.maxVolume !== undefined) ? ccs.maxVolume : prevccs.maxVolume;
+							}
+							if(ccs.pitchWheelDeviation || prevccs.pitchWheelDeviation)
+							{
+								rval.pitchWheelDeviation = (ccs.pitchWheelDeviation !== undefined) ? ccs.pitchWheelDeviation : prevccs.pitchWheelDeviation;
+							}
+							if(ccs.speedDeviation || prevccs.speedDeviation)
+							{
+								rval.speedDeviation = (ccs.speedDeviation !== undefined) ? ccs.speedDeviation : prevccs.speedDeviation;
+							}
+							if(ccs.panOrigin || prevccs.panOrigin)
+							{
+								rval.panOrigin = (ccs.panOrigin !== undefined) ? ccs.panOrigin : prevccs.panOrigin;
+							}
+
+							rvals.push(rval);							
+						}
+						return rvals;
+					}
+
+					// if a trkOption is undefined, use the previousChordTrkOption (which may be undefined)
+					function getChordTrackOptions(trkOptions, previousChordTrkOptions)
+					{
+						// pedal -- possible values: "undefined", "holdAll", "holdLast"
+						// velocity -- possible values: "undefined", "scaled", "shared", "overridden"  
+						// minVelocity -- an integer in range [1..127]. Defined if velocity is defined.
+						// speed --  the value by which to divide output durations in the trk. (A float value greater than 0. Higher values mean higher speed.)  
+						// trkOff -- possible values: "undefined", "stopChord", "stopNow", "fade" 
+						var rval = {};
+
+						rval.pedal = (trkOptions.pedal !== undefined) ? trkOptions.pedal : previousChordTrkOptions.pedal;
+						rval.velocity = (trkOptions.velocity !== undefined) ? trkOptions.velocity : previousChordTrkOptions.velocity;
+						rval.minVelocity = (trkOptions.minVelocity !== undefined) ? trkOptions.minVelocity : previousChordTrkOptions.minVelocity;
+						rval.speed = (trkOptions.speed !== undefined) ? trkOptions.speed : previousChordTrkOptions.speed;
+						rval.trkOff = (trkOptions.trkOff !== undefined) ? trkOptions.trkOff : previousChordTrkOptions.trkOff;
+
+						return rval;
+					}
+
 					nTracks = inputTracks.length;
 					for(trackIndex = 0; trackIndex < nTracks; ++trackIndex)
 					{
@@ -1109,16 +1192,15 @@ _AP.keyboard1 = (function()
 									inputChord = inputObjects[ioIndex];
 									msPosition = inputChord.msPositionInScore;
 									msDuration = inputChord.msDurationInScore;
-									ccSettings = inputChord.ccSettings;
 
-									if(msPosition < startMarkerMsPosInScore && ccSettings !== undefined)
+									if(inputChord.ccSettings)
 									{
-										setContinuousControllerOptions(ccSettings); // shunt to startMarkerMsPosInScore;
+										shuntedCCSettings = getShuntedCCSettings(inputChord.ccSettings, shuntedCCSettings);
 									}
 
 									if(inputChord.trkOptions)
 									{
-										chordTrkOptions = inputChord.trkOptions;
+										chordTrkOptions = getChordTrackOptions(inputChord.trkOptions, previousChordTrkOptions);
 									}
 									else if(previousChordTrkOptions !== null)
 									{
@@ -1147,11 +1229,17 @@ _AP.keyboard1 = (function()
 												setNoteOnOffTrkOptions(performedNote, chordTrkOptions);
 												moment.push(performedNote);
 											}
-											if(ccSettings)
+
+											if(shuntedCCSettings && msPosition === startMarkerMsPosInScore)
 											{
-												console.assert(moment.ccSettings === undefined, "Illegal simultaneous ccSettings!");
-												moment.ccSettings = ccSettings;
+												moment.ccSettings = shuntedCCSettings;
 											}
+											else if(inputChord.ccSettings)
+											{
+												shuntedCCSettings = getShuntedCCSettings(inputChord.ccSettings, shuntedCCSettings);
+												moment.ccSettings = shuntedCCSettings;
+											}
+											// moment.ccSettings is undefined when the ccSettings don't change.
 										}
 									}
 								}
@@ -1370,7 +1458,7 @@ _AP.keyboard1 = (function()
 	{
 		init: init,
 
-		play: play,
+		play: play,  
 		stop: stop,
 		isStopped: isStopped,
 		isRunning: isRunning,
