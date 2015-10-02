@@ -191,21 +191,21 @@ _AP.inputChordDef = (function ()
 					var i, childNodes = noteOnOrNoteOffNode.childNodes, nChildNodes = childNodes.length,
 					noteOnOrNoteOff = {};
 
-					// returns an array of trkRef, possibly having an trkOptions attribute 
+					// returns an array of trkRef, possibly having a trkOptions attribute 
 					function getSeq(seqNode)
 					{
-						var i, childNodes, seqDef = [];
+						var i, childNodes, trkRef = [];
 
-						function getSeqTrk(seqTrkNode)
+						function getTrkRef(trkRefNode)
 						{
 							var i, attr,
 							seqTrk = {},
-							attrLen = seqTrkNode.attributes.length,
-							childNodes = seqTrkNode.childNodes;
+							attrLen = trkRefNode.attributes.length,
+							childNodes = trkRefNode.childNodes;
 
 							for(i = 0; i < attrLen; ++i)
 							{
-								attr = seqTrkNode.attributes[i];
+								attr = trkRefNode.attributes[i];
 								switch(attr.name)
 								{
 									case "midiChannel":
@@ -240,14 +240,14 @@ _AP.inputChordDef = (function ()
 							switch(childNodes[i].nodeName)
 							{
 								case 'trkOptions':
-									seqDef.trkOptions = new TrkOptions(childNodes[i]);
+									trkRef.trkOptions = new TrkOptions(childNodes[i]);
 									break;
-								case 'trk':
-									seqDef.push(getSeqTrk(childNodes[i]));
+								case 'trkRef':
+									trkRef.push(getTrkRef(childNodes[i]));
 									break;
 							}
 						}
-						return seqDef;
+						return trkRef;
 					}
 
 					// returns an array of trackIndices
