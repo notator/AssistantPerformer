@@ -8,7 +8,7 @@ This project is only being tested on the latest versions of Chrome and Firefox, 
 
 Note that it is not possible to display or play scores unless a valid MIDI output device has been selected, but that only hardware or software devices that involve installing a plugin are currently supported.<br />
 On Windows, the free [Virtual MIDI Synth](http://coolsoft.altervista.org/en/virtualmidisynth) can be installed and used in both browsers.<br />
-The Microsoft GS Wavetable Synth (part of Windows) is only available in Firefox (which requires the Jazz plug-in).
+The *Microsoft GS Wavetable Synth* (part of Windows) is only available in Firefox (which requires the Jazz plug-in).
 
 More background information about the Assistant Composer/Performer software can be found at<br /> http://james-ingram-act-two.de/moritz3/moritz3.html
 
