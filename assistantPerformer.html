@@ -53,13 +53,12 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
 					<option value="path=Study 3 sketch 1/Study 3 sketch 1 (2 pages)">Study 3 sketch 1 (pages)</option>
 					<option value="path=Study 3 sketch 2.1 - with input/Study 3 sketch 2 (scroll), inputHandler=keyboard1">Study 3 sketch 2.1 - with input (scroll)</option>
 					<option value="path=Study 3 sketch 2.2 - less visible/Study 3 sketch 2 (scroll), inputHandler=keyboard1">Study 3 sketch 2.2 - less visible (scroll)</option>
+					<option value="path=Pianola Music/Pianola Music (scroll)">Pianola Music 1967 (scroll)</option>
 				</select>
 				<select id="outputDeviceSelect"
 						class="deviceSelector" onchange="_AP.controls.doControl('outputDeviceSelect')"></select>
 			</div>
-			<!--<div id="aboutScoreLinkDiv" style="padding-top: 2px; display:none; text-align:center; font-size:11px">
-				<a id="aboutScoreLink" href="" target="_blank">About this score...</a>
-			</div>-->
+			<div id="waitingForSoundFontDiv" class="helpText" style="display:none; padding-top:3px">Please wait, the soundfont is still loading...</div>
 			<div id="globalSpeedDiv" class="globalSpeedPanel" style="display:none;">
 				<label id="globalSpeedInputNumberLabel1" for="globalSpeedInput">
 					speed:
@@ -284,6 +283,16 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
 				-->
 	</div>
 
+	<script src="../WebMIDI/namespace.js" type="text/javascript"></script>
+	<script src="../WebMIDI/constants.js" type="text/javascript"></script>
+	<script src="../WebMIDI/utilities.js" type="text/javascript"></script>
+
+	<script src="../sf2Synth1/riffParser.js"></script>
+	<script src="../sf2Synth1/soundFontParser.js"></script>
+	<script src="../sf2Synth1/soundFont.js"></script>
+	<script src="../sf2Synth1/soundFontSynthNote.js"></script>
+	<script src="../sf2Synth1/sf2Synth1.js"></script>
+
 	<script src="shim/WebMIDIAPI.min.js" type="text/javascript"></script>
 
 	<script src="ap/Namespace.js" type="text/javascript"></script>
@@ -309,8 +318,9 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
 	<script src="ap/Score.js" type="text/javascript"></script>
 	<script src="ap/TracksControl.js" type="text/javascript"></script>
 	<script src="ap/Controls.js" type="text/javascript"></script>
-	<script src="ap/Main.js" type="text/javascript"></script>
 
 	<script src="ap/Keyboard1.js" type="text/javascript"></script>
+
+	<script src="ap/Main.js" type="text/javascript"></script>
 </body>
 </html>

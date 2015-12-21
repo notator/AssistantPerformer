@@ -10,8 +10,8 @@
 *  Assistant Performer's Graphic User Interface. 
 */
 
-/*jslint bitwise: false, nomen: true, plusplus: true, white: true */
-/*global _AP: false,  window: false,  document: false, performance: false, console: false, alert: false, XMLHttpRequest: false */
+/*jslint white */
+/*global WebMIDI, _AP,  window,  document */
 
 _AP.namespace('_AP.controls');
 
@@ -19,7 +19,9 @@ _AP.controls = (function(document, window)
 {
     "use strict";
 
-    var
+	var
+	sf2Synth,
+
     tracksControl = _AP.tracksControl,
     Score = _AP.score.Score,
     sequence = _AP.sequence,
@@ -196,20 +198,27 @@ _AP.controls = (function(document, window)
 
     setMainOptionsState = function(mainOptionsState)
     {
-        var
+    	var
         scoreIndex = globalElements.scoreSelect.selectedIndex,
         outputDeviceIndex = globalElements.outputDeviceSelect.selectedIndex;
 
         switch(mainOptionsState)
         {
             case "toFront": // set main options visible with the appropriate controls enabled/disabled
-            	globalElements.titleOptionsDiv.style.visibility = "visible";
-                globalElements.globalSpeedDiv.style.display = "none";
+            	globalElements.titleOptionsDiv.style.visibility = "visible";	
+            	globalElements.waitingForSoundFontDiv.style.display = "none";
+            	globalElements.globalSpeedDiv.style.display = "none";
                 globalElements.startRuntimeButton.style.display = "none";
                 globalElements.svgRuntimeControls.style.visibility = "hidden";
                 globalElements.svgPagesFrame.style.visibility = "hidden";
 
-            	// Note that the midi input device does not have to be set in order to enable performance.
+                if(outputDeviceIndex === 1 && (globalElements.scoreSelect.options[scoreIndex].soundFont === undefined))
+                {
+                	// outputDeviceIndex 1 (the Resident SoundFont Synth) can only be
+                	// selected if the score can be played using a soundFont.
+                	globalElements.waitingForSoundFontDiv.style.display = "block"; 
+                }
+            	else // Note that the midi input device does not have to be set in order to enable performance.
                 if(scoreIndex > 0 && outputDeviceIndex > 0)
                 {
                 	globalElements.globalSpeedDiv.style.display = "block";
@@ -607,7 +616,7 @@ _AP.controls = (function(document, window)
 	},
 
 	// sets the options in the output device selector
-	setMIDIOutputDeviceSelector = function(midiAccess)
+	setMIDIOutputDeviceSelector = function(midiAccess, sf2Synth)
 	{
 		var
 		option,
@@ -618,6 +627,12 @@ _AP.controls = (function(document, window)
 		option = document.createElement("option");
 		option.text = "choose a MIDI output device";
 		os.add(option, null);
+
+		option = document.createElement("option");
+		option.outputDevice = sf2Synth;
+		option.text = "Resident SoundFont Synth";
+		os.add(option, null);
+
 		midiAccess.outputs.forEach(function(port)
 		{
 			//console.log('output id:', port.id, ' output name:', port.name);
@@ -652,7 +667,7 @@ _AP.controls = (function(document, window)
 				}
 				break;
 			case "output":
-				setMIDIOutputDeviceSelector(midiAccess);
+				setMIDIOutputDeviceSelector(midiAccess, sf2Synth);
 				// Output devices are currently handled differently from the input devices...
 				// (I don't want the output device selector's selected index to change 
 				// every time an input device is connected or disconnected.)
@@ -682,14 +697,16 @@ _AP.controls = (function(document, window)
 
     // Defines the window.svgLoaded(...) function.
     // Sets up the pop-up menues for scores and MIDI input and output devices.
+	// Loads SoundFonts, adding them to the relevant scoreSelect option(s).
     init = function(mAccess)
     {
-        function getGlobalElements()
+		function getGlobalElements()
         {
         	globalElements.titleOptionsDiv = document.getElementById("titleOptionsDiv");
             globalElements.inputDeviceSelect = document.getElementById("inputDeviceSelect");
             globalElements.scoreSelect = document.getElementById("scoreSelect");
             globalElements.outputDeviceSelect = document.getElementById("outputDeviceSelect");
+            globalElements.waitingForSoundFontDiv = document.getElementById("waitingForSoundFontDiv");
             globalElements.globalSpeedDiv = document.getElementById("globalSpeedDiv");
             globalElements.globalSpeedInput = document.getElementById("globalSpeedInput");
             globalElements.startRuntimeButton = document.getElementById("startRuntimeButton");
@@ -700,9 +717,85 @@ _AP.controls = (function(document, window)
 
         // resets the score selector in case the browser has cached the last value
         function initScoreSelector(runningMarkerHeightChanged)
-        {
+		{
+        	// There is one soundFont per score type.
+        	// The soundFont is added as an attribute to the scoreSelect option for the score.
+        	function loadSoundFonts(scoreSelect)
+        	{
+        		var
+				soundFontIndex = 0,
+				soundFontData =
+				[
+					//{
+					//	name: "SongSix",
+					//	url: "http://james-ingram-act-two.de/soundFonts/Arachno/SongSix.sf2",
+					//	presetIndices: [60, 67, 72, 74, 76, 78, 79, 115, 117, 122, 123, 124, 125, 126, 127],
+					//	scoreSelectIndices: [1]
+					//},
+					//{
+					//	name: "Study2",
+					//	url: "http://james-ingram-act-two.de/soundFonts/Arachno/Study2.sf2",
+					//	presetIndices: [8, 9, 10, 11, 12, 13, 14, 15, 24, 25, 26, 27],
+					//	scoreSelectIndices: [2]
+					//},
+					//{
+					//	name: "Study3Sketch",
+					//	url: "http://james-ingram-act-two.de/soundFonts/Arachno/Study3Sketch.sf2",
+					//	presetIndices: [72, 78, 79, 113, 115, 117, 118],
+					//	scoreSelectIndices: [3, 4, 5, 6]
+					//},
+					{
+						name: "Grand Piano",
+						url: "http://james-ingram-act-two.de/soundFonts/Arachno/Arachno1.0selection-grand piano.sf2",
+						presetIndices: [0],
+						scoreSelectIndices: [7]
+					}
+				];
+
+        		// Note that XMLHttpRequest does not work with local files (localhost:).
+        		// To make it work, run the app from the web (http:).
+        		function loadSoundFontAsynch()
+        		{
+        			var
+					soundFont,
+					soundFontURL = soundFontData[soundFontIndex].url,
+					soundFontName = soundFontData[soundFontIndex].name,
+					presetIndices = soundFontData[soundFontIndex].presetIndices,
+					scoreSelectIndices = soundFontData[soundFontIndex].scoreSelectIndices;
+
+        			function onLoad()
+        			{
+        				var i, option;
+
+        				soundFont.init();
+        				for(i = 0; i < scoreSelectIndices.length; ++i)
+        				{
+        					option = scoreSelect.options[scoreSelectIndices[i]];
+        					option.soundFont = soundFont;
+        				}
+
+        				setMainOptionsState("toFront");
+
+        				console.log(soundFontName + ": loading complete.");
+
+        				soundFontIndex++;
+        				if(soundFontIndex < soundFontData.length)
+        				{
+        					console.log('loading the "' + soundFontData[soundFontIndex].name + '" soundFont (' + (soundFontIndex + 1) + "/" + soundFontData.length + ")...");
+        					loadSoundFontAsynch();
+        				}
+        			}
+
+        			console.log('loading the "' + soundFontName + '" soundFont (' + (soundFontIndex + 1) + "/" + soundFontData.length + ")...");
+        			soundFont = new WebMIDI.soundFont.SoundFont(soundFontURL, soundFontName, presetIndices, onLoad);
+        		}
+
+        		loadSoundFontAsynch();
+        	}
+
             globalElements.scoreSelect.selectedIndex = 0;
             score = new Score(runningMarkerHeightChanged); // an empty score, with callback function
+            loadSoundFonts(globalElements.scoreSelect);
         }
 
         function getControlLayers(document)
@@ -753,10 +846,13 @@ _AP.controls = (function(document, window)
     	{
     		midiAccess = mAccess;
 
+			sf2Synth = new WebMIDI.sf2Synth1.Sf2Synth1();
+			sf2Synth.init();
+
     		getGlobalElements();
 
     		setMIDIInputDeviceSelector(midiAccess);
-    		setMIDIOutputDeviceSelector(midiAccess);
+    		setMIDIOutputDeviceSelector(midiAccess, sf2Synth);
 
     		// update the device selectors when devices get connected, disconnected, opened or closed
     		midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
@@ -1068,21 +1164,23 @@ _AP.controls = (function(document, window)
 
     	try
     	{
-    		// setMIDIDevices is now called in beginRuntime().
-    		// There is no reason to react here to the inputDeviceSelect changing.
-    		//if(controlID === "inputDeviceSelect")
-    		//{
-    		//	//setMIDIDevices();
-    		//	if(globalElements.scoreSelect.selectedIndex > 0)
-    		//	{
-    		//		setScore();
-    		//	}
-    		//}
-
     		if(controlID === "scoreSelect")
     		{
     			if(globalElements.scoreSelect.selectedIndex > 0)
     			{
+    				if(globalElements.scoreSelect.selectedIndex === 7) // Pianola music
+    				{
+    					globalElements.outputDeviceSelect.options[1].disabled = false;
+    				}
+					else
+    				{
+    					if(globalElements.outputDeviceSelect.selectedIndex === 1) // resident synth
+    					{
+    						globalElements.outputDeviceSelect.selectedIndex = 0;
+    					}
+    					globalElements.outputDeviceSelect.options[1].disabled = true;
+    				}
+					
     				setScore();
     			}
     			else
@@ -1184,6 +1282,7 @@ _AP.controls = (function(document, window)
     	{
     		var i,
 			inSelector = document.getElementById("inputDeviceSelect"),
+			scoreSelector = document.getElementById("scoreSelect"),
 			outSelector = document.getElementById("outputDeviceSelect");
 
     		// inputDevices are opened and closed by the input event handling module (e.g. Keyboard1)
@@ -1209,6 +1308,11 @@ _AP.controls = (function(document, window)
     		{
     			options.outputDevice = outSelector.options[outSelector.selectedIndex].outputDevice;
     			options.outputDevice.open();
+    		}
+
+    		if(options.outputDevice.setSoundFont !== undefined)
+    		{
+    			options.outputDevice.setSoundFont(scoreSelector[scoreSelector.selectedIndex].soundFont);
     		}
     	}
 
