@@ -42,6 +42,7 @@ _AP.sequence = (function(window)
     previousTimestamp = null, // nextMoment()
     previousMomtMsPos, // nextMoment()
     currentMoment = null, // nextMoment(), resume(), tick()
+	startMarkerMsPosition,
     endMarkerMsPosition,
 
     // used by setState()
@@ -155,13 +156,22 @@ _AP.sequence = (function(window)
     // does nothing if the sequence is already stopped
     stop = function()
     {
-        var performanceMsDuration;
+    	var delay;
+
+		function stopAfterDelay()
+    	{
+			var performanceMsDuration;
+
+			performanceMsDuration = Math.ceil(performance.now() - performanceStartTime);
+			reportEndOfPerformance(sequenceRecording, performanceMsDuration);
+    	}
 
         if(!isStopped())
         {
-            performanceMsDuration = Math.ceil(performance.now() - performanceStartTime);
-            setState("stopped");
-            reportEndOfPerformance(sequenceRecording, performanceMsDuration);
+        	setState("stopped");   // stops tick() while waiting to call stopAfterDelay().
+			// wait for the duration of the final moment
+        	delay = (endMarkerMsPosition - startMarkerMsPosition) - Math.ceil(performance.now() - performanceStartTime);
+        	window.setTimeout(stopAfterDelay, delay);
         }
     },
 
@@ -203,7 +213,7 @@ _AP.sequence = (function(window)
 
         if(track === null)
         {
-            stop(); // calls reportEndOfPerformance(). An assisted performance waits for a noteOff...
+            stop(); // calls reportEndOfPerformance(). An assisted performance (Keyboard1) waits for a noteOff...
         }
         else
         {
@@ -475,6 +485,7 @@ _AP.sequence = (function(window)
         sequenceRecording = recording; // can be undefined or null
 
         performanceStartTime = performance.now();
+        startMarkerMsPosition = startMarkerMsPosInScore
         endMarkerMsPosition = endMarkerMsPosInScore;
         startTimeAdjustedForPauses = performanceStartTime;
 
