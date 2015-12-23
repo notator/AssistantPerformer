@@ -154,7 +154,7 @@ _AP.sequence = (function(window)
     },
 
     // does nothing if the sequence is already stopped
-    stop = function()
+    stop = function(stoppedByStopControl)
     {
     	var delay;
 
@@ -169,9 +169,13 @@ _AP.sequence = (function(window)
         if(!isStopped())
         {
         	setState("stopped");   // stops tick() while waiting to call stopAfterDelay().
-			// wait for the duration of the final moment
-        	delay = (endMarkerMsPosition - startMarkerMsPosition) - Math.ceil(performance.now() - performanceStartTime);
-        	window.setTimeout(stopAfterDelay, delay);
+        	
+        	if(!stoppedByStopControl)
+        	{
+        		// wait for the duration of the final moment
+        		delay = (endMarkerMsPosition - startMarkerMsPosition) - Math.ceil(performance.now() - performanceStartTime);
+        		window.setTimeout(stopAfterDelay, delay);
+        	}
         }
     },
 
@@ -213,7 +217,7 @@ _AP.sequence = (function(window)
 
         if(track === null)
         {
-            stop(); // calls reportEndOfPerformance(). An assisted performance (Keyboard1) waits for a noteOff...
+            stop(false); // calls reportEndOfPerformance(). An assisted performance (Keyboard1) waits for a noteOff...
         }
         else
         {
