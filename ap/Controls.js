@@ -723,6 +723,7 @@ _AP.controls = (function(document, window)
         	function loadSoundFonts(scoreSelect)
         	{
         		var
+				firstSoundFontLoaded = false,
 				soundFontIndex = 0,
 				soundFontData =
 				[
@@ -767,11 +768,51 @@ _AP.controls = (function(document, window)
         			{
         				var i, option;
 
+        				function loadFirstSoundFont(synth, soundFont)
+        				{
+        					var channelIndex;
+
+        					synth.setSoundFont(soundFont);
+
+        					// For some reason, the first noteOn to be sent by the host, reacts only after a delay.
+        					// This noteOn/noteOff pair is sent so that the *next* noteOn will react immediately.
+        					// This is actually a kludge. I have been unable to solve the root problem.
+        					// (Is there an uninitialized buffer somewhere?)
+        					if(synth.setMasterVolume)
+        					{
+        						// consoleSf2Synth can't/shouldn't do this.
+        						// (It has no setMasterVolume function)
+        						synth.setMasterVolume(0);
+        						for(channelIndex = 0; channelIndex < 16; ++channelIndex)
+        						{
+        							if(channelIndex !== 9)
+									{
+        								synth.noteOn(channelIndex, 64, 100);
+        								synth.noteOff(channelIndex, 64, 100);
+									}
+        						}
+        					}
+        					// Wait for the above noteOn/noteOff kludge to work.
+        					setTimeout(function()
+        					{
+        						if(synth.setMasterVolume)
+        						{
+        							synth.setMasterVolume(16384);
+        						}
+        						firstSoundFontLoaded = true;
+        					}, 2400);
+        				}
+
         				soundFont.init();
         				for(i = 0; i < scoreSelectIndices.length; ++i)
         				{
         					option = scoreSelect.options[scoreSelectIndices[i]];
         					option.soundFont = soundFont;
+        				}
+
+        				if(!firstSoundFontLoaded)
+        				{
+        					loadFirstSoundFont(sf2Synth, soundFont);
         				}
 
         				setMainOptionsState("toFront");
