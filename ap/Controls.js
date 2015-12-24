@@ -248,7 +248,7 @@ _AP.controls = (function(document, window)
 
     setStopped = function()
     {
-        player.stop(true);
+        player.stop();
 
         score.moveRunningMarkerToStartMarker();
 
