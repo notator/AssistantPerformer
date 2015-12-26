@@ -785,11 +785,8 @@ _AP.controls = (function(document, window)
         						synth.setMasterVolume(0);
         						for(channelIndex = 0; channelIndex < 16; ++channelIndex)
         						{
-        							if(channelIndex !== 9)
-									{
-        								synth.noteOn(channelIndex, 64, 100);
-        								synth.noteOff(channelIndex, 64, 100);
-									}
+        							synth.noteOn(channelIndex, 64, 100);
+        							synth.noteOff(channelIndex, 64, 100);
         						}
         					}
         					// Wait for the above noteOn/noteOff kludge to work.
