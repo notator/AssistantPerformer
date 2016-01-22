@@ -81,7 +81,7 @@ _AP.moment = (function ()
 
     // Adds the moment2.messages to the end of the current messages using
     // msPositionInChord attributes to check synchronousness.
-    // Sets restStart, chordStart if necessary.
+    // Sets this.systemIndex if necessary to flag that this is a possible place to align a runningMarker.
     // Throws an exception if moment2.msPositionInChord !== this.msPositionInChord.
     Moment.prototype.mergeMoment = function (moment2)
     {
@@ -89,13 +89,9 @@ _AP.moment = (function ()
 
         console.assert(msPositionInChord === moment2.msPositionInChord, "Attempt to merge moments having different msPositionInChord values.");
 
-        if (moment2.chordStart !== undefined)
+        if (moment2.systemIndex !== undefined)
         {
-            Object.defineProperty(this, "chordStart", { value: true, writable: false });
-        }
-        else if (moment2.restStart !== undefined)
-        {
-            Object.defineProperty(this, "restStart", { value: true, writable: false });
+        	Object.defineProperty(this, "systemIndex", { value: moment2.systemIndex, writable: false });
         }
 
         this.messages = this.messages.concat(moment2.messages);

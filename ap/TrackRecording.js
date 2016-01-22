@@ -156,10 +156,6 @@ _AP.trackRecording = (function ()
     // moment in the trackRecording.
     // An exception is thrown if either the current last moment's or the new moment's
     // timestamp has the value UNDEFINED_TIMESTAMP.
-    // This function defines and undefines an isInChord attribute for this trackRecording when
-    // the moment argument has a .chordStart or .restStart attribute respectively.
-    // .isInChord is used to decide whether or not to record controller information 
-    // being created by a live performer. See addLivePerformersControlMoment() below.
     TrackRecording.prototype.addLiveScoreMoment = function (moment)
     {
         var moments = this.moments;
@@ -171,15 +167,6 @@ _AP.trackRecording = (function ()
         else
         {
             _addLiveMoment(moment, moments);
-        }
-
-        if (moment.restStart !== undefined && this.isInChord !== undefined)
-        {
-            delete this.isInChord;
-        }
-        else if (moment.chordStart !== undefined)
-        {
-            this.isInChord = true;            
         }
     };
 
@@ -227,17 +214,10 @@ _AP.trackRecording = (function ()
     // Add a moment to the end of this TrackRecording using the moment's (absolute) timestamp
     // field to determine whether or not to merge the moment with the current last
     // moment in the trackRecording.
-    // This function should only be called if this trackRecording's .isInChord attribute is
-    // defined. It therefore throws an exception if it is not.
-    // An exception is also thrown if either the current last moment's or the new
+    // An exception is thrown if either the current last moment's or the new
     // moment's timestamp has the value UNDEFINED_TIMESTAMP.
     TrackRecording.prototype.addLivePerformersControlMoment = function (moment)
     {
-        if (this.isInChord === undefined)
-        {
-            throw "Error: this.isInChord must be defined here.";
-        }
-
         _addLiveMoment(moment, this.moments);
     };
 

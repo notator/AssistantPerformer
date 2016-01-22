@@ -20,8 +20,6 @@
 *       isStopped()
 *       isPaused()
 *       isRunning()
-*       
-*       setSpeedFactor()
 */
 
 /*jslint bitwise, white: true */
@@ -37,7 +35,6 @@ _AP.sequence = (function(window)
 	sendWithTimeStamp = true,
 	tracks,
 
-    speedFactor = 1.0, // nextMoment(), setSpeedFactor()
     previousTimestamp = null, // nextMoment()
     previousMomtMsPos, // nextMoment()
     currentMoment = null, // nextMoment(), resume(), tick()
@@ -50,9 +47,10 @@ _AP.sequence = (function(window)
     paused = false, // nextMoment(), pause(), isPaused()
 
     reportEndOfPerformance, // callback. Can be null or undefined. Set in play().
-    reportMsPositionInScore,  // callback. Can be null or undefined. Set in play().
+    reportNextMIDIObject,  // callback. Can be null or undefined. Set in play().
     lastReportedMsPosition = -1, // set by tick() used by nextMoment()
     msPositionToReport = -1,   // set in nextMoment() and used/reset by tick()
+	systemIndexToReport = -1, // set in nextMoment() and used/reset by tick()
 
     // (performance.now() - performanceStartTime) is the real time elapsed since the start of the performance.
     performanceStartTime = -1,  // set in play(), used by stop(), run()
@@ -227,11 +225,12 @@ _AP.sequence = (function(window)
         {
         	nextMomtMsPos = trackNextMomtMsPos;
 
-            if((nextMomt.chordStart || nextMomt.restStart)
+            if((nextMomt.systemIndex !== undefined)
             && (nextMomtMsPos > lastReportedMsPosition))
             {
                 // the position will be reported by tick() when nextMomt is sent.
-                msPositionToReport = nextMomtMsPos;
+            	msPositionToReport = nextMomtMsPos;
+            	systemIndexToReport = nextMomt.systemIndex;
                 //console.log("msPositionToReport=%i", msPositionToReport);
             }
 
@@ -241,7 +240,7 @@ _AP.sequence = (function(window)
             }
             else
             {
-                nextMomt.timestamp = ((nextMomtMsPos - previousMomtMsPos) * speedFactor) + previousTimestamp;
+                nextMomt.timestamp = (nextMomtMsPos - previousMomtMsPos) + previousTimestamp;
             }
 
             previousTimestamp = nextMomt.timestamp;
@@ -328,7 +327,7 @@ _AP.sequence = (function(window)
         {
             if(msPositionToReport >= 0)
             {
-                reportMsPositionInScore(msPositionToReport);
+            	reportNextMIDIObject(msPositionToReport, systemIndexToReport);
                 lastReportedMsPosition = msPositionToReport; // lastReportedMsPosition is used in nextMoment() above.
                 msPositionToReport = -1;
             }
@@ -415,16 +414,16 @@ _AP.sequence = (function(window)
     // reaches the endMarkerMsPosition (see play(), or stop() is called. Can be undefined or null.
     // It is called in this file as:
     //      reportEndOfPerformance(sequenceRecording, performanceMsDuration);
-    // The reportMsPosCallback argument is a callback function which reports the current msPositionInScore back
-    // to the GUI while performing. Can be undefined or null.
+    // The reportNextMIDIObjectCallback argument is a callback function which reports the current
+	// msPositionInScore and systemIndex back to the GUI while performing.
     // It is called here as:
-    //      reportMsPositionInScore(msPositionToReport);
+    //      reportNextMIDIObject(msPositionToReport, systemIndexToReport);
     // The msPosition it passes back is the original number of milliseconds from the start of
     // the score (taking the global speed option into account). This value is used to identify
     // chord and rest symbols in the score, and so to synchronize the running cursor.
     // Moments whose msPositionInScore is to be reported are given chordStart or restStart
     // attributes before play() is called.
-    init = function(outputDeviceArg, reportEndOfPerfCallback, reportMsPosCallback)
+    init = function(outputDeviceArg, reportEndOfPerfCallback, reportNextMIDIObjectCallback)
     {
         if(outputDeviceArg === undefined || outputDeviceArg === null)
         {
@@ -432,7 +431,7 @@ _AP.sequence = (function(window)
         }
 
         if(reportEndOfPerfCallback === undefined || reportEndOfPerfCallback === null
-            || reportMsPosCallback === undefined || reportMsPosCallback === null)
+            || reportNextMIDIObjectCallback === undefined || reportNextMIDIObjectCallback === null)
         {
         	throw "Error: both the position reporting callbacks must be defined.";
         }
@@ -442,7 +441,7 @@ _AP.sequence = (function(window)
         tracks = this.outputTracks;
         outputDevice = outputDeviceArg;
         reportEndOfPerformance = reportEndOfPerfCallback;
-        reportMsPositionInScore = reportMsPosCallback;
+        reportNextMIDIObject = reportNextMIDIObjectCallback;
 
         initChannelResetMessages(tracks.length);
     },
@@ -510,11 +509,6 @@ _AP.sequence = (function(window)
         run();
     },
 
-    setSpeedFactor = function(factor)
-    {
-        speedFactor = factor;
-    },
-
     publicAPI =
     {
         init: init,
@@ -525,9 +519,7 @@ _AP.sequence = (function(window)
         stop: stop,
         isStopped: isStopped,
         isPaused: isPaused,
-        isRunning: isRunning,
-
-        setSpeedFactor: setSpeedFactor
+        isRunning: isRunning
     };
     // end var
 

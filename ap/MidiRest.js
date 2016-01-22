@@ -10,8 +10,8 @@
  *      MidiRest(timeObject) // MidiRest constructor  
  */
 
-/*jslint bitwise: false, nomen: true, plusplus: true, white: true */
-/*global _AP: false,  window: false,  document: false, performance: false, console: false, alert: false, XMLHttpRequest: false */
+/*jslint white */
+/*global WebMIDI, _AP,  window,  document */
 
 _AP.namespace('_AP.midiRest');
 
@@ -21,7 +21,7 @@ _AP.midiRest = (function()
     // begin var
     var
     // A MidiRest has the same structure as a MidiChord, but its moments array always contains a single moment.
-    // moments[0] has a restStart attribute.
+    // moments[0] has a systemIndex attribute.
     // moments[0].messages is initially empty, but finalChordOffMessages can be added while a sequence is being created.
     MidiRest = function(timeObject)
     {
@@ -29,12 +29,14 @@ _AP.midiRest = (function()
         {
             return new MidiRest(timeObject);
         }
+
         Object.defineProperty(this, "msPositionInScore", { value: timeObject.msPosition, writable: false });
         Object.defineProperty(this, "msDurationInScore", { value: timeObject.msDuration, writable: false });
         Object.defineProperty(this, "moments", { value: [], writable: false });
         Object.defineProperty(this, "currentMoment", { value: new _AP.moment.Moment(0), writable: false });
 
-        Object.defineProperty(this.currentMoment, "restStart", { value: true, writable: false });
+        Object.defineProperty(this.currentMoment, "systemIndex", { value: timeObject.systemIndex, writable: false });
+
         this.moments.push(this.currentMoment);
 
         return this;

@@ -362,12 +362,12 @@ _AP.controls = (function(document, window)
     // callback called by a performing sequence. Reports the msPositionInScore of the
     // Moment curently being sent. When all the events in the span have been played,
     // reportEndOfPerformance() is called (see above).
-    reportMsPos = function(msPositionInScore)
+    reportMsPos = function(msPositionInScore, systemIndex)
     {
         //console.log("Controls: calling score.advanceRunningMarker(msPosition), msPositionInScore=" + msPositionInScore);
         // If there is a graphic object in the score having msPositionInScore,
         // the running cursor is aligned to that object.
-        score.advanceRunningMarker(msPositionInScore);
+        score.advanceRunningMarker(msPositionInScore, systemIndex);
     },
 
     //svgControlsState can be 'disabled', 'stopped', 'paused', 'playing', 'settingStart', 'settingEnd'.

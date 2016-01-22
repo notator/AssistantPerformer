@@ -12,8 +12,8 @@
 */
 
 
-/*jslint bitwise: false, nomen: true, plusplus: true, white: true, maxerr: 100 */
-/*global _AP: false,  window: false,  document: false, performance: false, console: false, alert: false, XMLHttpRequest: false */
+/*jslint white */
+/*global WebMIDI, _AP,  window,  document, performance */
 
 _AP.namespace('_AP.score');
 
@@ -39,7 +39,6 @@ _AP.score = (function (document)
 	ENABLED_INPUT_TITLE_COLOR = "#3333EE",
 	DISABLED_PINK_COLOR = "#FFBBBB",
 
-    MAX_MIDI_CHANNELS = 16,
 	outputTrackPerMidiChannel = [], // only output tracks
 
 	// This array is initialized to all tracks on (=true) when the score is loaded,
@@ -1231,20 +1230,20 @@ _AP.score = (function (document)
     // Advances the running marker to msPosition (in any channel)
     // if msPosition is >= that object's msPosition. Otherwise does nothing.
     // Also does nothing when the end of the score is reached.
-    advanceRunningMarker = function(msPosition)
+    advanceRunningMarker = function(msPosition, systemIndex)
     {
-    	if(msPosition >= systems[runningMarker.systemIndex()].endMsPosition)
+    	if(systemIndex > runningMarker.systemIndex())
     	{
     		// Move runningMarker to msPosition in the next system.
     		runningMarker.setVisible(false);
-    		if(runningMarker.systemIndex() < (systems.length - 1) && endMarkerMsPosition() > systems[runningMarker.systemIndex()].endMsPosition)
+    		if(runningMarker.systemIndex() < endMarker.systemIndex())
     		{
     			runningMarker = systems[runningMarker.systemIndex() + 1].runningMarker;
     			runningMarker.moveTo(msPosition);
     			runningMarker.setVisible(true);
+    			// callback for auto scroll
+    			runningMarkerHeightChanged(runningMarker.getYCoordinates());
     		}
-    		// callback for auto scroll
-    		runningMarkerHeightChanged(runningMarker.getYCoordinates());
     	}
     	else
     	{
@@ -1282,20 +1281,22 @@ _AP.score = (function (document)
     	{
     		var systemElem,
                 i, systemIndex,
-                lastSystemTimeObjects, finalBarlineMsPosition;
+                lastSystemTimeObjects;
 
-    		function getSystemTimeObjects(system, viewBoxScale1, systemElem)
+    		function getSystemTimeObjects(systems, systemIndex, viewBoxScale1, systemElem)
     		{
-    			var i, j, systemChildren, systemChildClass,
+    			var i, j,
+					system = systems[systemIndex],
+					systemChildren, systemChildClass,
                     staff, staffChildren, staffChildClass, staffChild,
                     voice,
                     staffIndex = 0,
                     voiceIndex = 0;
 
-    			// There is a timeObject for every input and output chord or rest.
+    			// There is a timeObject for every input and output chord or rest and the final barline in each voice.
     			// All timeObjects are allocated alignmentX and msDuration fields.
 				// Chord timeObjects are allocated either a midiChordDef or an inputChordDef field depending on whether they are input or output chords.
-    			function getTimeObjects(noteObjectElems)
+    			function getTimeObjects(systemIndex, noteObjectElems)
     			{
     				var timeObjects = [], noteObjectClass,
                         timeObject, i, j, length, noteObjectElem, chordChildElems, otpmc = outputTrackPerMidiChannel;
@@ -1323,6 +1324,7 @@ _AP.score = (function (document)
     					{
     						timeObject = {};
     						timeObject.alignmentX = parseFloat(noteObjectElem.getAttribute('score:alignmentX')) / viewBoxScale1;
+    						timeObject.systemIndex = systemIndex;
     						chordChildElems = noteObjectElem.children;
     						for(j = 0; j < chordChildElems.length; ++j)
     						{
@@ -1348,7 +1350,18 @@ _AP.score = (function (document)
     					{
     						timeObject = {};
     						timeObject.alignmentX = parseFloat(noteObjectElem.getAttribute('score:alignmentX') / viewBoxScale1);
+    						timeObject.systemIndex = systemIndex;
     						timeObject.msDuration = parseFloat(noteObjectElem.getAttribute('score:msDuration'));
+    						timeObjects.push(timeObject);
+    					}
+    					else if(noteObjectClass === null && i === length - 1)
+    					{
+    						timeObject = {}; // the final barline in the voice (used when changing speed)
+    						timeObject.msDuration = 0;
+    						timeObject.systemIndex = systemIndex;
+    						// msPosition and alignmentX are set later
+    						// timeObject.msPosition = systems[systemIndex + 1].startMsPosition;
+    						// timeObject.alignmentX = system.right;
     						timeObjects.push(timeObject);
     					}
     				}
@@ -1371,7 +1384,7 @@ _AP.score = (function (document)
     						if(staffChildClass === 'outputVoice' || staffChildClass === 'inputVoice')
     						{
     							voice = staff.voices[voiceIndex++];
-    							voice.timeObjects = getTimeObjects(staffChild.children);
+    							voice.timeObjects = getTimeObjects(systemIndex, staffChild.children);
     						}
     					}
     					voiceIndex = 0;
@@ -1379,12 +1392,12 @@ _AP.score = (function (document)
     			}
     		}
 
-    		// Sets the msPosition of each timeObject (input and output rests and chords) in the voice.timeObjectArrays
-    		// Returns the msPosition of the final barline in the score.
+    		// Sets the msPosition of each timeObject (input and output rests and chords, and each voice's final barline)
+			// in the voice.timeObjectArrays.
     		function setMsPositions(systems)
     		{
     			var nStaves, staffIndex, nVoices, voiceIndex, nSystems, systemIndex, msPosition,
-                    timeObjects, nTimeObjects, tIndex, finalMsPosition;
+                    timeObjects, nTimeObjects, tIndex;
 
     			nSystems = systems.length;
     			nStaves = systems[0].staves.length;
@@ -1404,90 +1417,35 @@ _AP.score = (function (document)
     							msPosition += timeObjects[tIndex].msDuration;
     						}
     					}
-    					finalMsPosition = msPosition;
     					msPosition = 0;
     				}
+
     			}
-    			return finalMsPosition;
     		}
 
-    		// Sets system.startMsPosition and system.endMsPosition. These values are needed for selecting
-    		// runningMarkers.
-    		// Except in the final system, system.endMsPosition is equal to  the startMsPosition of
-    		// the following system. The final system's endMsPosition is set to the finalBarlineMsPosition
-    		// argument.
-    		// To be precise: system.StartMsPosition is the earliest msPosition of any timeObject
-    		// in any voice.timeObjects. This allows for the "tied notes" which Moritz now supports...
-    		//
-    		// This function also adds a finalBarline (having msDuration=0, msPosition and alignmentX)
-    		// to the end of each voice.timeObjects array. These values are used by endMarkers.
-    		function setSystemMsPositionsAndAddFinalBarlineToEachVoice(systems, finalBarlineMsPosition)
+			// The rightmost barlines all need an AlignmentX to which the EndMarker can be set.
+    		function setRightmostBarlinesAlignmentX(systems)
     		{
-    			var nSystems = systems.length,
-                    nSystemsMinusOne = systems.length - 1,
-                    nStaves = systems[0].staves.length,
-                    nVoices,
-                    systemIndex, staffIndex, voiceIndex,
-                    system, voice, finalBarline;
+    			var i, nSystems = systems.length, system,
+				    j, nStaves, staff,
+					k, nVoices, voice,
+					finalBarline,
+					rightmostAlignmentX = systems[0].right;
 
-    			function smallestMsPosition(system)
+    			for(i = 0; i < nSystems; ++i)
     			{
-    				var staffIndex, voiceIndex,
-                        nStaves = system.staves.length, nVoices,
-                        minMsPosition = Infinity,
-                        voice, voiceMsPosition;
-
-    				for(staffIndex = 0; staffIndex < nStaves; ++staffIndex)
+    				system = systems[i];
+    				nStaves = system.staves.length;
+    				for(j = 0; j < nStaves; ++j)
     				{
-    					nVoices = system.staves[staffIndex].voices.length;
-    					for(voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
+    					staff = system.staves[j];
+    					nVoices = staff.voices.length;
+    					for(k = 0; k < nVoices; ++k)
     					{
-    						voice = system.staves[staffIndex].voices[voiceIndex];
-    						voiceMsPosition = voice.timeObjects[0].msPosition;
-    						minMsPosition = (minMsPosition < voiceMsPosition) ? minMsPosition : voiceMsPosition;
+    						voice = staff.voices[k];
+    						finalBarline = voice.timeObjects[voice.timeObjects.length - 1];
+    						finalBarline.alignmentX = rightmostAlignmentX;
     					}
-    				}
-    				return minMsPosition;
-    			}
-
-    			systems[0].startMsPosition = 0;
-    			if(nSystems > 1) // set all but last system
-    			{
-    				for(systemIndex = 0; systemIndex < nSystemsMinusOne; ++systemIndex)
-    				{
-    					system = systems[systemIndex];
-    					system.endMsPosition = smallestMsPosition(systems[systemIndex + 1]);
-    					systems[systemIndex + 1].startMsPosition = system.endMsPosition;
-    					for(staffIndex = 0; staffIndex < nStaves; ++staffIndex)
-    					{
-    						nVoices = system.staves[staffIndex].voices.length;
-    						for(voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
-    						{
-    							voice = system.staves[staffIndex].voices[voiceIndex];
-    							finalBarline = {};
-    							finalBarline.msDuration = 0;
-    							finalBarline.msPosition = systems[systemIndex + 1].startMsPosition;
-    							finalBarline.alignmentX = system.right;
-    							voice.timeObjects.push(finalBarline);
-    						}
-    					}
-    				}
-    			}
-
-    			// set final system's final barline
-    			system = systems[systems.length - 1];
-    			system.endMsPosition = finalBarlineMsPosition;
-    			for(staffIndex = 0; staffIndex < nStaves; ++staffIndex)
-    			{
-    				nVoices = system.staves[staffIndex].voices.length;
-    				for(voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
-    				{
-    					voice = system.staves[staffIndex].voices[voiceIndex];
-    					finalBarline = {};
-    					finalBarline.msDuration = 0;
-    					finalBarline.msPosition = finalBarlineMsPosition;
-    					finalBarline.alignmentX = system.right;
-    					voice.timeObjects.push(finalBarline);
     				}
     			}
     		}
@@ -1617,7 +1575,6 @@ _AP.score = (function (document)
     			for(i = 0; i < nSystems; ++i)
     			{
     				system = systems[i];
-    				system.endMsPosition = Math.round(system.endMsPosition / speed);
     				for(j = 0; j < system.staves.length; ++j)
     				{
     					staff = system.staves[j];
@@ -1644,12 +1601,12 @@ _AP.score = (function (document)
     			{
     				delete systems[systemIndex].msDuration; // is reset in the following function
     			}
-    			getSystemTimeObjects(systems[systemIndex], viewBoxScale, systemElem);
+    			getSystemTimeObjects(systems, systemIndex, viewBoxScale, systemElem);
     			systemIndex++;
     		}
 
-    		finalBarlineMsPosition = setMsPositions(systems);
-    		setSystemMsPositionsAndAddFinalBarlineToEachVoice(systems, finalBarlineMsPosition);
+    		setMsPositions(systems);
+    		setRightmostBarlinesAlignmentX(systems);
 
     		if(speed !== 1)
     		{
@@ -1670,7 +1627,7 @@ _AP.score = (function (document)
     			system.startMarker.setVisible(false);
     			system.runningMarker.setParameters(system, i, isLivePerformance, trackIsOnArray);
     			system.runningMarker.setVisible(false);
-    			system.endMarker.setParameters(system);
+    			system.endMarker.setParameters(system, i);
     			system.endMarker.setVisible(false);
     		}
 
@@ -1687,7 +1644,7 @@ _AP.score = (function (document)
         // inserts each midiChord's finalChordOffMoment.messages in the first moment in the following midiObject.
         function transferFinalChordOffMoments(outputTracks)
         {
-            var track, trackIndex, midiObjectIndex, finalChordOffMessages, nextObjectMessages, i;
+            var track, trackIndex, midiObjectIndex, finalChordOffMessages, nextObjectMessages, i, previousMidiChord;
 
             for(trackIndex = 0; trackIndex < outputTracks.length; ++trackIndex)
             {
@@ -1698,14 +1655,17 @@ _AP.score = (function (document)
                     {
                         if(track.midiObjects[midiObjectIndex - 1] instanceof MidiChord)
                         {
-                        	console.assert(track.midiObjects[midiObjectIndex - 1].finalChordOffMoment !== undefined, "finalChordOffMoment must be defined (but it can be empty).");
+                        	previousMidiChord = track.midiObjects[midiObjectIndex - 1];
+                        	console.assert(previousMidiChord.finalChordOffMoment !== undefined, "finalChordOffMoment must be defined (but it can be empty).");
 
-                            finalChordOffMessages = track.midiObjects[midiObjectIndex - 1].finalChordOffMoment.messages;
+                        	finalChordOffMessages = previousMidiChord.finalChordOffMoment.messages;
                             nextObjectMessages = track.midiObjects[midiObjectIndex].moments[0].messages;
                             for(i = 0; i < finalChordOffMessages.length; ++i)
                             {
                                 nextObjectMessages.splice(0, 0, finalChordOffMessages[i]);
                             }
+                            previousMidiChord.finalChordOffMoment = undefined;
+                            previousMidiChord.moments.length -= 1;	
                         }
                     }
                 }

@@ -14,8 +14,8 @@
  *      MidiChord(channel, midiChordDef, timeObject) // MidiChord constructor
  */
 
-/*jslint bitwise: false, nomen: true, plusplus: true, white: true */
-/*global _AP: false,  window: false,  document: false, performance: false, console: false, alert: false, XMLHttpRequest: false */
+/*jslint white */
+/*global WebMIDI, _AP,  window,  document */
 
 _AP.namespace('_AP.midiChord');
 
@@ -102,7 +102,7 @@ _AP.midiChord = (function()
     		Object.defineProperty(this, "_currentMomentIndex", { value: -1, writable: true });
 
     		// The timeObject takes the global speed option into account.
-    		rval = this._getMoments(channel, midiChordDef, timeObject.msDuration); // defined in prototype below
+    		rval = this._getMoments(channel, midiChordDef, timeObject.msDuration, timeObject.systemIndex); // defined in prototype below
 
     		// moments is an ordered array of moments (containing messages for sequential chords and slider messages).
     		// A Moment is a list of logically synchronous MIDI messages.  
@@ -130,7 +130,7 @@ _AP.midiChord = (function()
     };
 	// end var
 
-	MidiChord.prototype._getMoments = function(channel, midiChordDef, msDurationInScore)
+	MidiChord.prototype._getMoments = function(channel, midiChordDef, msDurationInScore, systemIndex)
 	{
 		var
         basicChordMsDurations,
@@ -737,7 +737,7 @@ _AP.midiChord = (function()
 			rval.moments = chordMoments;
 		}
 
-		Object.defineProperty(rval.moments[0], "chordStart", { value: true, writable: false });
+		Object.defineProperty(rval.moments[0], "systemIndex", { value: systemIndex, writable: false });
 
 		return rval;
 	};

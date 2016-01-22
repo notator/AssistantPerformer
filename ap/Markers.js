@@ -14,8 +14,8 @@
  *  
  */
 
-/*jslint bitwise: false, nomen: true, plusplus: true, white: true */
-/*global _AP: false,  window: false,  document: false, performance: false, console: false, alert: false, XMLHttpRequest: false */
+/*jslint white */
+/*global WebMIDI, _AP,  window,  document */
 
 _AP.namespace('_AP.markers');
 
@@ -200,8 +200,9 @@ _AP.markers = (function ()
         halfRectWidth,
         color = '#EE0000', disabledColor = '#FFC8C8',
         millisecondPosition,
+		sysIndex,
 
-        setParameters = function(system)
+        setParameters = function(system, systemIndex)
         {
         	var topY, bottomY, rectX, rectY, widthHeight;
 
@@ -229,7 +230,14 @@ _AP.markers = (function ()
 
             rect.style.strokeWidth = 0;
             rect.style.fill = color;
+
+            sysIndex = systemIndex;
         },
+
+    	systemIndex = function()
+    	{
+    		return sysIndex;
+    	},
 
         // the argument's alignmentX is in user html pixels
         moveTo = function (timeObject)
@@ -300,6 +308,7 @@ _AP.markers = (function ()
         this.msPosition = msPosition;
         this.setVisible = setVisible;
         this.setEnabledColor = setEnabledColor;
+        this.systemIndex = systemIndex;
 
         return this;
     },
@@ -471,7 +480,8 @@ _AP.markers = (function ()
             timeObjects = [];
             timeObject = {};
             timeObject.msPosition = -1;
-            while (timeObject.msPosition < system.endMsPosition)
+			timeObject.alignmentX = -1;
+			while(timeObject.alignmentX < system.right)
             {
             	timeObject = findFollowingTimeObject(system, timeObject.msPosition, isLivePerformance, trackIsOnArray);
                 timeObjects.push(timeObject);

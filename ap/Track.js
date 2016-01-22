@@ -25,15 +25,16 @@
  *      advanceCurrentMoment()
  */
 
-/*jslint bitwise: false, nomen: true, plusplus: true, white: true */
-/*global _AP: false,  window: false,  document: false, performance: false, console: false, alert: false, XMLHttpRequest: false */
+/*jslint white */
+/*global WebMIDI, _AP,  window,  document */
 
 _AP.namespace('_AP.track');
 
 _AP.track = (function()
 {
     "use strict";
-    var
+	var
+	MidiChord = _AP.midiChord.MidiChord,
     // An empty track is created.
     Track = function()
     {
@@ -105,7 +106,7 @@ _AP.track = (function()
     		// find the index of the MidiChord straddling or at the startMarkerMsPositionInScore,
     		// or the index of the MidiChord that starts after the startMarkerMsPositionInScore
     		// or the index of a MidiRest that starts at the startMarkerMsPositionInScore.
-    		if(midiObjects[i].moments[0].chordStart === true)
+    		if(midiObjects[i] instanceof MidiChord)
     		{
     			midiChord = midiObjects[i];
     			if((midiChord.msPositionInScore <= startMarkerMsPositionInScore)
@@ -145,8 +146,8 @@ _AP.track = (function()
     			break;
     		}
 
-    		if(midiObject.moments[0].chordStart === true)
-    		{
+    		if(midiObjects[i] instanceof MidiChord)
+    		{ 
     			midiObject.setToStartAtBeginning();
     		}
     	}
