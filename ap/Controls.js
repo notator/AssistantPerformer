@@ -41,6 +41,8 @@ _AP.controls = (function(document, window)
     SMOKE = "0.7", // control layer is smoky (semi-transparent)
     GLASS = "0", // control layer is completely transparent
 
+	PIANOLA_MUSIC_SCORE_INDEX = 7,
+
     // options set in the top dialog
     options = {},
 
@@ -206,20 +208,13 @@ _AP.controls = (function(document, window)
         {
             case "toFront": // set main options visible with the appropriate controls enabled/disabled
             	globalElements.titleOptionsDiv.style.visibility = "visible";	
-            	globalElements.waitingForSoundFontDiv.style.display = "none";
             	globalElements.globalSpeedDiv.style.display = "none";
                 globalElements.startRuntimeButton.style.display = "none";
                 globalElements.svgRuntimeControls.style.visibility = "hidden";
                 globalElements.svgPagesFrame.style.visibility = "hidden";
 
-                if(outputDeviceIndex === 1 && (globalElements.scoreSelect.options[scoreIndex].soundFont === undefined))
-                {
-                	// outputDeviceIndex 1 (the Resident SoundFont Synth) can only be
-                	// selected if the score can be played using a soundFont.
-                	globalElements.waitingForSoundFontDiv.style.display = "block"; 
-                }
-            	else // Note that the midi input device does not have to be set in order to enable performance.
-                if(scoreIndex > 0 && outputDeviceIndex > 0)
+                if(globalElements.waitingForSoundFontDiv.style.display === "none"
+                	&& scoreIndex > 0 && outputDeviceIndex > 0)
                 {
                 	globalElements.globalSpeedDiv.style.display = "block";
 
@@ -749,7 +744,7 @@ _AP.controls = (function(document, window)
 						name: "Grand Piano",
 						url: "http://james-ingram-act-two.de/soundFonts/Arachno/Arachno1.0selection-grand piano.sf2",
 						presetIndices: [0],
-						scoreSelectIndices: [7]
+						scoreSelectIndices: [PIANOLA_MUSIC_SCORE_INDEX]
 					}
 				];
 
@@ -798,6 +793,8 @@ _AP.controls = (function(document, window)
         						}
         						firstSoundFontLoaded = true;
         					}, 2400);
+
+        					setMainOptionsState("toFront"); // hides "soundFont loading" message
         				}
 
         				soundFont.init();
@@ -811,8 +808,6 @@ _AP.controls = (function(document, window)
         				{
         					loadFirstSoundFont(sf2Synth, soundFont);
         				}
-
-        				setMainOptionsState("toFront");
 
         				console.log(soundFontName + ": loading complete.");
 
@@ -1200,6 +1195,21 @@ _AP.controls = (function(document, window)
             }
         }
 
+        function waitForSoundFont()
+        {
+        	if(globalElements.scoreSelect.options[PIANOLA_MUSIC_SCORE_INDEX].soundFont === undefined)
+        	{
+        		globalElements.waitingForSoundFontDiv.style.display = "block";
+        		globalElements.outputDeviceSelect.disabled = true;
+        	}
+        	else
+        	{
+        		globalElements.waitingForSoundFontDiv.style.display = "none";
+        		globalElements.outputDeviceSelect.disabled = false;
+        	}
+        	doControl("scoreSelect");
+        }
+
     	try
     	{
     		if(controlID === "scoreSelect")
@@ -1236,10 +1246,19 @@ _AP.controls = (function(document, window)
 
     		/**** controls in options panel ***/
     		if(controlID === "inputDeviceSelect"
-			|| controlID === "scoreSelect"
 			|| controlID === "outputDeviceSelect"
 			|| controlID === "globalSpeedInput")
     		{
+    			setMainOptionsState("toFront"); // enables only the appropriate controls
+    		}
+
+    		if(controlID === "scoreSelect")
+    		{
+    			if(globalElements.scoreSelect.selectedIndex === PIANOLA_MUSIC_SCORE_INDEX
+				&& globalElements.scoreSelect.options[PIANOLA_MUSIC_SCORE_INDEX].soundFont === undefined)
+    			{
+    				setTimeout(waitForSoundFont, 200);
+    			}
     			setMainOptionsState("toFront"); // enables only the appropriate controls
     		}
 
