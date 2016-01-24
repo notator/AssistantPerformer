@@ -747,7 +747,8 @@ _AP.midiChord = (function()
 	// The chord must be at or straddle the start marker.
 	// This function sets the chord to the state it should have when a performance starts.
 	// this.currentMoment is set to the first moment at or after startMarkerMsPositionInScore.
-	MidiChord.prototype.setToFirstStartMarker = function(startMarkerMsPositionInScore)
+	// this.currentMoment will be undefined if there are no moments at or after startMarkerMsPositionInScore. 
+	MidiChord.prototype.setToStartMarker = function(startMarkerMsPositionInScore)
 	{
 		var
         nMoments = this.moments.length,

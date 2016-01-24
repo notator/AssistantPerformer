@@ -386,18 +386,18 @@ _AP.score = (function (document)
     svgPageClicked = function (e, state)
     {
         var frame = e.target,
-            x = e.pageX,
-            y = e.pageY + frame.originY,
+            cursorX = e.pageX,
+            cursorY = e.pageY + frame.originY,
             systemIndex, system,
             timeObjectsArray, timeObject, trackIndex, nOutputTracks = outputTrackPerMidiChannel.length;
 
-        // x and y now use the <body> element as their frame of reference.
+        // cursorX and cursorY now use the <body> element as their frame of reference.
         // this is the same frame of reference as in the systems.
         // systems is a single global array (inside this namespace)of all systems.
         // This is important when identifying systems, and when performing.
 
-        // Returns the system having stafflines closest to y.
-        function findSystemIndex(y)
+        // Returns the system having stafflines closest to cursorY.
+        function findSystemIndex(cursorY)
         {
             var i, topLimit, bottomLimit, systemIndex1;
 
@@ -411,7 +411,7 @@ _AP.score = (function (document)
                 for (i = 0; i < systems.length - 1; ++i)
                 {
                     bottomLimit = (systems[i].bottomLineY + systems[i + 1].topLineY) / 2;
-                    if (y >= topLimit && y < bottomLimit)
+                    if (cursorY >= topLimit && cursorY < bottomLimit)
                     {
                         systemIndex1 = i;
                         break;
@@ -427,16 +427,16 @@ _AP.score = (function (document)
             return systemIndex1;
         }
 
-        // Returns the index of the staff having stafflines closest to y
-        function findStaffIndex(y, staves)
+        // Returns the index of the staff having stafflines closest to cursorY
+        function findStaffIndex(cursorY, staves)
         {
             var rStaffIndex, i, nStaves, topLimit, bottomLimit;
 
-            if (y <= staves[0].bottomLineY)
+            if (cursorY <= staves[0].bottomLineY)
             {
                 rStaffIndex = 0;
             }
-            else if (y >= staves[staves.length - 1].topLineY)
+            else if (cursorY >= staves[staves.length - 1].topLineY)
             {
                 rStaffIndex = staves.length - 1;
             }
@@ -447,13 +447,13 @@ _AP.score = (function (document)
                 {
                     topLimit = staves[i - 1].bottomLineY;
                     bottomLimit = staves[i].topLineY;
-                    if (y >= topLimit && y <= bottomLimit)
+                    if (cursorY >= topLimit && cursorY <= bottomLimit)
                     {
-                        rStaffIndex = ((y - topLimit) < (bottomLimit - y)) ? i - 1 : i;
+                        rStaffIndex = ((cursorY - topLimit) < (bottomLimit - cursorY)) ? i - 1 : i;
                         break;
                     }
 
-                    if (y >= staves[i].topLineY && y <= staves[i].bottomLineY)
+                    if (cursorY >= staves[i].topLineY && cursorY <= staves[i].bottomLineY)
                     {
                         rStaffIndex = i;
                         break;
@@ -463,8 +463,8 @@ _AP.score = (function (document)
             return rStaffIndex;
         }
 
-        // Returns the index of the voice closest to y
-        function findVoiceIndex(y, voices)
+        // Returns the index of the voice closest to cursorY
+        function findVoiceIndex(cursorY, voices)
         {
             var index, nVoices = voices.length, midY;
             if (nVoices === 1)
@@ -474,15 +474,15 @@ _AP.score = (function (document)
             else
             {
                 midY = (voices[0].centreY + voices[1].centreY) / 2;
-                index = (y < midY) ? 0 : 1;
+                index = (cursorY < midY) ? 0 : 1;
             }
             return index;
         }
 
-        function findTrackIndex(y, system)
+        function findTrackIndex(cursorY, system)
         {
-        	var i, j, staff, staffIndex = findStaffIndex(y, system.staves),
-			voiceIndex = findVoiceIndex(y, system.staves[staffIndex].voices),
+        	var i, j, staff, staffIndex = findStaffIndex(cursorY, system.staves),
+			voiceIndex = findVoiceIndex(cursorY, system.staves[staffIndex].voices),
 			trackIndex = 0, found = false;
 
         	for(i= 0; i < system.staves.length;++i)
@@ -505,7 +505,7 @@ _AP.score = (function (document)
         	return trackIndex;
         }
 
-        function getEndMarkerTimeObject(timeObject, x, systems, systemIndex)
+        function getEndMarkerTimeObject(timeObject, cursorX, systems, systemIndex)
         {
         	var returnObject,
 				voiceTimeObjects = systems[systemIndex].staves[0].voices[0].timeObjects,
@@ -538,7 +538,7 @@ _AP.score = (function (document)
 
         	earliestAlignmentX = findEarliestChordAlignmentX(systems[systemIndex]);
 
-        	if(x > rightBarlineTimeObject.alignmentX || ((rightBarlineTimeObject.alignmentX - x) < (x - timeObject.alignmentX)))
+        	if(cursorX > rightBarlineTimeObject.alignmentX || ((rightBarlineTimeObject.alignmentX - cursorX) < (cursorX - timeObject.alignmentX)))
         	{
         		returnObject = rightBarlineTimeObject;
         	}
@@ -553,22 +553,22 @@ _AP.score = (function (document)
         	return returnObject;
         }
 
-        systemIndex = findSystemIndex(y);
+        systemIndex = findSystemIndex(cursorY);
         if (systemIndex !== undefined)
         {
         	system = systems[systemIndex];
 
         	timeObjectsArray = getTimeObjectsArray(system);
 
-        	trackIndex = findTrackIndex(y, system);
+        	trackIndex = findTrackIndex(cursorY, system);
 
             if(isLivePerformance === true)
             {
-            	timeObject = findPerformingInputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, x, trackIndex);
+            	timeObject = findPerformingInputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, cursorX, trackIndex);
             }
             else
             {
-            	timeObject = findPerformingOutputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, x, trackIndex);
+            	timeObject = findPerformingOutputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, cursorX, trackIndex);
             }
 
             // timeObject is now the nearest performing chord to the click,
@@ -586,9 +586,9 @@ _AP.score = (function (document)
             			}
             			break;
             		case 'settingEnd':
-            			// returns the rightmost barline if that is closer to x than the timeObject
+            			// returns the rightmost barline if that is closer to cursorX than the timeObject
             			// returns null if timeObject.alignmentX is the alignmentx of the first chord on the system.
-            			timeObject = getEndMarkerTimeObject(timeObject, x, systems, systemIndex);
+            			timeObject = getEndMarkerTimeObject(timeObject, cursorX, systems, systemIndex);
             			if(timeObject !== null && startMarker.msPosition() < timeObject.msPosition)
             			{
             				endMarker = system.endMarker;
