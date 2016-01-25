@@ -801,7 +801,13 @@ _AP.controls = (function(document, window)
         				for(i = 0; i < scoreSelectIndices.length; ++i)
         				{
         					option = scoreSelect.options[scoreSelectIndices[i]];
-        					option.soundFont = soundFont;
+        					if(soundFont.name === "Grand Piano")
+        					{
+        						if(option.text === "Pianola Music 1967 (scroll)")
+								{ 
+        							option.soundFont = soundFont;
+        						}
+        					}
         				}
 
         				if(!firstSoundFontLoaded)
