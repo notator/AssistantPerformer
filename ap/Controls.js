@@ -389,7 +389,7 @@ _AP.controls = (function(document, window)
             cl.sendStopToEndControlDisabled.setAttribute("opacity", SMOKE);
             /********* end performance buttons *******************/
 
-            tracksControl.setDisabled(true);
+            // The tracksControl is only initialised after a specific score is loaded.
         }
 
         // setStopped is outer function

@@ -11,8 +11,8 @@
 *  
 */
 
-/*jslint bitwise: false, nomen: true, plusplus: true, white: true */
-/*global _AP: false,  window: false,  document: false, performance: false, console: false, alert: false, XMLHttpRequest: false */
+/*jslint white */
+/*global WebMIDI, _AP,  window,  document, performance */
 
 _AP.namespace('_AP.tracksControl');
 
@@ -49,6 +49,32 @@ _AP.tracksControl = (function (document)
 	trackCtlElems = [], // the controls for individual tracks
 
     scoreRefresh = null, // a callback that tells the score to redraw itself
+
+	setTrackCtlState = function(trackIndex, state)
+	{
+		var
+		offLayer = document.getElementById("bullet" + (trackIndex + 1).toString() + "Off"),
+		disabledLayer = document.getElementById("bullet" + (trackIndex + 1).toString() + "Disabled");
+		trackCtlElems[trackIndex].previousState = trackCtlElems[trackIndex].state;
+
+		switch(state)
+		{
+			case "on":
+				offLayer.setAttribute("opacity", GLASS);
+				disabledLayer.setAttribute("opacity", GLASS);
+				trackCtlElems[trackIndex].state = "on";
+				break;
+			case "off":
+				offLayer.setAttribute("opacity", METAL);
+				disabledLayer.setAttribute("opacity", GLASS);
+				trackCtlElems[trackIndex].state = "off";
+				break;
+			case "disabled":
+				disabledLayer.setAttribute("opacity", SMOKE);
+				trackCtlElems[trackIndex].state = "disabled";
+				break;
+		}
+	},
 
 	init = function(nOutputTracks, nInputTracks, isLivePerf, scoreRefreshCallback)
 	{
@@ -223,7 +249,9 @@ _AP.tracksControl = (function (document)
 		trackIndex = parseInt(trackNumberStr, 10),
     	bulletOffLayer = document.getElementById(bulletOffID),
         thisIsTheLastPlayingInputOrOutputTrack,
-    	readOnlyTrackIsOnArray = [];
+    	readOnlyTrackIsOnArray = [],
+		disabledFrame = document.getElementById(DISABLED_FRAME_ID),
+        isCurrentlyDisabled = (disabledFrame.getAttribute("opacity") === SMOKE);
 
         function isTheLastPlayingInputOrOutputTrack(trackIndex)
         {
@@ -261,84 +289,58 @@ _AP.tracksControl = (function (document)
             return rVal;
         }
 
-        thisIsTheLastPlayingInputOrOutputTrack = isTheLastPlayingInputOrOutputTrack(trackIndex);
-
-        if (!thisIsTheLastPlayingInputOrOutputTrack)
+        if(!isCurrentlyDisabled)
         {
-            if (trackCtlElems[trackIndex].state === "on")
-            {
-            	bulletOffLayer.setAttribute("opacity", METAL);
-                trackCtlElems[trackIndex].state = "off";
-            }
-            else if(trackCtlElems[trackIndex].state === "off")
-            {
-            	bulletOffLayer.setAttribute("opacity", GLASS);
-            	trackCtlElems[trackIndex].state = "on";
-            }
+        	thisIsTheLastPlayingInputOrOutputTrack = isTheLastPlayingInputOrOutputTrack(trackIndex);
 
-        	// scoreRefresh is a callback that tells the score to redraw itself
-            if(scoreRefresh !== null)
-            {
-            	getReadOnlyTrackIsOnArray(readOnlyTrackIsOnArray)
-            	scoreRefresh(readOnlyTrackIsOnArray);
-            }
+        	if(!thisIsTheLastPlayingInputOrOutputTrack)
+        	{
+        		if(trackCtlElems[trackIndex].state === "on")
+        		{
+        			bulletOffLayer.setAttribute("opacity", METAL);
+        			trackCtlElems[trackIndex].state = "off";
+        		}
+        		else if(trackCtlElems[trackIndex].state === "off")
+        		{
+        			bulletOffLayer.setAttribute("opacity", GLASS);
+        			trackCtlElems[trackIndex].state = "on";
+        		}
+
+        		// scoreRefresh is a callback that tells the score to redraw itself
+        		if(scoreRefresh !== null)
+        		{
+        			getReadOnlyTrackIsOnArray(readOnlyTrackIsOnArray);
+        			scoreRefresh(readOnlyTrackIsOnArray);
+        		}
+        	}
         }
     },
-
-	setTrackCtlState = function(trackIndex, state)
-	{
-		var 
-		offLayer = document.getElementById("bullet" + (trackIndex + 1).toString() + "Off"),
-		disabledLayer = document.getElementById("bullet" + (trackIndex + 1).toString() + "Disabled");
-		trackCtlElems[trackIndex].previousState = trackCtlElems[trackIndex].state;
-
-		switch(state)
-		{
-			case "on":
-				offLayer.setAttribute("opacity", GLASS);
-				disabledLayer.setAttribute("opacity", GLASS);
-				trackCtlElems[trackIndex].state = "on";
-				break;
-			case "off":
-				offLayer.setAttribute("opacity", METAL);
-				disabledLayer.setAttribute("opacity", GLASS);
-				trackCtlElems[trackIndex].state = "off";
-				break;
-			case "disabled":
-				disabledLayer.setAttribute("opacity", SMOKE);
-				trackCtlElems[trackIndex].state = "disabled";
-				break;
-		}
-	},
 
     // disable/re-enable the whole tracks control
     setDisabled = function (toDisabled)
     {
-    	var i, isCurrentlyDisabled, disabledFrame = document.getElementById(DISABLED_FRAME_ID);
+    	var i,
+		disabledFrame = document.getElementById(DISABLED_FRAME_ID),
+		isCurrentlyDisabled = (disabledFrame.getAttribute("opacity") === SMOKE);
 
-    	if(disabledFrame !== null)
+    	if(toDisabled)
     	{
-    		isCurrentlyDisabled = (disabledFrame.getAttribute("opacity") === SMOKE);
+    		disabledFrame.setAttribute("opacity", SMOKE);
+    	}
+    	else
+    	{
+    		disabledFrame.setAttribute("opacity", GLASS);
+    	}
 
+    	for(i = 0; i < trackCtlElems.length; ++i)
+    	{
     		if(toDisabled)
     		{
-    			disabledFrame.setAttribute("opacity", SMOKE);
+    			setTrackCtlState(i, "disabled");
     		}
-    		else
+    		else if(isCurrentlyDisabled)
     		{
-    			disabledFrame.setAttribute("opacity", GLASS);
-    		}
-
-    		for(i = 0; i < trackCtlElems.length; ++i)
-    		{
-    			if(toDisabled)
-    			{
-    				setTrackCtlState(i, "disabled");
-    			}
-    			else if(isCurrentlyDisabled)
-    			{
-    				setTrackCtlState(i, trackCtlElems[i].previousState);
-    			}
+    			setTrackCtlState(i, trackCtlElems[i].previousState);
     		}
     	}
     },
