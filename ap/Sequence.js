@@ -174,12 +174,6 @@ _AP.sequence = (function(window)
         nextMomt = null,
         delay;
 
-        function stopAfterDelay()
-        {
-        	var performanceMsDuration = Math.ceil(performance.now() - performanceStartTime);
-        	reportEndOfPerformance(sequenceRecording, performanceMsDuration);
-        }
-
         // Returns the track having the earliest nextMsPosition (= the position of the first unsent Moment in the track),
         // or null if the earliest nextMsPosition is >= endMarkerMsPosition.
         function getNextTrack(tracks, nTracks)
@@ -206,13 +200,17 @@ _AP.sequence = (function(window)
 
         track = getNextTrack(tracks, nTracks);
 
-        if(track === null)
+        if(document.hidden === true)
         {
-        	// The returned nextMomt is going to be null, and tick() will stop, while waiting to call stopAfterDelay().
+        	stop();
+        }
+		else if(track === null)
+        {
+        	// The returned nextMomt is going to be null, and tick() will stop, while waiting to call stop().
         	setState("stopped");
         	// Wait for the duration of the final moment before stopping. (An assisted performance (Keyboard1) waits for a noteOff...)
         	delay = (endMarkerMsPosition - startMarkerMsPosition) - Math.ceil(performance.now() - performanceStartTime);
-        	window.setTimeout(stopAfterDelay, delay);
+        	window.setTimeout(stop, delay);
         }
         else
         {
