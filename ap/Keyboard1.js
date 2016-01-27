@@ -19,7 +19,7 @@
 * // reportMsPosCallback: a callback function which reports the current msPositionInScore
 * //      back to the GUI while performing. Can be undefined or null.
 * //      It is called here as:
-* //          reportMsPositionInScore(msPositionToReport);
+* //          reportMsPositionInScore(msPositionToReport, systemIndex);
 * //      The msPosition it passes back is the original number of milliseconds from the start of
 * //      the score (taking the global speed option into account). This value is used to identify
 * //      chord and rest symbols in the score, and so to synchronize the running cursor.
@@ -69,7 +69,8 @@ _AP.keyboard1 = (function()
 	keyRange, // keyRange.bottomKey and keyRange.topKey are the bottom and top input midi key values notated in the score.
 
 	reportEndOfSpan, // callback -- called here as reportEndOfSpan(sequenceRecording, performanceMsDuration);
-	reportMsPositionInScore, // callback -- called here as reportMsPositionInScore(msPositionToReport);
+	reportMsPositionInScore, // callback -- called here as reportMsPositionInScore(msPositionToReport, systemIndex);
+	systemMsPositions = [], // used before calling reportMsPositionInScore(msPositionToReport, systemIndex);
 
 	// (performance.now() - performanceStartTime) is the real time elapsed since the start of the performance.
 	performanceStartTime = -1,  // set in play(), used by stop(), run()
@@ -530,6 +531,21 @@ _AP.keyboard1 = (function()
     		}
     	}
 
+    	function report(msPosition)
+    	{
+    		var sysIndex, systemIndex = 0, sysMsPositions = systemMsPositions, nSystems = sysMsPositions.length;
+
+    		for(sysIndex = nSystems - 1; sysIndex >= 0 ; --sysIndex)
+    		{
+    			if(sysMsPositions[sysIndex] <= msPosition)
+    			{
+    				systemIndex = sysIndex;
+    				break;
+    			}	
+    		}
+    		reportMsPositionInScore(msPosition, systemIndex); 
+    	}
+
     	// This function is called either by a real performed NoteOff or by a performed NoteOn having zero velocity.
     	function handleNoteOff(key)
     	{
@@ -558,7 +574,7 @@ _AP.keyboard1 = (function()
     						if(instant.noteOns === undefined)
     						{
     							currentInstantIndex++;
-    							reportMsPositionInScore(instants[currentInstantIndex].msPosition);
+    							report(instants[currentInstantIndex].msPosition);
     						}
     						advanceKeyInstantIndicesTo(keyInstantIndices, currentInstantIndex); // see above
     					}
@@ -571,7 +587,7 @@ _AP.keyboard1 = (function()
     						while(tempInstantIndex < instantIndex)
     						{
     							instant = instants[tempInstantIndex];
-    							reportMsPositionInScore(instants[tempInstantIndex].msPosition);
+    							report(instants[currentInstantIndex].msPosition);
     							sendAllTrkOffsAtInstant(instant);
     							currentInstantIndex = tempInstantIndex++;
     						}
@@ -617,7 +633,7 @@ _AP.keyboard1 = (function()
     						if(instant.noteOns.length === 0)
     						{
     							currentInstantIndex++;
-    							reportMsPositionInScore(instants[currentInstantIndex].msPosition);
+    							report(instants[currentInstantIndex].msPosition);
     						}
 
     						console.log("performedVelocity=" + performedVelocity.toString(10));
@@ -851,7 +867,7 @@ _AP.keyboard1 = (function()
 	// The reportMsPosCallback argument is a callback function which reports the current msPositionInScore back
 	// to the GUI while performing. Can be undefined or null.
 	// It is called here as:
-	//      reportMsPositionInScore(msPositionToReport);
+	//      reportMsPositionInScore(msPositionToReport, systemIndex);
 	// The msPosition it passes back is the original number of milliseconds from the start of
 	// the score (taking the global speed option into account). This value is used to identify
 	// chord and rest symbols in the score, and so to synchronize the running cursor.
@@ -859,6 +875,32 @@ _AP.keyboard1 = (function()
 	// attributes before play() is called.
 	init = function(inputDeviceArg, outputDeviceArg, tracksData, reportEndOfPerfCallback, reportMsPosCallback)
 	{
+		function getSystemMsPositions(outputTracks)
+		{
+			var i, j, sysMsPositions = [], nOutputTracks = outputTracks.length, midiObject, midiObjects, nMidiObjects, systemIndex, msPosition;
+
+			for(i = 0; i < nOutputTracks; ++i)
+			{
+				midiObjects = outputTracks[i].midiObjects;
+				nMidiObjects = midiObjects.length;
+				for(j = 0; j < nMidiObjects; ++j)
+				{
+					midiObject = midiObjects[j];
+					if(midiObject.moments[0].systemIndex !== undefined)
+					{
+						systemIndex = midiObject.moments[0].systemIndex;
+						msPosition = midiObject.msPositionInScore;
+						if(sysMsPositions[systemIndex] === undefined || sysMsPositions[systemIndex] > msPosition)
+						{
+							sysMsPositions[systemIndex] = msPosition;
+						}
+					}
+				}
+			}
+
+			return sysMsPositions;
+		}
+
 		console.assert((inputDeviceArg !== undefined && inputDeviceArg !== null), "The midi input device must be defined.");
 		console.assert((outputDeviceArg !== undefined && outputDeviceArg !== null), "The midi output device must be defined.");
 		console.assert((tracksData !== undefined && tracksData !== null), "The tracksData must be defined.");
@@ -876,6 +918,8 @@ _AP.keyboard1 = (function()
 		keyRange = tracksData.inputKeyRange; // these are the bottom and top midi key values notated in the score.
 		reportEndOfSpan = reportEndOfPerfCallback;
 		reportMsPositionInScore = reportMsPosCallback;
+
+		systemMsPositions = getSystemMsPositions(tracksData.outputTracks);
 
 		initChannelResetMessages(outputTracks.length);
 

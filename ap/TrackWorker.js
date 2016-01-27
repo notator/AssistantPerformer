@@ -243,7 +243,7 @@ eventHandler = function(e)
 				if(momentIndex < moments.length && stopNow === false)
 				{
 					nextMomt = moments[momentIndex++];
-					if(stopChord && momentIndex > 1 && (nextMomt.systemIndex !== undefined))
+					if(stopChord || nextMomt === undefined)
 					{
 						nextMomt = null; // stop at this chord or rest
 					}
