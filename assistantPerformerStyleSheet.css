@@ -20,7 +20,18 @@ p.header1
 {
     font-size: 22px;
     font-weight: normal;
-    margin:15px auto 10px auto;
+    margin:20px auto 6px auto;
+}
+
+div.note /* a note in a blue frame */
+{
+    font-size: 8.25pt;
+    line-height: 150%;
+	text-align:left;
+	width:644px;
+	margin:8px auto 12px auto;
+    padding: 12px 14px 12px 14px; 
+    border: 1px solid #1010C6
 }
 
 div.helpText

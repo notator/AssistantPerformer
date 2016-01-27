@@ -41,6 +41,13 @@ _AP.controls = (function(document, window)
     SMOKE = "0.7", // control layer is smoky (semi-transparent)
     GLASS = "0", // control layer is completely transparent
 
+	NO_SCORE_INDEX = 0,
+	SONG_SIX_SCORE_INDEX = 1,
+	STUDY2_SCORE_INDEX = 2,
+	STUDY3_SKETCH1_SCORE_INDEX1 = 3,
+	STUDY3_SKETCH1_SCORE_INDEX2 = 4,
+	STUDY3_SKETCH2_SCORE_INDEX1 = 5,
+	STUDY3_SKETCH2_SCORE_INDEX2 = 6,
 	PIANOLA_MUSIC_SCORE_INDEX = 7,
 
     // options set in the top dialog
@@ -209,9 +216,15 @@ _AP.controls = (function(document, window)
             case "toFront": // set main options visible with the appropriate controls enabled/disabled
             	globalElements.titleOptionsDiv.style.visibility = "visible";	
             	globalElements.globalSpeedDiv.style.display = "none";
+            	globalElements.aboutLinkDiv.style.display = "none";
                 globalElements.startRuntimeButton.style.display = "none";
                 globalElements.svgRuntimeControls.style.visibility = "hidden";
                 globalElements.svgPagesFrame.style.visibility = "hidden";
+
+                if(scoreIndex > 0)
+                {
+                	globalElements.aboutLinkDiv.style.display = "block";
+                }
 
                 if(globalElements.waitingForSoundFontDiv.style.display === "none"
                 	&& scoreIndex > 0 && outputDeviceIndex > 0)
@@ -702,6 +715,7 @@ _AP.controls = (function(document, window)
             globalElements.scoreSelect = document.getElementById("scoreSelect");
             globalElements.outputDeviceSelect = document.getElementById("outputDeviceSelect");
             globalElements.waitingForSoundFontDiv = document.getElementById("waitingForSoundFontDiv");
+            globalElements.aboutLinkDiv = document.getElementById("aboutLinkDiv");
             globalElements.globalSpeedDiv = document.getElementById("globalSpeedDiv");
             globalElements.globalSpeedInput = document.getElementById("globalSpeedInput");
             globalElements.startRuntimeButton = document.getElementById("startRuntimeButton");
@@ -937,76 +951,73 @@ _AP.controls = (function(document, window)
     	// This function analyses the score's id string in the scoreSelector in assistantPerformer.html,
     	// and uses the information to load the score's svg files into the "svgPagesFrame" div,
     	// The score is actually analysed when the Start button is clicked.
-    	function setScore()
+    	function setScore(scoreIndex)
     	{
     		var scoreInfo;
 
-    		// Returns a scoreInfo object having two attributes constructed from the value string in the scoreSelector's
-    		// currently selected options element. (See assistantPerformer.html.)
-    		// The option value string contains a path= setting and optionally, after a ',', an inputHandler= setting.
-    		// The returned attributes are:
-    		//      scoreInfo.path -- e.g. "Song Six/Song Six (scroll)" or "Song Six/Song Six (14 pages)"
-    		//      scoreInfo.inputHandler -- is "none", by default, if not set in the value string
-    		// The path= setting includes the complete path from the Assistant Performer's "scores" folder
+    		// The scoreSelectIndex argument is the index of the score in the score selector
+    		// Returns a scoreInfo object having the following fields:
+    		//	scoreInfo.path -- the path to the score's file
+    		//	scoreInfo.inputHandler
+    		//	scoreInfo.aboutText
+    		//	scoreInfo.aboutURL
+    		// The path setting includes the complete path from the Assistant Performer's "scores" folder
     		// to the page(s) to be used, and ends with either "(scroll)" or "(<nPages> pages)" -- e.g. "(14 pages)".
     		// "Song Six/Song Six (scroll).svg" is a file. If separate pages are to be used, their paths will be:
     		// "Song Six/Song Six page 1.svg", "Song Six/Song Six page 2.svg", "Song Six/Song Six page 3.svg" etc.
-    		// Note that if annotated page(s) are to be used, their path= value will includes the name of their
+    		// Note that if annotated page(s) are to be used, their path value will include the name of their
     		// folder (e.g. "Song Six/annotated/Song Six (14 pages)").
     		// If the score contains input voices, the inputHandler= option will be defined: It selects one of the
     		// Assistant Performer's inputHandlers. If omitted, the inputHandler is given its default value "none".
-    		function getScoreInfo()
+    		function getScoreInfo(scoreSelectIndex)
     		{
-    			var scoreSelectorElem = document.getElementById("scoreSelect"),
-                    scoreInfoStrings, scoreInfoString, scoreInfo;
+    			var scoreInfo = { path: "", inputHandler: "none", aboutText: "", aboutURL: "" };
 
-    			function getScoreInfoStrings(scoreSelectorElem)
+    			switch(scoreSelectIndex)
     			{
-    				var scoreInfoStrings = [], i, childNode;
-
-    				for(i = 0 ; i < scoreSelectorElem.childNodes.length; ++i)
-    				{
-    					childNode = scoreSelectorElem.childNodes[i];
-    					if(childNode.value !== undefined)
-    					{
-    						scoreInfoStrings.push(childNode.value);
-    					}
-    				}
-    				return scoreInfoStrings;
+    				case SONG_SIX_SCORE_INDEX:
+    					scoreInfo.path = "Song Six/annotated/Song Six (scroll)";
+    					scoreInfo.inputHandler = "none";
+    					scoreInfo.aboutText = "about Song Six";
+    					scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/songSix/aboutSongSix.html";
+    					break;
+    				case STUDY2_SCORE_INDEX:
+    					scoreInfo.path = "Study 2c3.1/Study 2c3.1 (scroll)";
+    					scoreInfo.inputHandler = "none";
+    					scoreInfo.aboutText = "about Study 2";
+    					scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/study2/aboutStudy2.html";
+    					break;
+    				case STUDY3_SKETCH1_SCORE_INDEX1:
+    					scoreInfo.path = "Study 3 sketch 1/Study 3 sketch 1 (scroll)";
+    					scoreInfo.inputHandler = "none";
+    					scoreInfo.aboutText = "about Study 3 Sketch";
+    					scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
+    					break;
+    				case STUDY3_SKETCH1_SCORE_INDEX2:
+    					scoreInfo.path = "Study 3 sketch 1/Study 3 sketch 1 (2 pages)";
+    					scoreInfo.inputHandler = "none";
+    					scoreInfo.aboutText = "about Study 3 Sketch";
+    					scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
+    					break;
+    				case STUDY3_SKETCH2_SCORE_INDEX1:
+    					scoreInfo.path = "Study 3 sketch 2.1 - with input/Study 3 sketch 2 (scroll)";
+    					scoreInfo.inputHandler = "keyboard1";
+    					scoreInfo.aboutText = "about Study 3 Sketch";
+    					scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
+    					break;
+    				case STUDY3_SKETCH2_SCORE_INDEX2:
+    					scoreInfo.path = "Study 3 sketch 2.2 - less visible/Study 3 sketch 2 (scroll)";
+    					scoreInfo.inputHandler = "keyboard1";
+    					scoreInfo.aboutText = "about Study 3 Sketch";
+    					scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
+    					break;
+    				case PIANOLA_MUSIC_SCORE_INDEX:
+    					scoreInfo.path = "Pianola Music/Pianola Music (scroll)";
+    					scoreInfo.inputHandler = "none";
+    					scoreInfo.aboutText = "about Pianola Music";
+    					scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/pianolaMusic/aboutPianolaMusic.html";
+    					break;
     			}
-
-    			function analyseString(infoString)
-    			{
-    				var i, scoreInfo = {}, components;
-
-    				scoreInfo.inputHandler = "none"; // default
-
-    				components = infoString.split(",");
-    				for(i = 0; i < components.length; ++i)
-    				{
-    					components[i] = components[i].trim();
-    					if(components[i].slice(0, 5) === "path=")
-    					{
-    						scoreInfo.path = components[i].slice(5);
-    					}
-    					else if(components[i].slice(0, 13) === "inputHandler=")// e.g. "keyboard1"
-    					{
-    						scoreInfo.inputHandler = components[i].slice(13);
-    					}
-    					else
-    					{
-    						throw "Illegal score option.";
-    					}
-    				}
-
-    				return scoreInfo;
-    			}
-
-    			scoreInfoStrings = getScoreInfoStrings(scoreSelectorElem);
-
-    			scoreInfoString = scoreInfoStrings[scoreSelectorElem.selectedIndex];
-
-    			scoreInfo = analyseString(scoreInfoString);
 
     			return scoreInfo;
     		}
@@ -1060,6 +1071,18 @@ _AP.controls = (function(document, window)
     			}
 
     			return pathData;
+    		}
+
+    		function setAboutLink(scoreInfo)
+    		{
+    			var linkDivElem = document.getElementById('aboutLinkDiv');
+
+    			linkDivElem.style.display = "none";
+    			if(scoreInfo.aboutURL !== undefined)
+    			{
+    				linkDivElem.innerHTML = '<a href=\"' + scoreInfo.aboutURL + '\" target="_blank">' + scoreInfo.aboutText + '</a>';
+    				linkDivElem.style.display = "block"; 
+    			}
     		}
 
     		function setPages(scoreInfo)
@@ -1119,7 +1142,9 @@ _AP.controls = (function(document, window)
     			}
     		}
 
-    		scoreInfo = getScoreInfo();
+    		scoreInfo = getScoreInfo(scoreIndex);
+
+    		setAboutLink(scoreInfo);
 
     		setPages(scoreInfo);
 
@@ -1222,7 +1247,7 @@ _AP.controls = (function(document, window)
     		{
     			if(globalElements.scoreSelect.selectedIndex > 0)
     			{
-    				if(globalElements.scoreSelect.selectedIndex === 7) // Pianola music
+    				if(globalElements.scoreSelect.selectedIndex === PIANOLA_MUSIC_SCORE_INDEX) // Pianola music
     				{
     					globalElements.outputDeviceSelect.options[1].disabled = false;
     				}
@@ -1234,12 +1259,11 @@ _AP.controls = (function(document, window)
     					}
     					globalElements.outputDeviceSelect.options[1].disabled = true;
     				}
-					
-    				setScore();
+    				setScore(globalElements.scoreSelect.selectedIndex);
     			}
     			else
     			{
-    				setMainOptionsState("toFront"); // hides startRuntimeButton
+    				setMainOptionsState("toFront"); // hides startRuntimeButton and "about" text
     			}
     		}
 
