@@ -45,8 +45,8 @@
 * 
 */
 
-/*jslint bitwise: true, nomen: true, plusplus: true, white: true, continue: true */
-/*global _AP: false,  window: false,  document: false, performance: false, console: false, alert: false, XMLHttpRequest: false */
+/*jslint white, bitwise*/
+/*global WebMIDI, _AP,  window,  document, performance */
 
 _AP.namespace('_AP.keyboard1');
 
@@ -521,7 +521,7 @@ _AP.keyboard1 = (function()
     			{
     				while(kOnOffIndices.index < kOnOffIndices.keyOnIndices.length)
     				{
-    					if((kOnOffIndices.keyOnIndices[kOnOffIndices.index] >= currentInstantIndex))
+    					if(kOnOffIndices.keyOnIndices[kOnOffIndices.index] >= currentInstantIndex)
     					{
     						break;
     					}
@@ -1003,13 +1003,14 @@ _AP.keyboard1 = (function()
 				// These depend on whether the trk is inside a seq, pressures, pitchWheels or modWheels object.
 				function getNotesMoments(inputTracks, trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore)
 				{
-					var trackIndex, nTracks, ioIndex, inputObjects, nInputObjects, msPosition, msDuration, inputChord,
-						notesMoments = [], performedNote, performedNotes, moment, i, nPerformedNotes,
+					var inputTrackIndex, nInputTracks, topInputTrackIndex,
+						ioIndex, inputObjects, nInputObjects, msPosition, msDuration, inputChord,
+						notesMoments = [], inputNote, inputNotes, moment, i, nInputNotes,
 						shuntedCCSettings = [], chordTrkOptions, previousChordTrkOptions;
 
-					function getPerformedNotes(inputNotes, trackIsOnArray)
+					function getInputNotes(inputNotes, trackIsOnArray)
 					{
-						var performedNotes = [], i, nInputNotes = inputNotes.length;
+						var rval = [], i, nInputNotes = inputNotes.length;
 
 						function usesTrack(inputNote, trackIsOnArray)
 						{
@@ -1017,13 +1018,18 @@ _AP.keyboard1 = (function()
 
 							function seqHasTrack(trkArray, trackIsOnArray)
 							{
-								var rval = false, i, nTrks = trkArray.length;
-								for(i = 0; i < nTrks; ++i)
+								var rval = false, i, nTrks;
+
+								if(trkArray !== undefined && trkArray.length > 0)
 								{
-									if(trackIsOnArray[trkArray[i].trackIndex])
+									nTrks = trkArray.length;
+									for(i = 0; i < nTrks; ++i)
 									{
-										rval = true;
-										break;
+										if(trackIsOnArray[trkArray[i].trackIndex])
+										{
+											rval = true;
+											break;
+										}
 									}
 								}
 								return rval;
@@ -1031,13 +1037,18 @@ _AP.keyboard1 = (function()
 
 							function trkOffsHasTrack(trackIndices, trackIsOnArray)
 							{
-								var rval = false, i, nTrks = trackIndices.length;
-								for(i = 0; i < nTrks; ++i)
+								var rval = false, i, nTrks;
+
+								if(trackIndices !== undefined && trackIndices.length > 0)
 								{
-									if(trackIsOnArray[trackIndices[i]])
+									nTrks = trackIndices.length;
+									for(i = 0; i < nTrks; ++i)
 									{
-										rval = true;
-										break;
+										if(trackIsOnArray[trackIndices[i]])
+										{
+											rval = true;
+											break;
+										}
 									}
 								}
 								return rval;
@@ -1057,14 +1068,66 @@ _AP.keyboard1 = (function()
 						{
 							if(usesTrack(inputNotes[i], trackIsOnArray))
 							{
-								performedNotes.push(inputNotes[i]);
+								rval.push(inputNotes[i]);
 							}
 						}
 
-						return performedNotes;
+						return rval;
 					}
 
-					function setNoteOnOffTrkOptions(note, chordTrkOptions)
+					function removeDisabledTrks(inputNote, trackIsOnArray)
+					{
+						function removeTrks(noteOnOff, trackIsOnArray)
+						{
+							var i, nTrks, trk, seqDef, newSeqDef = [];
+
+							function hasDisabledTrack(seqDef, trackIsOnArray)
+							{
+								var nTrks = seqDef.length, rval = false;
+								for(i = 0; i < nTrks; ++i)
+								{
+									trk = seqDef[i];
+									if(trackIsOnArray[trk.trackIndex] === false)
+									{
+										rval = true;
+										break;
+									}
+								}
+								return rval;
+							}
+
+							if(noteOnOff !== undefined && noteOnOff.seqDef !== undefined)
+							{
+								seqDef = noteOnOff.seqDef;
+								if(hasDisabledTrack(seqDef, trackIsOnArray))
+								{
+									nTrks = seqDef.length;
+									for(i = 0; i < nTrks; ++i)
+									{
+										trk = seqDef[i];
+										if(trackIsOnArray[trk.trackIndex] === true)
+										{
+											newSeqDef.push(trk);
+										}
+									}
+									noteOnOff.seqDef = newSeqDef;
+								}
+							}
+
+						}
+
+						if(inputNote.noteOn)
+						{
+							removeTrks(inputNote.noteOn, trackIsOnArray);
+						}
+
+						if(inputNote.noteOff)
+						{
+							removeTrks(inputNote.noteOff, trackIsOnArray);
+						}
+					}
+
+					function setNoteOnOffTrkOptions(inputNote, chordTrkOptions)
 					{
 						function setTrkOptions(noteOnOff, noteTrkOptions, chordTrkOptions)
 						{
@@ -1126,20 +1189,20 @@ _AP.keyboard1 = (function()
 								}
 							}
 
-							if(noteOnOff.seqDef !== undefined)
+							if(noteOnOff.seqDef !== undefined && noteOnOff.seqDef.length > 0)
 							{
 								setSeqTrkOptions(noteOnOff.seqDef, noteTrkOptions, chordTrkOptions);
 							}
 						}
 
-						if(note.noteOn)
+						if(inputNote.noteOn)
 						{
-							setTrkOptions(note.noteOn, note.trkOptions, chordTrkOptions);
+							setTrkOptions(inputNote.noteOn, inputNote.trkOptions, chordTrkOptions);
 						}
 
-						if(note.noteOff)
+						if(inputNote.noteOff)
 						{
-							setTrkOptions(note.noteOff, note.trkOptions, chordTrkOptions);
+							setTrkOptions(inputNote.noteOff, inputNote.trkOptions, chordTrkOptions);
 						}
 					}
 
@@ -1226,13 +1289,14 @@ _AP.keyboard1 = (function()
 						return rval;
 					}
 
-					nTracks = inputTracks.length;
-					for(trackIndex = 0; trackIndex < nTracks; ++trackIndex)
+					nInputTracks = inputTracks.length;
+					topInputTrackIndex = trackIsOnArray.length - nInputTracks;
+					for(inputTrackIndex = 0; inputTrackIndex < nInputTracks; ++inputTrackIndex)
 					{
-						if(trackIsOnArray[trackIndex])
+						if(trackIsOnArray[topInputTrackIndex + inputTrackIndex])
 						{
 							previousChordTrkOptions = new _AP.trkOptions.TrkOptions();
-							inputObjects = inputTracks[trackIndex].inputObjects;
+							inputObjects = inputTracks[inputTrackIndex].inputObjects;
 							nInputObjects = inputObjects.length;
 							for(ioIndex = 0; ioIndex < nInputObjects; ++ioIndex)
 							{
@@ -1259,11 +1323,11 @@ _AP.keyboard1 = (function()
 
 									if(msPosition >= startMarkerMsPosInScore && msPosition < endMarkerMsPosInScore)
 									{
-										performedNotes = getPerformedNotes(inputChord.inputNotes, trackIsOnArray);
+										inputNotes = getInputNotes(inputChord.inputNotes, trackIsOnArray);
 
-										if(performedNotes.length > 0)
+										if(inputNotes.length > 0)
 										{
-											nPerformedNotes = performedNotes.length;
+											nInputNotes = inputNotes.length;
 											moment = findObjectAtMsPosition(notesMoments, msPosition);
 											if(moment === null)
 											{
@@ -1271,12 +1335,13 @@ _AP.keyboard1 = (function()
 												moment.msPosition = msPosition;
 												notesMoments.push(moment);
 											}
-											for(i = 0; i < nPerformedNotes; ++i)
+											for(i = 0; i < nInputNotes; ++i)
 											{
-												performedNote = performedNotes[i];
-												performedNote.msDuration = msDuration;
-												setNoteOnOffTrkOptions(performedNote, chordTrkOptions);
-												moment.push(performedNote);
+												inputNote = inputNotes[i];
+												inputNote.msDuration = msDuration;
+												removeDisabledTrks(inputNote, trackIsOnArray);
+												setNoteOnOffTrkOptions(inputNote, chordTrkOptions);
+												moment.push(inputNote);
 											}
 
 											if(shuntedCCSettings && msPosition === startMarkerMsPosInScore)
