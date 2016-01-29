@@ -580,17 +580,7 @@ _AP.controls = (function(document, window)
                 }
                 break;
         	case 'playing':
-        		try
-        		{
-        			setPlaying(options.livePerformance);
-        		}
-        		catch(errorMessage)
-        		{
-        			alert("ji: runtime browser error: \n\n" +
-					"browser's error message: \n" + errorMessage);
-        			//window.close();
-        			throw errorMessage;
-        		}
+        		setPlaying(options.livePerformance);
                 break;
             case 'settingStart':
                 setSettingStart();
@@ -690,18 +680,6 @@ _AP.controls = (function(document, window)
 				break;
 		}
 	},
-
-    doAlertThrow = function(functionLocation, errorMessage)
-    {
-    	var msg = errorMessage;
-    	if(functionLocation !== "")
-    	{
-    		msg = msg + "\n\nError in " + functionLocation;
-		}
-    	alert(msg);
-
-    	throw errorMessage;
-    },
 
     // Defines the window.svgLoaded(...) function.
     // Sets up the pop-up menues for scores and MIDI input and output devices.
@@ -895,53 +873,39 @@ _AP.controls = (function(document, window)
             svgPagesDiv.style.height = window.innerHeight - 43;
         }
 
-    	try
-    	{
-    		midiAccess = mAccess;
+    	midiAccess = mAccess;
 
-			sf2Synth = new WebMIDI.sf2Synth1.Sf2Synth1();
-			sf2Synth.init();
+		sf2Synth = new WebMIDI.sf2Synth1.Sf2Synth1();
+		sf2Synth.init();
 
-    		getGlobalElements();
+    	getGlobalElements();
 
-    		setMIDIInputDeviceSelector(midiAccess);
-    		setMIDIOutputDeviceSelector(midiAccess, sf2Synth);
+    	setMIDIInputDeviceSelector(midiAccess);
+    	setMIDIOutputDeviceSelector(midiAccess, sf2Synth);
 
-    		// update the device selectors when devices get connected, disconnected, opened or closed
-    		midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
+    	// update the device selectors when devices get connected, disconnected, opened or closed
+    	midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
 
-    		initScoreSelector(runningMarkerHeightChanged);
+    	initScoreSelector(runningMarkerHeightChanged);
 
-    		setSvgPagesDivHeight();
+    	setSvgPagesDivHeight();
 
-    		getControlLayers(document);
+    	getControlLayers(document);
 
-    		setSvgControlsState('disabled');
-    	}
-    	catch(errorMessage)
-    	{
-    		doAlertThrow("Controls.init()", errorMessage);
-    	}
+    	setSvgControlsState('disabled');
     },
 
 	// The Go control can be clicked directly.
 	// Also, it is called automatically when assisted performances start.
 	goControlClicked = function()
 	{
-		try
+		if(svgControlsState === 'stopped' || svgControlsState === 'paused')
 		{
-			if(svgControlsState === 'stopped' || svgControlsState === 'paused')
-			{
-				setSvgControlsState('playing');
-			}
-			else if(svgControlsState === 'playing')
-			{
-				setSvgControlsState('paused');
-			}
+			setSvgControlsState('playing');
 		}
-		catch(errorMessage)
+		else if(svgControlsState === 'playing')
 		{
-			doAlertThrow("Controls.goControlClicked()", errorMessage);
+			setSvgControlsState('paused');
 		}
 	},
 
@@ -1241,102 +1205,95 @@ _AP.controls = (function(document, window)
         	doControl("scoreSelect");
         }
 
-    	try
+    	if(controlID === "scoreSelect")
     	{
-    		if(controlID === "scoreSelect")
+    		if(globalElements.scoreSelect.selectedIndex > 0)
     		{
-    			if(globalElements.scoreSelect.selectedIndex > 0)
+    			if(globalElements.scoreSelect.selectedIndex === PIANOLA_MUSIC_SCORE_INDEX) // Pianola music
     			{
-    				if(globalElements.scoreSelect.selectedIndex === PIANOLA_MUSIC_SCORE_INDEX) // Pianola music
+    				globalElements.outputDeviceSelect.options[1].disabled = false;
+    			}
+				else
+    			{
+    				if(globalElements.outputDeviceSelect.selectedIndex === 1) // resident synth
     				{
-    					globalElements.outputDeviceSelect.options[1].disabled = false;
+    					globalElements.outputDeviceSelect.selectedIndex = 0;
     				}
-					else
-    				{
-    					if(globalElements.outputDeviceSelect.selectedIndex === 1) // resident synth
-    					{
-    						globalElements.outputDeviceSelect.selectedIndex = 0;
-    					}
-    					globalElements.outputDeviceSelect.options[1].disabled = true;
-    				}
-    				setScore(globalElements.scoreSelect.selectedIndex);
+    				globalElements.outputDeviceSelect.options[1].disabled = true;
     			}
-    			else
-    			{
-    				setMainOptionsState("toFront"); // hides startRuntimeButton and "about" text
-    			}
+    			setScore(globalElements.scoreSelect.selectedIndex);
     		}
-
-    		// setMIDIDevices is now called in beginRuntime().
-			// There is no reason to react here to the outputDeviceSelect changing.
-    		//if(controlID === "outputDeviceSelect")
-    		//{
-    		//	//setMIDIDevices();
-    		//}
-
-    		/**** controls in options panel ***/
-    		if(controlID === "inputDeviceSelect"
-			|| controlID === "outputDeviceSelect"
-			|| controlID === "globalSpeedInput")
+    		else
     		{
-    			setMainOptionsState("toFront"); // enables only the appropriate controls
-    		}
-
-    		if(controlID === "scoreSelect")
-    		{
-    			if(globalElements.scoreSelect.selectedIndex === PIANOLA_MUSIC_SCORE_INDEX
-				&& globalElements.scoreSelect.options[PIANOLA_MUSIC_SCORE_INDEX].soundFont === undefined)
-    			{
-    				setTimeout(waitForSoundFont, 200);
-    			}
-    			setMainOptionsState("toFront"); // enables only the appropriate controls
-    		}
-
-    		/*** SVG controls ***/
-    		if(cl.performanceButtonsDisabled.getAttribute("opacity") !== SMOKE)
-    		{
-    			switch(controlID)
-    			{
-    				case "goControl":
-    					goControlClicked();
-    					break;
-    				case "stopControl":
-    					stopControlClicked();
-    					break;
-    				case "setStartControl":
-    					setStartControlClicked();
-    					break;
-    				case "setEndControl":
-    					setEndControlClicked();
-    					break;
-    				case "sendStartToBeginningControl":
-    					sendStartToBeginningControlClicked();
-    					break;
-    				case "sendStopToEndControl":
-    					sendStopToEndControlClicked();
-    					break;
-    				default:
-    					break;
-    			}
-    		}
-
-    		if(controlID === "gotoOptions")
-    		{
-    			deleteSaveMIDIFileButton();
-
-    			midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
-
-    			if(cl.gotoOptionsDisabled.getAttribute("opacity") !== SMOKE)
-    			{
-    				setSvgControlsState('disabled');
-    				score.moveStartMarkerToTop(svgPagesDiv);
-    				scoreHasJustBeenSelected = false;
-    			}
+    			setMainOptionsState("toFront"); // hides startRuntimeButton and "about" text
     		}
     	}
-    	catch(errorMessage)
+
+    	// setMIDIDevices is now called in beginRuntime().
+		// There is no reason to react here to the outputDeviceSelect changing.
+    	//if(controlID === "outputDeviceSelect")
+    	//{
+    	//	//setMIDIDevices();
+    	//}
+
+    	/**** controls in options panel ***/
+    	if(controlID === "inputDeviceSelect"
+		|| controlID === "outputDeviceSelect"
+		|| controlID === "globalSpeedInput")
     	{
-    		doAlertThrow("Controls.doControl()", errorMessage);
+    		setMainOptionsState("toFront"); // enables only the appropriate controls
+    	}
+
+    	if(controlID === "scoreSelect")
+    	{
+    		if(globalElements.scoreSelect.selectedIndex === PIANOLA_MUSIC_SCORE_INDEX
+			&& globalElements.scoreSelect.options[PIANOLA_MUSIC_SCORE_INDEX].soundFont === undefined)
+    		{
+    			setTimeout(waitForSoundFont, 200);
+    		}
+    		setMainOptionsState("toFront"); // enables only the appropriate controls
+    	}
+
+    	/*** SVG controls ***/
+    	if(cl.performanceButtonsDisabled.getAttribute("opacity") !== SMOKE)
+    	{
+    		switch(controlID)
+    		{
+    			case "goControl":
+    				goControlClicked();
+    				break;
+    			case "stopControl":
+    				stopControlClicked();
+    				break;
+    			case "setStartControl":
+    				setStartControlClicked();
+    				break;
+    			case "setEndControl":
+    				setEndControlClicked();
+    				break;
+    			case "sendStartToBeginningControl":
+    				sendStartToBeginningControlClicked();
+    				break;
+    			case "sendStopToEndControl":
+    				sendStopToEndControlClicked();
+    				break;
+    			default:
+    				break;
+    		}
+    	}
+
+    	if(controlID === "gotoOptions")
+    	{
+    		deleteSaveMIDIFileButton();
+
+    		midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
+
+    		if(cl.gotoOptionsDisabled.getAttribute("opacity") !== SMOKE)
+    		{
+    			setSvgControlsState('disabled');
+    			score.moveStartMarkerToTop(svgPagesDiv);
+    			scoreHasJustBeenSelected = false;
+    		}
     	}
     },
 
@@ -1446,30 +1403,23 @@ _AP.controls = (function(document, window)
     	options.livePerformance = (globalElements.inputDeviceSelect.disabled === false && globalElements.inputDeviceSelect.selectedIndex > 0); 
     	options.globalSpeed = globalElements.globalSpeedInput.value / 100;
 
-    	try
+    	setMIDIDevices(options);
+
+    	// This function can throw an exception
+    	// (e.g. if an attempt is made to create an event that has no duration).
+    	getTracksAndPlayer(score, options);
+
+    	midiAccess.removeEventListener('statechange', onMIDIDeviceStateChange, false);
+
+    	score.refreshDisplay(); // undefined trackIsOnArray
+
+    	score.moveStartMarkerToTop(svgPagesDiv);
+
+    	setSvgControlsState('stopped');
+
+    	if(options.livePerformance === true)
     	{
-    		setMIDIDevices(options);
-
-    		// This function can throw an exception
-    		// (e.g. if an attempt is made to create an event that has no duration).
-    		getTracksAndPlayer(score, options);
-
-    		midiAccess.removeEventListener('statechange', onMIDIDeviceStateChange, false);
-
-    		score.refreshDisplay(); // undefined trackIsOnArray
-
-    		score.moveStartMarkerToTop(svgPagesDiv);
-
-    		setSvgControlsState('stopped');
-
-    		if(options.livePerformance === true)
-    		{
-    			goControlClicked();
-    		}
-    	}
-    	catch(errorMessage)
-    	{
-    		doAlertThrow("", errorMessage);
+    		goControlClicked();
     	}
     },
 
