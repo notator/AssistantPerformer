@@ -76,13 +76,14 @@ _AP.tracksControl = (function (document)
 		}
 	},
 
-	init = function(nOutputTracks, nInputTracks, isLivePerf, scoreRefreshCallback)
+	init = function(outputTracks, inputTracks, isLivePerf, scoreRefreshCallback)
 	{
-	    var trackControlsMainElem, svgTrackControlsElem, trackCtlElem,
+		var nOutputTracks = outputTracks.length, nInputTracks = inputTracks.length,
+			trackControlsMainElem, svgTrackControlsElem, trackCtlElem,
 			controlPanel = document.getElementById("svgRuntimeControls"),
 			firstControlPanelChild,
 			i, parentElem,
-			nTrackControls,
+			nTrackControls, inputIndex,
 			trackControlsWidth;
 
 	    function getTrackControlsMainElem(trackControlsWidth)
@@ -220,8 +221,34 @@ _AP.tracksControl = (function (document)
 
 	    	trackCtlElems.push(trackCtlElem);
 	    	trackCtlElems[i].isOutput = (i < nOutputTracks);
-	    	trackCtlElems[i].state = "on";
-	    	trackCtlElems[i].previousState = "on";
+
+	    	if(i < nOutputTracks)
+	    	{
+	    		if(outputTracks[i].isVisible === true)
+	    		{
+	    			setTrackCtlState(i, "on");
+	    			trackCtlElems[i].previousState = "on";
+	    		}
+	    		else
+	    		{
+	    			setTrackCtlState(i, "disabled");
+	    			trackCtlElems[i].previousState = "disabled";
+	    		}
+	    	}
+	    	else
+	    	{
+	    		inputIndex = nTrackControls - i - 1;
+	    		if(inputTracks[inputIndex].isVisible === true)
+	    		{
+	    			setTrackCtlState(i, "on");
+	    			trackCtlElems[i].previousState = "on";
+	    		}
+	    		else
+	    		{
+	    			setTrackCtlState(i, "disabled");
+	    			trackCtlElems[i].previousState = "disabled";
+	    		}
+	    	}
 	    }
 
 	    if(isLivePerformance === false)
@@ -262,7 +289,7 @@ _AP.tracksControl = (function (document)
             	for(i = 0; i < trackCtlElems.length; ++i)
                 {
 
-            		if(i !== trackIndex && trackCtlElems[i].state === "on" && trackCtlElems[i].isOutput === isOutput)
+            		if(i !== trackIndex && trackCtlElems[i].isOutput === isOutput && trackCtlElems[i].state === "on")
                     {
                         rVal = false;
                         break;
@@ -278,11 +305,11 @@ _AP.tracksControl = (function (document)
             {
             	if(trackCtlElems[trackIndex].isOutput)
             	{
-            		alert("Can't turn off the last playing output track!");
+            		alert("Can't turn off the last visible output track!");
             	}
             	else
             	{
-            		alert("Can't turn off the last playing input track!");
+            		alert("Can't turn off the last visible input track!");
             	}
             }
 

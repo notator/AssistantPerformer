@@ -217,18 +217,18 @@ _AP.keyboard1 = (function()
 		{
 			case "midiMessage":
 				// Note that Jazz 1.2 does not support timestamps. It always sends messages immediately.
-				if(msg.midiMessage.length === 2)
-				{
-					console.log("[0]=%d, [1]=%d", msg.midiMessage[0], msg.midiMessage[1]);
-				}
-				else if(msg.midiMessage.length === 3)
-				{
-					console.log("[0]=%d, [1]=%d, [2]=%d", msg.midiMessage[0], msg.midiMessage[1], msg.midiMessage[2]);
-				}
-				else
-				{
-					console.log("msg length = ", msg.midiMessage.length);
-				}
+				//if(msg.midiMessage.length === 2)
+				//{
+				//	console.log("[0]=%d, [1]=%d", msg.midiMessage[0], msg.midiMessage[1]);
+				//}
+				//else if(msg.midiMessage.length === 3)
+				//{
+				//	console.log("[0]=%d, [1]=%d, [2]=%d", msg.midiMessage[0], msg.midiMessage[1], msg.midiMessage[2]);
+				//}
+				//else
+				//{
+				//	console.log("msg length = ", msg.midiMessage.length);
+				//}
 				sendMIDIMessage(msg.midiMessage);
 				break;
 			case "trkCompleted":

@@ -1397,7 +1397,7 @@ _AP.controls = (function(document, window)
     		// score.refreshDisplay(isLivePerformance, trackIsOnArray) simply tells the score to repaint itself.
     		// Repainting includes using the correct staff colours, but the score may also update the position of
     		// its start marker (which always starts on a chord) if a track is turned off.
-    		tracksControl.init(tracksData.outputTracks.length, tracksData.inputTracks.length, options.livePerformance, score.refreshDisplay);
+    		tracksControl.init(tracksData.outputTracks, tracksData.inputTracks, options.livePerformance, score.refreshDisplay);
     	}
 
     	options.livePerformance = (globalElements.inputDeviceSelect.disabled === false && globalElements.inputDeviceSelect.selectedIndex > 0); 

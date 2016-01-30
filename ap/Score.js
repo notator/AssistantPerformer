@@ -302,7 +302,7 @@ _AP.score = (function (document)
         	function setColors(trackIsOnArray, isLivePerformance)
         	{
         		var i, nSystems = systems.length, j, nStaves = systems[0].staves.length,
-                k, staff, trackIndex, m, nLines,
+                k, staff, trackIndex, m, nLines, t, nTracksPerStaff,
                 stafflineColor;
 
         		for(i = 0; i < nSystems; ++i)
@@ -315,43 +315,46 @@ _AP.score = (function (document)
         				{
         					break;
         				}
-        				if(staff.isVisible)
+        				nTracksPerStaff = staff.voices.length;
+        				for(t = 0; t < nTracksPerStaff; ++t)
         				{
-        					stafflineColor = getColor(trackIsOnArray, trackIndex, isLivePerformance);
-        					staff.nameElem.style.fill = stafflineColor;
+        					if(staff.isVisible)
+        					{
+        						stafflineColor = getColor(trackIsOnArray, trackIndex, isLivePerformance);
+        						staff.nameElem.style.fill = stafflineColor;
 
-        					if(staff.voices.length === 1)
-        					{
-        						nLines = staff.svgStafflines.length;
-        						for(m = 0; m < nLines; ++m) // could be any number of lines
+        						if(nTracksPerStaff === 1)
         						{
-        							staff.svgStafflines[m].style.stroke = stafflineColor;
+        							nLines = staff.svgStafflines.length;
+        							for(m = 0; m < nLines; ++m) // could be any number of lines
+        							{
+        								staff.svgStafflines[m].style.stroke = stafflineColor;
+        							}
         						}
-        						++trackIndex;
-        					}
-        					else if(staff.voices.length === 2 && staff.svgStafflines.length === 5) // the staff has two voices
-        					{
-        						for(k = 0; k < 2; ++k)
+        						else if(nTracksPerStaff === 2 && staff.svgStafflines.length === 5) // the staff has two voices
         						{
-        							if(k === 0)
+        							for(k = 0; k < 2; ++k)
         							{
-        								staff.svgStafflines[0].style.stroke = stafflineColor;
-        								staff.svgStafflines[1].style.stroke = stafflineColor;
-        								staff.svgStafflines[2].style.stroke = stafflineColor;
+        								if(k === 0)
+        								{
+        									staff.svgStafflines[0].style.stroke = stafflineColor;
+        									staff.svgStafflines[1].style.stroke = stafflineColor;
+        									staff.svgStafflines[2].style.stroke = stafflineColor;
+        								}
+        								if(k === 1)
+        								{
+        									staff.svgStafflines[3].style.stroke = stafflineColor;
+        									staff.svgStafflines[4].style.stroke = stafflineColor;
+        								}
         							}
-        							if(k === 1)
-        							{
-        								staff.svgStafflines[3].style.stroke = stafflineColor;
-        								staff.svgStafflines[4].style.stroke = stafflineColor;
-        							}
-        							++trackIndex;
+        						}
+        						else
+        						{
+        							throw "Error: staff cannot have more than two voices!\n" +
+											"Two voice staves must have five lines.";
         						}
         					}
-        					else
-        					{
-        						throw "Error: staff cannot have more than two voices!\n" +
-										"Two voice staves must have five lines.";
-        					}
+        					++trackIndex;
         				}
         			}
         		}
@@ -1687,12 +1690,14 @@ _AP.score = (function (document)
         				outputTracks[outputTrackIndex].midiObjects = [];
         				outputTracks[outputTrackIndex].midiChannel = voice.midiChannel;
         				outputTracks[outputTrackIndex].masterVolume = voice.masterVolume;
+						outputTracks[outputTrackIndex].isVisible = staff.isVisible;
         				outputTrackIndex++;
         			}
         			else // voice.class === "inputVoice" 
         			{
         				inputTracks.push(new Track());
         				inputTracks[inputTrackIndex].inputObjects = [];
+        				inputTracks[inputTrackIndex].isVisible = staff.isVisible;
         				inputTrackIndex++;
         			}
         		}
