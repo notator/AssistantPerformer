@@ -592,6 +592,7 @@ _AP.controls = (function(document, window)
     },
 
     // sets the options in the input device selector
+	// midiAccess can be null
 	setMIDIInputDeviceSelector = function(midiAccess)
 	{
 		var
@@ -601,19 +602,29 @@ _AP.controls = (function(document, window)
 		is.options.length = 0; // important when called by midiAccess.onstatechange 
 
 		option = document.createElement("option");
-		option.text = "choose a MIDI input device";
-		is.add(option, null);
-		midiAccess.inputs.forEach(function(port)
+		if(midiAccess !== null)
 		{
-			//console.log('input id:', port.id, ' input name:', port.name);
-			option = document.createElement("option");
-			option.inputDevice = port;
-			option.text = port.name;
+			option.text = "choose a MIDI input device";
 			is.add(option, null);
-		});
+			midiAccess.inputs.forEach(function(port)
+			{
+				//console.log('input id:', port.id, ' input name:', port.name);
+				option = document.createElement("option");
+				option.inputDevice = port;
+				option.text = port.name;
+				is.add(option, null);
+			});
+		}
+		else
+		{
+			option.text = "browser does not support MIDI input";
+			is.add(option, null);
+			globalElements.inputDeviceSelect.disabled = true;
+		}
 	},
 
 	// sets the options in the output device selector
+	// midiAccess can be null
 	setMIDIOutputDeviceSelector = function(midiAccess, sf2Synth)
 	{
 		var
@@ -631,14 +642,24 @@ _AP.controls = (function(document, window)
 		option.text = "Resident SoundFont Synth";
 		os.add(option, null);
 
-		midiAccess.outputs.forEach(function(port)
+		if(midiAccess !== null)
 		{
-			//console.log('output id:', port.id, ' output name:', port.name);
+			midiAccess.outputs.forEach(function(port)
+			{
+				//console.log('output id:', port.id, ' output name:', port.name);
+				option = document.createElement("option");
+				option.outputDevice = port;
+				option.text = port.name;
+				os.add(option, null);
+			});
+		}
+		else
+		{
 			option = document.createElement("option");
-			option.outputDevice = port;
-			option.text = port.name;
+			option.text = "browser does not support MIDI output";
 			os.add(option, null);
-		});
+			option.disabled = true;
+		}
 	},
 
 	onMIDIDeviceStateChange = function(e)
@@ -684,6 +705,7 @@ _AP.controls = (function(document, window)
     // Defines the window.svgLoaded(...) function.
     // Sets up the pop-up menues for scores and MIDI input and output devices.
 	// Loads SoundFonts, adding them to the relevant scoreSelect option(s).
+	// mAccess is null if the browser does not support the Web MIDI API
     init = function(mAccess)
     {
 		function getGlobalElements()
@@ -827,6 +849,16 @@ _AP.controls = (function(document, window)
             globalElements.scoreSelect.selectedIndex = 0;
             score = new Score(runningMarkerHeightChanged); // an empty score, with callback function
             loadSoundFonts(globalElements.scoreSelect);
+
+            if(midiAccess === null)
+            {
+            	globalElements.scoreSelect.options[SONG_SIX_SCORE_INDEX].disabled = true;
+            	globalElements.scoreSelect.options[STUDY2_SCORE_INDEX].disabled = true;
+            	globalElements.scoreSelect.options[STUDY3_SKETCH1_SCORE_INDEX1].disabled = true;
+            	globalElements.scoreSelect.options[STUDY3_SKETCH1_SCORE_INDEX2].disabled = true;
+            	globalElements.scoreSelect.options[STUDY3_SKETCH2_SCORE_INDEX1].disabled = true;
+            	globalElements.scoreSelect.options[STUDY3_SKETCH2_SCORE_INDEX2].disabled = true;  
+            }
         }
 
         function getControlLayers(document)
@@ -883,8 +915,11 @@ _AP.controls = (function(document, window)
     	setMIDIInputDeviceSelector(midiAccess);
     	setMIDIOutputDeviceSelector(midiAccess, sf2Synth);
 
-    	// update the device selectors when devices get connected, disconnected, opened or closed
-    	midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
+    	if(midiAccess !== null)
+    	{
+    		// update the device selectors when devices get connected, disconnected, opened or closed
+    		midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
+    	}
 
     	initScoreSelector(runningMarkerHeightChanged);
 
@@ -1286,7 +1321,10 @@ _AP.controls = (function(document, window)
     	{
     		deleteSaveMIDIFileButton();
 
-    		midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
+    		if(midiAccess !== null)
+    		{
+    			midiAccess.addEventListener('statechange', onMIDIDeviceStateChange, false);
+    		}
 
     		if(cl.gotoOptionsDisabled.getAttribute("opacity") !== SMOKE)
     		{
@@ -1341,7 +1379,10 @@ _AP.controls = (function(document, window)
 
     		for(i = 1; i < outSelector.options.length; ++i)
     		{
-    			outSelector.options[i].outputDevice.close();
+    			if(outSelector.options[i].outputDevice)
+    			{
+    				outSelector.options[i].outputDevice.close();
+    			}
     		}
 
     		if(outSelector.selectedIndex === 0)
@@ -1409,7 +1450,10 @@ _AP.controls = (function(document, window)
     	// (e.g. if an attempt is made to create an event that has no duration).
     	getTracksAndPlayer(score, options);
 
-    	midiAccess.removeEventListener('statechange', onMIDIDeviceStateChange, false);
+    	if(midiAccess !== null)
+    	{
+    		midiAccess.removeEventListener('statechange', onMIDIDeviceStateChange, false);
+    	}
 
     	score.refreshDisplay(); // undefined trackIsOnArray
 

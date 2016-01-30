@@ -33,7 +33,7 @@ window.addEventListener("load", function (window)
     },
     onErrorCallback = function (error)
     {
-        throw "Error: Unable to set midiAccess. Error code:".concat(error.code);
+    	_AP.controls.init(null);
     };
 
     navigator.requestMIDIAccess().then(onSuccessCallback, onErrorCallback);
