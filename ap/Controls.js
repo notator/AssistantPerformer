@@ -226,7 +226,7 @@ _AP.controls = (function(document, window)
                 	globalElements.aboutLinkDiv.style.display = "block";
                 }
 
-                if(globalElements.waitingForSoundFontDiv.style.display === "none"
+                if(globalElements.waitingForSoundfontDiv.style.display === "none"
                 	&& scoreIndex > 0 && outputDeviceIndex > 0)
                 {
                 	globalElements.globalSpeedDiv.style.display = "block";
@@ -617,7 +617,7 @@ _AP.controls = (function(document, window)
 		}
 		else
 		{
-			option.text = "browser does not support MIDI input";
+			option.text = "browser does not support Web MIDI";
 			is.add(option, null);
 			globalElements.inputDeviceSelect.disabled = true;
 		}
@@ -639,7 +639,7 @@ _AP.controls = (function(document, window)
 
 		option = document.createElement("option");
 		option.outputDevice = sf2Synth;
-		option.text = "Resident SoundFont Synth";
+		option.text = "Resident Soundfont Synth";
 		os.add(option, null);
 
 		if(midiAccess !== null)
@@ -656,7 +656,7 @@ _AP.controls = (function(document, window)
 		else
 		{
 			option = document.createElement("option");
-			option.text = "browser does not support MIDI output";
+			option.text = "browser does not support Web MIDI";
 			os.add(option, null);
 			option.disabled = true;
 		}
@@ -704,7 +704,7 @@ _AP.controls = (function(document, window)
 
     // Defines the window.svgLoaded(...) function.
     // Sets up the pop-up menues for scores and MIDI input and output devices.
-	// Loads SoundFonts, adding them to the relevant scoreSelect option(s).
+	// Loads Soundfonts, adding them to the relevant scoreSelect option(s).
 	// mAccess is null if the browser does not support the Web MIDI API
     init = function(mAccess)
     {
@@ -714,7 +714,7 @@ _AP.controls = (function(document, window)
             globalElements.inputDeviceSelect = document.getElementById("inputDeviceSelect");
             globalElements.scoreSelect = document.getElementById("scoreSelect");
             globalElements.outputDeviceSelect = document.getElementById("outputDeviceSelect");
-            globalElements.waitingForSoundFontDiv = document.getElementById("waitingForSoundFontDiv");
+            globalElements.waitingForSoundfontDiv = document.getElementById("waitingForSoundfontDiv");
             globalElements.aboutLinkDiv = document.getElementById("aboutLinkDiv");
             globalElements.globalSpeedDiv = document.getElementById("globalSpeedDiv");
             globalElements.globalSpeedInput = document.getElementById("globalSpeedInput");
@@ -727,14 +727,14 @@ _AP.controls = (function(document, window)
         // resets the score selector in case the browser has cached the last value
         function initScoreSelector(runningMarkerHeightChanged)
 		{
-        	// There is one soundFont per score type.
-        	// The soundFont is added as an attribute to the scoreSelect option for the score.
-        	function loadSoundFonts(scoreSelect)
+        	// There is one soundfont per score type.
+        	// The soundfont is added as an attribute to the scoreSelect option for the score.
+        	function loadSoundfonts(scoreSelect)
         	{
         		var
-				firstSoundFontLoaded = false,
-				soundFontIndex = 0,
-				soundFontData =
+				firstSoundfontLoaded = false,
+				soundfontIndex = 0,
+				soundfontData =
 				[
 					//{
 					//	name: "SongSix",
@@ -764,24 +764,24 @@ _AP.controls = (function(document, window)
 
         		// Note that XMLHttpRequest does not work with local files (localhost:).
         		// To make it work, run the app from the web (http:).
-        		function loadSoundFontAsynch()
+        		function loadSoundfontAsynch()
         		{
         			var
-					soundFont,
-					soundFontURL = soundFontData[soundFontIndex].url,
-					soundFontName = soundFontData[soundFontIndex].name,
-					presetIndices = soundFontData[soundFontIndex].presetIndices,
-					scoreSelectIndices = soundFontData[soundFontIndex].scoreSelectIndices;
+					soundfont,
+					soundfontURL = soundfontData[soundfontIndex].url,
+					soundfontName = soundfontData[soundfontIndex].name,
+					presetIndices = soundfontData[soundfontIndex].presetIndices,
+					scoreSelectIndices = soundfontData[soundfontIndex].scoreSelectIndices;
 
         			function onLoad()
         			{
         				var i, option;
 
-        				function loadFirstSoundFont(synth, soundFont)
+        				function loadFirstSoundfont(synth, soundfont)
         				{
         					var channelIndex;
 
-        					synth.setSoundFont(soundFont);
+        					synth.setSoundfont(soundfont);
 
         					// For some reason, the first noteOn to be sent by the host, reacts only after a delay.
         					// This noteOn/noteOff pair is sent so that the *next* noteOn will react immediately.
@@ -805,50 +805,50 @@ _AP.controls = (function(document, window)
         						{
         							synth.setMasterVolume(16384);
         						}
-        						firstSoundFontLoaded = true;
+        						firstSoundfontLoaded = true;
         					}, 2400);
 
-        					setMainOptionsState("toFront"); // hides "soundFont loading" message
+        					setMainOptionsState("toFront"); // hides "soundfont loading" message
         				}
 
-        				soundFont.init();
+        				soundfont.init();
         				for(i = 0; i < scoreSelectIndices.length; ++i)
         				{
         					option = scoreSelect.options[scoreSelectIndices[i]];
-        					if(soundFont.name === "Grand Piano")
+        					if(soundfont.name === "Grand Piano")
         					{
         						if(option.text === "Pianola Music 1967 (scroll)")
 								{ 
-        							option.soundFont = soundFont;
+        							option.soundfont = soundfont;
         						}
         					}
         				}
 
-        				if(!firstSoundFontLoaded)
+        				if(!firstSoundfontLoaded)
         				{
-        					loadFirstSoundFont(sf2Synth, soundFont);
+        					loadFirstSoundfont(sf2Synth, soundfont);
         				}
 
-        				console.log(soundFontName + ": loading complete.");
+        				console.log(soundfontName + ": loading complete.");
 
-        				soundFontIndex++;
-        				if(soundFontIndex < soundFontData.length)
+        				soundfontIndex++;
+        				if(soundfontIndex < soundfontData.length)
         				{
-        					console.log('loading the "' + soundFontData[soundFontIndex].name + '" soundFont (' + (soundFontIndex + 1) + "/" + soundFontData.length + ")...");
-        					loadSoundFontAsynch();
+        					console.log('loading the "' + soundfontData[soundfontIndex].name + '" soundfont (' + (soundfontIndex + 1) + "/" + soundfontData.length + ")...");
+        					loadSoundfontAsynch();
         				}
         			}
 
-        			console.log('loading the "' + soundFontName + '" soundFont (' + (soundFontIndex + 1) + "/" + soundFontData.length + ")...");
-        			soundFont = new WebMIDI.soundFont.SoundFont(soundFontURL, soundFontName, presetIndices, onLoad);
+        			console.log('loading the "' + soundfontName + '" soundfont (' + (soundfontIndex + 1) + "/" + soundfontData.length + ")...");
+        			soundfont = new WebMIDI.soundfont.Soundfont(soundfontURL, soundfontName, presetIndices, onLoad);
         		}
 
-        		loadSoundFontAsynch();
+        		loadSoundfontAsynch();
         	}
 
             globalElements.scoreSelect.selectedIndex = 0;
             score = new Score(runningMarkerHeightChanged); // an empty score, with callback function
-            loadSoundFonts(globalElements.scoreSelect);
+            loadSoundfonts(globalElements.scoreSelect);
 
             if(midiAccess === null)
             {
@@ -1225,16 +1225,16 @@ _AP.controls = (function(document, window)
             }
         }
 
-        function waitForSoundFont()
+        function waitForSoundfont()
         {
-        	if(globalElements.scoreSelect.options[PIANOLA_MUSIC_SCORE_INDEX].soundFont === undefined)
+        	if(globalElements.scoreSelect.options[PIANOLA_MUSIC_SCORE_INDEX].soundfont === undefined)
         	{
-        		globalElements.waitingForSoundFontDiv.style.display = "block";
+        		globalElements.waitingForSoundfontDiv.style.display = "block";
         		globalElements.outputDeviceSelect.disabled = true;
         	}
         	else
         	{
-        		globalElements.waitingForSoundFontDiv.style.display = "none";
+        		globalElements.waitingForSoundfontDiv.style.display = "none";
         		globalElements.outputDeviceSelect.disabled = false;
         	}
         	doControl("scoreSelect");
@@ -1282,9 +1282,9 @@ _AP.controls = (function(document, window)
     	if(controlID === "scoreSelect")
     	{
     		if(globalElements.scoreSelect.selectedIndex === PIANOLA_MUSIC_SCORE_INDEX
-			&& globalElements.scoreSelect.options[PIANOLA_MUSIC_SCORE_INDEX].soundFont === undefined)
+			&& globalElements.scoreSelect.options[PIANOLA_MUSIC_SCORE_INDEX].soundfont === undefined)
     		{
-    			setTimeout(waitForSoundFont, 200);
+    			setTimeout(waitForSoundfont, 200);
     		}
     		setMainOptionsState("toFront"); // enables only the appropriate controls
     	}
@@ -1395,9 +1395,9 @@ _AP.controls = (function(document, window)
     			options.outputDevice.open();
     		}
 
-    		if(options.outputDevice.setSoundFont !== undefined)
+    		if(options.outputDevice.setSoundfont !== undefined)
     		{
-    			options.outputDevice.setSoundFont(scoreSelector[scoreSelector.selectedIndex].soundFont);
+    			options.outputDevice.setSoundfont(scoreSelector[scoreSelector.selectedIndex].soundfont);
     		}
     	}
 

@@ -33,11 +33,13 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
 			</a><br />
 			<div class="note">
 				This experimental Web MIDI application is normally tested in the latest versions of Firefox and Chrome on Windows 10.<br />
-				Firefox requires the <a target="_blank" href="http://jazz-soft.net">Jazz</a> plug-in to be installed. Chrome implements the Web MIDI API natively.<br />
+				Firefox requires the <a target="_blank" href="http://jazz-soft.net">Jazz</a> plug-in to be installed. Chrome implements the Web MIDI natively.<br />
+				To find out which other browsers could be used, go to <a target="_blank" href="http://caniuse.com/#feat=midi">check Web <em>MIDI</em> API</a>. A limited functionality is available
+				if the browser only implements Web <em>Audio</em> (go to <a target="_blank" href="http://caniuse.com/#feat=audio-api">check Web <em>Audio</em> API</a>).<br />
 				<span class="blueHelpText">
 					Note that it is not possible to display or play scores in this application unless a MIDI output device has been selected.<br />
 					Scores and recordings can however be found via the link that appears when a score is selected.<br />
-					Currently, the only score that can be played on the <a target="_blank" href="https://github.com/notator/SimpleSoundFontSynthHost">Resident Soundfont Synth</a> is the Pianola Music (1967).
+					Currently, the only score that can be played on the <a target="_blank" href="https://github.com/notator/SimpleSoundfontSynthHost">Resident Soundfont Synth</a> is the Pianola Music (1967).
 					All the other<br /> scores require hardware or software output devices that are (or depend on) plugins.<br />
 					On Windows, the free <a id="VirtualMIDISynthLink" target="_blank" href="http://coolsoft.altervista.org/en/virtualmidisynth">Virtual MIDI Synth</a> can be installed and used in both browsers.
 					The <em>Microsoft GS Wavetable Synth</em><br /> (part of the Windows operating system) is available in Firefox if Jazz is installed.<br />
@@ -69,7 +71,7 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
 						class="deviceSelector" onchange="_AP.controls.doControl('outputDeviceSelect')"></select>
 			</div>
 			<div id="aboutLinkDiv" class="helpText" style="display:none; padding-top:3px"></div>
-			<div id="waitingForSoundFontDiv" class="helpText" style="display:none; padding-top:3px">Please wait, the soundfont is still loading...</div>
+			<div id="waitingForSoundfontDiv" class="helpText" style="display:none; padding-top:3px">Please wait, the soundfont is still loading...</div>
 			<div id="globalSpeedDiv" class="globalSpeedPanel" style="display:none;">
 				<label id="globalSpeedInputNumberLabel1" for="globalSpeedInput">
 					speed:
@@ -299,9 +301,9 @@ xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
 	<script src="../WebMIDI/utilities.js" type="text/javascript"></script>
 
 	<script src="../sf2Synth1/riffParser.js"></script>
-	<script src="../sf2Synth1/soundFontParser.js"></script>
-	<script src="../sf2Synth1/soundFont.js"></script>
-	<script src="../sf2Synth1/soundFontSynthNote.js"></script>
+	<script src="../sf2Synth1/soundfontParser.js"></script>
+	<script src="../sf2Synth1/soundfont.js"></script>
+	<script src="../sf2Synth1/soundfontSynthNote.js"></script>
 	<script src="../sf2Synth1/sf2Synth1.js"></script>
 
 	<script src="shim/WebMIDIAPI.min.js" type="text/javascript"></script>
