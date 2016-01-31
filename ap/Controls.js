@@ -41,7 +41,6 @@ _AP.controls = (function(document, window)
     SMOKE = "0.7", // control layer is smoky (semi-transparent)
     GLASS = "0", // control layer is completely transparent
 
-	NO_SCORE_INDEX = 0,
 	SONG_SIX_SCORE_INDEX = 1,
 	STUDY2_SCORE_INDEX = 2,
 	STUDY3_SKETCH1_SCORE_INDEX1 = 3,
@@ -49,6 +48,8 @@ _AP.controls = (function(document, window)
 	STUDY3_SKETCH2_SCORE_INDEX1 = 5,
 	STUDY3_SKETCH2_SCORE_INDEX2 = 6,
 	PIANOLA_MUSIC_SCORE_INDEX = 7,
+
+	RESIDENT_SYNTH_INDEX = 1,
 
     // options set in the top dialog
     options = {},
@@ -205,6 +206,20 @@ _AP.controls = (function(document, window)
         }
     },
 
+	// Scores that require MidiAccess cannot be played on the Resident Synth.
+	scoreRequiresMidiAccess = function(scoreIndex)
+	{
+		var rval = true;
+
+		console.assert(scoreIndex > 0, "This function should only be called with valid score indices.")
+
+		if(scoreIndex === PIANOLA_MUSIC_SCORE_INDEX)
+		{
+			rval = false;
+		}
+		return rval;
+	},
+
     setMainOptionsState = function(mainOptionsState)
     {
     	var
@@ -216,6 +231,7 @@ _AP.controls = (function(document, window)
             case "toFront": // set main options visible with the appropriate controls enabled/disabled
             	globalElements.titleOptionsDiv.style.visibility = "visible";	
             	globalElements.globalSpeedDiv.style.display = "none";
+            	globalElements.needsMIDIAccessDiv.style.display = "none";
             	globalElements.aboutLinkDiv.style.display = "none";
                 globalElements.startRuntimeButton.style.display = "none";
                 globalElements.svgRuntimeControls.style.visibility = "hidden";
@@ -224,23 +240,31 @@ _AP.controls = (function(document, window)
                 if(scoreIndex > 0)
                 {
                 	globalElements.aboutLinkDiv.style.display = "block";
-                }
 
-                if(globalElements.waitingForSoundfontDiv.style.display === "none"
-                	&& scoreIndex > 0 && outputDeviceIndex > 0)
-                {
-                	globalElements.globalSpeedDiv.style.display = "block";
-
-                	if(globalElements.globalSpeedInput.value <= 0)
+                	if(scoreRequiresMidiAccess(scoreIndex) === false || scoreRequiresMidiAccess(scoreIndex) && midiAccess !== null)
                 	{
-                		globalElements.globalSpeedInput.style.backgroundColor = _AP.constants.INPUT_ERROR_COLOR;
-                		globalElements.startRuntimeButton.style.display = "none";
-                		alert("Error: The speed must be set to a value greater than 0%!");
+
+                		if(globalElements.waitingForSoundfontDiv.style.display === "none"
+							&& scoreIndex > 0 && outputDeviceIndex > 0)
+                		{
+                			globalElements.globalSpeedDiv.style.display = "block";
+
+                			if(globalElements.globalSpeedInput.value <= 0)
+                			{
+                				globalElements.globalSpeedInput.style.backgroundColor = _AP.constants.INPUT_ERROR_COLOR;
+                				globalElements.startRuntimeButton.style.display = "none";
+                				alert("Error: The speed must be set to a value greater than 0%!");
+                			}
+                			else
+                			{
+                				globalElements.globalSpeedInput.style.backgroundColor = "#FFFFFF";
+                				globalElements.startRuntimeButton.style.display = "initial";
+                			}
+                		}
                 	}
                 	else
                 	{
-                		globalElements.globalSpeedInput.style.backgroundColor = "#FFFFFF";
-                		globalElements.startRuntimeButton.style.display = "initial";
+                		globalElements.needsMIDIAccessDiv.style.display = "block";
                 	}
                 }
                 break;
@@ -653,13 +677,6 @@ _AP.controls = (function(document, window)
 				os.add(option, null);
 			});
 		}
-		else
-		{
-			option = document.createElement("option");
-			option.text = "browser does not support Web MIDI";
-			os.add(option, null);
-			option.disabled = true;
-		}
 	},
 
 	onMIDIDeviceStateChange = function(e)
@@ -717,6 +734,7 @@ _AP.controls = (function(document, window)
             globalElements.waitingForSoundfontDiv = document.getElementById("waitingForSoundfontDiv");
             globalElements.aboutLinkDiv = document.getElementById("aboutLinkDiv");
             globalElements.globalSpeedDiv = document.getElementById("globalSpeedDiv");
+            globalElements.needsMIDIAccessDiv = document.getElementById("needsMIDIAccessDiv");
             globalElements.globalSpeedInput = document.getElementById("globalSpeedInput");
             globalElements.startRuntimeButton = document.getElementById("startRuntimeButton");
 
@@ -849,16 +867,6 @@ _AP.controls = (function(document, window)
             globalElements.scoreSelect.selectedIndex = 0;
             score = new Score(runningMarkerHeightChanged); // an empty score, with callback function
             loadSoundfonts(globalElements.scoreSelect);
-
-            if(midiAccess === null)
-            {
-            	globalElements.scoreSelect.options[SONG_SIX_SCORE_INDEX].disabled = true;
-            	globalElements.scoreSelect.options[STUDY2_SCORE_INDEX].disabled = true;
-            	globalElements.scoreSelect.options[STUDY3_SKETCH1_SCORE_INDEX1].disabled = true;
-            	globalElements.scoreSelect.options[STUDY3_SKETCH1_SCORE_INDEX2].disabled = true;
-            	globalElements.scoreSelect.options[STUDY3_SKETCH2_SCORE_INDEX1].disabled = true;
-            	globalElements.scoreSelect.options[STUDY3_SKETCH2_SCORE_INDEX2].disabled = true;  
-            }
         }
 
         function getControlLayers(document)
@@ -1118,10 +1126,13 @@ _AP.controls = (function(document, window)
     		{
     			if(scoreInfoInputHandler === "none")
     			{
-    				globalElements.inputDeviceSelect.selectedIndex = 0;
-    				globalElements.inputDeviceSelect.options[0].text = "this score does not accept live input";
-    				globalElements.inputDeviceSelect.disabled = true;
-    				options.inputHandler = undefined;
+    				if(globalElements.inputDeviceSelect.disabled === false)
+    				{
+    					globalElements.inputDeviceSelect.selectedIndex = 0;
+    					globalElements.inputDeviceSelect.options[0].text = "this score does not accept live input";
+    					globalElements.inputDeviceSelect.disabled = true;
+    					options.inputHandler = undefined;
+    				}
     			}
     			else
     			{
@@ -1145,12 +1156,15 @@ _AP.controls = (function(document, window)
 
     		setAboutLink(scoreInfo);
 
-    		setPages(scoreInfo);
+    		if(scoreRequiresMidiAccess(scoreIndex) === false || scoreRequiresMidiAccess(scoreIndex) && midiAccess !== null)
+    		{
+    			setPages(scoreInfo);
 
-    		setOptionsInputHandler(scoreInfo.inputHandler);
+    			setOptionsInputHandler(scoreInfo.inputHandler);
 
-    		svgPagesDiv.scrollTop = 0;
-    		scoreHasJustBeenSelected = true;
+    			svgPagesDiv.scrollTop = 0;
+    			scoreHasJustBeenSelected = true;
+    		}
     	}
 
         // used when the control automatically toggles back
@@ -1244,18 +1258,19 @@ _AP.controls = (function(document, window)
     	{
     		if(globalElements.scoreSelect.selectedIndex > 0)
     		{
-    			if(globalElements.scoreSelect.selectedIndex === PIANOLA_MUSIC_SCORE_INDEX) // Pianola music
+    			if(scoreRequiresMidiAccess(globalElements.scoreSelect.selectedIndex))
     			{
-    				globalElements.outputDeviceSelect.options[1].disabled = false;
-    			}
-				else
-    			{
-    				if(globalElements.outputDeviceSelect.selectedIndex === 1) // resident synth
+    				if(globalElements.outputDeviceSelect.selectedIndex === RESIDENT_SYNTH_INDEX) // resident synth
     				{
     					globalElements.outputDeviceSelect.selectedIndex = 0;
     				}
-    				globalElements.outputDeviceSelect.options[1].disabled = true;
+    				globalElements.outputDeviceSelect.options[RESIDENT_SYNTH_INDEX].disabled = true;
     			}
+    			else
+    			{
+    				globalElements.outputDeviceSelect.options[RESIDENT_SYNTH_INDEX].disabled = false;
+    			}
+    			
     			setScore(globalElements.scoreSelect.selectedIndex);
     		}
     		else
