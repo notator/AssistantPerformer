@@ -206,16 +206,15 @@ _AP.controls = (function(document, window)
         }
     },
 
-	// Scores that require MidiAccess cannot be played on the Resident Synth.
-	scoreRequiresMidiAccess = function(scoreIndex)
+	residentSynthCanPlayScore = function(scoreIndex)
 	{
-		var rval = true;
+		var rval = false;
 
 		console.assert(scoreIndex > 0, "This function should only be called with valid score indices.")
 
 		if(scoreIndex === PIANOLA_MUSIC_SCORE_INDEX)
 		{
-			rval = false;
+			rval = true;
 		}
 		return rval;
 	},
@@ -241,7 +240,7 @@ _AP.controls = (function(document, window)
                 {
                 	globalElements.aboutLinkDiv.style.display = "block";
 
-                	if(scoreRequiresMidiAccess(scoreIndex) === false || scoreRequiresMidiAccess(scoreIndex) && midiAccess !== null)
+                	if(residentSynthCanPlayScore(scoreIndex) === true || residentSynthCanPlayScore(scoreIndex) === false && midiAccess !== null)
                 	{
 
                 		if(globalElements.waitingForSoundfontDiv.style.display === "none"
@@ -1156,7 +1155,7 @@ _AP.controls = (function(document, window)
 
     		setAboutLink(scoreInfo);
 
-    		if(scoreRequiresMidiAccess(scoreIndex) === false || scoreRequiresMidiAccess(scoreIndex) && midiAccess !== null)
+    		if(residentSynthCanPlayScore(scoreIndex) === true || residentSynthCanPlayScore(scoreIndex) === false && midiAccess !== null)
     		{
     			setPages(scoreInfo);
 
@@ -1256,19 +1255,17 @@ _AP.controls = (function(document, window)
 
     	if(controlID === "scoreSelect")
     	{
+    		globalElements.outputDeviceSelect.selectedIndex = 0;
+
     		if(globalElements.scoreSelect.selectedIndex > 0)
     		{
-    			if(scoreRequiresMidiAccess(globalElements.scoreSelect.selectedIndex))
+    			if(residentSynthCanPlayScore(globalElements.scoreSelect.selectedIndex))
     			{
-    				if(globalElements.outputDeviceSelect.selectedIndex === RESIDENT_SYNTH_INDEX) // resident synth
-    				{
-    					globalElements.outputDeviceSelect.selectedIndex = 0;
-    				}
-    				globalElements.outputDeviceSelect.options[RESIDENT_SYNTH_INDEX].disabled = true;
+    				globalElements.outputDeviceSelect.options[RESIDENT_SYNTH_INDEX].disabled = false;
     			}
     			else
     			{
-    				globalElements.outputDeviceSelect.options[RESIDENT_SYNTH_INDEX].disabled = false;
+    				globalElements.outputDeviceSelect.options[RESIDENT_SYNTH_INDEX].disabled = true;
     			}
     			
     			setScore(globalElements.scoreSelect.selectedIndex);
