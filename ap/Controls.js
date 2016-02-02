@@ -20,7 +20,7 @@ _AP.controls = (function(document, window)
     "use strict";
 
 	var
-	sf2Synth,
+	residentSoundFontSynth,
 
     tracksControl = _AP.tracksControl,
     Score = _AP.score.Score,
@@ -243,7 +243,7 @@ _AP.controls = (function(document, window)
                 	if(residentSynthCanPlayScore(scoreIndex) === true || residentSynthCanPlayScore(scoreIndex) === false && midiAccess !== null)
                 	{
 
-                		if(globalElements.waitingForSoundfontDiv.style.display === "none"
+                		if(globalElements.waitingForSoundFontDiv.style.display === "none"
 							&& scoreIndex > 0 && outputDeviceIndex > 0)
                 		{
                 			globalElements.globalSpeedDiv.style.display = "block";
@@ -648,7 +648,7 @@ _AP.controls = (function(document, window)
 
 	// sets the options in the output device selector
 	// midiAccess can be null
-	setMIDIOutputDeviceSelector = function(midiAccess, sf2Synth)
+	setMIDIOutputDeviceSelector = function(midiAccess, residentSoundFontSynth)
 	{
 		var
 		option,
@@ -661,8 +661,8 @@ _AP.controls = (function(document, window)
 		os.add(option, null);
 
 		option = document.createElement("option");
-		option.outputDevice = sf2Synth;
-		option.text = "Resident Soundfont Synth";
+		option.outputDevice = residentSoundFontSynth;
+		option.text = "Resident SoundFont Synth";
 		os.add(option, null);
 
 		if(midiAccess !== null)
@@ -702,7 +702,7 @@ _AP.controls = (function(document, window)
 				}
 				break;
 			case "output":
-				setMIDIOutputDeviceSelector(midiAccess, sf2Synth);
+				setMIDIOutputDeviceSelector(midiAccess, residentSoundFontSynth);
 				// Output devices are currently handled differently from the input devices...
 				// (I don't want the output device selector's selected index to change 
 				// every time an input device is connected or disconnected.)
@@ -720,7 +720,7 @@ _AP.controls = (function(document, window)
 
     // Defines the window.svgLoaded(...) function.
     // Sets up the pop-up menues for scores and MIDI input and output devices.
-	// Loads Soundfonts, adding them to the relevant scoreSelect option(s).
+	// Loads SoundFonts, adding them to the relevant scoreSelect option(s).
 	// mAccess is null if the browser does not support the Web MIDI API
     init = function(mAccess)
     {
@@ -730,7 +730,7 @@ _AP.controls = (function(document, window)
             globalElements.inputDeviceSelect = document.getElementById("inputDeviceSelect");
             globalElements.scoreSelect = document.getElementById("scoreSelect");
             globalElements.outputDeviceSelect = document.getElementById("outputDeviceSelect");
-            globalElements.waitingForSoundfontDiv = document.getElementById("waitingForSoundfontDiv");
+            globalElements.waitingForSoundFontDiv = document.getElementById("waitingForSoundFontDiv");
             globalElements.aboutLinkDiv = document.getElementById("aboutLinkDiv");
             globalElements.globalSpeedDiv = document.getElementById("globalSpeedDiv");
             globalElements.needsMIDIAccessDiv = document.getElementById("needsMIDIAccessDiv");
@@ -744,14 +744,14 @@ _AP.controls = (function(document, window)
         // resets the score selector in case the browser has cached the last value
         function initScoreSelector(runningMarkerHeightChanged)
 		{
-        	// There is one soundfont per score type.
-        	// The soundfont is added as an attribute to the scoreSelect option for the score.
-        	function loadSoundfonts(scoreSelect)
+        	// There is one soundFont per score type.
+        	// The soundFont is added as an attribute to the scoreSelect option for the score.
+        	function loadSoundFonts(scoreSelect)
         	{
         		var
-				firstSoundfontLoaded = false,
-				soundfontIndex = 0,
-				soundfontData =
+				firstSoundFontLoaded = false,
+				soundFontIndex = 0,
+				soundFontData =
 				[
 					//{
 					//	name: "SongSix",
@@ -781,24 +781,24 @@ _AP.controls = (function(document, window)
 
         		// Note that XMLHttpRequest does not work with local files (localhost:).
         		// To make it work, run the app from the web (http:).
-        		function loadSoundfontAsynch()
+        		function loadSoundFontAsynch()
         		{
         			var
-					soundfont,
-					soundfontURL = soundfontData[soundfontIndex].url,
-					soundfontName = soundfontData[soundfontIndex].name,
-					presetIndices = soundfontData[soundfontIndex].presetIndices,
-					scoreSelectIndices = soundfontData[soundfontIndex].scoreSelectIndices;
+					soundFont,
+					soundFontURL = soundFontData[soundFontIndex].url,
+					soundFontName = soundFontData[soundFontIndex].name,
+					presetIndices = soundFontData[soundFontIndex].presetIndices,
+					scoreSelectIndices = soundFontData[soundFontIndex].scoreSelectIndices;
 
         			function onLoad()
         			{
         				var i, option;
 
-        				function loadFirstSoundfont(synth, soundfont)
+        				function loadFirstSoundFont(synth, soundFont)
         				{
         					var channelIndex;
 
-        					synth.setSoundfont(soundfont);
+        					synth.setSoundFont(soundFont);
 
         					// For some reason, the first noteOn to be sent by the host, reacts only after a delay.
         					// This noteOn/noteOff pair is sent so that the *next* noteOn will react immediately.
@@ -822,50 +822,50 @@ _AP.controls = (function(document, window)
         						{
         							synth.setMasterVolume(16384);
         						}
-        						firstSoundfontLoaded = true;
+        						firstSoundFontLoaded = true;
         					}, 2400);
 
-        					setMainOptionsState("toFront"); // hides "soundfont loading" message
+        					setMainOptionsState("toFront"); // hides "soundFont loading" message
         				}
 
-        				soundfont.init();
+        				soundFont.init();
         				for(i = 0; i < scoreSelectIndices.length; ++i)
         				{
         					option = scoreSelect.options[scoreSelectIndices[i]];
-        					if(soundfont.name === "Grand Piano")
+        					if(soundFont.name === "Grand Piano")
         					{
         						if(option.text === "Pianola Music 1967 (scroll)")
 								{ 
-        							option.soundfont = soundfont;
+        							option.soundFont = soundFont;
         						}
         					}
         				}
 
-        				if(!firstSoundfontLoaded)
+        				if(!firstSoundFontLoaded)
         				{
-        					loadFirstSoundfont(sf2Synth, soundfont);
+        					loadFirstSoundFont(residentSoundFontSynth, soundFont);
         				}
 
-        				console.log(soundfontName + ": loading complete.");
+        				console.log(soundFontName + ": loading complete.");
 
-        				soundfontIndex++;
-        				if(soundfontIndex < soundfontData.length)
+        				soundFontIndex++;
+        				if(soundFontIndex < soundFontData.length)
         				{
-        					console.log('loading the "' + soundfontData[soundfontIndex].name + '" soundfont (' + (soundfontIndex + 1) + "/" + soundfontData.length + ")...");
-        					loadSoundfontAsynch();
+        					console.log('loading the "' + soundFontData[soundFontIndex].name + '" soundFont (' + (soundFontIndex + 1) + "/" + soundFontData.length + ")...");
+        					loadSoundFontAsynch();
         				}
         			}
 
-        			console.log('loading the "' + soundfontName + '" soundfont (' + (soundfontIndex + 1) + "/" + soundfontData.length + ")...");
-        			soundfont = new WebMIDI.soundfont.Soundfont(soundfontURL, soundfontName, presetIndices, onLoad);
+        			console.log('loading the "' + soundFontName + '" soundFont (' + (soundFontIndex + 1) + "/" + soundFontData.length + ")...");
+        			soundFont = new WebMIDI.soundFont.SoundFont(soundFontURL, soundFontName, presetIndices, onLoad);
         		}
 
-        		loadSoundfontAsynch();
+        		loadSoundFontAsynch();
         	}
 
             globalElements.scoreSelect.selectedIndex = 0;
             score = new Score(runningMarkerHeightChanged); // an empty score, with callback function
-            loadSoundfonts(globalElements.scoreSelect);
+            loadSoundFonts(globalElements.scoreSelect);
         }
 
         function getControlLayers(document)
@@ -914,13 +914,13 @@ _AP.controls = (function(document, window)
 
     	midiAccess = mAccess;
 
-		sf2Synth = new WebMIDI.sf2Synth1.Sf2Synth1();
-		sf2Synth.init();
+    	residentSoundFontSynth = new WebMIDI.residentSoundFontSynth.ResidentSoundFontSynth();
+		residentSoundFontSynth.init();
 
     	getGlobalElements();
 
     	setMIDIInputDeviceSelector(midiAccess);
-    	setMIDIOutputDeviceSelector(midiAccess, sf2Synth);
+    	setMIDIOutputDeviceSelector(midiAccess, residentSoundFontSynth);
 
     	if(midiAccess !== null)
     	{
@@ -1238,16 +1238,16 @@ _AP.controls = (function(document, window)
             }
         }
 
-        function waitForSoundfont()
+        function waitForSoundFont()
         {
-        	if(globalElements.scoreSelect.options[PIANOLA_MUSIC_SCORE_INDEX].soundfont === undefined)
+        	if(globalElements.scoreSelect.options[PIANOLA_MUSIC_SCORE_INDEX].soundFont === undefined)
         	{
-        		globalElements.waitingForSoundfontDiv.style.display = "block";
+        		globalElements.waitingForSoundFontDiv.style.display = "block";
         		globalElements.outputDeviceSelect.disabled = true;
         	}
         	else
         	{
-        		globalElements.waitingForSoundfontDiv.style.display = "none";
+        		globalElements.waitingForSoundFontDiv.style.display = "none";
         		globalElements.outputDeviceSelect.disabled = false;
         	}
         	doControl("scoreSelect");
@@ -1294,9 +1294,9 @@ _AP.controls = (function(document, window)
     	if(controlID === "scoreSelect")
     	{
     		if(globalElements.scoreSelect.selectedIndex === PIANOLA_MUSIC_SCORE_INDEX
-			&& globalElements.scoreSelect.options[PIANOLA_MUSIC_SCORE_INDEX].soundfont === undefined)
+			&& globalElements.scoreSelect.options[PIANOLA_MUSIC_SCORE_INDEX].soundFont === undefined)
     		{
-    			setTimeout(waitForSoundfont, 200);
+    			setTimeout(waitForSoundFont, 200);
     		}
     		setMainOptionsState("toFront"); // enables only the appropriate controls
     	}
@@ -1407,9 +1407,9 @@ _AP.controls = (function(document, window)
     			options.outputDevice.open();
     		}
 
-    		if(options.outputDevice.setSoundfont !== undefined)
+    		if(options.outputDevice.setSoundFont !== undefined)
     		{
-    			options.outputDevice.setSoundfont(scoreSelector[scoreSelector.selectedIndex].soundfont);
+    			options.outputDevice.setSoundFont(scoreSelector[scoreSelector.selectedIndex].soundFont);
     		}
     	}
 
