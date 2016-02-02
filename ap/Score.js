@@ -1667,7 +1667,7 @@ _AP.score = (function (document)
                             {
                                 nextObjectMessages.splice(0, 0, finalChordOffMessages[i]);
                             }
-                            previousMidiChord.finalChordOffMoment = undefined;
+                            //previousMidiChord.finalChordOffMoment = undefined;
                             previousMidiChord.moments.length -= 1;	
                         }
                     }

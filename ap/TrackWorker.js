@@ -1,6 +1,6 @@
 
-/*jslint bitwise: true, nomen: true, plusplus: true, white: true, continue: true */
-/*global _AP: false,  window: false,  document: false, performance: false, console: false, alert: false, postMessage: false, setTimeout: false */
+/*jslint white, bitwise*/
+/*global WebMIDI, _AP,  window,  document, performance, postMessage, addEventListener */
 
 var
 trackIndex,
@@ -50,7 +50,7 @@ eventHandler = function(e)
 		channelIndex = msg.channelIndex;
 
 		allTrks = [];
-		trkIndex = 0;
+		trkIndex = -1;
 		//currentTrk = 0; initialised in start (from trkIndex)
 
 		// currentTrk.moments
@@ -225,6 +225,33 @@ eventHandler = function(e)
 		allTrks.splice(insertAtIndex, 0, trk);
 	}
 
+	function stopCurrentTrack()
+	{
+		var messages, i, nMessages, message, data0, silentTrkMessages = [];
+
+		// send all remaining messages that are not noteOns with velocity > 0
+		if(momentIndex < moments.length)
+		{
+			while(momentIndex < moments.length)
+			{
+				messages = moments[momentIndex].messages;
+				nMessages = messages.length;
+				for(i = 0; i < nMessages; ++i)
+				{
+					message = messages[i];
+					data0 = message.data[0];
+					if(!((data0 >= 0x90 && data0 <= 0x9F) && message.data[1] !== 0)) // not a NoteOn having velocity > 0
+					{
+						silentTrkMessages.push(message.data);									
+					}
+				}
+				momentIndex++;
+			}
+			postMessage({ action: "trkStopped", silentTrkMessages: silentTrkMessages });
+		}
+		currentTrk.isRunning = false;
+	}
+
 	// Seq.prototype.start calls:
 	// worker.postMessage({ action: "start", velocity: performedVelocity });
 	// Note that NoteOffs call this function with velocity set to 0,
@@ -307,11 +334,9 @@ eventHandler = function(e)
 
 				function trkCompleted(letSound)
 				{
-					if(trkIndex < (allTrks.length - 1))
-					{
-						postMessage({ action: "trkCompleted", channelIndex: channelIndex, letSound: letSound });
-					}
-					else
+					stopCurrentTrack();
+
+					if(trkIndex === (allTrks.length - 1))
 					{
 						postMessage({ action: "workerCompleted", trackIndex: trackIndex, channelIndex: channelIndex, letSound: letSound });
 					}
@@ -397,16 +422,16 @@ eventHandler = function(e)
 			return sharedVelocity;
 		}
 
-		if(trkIndex < allTrks.length)
+		if(trkIndex < (allTrks.length - 1))
 		{
-			stopChord = false;
-			stopNow = false;
-
 			if(currentTrk !== undefined && currentTrk.isRunning === true)
 			{
-				currentTrk.isRunning = false;
-				trkIndex++;
+				stopCurrentTrack();				
 			}
+
+			trkIndex++;
+			stopChord = false;
+			stopNow = false;
 
 			currentTrk = allTrks[trkIndex];
 			currentTrk.isRunning = true;
