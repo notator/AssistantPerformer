@@ -20,7 +20,7 @@ _AP.controls = (function(document, window)
     "use strict";
 
 	var
-	residentSoundFontSynth,
+	residentSf2Synth,
 
     tracksControl = _AP.tracksControl,
     Score = _AP.score.Score,
@@ -648,7 +648,7 @@ _AP.controls = (function(document, window)
 
 	// sets the options in the output device selector
 	// midiAccess can be null
-	setMIDIOutputDeviceSelector = function(midiAccess, residentSoundFontSynth)
+	setMIDIOutputDeviceSelector = function(midiAccess, residentSf2Synth)
 	{
 		var
 		option,
@@ -661,8 +661,8 @@ _AP.controls = (function(document, window)
 		os.add(option, null);
 
 		option = document.createElement("option");
-		option.outputDevice = residentSoundFontSynth;
-		option.text = "Resident SoundFont Synth";
+		option.outputDevice = residentSf2Synth;
+		option.text = "Resident Sf2 Synth";
 		os.add(option, null);
 
 		if(midiAccess !== null)
@@ -702,7 +702,7 @@ _AP.controls = (function(document, window)
 				}
 				break;
 			case "output":
-				setMIDIOutputDeviceSelector(midiAccess, residentSoundFontSynth);
+				setMIDIOutputDeviceSelector(midiAccess, residentSf2Synth);
 				// Output devices are currently handled differently from the input devices...
 				// (I don't want the output device selector's selected index to change 
 				// every time an input device is connected or disconnected.)
@@ -843,7 +843,7 @@ _AP.controls = (function(document, window)
 
         				if(!firstSoundFontLoaded)
         				{
-        					loadFirstSoundFont(residentSoundFontSynth, soundFont);
+        					loadFirstSoundFont(residentSf2Synth, soundFont);
         				}
 
         				console.log(soundFontName + ": loading complete.");
@@ -914,13 +914,13 @@ _AP.controls = (function(document, window)
 
     	midiAccess = mAccess;
 
-    	residentSoundFontSynth = new WebMIDI.residentSoundFontSynth.ResidentSoundFontSynth();
-		residentSoundFontSynth.init();
+    	residentSf2Synth = new WebMIDI.residentSf2Synth.ResidentSf2Synth();
+		residentSf2Synth.init();
 
     	getGlobalElements();
 
     	setMIDIInputDeviceSelector(midiAccess);
-    	setMIDIOutputDeviceSelector(midiAccess, residentSoundFontSynth);
+    	setMIDIOutputDeviceSelector(midiAccess, residentSf2Synth);
 
     	if(midiAccess !== null)
     	{
