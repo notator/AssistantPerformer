@@ -1,5 +1,5 @@
 
-This is an experimental Web MIDI application, written in HTML5 and Javascript, that gives a single performer control over the performance of music scores displayed in a browser. It uses MIDI input and output devices, and scores stored in an SVG format which has been enhanced to contain MIDI information. The latest stable version can be tried out on the web at<br />
+This is a developing, experimental Web MIDI application, written in HTML5 and Javascript, that gives a single performer control over the performance of music scores displayed in a browser. It uses MIDI input and output devices, and scores stored in an SVG format which has been enhanced to contain MIDI information. The latest stable version can be tried out on the web at<br />
 [http://james-ingram-act-two.de/open-source/assistantPerformer/assistantPerformer.html](http://james-ingram-act-two.de/open-source/assistantPerformer/assistantPerformer.html).<br />
 <br />
 This application is normally tested in the latest versions of Firefox and Chrome on Windows 10. Firefox requires the [Jazz](http://jazz-soft.net) plug-in to be installed. Chrome implements Web MIDI natively. [1]<br />
