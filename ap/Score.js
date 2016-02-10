@@ -261,7 +261,7 @@ _AP.score = (function (document)
     // It draws the staves with the right colours and, if necessary, moves the start marker to a chord.
     refreshDisplay = function(trackIsOnArrayArg)
     {
-        var system = systems[startMarker.systemIndex()],
+        var i, system = systems[startMarker.systemIndex()],
         startMarkerAlignmentX = startMarker.timeObject().alignmentX,
         timeObjectsArray = getTimeObjectsArray(system), timeObject,
         nOutputTracks = outputTrackPerMidiChannel.length;
@@ -366,6 +366,15 @@ _AP.score = (function (document)
         if(trackIsOnArrayArg !== undefined)
         {
         	trackIsOnArray = trackIsOnArrayArg; // reset by track control
+        }
+        else if(trackIsOnArray !== undefined)
+        {
+        	// This happens both when the score is initialised, and when
+        	// it is reloaded after it has already been displayed.
+        	for(i = 0; i < trackIsOnArray.length; ++i)
+        	{
+        		trackIsOnArray[i] = true;
+        	}
         }
 
         setOutputView(trackIsOnArray, isLivePerformance);

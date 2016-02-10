@@ -305,11 +305,11 @@ _AP.tracksControl = (function (document)
             {
             	if(trackCtlElems[trackIndex].isOutput)
             	{
-            		alert("Can't turn off the last visible output track!");
+            		alert("Can't turn off the last output track!");
             	}
             	else
             	{
-            		alert("Can't turn off the last visible input track!");
+            		alert("Can't turn off the last input track!");
             	}
             }
 
