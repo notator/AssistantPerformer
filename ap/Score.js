@@ -13,7 +13,7 @@
 
 
 /*jslint white */
-/*global WebMIDI, _AP,  window,  document, performance */
+/*global _AP,  window,  document, performance */
 
 _AP.namespace('_AP.score');
 
@@ -152,8 +152,9 @@ _AP.score = (function (document)
     	return timeObjectsArray;
     },
 
-	// Returns the performing timeObject closest to alignmentX (in any performing input or output track, depending on findInput).
+	// Returns the performing midiChordDef or inputChordDef closest to alignmentX (in any performing input or output track, depending on findInput).
 	// If trackIndex is defined, the returned timeObject will be in that track.
+	// If there are no chordDefs matching the arguments (i.e. if all the timeObjects are restDefs), the returned timeObject will be null.
 	findPerformingTimeObject = function(timeObjectsArray, nOutputTracks, trackIsOnArray, findInput, alignmentX, trackIndex)
 	{
 		var i, j, timeObjects, timeObject = null, timeObjectBefore = null, timeObjectAfter = null, returnTimeObject = null, nTimeObjects,
@@ -161,7 +162,7 @@ _AP.score = (function (document)
 
 		function hasPerformingTrack(inputChordDef, trackIsOnArray)
 		{
-			var i, j, outputTrackFound = false, outputTrackIndices;
+			var i, outputTrackFound = false, outputTrackIndices;
 
 			console.assert(inputChordDef !== undefined, "inputChordDef must be defined.");
 
@@ -266,101 +267,66 @@ _AP.score = (function (document)
         timeObjectsArray = getTimeObjectsArray(system), timeObject,
         nOutputTracks = outputTrackPerMidiChannel.length;
 
-    	// This function sets the colours of the visible OutputStaves.
+    	// This function sets the opacity of the visible OutputStaves.
     	// (there are no InputStaves in the system, when isLivePerformance === false)
     	// Staves have either one or two voices (=tracks).
         // The tracks are 0-indexed channels from top to bottom of the system.
-    	// If trackIsOnArray[trackIndex] is true, its stafflines are coloured black.
-    	// If trackIsOnArray[trackIndex] is false, its stafflines are coloured pink.
-		// When the staff has one track, all its stafflines are coloured for the track.
-        // When the staff has two tracks, the top three stafflines are coloured for the upper track,
-        // and the lower two lines are coloured for the lower track. 
+    	// If trackIsOnArray[trackIndex] is true, its stafflines opacity is set to 1.
+        // If trackIsOnArray[trackIndex] is false, its stafflines opacity is set to 0.3.
+		// When the staff has one track, all its stafflines are set for the track.
+        // When the staff has two tracks, the top three stafflines are set for the upper track,
+        // and the lower two lines are set for the lower track. 
         function setOutputView(trackIsOnArray, isLivePerformance)
         {
-        	function getColor(trackIsOnArray, trackIndex, isLivePerformance)
-        	{
-        		var color;
+        	var i, nSystems = systems.length, j, nStaves = systems[0].staves.length,
+            staff, trackIndex, t, nTracksPerStaff,
+            opacity, voiceGraphicElements, voiceGraphicElement, g;
 
-        		if(trackIsOnArray[trackIndex])
-        		{
-        			if(isLivePerformance === false)
-        			{
-        				color = BLACK_COLOR;
-        			}
-        			else
-        			{
-        				color = GREY_COLOR;
-        			}
-        		}
-        		else
-        		{
-        			color = DISABLED_PINK_COLOR;
-        		}
-        		return color;
+        	function setStafflinesOpacity(voice, trackIsOnArray, trackIndex, nTracksPerStaff, opacity)
+        	{
+        	    var voiceStafflinesElem = voice.stafflinesElem;
+
+        	    if(voiceStafflinesElem !== undefined)
+        	    {
+        	        if(nTracksPerStaff > 1 && (trackIsOnArray[trackIndex] !== trackIsOnArray[trackIndex + 1]))
+        	        {
+        	            opacity = 1;
+        	        }
+        	        voiceStafflinesElem.style.opacity = opacity;
+        	    }
         	}
 
-        	function setColors(trackIsOnArray, isLivePerformance)
+        	for(i = 0; i < nSystems; ++i)
         	{
-        		var i, nSystems = systems.length, j, nStaves = systems[0].staves.length,
-                k, staff, trackIndex, m, nLines, t, nTracksPerStaff,
-                stafflineColor;
-
-        		for(i = 0; i < nSystems; ++i)
+        		trackIndex = 0;
+        		for(j = 0; j < nStaves; ++j)
         		{
-        			trackIndex = 0;
-        			for(j = 0; j < nStaves; ++j)
+        			staff = systems[i].staves[j];
+        			if(staff.class !== "outputStaff")
         			{
-        				staff = systems[i].staves[j];
-        				if(staff.class !== "outputStaff")
+        				break;
+        			}
+        			nTracksPerStaff = staff.voices.length;
+        			for(t = 0; t < nTracksPerStaff; ++t)
+        			{
+        				if(staff.isVisible)
         				{
-        					break;
-        				}
-        				nTracksPerStaff = staff.voices.length;
-        				for(t = 0; t < nTracksPerStaff; ++t)
-        				{
-        					if(staff.isVisible)
+        				    opacity = (trackIsOnArray[trackIndex]) ? 1 : 0.3;
+
+        				    setStafflinesOpacity(staff.voices[t], trackIsOnArray, trackIndex, nTracksPerStaff, opacity);
+
+        					voiceGraphicElements = staff.voices[t].graphicElements;
+        					for(g = 0; g < voiceGraphicElements.length; ++g)
         					{
-        						stafflineColor = getColor(trackIsOnArray, trackIndex, isLivePerformance);
-        						staff.nameElem.style.fill = stafflineColor;
-
-        						if(nTracksPerStaff === 1)
-        						{
-        							nLines = staff.svgStafflines.length;
-        							for(m = 0; m < nLines; ++m) // could be any number of lines
-        							{
-        								staff.svgStafflines[m].style.stroke = stafflineColor;
-        							}
-        						}
-        						else if(nTracksPerStaff === 2 && staff.svgStafflines.length === 5) // the staff has two voices
-        						{
-        							for(k = 0; k < 2; ++k)
-        							{
-        								if(k === 0)
-        								{
-        									staff.svgStafflines[0].style.stroke = stafflineColor;
-        									staff.svgStafflines[1].style.stroke = stafflineColor;
-        									staff.svgStafflines[2].style.stroke = stafflineColor;
-        								}
-        								if(k === 1)
-        								{
-        									staff.svgStafflines[3].style.stroke = stafflineColor;
-        									staff.svgStafflines[4].style.stroke = stafflineColor;
-        								}
-        							}
-        						}
-        						else
-        						{
-        							throw "Error: staff cannot have more than two voices!\n" +
-											"Two voice staves must have five lines.";
-        						}
+        						voiceGraphicElement = voiceGraphicElements[g];
+        						voiceGraphicElement.style.opacity = opacity;                                    
         					}
-        					++trackIndex;
         				}
+
+        				++trackIndex;
         			}
         		}
         	}
-
-        	setColors(trackIsOnArray, isLivePerformance);
         }
 
         if(trackIsOnArrayArg !== undefined)
@@ -387,8 +353,9 @@ _AP.score = (function (document)
         {
         	timeObject = findPerformingOutputTimeObject(timeObjectsArray, nOutputTracks, trackIsOnArray, startMarkerAlignmentX);
 		}
-        // move the start marker if necessary
-        if(timeObject.alignmentX !== startMarkerAlignmentX)
+    	// Move the start marker if necessary.
+        // timeObject will be null if there are only rests to be found. In this case, the startMarker doesn't need to be moved.
+        if(timeObject !== null && timeObject.alignmentX !== startMarkerAlignmentX)
         {
         	updateStartMarker(timeObjectsArray, timeObject);
         }
@@ -497,7 +464,7 @@ _AP.score = (function (document)
 			voiceIndex = findVoiceIndex(cursorY, system.staves[staffIndex].voices),
 			trackIndex = 0, found = false;
 
-        	for(i= 0; i < system.staves.length;++i)
+        	for(i = 0; i < system.staves.length; ++i)
         	{
         		staff = system.staves[i];
         		for(j = 0; j < staff.voices.length; ++j)
@@ -1289,13 +1256,13 @@ _AP.score = (function (document)
 
     	// Gets the timeObjects for both input and output voices. 
     	// msDurations are retrieved from the score (not changed by the current speed option).
-    	function getOutputAndInputTimeObjects(speed)
+    	function getVoiceObjects(speed)
     	{
     		var systemElem,
                 i, systemIndex,
                 lastSystemTimeObjects;
 
-    		function getSystemTimeObjects(systems, systemIndex, viewBoxScale1, systemElem)
+    		function getSystemVoiceObjects(systems, systemIndex, viewBoxScale1, systemElem)
     		{
     			var i, j,
 					system = systems[systemIndex],
@@ -1303,82 +1270,121 @@ _AP.score = (function (document)
                     staff, staffChildren, staffChildClass, staffChild,
                     voice,
                     staffIndex = 0,
-                    voiceIndex = 0;
+                    voiceIndex = 0,
+                    voiceIndexInStaff = 0;
 
-    			// There is a timeObject for every input and output chord or rest and the final barline in each voice.
-    			// All timeObjects are allocated alignmentX and msDuration fields.
-				// Chord timeObjects are allocated either a midiChordDef or an inputChordDef field depending on whether they are input or output chords.
+    		    // There is a timeObject for every input and output chord or rest and the final barline in each voice.
+    		    // All timeObjects are allocated alignmentX and msDuration fields.
+    		    // Chord timeObjects are allocated either a midiChordDef or an inputChordDef field depending on whether they are input or output chords.
     			function getTimeObjects(systemIndex, noteObjectElems)
     			{
-    				var timeObjects = [], noteObjectClass,
+    			    var timeObjects = [], noteObjectClass,
                         timeObject, i, j, length, noteObjectElem, chordChildElems, otpmc = outputTrackPerMidiChannel;
 
-    				function getMsDuration(midiChordDef)
-    				{
-    					var i,
+    			    function getMsDuration(midiChordDef)
+    			    {
+    			        var i,
                             msDuration = 0,
                             basicChordsArray = midiChordDef.basicChordsArray;
 
-    					for(i = 0; i < basicChordsArray.length; ++i)
-    					{
-    						msDuration += basicChordsArray[i].msDuration;
-    					}
+    			        for(i = 0; i < basicChordsArray.length; ++i)
+    			        {
+    			            msDuration += basicChordsArray[i].msDuration;
+    			        }
 
-    					return msDuration;
-    				}
+    			        return msDuration;
+    			    }
+
+    			    length = noteObjectElems.length;
+    			    for(i = 0; i < length; ++i)
+    			    {
+    			        noteObjectElem = noteObjectElems[i];
+    			        noteObjectClass = noteObjectElem.getAttribute('class');
+    			        if(noteObjectClass === 'outputChord' || noteObjectClass === 'inputChord')
+    			        {
+    			            timeObject = {};
+    			            timeObject.alignmentX = parseFloat(noteObjectElem.getAttribute('score:alignmentX')) / viewBoxScale1;
+    			            timeObject.systemIndex = systemIndex;
+    			            chordChildElems = noteObjectElem.children;
+    			            for(j = 0; j < chordChildElems.length; ++j)
+    			            {
+    			                switch(chordChildElems[j].nodeName)
+    			                {
+    			                    case 'score:midiChord':
+    			                        timeObject.midiChordDef = new MidiChordDef(chordChildElems[j]);
+    			                        timeObject.msDuration = getMsDuration(timeObject.midiChordDef);
+    			                        break;
+    			                    case 'score:inputNotes':
+    			                        timeObject.inputChordDef = new InputChordDef(noteObjectElem, otpmc);
+    			                        timeObject.msDuration = parseInt(noteObjectElem.getAttribute('score:msDuration'), 10);
+    			                        break;
+    			                }
+    			            }
+    			            if(timeObject.msDuration < 1)
+    			            {
+    			                throw "Error: The score contains chords having zero duration!";
+    			            }
+    			            timeObjects.push(timeObject);
+    			        }
+    			        else if(noteObjectClass === 'rest')
+    			        {
+    			            timeObject = {};
+    			            timeObject.alignmentX = parseFloat(noteObjectElem.getAttribute('score:alignmentX') / viewBoxScale1);
+    			            timeObject.systemIndex = systemIndex;
+    			            timeObject.msDuration = parseFloat(noteObjectElem.getAttribute('score:msDuration'));
+    			            timeObjects.push(timeObject);
+    			        }
+    			        else if(i === length - 1)
+    			        {
+    			            timeObject = {}; // the final barline in the voice (used when changing speed)
+    			            timeObject.msDuration = 0;
+    			            timeObject.systemIndex = systemIndex;
+    			            // msPosition and alignmentX are set later
+    			            // timeObject.msPosition = systems[systemIndex + 1].startMsPosition;
+    			            // timeObject.alignmentX = system.right;
+    			            timeObjects.push(timeObject);
+    			        }
+    			    }
+
+    			    return timeObjects;
+    			}
+
+    		    // These are SVG elements in the voice that will have their opacity changed when the voice is disabled.
+    			function getGraphicElements(systemIndex, noteObjectElems)
+    			{
+    				var graphicElements = [], type, i, length, noteObjectElem;
 
     				length = noteObjectElems.length;
     				for(i = 0; i < length; ++i)
     				{
     					noteObjectElem = noteObjectElems[i];
-    					noteObjectClass = noteObjectElem.getAttribute('class');
-    					if(noteObjectClass === 'outputChord' || noteObjectClass === 'inputChord')
+    					type = noteObjectElem.getAttribute('class');
+    					if(type === 'outputChord' || type === 'inputChord' || type === 'cautionaryChord' || type === 'rest'
+                        || type === 'clef' || type === 'barline' || type === 'staffName' || type === 'beamBlock' || type === 'clefChange'
+                        || type === 'endBarlineLeft' || type === 'endBarlineRight')
     					{
-    						timeObject = {};
-    						timeObject.alignmentX = parseFloat(noteObjectElem.getAttribute('score:alignmentX')) / viewBoxScale1;
-    						timeObject.systemIndex = systemIndex;
-    						chordChildElems = noteObjectElem.children;
-    						for(j = 0; j < chordChildElems.length; ++j)
-    						{
-    							switch(chordChildElems[j].nodeName)
-    							{
-    								case 'score:midiChord':
-    									timeObject.midiChordDef = new MidiChordDef(chordChildElems[j]);
-    									timeObject.msDuration = getMsDuration(timeObject.midiChordDef);
-    									break;
-    								case 'score:inputNotes':
-    									timeObject.inputChordDef = new InputChordDef(noteObjectElem, otpmc);
-    									timeObject.msDuration = parseInt(noteObjectElem.getAttribute('score:msDuration'), 10);
-    									break;
-    							}
-    						}
-    						if(timeObject.msDuration < 1)
-    						{
-    							throw "Error: The score contains chords having zero duration!";
-    						}
-    						timeObjects.push(timeObject);
-    					}
-    					else if(noteObjectClass === 'rest')
-    					{
-    						timeObject = {};
-    						timeObject.alignmentX = parseFloat(noteObjectElem.getAttribute('score:alignmentX') / viewBoxScale1);
-    						timeObject.systemIndex = systemIndex;
-    						timeObject.msDuration = parseFloat(noteObjectElem.getAttribute('score:msDuration'));
-    						timeObjects.push(timeObject);
-    					}
-    					else if(noteObjectClass === null && i === length - 1)
-    					{
-    						timeObject = {}; // the final barline in the voice (used when changing speed)
-    						timeObject.msDuration = 0;
-    						timeObject.systemIndex = systemIndex;
-    						// msPosition and alignmentX are set later
-    						// timeObject.msPosition = systems[systemIndex + 1].startMsPosition;
-    						// timeObject.alignmentX = system.right;
-    						timeObjects.push(timeObject);
+    					    graphicElements.push(noteObjectElem);
     					}
     				}
 
-    				return timeObjects;
+    				return graphicElements;
+    			}
+
+    		    // The stafflines element that will have its opacity changed when the staff's voices are both disabled.
+    			function getStaffLinesElem(staffChildren)
+    			{
+    			    var i, stafflinesElem;
+
+    			    for(i = 0; i < staffChildren.length; ++i)
+    			    {
+    			        if(staffChildren[i].getAttribute('class') === "stafflines")
+    			        {
+    			            stafflinesElem = staffChildren[i];
+    			            break;
+    			        }
+    			    }
+
+    			    return stafflinesElem;
     			}
 
     			systemChildren = systemElem.children;
@@ -1393,10 +1399,17 @@ _AP.score = (function (document)
     					{
     						staffChild = staffChildren[j];
     						staffChildClass = staffChild.getAttribute('class');
+    						voiceIndexInStaff = 0;
     						if(staffChildClass === 'outputVoice' || staffChildClass === 'inputVoice')
     						{
     							voice = staff.voices[voiceIndex++];
     							voice.timeObjects = getTimeObjects(systemIndex, staffChild.children);
+    							voice.graphicElements = getGraphicElements(systemIndex, staffChild.children); // will be used to set opacity when the voice is disabled
+    							if(voiceIndexInStaff === 0)
+    							{
+    							    voice.staffLinesElem = getStaffLinesElem(staffChildren);
+    							    voiceIndexInStaff++;
+    							}
     						}
     					}
     					voiceIndex = 0;
@@ -1613,7 +1626,7 @@ _AP.score = (function (document)
     			{
     				delete systems[systemIndex].msDuration; // is reset in the following function
     			}
-    			getSystemTimeObjects(systems, systemIndex, viewBoxScale, systemElem);
+    			getSystemVoiceObjects(systems, systemIndex, viewBoxScale, systemElem);
     			systemIndex++;
     		}
 
@@ -1743,7 +1756,7 @@ _AP.score = (function (document)
         	return inputKeyRange;
         }
 
-        getOutputAndInputTimeObjects(globalSpeed);
+        getVoiceObjects(globalSpeed);
 
         setSystemMarkerParameters(systems, isLivePerformance);
 
