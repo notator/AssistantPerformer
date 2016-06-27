@@ -152,79 +152,80 @@ _AP.score = (function (document)
     	return timeObjectsArray;
     },
 
-	// Returns the performing midiChordDef or inputChordDef closest to alignmentX (in any performing input or output track, depending on findInput).
+	// Returns the performing restDef or (in any performing input or output track, depending on findInput) midiChordDef or inputChordDef closest to alignmentX.
 	// If trackIndex is defined, the returned timeObject will be in that track.
 	// If there are no chordDefs matching the arguments (i.e. if all the timeObjects are restDefs), the returned timeObject will be null.
 	findPerformingTimeObject = function(timeObjectsArray, nOutputTracks, trackIsOnArray, findInput, alignmentX, trackIndex)
 	{
-		var i, j, timeObjects, timeObject = null, timeObjectBefore = null, timeObjectAfter = null, returnTimeObject = null, nTimeObjects,
+	    var i, j, timeObjects, timeObject = null, timeObjectBefore = null, timeObjectAfter = null, returnTimeObject = null, nTimeObjects,
 			nAllTracks = timeObjectsArray.length, deltaBefore = Number.MAX_VALUE, deltaAfter = Number.MAX_VALUE, startIndex, endIndex;
 
-		function hasPerformingTrack(inputChordDef, trackIsOnArray)
-		{
-			var i, outputTrackFound = false, outputTrackIndices;
+	    function hasPerformingTrack(inputChordDef, trackIsOnArray)
+	    {
+	        var i, outputTrackFound = false, outputTrackIndices;
 
-			console.assert(inputChordDef !== undefined, "inputChordDef must be defined.");
+	        console.assert(inputChordDef !== undefined, "inputChordDef must be defined.");
 
-			outputTrackIndices = inputChordDef.referencedOutputTrackIndices();
-			for(i = 0; i < outputTrackIndices.length; ++i)
-			{
-				if(trackIsOnArray[outputTrackIndices[i]])
-				{
-					outputTrackFound = true;
-					break;
-				}
-				if(outputTrackFound === true)
-				{
-					break;
-				}
-			}
-			return outputTrackFound;
-		}
+	        outputTrackIndices = inputChordDef.referencedOutputTrackIndices();
+	        for(i = 0; i < outputTrackIndices.length; ++i)
+	        {
+	            if(trackIsOnArray[outputTrackIndices[i]])
+	            {
+	                outputTrackFound = true;
+	                break;
+	            }
+	            if(outputTrackFound === true)
+	            {
+	                break;
+	            }
+	        }
+	        return outputTrackFound;
+	    }
 
-		startIndex = (findInput === true) ? nOutputTracks : 0;
-		endIndex = (findInput === true) ? nAllTracks : nOutputTracks;
+	    startIndex = (findInput === true) ? nOutputTracks : 0;
+	    endIndex = (findInput === true) ? nAllTracks : nOutputTracks;
 
-		for(i = startIndex; i < endIndex; ++i)
-		{
-			if(trackIndex === undefined || findInput === true || (i === trackIndex))
-			{
-				timeObjects = timeObjectsArray[i];
-				if(trackIsOnArray[i] === true)
-				{
-					nTimeObjects = timeObjects.length;
-					for(j = 0; j < nTimeObjects; ++j)
-					{
-						timeObject = timeObjects[j];
-						if((!findInput && timeObject.midiChordDef !== undefined)
-						|| (findInput && timeObject.inputChordDef !== undefined 
-							&& hasPerformingTrack(timeObject.inputChordDef, trackIsOnArray)))
-						{
-							if(alignmentX === timeObject.alignmentX)
-							{
-								returnTimeObject = timeObject;
-								break;
-							}
-							if(alignmentX > timeObject.alignmentX && (deltaBefore > (alignmentX - timeObject.alignmentX)))
-							{
-								timeObjectBefore = timeObject;
-								deltaBefore = alignmentX - timeObject.alignmentX;
-							}
-							if(alignmentX < timeObject.alignmentX && (deltaAfter > (timeObject.alignmentX - alignmentX)))
-							{
-								timeObjectAfter = timeObject;
-								deltaAfter = timeObject.alignmentX - alignmentX;
-							}
-						}
-					}
-				}
-			}
-		}
-		if(returnTimeObject === null && (timeObjectBefore !== null || timeObjectAfter !== null))
-		{
-			returnTimeObject = (deltaBefore > deltaAfter) ? timeObjectAfter : timeObjectBefore;
-		}
-		return returnTimeObject;
+	    for(i = startIndex; i < endIndex; ++i)
+	    {
+	        if(trackIndex === undefined || findInput === true || (i === trackIndex))
+	        {
+	            timeObjects = timeObjectsArray[i];
+	            if(trackIsOnArray[i] === true)
+	            {
+	                nTimeObjects = timeObjects.length;
+	                for(j = 0; j < nTimeObjects; ++j)
+	                {
+	                    timeObject = timeObjects[j];
+	                    if((!findInput)  // timeObject is a restDef or midiChordDef in an outputVoice
+						|| (findInput &&
+                            (timeObject.inputChordDef === undefined // a rest in an inputVoice
+                            || (timeObject.inputChordDef !== undefined && hasPerformingTrack(timeObject.inputChordDef, trackIsOnArray)))))
+	                    {
+	                        if(alignmentX === timeObject.alignmentX)
+	                        {
+	                            returnTimeObject = timeObject;
+	                            break;
+	                        }
+	                        if(alignmentX > timeObject.alignmentX && (deltaBefore > (alignmentX - timeObject.alignmentX)))
+	                        {
+	                            timeObjectBefore = timeObject;
+	                            deltaBefore = alignmentX - timeObject.alignmentX;
+	                        }
+	                        if(alignmentX < timeObject.alignmentX && (deltaAfter > (timeObject.alignmentX - alignmentX)))
+	                        {
+	                            timeObjectAfter = timeObject;
+	                            deltaAfter = timeObject.alignmentX - alignmentX;
+	                        }
+	                    }
+	                }
+	            }
+	        }
+	    }
+	    if(returnTimeObject === null && (timeObjectBefore !== null || timeObjectAfter !== null))
+	    {
+	        returnTimeObject = (deltaBefore > deltaAfter) ? timeObjectAfter : timeObjectBefore;
+	    }
+	    return returnTimeObject;
 	},
 	 
 	findPerformingInputTimeObject = function(timeObjectsArray, nOutputTracks, trackIsOnArray, alignmentX, trackIndex)
