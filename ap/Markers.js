@@ -426,7 +426,7 @@ _AP.markers = (function ()
                 for (i = 0; i < system.staves.length; ++i)
                 {
                 	staff = system.staves[i];
-                	if(staff.isVisible && staff.nameElem !== undefined)
+                	if(staff.isVisible && staff.topLineY !== undefined)
                 	{
                 		for(voiceIndex = 0; voiceIndex < staff.voices.length; ++voiceIndex)
                 		{
