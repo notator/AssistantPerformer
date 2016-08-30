@@ -15,7 +15,7 @@
  */
 
 /*jslint white */
-/*global WebMIDI, _AP,  window,  document */
+/*global _AP,  window,  document */
 
 _AP.namespace('_AP.markers');
 
@@ -355,8 +355,6 @@ _AP.markers = (function ()
 		// msPosition must be in the current system
 		moveTo = function(msPosition)
 		{
-			var i;
-
 			positionIndex = 0;
 			while(timeObjects[positionIndex].msPosition !== msPosition)
 			{
@@ -375,7 +373,7 @@ _AP.markers = (function ()
         moveToStartMarker = function (startMarker)
         {
         	//moveTo(startMarker.timeObject().msPosition);
-        	var i, msPosition = startMarker.timeObject().msPosition;
+        	var msPosition = startMarker.timeObject().msPosition;
 
         	positionIndex = 0;
         	while(timeObjects[positionIndex].msPosition < msPosition)
@@ -425,11 +423,11 @@ _AP.markers = (function ()
 
                 for (i = 0; i < system.staves.length; ++i)
                 {
-                	staff = system.staves[i];
-                	if(staff.isVisible && staff.topLineY !== undefined)
-                	{
-                		for(voiceIndex = 0; voiceIndex < staff.voices.length; ++voiceIndex)
-                		{
+                    staff = system.staves[i];
+                    for(voiceIndex = 0; voiceIndex < staff.voices.length; ++voiceIndex)
+                    {
+                	    if(staff.isVisible && staff.topLineY !== undefined)
+                	    {  
                 			if(trackIsOnArray[trackIndex] === true)
                 			{
                 				voice = staff.voices[voiceIndex];
@@ -456,8 +454,8 @@ _AP.markers = (function ()
                 					}
                 				}
                 			}
-                			trackIndex++;
-                		}
+                	    }
+                	    trackIndex++;
                 	}
                 }
 
@@ -477,14 +475,38 @@ _AP.markers = (function ()
                 return nextTimeObject;
             }
 
+            function addRestAndEndBarlineTimeObjects(timeObjects, system)
+            { 			        
+			    var topVoiceTimeObjects = system.staves[0].voices[0].timeObjects,
+			        firstSystemTimeObject = topVoiceTimeObjects[0],
+			        endBarlineTimeObject = topVoiceTimeObjects[topVoiceTimeObjects.length - 1],
+			        systemRestTimeObject = {};
+
+			    systemRestTimeObject.alignmentX = firstSystemTimeObject.alignmentX;
+			    systemRestTimeObject.msPosition = firstSystemTimeObject.msPosition;
+			    systemRestTimeObject.msDuration = endBarlineTimeObject.msPosition - firstSystemTimeObject.msPosition;
+
+			    timeObjects.push(systemRestTimeObject);
+			    timeObjects.push(endBarlineTimeObject);
+            }
+
             timeObjects = [];
             timeObject = {};
             timeObject.msPosition = -1;
 			timeObject.alignmentX = -1;
 			while(timeObject.alignmentX < system.right)
             {
-            	timeObject = findFollowingTimeObject(system, timeObject.msPosition, isLivePerformance, trackIsOnArray);
-                timeObjects.push(timeObject);
+			    timeObject = findFollowingTimeObject(system, timeObject.msPosition, isLivePerformance, trackIsOnArray);
+			    if(timeObject === undefined)
+			    {
+                    // the system has no performing timeObjects. Add a rest timeObject and final barline timeObject
+			        addRestAndEndBarlineTimeObjects(timeObjects, system);
+			        timeObject = timeObjects[1];
+			    }
+			    else
+                {
+			        timeObjects.push(timeObject);
+                }
             }
         },
 

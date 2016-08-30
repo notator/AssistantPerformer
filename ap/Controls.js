@@ -48,6 +48,7 @@ _AP.controls = (function(document, window)
 	STUDY3_SKETCH1_SCORE_INDEX2 = 5,
 	STUDY3_SKETCH2_SCORE_INDEX1 = 6,
 	STUDY3_SKETCH2_SCORE_INDEX2 = 7,
+	TOMBEAU1_SCORE_INDEX = 8,
 
 	RESIDENT_SYNTH_INDEX = 1,
 
@@ -209,7 +210,7 @@ _AP.controls = (function(document, window)
 	residentSynthCanPlayScore = function(scoreIndex)
 	{
 		var rval = false,
-			playableScores = [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX];
+			playableScores = [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX];
 
 		console.assert(scoreIndex > 0, "This function should only be called with valid score indices.");
 
@@ -776,7 +777,7 @@ _AP.controls = (function(document, window)
 						name: "Grand Piano",
 						url: "http://james-ingram-act-two.de/soundFonts/Arachno/Arachno1.0selection-grand piano.sf2",
 						presetIndices: [0],
-						scoreSelectIndices: [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX]
+						scoreSelectIndices: [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX]
 					}
 				];
 
@@ -809,12 +810,12 @@ _AP.controls = (function(document, window)
         					{
         						// consoleSf2Synth can't/shouldn't do this.
         						// (It has no setMasterVolume function)
-        					    synth.setMasterVolume(0);
-        					    for(channelIndex = 0; channelIndex < 16; ++channelIndex)
-        					    {
-        					        synth.noteOn(channelIndex, 64, 100);
-        					        synth.noteOff(channelIndex, 64, 100);
-        					    }
+        						synth.setMasterVolume(0);
+        						for(channelIndex = 0; channelIndex < 16; ++channelIndex)
+        						{
+        							synth.noteOn(channelIndex, 64, 100);
+        							synth.noteOff(channelIndex, 64, 100);
+        						}
         					}
         					// Wait for the above noteOn/noteOff kludge to work.
         					setTimeout(function()
@@ -1018,6 +1019,12 @@ _AP.controls = (function(document, window)
     					scoreInfo.aboutText = "about Study 3 Sketch";
     					scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
                         break;
+    				case TOMBEAU1_SCORE_INDEX:
+    					scoreInfo.path = "Tombeau 1/Tombeau 1 (scroll)";
+    					scoreInfo.inputHandler = "none";
+    					scoreInfo.aboutText = "about Tombeau 1";
+    					scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/tombeau1/aboutTombeau1.html";
+    					break;
     			}
 
     			return scoreInfo;
