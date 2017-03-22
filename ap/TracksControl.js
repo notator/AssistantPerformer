@@ -20,7 +20,7 @@ _AP.tracksControl = (function (document)
 {
     "use strict";
 
-	var
+    var
 	DISABLED_FRAME_ID = "trackControlsFrameDisabled",
 
 	// colours in this tracksControl
@@ -28,7 +28,7 @@ _AP.tracksControl = (function (document)
     TRACKOFF_FILLCOLOR = BACKGROUND_GREEN,
 	DISABLED_BULLET_STROKECOLOR = "#FFFFFF", // used with opacity
 	DISABLED_BULLET_FILLCOLOR = "#FFFFFF", // used with opacity
- 
+
 	OUTPUT_TRACKNUMBER_COLOR = "#000000",
     OUTPUT_BULLET_STROKECOLOR = "#000000",
 	OUTPUT_BULLET_FILLCOLOR = "#AAAAAA",
@@ -52,29 +52,36 @@ _AP.tracksControl = (function (document)
 
 	setTrackCtlState = function(trackIndex, state)
 	{
-		var
+	    var
 		offLayer = document.getElementById("bullet" + (trackIndex + 1).toString() + "Off"),
 		disabledLayer = document.getElementById("bullet" + (trackIndex + 1).toString() + "Disabled");
-		trackCtlElems[trackIndex].previousState = trackCtlElems[trackIndex].state;
+	    trackCtlElems[trackIndex].previousState = trackCtlElems[trackIndex].state;
 
-		switch(state)
-		{
-			case "on":
-				offLayer.setAttribute("opacity", GLASS);
-				disabledLayer.setAttribute("opacity", GLASS);
-				trackCtlElems[trackIndex].state = "on";
-				break;
-			case "off":
-				offLayer.setAttribute("opacity", METAL);
-				disabledLayer.setAttribute("opacity", GLASS);
-				trackCtlElems[trackIndex].state = "off";
-				break;
-			case "disabled":
-				disabledLayer.setAttribute("opacity", SMOKE);
-				trackCtlElems[trackIndex].state = "disabled";
-				break;
-		}
+	    switch(state)
+	    {
+	        case "on":
+	            offLayer.setAttribute("opacity", GLASS);
+	            disabledLayer.setAttribute("opacity", GLASS);
+	            trackCtlElems[trackIndex].state = "on";
+	            break;
+	        case "off":
+	            offLayer.setAttribute("opacity", METAL);
+	            disabledLayer.setAttribute("opacity", GLASS);
+	            trackCtlElems[trackIndex].state = "off";
+	            break;
+	        case "disabled":
+	            disabledLayer.setAttribute("opacity", SMOKE);
+	            trackCtlElems[trackIndex].state = "disabled";
+	            break;
+	    }
 	},
+
+    bbWidth = 0, // the width of the bounding box. Set in init()
+
+    width = function()
+    {
+        return bbWidth;
+    },
 
 	init = function(outputTracks, inputTracks, isLivePerf, scoreRefreshCallback)
 	{
@@ -94,9 +101,10 @@ _AP.tracksControl = (function (document)
 	    		parentElem = trackControlsMainElem.parentNode;
 	    		parentElem.removeChild(trackControlsMainElem);
 	    	}
+	    	bbWidth = parseInt(trackControlsWidth, 10) + 2;
 	    	trackControlsMainElem = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
 	    	trackControlsMainElem.setAttribute("id", "trackControlsMainElem");
-	    	trackControlsMainElem.setAttribute("width", trackControlsWidth + 2);
+	    	trackControlsMainElem.setAttribute("width", bbWidth);
 	    	trackControlsMainElem.setAttribute("height", "36px");
 	    	trackControlsMainElem.style.position = "absolute";
 	    	trackControlsMainElem.style.top = 0;
@@ -375,7 +383,10 @@ _AP.tracksControl = (function (document)
     publicAPI =
     {
         // Called after loading a particular score.
-    	init: init,
+        init: init,
+
+        // the width of the bounding box (set by init())
+        width: width,
 
     	// used to disable the whole tracks control when changing it makes no sense.
     	setDisabled: setDisabled,

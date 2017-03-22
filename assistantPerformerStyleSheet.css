@@ -16,13 +16,6 @@ a:visited
     color: #00AA00;
 }
 
-p.header1
-{
-    font-size: 22px;
-    font-weight: normal;
-    margin:20px auto 6px auto;
-}
-
 div.note /* a note in a blue frame */
 {
     font-size: 8.25pt;
@@ -54,17 +47,8 @@ select.deviceSelector
     font-family: Lucida Sans Unicode, Verdana, Arial, Geneva, Sans-Serif;
     font-size: 11px; 
     width: 220px;
-    margin-left: 8px;
-    margin-right: 8px; 
-}
-
-div.globalSpeedPanel
-{
-    width:520px;
-    padding: 9px 0 6px 0;
-    margin:8px auto 9px auto;    
-    background-color: #FCFCFC;
-    border: 1px solid #008000;
+    margin: 6px 8px 6px 8px;
+    padding: 0; 
 }
 
 div.options
@@ -73,8 +57,8 @@ div.options
     background-color: #F6F6F6;
     border: 1px solid #008000;
 	width:740px;
-    margin: 10px auto 0 auto;
-    padding: 10px;
+    margin: 4px auto 0 auto;
+    padding: 6px 10px 6px 10px;
     text-align:center;
 }
 
@@ -94,4 +78,9 @@ div.runtimeDiv
 	padding: 0;
 	margin: 0;
 	visibility: hidden;
+}
+
+input.startRuntimeButton
+{
+    margin:5px 0 2px 0;
 }

@@ -46,110 +46,13 @@ _AP.message = (function ()
     REAL_TIME = _AP.constants.REAL_TIME,
     SYSTEM_EXCLUSIVE = _AP.constants.SYSTEM_EXCLUSIVE,
 
-    _length,
-
-    _getDataValues = function (argsLength, data1Arg, data2Arg)
-    {
-        var values = {};
-
-        if (argsLength === 1)
-        {
-            values.data1 = 0;
-            values.data2 = 0;
-        }
-        else if (argsLength === 2)
-        {
-            values.data1 = data1Arg;
-            values.data2 = 0;
-        }
-        else if (argsLength === 3 || argsLength === 4)
-        {
-            values.data1 = data1Arg;
-            values.data2 = data2Arg;
-        }
-        else
-        {
-            throw "Error: Too many arguments!";
-        }
-
-        return values;
-    },
-
-    _checkArgSizes = function (status, data1, data2)
-    {
-        if (status < 0 || status > 0xFF)
-        {
-            throw "Error: status out of range.";
-        }
-        if (data1 < 0 || data1 > 0xFF)
-        {
-            throw "Error: data1 out of range.";
-        }
-        if (data2 < 0 || data2 > 0xFF)
-        {
-            throw "Error: data2 out of range.";
-        }
-    },
-
-    _getLength = function (status)
-    {
-        var length = -1, command = status & 0xF0;
-
-        switch (command)
-        {
-            case COMMAND.NOTE_OFF:
-            case COMMAND.NOTE_ON:
-            case COMMAND.AFTERTOUCH:
-            case COMMAND.CONTROL_CHANGE:
-            case COMMAND.PITCH_WHEEL:
-                length = 3;
-                break;
-            case COMMAND.PROGRAM_CHANGE:
-            case COMMAND.CHANNEL_PRESSURE:
-                length = 2;
-                break;
-        }
-        if (length === -1)
-        {
-            switch (status)
-            {
-                case SYSTEM_EXCLUSIVE.START:
-                    throw "Error: Use the special SysExMessage constructor to construct variable length messages.";
-                case REAL_TIME.TUNE_REQUEST:
-                case REAL_TIME.MIDI_CLOCK:
-                case REAL_TIME.MIDI_TICK:
-                case REAL_TIME.MIDI_START:
-                case REAL_TIME.MIDI_CONTINUE:
-                case REAL_TIME.MIDI_STOP:
-                case REAL_TIME.ACTIVE_SENSE:
-                case REAL_TIME.RESET:
-                    length = 1;
-                    break;
-                case REAL_TIME.MTC_QUARTER_FRAME:
-                case REAL_TIME.SONG_SELECT:
-                    length = 2;
-                    break;
-                case REAL_TIME.SONG_POSITION_POINTER:
-                    length = 3;
-                    break;
-            }
-        }
-
-        if (length === -1)
-        {
-            throw "Error: Unknown message type.";
-        }
-
-        return length;
-    },
-
     // This is the constructor to use for non-SysExMessages having 1, 2 or 3 data bytes.
     // A 1-byte "realTime" message will be constructed if data.length is 1, and data[0]
     // matches one of the appropriate REAL_TIME values. 
     // The data1Arg and data2Arg arguments are optional and default to 0.
     Message = function (status, data1Arg, data2Arg)
     {
-        var dataValues, data1, data2;
+        var dataValues, data1, data2, length;
 
         if (!(this instanceof Message))
         {
@@ -159,18 +62,18 @@ _AP.message = (function ()
             }
         }
 
-        dataValues = _getDataValues(arguments.length, data1Arg, data2Arg);
+        dataValues = this._getDataValues(arguments.length, data1Arg, data2Arg);
 
         data1 = dataValues.data1;
         data2 = dataValues.data2;
 
-        _checkArgSizes(status, data1, data2);
+        this._checkArgSizes(status, data1, data2);
 
-        _length = _getLength(status);
+        length = this._getLength(status);
 
-        this.data = new Uint8Array(_length);
+        this.data = new Uint8Array(length);
 
-        switch (_length)
+        switch (length)
         {
             case 1:
                 this.data[0] = status; // runtime messages
@@ -257,7 +160,7 @@ _AP.message = (function ()
         switch(this.data.length)
         {
             case 1:
-                clone = new Message(this.data[0]);; // runtime messages
+                clone = new Message(this.data[0]); // runtime messages
                 break;
             case 2:
                 clone = new Message(this.data[0], this.data[1]);
@@ -361,6 +264,101 @@ _AP.message = (function ()
         }
         return returnString;
     };
+
+    Message.prototype._getDataValues = function(argsLength, data1Arg, data2Arg)
+    {
+        var values = {};
+
+        if(argsLength === 1)
+        {
+            values.data1 = 0;
+            values.data2 = 0;
+        }
+        else if(argsLength === 2)
+        {
+            values.data1 = data1Arg;
+            values.data2 = 0;
+        }
+        else if(argsLength === 3 || argsLength === 4)
+        {
+            values.data1 = data1Arg;
+            values.data2 = data2Arg;
+        }
+        else
+        {
+            throw "Error: Too many arguments!";
+        }
+
+        return values;
+    },
+
+    Message.prototype._checkArgSizes = function(status, data1, data2)
+    {
+        if(status < 0 || status > 0xFF)
+        {
+            throw "Error: status out of range.";
+        }
+        if(data1 < 0 || data1 > 0x7F)
+        {
+            throw "Error: data1 out of range.";
+        }
+        if(data2 < 0 || data2 > 0x7F)
+        {
+            throw "Error: data2 out of range.";
+        }
+    },
+
+    Message.prototype._getLength = function(status)
+    {
+        var length = -1, command = status & 0xF0;
+
+        switch(command)
+        {
+            case COMMAND.NOTE_OFF:
+            case COMMAND.NOTE_ON:
+            case COMMAND.AFTERTOUCH:
+            case COMMAND.CONTROL_CHANGE:
+            case COMMAND.PITCH_WHEEL:
+                length = 3;
+                break;
+            case COMMAND.PROGRAM_CHANGE:
+            case COMMAND.CHANNEL_PRESSURE:
+                length = 2;
+                break;
+        }
+        if(length === -1)
+        {
+            switch(status)
+            {
+                case SYSTEM_EXCLUSIVE.START:
+                    throw "Error: Use the special SysExMessage constructor to construct variable length messages.";
+                case REAL_TIME.TUNE_REQUEST:
+                case REAL_TIME.MIDI_CLOCK:
+                case REAL_TIME.MIDI_TICK:
+                case REAL_TIME.MIDI_START:
+                case REAL_TIME.MIDI_CONTINUE:
+                case REAL_TIME.MIDI_STOP:
+                case REAL_TIME.ACTIVE_SENSE:
+                case REAL_TIME.RESET:
+                    length = 1;
+                    break;
+                case REAL_TIME.MTC_QUARTER_FRAME:
+                case REAL_TIME.SONG_SELECT:
+                    length = 2;
+                    break;
+                case REAL_TIME.SONG_POSITION_POINTER:
+                    length = 3;
+                    break;
+            }
+        }
+
+        if(length === -1)
+        {
+            throw "Error: Unknown message type.";
+        }
+
+        return length;
+    },
 
     // returns "SysEx data:" followed by a string of hexadecimal numbers.
     SysExMessage.prototype.toString = function ()

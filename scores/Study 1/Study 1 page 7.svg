@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet href="../../fontsStyleSheet.css" type="text/css"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:score="http://www.james-ingram-act-two.de/open-source/svgScoreExtensions.html" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:score="http://www.james-ingram-act-two.de/open-source/svgScoreNamespace.html" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
 	version="1.1"
+	data-scoreType="http://www.james-ingram-act-two.de/open-source/svgScoreNamespace.html"
 	width="1010"
 	height="1237"
 	viewBox="0 0 8080 9896">
@@ -9,9 +10,9 @@
 		inkscape:window-maximized="1"
 		inkscape:current-layer="layer2" />
 	<title
-		id="pageTitle">Study 1, page 7 of 7</title>
+		class="pageTitle">Study 1, page 7 of 7</title>
 	<metadata
-		id="metadata">
+		class="metadata">
 		<rdf:RDF>
 			<cc:Work
 				rdf:about="">
@@ -19,7 +20,7 @@
 				<dc:type
 					rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
 				<dc:title>Study 1, page 7 of 7</dc:title>
-				<dc:date>Sunday 03.07.2016, 15:13:14</dc:date>
+				<dc:date>Thursday 02.03.2017, 10:30:28</dc:date>
 				<dc:creator>
 					<cc:Agent>
 						<dc:title>James Ingram</dc:title>
@@ -315,6 +316,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			style="stroke:black; stroke-width:4; fill:#ffffff" />
 	</g>
 	<g
+		class="systems"
 		inkscape:groupmode="layer"
 		id="layer2"
 		inkscape:label="score"
@@ -325,9 +327,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			x="32"
 			y="80"
 			font-size="72"
-			font-family="Arial">Study 1 page 7, Sunday 03.07.2016, 15:13:14</text>
+			font-family="Arial">Study 1 page 7, Thursday 02.03.2017, 10:30:28</text>
 		<g
 			class="system">
+			<score:leftToRight
+				systemTop="467,5329"
+				systemBottom="1255,49" />
 			<g
 				class="outputStaff"
 				score:staffName=" ">
@@ -404,16 +409,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="930.9993">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="160"
-									patch="0"
-									pitches="65 68 70 74 75"
-									velocities="71 71 71 71 71" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="930.9993">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="160">
+									<switches>
+										<msg
+											m="0xB0 0 0" />
+										<msg
+											m="0xC0 0" />
+										<msg
+											m="0xB0 101 0" />
+										<msg
+											m="0xB0 6 2" />
+									</switches>
+									<noteOns>
+										<msg
+											m="0x90 65 71" />
+										<msg
+											m="0x90 68 71" />
+										<msg
+											m="0x90 70 71" />
+										<msg
+											m="0x90 74 71" />
+										<msg
+											m="0x90 75 71" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -471,16 +496,42 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1282.989">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="137"
-									patch="0"
-									pitches="63 65 66 69 73 78 85"
-									velocities="43 43 43 43 43 43 43" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1282.989">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="137">
+									<noteOffs>
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 74 64" />
+										<msg
+											m="0x80 75 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 63 43" />
+										<msg
+											m="0x90 65 43" />
+										<msg
+											m="0x90 66 43" />
+										<msg
+											m="0x90 69 43" />
+										<msg
+											m="0x90 73 43" />
+										<msg
+											m="0x90 78 43" />
+										<msg
+											m="0x90 85 43" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -575,16 +626,44 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1584.38">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="147"
-									patch="0"
-									pitches="60 62 65 66 70 75"
-									velocities="57 57 57 57 57 57" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1584.38">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="147">
+									<noteOffs>
+										<msg
+											m="0x80 63 64" />
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 73 64" />
+										<msg
+											m="0x80 78 64" />
+										<msg
+											m="0x80 85 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 60 57" />
+										<msg
+											m="0x90 62 57" />
+										<msg
+											m="0x90 65 57" />
+										<msg
+											m="0x90 66 57" />
+										<msg
+											m="0x90 70 57" />
+										<msg
+											m="0x90 75 57" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -663,16 +742,46 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1907.77">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="128"
-									patch="0"
-									pitches="68 69 71 74 78 83 90 102"
-									velocities="29 29 29 29 29 29 29 29" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1907.77">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="128">
+									<noteOffs>
+										<msg
+											m="0x80 60 64" />
+										<msg
+											m="0x80 62 64" />
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 75 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 68 29" />
+										<msg
+											m="0x90 69 29" />
+										<msg
+											m="0x90 71 29" />
+										<msg
+											m="0x90 74 29" />
+										<msg
+											m="0x90 78 29" />
+										<msg
+											m="0x90 83 29" />
+										<msg
+											m="0x90 90 29" />
+										<msg
+											m="0x90 102 29" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -797,16 +906,38 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="2189.361">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="213"
-									patch="0"
-									pitches="64 68"
-									velocities="113 113" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="2189.361">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="213">
+									<noteOffs>
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 74 64" />
+										<msg
+											m="0x80 78 64" />
+										<msg
+											m="0x80 83 64" />
+										<msg
+											m="0x80 90 64" />
+										<msg
+											m="0x80 102 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 64 113" />
+										<msg
+											m="0x90 68 113" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -839,16 +970,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="2657.947">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="192"
-									patch="0"
-									pitches="62 66 69"
-									velocities="99 99 99" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="2657.947">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="192">
+									<noteOffs>
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 68 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 62 99" />
+										<msg
+											m="0x90 66 99" />
+										<msg
+											m="0x90 69 99" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -886,16 +1029,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3080.334">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="160"
-									patch="0"
-									pitches="61 64 66 70 71"
-									velocities="71 71 71 71 71" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3080.334">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="160">
+									<noteOffs>
+										<msg
+											m="0x80 62 64" />
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 69 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 61 71" />
+										<msg
+											m="0x90 64 71" />
+										<msg
+											m="0x90 66 71" />
+										<msg
+											m="0x90 70 71" />
+										<msg
+											m="0x90 71 71" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -959,16 +1120,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3432.323">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="174"
-									patch="0"
-									pitches="66 69 73 75"
-									velocities="85 85 85 85" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3432.323">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="174">
+									<noteOffs>
+										<msg
+											m="0x80 61 64" />
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 71 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 66 85" />
+										<msg
+											m="0x90 69 85" />
+										<msg
+											m="0x90 73 85" />
+										<msg
+											m="0x90 75 85" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -1026,16 +1207,40 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3815.112">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="137"
-									patch="0"
-									pitches="67 69 70 73 77 82 89"
-									velocities="43 43 43 43 43 43 43" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3815.112">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="137">
+									<noteOffs>
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 73 64" />
+										<msg
+											m="0x80 75 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 67 43" />
+										<msg
+											m="0x90 69 43" />
+										<msg
+											m="0x90 70 43" />
+										<msg
+											m="0x90 73 43" />
+										<msg
+											m="0x90 77 43" />
+										<msg
+											m="0x90 82 43" />
+										<msg
+											m="0x90 89 43" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -1121,16 +1326,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4116.503">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="240"
-									patch="0"
-									pitches="65"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4116.503">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="240">
+									<noteOffs>
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 73 64" />
+										<msg
+											m="0x80 77 64" />
+										<msg
+											m="0x80 82 64" />
+										<msg
+											m="0x80 89 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 65 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -1153,16 +1376,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4644.487">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="147"
-									patch="0"
-									pitches="63 65 68 69 73 78"
-									velocities="57 57 57 57 57 57" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4644.487">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="147">
+									<noteOffs>
+										<msg
+											m="0x80 65 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 63 57" />
+										<msg
+											m="0x90 65 57" />
+										<msg
+											m="0x90 68 57" />
+										<msg
+											m="0x90 69 57" />
+										<msg
+											m="0x90 73 57" />
+										<msg
+											m="0x90 78 57" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -1230,16 +1469,46 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4967.877">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="128"
-									patch="0"
-									pitches="68 69 71 74 78 83 90 102"
-									velocities="29 29 29 29 29 29 29 29" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4967.877">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="128">
+									<noteOffs>
+										<msg
+											m="0x80 63 64" />
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 73 64" />
+										<msg
+											m="0x80 78 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 68 29" />
+										<msg
+											m="0x90 69 29" />
+										<msg
+											m="0x90 71 29" />
+										<msg
+											m="0x90 74 29" />
+										<msg
+											m="0x90 78 29" />
+										<msg
+											m="0x90 83 29" />
+										<msg
+											m="0x90 90 29" />
+										<msg
+											m="0x90 102 29" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -1369,16 +1638,38 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="5249.468">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="213"
-									patch="0"
-									pitches="60 64"
-									velocities="113 113" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="5249.468">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="213">
+									<noteOffs>
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 74 64" />
+										<msg
+											m="0x80 78 64" />
+										<msg
+											m="0x80 83 64" />
+										<msg
+											m="0x80 90 64" />
+										<msg
+											m="0x80 102 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 60 113" />
+										<msg
+											m="0x90 64 113" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -1412,16 +1703,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="5718.054">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="192"
-									patch="0"
-									pitches="64 68 71"
-									velocities="99 99 99" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="5718.054">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="192">
+									<noteOffs>
+										<msg
+											m="0x80 60 64" />
+										<msg
+											m="0x80 64 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 64 99" />
+										<msg
+											m="0x90 68 99" />
+										<msg
+											m="0x90 71 99" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -1459,16 +1762,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="6140.441">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="160"
-									patch="0"
-									pitches="62 65 67 71 72"
-									velocities="71 71 71 71 71" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="6140.441">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="160">
+									<noteOffs>
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 71 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 62 71" />
+										<msg
+											m="0x90 65 71" />
+										<msg
+											m="0x90 67 71" />
+										<msg
+											m="0x90 71 71" />
+										<msg
+											m="0x90 72 71" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -1516,16 +1837,42 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="6492.431">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="137"
-									patch="0"
-									pitches="61 63 64 67 71 76 83"
-									velocities="43 43 43 43 43 43 43" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="6492.431">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="137">
+									<noteOffs>
+										<msg
+											m="0x80 62 64" />
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 72 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 61 43" />
+										<msg
+											m="0x90 63 43" />
+										<msg
+											m="0x90 64 43" />
+										<msg
+											m="0x90 67 43" />
+										<msg
+											m="0x90 71 43" />
+										<msg
+											m="0x90 76 43" />
+										<msg
+											m="0x90 83 43" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -1600,16 +1947,40 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="6793.822">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="174"
-									patch="0"
-									pitches="67 70 74 76"
-									velocities="85 85 85 85" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="6793.822">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="174">
+									<noteOffs>
+										<msg
+											m="0x80 61 64" />
+										<msg
+											m="0x80 63 64" />
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 76 64" />
+										<msg
+											m="0x80 83 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 67 85" />
+										<msg
+											m="0x90 70 85" />
+										<msg
+											m="0x90 74 85" />
+										<msg
+											m="0x90 76 85" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -1652,16 +2023,38 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="7176.61">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="147"
-									patch="0"
-									pitches="66 68 71 72 76 81"
-									velocities="57 57 57 57 57 57" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="7176.61">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="147">
+									<noteOffs>
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 74 64" />
+										<msg
+											m="0x80 76 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 66 57" />
+										<msg
+											m="0x90 68 57" />
+										<msg
+											m="0x90 71 57" />
+										<msg
+											m="0x90 72 57" />
+										<msg
+											m="0x90 76 57" />
+										<msg
+											m="0x90 81 57" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -1742,6 +2135,9 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 		</g>
 		<g
 			class="system">
+			<score:leftToRight
+				systemTop="1347,533"
+				systemBottom="2095,49" />
 			<g
 				class="outputStaff"
 				score:staffName=" ">
@@ -1818,16 +2214,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="793.173">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="240"
-									patch="0"
-									pitches="65"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="793.173">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="240">
+									<noteOffs>
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 72 64" />
+										<msg
+											m="0x80 76 64" />
+										<msg
+											m="0x80 81 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 65 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -1855,16 +2267,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1304.169">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="128"
-									patch="0"
-									pitches="68 69 71 74 78 83 90 102"
-									velocities="29 29 29 29 29 29 29 29" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1304.169">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="128">
+									<noteOffs>
+										<msg
+											m="0x80 65 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 68 29" />
+										<msg
+											m="0x90 69 29" />
+										<msg
+											m="0x90 71 29" />
+										<msg
+											m="0x90 74 29" />
+										<msg
+											m="0x90 78 29" />
+										<msg
+											m="0x90 83 29" />
+										<msg
+											m="0x90 90 29" />
+										<msg
+											m="0x90 102 29" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -1984,16 +2416,38 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1576.701">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="213"
-									patch="0"
-									pitches="63 67"
-									velocities="113 113" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1576.701">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="213">
+									<noteOffs>
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 74 64" />
+										<msg
+											m="0x80 78 64" />
+										<msg
+											m="0x80 83 64" />
+										<msg
+											m="0x80 90 64" />
+										<msg
+											m="0x80 102 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 63 113" />
+										<msg
+											m="0x90 67 113" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -2031,16 +2485,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="2030.21">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="192"
-									patch="0"
-									pitches="60 64 67"
-									velocities="99 99 99" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="2030.21">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="192">
+									<noteOffs>
+										<msg
+											m="0x80 63 64" />
+										<msg
+											m="0x80 67 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 60 99" />
+										<msg
+											m="0x90 64 99" />
+										<msg
+											m="0x90 67 99" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -2084,16 +2550,38 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="2439.007">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="137"
-									patch="0"
-									pitches="64 66 67 70 74 79 86"
-									velocities="43 43 43 43 43 43 43" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="2439.007">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="137">
+									<noteOffs>
+										<msg
+											m="0x80 60 64" />
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 67 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 64 43" />
+										<msg
+											m="0x90 66 43" />
+										<msg
+											m="0x90 67 43" />
+										<msg
+											m="0x90 70 43" />
+										<msg
+											m="0x90 74 43" />
+										<msg
+											m="0x90 79 43" />
+										<msg
+											m="0x90 86 43" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -2168,16 +2656,42 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="2730.701">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="160"
-									patch="0"
-									pitches="67 70 72 76 77"
-									velocities="71 71 71 71 71" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="2730.701">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="160">
+									<noteOffs>
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 74 64" />
+										<msg
+											m="0x80 79 64" />
+										<msg
+											m="0x80 86 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 67 71" />
+										<msg
+											m="0x90 70 71" />
+										<msg
+											m="0x90 72 71" />
+										<msg
+											m="0x90 76 71" />
+										<msg
+											m="0x90 77 71" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -2230,16 +2744,40 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3071.365">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="147"
-									patch="0"
-									pitches="62 64 67 68 72 77"
-									velocities="57 57 57 57 57 57" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3071.365">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="147">
+									<noteOffs>
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 72 64" />
+										<msg
+											m="0x80 76 64" />
+										<msg
+											m="0x80 77 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 62 57" />
+										<msg
+											m="0x90 64 57" />
+										<msg
+											m="0x90 67 57" />
+										<msg
+											m="0x90 68 57" />
+										<msg
+											m="0x90 72 57" />
+										<msg
+											m="0x90 77 57" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -2292,16 +2830,38 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3384.351">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="174"
-									patch="0"
-									pitches="61 64 68 70"
-									velocities="85 85 85 85" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3384.351">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="174">
+									<noteOffs>
+										<msg
+											m="0x80 62 64" />
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 72 64" />
+										<msg
+											m="0x80 77 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 61 85" />
+										<msg
+											m="0x90 64 85" />
+										<msg
+											m="0x90 68 85" />
+										<msg
+											m="0x90 70 85" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -2360,16 +2920,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3754.823">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="240"
-									patch="0"
-									pitches="66"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3754.823">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="240">
+									<noteOffs>
+										<msg
+											m="0x80 61 64" />
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 70 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 66 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -2397,16 +2969,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4265.819">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="128"
-									patch="0"
-									pitches="65 66 68 71 75 80 87 99"
-									velocities="29 29 29 29 29 29 29 29" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4265.819">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="128">
+									<noteOffs>
+										<msg
+											m="0x80 66 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 65 29" />
+										<msg
+											m="0x90 66 29" />
+										<msg
+											m="0x90 68 29" />
+										<msg
+											m="0x90 71 29" />
+										<msg
+											m="0x90 75 29" />
+										<msg
+											m="0x90 80 29" />
+										<msg
+											m="0x90 87 29" />
+										<msg
+											m="0x90 99 29" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -2535,16 +3127,48 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4538.351">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="137"
-									patch="0"
-									pitches="68 70 71 74 78 83 90"
-									velocities="43 43 43 43 43 43 43" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4538.351">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="137">
+									<noteOffs>
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 75 64" />
+										<msg
+											m="0x80 80 64" />
+										<msg
+											m="0x80 87 64" />
+										<msg
+											m="0x80 99 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 68 43" />
+										<msg
+											m="0x90 70 43" />
+										<msg
+											m="0x90 71 43" />
+										<msg
+											m="0x90 74 43" />
+										<msg
+											m="0x90 78 43" />
+										<msg
+											m="0x90 83 43" />
+										<msg
+											m="0x90 90 43" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -2640,16 +3264,42 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4830.044">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="160"
-									patch="0"
-									pitches="63 66 68 72 73"
-									velocities="71 71 71 71 71" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4830.044">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="160">
+									<noteOffs>
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 74 64" />
+										<msg
+											m="0x80 78 64" />
+										<msg
+											m="0x80 83 64" />
+										<msg
+											m="0x80 90 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 63 71" />
+										<msg
+											m="0x90 66 71" />
+										<msg
+											m="0x90 68 71" />
+										<msg
+											m="0x90 72 71" />
+										<msg
+											m="0x90 73 71" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -2712,16 +3362,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="5170.708">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="213"
-									patch="0"
-									pitches="67 71"
-									velocities="113 113" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="5170.708">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="213">
+									<noteOffs>
+										<msg
+											m="0x80 63 64" />
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 72 64" />
+										<msg
+											m="0x80 73 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 67 113" />
+										<msg
+											m="0x90 71 113" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -2754,16 +3420,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="5624.218">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="147"
-									patch="0"
-									pitches="64 66 69 70 74 79"
-									velocities="57 57 57 57 57 57" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="5624.218">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="147">
+									<noteOffs>
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 71 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 64 57" />
+										<msg
+											m="0x90 66 57" />
+										<msg
+											m="0x90 69 57" />
+										<msg
+											m="0x90 70 57" />
+										<msg
+											m="0x90 74 57" />
+										<msg
+											m="0x90 79 57" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -2821,16 +3505,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="5937.203">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="192"
-									patch="0"
-									pitches="60 64 67"
-									velocities="99 99 99" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="5937.203">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="192">
+									<noteOffs>
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 74 64" />
+										<msg
+											m="0x80 79 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 60 99" />
+										<msg
+											m="0x90 64 99" />
+										<msg
+											m="0x90 67 99" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -2869,16 +3573,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="6346">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="174"
-									patch="0"
-									pitches="66 69 73 75"
-									velocities="85 85 85 85" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="6346">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="174">
+									<noteOffs>
+										<msg
+											m="0x80 60 64" />
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 67 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 66 85" />
+										<msg
+											m="0x90 69 85" />
+										<msg
+											m="0x90 73 85" />
+										<msg
+											m="0x90 75 85" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -2931,16 +3651,42 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="6716.472">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="128"
-									patch="0"
-									pitches="65 66 68 71 75 80 87 99"
-									velocities="29 29 29 29 29 29 29 29" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="6716.472">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="128">
+									<noteOffs>
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 73 64" />
+										<msg
+											m="0x80 75 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 65 29" />
+										<msg
+											m="0x90 66 29" />
+										<msg
+											m="0x90 68 29" />
+										<msg
+											m="0x90 71 29" />
+										<msg
+											m="0x90 75 29" />
+										<msg
+											m="0x90 80 29" />
+										<msg
+											m="0x90 87 29" />
+										<msg
+											m="0x90 99 29" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -3069,16 +3815,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="6989.003">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="240"
-									patch="0"
-									pitches="62"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="6989.003">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="240">
+									<noteOffs>
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 75 64" />
+										<msg
+											m="0x80 80 64" />
+										<msg
+											m="0x80 87 64" />
+										<msg
+											m="0x80 99 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 62 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -3113,6 +3879,9 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 		</g>
 		<g
 			class="system">
+			<score:leftToRight
+				systemTop="2201,2"
+				systemBottom="2975,49" />
 			<g
 				class="outputStaff"
 				score:staffName=" ">
@@ -3189,16 +3958,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="878.8628">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="137"
-									patch="0"
-									pitches="61 63 64 67 71 76 83"
-									velocities="43 43 43 43 43 43 43" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="878.8628">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="137">
+									<noteOffs>
+										<msg
+											m="0x80 62 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 61 43" />
+										<msg
+											m="0x90 63 43" />
+										<msg
+											m="0x90 64 43" />
+										<msg
+											m="0x90 67 43" />
+										<msg
+											m="0x90 71 43" />
+										<msg
+											m="0x90 76 43" />
+										<msg
+											m="0x90 83 43" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -3273,16 +4060,42 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1182.646">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="160"
-									patch="0"
-									pitches="68 71 73 77 78"
-									velocities="71 71 71 71 71" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1182.646">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="160">
+									<noteOffs>
+										<msg
+											m="0x80 61 64" />
+										<msg
+											m="0x80 63 64" />
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 76 64" />
+										<msg
+											m="0x80 83 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 68 71" />
+										<msg
+											m="0x90 71 71" />
+										<msg
+											m="0x90 73 71" />
+										<msg
+											m="0x90 77 71" />
+										<msg
+											m="0x90 78 71" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -3340,16 +4153,40 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1537.429">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="147"
-									patch="0"
-									pitches="63 65 68 69 73 78"
-									velocities="57 57 57 57 57 57" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1537.429">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="147">
+									<noteOffs>
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 73 64" />
+										<msg
+											m="0x80 77 64" />
+										<msg
+											m="0x80 78 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 63 57" />
+										<msg
+											m="0x90 65 57" />
+										<msg
+											m="0x90 68 57" />
+										<msg
+											m="0x90 69 57" />
+										<msg
+											m="0x90 73 57" />
+										<msg
+											m="0x90 78 57" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -3417,16 +4254,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1863.386">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="192"
-									patch="0"
-									pitches="67 71 74"
-									velocities="99 99 99" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1863.386">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="192">
+									<noteOffs>
+										<msg
+											m="0x80 63 64" />
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 73 64" />
+										<msg
+											m="0x80 78 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 67 99" />
+										<msg
+											m="0x90 71 99" />
+										<msg
+											m="0x90 74 99" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -3464,16 +4321,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="2289.125">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="213"
-									patch="0"
-									pitches="64 68"
-									velocities="113 113" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="2289.125">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="213">
+									<noteOffs>
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 74 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 64 113" />
+										<msg
+											m="0x90 68 113" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -3506,16 +4375,30 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="2761.43">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="174"
-									patch="0"
-									pitches="66 69 73 75"
-									velocities="85 85 85 85" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="2761.43">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="174">
+									<noteOffs>
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 68 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 66 85" />
+										<msg
+											m="0x90 69 85" />
+										<msg
+											m="0x90 73 85" />
+										<msg
+											m="0x90 75 85" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -3568,16 +4451,42 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3147.257">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="128"
-									patch="0"
-									pitches="60 61 63 66 70 75 82 94"
-									velocities="29 29 29 29 29 29 29 29" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3147.257">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="128">
+									<noteOffs>
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 73 64" />
+										<msg
+											m="0x80 75 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 60 29" />
+										<msg
+											m="0x90 61 29" />
+										<msg
+											m="0x90 63 29" />
+										<msg
+											m="0x90 66 29" />
+										<msg
+											m="0x90 70 29" />
+										<msg
+											m="0x90 75 29" />
+										<msg
+											m="0x90 82 29" />
+										<msg
+											m="0x90 94 29" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -3706,16 +4615,48 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3431.083">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="137"
-									patch="0"
-									pitches="65 67 68 71 75 80 87"
-									velocities="43 43 43 43 43 43 43" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3431.083">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="137">
+									<noteOffs>
+										<msg
+											m="0x80 60 64" />
+										<msg
+											m="0x80 61 64" />
+										<msg
+											m="0x80 63 64" />
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 75 64" />
+										<msg
+											m="0x80 82 64" />
+										<msg
+											m="0x80 94 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 65 43" />
+										<msg
+											m="0x90 67 43" />
+										<msg
+											m="0x90 68 43" />
+										<msg
+											m="0x90 71 43" />
+										<msg
+											m="0x90 75 43" />
+										<msg
+											m="0x90 80 43" />
+										<msg
+											m="0x90 87 43" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -3810,16 +4751,44 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3734.866">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="147"
-									patch="0"
-									pitches="68 70 73 74 78 83"
-									velocities="57 57 57 57 57 57" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3734.866">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="147">
+									<noteOffs>
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 75 64" />
+										<msg
+											m="0x80 80 64" />
+										<msg
+											m="0x80 87 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 68 57" />
+										<msg
+											m="0x90 70 57" />
+										<msg
+											m="0x90 73 57" />
+										<msg
+											m="0x90 74 57" />
+										<msg
+											m="0x90 78 57" />
+										<msg
+											m="0x90 83 57" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -3898,16 +4867,40 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4060.823">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="160"
-									patch="0"
-									pitches="62 65 67 71 72"
-									velocities="71 71 71 71 71" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4060.823">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="160">
+									<noteOffs>
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 73 64" />
+										<msg
+											m="0x80 74 64" />
+										<msg
+											m="0x80 78 64" />
+										<msg
+											m="0x80 83 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 62 71" />
+										<msg
+											m="0x90 65 71" />
+										<msg
+											m="0x90 67 71" />
+										<msg
+											m="0x90 71 71" />
+										<msg
+											m="0x90 72 71" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -3960,16 +4953,30 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4415.606">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="240"
-									patch="0"
-									pitches="61"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4415.606">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="240">
+									<noteOffs>
+										<msg
+											m="0x80 62 64" />
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 72 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 61 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -4003,16 +5010,26 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4947.78">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="192"
-									patch="0"
-									pitches="63 67 70"
-									velocities="99 99 99" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4947.78">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="192">
+									<noteOffs>
+										<msg
+											m="0x80 61 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 63 99" />
+										<msg
+											m="0x90 67 99" />
+										<msg
+											m="0x90 70 99" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -4055,16 +5072,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="5373.52">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="174"
-									patch="0"
-									pitches="67 70 74 76"
-									velocities="85 85 85 85" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="5373.52">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="174">
+									<noteOffs>
+										<msg
+											m="0x80 63 64" />
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 70 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 67 85" />
+										<msg
+											m="0x90 70 85" />
+										<msg
+											m="0x90 74 85" />
+										<msg
+											m="0x90 76 85" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -4107,16 +5140,30 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="5759.347">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="213"
-									patch="0"
-									pitches="64 68"
-									velocities="113 113" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="5759.347">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="213">
+									<noteOffs>
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 74 64" />
+										<msg
+											m="0x80 76 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 64 113" />
+										<msg
+											m="0x90 68 113" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -4149,16 +5196,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="6231.651">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="137"
-									patch="0"
-									pitches="66 68 69 72 76 81 88"
-									velocities="43 43 43 43 43 43 43" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="6231.651">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="137">
+									<noteOffs>
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 68 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 66 43" />
+										<msg
+											m="0x90 68 43" />
+										<msg
+											m="0x90 69 43" />
+										<msg
+											m="0x90 72 43" />
+										<msg
+											m="0x90 76 43" />
+										<msg
+											m="0x90 81 43" />
+										<msg
+											m="0x90 88 43" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -4239,16 +5306,48 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="6535.434">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="128"
-									patch="0"
-									pitches="65 66 68 71 75 80 87 99"
-									velocities="29 29 29 29 29 29 29 29" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="6535.434">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="128">
+									<noteOffs>
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 72 64" />
+										<msg
+											m="0x80 76 64" />
+										<msg
+											m="0x80 81 64" />
+										<msg
+											m="0x80 88 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 65 29" />
+										<msg
+											m="0x90 66 29" />
+										<msg
+											m="0x90 68 29" />
+										<msg
+											m="0x90 71 29" />
+										<msg
+											m="0x90 75 29" />
+										<msg
+											m="0x90 80 29" />
+										<msg
+											m="0x90 87 29" />
+										<msg
+											m="0x90 99 29" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -4377,16 +5476,46 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="6819.26">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="147"
-									patch="0"
-									pitches="68 70 73 74 78 83"
-									velocities="57 57 57 57 57 57" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="6819.26">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="147">
+									<noteOffs>
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 75 64" />
+										<msg
+											m="0x80 80 64" />
+										<msg
+											m="0x80 87 64" />
+										<msg
+											m="0x80 99 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 68 57" />
+										<msg
+											m="0x90 70 57" />
+										<msg
+											m="0x90 73 57" />
+										<msg
+											m="0x90 74 57" />
+										<msg
+											m="0x90 78 57" />
+										<msg
+											m="0x90 83 57" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -4465,16 +5594,40 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="7145.217">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="160"
-									patch="0"
-									pitches="60 63 65 69 70"
-									velocities="71 71 71 71 71" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="7145.217">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="160">
+									<noteOffs>
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 73 64" />
+										<msg
+											m="0x80 74 64" />
+										<msg
+											m="0x80 78 64" />
+										<msg
+											m="0x80 83 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 60 71" />
+										<msg
+											m="0x90 63 71" />
+										<msg
+											m="0x90 65 71" />
+										<msg
+											m="0x90 69 71" />
+										<msg
+											m="0x90 70 71" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -4550,6 +5703,9 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 		</g>
 		<g
 			class="system">
+			<score:leftToRight
+				systemTop="3081,2"
+				systemBottom="3835,49" />
 			<g
 				class="outputStaff"
 				score:staffName=" ">
@@ -4626,16 +5782,30 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="804.7249">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="240"
-									patch="0"
-									pitches="61"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="804.7249">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="240">
+									<noteOffs>
+										<msg
+											m="0x80 60 64" />
+										<msg
+											m="0x80 63 64" />
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 70 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 61 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -4669,16 +5839,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1307.499">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="174"
-									patch="0"
-									pitches="62 65 69 71"
-									velocities="85 85 85 85" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1307.499">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="174">
+									<noteOffs>
+										<msg
+											m="0x80 61 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 62 85" />
+										<msg
+											m="0x90 65 85" />
+										<msg
+											m="0x90 69 85" />
+										<msg
+											m="0x90 71 85" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -4716,16 +5898,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1672.01">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="192"
-									patch="0"
-									pitches="63 67 70"
-									velocities="99 99 99" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1672.01">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="192">
+									<noteOffs>
+										<msg
+											m="0x80 62 64" />
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 71 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 63 99" />
+										<msg
+											m="0x90 67 99" />
+										<msg
+											m="0x90 70 99" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -4768,16 +5966,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="2074.229">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="213"
-									patch="0"
-									pitches="67 71"
-									velocities="113 113" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="2074.229">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="213">
+									<noteOffs>
+										<msg
+											m="0x80 63 64" />
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 70 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 67 113" />
+										<msg
+											m="0x90 71 113" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -4810,16 +6020,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="2520.441">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="137"
-									patch="0"
-									pitches="65 67 68 71 75 80 87"
-									velocities="43 43 43 43 43 43 43" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="2520.441">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="137">
+									<noteOffs>
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 71 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 65 43" />
+										<msg
+											m="0x90 67 43" />
+										<msg
+											m="0x90 68 43" />
+										<msg
+											m="0x90 71 43" />
+										<msg
+											m="0x90 75 43" />
+										<msg
+											m="0x90 80 43" />
+										<msg
+											m="0x90 87 43" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -4904,16 +6134,48 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="2807.442">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="128"
-									patch="0"
-									pitches="66 67 69 72 76 81 88 100"
-									velocities="29 29 29 29 29 29 29 29" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="2807.442">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="128">
+									<noteOffs>
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 75 64" />
+										<msg
+											m="0x80 80 64" />
+										<msg
+											m="0x80 87 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 66 29" />
+										<msg
+											m="0x90 67 29" />
+										<msg
+											m="0x90 69 29" />
+										<msg
+											m="0x90 72 29" />
+										<msg
+											m="0x90 76 29" />
+										<msg
+											m="0x90 81 29" />
+										<msg
+											m="0x90 88 29" />
+										<msg
+											m="0x90 100 29" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -5017,16 +6279,46 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3075.588">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="147"
-									patch="0"
-									pitches="68 70 73 74 78 83"
-									velocities="57 57 57 57 57 57" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3075.588">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="147">
+									<noteOffs>
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 72 64" />
+										<msg
+											m="0x80 76 64" />
+										<msg
+											m="0x80 81 64" />
+										<msg
+											m="0x80 88 64" />
+										<msg
+											m="0x80 100 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 68 57" />
+										<msg
+											m="0x90 70 57" />
+										<msg
+											m="0x90 73 57" />
+										<msg
+											m="0x90 74 57" />
+										<msg
+											m="0x90 78 57" />
+										<msg
+											m="0x90 83 57" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -5100,16 +6392,40 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3383.537">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="160"
-									patch="0"
-									pitches="64 67 69 73 74"
-									velocities="71 71 71 71 71" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3383.537">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="160">
+									<noteOffs>
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 73 64" />
+										<msg
+											m="0x80 74 64" />
+										<msg
+											m="0x80 78 64" />
+										<msg
+											m="0x80 83 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 64 71" />
+										<msg
+											m="0x90 67 71" />
+										<msg
+											m="0x90 69 71" />
+										<msg
+											m="0x90 73 71" />
+										<msg
+											m="0x90 74 71" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -5167,16 +6483,30 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3718.72">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="240"
-									patch="0"
-									pitches="60"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3718.72">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="240">
+									<noteOffs>
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 73 64" />
+										<msg
+											m="0x80 74 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 60 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -5205,16 +6535,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4221.494">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="174"
-									patch="0"
-									pitches="61 64 68 70"
-									velocities="85 85 85 85" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4221.494">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="174">
+									<noteOffs>
+										<msg
+											m="0x80 60 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 61 85" />
+										<msg
+											m="0x90 64 85" />
+										<msg
+											m="0x90 68 85" />
+										<msg
+											m="0x90 70 85" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -5273,16 +6615,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4586.005">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="192"
-									patch="0"
-									pitches="62 66 69"
-									velocities="99 99 99" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4586.005">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="192">
+									<noteOffs>
+										<msg
+											m="0x80 61 64" />
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 70 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 62 99" />
+										<msg
+											m="0x90 66 99" />
+										<msg
+											m="0x90 69 99" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -5325,16 +6683,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4988.224">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="213"
-									patch="0"
-									pitches="67 71"
-									velocities="113 113" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4988.224">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="213">
+									<noteOffs>
+										<msg
+											m="0x80 62 64" />
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 69 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 67 113" />
+										<msg
+											m="0x90 71 113" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -5362,16 +6732,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="5434.436">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="137"
-									patch="0"
-									pitches="63 65 66 69 73 78 85"
-									velocities="43 43 43 43 43 43 43" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="5434.436">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="137">
+									<noteOffs>
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 71 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 63 43" />
+										<msg
+											m="0x90 65 43" />
+										<msg
+											m="0x90 66 43" />
+										<msg
+											m="0x90 69 43" />
+										<msg
+											m="0x90 73 43" />
+										<msg
+											m="0x90 78 43" />
+										<msg
+											m="0x90 85 43" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -5461,16 +6851,44 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="5721.436">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="147"
-									patch="0"
-									pitches="68 70 73 74 78 83"
-									velocities="57 57 57 57 57 57" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="5721.436">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="147">
+									<noteOffs>
+										<msg
+											m="0x80 63 64" />
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 73 64" />
+										<msg
+											m="0x80 78 64" />
+										<msg
+											m="0x80 85 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 68 57" />
+										<msg
+											m="0x90 70 57" />
+										<msg
+											m="0x90 73 57" />
+										<msg
+											m="0x90 74 57" />
+										<msg
+											m="0x90 78 57" />
+										<msg
+											m="0x90 83 57" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -5544,16 +6962,46 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="6029.385">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="128"
-									patch="0"
-									pitches="65 66 68 71 75 80 87 99"
-									velocities="29 29 29 29 29 29 29 29" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="6029.385">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="128">
+									<noteOffs>
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 73 64" />
+										<msg
+											m="0x80 74 64" />
+										<msg
+											m="0x80 78 64" />
+										<msg
+											m="0x80 83 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 65 29" />
+										<msg
+											m="0x90 66 29" />
+										<msg
+											m="0x90 68 29" />
+										<msg
+											m="0x90 71 29" />
+										<msg
+											m="0x90 75 29" />
+										<msg
+											m="0x90 80 29" />
+										<msg
+											m="0x90 87 29" />
+										<msg
+											m="0x90 99 29" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -5677,16 +7125,44 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="6297.531">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="160"
-									patch="0"
-									pitches="66 69 71 75 76"
-									velocities="71 71 71 71 71" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="6297.531">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="160">
+									<noteOffs>
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 75 64" />
+										<msg
+											m="0x80 80 64" />
+										<msg
+											m="0x80 87 64" />
+										<msg
+											m="0x80 99 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 66 71" />
+										<msg
+											m="0x90 69 71" />
+										<msg
+											m="0x90 71 71" />
+										<msg
+											m="0x90 75 71" />
+										<msg
+											m="0x90 76 71" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -5739,16 +7215,30 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="6632.714">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="240"
-									patch="0"
-									pitches="64"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="6632.714">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="240">
+									<noteOffs>
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 75 64" />
+										<msg
+											m="0x80 76 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 64 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -5771,16 +7261,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="7135.488">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="174"
-									patch="0"
-									pitches="60 63 67 69"
-									velocities="85 85 85 85" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="7135.488">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="174">
+									<noteOffs>
+										<msg
+											m="0x80 64 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 60 85" />
+										<msg
+											m="0x90 63 85" />
+										<msg
+											m="0x90 67 85" />
+										<msg
+											m="0x90 69 85" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -5841,6 +7343,9 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 		</g>
 		<g
 			class="system">
+			<score:leftToRight
+				systemTop="3947,533"
+				systemBottom="4715,49" />
 			<g
 				class="outputStaff"
 				score:staffName=" ">
@@ -5917,16 +7422,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="814.6786">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="192"
-									patch="0"
-									pitches="61 65 68"
-									velocities="99 99 99" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="814.6786">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="192">
+									<noteOffs>
+										<msg
+											m="0x80 60 64" />
+										<msg
+											m="0x80 63 64" />
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 69 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 61 99" />
+										<msg
+											m="0x90 65 99" />
+										<msg
+											m="0x90 68 99" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -5969,16 +7490,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1227.273">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="213"
-									patch="0"
-									pitches="67 71"
-									velocities="113 113" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1227.273">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="213">
+									<noteOffs>
+										<msg
+											m="0x80 61 64" />
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 68 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 67 113" />
+										<msg
+											m="0x90 71 113" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -6006,16 +7539,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1684.995">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="137"
-									patch="0"
-									pitches="62 64 65 68 72 77 84"
-									velocities="43 43 43 43 43 43 43" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1684.995">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="137">
+									<noteOffs>
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 71 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 62 43" />
+										<msg
+											m="0x90 64 43" />
+										<msg
+											m="0x90 65 43" />
+										<msg
+											m="0x90 68 43" />
+										<msg
+											m="0x90 72 43" />
+										<msg
+											m="0x90 77 43" />
+										<msg
+											m="0x90 84 43" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -6085,16 +7638,44 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1979.399">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="147"
-									patch="0"
-									pitches="63 65 68 69 73 78"
-									velocities="57 57 57 57 57 57" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1979.399">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="147">
+									<noteOffs>
+										<msg
+											m="0x80 62 64" />
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 72 64" />
+										<msg
+											m="0x80 77 64" />
+										<msg
+											m="0x80 84 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 63 57" />
+										<msg
+											m="0x90 65 57" />
+										<msg
+											m="0x90 68 57" />
+										<msg
+											m="0x90 69 57" />
+										<msg
+											m="0x90 73 57" />
+										<msg
+											m="0x90 78 57" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -6167,16 +7748,46 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="2295.292">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="128"
-									patch="0"
-									pitches="68 69 71 74 78 83 90 102"
-									velocities="29 29 29 29 29 29 29 29" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="2295.292">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="128">
+									<noteOffs>
+										<msg
+											m="0x80 63 64" />
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 73 64" />
+										<msg
+											m="0x80 78 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 68 29" />
+										<msg
+											m="0x90 69 29" />
+										<msg
+											m="0x90 71 29" />
+										<msg
+											m="0x90 74 29" />
+										<msg
+											m="0x90 78 29" />
+										<msg
+											m="0x90 83 29" />
+										<msg
+											m="0x90 90 29" />
+										<msg
+											m="0x90 102 29" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -6306,16 +7917,44 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="2570.354">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="160"
-									patch="0"
-									pitches="65 68 70 74 75"
-									velocities="71 71 71 71 71" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="2570.354">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="160">
+									<noteOffs>
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 74 64" />
+										<msg
+											m="0x80 78 64" />
+										<msg
+											m="0x80 83 64" />
+										<msg
+											m="0x80 90 64" />
+										<msg
+											m="0x80 102 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 65 71" />
+										<msg
+											m="0x90 68 71" />
+										<msg
+											m="0x90 70 71" />
+										<msg
+											m="0x90 74 71" />
+										<msg
+											m="0x90 75 71" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -6373,16 +8012,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="2914.183">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="174"
-									patch="0"
-									pitches="66 69 73 75"
-									velocities="85 85 85 85" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="2914.183">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="174">
+									<noteOffs>
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 74 64" />
+										<msg
+											m="0x80 75 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 66 85" />
+										<msg
+											m="0x90 69 85" />
+										<msg
+											m="0x90 73 85" />
+										<msg
+											m="0x90 75 85" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -6440,16 +8099,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3288.097">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="240"
-									patch="0"
-									pitches="64"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3288.097">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="240">
+									<noteOffs>
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 73 64" />
+										<msg
+											m="0x80 75 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 64 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -6472,16 +8143,26 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3803.84">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="192"
-									patch="0"
-									pitches="60 64 67"
-									velocities="99 99 99" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3803.84">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="192">
+									<noteOffs>
+										<msg
+											m="0x80 64 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 60 99" />
+										<msg
+											m="0x90 64 99" />
+										<msg
+											m="0x90 67 99" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -6520,16 +8201,38 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4216.435">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="137"
-									patch="0"
-									pitches="67 69 70 73 77 82 89"
-									velocities="43 43 43 43 43 43 43" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4216.435">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="137">
+									<noteOffs>
+										<msg
+											m="0x80 60 64" />
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 67 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 67 43" />
+										<msg
+											m="0x90 69 43" />
+										<msg
+											m="0x90 70 43" />
+										<msg
+											m="0x90 73 43" />
+										<msg
+											m="0x90 77 43" />
+										<msg
+											m="0x90 82 43" />
+										<msg
+											m="0x90 89 43" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -6615,16 +8318,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4510.838">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="213"
-									patch="0"
-									pitches="61 65"
-									velocities="113 113" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4510.838">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="213">
+									<noteOffs>
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 73 64" />
+										<msg
+											m="0x80 77 64" />
+										<msg
+											m="0x80 82 64" />
+										<msg
+											m="0x80 89 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 61 113" />
+										<msg
+											m="0x90 65 113" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -6657,16 +8380,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4968.561">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="147"
-									patch="0"
-									pitches="62 64 67 68 72 77"
-									velocities="57 57 57 57 57 57" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4968.561">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="147">
+									<noteOffs>
+										<msg
+											m="0x80 61 64" />
+										<msg
+											m="0x80 65 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 62 57" />
+										<msg
+											m="0x90 64 57" />
+										<msg
+											m="0x90 67 57" />
+										<msg
+											m="0x90 68 57" />
+										<msg
+											m="0x90 72 57" />
+										<msg
+											m="0x90 77 57" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -6724,16 +8465,46 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="5284.453">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="128"
-									patch="0"
-									pitches="63 64 66 69 73 78 85 97"
-									velocities="29 29 29 29 29 29 29 29" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="5284.453">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="128">
+									<noteOffs>
+										<msg
+											m="0x80 62 64" />
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 72 64" />
+										<msg
+											m="0x80 77 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 63 29" />
+										<msg
+											m="0x90 64 29" />
+										<msg
+											m="0x90 66 29" />
+										<msg
+											m="0x90 69 29" />
+										<msg
+											m="0x90 73 29" />
+										<msg
+											m="0x90 78 29" />
+										<msg
+											m="0x90 85 29" />
+										<msg
+											m="0x90 97 29" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -6856,16 +8627,44 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="5559.516">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="160"
-									patch="0"
-									pitches="68 71 73 77 78"
-									velocities="71 71 71 71 71" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="5559.516">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="160">
+									<noteOffs>
+										<msg
+											m="0x80 63 64" />
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 73 64" />
+										<msg
+											m="0x80 78 64" />
+										<msg
+											m="0x80 85 64" />
+										<msg
+											m="0x80 97 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 68 71" />
+										<msg
+											m="0x90 71 71" />
+										<msg
+											m="0x90 73 71" />
+										<msg
+											m="0x90 77 71" />
+										<msg
+											m="0x90 78 71" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -6928,16 +8727,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="5903.345">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="174"
-									patch="0"
-									pitches="65 68 72 74"
-									velocities="85 85 85 85" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="5903.345">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="174">
+									<noteOffs>
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 73 64" />
+										<msg
+											m="0x80 77 64" />
+										<msg
+											m="0x80 78 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 65 85" />
+										<msg
+											m="0x90 68 85" />
+										<msg
+											m="0x90 72 85" />
+										<msg
+											m="0x90 74 85" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -6985,16 +8804,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="6277.259">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="240"
-									patch="0"
-									pitches="66"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="6277.259">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="240">
+									<noteOffs>
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 72 64" />
+										<msg
+											m="0x80 74 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 66 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -7022,16 +8853,26 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="6793.002">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="192"
-									patch="0"
-									pitches="64 68 71"
-									velocities="99 99 99" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="6793.002">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="192">
+									<noteOffs>
+										<msg
+											m="0x80 66 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 64 99" />
+										<msg
+											m="0x90 68 99" />
+										<msg
+											m="0x90 71 99" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -7069,16 +8910,38 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="7205.597">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="137"
-									patch="0"
-									pitches="67 69 70 73 77 82 89"
-									velocities="43 43 43 43 43 43 43" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="7205.597">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="137">
+									<noteOffs>
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 71 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 67 43" />
+										<msg
+											m="0x90 69 43" />
+										<msg
+											m="0x90 70 43" />
+										<msg
+											m="0x90 73 43" />
+										<msg
+											m="0x90 77 43" />
+										<msg
+											m="0x90 82 43" />
+										<msg
+											m="0x90 89 43" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -7181,6 +9044,9 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 		</g>
 		<g
 			class="system">
+			<score:leftToRight
+				systemTop="4801,2"
+				systemBottom="5555,49" />
 			<g
 				class="outputStaff"
 				score:staffName=" ">
@@ -7257,16 +9123,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="773.4094">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="213"
-									patch="0"
-									pitches="60 64"
-									velocities="113 113" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="773.4094">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="213">
+									<noteOffs>
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 73 64" />
+										<msg
+											m="0x80 77 64" />
+										<msg
+											m="0x80 82 64" />
+										<msg
+											m="0x80 89 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 60 113" />
+										<msg
+											m="0x90 64 113" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -7300,16 +9186,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1229.413">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="147"
-									patch="0"
-									pitches="61 63 66 67 71 76"
-									velocities="57 57 57 57 57 57" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1229.413">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="147">
+									<noteOffs>
+										<msg
+											m="0x80 60 64" />
+										<msg
+											m="0x80 64 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 61 57" />
+										<msg
+											m="0x90 63 57" />
+										<msg
+											m="0x90 66 57" />
+										<msg
+											m="0x90 67 57" />
+										<msg
+											m="0x90 71 57" />
+										<msg
+											m="0x90 76 57" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -7378,16 +9282,40 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1544.12">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="160"
-									patch="0"
-									pitches="62 65 67 71 72"
-									velocities="71 71 71 71 71" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1544.12">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="160">
+									<noteOffs>
+										<msg
+											m="0x80 61 64" />
+										<msg
+											m="0x80 63 64" />
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 76 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 62 71" />
+										<msg
+											m="0x90 65 71" />
+										<msg
+											m="0x90 67 71" />
+										<msg
+											m="0x90 71 71" />
+										<msg
+											m="0x90 72 71" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -7440,16 +9368,44 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1886.658">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="128"
-									patch="0"
-									pitches="63 64 66 69 73 78 85 97"
-									velocities="29 29 29 29 29 29 29 29" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1886.658">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="128">
+									<noteOffs>
+										<msg
+											m="0x80 62 64" />
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 72 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 63 29" />
+										<msg
+											m="0x90 64 29" />
+										<msg
+											m="0x90 66 29" />
+										<msg
+											m="0x90 69 29" />
+										<msg
+											m="0x90 73 29" />
+										<msg
+											m="0x90 78 29" />
+										<msg
+											m="0x90 85 29" />
+										<msg
+											m="0x90 97 29" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -7567,16 +9523,42 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="2160.688">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="174"
-									patch="0"
-									pitches="68 71 75 77"
-									velocities="85 85 85 85" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="2160.688">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="174">
+									<noteOffs>
+										<msg
+											m="0x80 63 64" />
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 73 64" />
+										<msg
+											m="0x80 78 64" />
+										<msg
+											m="0x80 85 64" />
+										<msg
+											m="0x80 97 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 68 85" />
+										<msg
+											m="0x90 71 85" />
+										<msg
+											m="0x90 75 85" />
+										<msg
+											m="0x90 77 85" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -7629,16 +9611,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="2533.198">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="240"
-									patch="0"
-									pitches="65"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="2533.198">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="240">
+									<noteOffs>
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 75 64" />
+										<msg
+											m="0x80 77 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 65 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -7661,16 +9655,26 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3047.006">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="192"
-									patch="0"
-									pitches="66 70 73"
-									velocities="99 99 99" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3047.006">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="192">
+									<noteOffs>
+										<msg
+											m="0x80 65 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 66 99" />
+										<msg
+											m="0x90 70 99" />
+										<msg
+											m="0x90 73 99" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -7718,16 +9722,38 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3458.051">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="137"
-									patch="0"
-									pitches="64 66 67 70 74 79 86"
-									velocities="43 43 43 43 43 43 43" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3458.051">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="137">
+									<noteOffs>
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 73 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 64 43" />
+										<msg
+											m="0x90 66 43" />
+										<msg
+											m="0x90 67 43" />
+										<msg
+											m="0x90 70 43" />
+										<msg
+											m="0x90 74 43" />
+										<msg
+											m="0x90 79 43" />
+										<msg
+											m="0x90 86 43" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -7802,16 +9828,44 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3751.349">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="147"
-									patch="0"
-									pitches="67 69 72 73 77 82"
-									velocities="57 57 57 57 57 57" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3751.349">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="147">
+									<noteOffs>
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 74 64" />
+										<msg
+											m="0x80 79 64" />
+										<msg
+											m="0x80 86 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 67 57" />
+										<msg
+											m="0x90 69 57" />
+										<msg
+											m="0x90 72 57" />
+										<msg
+											m="0x90 73 57" />
+										<msg
+											m="0x90 77 57" />
+										<msg
+											m="0x90 82 57" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -7880,16 +9934,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4066.056">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="213"
-									patch="0"
-									pitches="60 64"
-									velocities="113 113" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4066.056">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="213">
+									<noteOffs>
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 72 64" />
+										<msg
+											m="0x80 73 64" />
+										<msg
+											m="0x80 77 64" />
+										<msg
+											m="0x80 82 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 60 113" />
+										<msg
+											m="0x90 64 113" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -7923,16 +9995,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4522.06">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="160"
-									patch="0"
-									pitches="61 64 66 70 71"
-									velocities="71 71 71 71 71" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4522.06">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="160">
+									<noteOffs>
+										<msg
+											m="0x80 60 64" />
+										<msg
+											m="0x80 64 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 61 71" />
+										<msg
+											m="0x90 64 71" />
+										<msg
+											m="0x90 66 71" />
+										<msg
+											m="0x90 70 71" />
+										<msg
+											m="0x90 71 71" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -7996,16 +10084,44 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4864.598">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="128"
-									patch="0"
-									pitches="63 64 66 69 73 78 85 97"
-									velocities="29 29 29 29 29 29 29 29" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4864.598">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="128">
+									<noteOffs>
+										<msg
+											m="0x80 61 64" />
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 71 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 63 29" />
+										<msg
+											m="0x90 64 29" />
+										<msg
+											m="0x90 66 29" />
+										<msg
+											m="0x90 69 29" />
+										<msg
+											m="0x90 73 29" />
+										<msg
+											m="0x90 78 29" />
+										<msg
+											m="0x90 85 29" />
+										<msg
+											m="0x90 97 29" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -8128,16 +10244,42 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="5138.628">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="174"
-									patch="0"
-									pitches="62 65 69 71"
-									velocities="85 85 85 85" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="5138.628">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="174">
+									<noteOffs>
+										<msg
+											m="0x80 63 64" />
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 73 64" />
+										<msg
+											m="0x80 78 64" />
+										<msg
+											m="0x80 85 64" />
+										<msg
+											m="0x80 97 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 62 85" />
+										<msg
+											m="0x90 65 85" />
+										<msg
+											m="0x90 69 85" />
+										<msg
+											m="0x90 71 85" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -8185,16 +10327,40 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="5511.139">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="137"
-									patch="0"
-									pitches="68 70 71 74 78 83 90"
-									velocities="43 43 43 43 43 43 43" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="5511.139">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="137">
+									<noteOffs>
+										<msg
+											m="0x80 62 64" />
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 71 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 68 43" />
+										<msg
+											m="0x90 70 43" />
+										<msg
+											m="0x90 71 43" />
+										<msg
+											m="0x90 74 43" />
+										<msg
+											m="0x90 78 43" />
+										<msg
+											m="0x90 83 43" />
+										<msg
+											m="0x90 90 43" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -8285,16 +10451,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="5804.437">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="240"
-									patch="0"
-									pitches="65"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="5804.437">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="240">
+									<noteOffs>
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 74 64" />
+										<msg
+											m="0x80 78 64" />
+										<msg
+											m="0x80 83 64" />
+										<msg
+											m="0x80 90 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 65 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -8317,16 +10501,26 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="6318.244">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="192"
-									patch="0"
-									pitches="66 70 73"
-									velocities="99 99 99" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="6318.244">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="192">
+									<noteOffs>
+										<msg
+											m="0x80 65 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 66 99" />
+										<msg
+											m="0x90 70 99" />
+										<msg
+											m="0x90 73 99" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -8374,16 +10568,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="6729.29">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="147"
-									patch="0"
-									pitches="64 66 69 70 74 79"
-									velocities="57 57 57 57 57 57" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="6729.29">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="147">
+									<noteOffs>
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 73 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 64 57" />
+										<msg
+											m="0x90 66 57" />
+										<msg
+											m="0x90 69 57" />
+										<msg
+											m="0x90 70 57" />
+										<msg
+											m="0x90 74 57" />
+										<msg
+											m="0x90 79 57" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -8446,16 +10660,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="7043.997">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="213"
-									patch="0"
-									pitches="67 71"
-									velocities="113 113" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="7043.997">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="213">
+									<noteOffs>
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 74 64" />
+										<msg
+											m="0x80 79 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 67 113" />
+										<msg
+											m="0x90 71 113" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -8495,6 +10727,9 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 		</g>
 		<g
 			class="system">
+			<score:leftToRight
+				systemTop="5641,2"
+				systemBottom="6415,49" />
 			<g
 				class="outputStaff"
 				score:staffName=" ">
@@ -8571,16 +10806,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="814.6786">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="160"
-									patch="0"
-									pitches="60 63 65 69 70"
-									velocities="71 71 71 71 71" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="814.6786">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="160">
+									<noteOffs>
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 71 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 60 71" />
+										<msg
+											m="0x90 63 71" />
+										<msg
+											m="0x90 65 71" />
+										<msg
+											m="0x90 69 71" />
+										<msg
+											m="0x90 70 71" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -8639,16 +10890,44 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1160.598">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="128"
-									patch="0"
-									pitches="61 62 64 67 71 76 83 95"
-									velocities="29 29 29 29 29 29 29 29" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1160.598">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="128">
+									<noteOffs>
+										<msg
+											m="0x80 60 64" />
+										<msg
+											m="0x80 63 64" />
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 70 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 61 29" />
+										<msg
+											m="0x90 62 29" />
+										<msg
+											m="0x90 64 29" />
+										<msg
+											m="0x90 67 29" />
+										<msg
+											m="0x90 71 29" />
+										<msg
+											m="0x90 76 29" />
+										<msg
+											m="0x90 83 29" />
+										<msg
+											m="0x90 95 29" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -8757,16 +11036,42 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1437.333">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="174"
-									patch="0"
-									pitches="63 66 70 72"
-									velocities="85 85 85 85" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1437.333">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="174">
+									<noteOffs>
+										<msg
+											m="0x80 61 64" />
+										<msg
+											m="0x80 62 64" />
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 76 64" />
+										<msg
+											m="0x80 83 64" />
+										<msg
+											m="0x80 95 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 63 85" />
+										<msg
+											m="0x90 66 85" />
+										<msg
+											m="0x90 70 85" />
+										<msg
+											m="0x90 72 85" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -8819,16 +11124,40 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1813.52">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="137"
-									patch="0"
-									pitches="62 64 65 68 72 77 84"
-									velocities="43 43 43 43 43 43 43" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1813.52">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="137">
+									<noteOffs>
+										<msg
+											m="0x80 63 64" />
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 72 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 62 43" />
+										<msg
+											m="0x90 64 43" />
+										<msg
+											m="0x90 65 43" />
+										<msg
+											m="0x90 68 43" />
+										<msg
+											m="0x90 72 43" />
+										<msg
+											m="0x90 77 43" />
+										<msg
+											m="0x90 84 43" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -8903,16 +11232,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="2109.713">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="240"
-									patch="0"
-									pitches="68"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="2109.713">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="240">
+									<noteOffs>
+										<msg
+											m="0x80 62 64" />
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 72 64" />
+										<msg
+											m="0x80 77 64" />
+										<msg
+											m="0x80 84 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 68 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -8940,16 +11287,26 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="2628.591">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="192"
-									patch="0"
-									pitches="65 69 72"
-									velocities="99 99 99" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="2628.591">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="192">
+									<noteOffs>
+										<msg
+											m="0x80 68 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 65 99" />
+										<msg
+											m="0x90 69 99" />
+										<msg
+											m="0x90 72 99" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -8982,16 +11339,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3043.694">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="147"
-									patch="0"
-									pitches="66 68 71 72 76 81"
-									velocities="57 57 57 57 57 57" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3043.694">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="147">
+									<noteOffs>
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 72 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 66 57" />
+										<msg
+											m="0x90 68 57" />
+										<msg
+											m="0x90 71 57" />
+										<msg
+											m="0x90 72 57" />
+										<msg
+											m="0x90 76 57" />
+										<msg
+											m="0x90 81 57" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -9055,16 +11432,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3361.507">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="213"
-									patch="0"
-									pitches="64 68"
-									velocities="113 113" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3361.507">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="213">
+									<noteOffs>
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 72 64" />
+										<msg
+											m="0x80 76 64" />
+										<msg
+											m="0x80 81 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 64 113" />
+										<msg
+											m="0x90 68 113" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -9097,16 +11492,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3822.012">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="160"
-									patch="0"
-									pitches="67 70 72 76 77"
-									velocities="71 71 71 71 71" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3822.012">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="160">
+									<noteOffs>
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 68 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 67 71" />
+										<msg
+											m="0x90 70 71" />
+										<msg
+											m="0x90 72 71" />
+										<msg
+											m="0x90 76 71" />
+										<msg
+											m="0x90 77 71" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -9159,16 +11570,44 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4167.931">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="128"
-									patch="0"
-									pitches="60 61 63 66 70 75 82 94"
-									velocities="29 29 29 29 29 29 29 29" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4167.931">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="128">
+									<noteOffs>
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 72 64" />
+										<msg
+											m="0x80 76 64" />
+										<msg
+											m="0x80 77 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 60 29" />
+										<msg
+											m="0x90 61 29" />
+										<msg
+											m="0x90 63 29" />
+										<msg
+											m="0x90 66 29" />
+										<msg
+											m="0x90 70 29" />
+										<msg
+											m="0x90 75 29" />
+										<msg
+											m="0x90 82 29" />
+										<msg
+											m="0x90 94 29" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -9297,16 +11736,42 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4444.666">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="174"
-									patch="0"
-									pitches="61 64 68 70"
-									velocities="85 85 85 85" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4444.666">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="174">
+									<noteOffs>
+										<msg
+											m="0x80 60 64" />
+										<msg
+											m="0x80 61 64" />
+										<msg
+											m="0x80 63 64" />
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 75 64" />
+										<msg
+											m="0x80 82 64" />
+										<msg
+											m="0x80 94 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 61 85" />
+										<msg
+											m="0x90 64 85" />
+										<msg
+											m="0x90 68 85" />
+										<msg
+											m="0x90 70 85" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -9370,16 +11835,40 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4820.853">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="137"
-									patch="0"
-									pitches="63 65 66 69 73 78 85"
-									velocities="43 43 43 43 43 43 43" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4820.853">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="137">
+									<noteOffs>
+										<msg
+											m="0x80 61 64" />
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 70 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 63 43" />
+										<msg
+											m="0x90 65 43" />
+										<msg
+											m="0x90 66 43" />
+										<msg
+											m="0x90 69 43" />
+										<msg
+											m="0x90 73 43" />
+										<msg
+											m="0x90 78 43" />
+										<msg
+											m="0x90 85 43" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -9474,16 +11963,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="5117.046">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="240"
-									patch="0"
-									pitches="62"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="5117.046">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="240">
+									<noteOffs>
+										<msg
+											m="0x80 63 64" />
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 73 64" />
+										<msg
+											m="0x80 78 64" />
+										<msg
+											m="0x80 85 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 62 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -9511,16 +12018,26 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="5635.925">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="192"
-									patch="0"
-									pitches="68 72 75"
-									velocities="99 99 99" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="5635.925">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="192">
+									<noteOffs>
+										<msg
+											m="0x80 62 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 68 99" />
+										<msg
+											m="0x90 72 99" />
+										<msg
+											m="0x90 75 99" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -9563,16 +12080,36 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="6051.028">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="147"
-									patch="0"
-									pitches="65 67 70 71 75 80"
-									velocities="57 57 57 57 57 57" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="6051.028">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="147">
+									<noteOffs>
+										<msg
+											m="0x80 68 64" />
+										<msg
+											m="0x80 72 64" />
+										<msg
+											m="0x80 75 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 65 57" />
+										<msg
+											m="0x90 67 57" />
+										<msg
+											m="0x90 70 57" />
+										<msg
+											m="0x90 71 57" />
+										<msg
+											m="0x90 75 57" />
+										<msg
+											m="0x90 80 57" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -9641,16 +12178,34 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="6368.841">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="213"
-									patch="0"
-									pitches="66 70"
-									velocities="113 113" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="6368.841">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="213">
+									<noteOffs>
+										<msg
+											m="0x80 65 64" />
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 70 64" />
+										<msg
+											m="0x80 71 64" />
+										<msg
+											m="0x80 75 64" />
+										<msg
+											m="0x80 80 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 66 113" />
+										<msg
+											m="0x90 70 113" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -9688,16 +12243,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="6829.346">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="160"
-									patch="0"
-									pitches="64 67 69 73 74"
-									velocities="71 71 71 71 71" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="6829.346">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="160">
+									<noteOffs>
+										<msg
+											m="0x80 66 64" />
+										<msg
+											m="0x80 70 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 64 71" />
+										<msg
+											m="0x90 67 71" />
+										<msg
+											m="0x90 69 71" />
+										<msg
+											m="0x90 73 71" />
+										<msg
+											m="0x90 74 71" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -9750,16 +12321,44 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="7175.265">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="128"
-									patch="0"
-									pitches="67 68 70 73 77 82 89 101"
-									velocities="29 29 29 29 29 29 29 29" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="7175.265">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="128">
+									<noteOffs>
+										<msg
+											m="0x80 64 64" />
+										<msg
+											m="0x80 67 64" />
+										<msg
+											m="0x80 69 64" />
+										<msg
+											m="0x80 73 64" />
+										<msg
+											m="0x80 74 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 67 29" />
+										<msg
+											m="0x90 68 29" />
+										<msg
+											m="0x90 70 29" />
+										<msg
+											m="0x90 73 29" />
+										<msg
+											m="0x90 77 29" />
+										<msg
+											m="0x90 82 29" />
+										<msg
+											m="0x90 89 29" />
+										<msg
+											m="0x90 101 29" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line

@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet href="../../fontsStyleSheet.css" type="text/css"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:score="http://www.james-ingram-act-two.de/open-source/svgScoreExtensions.html" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:score="http://www.james-ingram-act-two.de/open-source/svgScoreNamespace.html" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
 	version="1.1"
+	data-scoreType="http://www.james-ingram-act-two.de/open-source/svgScoreNamespace.html"
 	width="1429"
 	height="875"
 	viewBox="0 0 11432 7000">
@@ -9,9 +10,9 @@
 		inkscape:window-maximized="1"
 		inkscape:current-layer="layer2" />
 	<title
-		id="pageTitle">Pianola Music, page 3 of 8</title>
+		class="pageTitle">Pianola Music, page 3 of 8</title>
 	<metadata
-		id="metadata">
+		class="metadata">
 		<rdf:RDF>
 			<cc:Work
 				rdf:about="">
@@ -19,7 +20,7 @@
 				<dc:type
 					rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
 				<dc:title>Pianola Music, page 3 of 8</dc:title>
-				<dc:date>Sunday 03.07.2016, 15:13:34</dc:date>
+				<dc:date>Thursday 02.03.2017, 10:30:09</dc:date>
 				<dc:creator>
 					<cc:Agent>
 						<dc:title>James Ingram</dc:title>
@@ -315,6 +316,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			style="stroke:black; stroke-width:4; fill:#ffffff" />
 	</g>
 	<g
+		class="systems"
 		inkscape:groupmode="layer"
 		id="layer2"
 		inkscape:label="score"
@@ -325,9 +327,12 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 			x="32"
 			y="80"
 			font-size="72"
-			font-family="Arial">Pianola Music page 3, Sunday 03.07.2016, 15:13:34</text>
+			font-family="Arial">Pianola Music page 3, Thursday 02.03.2017, 10:30:08</text>
 		<g
 			class="system">
+			<score:leftToRight
+				systemTop="476,56"
+				systemBottom="4041,974" />
 			<g
 				class="outputStaff"
 				score:staffName="1">
@@ -408,20 +413,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 631.1379 797.76 L 818.7762 778.9962 818.7762 792.4362 631.1379 811.2 z" />
+							d="M 631.1379 797.76 L 811.645 779.7093 811.645 793.1493 631.1379 811.2 z" />
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="614.7252">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="432"
-									patch="0"
-									pitches="32"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="614.7252">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="432">
+									<switches>
+										<msg
+											m="0xB0 0 0" />
+										<msg
+											m="0xC0 0" />
+										<msg
+											m="0xB0 101 0" />
+										<msg
+											m="0xB0 6 2" />
+									</switches>
+									<noteOns>
+										<msg
+											m="0x90 32 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -498,83 +515,95 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="802.3636">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="576"
-									patch="0"
-									pitches="45"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="795.2324">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="576">
+									<noteOffs>
+										<msg
+											m="0x80 32 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 45 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="818.7762"
-								y1="778.9962"
-								x2="818.7762"
+								x1="811.645"
+								y1="779.7093"
+								x2="811.645"
 								y2="1036.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="783.9509"
+								x="776.8197"
 								y="1040"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								x1="769.5383"
+								x1="762.407"
 								y1="896"
-								x2="835.1889"
+								x2="828.0577"
 								y2="896"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="769.5383"
+								x1="762.407"
 								y1="928"
-								x2="835.1889"
+								x2="828.0577"
 								y2="928"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="769.5383"
+								x1="762.407"
 								y1="960"
-								x2="835.1889"
+								x2="828.0577"
 								y2="960"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="769.5383"
+								x1="762.407"
 								y1="992"
-								x2="835.1889"
+								x2="828.0577"
 								y2="992"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="769.5383"
+								x1="762.407"
 								y1="1024"
-								x2="835.1889"
+								x2="828.0577"
 								y2="1024"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1052.548">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="864"
-									patch="0"
-									pitches="71"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1035.909">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="864">
+									<noteOffs>
+										<msg
+											m="0x80 45 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 71 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="1036.135"
+								x1="1019.496"
 								y1="803.696"
-								x2="1036.135"
+								x2="1019.496"
 								y2="915.2"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="1034.135"
+								x="1017.496"
 								y="800"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
@@ -585,63 +614,69 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 1429.628 1003.53 L 1468.028 999.791 1468.028 1019.951 1429.628 1023.69 z" />
+							d="M 1401.896 1003.936 L 1440.296 1000.143 1440.296 1020.303 1401.896 1024.096 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 1429.628 990.0897 L 1468.028 986.351 1468.028 999.791 1429.628 1003.53 z" />
+							d="M 1401.896 990.4965 L 1440.296 986.7034 1440.296 1000.143 1401.896 1003.936 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 1429.628 1035.53 L 1468.028 1031.791 1468.028 1051.951 1429.628 1055.69 z" />
+							d="M 1401.896 1035.936 L 1440.296 1032.143 1440.296 1052.303 1401.896 1056.096 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 1429.628 1022.09 L 1468.028 1018.351 1468.028 1031.791 1429.628 1035.53 z" />
+							d="M 1401.896 1022.496 L 1440.296 1018.703 1440.296 1032.143 1401.896 1035.936 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 1829.452 996.6017 L 1867.852 992.863 1867.852 1013.023 1829.452 1016.762 z" />
+							d="M 1795.433 997.0629 L 1833.833 993.2698 1833.833 1013.43 1795.433 1017.223 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 1829.452 983.1617 L 1867.852 979.423 1867.852 992.863 1829.452 996.6017 z" />
+							d="M 1795.433 983.6229 L 1833.833 979.8298 1833.833 993.2698 1795.433 997.0629 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 1429.628 1054.09 L 1867.852 1011.423 1867.852 1024.863 1429.628 1067.53 z" />
+							d="M 1401.896 1054.496 L 1833.833 1011.83 1833.833 1025.27 1401.896 1067.936 z" />
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1446.04">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="144"
-									patch="0"
-									pitches="78"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1418.308">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="144">
+									<noteOffs>
+										<msg
+											m="0x80 71 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 78 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="1429.628"
+								x1="1401.896"
 								y1="739.696"
-								x2="1429.628"
-								y2="1054.09"
+								x2="1401.896"
+								y2="1054.496"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="1427.628"
+								x="1399.896"
 								y="736"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<text
-								x="1387.473"
+								x="1359.741"
 								y="736"
 								font-size="125.44"
 								font-family="CLicht">#</text>
@@ -649,183 +684,207 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1508.587">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="720"
-									patch="0"
-									pitches="58"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1484.075">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="720">
+									<noteOffs>
+										<msg
+											m="0x80 78 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 58 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="1492.174"
+								x1="1467.663"
 								y1="931.696"
-								x2="1492.174"
+								x2="1467.663"
 								y2="1048"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="1490.174"
+								x="1465.663"
 								y="928"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<text
-								x="1437.607"
+								x="1413.095"
 								y="928"
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
-								x1="1475.761"
+								x1="1451.25"
 								y1="896"
-								x2="1541.412"
+								x2="1516.901"
 								y2="896"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1475.761"
+								x1="1451.25"
 								y1="928"
-								x2="1541.412"
+								x2="1516.901"
 								y2="928"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1884.265">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="288"
-									patch="0"
-									pitches="91"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1850.245">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="288">
+									<noteOffs>
+										<msg
+											m="0x80 58 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 91 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="1867.852"
+								x1="1833.833"
 								y1="611.696"
-								x2="1867.852"
-								y2="1011.423"
+								x2="1833.833"
+								y2="1011.83"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="1865.852"
+								x="1831.833"
 								y="608"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								x1="1851.439"
+								x1="1817.42"
 								y1="608"
-								x2="1917.09"
+								x2="1883.071"
 								y2="608"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1851.439"
+								x1="1817.42"
 								y1="640"
-								x2="1917.09"
+								x2="1883.071"
 								y2="640"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1851.439"
+								x1="1817.42"
 								y1="672"
-								x2="1917.09"
+								x2="1883.071"
 								y2="672"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1851.439"
+								x1="1817.42"
 								y1="704"
-								x2="1917.09"
+								x2="1883.071"
 								y2="704"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="2009.357">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="1152"
-									patch="0"
-									pitches="97"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1970.583">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="1152">
+									<noteOffs>
+										<msg
+											m="0x80 91 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 97 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="1992.944"
+								x1="1954.171"
 								y1="563.696"
-								x2="1992.944"
+								x2="1954.171"
 								y2="803.2"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="1990.944"
+								x="1952.171"
 								y="560"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<text
-								x="1938.377"
+								x="1899.604"
 								y="560"
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
-								x1="1976.532"
+								x1="1937.758"
 								y1="576"
-								x2="2042.182"
+								x2="2003.409"
 								y2="576"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1976.532"
+								x1="1937.758"
 								y1="608"
-								x2="2042.182"
+								x2="2003.409"
 								y2="608"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1976.532"
+								x1="1937.758"
 								y1="640"
-								x2="2042.182"
+								x2="2003.409"
 								y2="640"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1976.532"
+								x1="1937.758"
 								y1="672"
-								x2="2042.182"
+								x2="2003.409"
 								y2="672"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1976.532"
+								x1="1937.758"
 								y1="704"
-								x2="2042.182"
+								x2="2003.409"
 								y2="704"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="2509.726">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="1584"
-									patch="0"
-									pitches="64"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="2451.936">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="1584">
+									<noteOffs>
+										<msg
+											m="0x80 97 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 64 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="2526.139"
+								x1="2468.348"
 								y1="748.8"
-								x2="2526.139"
+								x2="2468.348"
 								y2="860.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="2491.313"
+								x="2433.523"
 								y="864"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
@@ -833,65 +892,77 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3197.734">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="1008"
-									patch="0"
-									pitches="84"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3113.795">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="1008">
+									<noteOffs>
+										<msg
+											m="0x80 64 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 84 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="3181.321"
+								x1="3097.383"
 								y1="675.696"
-								x2="3181.321"
+								x2="3097.383"
 								y2="803.2"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="3179.321"
+								x="3095.383"
 								y="672"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								x1="3164.908"
+								x1="3080.97"
 								y1="672"
-								x2="3230.559"
+								x2="3146.621"
 								y2="672"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="3164.908"
+								x1="3080.97"
 								y1="704"
-								x2="3230.559"
+								x2="3146.621"
 								y2="704"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3635.556">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="1728"
-									patch="0"
-									pitches="77"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3534.979">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="1728">
+									<noteOffs>
+										<msg
+											m="0x80 84 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 77 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="3619.144"
+								x1="3518.567"
 								y1="739.696"
-								x2="3619.144"
+								x2="3518.567"
 								y2="851.2"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="3617.144"
+								x="3516.567"
 								y="736"
 								font-size="125.44"
 								font-family="CLicht">˙</text>
@@ -899,275 +970,306 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4386.11">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="1440"
-									patch="0"
-									pitches="51"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4257.008">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="1440">
+									<noteOffs>
+										<msg
+											m="0x80 77 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 51 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="4402.523"
+								x1="4273.421"
 								y1="796.8"
-								x2="4402.523"
+								x2="4273.421"
 								y2="988.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="4367.698"
+								x="4238.596"
 								y="992"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<text
-								x="4315.13"
+								x="4186.028"
 								y="992"
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
-								x1="4353.285"
+								x1="4224.183"
 								y1="896"
-								x2="4418.936"
+								x2="4289.833"
 								y2="896"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="4353.285"
+								x1="4224.183"
 								y1="928"
-								x2="4418.936"
+								x2="4289.833"
 								y2="928"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="4353.285"
+								x1="4224.183"
 								y1="960"
-								x2="4418.936"
+								x2="4289.833"
 								y2="960"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="4353.285"
+								x1="4224.183"
 								y1="992"
-								x2="4418.936"
+								x2="4289.833"
 								y2="992"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="5011.572">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="1296"
-									patch="0"
-									pitches="38"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4858.7">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="1296">
+									<noteOffs>
+										<msg
+											m="0x80 51 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 38 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="5027.985"
+								x1="4875.112"
 								y1="796.8"
-								x2="5027.985"
+								x2="4875.112"
 								y2="1100.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="4993.16"
+								x="4840.287"
 								y="1104"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								x1="4978.747"
+								x1="4825.875"
 								y1="896"
-								x2="5044.397"
+								x2="4891.525"
 								y2="896"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="4978.747"
+								x1="4825.875"
 								y1="928"
-								x2="5044.397"
+								x2="4891.525"
 								y2="928"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="4978.747"
+								x1="4825.875"
 								y1="960"
-								x2="5044.397"
+								x2="4891.525"
 								y2="960"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="4978.747"
+								x1="4825.875"
 								y1="992"
-								x2="5044.397"
+								x2="4891.525"
 								y2="992"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="4978.747"
+								x1="4825.875"
 								y1="1024"
-								x2="5044.397"
+								x2="4891.525"
 								y2="1024"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="4978.747"
+								x1="4825.875"
 								y1="1056"
-								x2="5044.397"
+								x2="4891.525"
 								y2="1056"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="4978.747"
+								x1="4825.875"
 								y1="1088"
-								x2="5044.397"
+								x2="4891.525"
 								y2="1088"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="5574.488">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="3840"
-									patch="0"
-									pitches="38"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="5400.221">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="3840">
+									<noteOffs>
+										<msg
+											m="0x80 38 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 38 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<text
-								x="5547.402"
+								x="5373.136"
 								y="1104"
 								font-size="125.44"
 								font-family="CLicht">w</text>
 							<line
-								x1="5524.317"
+								x1="5350.051"
 								y1="896"
-								x2="5624.658"
+								x2="5450.392"
 								y2="896"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="5524.317"
+								x1="5350.051"
 								y1="928"
-								x2="5624.658"
+								x2="5450.392"
 								y2="928"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="5524.317"
+								x1="5350.051"
 								y1="960"
-								x2="5624.658"
+								x2="5450.392"
 								y2="960"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="5524.317"
+								x1="5350.051"
 								y1="992"
-								x2="5624.658"
+								x2="5450.392"
 								y2="992"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="5524.317"
+								x1="5350.051"
 								y1="1024"
-								x2="5624.658"
+								x2="5450.392"
 								y2="1024"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="5524.317"
+								x1="5350.051"
 								y1="1056"
-								x2="5624.658"
+								x2="5450.392"
 								y2="1056"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="5524.317"
+								x1="5350.051"
 								y1="1088"
-								x2="5624.658"
+								x2="5450.392"
 								y2="1088"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="7242.385">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="4320"
-									patch="0"
-									pitches="97"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="7004.729">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="4320">
+									<noteOffs>
+										<msg
+											m="0x80 38 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 97 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<text
-								x="7215.299"
+								x="6977.643"
 								y="560"
 								font-size="125.44"
 								font-family="CLicht">w</text>
 							<text
-								x="7154.06"
+								x="6916.403"
 								y="560"
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
-								x1="7192.214"
+								x1="6954.558"
 								y1="576"
-								x2="7292.555"
+								x2="7054.899"
 								y2="576"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="7192.214"
+								x1="6954.558"
 								y1="608"
-								x2="7292.555"
+								x2="7054.899"
 								y2="608"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="7192.214"
+								x1="6954.558"
 								y1="640"
-								x2="7292.555"
+								x2="7054.899"
 								y2="640"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="7192.214"
+								x1="6954.558"
 								y1="672"
-								x2="7292.555"
+								x2="7054.899"
 								y2="672"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="7192.214"
+								x1="6954.558"
 								y1="704"
-								x2="7292.555"
+								x2="7054.899"
 								y2="704"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="9118.768">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="5280"
-									patch="0"
-									pitches="71"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="8809.798">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="5280">
+									<noteOffs>
+										<msg
+											m="0x80 97 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x90 71 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<text
-								x="9091.683"
+								x="8782.713"
 								y="800"
 								font-size="125.44"
 								font-family="CLicht">w</text>
-							<line
-								x1="9154.87"
-								y1="800"
-								x2="11064"
-								y2="800"
-								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
 						</g>
 					</g>
+					<line
+						class="barline"
+						x1="11032"
+						y1="734"
+						x2="11032"
+						y2="866"
+						style="stroke:black; stroke-width:8px" />
 				</g>
 			</g>
 			<g
@@ -1230,16 +1332,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						font-family="Arial">2</text>
 					<g
 						class="outputChord"
-						score:alignmentX="614.7252">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="3696"
-									patch="0"
-									pitches="82"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="614.7252">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="3696">
+									<switches>
+										<msg
+											m="0xB1 0 0" />
+										<msg
+											m="0xC1 0" />
+										<msg
+											m="0xB1 101 0" />
+										<msg
+											m="0xB1 6 2" />
+									</switches>
+									<noteOns>
+										<msg
+											m="0x91 82 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<text
@@ -1262,20 +1376,26 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="2301.239">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="4224"
-									patch="0"
-									pitches="69"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="2251.372">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="4224">
+									<noteOffs>
+										<msg
+											m="0x81 82 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x91 69 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<text
-								x="2274.154"
+								x="2224.287"
 								y="1424"
 								font-size="125.44"
 								font-family="CLicht">w</text>
@@ -1283,238 +1403,330 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4135.926">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="5280"
-									patch="0"
-									pitches="43"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4016.332">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="5280">
+									<noteOffs>
+										<msg
+											m="0x81 69 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x91 43 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<text
-								x="4108.841"
+								x="3989.247"
 								y="1664"
 								font-size="125.44"
 								font-family="CLicht">w</text>
 							<line
-								x1="4085.755"
+								x1="3966.162"
 								y1="1504"
-								x2="4186.096"
+								x2="4066.503"
 								y2="1504"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="4085.755"
+								x1="3966.162"
 								y1="1536"
-								x2="4186.096"
+								x2="4066.503"
 								y2="1536"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="4085.755"
+								x1="3966.162"
 								y1="1568"
-								x2="4186.096"
+								x2="4066.503"
 								y2="1568"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="4085.755"
+								x1="3966.162"
 								y1="1600"
-								x2="4186.096"
+								x2="4066.503"
 								y2="1600"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="4085.755"
+								x1="3966.162"
 								y1="1632"
-								x2="4186.096"
+								x2="4066.503"
 								y2="1632"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="4085.755"
+								x1="3966.162"
 								y1="1664"
-								x2="4186.096"
+								x2="4066.503"
 								y2="1664"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="6429.285">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="2640"
-									patch="0"
-									pitches="36"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="6222.531">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="2640">
+									<noteOffs>
+										<msg
+											m="0x81 43 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x91 36 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="6445.698"
+								x1="6238.944"
 								y1="1404.8"
-								x2="6445.698"
+								x2="6238.944"
 								y2="1724.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="6410.873"
+								x="6204.119"
 								y="1728"
 								font-size="125.44"
 								font-family="CLicht">˙</text>
 							<line
-								x1="6396.46"
+								x1="6189.706"
 								y1="1504"
-								x2="6462.11"
+								x2="6255.356"
 								y2="1504"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="6396.46"
+								x1="6189.706"
 								y1="1536"
-								x2="6462.11"
+								x2="6255.356"
 								y2="1536"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="6396.46"
+								x1="6189.706"
 								y1="1568"
-								x2="6462.11"
+								x2="6255.356"
 								y2="1568"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="6396.46"
+								x1="6189.706"
 								y1="1600"
-								x2="6462.11"
+								x2="6255.356"
 								y2="1600"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="6396.46"
+								x1="6189.706"
 								y1="1632"
-								x2="6462.11"
+								x2="6255.356"
 								y2="1632"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="6396.46"
+								x1="6189.706"
 								y1="1664"
-								x2="6462.11"
+								x2="6255.356"
 								y2="1664"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="6396.46"
+								x1="6189.706"
 								y1="1696"
-								x2="6462.11"
+								x2="6255.356"
 								y2="1696"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="6396.46"
+								x1="6189.706"
 								y1="1728"
-								x2="6462.11"
+								x2="6255.356"
 								y2="1728"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="7575.964">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="4752"
-									patch="0"
-									pitches="56"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="7325.63">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="4752">
+									<noteOffs>
+										<msg
+											m="0x81 36 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x91 56 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<text
-								x="7548.878"
+								x="7298.544"
 								y="1552"
 								font-size="125.44"
 								font-family="CLicht">w</text>
 							<text
-								x="7487.639"
+								x="7237.305"
 								y="1552"
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
-								x1="7525.793"
+								x1="7275.459"
 								y1="1504"
-								x2="7626.134"
+								x2="7375.8"
 								y2="1504"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="7525.793"
+								x1="7275.459"
 								y1="1536"
-								x2="7626.134"
+								x2="7375.8"
 								y2="1536"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="9639.986">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="3168"
-									patch="0"
-									pitches="95"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="9311.206">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="3168">
+									<noteOffs>
+										<msg
+											m="0x81 56 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x91 95 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="9623.573"
+								x1="9294.793"
 								y1="1187.696"
-								x2="9623.573"
+								x2="9294.793"
 								y2="1411.2"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="9621.573"
+								x="9292.793"
 								y="1184"
 								font-size="125.44"
 								font-family="CLicht">˙</text>
 							<line
-								x1="9607.161"
+								x1="9278.381"
 								y1="1184"
-								x2="9672.812"
+								x2="9344.031"
 								y2="1184"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="9607.161"
+								x1="9278.381"
 								y1="1216"
-								x2="9672.812"
+								x2="9344.031"
 								y2="1216"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="9607.161"
+								x1="9278.381"
 								y1="1248"
-								x2="9672.812"
+								x2="9344.031"
 								y2="1248"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="9607.161"
+								x1="9278.381"
 								y1="1280"
-								x2="9672.812"
+								x2="9344.031"
 								y2="1280"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="9607.161"
+								x1="9278.381"
 								y1="1312"
-								x2="9672.812"
+								x2="9344.031"
 								y2="1312"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
-					<line
-						class="barline"
-						x1="11032"
-						y1="1342"
-						x2="11032"
-						y2="1474"
-						style="stroke:black; stroke-width:8px" />
+					<g
+						class="outputChord"
+						score:alignment="10634.93">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="6336">
+									<noteOffs>
+										<msg
+											m="0x81 95 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x91 101 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
+						<g
+							class="graphics">
+							<text
+								x="10607.84"
+								y="1120"
+								font-size="125.44"
+								font-family="CLicht">w</text>
+							<line
+								x1="10584.75"
+								y1="1120"
+								x2="10685.1"
+								y2="1120"
+								style="stroke:black; stroke-width:4px" />
+							<line
+								x1="10584.75"
+								y1="1152"
+								x2="10685.1"
+								y2="1152"
+								style="stroke:black; stroke-width:4px" />
+							<line
+								x1="10584.75"
+								y1="1184"
+								x2="10685.1"
+								y2="1184"
+								style="stroke:black; stroke-width:4px" />
+							<line
+								x1="10584.75"
+								y1="1216"
+								x2="10685.1"
+								y2="1216"
+								style="stroke:black; stroke-width:4px" />
+							<line
+								x1="10584.75"
+								y1="1248"
+								x2="10685.1"
+								y2="1248"
+								style="stroke:black; stroke-width:4px" />
+							<line
+								x1="10584.75"
+								y1="1280"
+								x2="10685.1"
+								y2="1280"
+								style="stroke:black; stroke-width:4px" />
+							<line
+								x1="10584.75"
+								y1="1312"
+								x2="10685.1"
+								y2="1312"
+								style="stroke:black; stroke-width:4px" />
+							<line
+								x1="10693.1"
+								y1="1120"
+								x2="11064"
+								y2="1120"
+								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
+						</g>
+					</g>
 				</g>
 			</g>
 			<g
@@ -1577,16 +1789,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						font-family="Arial">3</text>
 					<g
 						class="outputChord"
-						score:alignmentX="614.7252">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="1680"
-									patch="0"
-									pitches="54"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="614.7252">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="1680">
+									<switches>
+										<msg
+											m="0xB2 0 0" />
+										<msg
+											m="0xC2 0" />
+										<msg
+											m="0xB2 101 0" />
+										<msg
+											m="0xB2 6 2" />
+									</switches>
+									<noteOns>
+										<msg
+											m="0x92 54 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -1627,26 +1851,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1362.646">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="2016"
-									patch="0"
-									pitches="67"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1338.083">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="2016">
+									<noteOffs>
+										<msg
+											m="0x82 54 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x92 67 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="1379.058"
+								x1="1354.495"
 								y1="1772.8"
-								x2="1379.058"
+								x2="1354.495"
 								y2="1884.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="1344.233"
+								x="1319.67"
 								y="1888"
 								font-size="125.44"
 								font-family="CLicht">˙</text>
@@ -1654,151 +1884,169 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="2301.239">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="2688"
-									patch="0"
-									pitches="93"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="2251.372">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="2688">
+									<noteOffs>
+										<msg
+											m="0x82 67 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x92 93 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="2284.826"
+								x1="2234.96"
 								y1="1651.696"
-								x2="2284.826"
+								x2="2234.96"
 								y2="1859.2"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="2282.826"
+								x="2232.96"
 								y="1648"
 								font-size="125.44"
 								font-family="CLicht">˙</text>
 							<line
-								x1="2268.414"
+								x1="2218.547"
 								y1="1664"
-								x2="2334.064"
+								x2="2284.198"
 								y2="1664"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="2268.414"
+								x1="2218.547"
 								y1="1696"
-								x2="2334.064"
+								x2="2284.198"
 								y2="1696"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="2268.414"
+								x1="2218.547"
 								y1="1728"
-								x2="2334.064"
+								x2="2284.198"
 								y2="1728"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="2268.414"
+								x1="2218.547"
 								y1="1760"
-								x2="2334.064"
+								x2="2284.198"
 								y2="1760"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3468.767">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="1008"
-									patch="0"
-									pitches="40"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3374.528">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="1008">
+									<noteOffs>
+										<msg
+											m="0x82 93 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x92 40 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="3485.179"
+								x1="3390.941"
 								y1="1852.8"
-								x2="3485.179"
+								x2="3390.941"
 								y2="2140.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="3450.354"
+								x="3356.116"
 								y="2144"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								x1="3435.942"
+								x1="3341.703"
 								y1="1952"
-								x2="3501.592"
+								x2="3407.354"
 								y2="1952"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="3435.942"
+								x1="3341.703"
 								y1="1984"
-								x2="3501.592"
+								x2="3407.354"
 								y2="1984"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="3435.942"
+								x1="3341.703"
 								y1="2016"
-								x2="3501.592"
+								x2="3407.354"
 								y2="2016"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="3435.942"
+								x1="3341.703"
 								y1="2048"
-								x2="3501.592"
+								x2="3407.354"
 								y2="2048"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="3435.942"
+								x1="3341.703"
 								y1="2080"
-								x2="3501.592"
+								x2="3407.354"
 								y2="2080"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="3435.942"
+								x1="3341.703"
 								y1="2112"
-								x2="3501.592"
+								x2="3407.354"
 								y2="2112"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="3435.942"
+								x1="3341.703"
 								y1="2144"
-								x2="3501.592"
+								x2="3407.354"
 								y2="2144"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3906.59">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="2352"
-									patch="0"
-									pitches="80"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3795.712">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="2352">
+									<noteOffs>
+										<msg
+											m="0x82 40 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x92 80 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="3890.177"
+								x1="3779.3"
 								y1="1779.696"
-								x2="3890.177"
+								x2="3779.3"
 								y2="1891.2"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="3888.177"
+								x="3777.3"
 								y="1776"
 								font-size="125.44"
 								font-family="CLicht">˙</text>
 							<text
-								x="3848.022"
+								x="3737.145"
 								y="1776"
 								font-size="125.44"
 								font-family="CLicht">#</text>
@@ -1806,324 +2054,360 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4928.177">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="1344"
-									patch="0"
-									pitches="53"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4778.474">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="1344">
+									<noteOffs>
+										<msg
+											m="0x82 80 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x92 53 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="4944.59"
+								x1="4794.887"
 								y1="1852.8"
-								x2="4944.59"
+								x2="4794.887"
 								y2="2012.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="4909.765"
+								x="4760.062"
 								y="2016"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								x1="4895.352"
+								x1="4745.649"
 								y1="1952"
-								x2="4961.002"
+								x2="4811.299"
 								y2="1952"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="4895.352"
+								x1="4745.649"
 								y1="1984"
-								x2="4961.002"
+								x2="4811.299"
 								y2="1984"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="4895.352"
+								x1="4745.649"
 								y1="2016"
-								x2="4961.002"
+								x2="4811.299"
 								y2="2016"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="5511.941">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="3360"
-									patch="0"
-									pitches="47"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="5340.052">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="3360">
+									<noteOffs>
+										<msg
+											m="0x82 53 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x92 47 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<text
-								x="5484.856"
+								x="5312.967"
 								y="2080"
 								font-size="125.44"
 								font-family="CLicht">w</text>
 							<line
-								x1="5461.771"
+								x1="5289.882"
 								y1="1952"
-								x2="5562.112"
+								x2="5390.223"
 								y2="1952"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="5461.771"
+								x1="5289.882"
 								y1="1984"
-								x2="5562.112"
+								x2="5390.223"
 								y2="1984"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="5461.771"
+								x1="5289.882"
 								y1="2016"
-								x2="5562.112"
+								x2="5390.223"
 								y2="2016"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="5461.771"
+								x1="5289.882"
 								y1="2048"
-								x2="5562.112"
+								x2="5390.223"
 								y2="2048"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="5461.771"
+								x1="5289.882"
 								y1="2080"
-								x2="5562.112"
+								x2="5390.223"
 								y2="2080"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="6971.352">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="336"
-									patch="0"
-									pitches="86"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="6743.997">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="336">
+									<noteOffs>
+										<msg
+											m="0x82 47 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x92 86 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="6954.939"
+								x1="6727.584"
 								y1="1715.696"
-								x2="6954.939"
+								x2="6727.584"
 								y2="1870.306"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<use
 								xlink:href="#Left2Flags"
 								x="0"
 								y="0"
-								transform="translate(6954.939,1870.306) scale(125.44)" />
+								transform="translate(6727.584,1870.306) scale(125.44)" />
 							<text
-								x="6952.939"
+								x="6725.584"
 								y="1712"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								x1="6938.526"
+								x1="6711.171"
 								y1="1728"
-								x2="7004.177"
+								x2="6776.822"
 								y2="1728"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="6938.526"
+								x1="6711.171"
 								y1="1760"
-								x2="7004.177"
+								x2="6776.822"
 								y2="1760"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="7117.292">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="3024"
-									patch="0"
-									pitches="34"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="6884.391">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="3024">
+									<noteOffs>
+										<msg
+											m="0x82 86 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x92 34 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="7133.705"
+								x1="6900.803"
 								y1="1852.8"
-								x2="7133.705"
+								x2="6900.803"
 								y2="2204.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="7098.88"
+								x="6865.978"
 								y="2208"
 								font-size="125.44"
 								font-family="CLicht">˙</text>
 							<text
-								x="7046.313"
+								x="6813.411"
 								y="2208"
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
-								x1="7084.467"
+								x1="6851.565"
 								y1="1952"
-								x2="7150.118"
+								x2="6917.216"
 								y2="1952"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="7084.467"
+								x1="6851.565"
 								y1="1984"
-								x2="7150.118"
+								x2="6917.216"
 								y2="1984"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="7084.467"
+								x1="6851.565"
 								y1="2016"
-								x2="7150.118"
+								x2="6917.216"
 								y2="2016"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="7084.467"
+								x1="6851.565"
 								y1="2048"
-								x2="7150.118"
+								x2="6917.216"
 								y2="2048"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="7084.467"
+								x1="6851.565"
 								y1="2080"
-								x2="7150.118"
+								x2="6917.216"
 								y2="2080"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="7084.467"
+								x1="6851.565"
 								y1="2112"
-								x2="7150.118"
+								x2="6917.216"
 								y2="2112"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="7084.467"
+								x1="6851.565"
 								y1="2144"
-								x2="7150.118"
+								x2="6917.216"
 								y2="2144"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="7084.467"
+								x1="6851.565"
 								y1="2176"
-								x2="7150.118"
+								x2="6917.216"
 								y2="2176"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="7084.467"
+								x1="6851.565"
 								y1="2208"
-								x2="7150.118"
+								x2="6917.216"
 								y2="2208"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="8430.761">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="672"
-									patch="0"
-									pitches="99"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="8147.94">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="672">
+									<noteOffs>
+										<msg
+											m="0x82 34 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x92 99 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="8414.348"
+								x1="8131.528"
 								y1="1603.696"
-								x2="8414.348"
+								x2="8131.528"
 								y2="1870.946"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<use
 								xlink:href="#Left1Flag"
 								x="0"
 								y="0"
-								transform="translate(8414.348,1870.946) scale(125.44)" />
+								transform="translate(8131.528,1870.946) scale(125.44)" />
 							<text
-								x="8412.348"
+								x="8129.528"
 								y="1600"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<text
-								x="8359.781"
+								x="8076.96"
 								y="1600"
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
-								x1="8397.936"
+								x1="8115.115"
 								y1="1600"
-								x2="8463.586"
+								x2="8180.766"
 								y2="1600"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="8397.936"
+								x1="8115.115"
 								y1="1632"
-								x2="8463.586"
+								x2="8180.766"
 								y2="1632"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="8397.936"
+								x1="8115.115"
 								y1="1664"
-								x2="8463.586"
+								x2="8180.766"
 								y2="1664"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="8397.936"
+								x1="8115.115"
 								y1="1696"
-								x2="8463.586"
+								x2="8180.766"
 								y2="1696"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="8397.936"
+								x1="8115.115"
 								y1="1728"
-								x2="8463.586"
+								x2="8180.766"
 								y2="1728"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="8397.936"
+								x1="8115.115"
 								y1="1760"
-								x2="8463.586"
+								x2="8180.766"
 								y2="1760"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="8722.643">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="4032"
-									patch="0"
-									pitches="73"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="8428.729">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="4032">
+									<noteOffs>
+										<msg
+											m="0x82 99 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x92 73 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<text
-								x="8695.558"
+								x="8401.644"
 								y="1840"
 								font-size="125.44"
 								font-family="CLicht">w</text>
 							<text
-								x="8656.385"
+								x="8362.471"
 								y="1840"
 								font-size="125.44"
 								font-family="CLicht">#</text>
@@ -2131,31 +2415,37 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="10473.93">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="3696"
-									patch="0"
-									pitches="60"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="10113.46">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="3696">
+									<noteOffs>
+										<msg
+											m="0x82 73 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x92 60 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<text
-								x="10446.85"
+								x="10086.38"
 								y="1952"
 								font-size="125.44"
 								font-family="CLicht">w</text>
 							<line
-								x1="10423.76"
+								x1="10063.29"
 								y1="1952"
-								x2="10524.11"
+								x2="10163.63"
 								y2="1952"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="10532.11"
+								x1="10171.63"
 								y1="1952"
 								x2="11064"
 								y2="1952"
@@ -2224,16 +2514,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						font-family="Arial">4</text>
 					<g
 						class="outputChord"
-						score:alignmentX="614.7252">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="1296"
-									patch="0"
-									pitches="77"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="614.7252">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="1296">
+									<switches>
+										<msg
+											m="0xB3 0 0" />
+										<msg
+											m="0xC3 0" />
+										<msg
+											m="0xB3 101 0" />
+										<msg
+											m="0xB3 6 2" />
+									</switches>
+									<noteOns>
+										<msg
+											m="0x93 77 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -2251,31 +2553,37 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1177.64">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="1728"
-									patch="0"
-									pitches="78"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1156.247">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="1728">
+									<noteOffs>
+										<msg
+											m="0x83 77 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x93 78 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="1161.228"
+								x1="1139.834"
 								y1="2307.696"
-								x2="1161.228"
+								x2="1139.834"
 								y2="2419.2"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="1159.228"
+								x="1137.834"
 								y="2304"
 								font-size="125.44"
 								font-family="CLicht">˙</text>
 							<text
-								x="1119.073"
+								x="1097.68"
 								y="2304"
 								font-size="125.44"
 								font-family="CLicht">#</text>
@@ -2283,224 +2591,248 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="2009.357">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="2592"
-									patch="0"
-									pitches="32"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1970.583">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="2592">
+									<noteOffs>
+										<msg
+											m="0x83 78 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x93 32 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="2025.77"
+								x1="1986.996"
 								y1="2364.8"
-								x2="2025.77"
+								x2="1986.996"
 								y2="2732.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="1990.944"
+								x="1952.171"
 								y="2736"
 								font-size="125.44"
 								font-family="CLicht">˙</text>
 							<text
-								x="1938.377"
+								x="1899.604"
 								y="2736"
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
-								x1="1976.532"
+								x1="1937.758"
 								y1="2464"
-								x2="2042.182"
+								x2="2003.409"
 								y2="2464"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1976.532"
+								x1="1937.758"
 								y1="2496"
-								x2="2042.182"
+								x2="2003.409"
 								y2="2496"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1976.532"
+								x1="1937.758"
 								y1="2528"
-								x2="2042.182"
+								x2="2003.409"
 								y2="2528"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1976.532"
+								x1="1937.758"
 								y1="2560"
-								x2="2042.182"
+								x2="2003.409"
 								y2="2560"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1976.532"
+								x1="1937.758"
 								y1="2592"
-								x2="2042.182"
+								x2="2003.409"
 								y2="2592"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1976.532"
+								x1="1937.758"
 								y1="2624"
-								x2="2042.182"
+								x2="2003.409"
 								y2="2624"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1976.532"
+								x1="1937.758"
 								y1="2656"
-								x2="2042.182"
+								x2="2003.409"
 								y2="2656"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1976.532"
+								x1="1937.758"
 								y1="2688"
-								x2="2042.182"
+								x2="2003.409"
 								y2="2688"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1976.532"
+								x1="1937.758"
 								y1="2720"
-								x2="2042.182"
+								x2="2003.409"
 								y2="2720"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3135.188">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="432"
-									patch="0"
-									pitches="51"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3053.626">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="432">
+									<noteOffs>
+										<msg
+											m="0x83 32 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x93 51 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="3151.6"
+								x1="3070.039"
 								y1="2353.054"
-								x2="3151.6"
+								x2="3070.039"
 								y2="2556.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<use
 								xlink:href="#Right1Flag"
 								x="0"
 								y="0"
-								transform="translate(3151.6,2353.054) scale(125.44)" />
+								transform="translate(3070.039,2353.054) scale(125.44)" />
 							<text
-								x="3116.775"
+								x="3035.214"
 								y="2560"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<text
-								x="3064.208"
+								x="2982.646"
 								y="2560"
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
-								x1="3102.362"
+								x1="3020.801"
 								y1="2464"
-								x2="3168.013"
+								x2="3086.452"
 								y2="2464"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="3102.362"
+								x1="3020.801"
 								y1="2496"
-								x2="3168.013"
+								x2="3086.452"
 								y2="2496"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="3102.362"
+								x1="3020.801"
 								y1="2528"
-								x2="3168.013"
+								x2="3086.452"
 								y2="2528"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="3102.362"
+								x1="3020.801"
 								y1="2560"
-								x2="3168.013"
+								x2="3086.452"
 								y2="2560"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3322.826">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="2160"
-									patch="0"
-									pitches="91"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3234.134">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="2160">
+									<noteOffs>
+										<msg
+											m="0x83 51 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x93 91 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="3306.413"
+								x1="3217.721"
 								y1="2179.696"
-								x2="3306.413"
+								x2="3217.721"
 								y2="2371.2"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="3304.413"
+								x="3215.721"
 								y="2176"
 								font-size="125.44"
 								font-family="CLicht">˙</text>
 							<line
-								x1="3290.001"
+								x1="3201.309"
 								y1="2176"
-								x2="3355.651"
+								x2="3266.959"
 								y2="2176"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="3290.001"
+								x1="3201.309"
 								y1="2208"
-								x2="3355.651"
+								x2="3266.959"
 								y2="2208"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="3290.001"
+								x1="3201.309"
 								y1="2240"
-								x2="3355.651"
+								x2="3266.959"
 								y2="2240"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="3290.001"
+								x1="3201.309"
 								y1="2272"
-								x2="3355.651"
+								x2="3266.959"
 								y2="2272"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4261.018">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="864"
-									patch="0"
-									pitches="64"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4136.67">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="864">
+									<noteOffs>
+										<msg
+											m="0x83 91 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x93 64 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="4277.431"
+								x1="4153.083"
 								y1="2316.8"
-								x2="4277.431"
+								x2="4153.083"
 								y2="2428.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="4242.605"
+								x="4118.258"
 								y="2432"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
@@ -2508,218 +2840,242 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4636.295">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="3456"
-									patch="0"
-									pitches="58"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4497.685">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="3456">
+									<noteOffs>
+										<msg
+											m="0x83 64 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x93 58 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<text
-								x="4609.209"
+								x="4470.6"
 								y="2496"
 								font-size="125.44"
 								font-family="CLicht">w</text>
 							<text
-								x="4547.97"
+								x="4409.36"
 								y="2496"
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
-								x1="4586.125"
+								x1="4447.515"
 								y1="2464"
-								x2="4686.465"
+								x2="4547.855"
 								y2="2464"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="4586.125"
+								x1="4447.515"
 								y1="2496"
-								x2="4686.465"
+								x2="4547.855"
 								y2="2496"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="6137.403">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="4752"
-									patch="0"
-									pitches="97"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="5941.742">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="4752">
+									<noteOffs>
+										<msg
+											m="0x83 58 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x93 97 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<text
-								x="6110.317"
+								x="5914.657"
 								y="2128"
 								font-size="125.44"
 								font-family="CLicht">w</text>
 							<text
-								x="6049.078"
+								x="5853.417"
 								y="2128"
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
-								x1="6087.232"
+								x1="5891.572"
 								y1="2144"
-								x2="6187.573"
+								x2="5991.913"
 								y2="2144"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="6087.232"
+								x1="5891.572"
 								y1="2176"
-								x2="6187.573"
+								x2="5991.913"
 								y2="2176"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="6087.232"
+								x1="5891.572"
 								y1="2208"
-								x2="6187.573"
+								x2="5991.913"
 								y2="2208"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="6087.232"
+								x1="5891.572"
 								y1="2240"
-								x2="6187.573"
+								x2="5991.913"
 								y2="2240"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="6087.232"
+								x1="5891.572"
 								y1="2272"
-								x2="6187.573"
+								x2="5991.913"
 								y2="2272"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="8201.425">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="3024"
-									patch="0"
-									pitches="45"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="7927.321">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="3024">
+									<noteOffs>
+										<msg
+											m="0x83 97 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x93 45 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="8217.838"
+								x1="7943.733"
 								y1="2364.8"
-								x2="8217.838"
+								x2="7943.733"
 								y2="2604.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="8183.012"
+								x="7908.908"
 								y="2608"
 								font-size="125.44"
 								font-family="CLicht">˙</text>
 							<line
-								x1="8168.6"
+								x1="7894.496"
 								y1="2464"
-								x2="8234.25"
+								x2="7960.146"
 								y2="2464"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="8168.6"
+								x1="7894.496"
 								y1="2496"
-								x2="8234.25"
+								x2="7960.146"
 								y2="2496"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="8168.6"
+								x1="7894.496"
 								y1="2528"
-								x2="8234.25"
+								x2="7960.146"
 								y2="2528"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="8168.6"
+								x1="7894.496"
 								y1="2560"
-								x2="8234.25"
+								x2="7960.146"
 								y2="2560"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="8168.6"
+								x1="7894.496"
 								y1="2592"
-								x2="8234.25"
+								x2="7960.146"
 								y2="2592"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="9514.894">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="5184"
-									patch="0"
-									pitches="38"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="9190.868">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="5184">
+									<noteOffs>
+										<msg
+											m="0x83 45 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x93 38 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<text
-								x="9487.809"
+								x="9163.783"
 								y="2672"
 								font-size="125.44"
 								font-family="CLicht">w</text>
 							<line
-								x1="9464.723"
+								x1="9140.697"
 								y1="2464"
-								x2="9565.064"
+								x2="9241.039"
 								y2="2464"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="9464.723"
+								x1="9140.697"
 								y1="2496"
-								x2="9565.064"
+								x2="9241.039"
 								y2="2496"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="9464.723"
+								x1="9140.697"
 								y1="2528"
-								x2="9565.064"
+								x2="9241.039"
 								y2="2528"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="9464.723"
+								x1="9140.697"
 								y1="2560"
-								x2="9565.064"
+								x2="9241.039"
 								y2="2560"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="9464.723"
+								x1="9140.697"
 								y1="2592"
-								x2="9565.064"
+								x2="9241.039"
 								y2="2592"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="9464.723"
+								x1="9140.697"
 								y1="2624"
-								x2="9565.064"
+								x2="9241.039"
 								y2="2624"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="9464.723"
+								x1="9140.697"
 								y1="2656"
-								x2="9565.064"
+								x2="9241.039"
 								y2="2656"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="9573.064"
+								x1="9249.039"
 								y1="2672"
 								x2="11064"
 								y2="2672"
@@ -2801,20 +3157,32 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 631.1379 2866.56 L 735.3814 2876.984 735.3814 2890.424 631.1379 2880 z" />
+							d="M 631.1379 2866.56 L 731.4196 2876.588 731.4196 2890.028 631.1379 2880 z" />
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="614.7252">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="240"
-									patch="0"
-									pitches="49"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="614.7252">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="240">
+									<switches>
+										<msg
+											m="0xB4 0 0" />
+										<msg
+											m="0xC4 0" />
+										<msg
+											m="0xB4 101 0" />
+										<msg
+											m="0xB4 6 2" />
+									</switches>
+									<noteOns>
+										<msg
+											m="0x94 49 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -2861,144 +3229,162 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="718.9688">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="480"
-									patch="0"
-									pitches="36"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="715.007">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="480">
+									<noteOffs>
+										<msg
+											m="0x84 49 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x94 36 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="735.3814"
-								y1="2876.984"
-								x2="735.3814"
+								x1="731.4196"
+								y1="2876.588"
+								x2="731.4196"
 								y2="3196.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="700.5561"
+								x="696.5943"
 								y="3200"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								x1="686.1434"
+								x1="682.1816"
 								y1="2976"
-								x2="751.7941"
+								x2="747.8323"
 								y2="2976"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="686.1434"
+								x1="682.1816"
 								y1="3008"
-								x2="751.7941"
+								x2="747.8323"
 								y2="3008"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="686.1434"
+								x1="682.1816"
 								y1="3040"
-								x2="751.7941"
+								x2="747.8323"
 								y2="3040"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="686.1434"
+								x1="682.1816"
 								y1="3072"
-								x2="751.7941"
+								x2="747.8323"
 								y2="3072"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="686.1434"
+								x1="682.1816"
 								y1="3104"
-								x2="751.7941"
+								x2="747.8323"
 								y2="3104"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="686.1434"
+								x1="682.1816"
 								y1="3136"
-								x2="751.7941"
+								x2="747.8323"
 								y2="3136"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="686.1434"
+								x1="682.1816"
 								y1="3168"
-								x2="751.7941"
+								x2="747.8323"
 								y2="3168"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="686.1434"
+								x1="682.1816"
 								y1="3200"
-								x2="751.7941"
+								x2="747.8323"
 								y2="3200"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="927.4558">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="960"
-									patch="0"
-									pitches="82"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="915.5705">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="960">
+									<noteOffs>
+										<msg
+											m="0x84 36 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x94 82 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="911.0432"
+								x1="899.1578"
 								y1="2787.696"
-								x2="911.0432"
+								x2="899.1578"
 								y2="2899.2"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="909.0432"
+								x="897.1578"
 								y="2784"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<text
-								x="856.4759"
+								x="844.5906"
 								y="2784"
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
-								x1="894.6305"
+								x1="882.7452"
 								y1="2784"
-								x2="960.2811"
+								x2="948.3958"
 								y2="2784"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1362.646">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="2640"
-									patch="0"
-									pitches="75"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1338.083">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="2640">
+									<noteOffs>
+										<msg
+											m="0x84 82 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x94 75 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="1346.233"
+								x1="1321.67"
 								y1="2851.696"
-								x2="1346.233"
+								x2="1321.67"
 								y2="2963.2"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="1344.233"
+								x="1319.67"
 								y="2848"
 								font-size="125.44"
 								font-family="CLicht">˙</text>
 							<text
-								x="1304.078"
+								x="1279.515"
 								y="2848"
 								font-size="125.44"
 								font-family="CLicht">#</text>
@@ -3006,88 +3392,100 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="2572.272">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="720"
-									patch="0"
-									pitches="95"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="2512.105">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="720">
+									<noteOffs>
+										<msg
+											m="0x84 75 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x94 95 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="2555.86"
+								x1="2495.692"
 								y1="2659.696"
-								x2="2555.86"
+								x2="2495.692"
 								y2="2894.946"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<use
 								xlink:href="#Left1Flag"
 								x="0"
 								y="0"
-								transform="translate(2555.86,2894.946) scale(125.44)" />
+								transform="translate(2495.692,2894.946) scale(125.44)" />
 							<text
-								x="2553.86"
+								x="2493.692"
 								y="2656"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								x1="2539.447"
+								x1="2479.28"
 								y1="2656"
-								x2="2605.097"
+								x2="2544.93"
 								y2="2656"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="2539.447"
+								x1="2479.28"
 								y1="2688"
-								x2="2605.097"
+								x2="2544.93"
 								y2="2688"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="2539.447"
+								x1="2479.28"
 								y1="2720"
-								x2="2605.097"
+								x2="2544.93"
 								y2="2720"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="2539.447"
+								x1="2479.28"
 								y1="2752"
-								x2="2605.097"
+								x2="2544.93"
 								y2="2752"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="2539.447"
+								x1="2479.28"
 								y1="2784"
-								x2="2605.097"
+								x2="2544.93"
 								y2="2784"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="2885.003">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="2880"
-									patch="0"
-									pitches="62"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="2812.95">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="2880">
+									<noteOffs>
+										<msg
+											m="0x84 95 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x94 62 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="2901.416"
+								x1="2829.363"
 								y1="2844.8"
-								x2="2901.416"
+								x2="2829.363"
 								y2="2956.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="2866.59"
+								x="2794.538"
 								y="2960"
 								font-size="125.44"
 								font-family="CLicht">˙</text>
@@ -3095,139 +3493,157 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4135.926">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="1440"
-									patch="0"
-									pitches="56"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4016.332">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="1440">
+									<noteOffs>
+										<msg
+											m="0x84 62 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x94 56 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="4152.338"
+								x1="4032.745"
 								y1="2876.8"
-								x2="4152.338"
+								x2="4032.745"
 								y2="3020.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="4117.513"
+								x="3997.92"
 								y="3024"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<text
-								x="4064.946"
+								x="3945.352"
 								y="3024"
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
-								x1="4103.101"
+								x1="3983.507"
 								y1="2976"
-								x2="4168.751"
+								x2="4049.157"
 								y2="2976"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="4103.101"
+								x1="3983.507"
 								y1="3008"
-								x2="4168.751"
+								x2="4049.157"
 								y2="3008"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="4761.387">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="2160"
-									patch="0"
-									pitches="101"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="4618.023">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="2160">
+									<noteOffs>
+										<msg
+											m="0x84 56 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x94 101 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="4744.975"
+								x1="4601.61"
 								y1="2595.696"
-								x2="4744.975"
+								x2="4601.61"
 								y2="2883.2"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="4742.975"
+								x="4599.61"
 								y="2592"
 								font-size="125.44"
 								font-family="CLicht">˙</text>
 							<line
-								x1="4728.562"
+								x1="4585.198"
 								y1="2592"
-								x2="4794.212"
+								x2="4650.848"
 								y2="2592"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="4728.562"
+								x1="4585.198"
 								y1="2624"
-								x2="4794.212"
+								x2="4650.848"
 								y2="2624"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="4728.562"
+								x1="4585.198"
 								y1="2656"
-								x2="4794.212"
+								x2="4650.848"
 								y2="2656"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="4728.562"
+								x1="4585.198"
 								y1="2688"
-								x2="4794.212"
+								x2="4650.848"
 								y2="2688"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="4728.562"
+								x1="4585.198"
 								y1="2720"
-								x2="4794.212"
+								x2="4650.848"
 								y2="2720"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="4728.562"
+								x1="4585.198"
 								y1="2752"
-								x2="4794.212"
+								x2="4650.848"
 								y2="2752"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="4728.562"
+								x1="4585.198"
 								y1="2784"
-								x2="4794.212"
+								x2="4650.848"
 								y2="2784"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="5699.58">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="1200"
-									patch="0"
-									pitches="69"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="5520.559">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="1200">
+									<noteOffs>
+										<msg
+											m="0x84 101 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x94 69 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="5715.993"
+								x1="5536.972"
 								y1="2780.8"
-								x2="5715.993"
+								x2="5536.972"
 								y2="2892.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="5681.167"
+								x="5502.146"
 								y="2896"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
@@ -3235,299 +3651,329 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="6220.798">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="2400"
-									patch="0"
-									pitches="88"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="6021.968">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="2400">
+									<noteOffs>
+										<msg
+											m="0x84 69 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x94 88 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="6204.385"
+								x1="6005.555"
 								y1="2723.696"
-								x2="6204.385"
+								x2="6005.555"
 								y2="2883.2"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="6202.385"
+								x="6003.555"
 								y="2720"
 								font-size="125.44"
 								font-family="CLicht">˙</text>
 							<line
-								x1="6187.973"
+								x1="5989.143"
 								y1="2720"
-								x2="6253.623"
+								x2="6054.793"
 								y2="2720"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="6187.973"
+								x1="5989.143"
 								y1="2752"
-								x2="6253.623"
+								x2="6054.793"
 								y2="2752"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="6187.973"
+								x1="5989.143"
 								y1="2784"
-								x2="6253.623"
+								x2="6054.793"
 								y2="2784"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="7263.233">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="1920"
-									patch="0"
-									pitches="30"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="7024.785">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="1920">
+									<noteOffs>
+										<msg
+											m="0x84 88 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x94 30 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="7279.646"
+								x1="7041.197"
 								y1="2876.8"
-								x2="7279.646"
+								x2="7041.197"
 								y2="3260.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="7244.821"
+								x="7006.372"
 								y="3264"
 								font-size="125.44"
 								font-family="CLicht">˙</text>
 							<text
-								x="7192.253"
+								x="6953.805"
 								y="3264"
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
-								x1="7230.408"
+								x1="6991.959"
 								y1="2976"
-								x2="7296.059"
+								x2="7057.61"
 								y2="2976"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="7230.408"
+								x1="6991.959"
 								y1="3008"
-								x2="7296.059"
+								x2="7057.61"
 								y2="3008"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="7230.408"
+								x1="6991.959"
 								y1="3040"
-								x2="7296.059"
+								x2="7057.61"
 								y2="3040"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="7230.408"
+								x1="6991.959"
 								y1="3072"
-								x2="7296.059"
+								x2="7057.61"
 								y2="3072"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="7230.408"
+								x1="6991.959"
 								y1="3104"
-								x2="7296.059"
+								x2="7057.61"
 								y2="3104"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="7230.408"
+								x1="6991.959"
 								y1="3136"
-								x2="7296.059"
+								x2="7057.61"
 								y2="3136"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="7230.408"
+								x1="6991.959"
 								y1="3168"
-								x2="7296.059"
+								x2="7057.61"
 								y2="3168"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="7230.408"
+								x1="6991.959"
 								y1="3200"
-								x2="7296.059"
+								x2="7057.61"
 								y2="3200"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="7230.408"
+								x1="6991.959"
 								y1="3232"
-								x2="7296.059"
+								x2="7057.61"
 								y2="3232"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="7230.408"
+								x1="6991.959"
 								y1="3264"
-								x2="7296.059"
+								x2="7057.61"
 								y2="3264"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="8097.182">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="1680"
-									patch="0"
-									pitches="43"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="7827.039">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="1680">
+									<noteOffs>
+										<msg
+											m="0x84 30 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x94 43 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="8113.594"
+								x1="7843.452"
 								y1="2876.8"
-								x2="8113.594"
+								x2="7843.452"
 								y2="3132.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="8078.769"
+								x="7808.626"
 								y="3136"
 								font-size="125.44"
 								font-family="CLicht">˙</text>
 							<line
-								x1="8064.356"
+								x1="7794.214"
 								y1="2976"
-								x2="8130.007"
+								x2="7859.864"
 								y2="2976"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="8064.356"
+								x1="7794.214"
 								y1="3008"
-								x2="8130.007"
+								x2="7859.864"
 								y2="3008"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="8064.356"
+								x1="7794.214"
 								y1="3040"
-								x2="8130.007"
+								x2="7859.864"
 								y2="3040"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="8064.356"
+								x1="7794.214"
 								y1="3072"
-								x2="8130.007"
+								x2="7859.864"
 								y2="3072"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="8064.356"
+								x1="7794.214"
 								y1="3104"
-								x2="8130.007"
+								x2="7859.864"
 								y2="3104"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="8064.356"
+								x1="7794.214"
 								y1="3136"
-								x2="8130.007"
+								x2="7859.864"
 								y2="3136"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="8826.886">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="3840"
-									patch="0"
-									pitches="43"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="8529.01">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="3840">
+									<noteOffs>
+										<msg
+											m="0x84 43 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x94 43 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<text
-								x="8799.801"
+								x="8501.925"
 								y="3136"
 								font-size="125.44"
 								font-family="CLicht">w</text>
 							<line
-								x1="8776.715"
+								x1="8478.839"
 								y1="2976"
-								x2="8877.057"
+								x2="8579.181"
 								y2="2976"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="8776.715"
+								x1="8478.839"
 								y1="3008"
-								x2="8877.057"
+								x2="8579.181"
 								y2="3008"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="8776.715"
+								x1="8478.839"
 								y1="3040"
-								x2="8877.057"
+								x2="8579.181"
 								y2="3040"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="8776.715"
+								x1="8478.839"
 								y1="3072"
-								x2="8877.057"
+								x2="8579.181"
 								y2="3072"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="8776.715"
+								x1="8478.839"
 								y1="3104"
-								x2="8877.057"
+								x2="8579.181"
 								y2="3104"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="8776.715"
+								x1="8478.839"
 								y1="3136"
-								x2="8877.057"
+								x2="8579.181"
 								y2="3136"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="10494.78">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="4224"
-									patch="0"
-									pitches="56"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="10133.52">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="4224">
+									<noteOffs>
+										<msg
+											m="0x84 43 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x94 56 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<text
-								x="10467.7"
+								x="10106.43"
 								y="3024"
 								font-size="125.44"
 								font-family="CLicht">w</text>
 							<text
-								x="10406.46"
+								x="10045.19"
 								y="3024"
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
-								x1="10444.61"
+								x1="10083.35"
 								y1="2976"
-								x2="10544.95"
+								x2="10183.69"
 								y2="2976"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="10444.61"
+								x1="10083.35"
 								y1="3008"
-								x2="10544.95"
+								x2="10183.69"
 								y2="3008"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="10552.95"
+								x1="10191.69"
 								y1="3024"
 								x2="11064"
 								y2="3024"
@@ -3599,111 +4045,123 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 1507.448 3374.606 L 1545.848 3375.022 1545.848 3395.182 1507.448 3394.766 z" />
+							d="M 1482.144 3374.602 L 1520.544 3375.029 1520.544 3395.189 1482.144 3394.761 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 1507.448 3388.046 L 1545.848 3388.462 1545.848 3401.902 1507.448 3401.486 z" />
+							d="M 1482.144 3388.042 L 1520.544 3388.469 1520.544 3401.909 1482.144 3401.481 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 1507.448 3342.606 L 1545.848 3343.022 1545.848 3363.182 1507.448 3362.766 z" />
+							d="M 1482.144 3342.602 L 1520.544 3343.029 1520.544 3363.189 1482.144 3362.761 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 1507.448 3356.046 L 1545.848 3356.462 1545.848 3369.902 1507.448 3369.486 z" />
+							d="M 1482.144 3356.042 L 1520.544 3356.469 1520.544 3369.909 1482.144 3369.481 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 1742.929 3345.156 L 1781.329 3345.571 1781.329 3365.731 1742.929 3365.315 z" />
+							d="M 1710.495 3345.146 L 1748.895 3345.573 1748.895 3365.733 1710.495 3365.305 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 1742.929 3358.595 L 1781.329 3359.011 1781.329 3372.451 1742.929 3372.035 z" />
+							d="M 1710.495 3358.585 L 1748.895 3359.013 1748.895 3372.453 1710.495 3372.025 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 988.8632 3304.992 L 1027.263 3305.408 1027.263 3325.568 988.8632 3325.152 z" />
+							d="M 973.8085 3304.938 L 1012.209 3305.366 1012.209 3325.526 973.8085 3325.098 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 988.8632 3318.432 L 1027.263 3318.848 1027.263 3332.288 988.8632 3331.872 z" />
+							d="M 973.8085 3318.378 L 1012.209 3318.806 1012.209 3332.246 973.8085 3331.818 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 1197.35 3307.25 L 1235.75 3307.665 1235.75 3327.825 1197.35 3327.409 z" />
+							d="M 1174.372 3307.172 L 1212.772 3307.6 1212.772 3327.76 1174.372 3327.332 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 1197.35 3320.689 L 1235.75 3321.105 1235.75 3334.545 1197.35 3334.129 z" />
+							d="M 1174.372 3320.612 L 1212.772 3321.04 1212.772 3334.48 1174.372 3334.052 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 1507.448 3310.606 L 1545.848 3311.022 1545.848 3331.182 1507.448 3330.766 z" />
+							d="M 1482.144 3310.602 L 1520.544 3311.029 1520.544 3331.189 1482.144 3330.761 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 1507.448 3324.046 L 1545.848 3324.462 1545.848 3337.902 1507.448 3337.486 z" />
+							d="M 1482.144 3324.042 L 1520.544 3324.469 1520.544 3337.909 1482.144 3337.481 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 1742.929 3313.156 L 1781.329 3313.571 1781.329 3333.731 1742.929 3333.315 z" />
+							d="M 1710.495 3313.146 L 1748.895 3313.573 1748.895 3333.733 1710.495 3333.305 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 1742.929 3326.595 L 1781.329 3327.011 1781.329 3340.451 1742.929 3340.035 z" />
+							d="M 1710.495 3326.585 L 1748.895 3327.013 1748.895 3340.453 1710.495 3340.025 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 631.1379 3269.12 L 1235.75 3275.665 1235.75 3295.825 631.1379 3289.28 z" />
+							d="M 631.1379 3269.12 L 1212.772 3275.6 1212.772 3295.76 631.1379 3289.28 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 631.1379 3282.56 L 1235.75 3289.105 1235.75 3302.545 631.1379 3296 z" />
+							d="M 631.1379 3282.56 L 1212.772 3289.04 1212.772 3302.48 631.1379 3296 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 1507.448 3278.606 L 1545.848 3279.022 1545.848 3299.182 1507.448 3298.766 z" />
+							d="M 1482.144 3278.602 L 1520.544 3279.029 1520.544 3299.189 1482.144 3298.761 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 1507.448 3292.046 L 1545.848 3292.462 1545.848 3305.902 1507.448 3305.486 z" />
+							d="M 1482.144 3292.042 L 1520.544 3292.469 1520.544 3305.909 1482.144 3305.481 z" />
 						<path
 							fill="white"
 							opacity="0.65"
-							d="M 1742.929 3281.156 L 1781.329 3281.571 1781.329 3301.731 1742.929 3301.315 z" />
+							d="M 1710.495 3281.146 L 1748.895 3281.573 1748.895 3301.733 1710.495 3301.305 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 1742.929 3294.595 L 1781.329 3295.011 1781.329 3308.451 1742.929 3308.035 z" />
+							d="M 1710.495 3294.585 L 1748.895 3295.013 1748.895 3308.453 1710.495 3308.025 z" />
 						<path
 							stroke="black"
 							stroke-width="4px"
 							fill="black"
-							d="M 631.1379 3250.56 L 2109.165 3266.56 2109.165 3280 631.1379 3264 z" />
+							d="M 631.1379 3250.56 L 2067.221 3266.56 2067.221 3280 631.1379 3264 z" />
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="614.7252">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="240"
-									patch="0"
-									pitches="99"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="614.7252">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="240">
+									<switches>
+										<msg
+											m="0xB5 0 0" />
+										<msg
+											m="0xC5 0" />
+										<msg
+											m="0xB5 101 0" />
+										<msg
+											m="0xB5 6 2" />
+									</switches>
+									<noteOns>
+										<msg
+											m="0x95 99 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
@@ -3762,150 +4220,168 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="718.9688">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="288"
-									patch="0"
-									pitches="40"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="715.007">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="288">
+									<noteOffs>
+										<msg
+											m="0x85 99 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x95 40 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="735.3814"
-								y1="3251.688"
-								x2="735.3814"
+								x1="731.4196"
+								y1="3251.677"
+								x2="731.4196"
 								y2="3932.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="700.5561"
+								x="696.5943"
 								y="3936"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								x1="686.1434"
+								x1="682.1816"
 								y1="3744"
-								x2="751.7941"
+								x2="747.8323"
 								y2="3744"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="686.1434"
+								x1="682.1816"
 								y1="3776"
-								x2="751.7941"
+								x2="747.8323"
 								y2="3776"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="686.1434"
+								x1="682.1816"
 								y1="3808"
-								x2="751.7941"
+								x2="747.8323"
 								y2="3808"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="686.1434"
+								x1="682.1816"
 								y1="3840"
-								x2="751.7941"
+								x2="747.8323"
 								y2="3840"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="686.1434"
+								x1="682.1816"
 								y1="3872"
-								x2="751.7941"
+								x2="747.8323"
 								y2="3872"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="686.1434"
+								x1="682.1816"
 								y1="3904"
-								x2="751.7941"
+								x2="747.8323"
 								y2="3904"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="686.1434"
+								x1="682.1816"
 								y1="3936"
-								x2="751.7941"
+								x2="747.8323"
 								y2="3936"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="844.061">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="384"
-									patch="0"
-									pitches="54"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="835.3451">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="384">
+									<noteOffs>
+										<msg
+											m="0x85 40 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x95 54 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="860.4736"
-								y1="3253.042"
-								x2="860.4736"
+								x1="851.7578"
+								y1="3253.018"
+								x2="851.7578"
 								y2="3804.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="825.6483"
+								x="816.9324"
 								y="3808"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<text
-								x="773.0811"
+								x="764.3652"
 								y="3808"
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
-								x1="811.2357"
+								x1="802.5198"
 								y1="3744"
-								x2="876.8863"
+								x2="868.1704"
 								y2="3744"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="811.2357"
+								x1="802.5198"
 								y1="3776"
-								x2="876.8863"
+								x2="868.1704"
 								y2="3776"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="811.2357"
+								x1="802.5198"
 								y1="3808"
-								x2="876.8863"
+								x2="868.1704"
 								y2="3808"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1010.851">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="144"
-									patch="0"
-									pitches="73"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="995.7959">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="144">
+									<noteOffs>
+										<msg
+											m="0x85 54 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x95 73 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="1027.263"
-								y1="3254.848"
-								x2="1027.263"
+								x1="1012.209"
+								y1="3254.806"
+								x2="1012.209"
 								y2="3628.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="992.438"
+								x="977.3832"
 								y="3632"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<text
-								x="953.2658"
+								x="938.2111"
 								y="3632"
 								font-size="125.44"
 								font-family="CLicht">#</text>
@@ -3913,115 +4389,133 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1073.397">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="336"
-									patch="0"
-									pitches="53"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1055.965">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="336">
+									<noteOffs>
+										<msg
+											m="0x85 73 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x95 53 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="1089.809"
-								y1="3255.525"
-								x2="1089.809"
+								x1="1072.378"
+								y1="3255.476"
+								x2="1072.378"
 								y2="3804.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="1054.984"
+								x="1037.552"
 								y="3808"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								x1="1040.572"
+								x1="1023.14"
 								y1="3744"
-								x2="1106.222"
+								x2="1088.79"
 								y2="3744"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1040.572"
+								x1="1023.14"
 								y1="3776"
-								x2="1106.222"
+								x2="1088.79"
 								y2="3776"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1040.572"
+								x1="1023.14"
 								y1="3808"
-								x2="1106.222"
+								x2="1088.79"
 								y2="3808"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1219.338">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="192"
-									patch="0"
-									pitches="86"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1196.36">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="192">
+									<noteOffs>
+										<msg
+											m="0x85 53 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x95 86 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="1235.75"
-								y1="3257.105"
-								x2="1235.75"
+								x1="1212.772"
+								y1="3257.04"
+								x2="1212.772"
 								y2="3500.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="1200.925"
+								x="1177.947"
 								y="3504"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								x1="1186.513"
+								x1="1163.534"
 								y1="3520"
-								x2="1252.163"
+								x2="1229.185"
 								y2="3520"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1186.513"
+								x1="1163.534"
 								y1="3552"
-								x2="1252.163"
+								x2="1229.185"
 								y2="3552"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1320.948">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="480"
-									patch="0"
-									pitches="80"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1297.97">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="480">
+									<noteOffs>
+										<msg
+											m="0x85 86 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x95 80 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="1337.361"
-								y1="3258.205"
-								x2="1337.361"
+								x1="1314.382"
+								y1="3258.172"
+								x2="1314.382"
 								y2="3564.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="1302.536"
+								x="1279.557"
 								y="3568"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<text
-								x="1263.363"
+								x="1240.385"
 								y="3568"
 								font-size="125.44"
 								font-family="CLicht">#</text>
@@ -4029,83 +4523,95 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1529.435">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="48"
-									patch="0"
-									pitches="47"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1504.132">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="48">
+									<noteOffs>
+										<msg
+											m="0x85 80 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x95 47 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="1545.848"
-								y1="3260.462"
-								x2="1545.848"
+								x1="1520.544"
+								y1="3260.469"
+								x2="1520.544"
 								y2="3868.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="1511.023"
+								x="1485.719"
 								y="3872"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								x1="1496.61"
+								x1="1471.307"
 								y1="3744"
-								x2="1562.261"
+								x2="1536.957"
 								y2="3744"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1496.61"
+								x1="1471.307"
 								y1="3776"
-								x2="1562.261"
+								x2="1536.957"
 								y2="3776"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1496.61"
+								x1="1471.307"
 								y1="3808"
-								x2="1562.261"
+								x2="1536.957"
 								y2="3808"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1496.61"
+								x1="1471.307"
 								y1="3840"
-								x2="1562.261"
+								x2="1536.957"
 								y2="3840"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1496.61"
+								x1="1471.307"
 								y1="3872"
-								x2="1562.261"
+								x2="1536.957"
 								y2="3872"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1577.278">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="432"
-									patch="0"
-									pitches="67"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1551.975">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="432">
+									<noteOffs>
+										<msg
+											m="0x85 47 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x95 67 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="1593.691"
-								y1="3260.98"
-								x2="1593.691"
+								x1="1568.387"
+								y1="3261.002"
+								x2="1568.387"
 								y2="3676.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="1558.866"
+								x="1533.562"
 								y="3680"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
@@ -4113,240 +4619,270 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1764.917">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="96"
-									patch="0"
-									pitches="60"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1732.482">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="96">
+									<noteOffs>
+										<msg
+											m="0x85 67 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x95 60 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="1781.329"
-								y1="3263.011"
-								x2="1781.329"
+								x1="1748.895"
+								y1="3263.013"
+								x2="1748.895"
 								y2="3740.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="1746.504"
+								x="1714.069"
 								y="3744"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								x1="1732.091"
+								x1="1699.657"
 								y1="3744"
-								x2="1797.742"
+								x2="1765.307"
 								y2="3744"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="1842.567">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="576"
-									patch="0"
-									pitches="34"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="1810.133">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="576">
+									<noteOffs>
+										<msg
+											m="0x85 60 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x95 34 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="1858.98"
-								y1="3263.852"
-								x2="1858.98"
+								x1="1826.545"
+								y1="3263.878"
+								x2="1826.545"
 								y2="3996.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="1824.155"
+								x="1791.72"
 								y="4000"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<text
-								x="1771.587"
+								x="1739.153"
 								y="4000"
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
-								x1="1809.742"
+								x1="1777.307"
 								y1="3744"
-								x2="1875.393"
+								x2="1842.958"
 								y2="3744"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1809.742"
+								x1="1777.307"
 								y1="3776"
-								x2="1875.393"
+								x2="1842.958"
 								y2="3776"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1809.742"
+								x1="1777.307"
 								y1="3808"
-								x2="1875.393"
+								x2="1842.958"
 								y2="3808"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1809.742"
+								x1="1777.307"
 								y1="3840"
-								x2="1875.393"
+								x2="1842.958"
 								y2="3840"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1809.742"
+								x1="1777.307"
 								y1="3872"
-								x2="1875.393"
+								x2="1842.958"
 								y2="3872"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1809.742"
+								x1="1777.307"
 								y1="3904"
-								x2="1875.393"
+								x2="1842.958"
 								y2="3904"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1809.742"
+								x1="1777.307"
 								y1="3936"
-								x2="1875.393"
+								x2="1842.958"
 								y2="3936"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1809.742"
+								x1="1777.307"
 								y1="3968"
-								x2="1875.393"
+								x2="1842.958"
 								y2="3968"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="1809.742"
+								x1="1777.307"
 								y1="4000"
-								x2="1875.393"
+								x2="1842.958"
 								y2="4000"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="2092.752">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="528"
-									patch="0"
-									pitches="93"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="2050.809">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="528">
+									<noteOffs>
+										<msg
+											m="0x85 34 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x95 93 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="2109.165"
+								x1="2067.221"
 								y1="3266.56"
-								x2="2109.165"
+								x2="2067.221"
 								y2="3436.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="2074.339"
+								x="2032.396"
 								y="3440"
 								font-size="125.44"
 								font-family="CLicht">œ</text>
 							<line
-								x1="2059.927"
+								x1="2017.984"
 								y1="3456"
-								x2="2125.577"
+								x2="2083.634"
 								y2="3456"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="2059.927"
+								x1="2017.984"
 								y1="3488"
-								x2="2125.577"
+								x2="2083.634"
 								y2="3488"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="2059.927"
+								x1="2017.984"
 								y1="3520"
-								x2="2125.577"
+								x2="2083.634"
 								y2="3520"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="2059.927"
+								x1="2017.984"
 								y1="3552"
-								x2="2125.577"
+								x2="2083.634"
 								y2="3552"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="2322.088">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="3456"
-									patch="0"
-									pitches="93"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="2271.428">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="3456">
+									<noteOffs>
+										<msg
+											m="0x85 93 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x95 93 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<text
-								x="2295.002"
+								x="2244.343"
 								y="3440"
 								font-size="125.44"
 								font-family="CLicht">w</text>
 							<line
-								x1="2271.917"
+								x1="2221.258"
 								y1="3456"
-								x2="2372.258"
+								x2="2321.599"
 								y2="3456"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="2271.917"
+								x1="2221.258"
 								y1="3488"
-								x2="2372.258"
+								x2="2321.599"
 								y2="3488"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="2271.917"
+								x1="2221.258"
 								y1="3520"
-								x2="2372.258"
+								x2="2321.599"
 								y2="3520"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="2271.917"
+								x1="2221.258"
 								y1="3552"
-								x2="2372.258"
+								x2="2321.599"
 								y2="3552"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="3823.195">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="4032"
-									patch="0"
-									pitches="80"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="3715.487">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="4032">
+									<noteOffs>
+										<msg
+											m="0x85 93 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x95 80 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<text
-								x="3796.11"
+								x="3688.401"
 								y="3568"
 								font-size="125.44"
 								font-family="CLicht">w</text>
 							<text
-								x="3756.937"
+								x="3649.229"
 								y="3568"
 								font-size="125.44"
 								font-family="CLicht">#</text>
@@ -4354,121 +4890,139 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="5574.488">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="5184"
-									patch="0"
-									pitches="54"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="5400.221">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="5184">
+									<noteOffs>
+										<msg
+											m="0x85 80 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x95 54 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<text
-								x="5547.402"
+								x="5373.136"
 								y="3808"
 								font-size="125.44"
 								font-family="CLicht">w</text>
 							<text
-								x="5486.163"
+								x="5311.896"
 								y="3808"
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
-								x1="5524.317"
+								x1="5350.051"
 								y1="3744"
-								x2="5624.658"
+								x2="5450.392"
 								y2="3744"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="5524.317"
+								x1="5350.051"
 								y1="3776"
-								x2="5624.658"
+								x2="5450.392"
 								y2="3776"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="5524.317"
+								x1="5350.051"
 								y1="3808"
-								x2="5624.658"
+								x2="5450.392"
 								y2="3808"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="7826.148">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="2304"
-									patch="0"
-									pitches="47"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="7566.307">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="2304">
+									<noteOffs>
+										<msg
+											m="0x85 54 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x95 47 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="7842.561"
+								x1="7582.719"
 								y1="3644.8"
-								x2="7842.561"
+								x2="7582.719"
 								y2="3868.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="7807.736"
+								x="7547.894"
 								y="3872"
 								font-size="125.44"
 								font-family="CLicht">˙</text>
 							<line
-								x1="7793.323"
+								x1="7533.481"
 								y1="3744"
-								x2="7858.974"
+								x2="7599.132"
 								y2="3744"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="7793.323"
+								x1="7533.481"
 								y1="3776"
-								x2="7858.974"
+								x2="7599.132"
 								y2="3776"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="7793.323"
+								x1="7533.481"
 								y1="3808"
-								x2="7858.974"
+								x2="7599.132"
 								y2="3808"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="7793.323"
+								x1="7533.481"
 								y1="3840"
-								x2="7858.974"
+								x2="7599.132"
 								y2="3840"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="7793.323"
+								x1="7533.481"
 								y1="3872"
-								x2="7858.974"
+								x2="7599.132"
 								y2="3872"
 								style="stroke:black; stroke-width:4px" />
 						</g>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="8826.886">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="4608"
-									patch="0"
-									pitches="67"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="8529.01">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="4608">
+									<noteOffs>
+										<msg
+											m="0x85 47 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x95 67 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<text
-								x="8799.801"
+								x="8501.925"
 								y="3680"
 								font-size="125.44"
 								font-family="CLicht">w</text>
@@ -4476,90 +5030,96 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					</g>
 					<g
 						class="outputChord"
-						score:alignmentX="10828.36">
-						<score:midiChord>
-							<basicChords>
-								<basicChord
-									msDuration="2880"
-									patch="0"
-									pitches="34"
-									velocities="127" />
-							</basicChords>
-						</score:midiChord>
+						score:alignment="10454.42">
+						<score:midi>
+							<moments>
+								<moment
+									msDuration="2880">
+									<noteOffs>
+										<msg
+											m="0x85 67 64" />
+									</noteOffs>
+									<noteOns>
+										<msg
+											m="0x95 34 127" />
+									</noteOns>
+								</moment>
+							</moments>
+						</score:midi>
 						<g
 							class="graphics">
 							<line
-								x1="10844.78"
+								x1="10470.83"
 								y1="3644.8"
-								x2="10844.78"
+								x2="10470.83"
 								y2="3996.304"
 								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
 							<text
-								x="10809.95"
+								x="10436.01"
 								y="4000"
 								font-size="125.44"
 								font-family="CLicht">˙</text>
 							<text
-								x="10757.38"
+								x="10383.44"
 								y="4000"
 								font-size="125.44"
 								font-family="CLicht">#</text>
 							<line
-								x1="10795.54"
+								x1="10421.59"
 								y1="3744"
-								x2="10861.19"
+								x2="10487.24"
 								y2="3744"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="10795.54"
+								x1="10421.59"
 								y1="3776"
-								x2="10861.19"
+								x2="10487.24"
 								y2="3776"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="10795.54"
+								x1="10421.59"
 								y1="3808"
-								x2="10861.19"
+								x2="10487.24"
 								y2="3808"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="10795.54"
+								x1="10421.59"
 								y1="3840"
-								x2="10861.19"
+								x2="10487.24"
 								y2="3840"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="10795.54"
+								x1="10421.59"
 								y1="3872"
-								x2="10861.19"
+								x2="10487.24"
 								y2="3872"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="10795.54"
+								x1="10421.59"
 								y1="3904"
-								x2="10861.19"
+								x2="10487.24"
 								y2="3904"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="10795.54"
+								x1="10421.59"
 								y1="3936"
-								x2="10861.19"
+								x2="10487.24"
 								y2="3936"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="10795.54"
+								x1="10421.59"
 								y1="3968"
-								x2="10861.19"
+								x2="10487.24"
 								y2="3968"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="10795.54"
+								x1="10421.59"
 								y1="4000"
-								x2="10861.19"
+								x2="10487.24"
 								y2="4000"
 								style="stroke:black; stroke-width:4px" />
 							<line
-								x1="10869.19"
+								x1="10495.24"
 								y1="4000"
 								x2="11064"
 								y2="4000"
@@ -4580,7 +5140,7 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 					x1="11032"
 					y1="864"
 					x2="11032"
-					y2="1344"
+					y2="1120"
 					style="stroke:black; stroke-width:8px" />
 				<line
 					x1="503.2"

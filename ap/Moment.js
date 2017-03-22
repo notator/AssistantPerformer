@@ -46,10 +46,11 @@ _AP.moment = (function ()
     UNDEFINED_TIMESTAMP = -1,
 
     // Moment constructor
-    // The moment.msPositionInChord is the (read only) position of the moment wrt its MidiChord in the score.
-    // It is used to set moment.timestamp, taking the position of the MidiChord and the speed of performance into account,
-    // when the absolute DOMHRT time is known. 
-    Moment = function (msPositionInChord)
+    // The moment.msPositionInChord is the position of the moment wrt its MidiChord or MidiRest.
+    // it is initially set to the value sored in the score, but changes if the performance speed is not 100%.
+    // During performances (when the absolute DOMHRT time is known) moment.msPositionInChord is used, with
+    // the msPosition of the containing MidiChord or MidiRest, to set moment.timestamp. 
+    Moment = function (msPositionInChord, systemIndex)
     {
         if (!(this instanceof Moment))
         {
@@ -61,7 +62,8 @@ _AP.moment = (function ()
             throw "Error: Moment.msPositionInChord must be defined.";
         }
 
-        Object.defineProperty(this, "msPositionInChord", { value: msPositionInChord, writable: false });
+        Object.defineProperty(this, "msPositionInChord", { value: msPositionInChord, writable: true });
+        Object.defineProperty(this, "systemIndex", { value: systemIndex, writable: false });
 
         // The absolute time (DOMHRT) at which this moment is sent to the output device.
         // This value is always set in Sequence.nextMoment().
@@ -91,7 +93,7 @@ _AP.moment = (function ()
 
         if (moment2.systemIndex !== undefined)
         {
-        	Object.defineProperty(this, "systemIndex", { value: moment2.systemIndex, writable: false });
+            Object.defineProperty(this, "systemIndex", { value: moment2.systemIndex, writable: false });
         }
 
         this.messages = this.messages.concat(moment2.messages);

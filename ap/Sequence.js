@@ -22,7 +22,7 @@
 *       isRunning()
 */
 
-/*jslint bitwise, white: true */
+/*jslint bitwise: true, white: true */
 /*global _AP, window, performance */
 
 _AP.namespace('_AP.sequence');
@@ -31,15 +31,18 @@ _AP.sequence = (function(window)
 {
     "use strict";
     var
+    Moment = _AP.moment.Moment,
+    Conductor = _AP.conductor.Conductor,
+
     outputDevice,
-	sendWithTimeStamp = true,
-	tracks,
+    timer, // performance or conductor (use performance.now() or conductor.now())
+    tracks,
 
     previousTimestamp = null, // nextMoment()
     previousMomtMsPos, // nextMoment()
     currentMoment = null, // nextMoment(), resume(), tick()
-	startMarkerMsPosition,
     endMarkerMsPosition,
+    endOfConductedPerformance,
 
     // used by setState()
     pausedMoment = null, // set by pause(), used by resume()
@@ -50,48 +53,22 @@ _AP.sequence = (function(window)
     reportNextMIDIObject,  // callback. Can be null or undefined. Set in play().
     lastReportedMsPosition = -1, // set by tick() used by nextMoment()
     msPositionToReport = -1,   // set in nextMoment() and used/reset by tick()
-	systemIndexToReport = -1, // set in nextMoment() and used/reset by tick()
+    systemIndexToReport = -1, // set in nextMoment() and used/reset by tick()
 
-    // (performance.now() - performanceStartTime) is the real time elapsed since the start of the performance.
+    // (timer.now() - performanceStartTime) is the real time elapsed since the start of the performance.
     performanceStartTime = -1,  // set in play(), used by stop(), run()
-    // (performance.now() - startTimeAdjustedForPauses) is the current performance duration excluding the durations of pauses.
+    // (timer.now() - startTimeAdjustedForPauses) is the current performance duration excluding the durations of pauses.
     startTimeAdjustedForPauses = -1, // performanceStartTime minus the durations of pauses. Used in nextMoment()
-    pauseStartTime = -1, // the performance.now() time at which the performance was paused.
+    pauseStartTime = -1, // the timer.now() time at which the performance was paused.
+
+    speed = 1, // in non-conducted performances, speed can be set at performance time using setSpeed(speed)
 
     sequenceRecording, // the sequence being recorded. set in play() and resume(), used by tick()
 
-	allControllersOffMessages = [],
-	allNotesOffMessages = [],
-
-	initChannelResetMessages = function(nOutputChannels)
-	{
-		var byte1, channelIndex,
-			constants = _AP.constants,
-			CONTROL_CHANGE = constants.COMMAND.CONTROL_CHANGE,
-			ALL_CONTROLLERS_OFF = constants.CONTROL.ALL_CONTROLLERS_OFF,
-			ALL_NOTES_OFF = constants.CONTROL.ALL_NOTES_OFF;
-
-		for(channelIndex = 0; channelIndex < nOutputChannels; channelIndex++)
-		{
-			byte1 = CONTROL_CHANGE + channelIndex;
-			allControllersOffMessages.push(new Uint8Array([byte1, ALL_CONTROLLERS_OFF, 0]));
-			allNotesOffMessages.push(new Uint8Array([byte1, ALL_NOTES_OFF, 0]));
-		}
-	},
-
-	resetChannel = function(outputDevice, channelIndex)
-	{
-		if(sendWithTimeStamp)
-		{
-			outputDevice.send(allControllersOffMessages[channelIndex], performance.now());
-			outputDevice.send(allNotesOffMessages[channelIndex], performance.now());
-		}
-		else
-		{
-			outputDevice.send(allControllersOffMessages[channelIndex]);
-			outputDevice.send(allNotesOffMessages[channelIndex]);
-		}
-	},
+    setSpeed = function(speedToSet)
+    {
+        speed = speedToSet;
+    },
 
     setState = function(state)
     {
@@ -100,14 +77,14 @@ _AP.sequence = (function(window)
             case "stopped":
                 stopped = true;
                 paused = false;
-                pauseStartTime = performance.now();
+                pauseStartTime = timer.now();
                 pausedMoment = currentMoment;
                 currentMoment = null;
                 break;
             case "paused":
                 stopped = false;
                 paused = true;
-                pauseStartTime = performance.now();
+                pauseStartTime = timer.now();
                 pausedMoment = currentMoment;
                 currentMoment = null;
                 break;
@@ -153,14 +130,15 @@ _AP.sequence = (function(window)
     // does nothing if the sequence is already stopped
     stop = function()
     {
-    	var performanceMsDuration;
+        var performanceMsDuration;
 
-    	if(!isStopped())
-    	{
-    		setState("stopped");
-    		performanceMsDuration = Math.ceil(performance.now() - performanceStartTime);
-    		reportEndOfPerformance(sequenceRecording, performanceMsDuration);
-    	}
+        if(!isStopped())
+        {
+            setState("stopped");
+            performanceMsDuration = Math.ceil(timer.now() - performanceStartTime);
+            outputDevice.reset();
+            reportEndOfPerformance(sequenceRecording, performanceMsDuration);
+        }
     },
 
     // nextMoment is used by tick(), resume(), play().
@@ -176,16 +154,16 @@ _AP.sequence = (function(window)
 
         function stopAfterDelay()
         {
-        	var performanceMsDuration = Math.ceil(performance.now() - performanceStartTime);
-        	setState("stopped");
-        	reportEndOfPerformance(sequenceRecording, performanceMsDuration);
+            var performanceMsDuration = Math.ceil(timer.now() - performanceStartTime);
+            setState("stopped");
+            reportEndOfPerformance(sequenceRecording, performanceMsDuration);
         }
 
         // Returns the track having the earliest nextMsPosition (= the position of the first unsent Moment in the track),
         // or null if the earliest nextMsPosition is >= endMarkerMsPosition.
         function getNextTrack(tracks, nTracks)
         {
-            var track, i, nextTrack = null, nextMomt = null, trackMsPos, nextMomtMsPos = Number.MAX_VALUE;
+            var track, i, nextTrack = null, trackMsPos, nextMomtMsPos = Number.MAX_VALUE;
 
             for(i = 0; i < nTracks; ++i)
             {
@@ -209,33 +187,49 @@ _AP.sequence = (function(window)
 
         if(document.hidden === true)
         {
-        	stopAfterDelay();
+            stopAfterDelay();
         }
         else if(track === null)
         {
-        	// The returned nextMomt is going to be null, and tick() will stop, while waiting to call stopAfterDelay().
-        	setState("stopped");
-        	// Wait for the duration of the final moment before stopping. (An assisted performance (Keyboard1) waits for a noteOff...)
-        	delay = (endMarkerMsPosition - startMarkerMsPosition) - Math.ceil(performance.now() - performanceStartTime);
-        	window.setTimeout(stopAfterDelay, delay);
+            if(timer instanceof Conductor)
+            {
+                if(endOfConductedPerformance === false)
+                {
+                    nextMomt = new Moment(0, 0);  // dummy moment
+                    trackNextMomtMsPos = endMarkerMsPosition;
+                    endOfConductedPerformance = true;
+                }
+                else
+                {
+                    stopAfterDelay();
+                }
+            }
+            else // using performance.now()
+            {
+                // The returned nextMomt is going to be null, and tick() will stop, while waiting to call stopAfterDelay().
+                setState("stopped");
+                // Wait for the duration of the final moment before stopping. (An assisted performance (Keyboard1) waits for a noteOff...)
+                delay = (endMarkerMsPosition - previousMomtMsPos) / speed;
+                window.setTimeout(stopAfterDelay, delay);
+            }
         }
         else
         {
-        	nextMomt = track.currentMoment;
-        	trackNextMomtMsPos = track.currentMsPosition();
+            nextMomt = track.currentMoment;
+            trackNextMomtMsPos = track.currentMsPosition();
             track.advanceCurrentMoment();
         }
 
         if(!stopped && !paused)
         {
-        	nextMomtMsPos = trackNextMomtMsPos;
+            nextMomtMsPos = trackNextMomtMsPos;
 
             if((nextMomt.systemIndex !== undefined)
             && (nextMomtMsPos > lastReportedMsPosition))
             {
                 // the position will be reported by tick() when nextMomt is sent.
-            	msPositionToReport = nextMomtMsPos;
-            	systemIndexToReport = nextMomt.systemIndex;
+                msPositionToReport = nextMomtMsPos;
+                systemIndexToReport = nextMomt.systemIndex;
                 //console.log("msPositionToReport=%i", msPositionToReport);
             }
 
@@ -245,7 +239,7 @@ _AP.sequence = (function(window)
             }
             else
             {
-                nextMomt.timestamp = (nextMomtMsPos - previousMomtMsPos) + previousTimestamp;
+                nextMomt.timestamp = ((nextMomtMsPos - previousMomtMsPos) / speed) + previousTimestamp;
             }
 
             previousTimestamp = nextMomt.timestamp;
@@ -288,11 +282,10 @@ _AP.sequence = (function(window)
     {
         var
         PREQUEUE = 0, // Setting this to 20ms leads to dropouts. But does this need to be set to something larger than 0? See above.
-        now = performance.now(),
+        now = timer.now(),
         delay;
 
         // moment.timestamps are always absolute DOMHRT values here.
-        // (Chris said that the timestamp should be absolute DOMHRT time when the moment is sent.)
         // Note that Jazz 1.2 does not support timestamps. It always sends Messages immediately.
         function sendMessages(moment)
         {
@@ -300,19 +293,9 @@ _AP.sequence = (function(window)
             messages = moment.messages,
             i, nMessages = messages.length, timestamp = moment.timestamp;
 
-            if(sendWithTimeStamp)
+            for(i = 0; i < nMessages; ++i)
             {
-            	for(i = 0; i < nMessages; ++i)
-            	{
-            		outputDevice.send(messages[i].data, timestamp);
-            	}
-            }
-            else
-            {
-            	for(i = 0; i < nMessages; ++i)
-            	{
-            		outputDevice.send(messages[i].data);
-            	}
+                outputDevice.send(messages[i].data, timestamp);
             }
         }
 
@@ -325,14 +308,14 @@ _AP.sequence = (function(window)
 
         ////console.log("tick: delay1=%f", delay);
         ////console.log("currentMoment.msPositionInScore=%i", currentMoment.msPositionInScore);
-    	////console.log("currentMoment.timestamp=%f", currentMoment.timestamp);
+        ////console.log("currentMoment.timestamp=%f", currentMoment.timestamp);
 
         // send all messages that are due between now and PREQUEUE ms later. 
         while(delay <= PREQUEUE)
         {
             if(msPositionToReport >= 0)
             {
-            	reportNextMIDIObject(msPositionToReport, systemIndexToReport);
+                reportNextMIDIObject(msPositionToReport, systemIndexToReport);
                 lastReportedMsPosition = msPositionToReport; // lastReportedMsPosition is used in nextMoment() above.
                 msPositionToReport = -1;
             }
@@ -347,7 +330,7 @@ _AP.sequence = (function(window)
                     // These values are adjusted relative to the first moment.timestamp
                     // before saving them in a Standard MIDI File.
                     // (i.e. the value of the earliest timestamp in the recording is
-                	// subtracted from all the timestamps in the recording)
+                    // subtracted from all the timestamps in the recording)
                     sequenceRecording.trackRecordings[currentMoment.messages[0].channel()].addLiveScoreMoment(currentMoment);
                 }
             }
@@ -379,7 +362,7 @@ _AP.sequence = (function(window)
         }
 
         currentMoment = pausedMoment; // the last moment whose messages were sent.
-        pauseMsDuration = performance.now() - pauseStartTime;
+        pauseMsDuration = timer.now() - pauseStartTime;
 
         setState("running"); // sets pausedMoment to null.
 
@@ -392,7 +375,7 @@ _AP.sequence = (function(window)
         {
             return;
         }
-        currentMoment.timestamp = performance.now();
+        currentMoment.timestamp = timer.now();
         tick();
     },
 
@@ -420,7 +403,7 @@ _AP.sequence = (function(window)
     // It is called in this file as:
     //      reportEndOfPerformance(sequenceRecording, performanceMsDuration);
     // The reportNextMIDIObjectCallback argument is a callback function which reports the current
-	// msPositionInScore and systemIndex back to the GUI while performing.
+    // msPositionInScore and systemIndex back to the GUI while performing.
     // It is called here as:
     //      reportNextMIDIObject(msPositionToReport, systemIndexToReport);
     // The msPosition it passes back is the original number of milliseconds from the start of
@@ -428,27 +411,31 @@ _AP.sequence = (function(window)
     // chord and rest symbols in the score, and so to synchronize the running cursor.
     // Moments whose msPositionInScore is to be reported are given chordStart or restStart
     // attributes before play() is called.
-    init = function(outputDeviceArg, reportEndOfPerfCallback, reportNextMIDIObjectCallback)
+    init = function(timerArg, outputDeviceArg, reportEndOfPerfCallback, reportNextMIDIObjectCallback)
     {
+        if(timerArg === undefined || timerArg === null)
+        {
+            throw "The timer must be defined.";
+        }
+
         if(outputDeviceArg === undefined || outputDeviceArg === null)
         {
-        	throw "The midi output device must be defined.";
+            throw "The midi output device must be defined.";
         }
 
         if(reportEndOfPerfCallback === undefined || reportEndOfPerfCallback === null
             || reportNextMIDIObjectCallback === undefined || reportNextMIDIObjectCallback === null)
         {
-        	throw "Error: both the position reporting callbacks must be defined.";
+            throw "Error: both the position reporting callbacks must be defined.";
         }
 
-        setState("stopped");
-
+        timer = timerArg; // performance or score.timePointer
         tracks = this.outputTracks;
         outputDevice = outputDeviceArg;
         reportEndOfPerformance = reportEndOfPerfCallback;
         reportNextMIDIObject = reportNextMIDIObjectCallback;
 
-        initChannelResetMessages(tracks.length);
+        setState("stopped");
     },
 
     // play()
@@ -461,48 +448,38 @@ _AP.sequence = (function(window)
     // of tracks as this (calling) sequence.
     play = function(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, recording)
     {
-    	var channelIndex;
+        // Sets each (output) track's isPerforming attribute.
+        // If the track is set to perform (in the trackIsOnArray -- the trackControl settings),
+        // sets track._currentMidiObjectIndex, track.currentMidiObject and track.currentMoment.
+        // all subsequent midiChords before endMarkerMsPosInScore are set to start at their beginnings.
+        function initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore)
+        {
+            var i,
+                // Note that the trackIsOnArray will also include input tracks if the score has any,
+                // but that these are ignored here because _tracks_ only contains the _output_ tracks.
+                nTracks = tracks.length,
+                track;
 
-    	// Sets each (output) track's isPerforming attribute.
-    	// If the track is set to perform (in the trackIsOnArray -- the trackControl settings),
-    	// sets track._currentMidiObjectIndex, track.currentMidiObject and track.currentMoment.
-    	// all subsequent midiChords before endMarkerMsPosInScore are set to start at their beginnings.
-    	function initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore)
-    	{
-    		var i,
-				// Note that the trackIsOnArray will also include input tracks if the score has any,
-				// but that these are ignored here because _tracks_ only contains the _output_ tracks.
-				nTracks = tracks.length,
-				track;
+            for(i = 0; i < nTracks; ++i)
+            {
+                track = tracks[i];
+                track.isPerforming = trackIsOnArray[i];
 
-    		for(i = 0; i < nTracks; ++i)
-    		{
-    			track = tracks[i];
-    			track.isPerforming = trackIsOnArray[i];
-
-    			if(track.isPerforming)
-    			{
-    				track.setForOutputSpan(startMarkerMsPosInScore, endMarkerMsPosInScore);
-    			}
-    		}
-    	}
+                if(track.isPerforming)
+                {
+                    track.setForOutputSpan(startMarkerMsPosInScore, endMarkerMsPosInScore);
+                }
+            }
+        }
 
         sequenceRecording = recording; // can be undefined or null
 
-        performanceStartTime = performance.now();
-        startMarkerMsPosition = startMarkerMsPosInScore;
         endMarkerMsPosition = endMarkerMsPosInScore;
-        startTimeAdjustedForPauses = performanceStartTime;
-
-        for(channelIndex = 0; channelIndex < trackIsOnArray.length; channelIndex++)
-        {
-        	if(trackIsOnArray[channelIndex] === true)
-        	{
-        		resetChannel(outputDevice, channelIndex);
-        	}
-        }
 
         initPlay(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore);
+
+        outputDevice.reset();
+        outputDevice.sendStartStateMessages(tracks);
 
         pausedMoment = null;
         pauseStartTime = -1;
@@ -510,6 +487,10 @@ _AP.sequence = (function(window)
         previousMomtMsPos = startMarkerMsPosInScore;
         msPositionToReport = -1;
         lastReportedMsPosition = -1;
+        endOfConductedPerformance = false;
+
+        performanceStartTime = timer.now();
+        startTimeAdjustedForPauses = performanceStartTime;
 
         run();
     },
@@ -517,6 +498,8 @@ _AP.sequence = (function(window)
     publicAPI =
     {
         init: init,
+
+        setSpeed: setSpeed,
 
         play: play,
         pause: pause,
