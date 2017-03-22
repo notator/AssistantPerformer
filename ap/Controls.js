@@ -342,6 +342,7 @@ _AP.controls = (function(document, window)
         {
             //score.moveStartMarkerToTop(globalElements.svgPagesFrame);
             options.isConducting = false;
+            score.setConducting(false);
             initializePlayer(score, options);
         }
 
