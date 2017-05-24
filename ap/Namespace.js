@@ -11,9 +11,6 @@
  *  
  */
 
-/*jslint bitwise: false, nomen: false, plusplus: true, white: true */
-/*global _AP: false,  window: false,  document: false, performance: false, console: false, alert: false, XMLHttpRequest: false */
-
 var _AP = _AP || {};
 
 _AP.namespace = function (ns_string)

@@ -10,9 +10,6 @@
 *  Assistant Performer's Graphic User Interface. 
 */
 
-/*jslint white:true */
-/*global WebMIDI, _AP,  window,  document, console, alert, performance */
-
 _AP.namespace('_AP.controls');
 
 _AP.controls = (function(document, window)

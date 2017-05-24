@@ -11,9 +11,6 @@
  *      MidiRest(scoreMidiElem) // MidiRest constructor
  */
 
-/*jslint white:true */
-/*global _AP,  window,  document, console */
-
 _AP.namespace('_AP.midiChord');
 
 _AP.midiObject = (function()

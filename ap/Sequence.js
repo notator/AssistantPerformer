@@ -22,9 +22,6 @@
 *       isRunning()
 */
 
-/*jslint bitwise: true, white: true */
-/*global _AP, window, performance */
-
 _AP.namespace('_AP.sequence');
 
 _AP.sequence = (function(window)

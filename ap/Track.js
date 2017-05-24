@@ -25,9 +25,6 @@
  *      advanceCurrentMoment()
  */
 
-/*jslint white:true */
-/*global _AP,  window,  document */
-
 _AP.namespace('_AP.track');
 
 _AP.track = (function()

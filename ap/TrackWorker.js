@@ -1,7 +1,4 @@
 
-/*jslint white, bitwise*/
-/*global WebMIDI, _AP,  window,  document, performance, postMessage, addEventListener */
-
 var
 trackIndex,
 channelIndex,

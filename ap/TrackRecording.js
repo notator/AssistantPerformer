@@ -39,9 +39,6 @@
  *      
  */
 
-/*jslint bitwise: false, nomen: true, plusplus: true, white: true */
-/*global _AP: false,  window: false,  document: false, performance: false, console: false, alert: false, XMLHttpRequest: false */
-
 _AP.namespace('_AP.trackRecording');
 
 _AP.trackRecording = (function ()

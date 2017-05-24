@@ -60,9 +60,6 @@
  *   Individual TrkOptions at lower levels temporarily override individual trkOptions at higher levels.
  */
 
-/*jslint bitwise: false, nomen: true, plusplus: true, white: true */
-/*global _AP: true,  window: false,  document: false, performance: false, console: false, alert: false, XMLHttpRequest: false */
-
 _AP.namespace('_AP.inputChordDef');
 
 _AP.inputObjectDef = (function ()

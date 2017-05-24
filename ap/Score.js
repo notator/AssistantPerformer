@@ -11,10 +11,6 @@
 *  
 */
 
-
-/*jslint white:true */
-/*global _AP,  window,  document, performance, console */
-
 _AP.namespace('_AP.score');
 
 _AP.score = (function (document)

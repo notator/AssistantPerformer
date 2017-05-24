@@ -13,9 +13,6 @@
  *  performance while it is running.  
  */
 
-/*jslint white:true */
-/*global _AP,  window,  document */
-
 _AP.namespace('_AP.endMarker');
 
 _AP.endMarker = (function()

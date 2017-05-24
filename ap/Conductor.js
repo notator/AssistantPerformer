@@ -9,9 +9,6 @@
  *  The Conductor handles mousemove events in the conducting layer.  
  */
 
-/*jslint white:true */
-/*global _AP,  window,  document, console */
-
 _AP.namespace('_AP.conductor');
 
 _AP.conductor = (function()

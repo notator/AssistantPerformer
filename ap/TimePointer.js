@@ -8,9 +8,6 @@
  *  ap/TimePointer.js
  */
 
-/*jslint white:true */
-/*global _AP,  window,  document */
-
 _AP.namespace('_AP.timePointer');
 
 _AP.timePointer = (function()

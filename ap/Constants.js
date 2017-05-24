@@ -14,9 +14,6 @@
  *      SYSTEM_EXCLUSIVE
  */
 
-/*jslint bitwise: false, nomen: false, plusplus: false, white: true */
-/*global _AP: false,  window: false,  document: false, performance: false, console: false, alert: false, XMLHttpRequest: false */
-
 _AP.namespace('_AP.constants');
 
 _AP.constants = (function ()

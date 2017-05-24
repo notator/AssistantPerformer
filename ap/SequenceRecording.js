@@ -17,10 +17,6 @@
 *       trackRecordings *
 */
 
-/*jslint bitwise: false, nomen: false, plusplus: true, white: true */
-/*global _AP: false,  window: false,  document: false, performance: false, console: false, alert: false, XMLHttpRequest: false */
-
-
 _AP.namespace('_AP.sequenceRecording');
 
 _AP.sequenceRecording = (function ()

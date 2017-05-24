@@ -11,9 +11,6 @@
 *  
 */
 
-/*jslint white */
-/*global WebMIDI, _AP,  window,  document, performance */
-
 _AP.namespace('_AP.tracksControl');
 
 _AP.tracksControl = (function (document)
