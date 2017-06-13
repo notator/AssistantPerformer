@@ -44,7 +44,7 @@ _AP.inputChord = (function()
             Object.defineProperty(this, "trkOptions", { value: inputChordDef.trkOptions, writable: false });
         }
 
-        Object.defineProperty(this, "inputNotes", { value: this.getInputNotes(inputChordDef.inputNotes, outputTracks, inputChordDef.msPositionInScore), writable: false });
+        Object.defineProperty(this, "inputNotes", { value: this.getInputNotes(inputChordDef.inputNotes, outputTracks), writable: false });
 
         return this;
     },
@@ -77,26 +77,28 @@ _AP.inputChord = (function()
     // getInputNotes() Returns:
     // An array of inputNote objects, the fields of which have been copied from the corresponding inputNoteDefs (see above)
     // but with trackIndex values converted to trackIndices:
-    InputChord.prototype.getInputNotes = function(inputNoteDefs, outputTracks, inputChordMsPositionInScore)
+    InputChord.prototype.getInputNotes = function(inputNoteDefs, outputTracks)
     {
         var i, nInputNoteDefs = inputNoteDefs.length, inputNoteDef,
-            inputNote, inputNotes = [];
+            inputNote, inputNotes = [], msPositionInScore = this.msPositionInScore;
 
-        function getNoteOnOrOff(noteInfo, outputTracks, inputChordMsPositionInScore)
+        function getNoteOnOrOff(noteInfo, outputTracks)
         {
             var noteOnOrOff = {};
 
-            function getSeq(onSeq, outputTracks, inputChordMsPositionInScore)
+            function getSeq(onSeq, outputTracks)
             {
                 var trk, trks = [], i, trkOn, nTrkOns = onSeq.length, trackMidiObjects;
 
-                function getMidiObjectIndex(trkMsPosition, midiObjects)
+                // Returns the index of the midiObject at msPositionInScore.
+                // Returns -1 if there is no object at msPositionInScore.
+                function getMidiObjectIndex(midiObjects)
                 {
-                    var found = false, midiObjectIndex;
+                    var found = false, midiObjectIndex, nRealMidiObjects = midiObjects.length - 1;
 
-                    for(midiObjectIndex = 0; midiObjectIndex < midiObjects.length; ++midiObjectIndex)
+                    for(midiObjectIndex = 0; midiObjectIndex < nRealMidiObjects && midiObjects[midiObjectIndex].msPositionInScore <= msPositionInScore; ++midiObjectIndex)
                     {
-                        if(midiObjects[midiObjectIndex].msPositionInScore === trkMsPosition)
+                        if(midiObjects[midiObjectIndex].msPositionInScore === msPositionInScore)
                         {
                             found = true;
                             break;
@@ -104,7 +106,7 @@ _AP.inputChord = (function()
                     }
                     if(found === false)
                     {
-                        throw "InputChord.js: Can't find the first midiObject in the trk!";
+                        midiObjectIndex = -1;
                     }
                     return midiObjectIndex;
                 }
@@ -131,9 +133,22 @@ _AP.inputChord = (function()
                     }
                     trk.trackIndex = trkOn.trackIndex;
                     trackMidiObjects = outputTracks[trk.trackIndex].midiObjects;
-                    trk.midiObjectIndex = getMidiObjectIndex(trkOn.msPositionInScore, trackMidiObjects);
-                    trk.msOffset = trackMidiObjects[trk.midiObjectIndex].msPositionInScore - inputChordMsPositionInScore;
-                    trk.midiObjects = getMidiObjects(trk.midiObjectIndex, trkOn.nMidiObjects, trackMidiObjects);
+                    trk.midiObjectIndex = getMidiObjectIndex(trackMidiObjects);
+                    if(trk.midiObjectIndex >= 0)
+                    {
+                        if((trk.midiObjectIndex + trkOn.nMidiObjects) <= trackMidiObjects.length)
+                        {
+                            trk.midiObjects = getMidiObjects(trk.midiObjectIndex, trkOn.nMidiObjects, trackMidiObjects);
+                        }
+                        else
+                        {
+                            throw "Error: not enough trackMidiObjects."; 
+                        }
+                    }
+                    else
+                    {
+                        throw "Error: can't find midiObject at msPositionInScore.";
+                    }
 
                     trks.push(trk);
                 }
@@ -148,7 +163,7 @@ _AP.inputChord = (function()
 
             if(noteInfo.seqDef !== undefined)
             {
-                noteOnOrOff.seqDef = getSeq(noteInfo.seqDef, outputTracks, inputChordMsPositionInScore);
+                noteOnOrOff.seqDef = getSeq(noteInfo.seqDef, outputTracks);
             }
 
             if(noteInfo.trkOffs !== undefined)
@@ -170,11 +185,11 @@ _AP.inputChord = (function()
             }
             if(inputNoteDef.noteOn !== undefined)
             {
-                inputNote.noteOn = getNoteOnOrOff(inputNoteDef.noteOn, outputTracks, inputChordMsPositionInScore);
+                inputNote.noteOn = getNoteOnOrOff(inputNoteDef.noteOn, outputTracks);
             }
             if(inputNoteDef.noteOff !== undefined)
             {
-                inputNote.noteOff = getNoteOnOrOff(inputNoteDef.noteOff, outputTracks, inputChordMsPositionInScore);
+                inputNote.noteOff = getNoteOnOrOff(inputNoteDef.noteOff, outputTracks);
             }
             inputNotes.push(inputNote);
         }
@@ -182,67 +197,67 @@ _AP.inputChord = (function()
         return inputNotes;
     };
 
-    InputChord.prototype.referencedOutputTrackIndices = function()
-    {
-        var i, inputNote, nInputNotes = this.inputNotes.length, nonUniqueOutputIndices = [], returnArray = [];
+    //InputChord.prototype.referencedOutputTrackIndices = function()
+    //{
+    //    var i, inputNote, nInputNotes = this.inputNotes.length, nonUniqueOutputIndices = [], returnArray = [];
 
-        function outIndices(noteOnOff)
-        {
-            var i,
-            seqDef = noteOnOff.seqDef, nSeqTrks,
-            trkOffs = noteOnOff.trkOffs, nTrkOffs,
-            outputIndices = [];
+    //    function outIndices(noteOnOff)
+    //    {
+    //        var i,
+    //        seqDef = noteOnOff.seqDef, nSeqTrks,
+    //        trkOffs = noteOnOff.trkOffs, nTrkOffs,
+    //        outputIndices = [];
 
-            if(seqDef !== undefined)
-            {
-                nSeqTrks = seqDef.length;
-                for(i = 0; i < nSeqTrks; ++i)
-                {
-                    outputIndices.push(seqDef[i].trackIndex);
-                }
-            }
-            if(trkOffs !== undefined)
-            {
-                nTrkOffs = trkOffs.length;
-                for(i = 0; i < nTrkOffs; ++i)
-                {
-                    outputIndices.push(trkOffs[i]);
-                }
-            }
+    //        if(seqDef !== undefined)
+    //        {
+    //            nSeqTrks = seqDef.length;
+    //            for(i = 0; i < nSeqTrks; ++i)
+    //            {
+    //                outputIndices.push(seqDef[i].trackIndex);
+    //            }
+    //        }
+    //        if(trkOffs !== undefined)
+    //        {
+    //            nTrkOffs = trkOffs.length;
+    //            for(i = 0; i < nTrkOffs; ++i)
+    //            {
+    //                outputIndices.push(trkOffs[i]);
+    //            }
+    //        }
 
-            return outputIndices;
-        }
+    //        return outputIndices;
+    //    }
 
-        function uniqueOutputIndices(nonUniqueOutputIndices)
-        {
-            var i, nAllOutputIndices = nonUniqueOutputIndices.length, rVal = [];
-            for(i = 0; i < nAllOutputIndices; ++i)
-            {
-                if(rVal.indexOf(nonUniqueOutputIndices[i]) < 0)
-                {
-                    rVal.push(nonUniqueOutputIndices[i]);
-                }
-            }
-            return rVal;
-        }
+    //    function uniqueOutputIndices(nonUniqueOutputIndices)
+    //    {
+    //        var i, nAllOutputIndices = nonUniqueOutputIndices.length, rVal = [];
+    //        for(i = 0; i < nAllOutputIndices; ++i)
+    //        {
+    //            if(rVal.indexOf(nonUniqueOutputIndices[i]) < 0)
+    //            {
+    //                rVal.push(nonUniqueOutputIndices[i]);
+    //            }
+    //        }
+    //        return rVal;
+    //    }
 
-        for(i = 0; i < nInputNotes; ++i)
-        {
-            inputNote = this.inputNotes[i];
-            if(inputNote.noteOn !== undefined)
-            {
-                nonUniqueOutputIndices = nonUniqueOutputIndices.concat(outIndices(inputNote.noteOn));
-            }
-            if(inputNote.noteOff !== undefined)
-            {
-                nonUniqueOutputIndices = nonUniqueOutputIndices.concat(outIndices(inputNote.noteOff));
-            }
-        }
+    //    for(i = 0; i < nInputNotes; ++i)
+    //    {
+    //        inputNote = this.inputNotes[i];
+    //        if(inputNote.noteOn !== undefined)
+    //        {
+    //            nonUniqueOutputIndices = nonUniqueOutputIndices.concat(outIndices(inputNote.noteOn));
+    //        }
+    //        if(inputNote.noteOff !== undefined)
+    //        {
+    //            nonUniqueOutputIndices = nonUniqueOutputIndices.concat(outIndices(inputNote.noteOff));
+    //        }
+    //    }
 
-        returnArray = uniqueOutputIndices(nonUniqueOutputIndices);
+    //    returnArray = uniqueOutputIndices(nonUniqueOutputIndices);
 
-        return returnArray;
-    };
+    //    return returnArray;
+    //};
 
     return publicInputChordAPI;
 }());

@@ -28,7 +28,7 @@ window.addEventListener("load", function ()
         // the contents of the device selector menus.
         _AP.controls.init(midiAccess);
     },
-    onErrorCallback = function (error)
+    onErrorCallback = function ()
     {
     	_AP.controls.init(null);
     };

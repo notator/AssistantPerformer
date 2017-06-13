@@ -147,13 +147,13 @@ _AP.score = (function (document)
         var i, j, timeObjects, timeObject = null, timeObjectBefore = null, timeObjectAfter = null, returnTimeObject = null, nTimeObjects,
             nAllTracks = timeObjectsArray.length, deltaBefore = Number.MAX_VALUE, deltaAfter = Number.MAX_VALUE, startIndex, endIndex;
 
-        function hasPerformingTrack(inputChord, trackIsOnArray)
+        function hasPerformingTrack(inputChordDef, trackIsOnArray)
         {
             var i, outputTrackFound = false, outputTrackIndices;
 
-            console.assert(inputChord !== undefined, "inputChord must be defined.");
+            console.assert(inputChordDef !== undefined, "inputChordDef must be defined.");
 
-            outputTrackIndices = inputChord.referencedOutputTrackIndices();
+            outputTrackIndices = inputChordDef.referencedOutputTrackIndices();
             for(i = 0; i < outputTrackIndices.length; ++i)
             {
                 if(trackIsOnArray[outputTrackIndices[i]])
@@ -185,7 +185,7 @@ _AP.score = (function (document)
                         timeObject = timeObjects[j];
                         if((findInput === false)  // timeObject contains a midiRest or midiChord
                         || (findInput && // find an inputChord
-                           (timeObject.inputChord !== undefined && hasPerformingTrack(timeObject.inputChord, trackIsOnArray))))
+                           (timeObject instanceof InputChordDef && hasPerformingTrack(timeObject, trackIsOnArray))))
                         {
                             if(alignment === timeObject.alignment)
                             {
@@ -1322,7 +1322,7 @@ _AP.score = (function (document)
         timeObjectIndex, nTimeObjects, timeObject,
         voiceIndex, nVoices, voice,
         staffIndex, nStaves, staff,
-        sysIndex, nSystems = systems.length, system,
+        sysIndex, nSystems = systems.length, system, systemElem,
         inputChord;
 
         // Gets the timeObjects for both input and output voices. 
@@ -1350,7 +1350,7 @@ _AP.score = (function (document)
             function getTimeObjects(systemIndex, voiceElem, viewBoxScale1)
             {
                 var noteObjectElems, noteObjectClass,
-                    timeObjects = [], noteObjectAlignment,
+                    timeObjects = [], noteObjectAlignment, msDuration,
                     timeObject, i, j, noteObjectElem, noteObjectChildren,
                     scoreMidiElem;
 
@@ -1359,7 +1359,8 @@ _AP.score = (function (document)
                 {
                     noteObjectElem = noteObjectElems[i];
                     noteObjectClass = noteObjectElem.getAttribute('class');
-                                               
+                    noteObjectAlignment = noteObjectElem.getAttribute('score:alignment'); // null if this is not a chord or rest
+                                                                   
                     if(noteObjectClass === 'outputChord' || noteObjectClass === 'outputRest')
                     {
                         noteObjectChildren = noteObjectElem.children;
@@ -1384,22 +1385,22 @@ _AP.score = (function (document)
                             throw "Error: The score contains chords having zero duration!";
                         }
 
-                        noteObjectAlignment = noteObjectElem.getAttribute('score:alignment'); // null if this is not a chord or rest
                         timeObject.alignment = parseFloat(noteObjectAlignment, 10) / viewBoxScale1;
-
                         timeObjects.push(timeObject);
                     }
                     else if(noteObjectClass === 'inputChord' || noteObjectClass === 'inputRest')
                     {
+                        msDuration = parseInt(noteObjectElem.getAttribute('score:msDuration'), 10);
                         if(noteObjectClass === 'inputChord')
                         {
-                            timeObject = new InputChordDef(noteObjectElem, midiChannelPerOutputTrack);
+                            timeObject = new InputChordDef(noteObjectElem, midiChannelPerOutputTrack, msDuration);
                         }
-                        else
+                        else if(noteObjectClass === 'inputRest')
                         {
-                            timeObject = new InputRestDef(timeObject.msDurationInScore);
+                            timeObject = new InputRestDef(msDuration);
                         }
 
+                        timeObject.alignment = parseFloat(noteObjectAlignment, 10) / viewBoxScale1;
                         timeObjects.push(timeObject);
                     }
                 }
@@ -1449,76 +1450,76 @@ _AP.score = (function (document)
                 }
             }
 
-            function getMidiChannelPerOutputTrack(systems)
+            function getSystemOutputVoiceObjects(systemIndex, systemElem, system, viewBoxScale1)
             {
-                var i, staves, systemIndex, timeObjectIndex, nTracks, channel,
-                voice, timeObject, messages, flatOutputVoicesPerSystem;
-
-                function getFlatOutputVoicesPerSystem(systems)
-                {
-                    var i, j, k, voices, flatOutputVoices, flatOutputVoicesPerSystem = [];
-
-                    for(i = 0; i < systems.length; ++i)
-                    {
-                        staves = systems[i].staves;
-                        flatOutputVoices = [];
-                        for(j = 0; j < staves.length; ++j)
-                        {
-                            if(staves[j].isOutput === false)
-                            {
-                                break;
-                            }
-                            voices = staves[j].voices;
-                            for(k = 0; k < voices.length; ++k)
-                            {
-                                flatOutputVoices.push(voices[k]);
-                            }
-                        }
-                        flatOutputVoicesPerSystem.push(flatOutputVoices);
-                    }
-                    return flatOutputVoicesPerSystem;
-                }
-                    
-                midiChannelPerOutputTrack.length = 0; // global array
-                flatOutputVoicesPerSystem = getFlatOutputVoicesPerSystem(systems);
-
-                systemIndex = 0;
-                timeObjectIndex = 0;
-                nTracks = flatOutputVoicesPerSystem[0].length; 
-                for(i = 0; i < nTracks; ++i)
-                {
-                    channel = -1;
-                    while(channel < 0 && systemIndex < systems.length)
-                    {
-                        voice = flatOutputVoicesPerSystem[systemIndex][i];
-                        timeObject = voice.timeObjects[timeObjectIndex];
-                        messages = timeObject.moments[0].messages;
-                        if(messages.length > 0)
-                        {
-                            channel = messages[0].channel();
-                        }
-                        else
-                        {
-                            timeObjectIndex++;
-                            if(timeObjectIndex === voice.timeObjects.length)
-                            {
-                                timeObjectIndex = 0;
-                                systemIndex++;
-                            }
-                        }
-                    }
-                    midiChannelPerOutputTrack.push(channel);
-                }
-            }
-
-            function getSystemOutputVoiceObjects(systemElems, systems, systemIndex, viewBoxScale1)
-            {
-                var systemElem, system, staffElems, staffElem,
+                var staffElems, staffElem,
                     staff,
                     staffIndex;
 
-                systemElem = systemElems[systemIndex];
-                system = systems[systemIndex];
+                function getMidiChannelPerOutputTrack(systems)
+                {
+                    var i, staves, systemIndex, nSystems, timeObjectIndex, nTracks, channel,
+                    voice, timeObject, messages, flatOutputVoicesPerSystem;
+
+                    function getFlatOutputVoicesPerSystem(systems)
+                    {
+                        var i, j, k, voices, flatOutputVoices, flatOutputVoicesPerSystem = [];
+
+                        nSystems = systems.length;
+
+                        for(i = 0; i < nSystems; ++i)
+                        {
+                            staves = systems[i].staves;
+                            flatOutputVoices = [];
+                            for(j = 0; j < staves.length; ++j)
+                            {
+                                if(staves[j].isOutput === false)
+                                {
+                                    break;
+                                }
+                                voices = staves[j].voices;
+                                for(k = 0; k < voices.length; ++k)
+                                {
+                                    flatOutputVoices.push(voices[k]);
+                                }
+                            }
+                            flatOutputVoicesPerSystem.push(flatOutputVoices);
+                        }
+                        return flatOutputVoicesPerSystem;
+                    }
+
+                    midiChannelPerOutputTrack.length = 0; // global array
+                    flatOutputVoicesPerSystem = getFlatOutputVoicesPerSystem(systems);
+
+                    systemIndex = 0;
+                    timeObjectIndex = 0;
+                    nTracks = flatOutputVoicesPerSystem[0].length;
+                    for(i = 0; i < nTracks; ++i)
+                    {
+                        channel = -1;
+                        while(channel < 0 && systemIndex < systems.length)
+                        {
+                            voice = flatOutputVoicesPerSystem[systemIndex][i];
+                            timeObject = voice.timeObjects[timeObjectIndex];
+                            messages = timeObject.moments[0].messages;
+                            if(messages.length > 0)
+                            {
+                                channel = messages[0].channel();
+                            }
+                            else
+                            {
+                                timeObjectIndex++;
+                                if(timeObjectIndex === voice.timeObjects.length)
+                                {
+                                    timeObjectIndex = 0;
+                                    systemIndex++;
+                                }
+                            }
+                        }
+                        midiChannelPerOutputTrack.push(channel);
+                    }
+                }
+
                 staffElems = getStaffElems(systemElem);
                 staffIndex = 0;
                 while(staffIndex < staffElems.length)
@@ -1532,17 +1533,20 @@ _AP.score = (function (document)
                     setVoices(systemIndex, staff, staffElem, "outputVoice", viewBoxScale1);
                     staffIndex++;
                 }
+
+                if(systemIndex === 0)
+                {
+                    getMidiChannelPerOutputTrack(systems);
+                }
             }
 
-            function getSystemInputVoiceObjects(systemElems, systems, systemIndex, viewBoxScale1)
+            function getSystemInputVoiceObjects(systemIndex, systemElem, system, viewBoxScale1)
             {
-                var systemElem, system, staffElems, staffElem,
+                var staffElems, staffElem,
                     staff,
                     staffIndex,
                     nOutputTracks = midiChannelPerOutputTrack.length;
 
-                systemElem = systemElems[systemIndex];
-                system = systems[systemIndex];
                 staffElems = getStaffElems(systemElem);
 
                 for(staffIndex = nOutputTracks; staffIndex < staffElems.length; ++staffIndex)
@@ -1571,18 +1575,21 @@ _AP.score = (function (document)
                         for(systemIndex = 0; systemIndex < nSystems; ++systemIndex)
                         {
                             timeObjects = systems[systemIndex].staves[staffIndex].voices[voiceIndex].timeObjects;
-                            nTimeObjects = timeObjects.length;
-                            for(tIndex = 0; tIndex < nTimeObjects; ++tIndex)
+                            if(timeObjects !== undefined)
                             {
-                                timeObject = timeObjects[tIndex];
-
-                                if(timeObject instanceof MidiChord || timeObject instanceof MidiRest ||
-                                    timeObject instanceof InputChordDef || timeObject instanceof InputRestDef)
+                                nTimeObjects = timeObjects.length;
+                                for(tIndex = 0; tIndex < nTimeObjects; ++tIndex)
                                 {
-                                    Object.defineProperty(timeObject, "msPositionInScore", { value: msPosition, writable: false });
-                                }
+                                    timeObject = timeObjects[tIndex];
 
-                                msPosition += timeObject.msDurationInScore;
+                                    if(timeObject instanceof MidiChord || timeObject instanceof MidiRest ||
+                                        timeObject instanceof InputChordDef || timeObject instanceof InputRestDef)
+                                    {
+                                        Object.defineProperty(timeObject, "msPositionInScore", { value: msPosition, writable: false });
+                                    }
+
+                                    msPosition += timeObject.msDurationInScore;
+                                }
                             }
                         }
                         msPosition = 0;
@@ -1636,7 +1643,7 @@ _AP.score = (function (document)
                         for(k = 0; k < nVoices; ++k)
                         {
                             voice = staff.voices[k];
-                            if(voice.timeObjects[0].alignment === undefined)
+                            if(voice.timeObjects !== undefined && voice.timeObjects[0].alignment === undefined)
                             {
                                 voice.timeObjects[0].alignment = firstAlignment;
                             }
@@ -1672,8 +1679,11 @@ _AP.score = (function (document)
                         staff = staves[i];
                         for(j = 0; j < staff.voices.length; ++j)
                         {
-                            firstMsPos = staff.voices[j].timeObjects[0].msPositionInScore;
-                            minMsPos = (minMsPos < firstMsPos) ? minMsPos : firstMsPos;
+                            if(staff.voices[j].timeObjects !== undefined)
+                            {
+                                firstMsPos = staff.voices[j].timeObjects[0].msPositionInScore;
+                                minMsPos = (minMsPos < firstMsPos) ? minMsPos : firstMsPos;
+                            }
                         }
                     }
                     return minMsPos;
@@ -1694,22 +1704,25 @@ _AP.score = (function (document)
                         for(k = 0; k < nVoices; ++k)
                         {
                             voice = staff.voices[k];
-                            timeObject = {}; // the final barline in the voice (used when changing speed)
-                            Object.defineProperty(timeObject, "msDurationInScore", { value: 0, writable: false });
-                            Object.defineProperty(timeObject, "systemIndex", { value: systemIndex, writable: false });
-                            Object.defineProperty(timeObject, "alignment", { value: rightmostAlignment, writable: false });
-                            if(systemIndex < nSystems - 1)
+                            if(voice.timeObjects !== undefined)
                             {
-                                Object.defineProperty(timeObject, "msPositionInScore", { value: startMsPositionOfNextSystem, writable: false });
-                            }
-                            else
-                            {
-                                lastTimeObject = voice.timeObjects[voice.timeObjects.length - 1]; 
-                                endMsPositionInScore = lastTimeObject.msPositionInScore + lastTimeObject.msDurationInScore;
-                                Object.defineProperty(timeObject, "msPositionInScore", { value: endMsPositionInScore, writable: false });
-                            }
+                                timeObject = {}; // the final barline in the voice (used when changing speed)
+                                Object.defineProperty(timeObject, "msDurationInScore", { value: 0, writable: false });
+                                Object.defineProperty(timeObject, "systemIndex", { value: systemIndex, writable: false });
+                                Object.defineProperty(timeObject, "alignment", { value: rightmostAlignment, writable: false });
+                                if(systemIndex < nSystems - 1)
+                                {
+                                    Object.defineProperty(timeObject, "msPositionInScore", { value: startMsPositionOfNextSystem, writable: false });
+                                }
+                                else
+                                {
+                                    lastTimeObject = voice.timeObjects[voice.timeObjects.length - 1];
+                                    endMsPositionInScore = lastTimeObject.msPositionInScore + lastTimeObject.msDurationInScore;
+                                    Object.defineProperty(timeObject, "msPositionInScore", { value: endMsPositionInScore, writable: false });
+                                }
 
-                            voice.timeObjects.push(timeObject);
+                                voice.timeObjects.push(timeObject);
+                            }
                         }
                     }
                 }
@@ -1719,14 +1732,15 @@ _AP.score = (function (document)
 
             for(i = 0; i < systemElems.length; ++i)
             {
-                getSystemOutputVoiceObjects(systemElems, systems, i, viewBoxScale);
-            }
+                systemElem = systemElems[i];
+                system = systems[i];
 
-            getMidiChannelPerOutputTrack(systems);
+                getSystemOutputVoiceObjects(i, systemElem, system, viewBoxScale);
 
-            for(i = 0; i < systemElems.length; ++i)
-            {
-                getSystemInputVoiceObjects(systemElems, systems, i, viewBoxScale);
+                if(isLivePerformance)
+                {
+                    getSystemInputVoiceObjects(i, systemElem, system, viewBoxScale);
+                }
             }
 
             setMsPositions(systems);
@@ -1831,8 +1845,6 @@ _AP.score = (function (document)
 
         getVoiceObjects();
 
-        setMarkers(systems, isLivePerformance);
-
         setTrackAttributes(outputTracks, inputTracks, systems[0].staves);
 
         nStaves = systems[0].staves.length;
@@ -1841,17 +1853,16 @@ _AP.score = (function (document)
         {
             system = systems[sysIndex];
             outputTrackIndex = 0;
-            inputTrackIndex = 0;
             for(staffIndex = 0; staffIndex < nStaves; ++staffIndex)
             {
                 staff = system.staves[staffIndex];
                 nVoices = staff.voices.length;
                 for(voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
                 {
-                    voice = staff.voices[voiceIndex];
-                    nTimeObjects = voice.timeObjects.length;
+                    voice = staff.voices[voiceIndex]; 
                     if(voice.isOutput === true)
                     {
+                        nTimeObjects = voice.timeObjects.length;
                         outputTrack = outputTracks[outputTrackIndex];
                         for(timeObjectIndex = 0; timeObjectIndex < nTimeObjects; ++timeObjectIndex)
                         {
@@ -1863,20 +1874,39 @@ _AP.score = (function (document)
                         }
                         ++outputTrackIndex;
                     }
-                    else // inputVoice
+                }
+            }
+        }
+
+        if(isLivePerformance)
+        {
+            for(sysIndex = 0; sysIndex < nSystems; ++sysIndex)
+            {
+                system = systems[sysIndex];
+                inputTrackIndex = 0;
+                for(staffIndex = 0; staffIndex < nStaves; ++staffIndex)
+                {
+                    staff = system.staves[staffIndex];
+                    nVoices = staff.voices.length;
+                    for(voiceIndex = 0; voiceIndex < nVoices; ++voiceIndex)
                     {
-                        inputTrack = inputTracks[inputTrackIndex];
-                        for(timeObjectIndex = 0; timeObjectIndex < nTimeObjects; ++timeObjectIndex)
+                        voice = staff.voices[voiceIndex];
+                        nTimeObjects = voice.timeObjects.length;
+                        if(voice.isOutput === false)
                         {
-                            timeObject = voice.timeObjects[timeObjectIndex];
-                            if(timeObject instanceof InputChordDef)
+                            inputTrack = inputTracks[inputTrackIndex];
+                            for(timeObjectIndex = 0; timeObjectIndex < nTimeObjects; ++timeObjectIndex)
                             {
-                                inputChord = new InputChord(timeObject, outputTracks); // the outputTracks should already be complete here
-                                inputTrack.inputObjects.push(inputChord);
+                                timeObject = voice.timeObjects[timeObjectIndex];
+                                if(timeObject instanceof InputChordDef)
+                                {
+                                    inputChord = new InputChord(timeObject, outputTracks, sysIndex); // the outputTracks should already be complete here
+                                    inputTrack.inputObjects.push(inputChord);
+                                }
+                                // inputRestDefs have been used to calculate inputChordDef.msPositionInScore, but are no longer needed.
                             }
-                            // inputRestDefs have been used to calculate inputChordDef.msPositionInScore, but are no longer needed.
+                            ++inputTrackIndex;
                         }
-                        ++inputTrackIndex;
                     }
                 }
             }
@@ -1884,6 +1914,8 @@ _AP.score = (function (document)
 
         tracksData.inputTracks = inputTracks;
         tracksData.outputTracks = outputTracks;
+
+        setMarkers(systems, isLivePerformance);
 
         //    if inputTracks contains one or more tracks, the following attributes are also defined (on tracksData):
         //        inputKeyRange.bottomKey

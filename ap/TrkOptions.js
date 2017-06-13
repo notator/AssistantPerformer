@@ -18,11 +18,11 @@
  *     inputChord.trkOptions change the global trkOptions for the containing voice (i.e. they are carried forward).
  *
  * Possible fields (all are attributes in score files), and their available values, are:
- *     pedal -- possible values: "undefined", "holdAll", "holdLast"
- *     velocity -- possible values: "undefined", "scaled", "shared", "overridden"  
- *     minVelocity -- an integer in range [1..127]. Defined if velocity is defined.
- *     speed --  the value by which to divide output durations in the trk. (A float value greater than 0. Higher values mean higher speed.)  
- *     trkOff -- possible values: "undefined", "stopChord", "stopNow", "fade"
+ *     pedal -- undefined or has one of the following values: "holdAll", "holdLast"
+ *     velocity -- undefined or has one of the following values: "scaled", "shared", "overridden"  
+ *     minVelocity -- undefined or has an integer value in range [1..127]. Defined if velocity is defined.
+ *     speed --  undefined or the value by which to divide output durations in the trk. (A float value greater than 0. Higher values mean higher speed.)  
+ *     trkOff -- undefined or has one of the following values: "stopChord", "stopNow", "fade"
  */
 
 _AP.namespace('_AP.trkOptions');

@@ -481,7 +481,8 @@ _AP.controls = (function(document, window)
 
     startPlaying = function(isLivePerformance)
     {
-        var sequenceRecording, trackIsOnArray = [];
+        var startMarkerMsPosition, endMarkerMsPosition, baseSpeed,
+        sequenceRecording, trackIsOnArray = [];
 
         deleteSaveMIDIFileButton();
 
@@ -499,7 +500,18 @@ _AP.controls = (function(document, window)
             score.moveStartMarkerToTop(globalElements.svgPagesFrame);
             score.getReadOnlyTrackIsOnArray(trackIsOnArray);
 
-            player.play(trackIsOnArray, score.startMarkerMsPosition(), score.endMarkerMsPosition(), sequenceRecording);
+            startMarkerMsPosition = score.startMarkerMsPosition();
+            endMarkerMsPosition = score.endMarkerMsPosition();
+            if(options.isConducting === true)
+            {
+                baseSpeed = 1;
+            }
+            else // isLivePerformance == true or false (player is Keyboard1 or normal Sequence)
+            {
+                baseSpeed = speedSliderValue(globalElements.speedControlInput.value);
+            }
+
+            player.play(trackIsOnArray, startMarkerMsPosition, endMarkerMsPosition, baseSpeed, sequenceRecording);
         }
 
         if(options.isConducting === false)
@@ -718,35 +730,25 @@ _AP.controls = (function(document, window)
         is.options.length = 0; // important when called by midiAccess.onstatechange 
 
         option = document.createElement("option");
-        /**************************************/
-        // to re-enable MIDI input devices,
-        // 1. un-comment the content of the function setOptionsInputHandler()
-        // 2. un-comment lines 731-749 here below
-        // 3. delete the following three lines 
-        option.text = "MIDI input is temporarily disabled";
-        is.add(option, null);
-        globalElements.inputDeviceSelect.disabled = true;
-        /**************************************/
-        //if(midiAccess !== null)
-        //{
-        //    option.text = "choose a MIDI input device";
-        //    is.add(option, null);
-        //    midiAccess.inputs.forEach(function(port)
-        //    {
-        //        //console.log('input id:', port.id, ' input name:', port.name);
-        //        option = document.createElement("option");
-        //        option.inputDevice = port;
-        //        option.text = port.name;
-        //        is.add(option, null);
-        //    });
-        //}
-        //else
-        //{
-        //    option.text = "browser does not support Web MIDI";
-        //    is.add(option, null);
-        //    globalElements.inputDeviceSelect.disabled = true;
-        //}
-        /**************************************/
+        if(midiAccess !== null)
+        {
+            option.text = "choose a MIDI input device";
+            is.add(option, null);
+            midiAccess.inputs.forEach(function(port)
+            {
+                //console.log('input id:', port.id, ' input name:', port.name);
+                option = document.createElement("option");
+                option.inputDevice = port;
+                option.text = port.name;
+                is.add(option, null);
+            });
+        }
+        else
+        {
+            option.text = "browser does not support Web MIDI";
+            is.add(option, null);
+            globalElements.inputDeviceSelect.disabled = true;
+        }
     },
 
     // sets the options in the output device selector
@@ -1053,13 +1055,15 @@ _AP.controls = (function(document, window)
 
     resetSpeed = function()
     {
-        if(globalElements.speedControlCheckbox.checked === true)
+        if (player.setSpeed !== undefined)
         {
+            // Keyboard1 does nothing here if the trackWorkers have not yet been initialised.
             player.setSpeed(1);
-            globalElements.speedControlInput.value = SPEEDCONTROL_MIDDLE;
-            globalElements.speedControlCheckbox.disabled = true;
-            globalElements.speedControlLabel2.innerHTML = "100%";
         }
+        globalElements.speedControlInput.value = SPEEDCONTROL_MIDDLE;
+        globalElements.speedControlCheckbox.checked = false;
+        globalElements.speedControlCheckbox.disabled = true;
+        globalElements.speedControlLabel2.innerHTML = "100%";
     },
 
     // see: http://stackoverflow.com/questions/846221/logarithmic-slider
@@ -1079,23 +1083,25 @@ _AP.controls = (function(document, window)
 
     // Called from beginRuntime() with options.isConducting===false when the start button is clicked on page 1.
     // Called again with options.isConducting===true if the conduct performance button is toggled on.
+    // If this is a live-conducted performance, sets the now() function to be the conductor's now().
+    // Otherwise performance.now() is used (for normal and Keyboard1 performances).
+    // Note that the performance's basic speed is always 1 for conducted performances, but that it can change
+    // (live) during other performances (normal Sequence and Keyboard1).
     initializePlayer = function(score, options)
     {
         var timer, speed, tracksData = score.getTracksData();
 
         player = sequence; // sequence is a namespace, not a class.
         player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
-        speed = speedSliderValue(globalElements.speedControlInput.value);
 
         if(options.isConducting)
         {
+            speed = speedSliderValue(globalElements.speedControlInput.value);
             timer = score.getConductor(speed); // use conductor.now()
-            player.setSpeed(1); // constant in conducted performances
         }
         else
         {
             timer = performance; // use performance.now()           
-            player.setSpeed(speed);
         }        
         player.init(timer, options.outputDevice, reportEndOfPerformance, reportMsPos);
     },
@@ -1307,31 +1313,31 @@ _AP.controls = (function(document, window)
 
             function setOptionsInputHandler(scoreInfoInputHandler)
             {
-                //if(scoreInfoInputHandler === "none")
-                //{
-                //    if(globalElements.inputDeviceSelect.disabled === false)
-                //    {
-                //        globalElements.inputDeviceSelect.selectedIndex = 0;
-                //        globalElements.inputDeviceSelect.options[0].text = "this score does not accept live input";
-                //        globalElements.inputDeviceSelect.disabled = true;
-                //        options.inputHandler = undefined;
-                //    }
-                //}
-                //else
-                //{
-                //    // globalElements.inputDeviceSelect.selectedIndex is not changed here
-                //    globalElements.inputDeviceSelect.options[0].text = "choose a MIDI input device";
-                //    globalElements.inputDeviceSelect.disabled = false;
+                if(scoreInfoInputHandler === "none")
+                {
+                    if(globalElements.inputDeviceSelect.disabled === false)
+                    {
+                        globalElements.inputDeviceSelect.selectedIndex = 0;
+                        globalElements.inputDeviceSelect.options[0].text = "this score does not accept live input";
+                        globalElements.inputDeviceSelect.disabled = true;
+                        options.inputHandler = undefined;
+                    }
+                }
+                else
+                {
+                    // globalElements.inputDeviceSelect.selectedIndex is not changed here
+                    globalElements.inputDeviceSelect.options[0].text = "choose a MIDI input device";
+                    globalElements.inputDeviceSelect.disabled = false;
 
-                //    if(scoreInfoInputHandler === "keyboard1")
-                //    {
-                //        options.inputHandler = _AP.keyboard1;
-                //    }
-                //    else
-                //    {
-                //        console.assert(false, "Error: unknown scoreInfo.inputType");
-                //    }
-                //}
+                    if(scoreInfoInputHandler === "keyboard1")
+                    {
+                        options.inputHandler = _AP.keyboard1;
+                    }
+                    else
+                    {
+                        console.assert(false, "Error: unknown scoreInfo.inputType");
+                    }
+                }
             }
 
             scoreInfo = getScoreInfo(scoreIndex);
@@ -1530,7 +1536,10 @@ _AP.controls = (function(document, window)
         if(controlID === "speedControlMousemove")
         {
             var speed = speedSliderValue(globalElements.speedControlInput.value);
-            player.setSpeed(speed);
+            if (player.setSpeed !== undefined)
+            {
+                player.setSpeed(speed);
+            }
 
             if(globalElements.speedControlInput.value === SPEEDCONTROL_MIDDLE)
             {
@@ -1645,7 +1654,9 @@ _AP.controls = (function(document, window)
             // score.refreshDisplay(isLivePerformance, trackIsOnArray) simply tells the score to repaint itself.
             // Repainting includes using the correct staff colours, but the score may also update the position of
             // its start marker (which always starts on a chord) if a track is turned off.
-            tracksControl.init(tracksData.outputTracks, tracksData.inputTracks, options.livePerformance, score.refreshDisplay);
+			tracksControl.init(tracksData.outputTracks, tracksData.inputTracks, options.livePerformance, score.refreshDisplay);
+
+			return tracksData;
         }
 
         function setOutputDeviceFunctions(outputDevice)
@@ -1725,8 +1736,8 @@ _AP.controls = (function(document, window)
             globalElements.speedControlSmokeDiv.style.display = "none";   
         }
 
-        try
-        {
+        //try
+        //{
             options.livePerformance = (globalElements.inputDeviceSelect.disabled === false && globalElements.inputDeviceSelect.selectedIndex > 0); 
             options.isConducting = false;
 
@@ -1751,7 +1762,6 @@ _AP.controls = (function(document, window)
             if(options.livePerformance)
             {
                 player = options.inputHandler; // e.g. keyboard1 -- the "prepared piano"
-                player.setSpeed(speedSliderValue(globalElements.speedControlInput.value));
                 player.outputTracks = tracksData.outputTracks; // public player.outputTracks is needed for sending track initialization messages
                 player.init(options.inputDevice, options.outputDevice, tracksData, reportEndOfPerformance, reportMsPos);
             }
@@ -1763,7 +1773,7 @@ _AP.controls = (function(document, window)
 
             setSpeedControl(tracksControl.width());
 
-            resetSpeed(); // calls player.setSpeed(1) (100%)
+            resetSpeed(); // if (player.setSpeed !== undefined) calls player.setSpeed(1) (100%)
 
             if(midiAccess !== null)
             {
@@ -1780,11 +1790,11 @@ _AP.controls = (function(document, window)
             {
                 goControlClicked();
             }
-        }
-        catch(e)
-        {
-            window.alert(e);
-        }
+        //}
+        //catch(e)
+        //{
+        //    window.alert(e);
+        //}
     },
 
     publicAPI =

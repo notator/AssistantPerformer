@@ -443,7 +443,7 @@ _AP.sequence = (function(window)
     // recording is a Sequence to which timestamped moments are added as they are performed.
     // Can be undefined or null. If used, it should be an empty Sequence having the same number
     // of tracks as this (calling) sequence.
-    play = function(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, recording)
+    play = function(trackIsOnArray, startMarkerMsPosInScore, endMarkerMsPosInScore, baseSpeed, recording)
     {
         // Sets each (output) track's isPerforming attribute.
         // If the track is set to perform (in the trackIsOnArray -- the trackControl settings),
@@ -469,6 +469,9 @@ _AP.sequence = (function(window)
             }
         }
 
+        // In blue, live conducted performances, Sequence.speed is always 1. (The speed slider value is used differently.)
+        // In normal Sequence or Keyboard1 performances, Sequence.speed is the value of the global speed slider (range [0.1..9.99]).
+        speed = baseSpeed; 
         sequenceRecording = recording; // can be undefined or null
 
         endMarkerMsPosition = endMarkerMsPosInScore;

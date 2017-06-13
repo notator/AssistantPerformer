@@ -11,7 +11,7 @@
  *      MidiRest(scoreMidiElem) // MidiRest constructor
  */
 
-_AP.namespace('_AP.midiChord');
+_AP.namespace('_AP.midiObject');
 
 _AP.midiObject = (function()
 {
@@ -772,6 +772,29 @@ _AP.midiObject = (function()
     {
         this._currentMomentIndex = 0;
         this.currentMoment = this.moments[0];
+    };
+
+    // Returns true if this is a MidiChord, false if this is a MidiRest
+    // Both types can contain any number of moments, but MidiRests can contain no NoteOn messages.
+    MidiChord.prototype.isMidiChord = function ()
+    {
+        var i, j, nMoments = this.moments.length, msgs, nMsgs, rval = false;
+
+        for(i = 0; i < nMoments; ++i)
+        {
+            msgs = this.moments[i].messages;
+            nMsgs = msgs.length;
+            for(j = 0; j < nMsgs; ++j)
+            {
+                if(msgs[j].command() === _AP.constants.COMMAND.NOTE_ON)
+                {
+                    rval = true;
+                    break;
+                }
+            }
+        }
+
+        return rval;
     };
 
     MidiRest.prototype = MidiChord.prototype;

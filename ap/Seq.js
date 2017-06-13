@@ -51,7 +51,7 @@ _AP.seq = (function()
 		//  trkOptions
 		function setAndGetWorkers(seqPositionInScore, trks, trackWorkers)
 		{
-			var i, nTrks = trks.length, trkDef, trkWorker, workers = [], msPosition, moments, options;
+			var i, nTrks = trks.length, trkDef, trkWorker, workers = [], moments, options;
 
 			function getMoments(trkMidiObjects)
 			{
@@ -65,9 +65,10 @@ _AP.seq = (function()
 						trkMoment = {};
 						if(moment.systemIndex !== undefined)
 						{
-							trkMoment.systemIndex = moment.systemIndex;
+						    trkMoment.systemIndex = moment.systemIndex;
 						}
-						// all moments have an msPositionInChord attribute (even in midiRests)
+					    // all moments have an msPositionInChord attribute (even in midiRests)
+						trkMoment.isFirstMomentInMidiObject = (moment.msPositionInChord === 0);
 						trkMoment.msPositionInSeq = midiObjectMsPosInSeq + moment.msPositionInChord;
 						trkMoment.messages = moment.messages; // a clone of the messages is made when the trkMoment is transferred to the webWorker.
 						trkMoments.push(trkMoment);
@@ -96,7 +97,6 @@ _AP.seq = (function()
 			{
 				trkDef = trks[i]; 
 
-				msPosition = seqPositionInScore + trkDef.msOffset;
 				moments = getMoments(trkDef.midiObjects);
 				options = trkDef.trkOptions;
 
@@ -104,14 +104,14 @@ _AP.seq = (function()
 				//     pedal
 				//     velocity (and minVelocity) -- both or neither is defined
 				//     speed
-				//     noteOff
+				//     trkOff
 				console.assert(options !== undefined, "Error: trkDef.trkOptions must be a valid object here.");
 
 				trkWorker = trackWorkers[trkDef.trackIndex];
 
 				if(trkWorker !== null)
 				{
-					trkWorker.postMessage({ action: "pushTrk", msPosition: msPosition, moments: moments, options: options });
+				    trkWorker.postMessage({ action: "pushTrk", msPosition: seqPositionInScore, moments: moments, options: options });
 					trkWorker.hasCompleted = false;
 				}
 
