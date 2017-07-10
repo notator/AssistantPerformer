@@ -1,14 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet href="../../fontsStyleSheet.css" type="text/css"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:score="http://www.james-ingram-act-two.de/open-source/svgScoreNamespace.html" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-	version="1.1"
-	data-scoreType="http://www.james-ingram-act-two.de/open-source/svgScoreNamespace.html"
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:score="http://www.james-ingram-act-two.de/open-source/svgScoreNamespace.html"
+	data-scoreType="http://www.james-ingram-act-two.de/open-source/cmn_core.html"
 	width="1010"
 	height="1237"
 	viewBox="0 0 8080 9896">
-	<sodipodi:namedview
-		inkscape:window-maximized="1"
-		inkscape:current-layer="layer2" />
 	<title
 		class="pageTitle">Study 3 sketch 1, page 2 of 2</title>
 	<metadata
@@ -20,7 +16,7 @@
 				<dc:type
 					rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
 				<dc:title>Study 3 sketch 1, page 2 of 2</dc:title>
-				<dc:date>Thursday 02.03.2017, 10:31:14</dc:date>
+				<dc:date>Saturday 08.07.2017, 17:11:07</dc:date>
 				<dc:creator>
 					<cc:Agent>
 						<dc:title>James Ingram</dc:title>
@@ -76,428 +72,315 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 				font-weight:600;
 				font-style: normal;
 			}
-		</style>
+		    .rest, .notehead, .accidental, .cautionaryNotehead, .cautionaryAccidental, .clef, .dynamic, .clefOctaveNumber
+            {
+                font-family:CLicht
+            }
+            .rest, .notehead, .accidental, .clef
+            {
+                font-size:125.44px
+            }
+            .dynamic
+            {
+                font-size:94.08px
+            }
+            .cautionaryNotehead, .cautionaryAccidental
+            {
+                font-size:100.352px
+            }
+            .clefOctaveNumber
+            {
+                font-size:84.0448px
+            }
+            .timeStamp, .staffName, .barNumberNumber
+            {
+                font-family:Arial
+            }
+            .timeStamp
+            {
+                font-size:72px
+            }
+            .staffName
+            {
+                font-size:70.4px;
+                text-anchor:middle
+            }
+            .barNumberNumber
+            {
+                font-size:63.9744px;
+                text-anchor:middle
+            }
+            .ornament
+            {
+                font-family:"Open Sans Condensed";
+                font-size:68.992px;
+                text-anchor:middle
+            }
+            .staffline, .ledgerline, .stem, .beam, .flag
+            {
+                stroke:black;
+                stroke-width:4px;
+                fill:black
+            }
+            .stem
+            {
+                stroke-linecap:round                
+            }
+            .barline
+            {
+                stroke:black;
+                stroke-width:8px
+            }
+            .thickBarline
+            {
+                stroke:black;
+                stroke-width:16px
+            }
+            .noteExtender
+            {
+                stroke:black;
+                stroke-width:13.6px
+            }
+            .barNumberFrame
+            {
+                stroke:black;
+                stroke-width:4.8px;
+                fill:none
+            }
+            .cautionaryBracket
+            {
+                stroke:black;
+                stroke-width:4;
+                fill:none                
+            }
+            .frame
+            {
+                stroke:black;
+                stroke-width:4px;
+                fill:white                
+            }
+            .opaqueBeam
+            {
+                stroke:white;
+                stroke-width:4px;
+                fill:white;
+                opacity:0.65                
+            }
+            </style>
 		<g
 			id="trebleClef">
 			<text
-				x="0"
-				y="0"
-				font-size="1px"
-				font-family="CLicht">&amp;</text>
-		</g>
-		<g
-			id="trebleClef8">
-			<text
-				x="0"
-				y="0"
-				font-size="1px"
-				font-family="CLicht">&amp;</text>
-			<text
-				x="0.28"
-				y="-1.17"
-				font-size="0.67px"
-				font-family="CLicht">•</text>
-		</g>
-		<g
-			id="trebleClef2x8">
-			<text
-				x="0"
-				y="0"
-				font-size="1px"
-				font-family="CLicht">&amp;</text>
-			<text
-				x="0.036"
-				y="-1.17"
-				font-size="0.67px"
-				font-family="CLicht">™</text>
-			<text
-				x="0.252"
-				y="-1.17"
-				font-size="0.4px"
-				font-family="Arial">x</text>
-			<text
-				x="0.48"
-				y="-1.17"
-				font-size="0.67px"
-				font-family="CLicht">•</text>
-		</g>
-		<g
-			id="trebleClef3x8">
-			<text
-				x="0"
-				y="0"
-				font-size="1px"
-				font-family="CLicht">&amp;</text>
-			<text
-				x="0.036"
-				y="-1.17"
-				font-size="0.67px"
-				font-family="CLicht">£</text>
-			<text
-				x="0.252"
-				y="-1.17"
-				font-size="0.4px"
-				font-family="Arial">x</text>
-			<text
-				x="0.48"
-				y="-1.17"
-				font-size="0.67px"
-				font-family="CLicht">•</text>
-		</g>
-		<g
-			id="bassClef">
-			<text
-				x="0"
-				y="0"
-				font-size="1px"
-				font-family="CLicht">?</text>
+				class="clef">&amp;</text>
 		</g>
 		<g
 			id="bassClef8">
 			<text
-				x="0"
-				y="0"
-				font-size="1px"
-				font-family="CLicht">?</text>
+				class="clef">?</text>
 			<text
-				x="0.16"
-				y="1.1"
-				font-size="0.67px"
-				font-family="CLicht">•</text>
+				class="clefOctaveNumber"
+				x="20.0704"
+				y="137.984">•</text>
 		</g>
 		<g
-			id="bassClef2x8">
-			<text
-				x="0"
-				y="0"
-				font-size="1px"
-				font-family="CLicht">?</text>
-			<text
-				x="0"
-				y="1.1"
-				font-size="0.67px"
-				font-family="CLicht">™</text>
-			<text
-				x="0.215"
-				y="1.1"
-				font-size="0.4px"
-				font-family="Arial">x</text>
-			<text
-				x="0.435"
-				y="1.1"
-				font-size="0.67px"
-				font-family="CLicht">•</text>
+			id="left2Flags">
+			<path
+				d="M 0,0 0,-15.1732 39.9012,-30.9461 Q 37.5066,-25.088 39.9012,-15.7678" />
+			<path
+				d="M 0,-31.36 0,-46.5332 39.9012,-62.3061 Q 37.5066,-56.448 39.9012,-47.1278" />
 		</g>
 		<g
-			id="bassClef3x8">
-			<text
-				x="0"
-				y="0"
-				font-size="1px"
-				font-family="CLicht">?</text>
-			<text
-				x="0"
-				y="1.1"
-				font-size="0.67px"
-				font-family="CLicht">£</text>
-			<text
-				x="0.215"
-				y="1.1"
-				font-size="0.4px"
-				font-family="Arial">x</text>
-			<text
-				x="0.435"
-				y="1.1"
-				font-size="0.67px"
-				font-family="CLicht">•</text>
+			id="left3Flags">
+			<path
+				d="M 0,0 0,-15.1732 39.9012,-30.9461 Q 37.5066,-25.088 39.9012,-15.7678" />
+			<path
+				d="M 0,-31.36 0,-46.5332 39.9012,-62.3061 Q 37.5066,-56.448 39.9012,-47.1278" />
+			<path
+				d="M 0,-62.72 0,-77.8932 39.9012,-93.6661 Q 37.5066,-87.808 39.9012,-78.4878" />
 		</g>
 		<g
-			id="Right1Flag">
+			id="right1Flag">
 			<path
-				d="M 0,0 0,0.12096 0.31809,0.2467 Q 0.299,0.2 0.31809,0.1257" />
+				d="M 0,0 0,15.1732 39.9012,30.9461 Q 37.5066,25.088 39.9012,15.7678" />
 		</g>
 		<g
-			id="Left1Flag">
+			id="right2Flags">
 			<path
-				d="M 0,0 0,-0.12096 0.31809,-0.2467 Q 0.299,-0.2 0.31809,-0.1257" />
+				d="M 0,0 0,15.1732 39.9012,30.9461 Q 37.5066,25.088 39.9012,15.7678" />
+			<path
+				d="M 0,31.36 0,46.5332 39.9012,62.3061 Q 37.5066,56.448 39.9012,47.1278" />
 		</g>
 		<g
-			id="Right2Flags">
+			id="right3Flags">
 			<path
-				d="M 0,0 0,0.12096 0.31809,0.2467 Q 0.299,0.2 0.31809,0.1257" />
+				d="M 0,0 0,15.1732 39.9012,30.9461 Q 37.5066,25.088 39.9012,15.7678" />
 			<path
-				d="M 0,0.25 0,0.37096 0.31809,0.4967 Q 0.299,0.45 0.31809,0.3757" />
-		</g>
-		<g
-			id="Left2Flags">
+				d="M 0,31.36 0,46.5332 39.9012,62.3061 Q 37.5066,56.448 39.9012,47.1278" />
 			<path
-				d="M 0,0 0,-0.12096 0.31809,-0.2467 Q 0.299,-0.2 0.31809,-0.1257" />
-			<path
-				d="M 0,-0.25 0,-0.37096 0.31809,-0.4967 Q 0.299,-0.45 0.31809,-0.3757" />
-		</g>
-		<g
-			id="Right3Flags">
-			<path
-				d="M 0,0 0,0.12096 0.31809,0.2467 Q 0.299,0.2 0.31809,0.1257" />
-			<path
-				d="M 0,0.25 0,0.37096 0.31809,0.4967 Q 0.299,0.45 0.31809,0.3757" />
-			<path
-				d="M 0,0.5 0,0.62096 0.31809,0.7467 Q 0.299,0.7 0.31809,0.6257" />
-		</g>
-		<g
-			id="Left3Flags">
-			<path
-				d="M 0,0 0,-0.12096 0.31809,-0.2467 Q 0.299,-0.2 0.31809,-0.1257" />
-			<path
-				d="M 0,-0.25 0,-0.37096 0.31809,-0.4967 Q 0.299,-0.45 0.31809,-0.3757" />
-			<path
-				d="M 0,-0.5 0,-0.62096 0.31809,-0.7467 Q 0.299,-0.7 0.31809,-0.6257" />
-		</g>
-		<g
-			id="Right4Flags">
-			<path
-				d="M 0,0 0,0.12096 0.31809,0.2467 Q 0.299,0.2 0.31809,0.1257" />
-			<path
-				d="M 0,0.25 0,0.37096 0.31809,0.4967 Q 0.299,0.45 0.31809,0.3757" />
-			<path
-				d="M 0,0.5 0,0.62096 0.31809,0.7467 Q 0.299,0.7 0.31809,0.6257" />
-			<path
-				d="M 0,0.75 0,0.87096 0.31809,0.9967 Q 0.299,0.95 0.31809,0.8757" />
-		</g>
-		<g
-			id="Left4Flags">
-			<path
-				d="M 0,0 0,-0.12096 0.31809,-0.2467 Q 0.299,-0.2 0.31809,-0.1257" />
-			<path
-				d="M 0,-0.25 0,-0.37096 0.31809,-0.4967 Q 0.299,-0.45 0.31809,-0.3757" />
-			<path
-				d="M 0,-0.5 0,-0.62096 0.31809,-0.7467 Q 0.299,-0.7 0.31809,-0.6257" />
-			<path
-				d="M 0,-0.75 0,-0.87096 0.31809,-0.9967 Q 0.299,-0.95 0.31809,-0.8757" />
-		</g>
-		<g
-			id="Right5Flags">
-			<path
-				d="M 0,0 0,0.12096 0.31809,0.2467 Q 0.299,0.2 0.31809,0.1257" />
-			<path
-				d="M 0,0.25 0,0.37096 0.31809,0.4967 Q 0.299,0.45 0.31809,0.3757" />
-			<path
-				d="M 0,0.5 0,0.62096 0.31809,0.7467 Q 0.299,0.7 0.31809,0.6257" />
-			<path
-				d="M 0,0.75 0,0.87096 0.31809,0.9967 Q 0.299,0.95 0.31809,0.8757" />
-			<path
-				d="M 0,1 0,1.12096 0.31809,1.2467 Q 0.299,1.2 0.31809,1.1257" />
-		</g>
-		<g
-			id="Left5Flags">
-			<path
-				d="M 0,0 0,-0.12096 0.31809,-0.2467 Q 0.299,-0.2 0.31809,-0.1257" />
-			<path
-				d="M 0,-0.25 0,-0.37096 0.31809,-0.4967 Q 0.299,-0.45 0.31809,-0.3757" />
-			<path
-				d="M 0,-0.5 0,-0.62096 0.31809,-0.7467 Q 0.299,-0.7 0.31809,-0.6257" />
-			<path
-				d="M 0,-0.75 0,-0.87096 0.31809,-0.9967 Q 0.299,-0.95 0.31809,-0.8757" />
-			<path
-				d="M 0,-1 0,-1.12096 0.31809,-1.2467 Q 0.299,-1.2 0.31809,-1.1257" />
+				d="M 0,62.72 0,77.8932 39.9012,93.6661 Q 37.5066,87.808 39.9012,78.4878" />
 		</g>
 	</defs>
+	<rect
+		class="frame"
+		x="0"
+		y="0"
+		width="8080"
+		height="9888" />
 	<g
-		inkscape:groupmode="layer"
-		id="layer1"
-		inkscape:label="frame"
-		style="display:inline"
-		sodipodi:insensitive="true">
-		<rect
-			x="0"
-			y="0"
-			width="8080"
-			height="9888"
-			style="stroke:black; stroke-width:4; fill:#ffffff" />
-	</g>
-	<g
-		class="systems"
-		inkscape:groupmode="layer"
-		id="layer2"
-		inkscape:label="score"
-		style="display:inline"
-		sodipodi:insensitive="true">
+		class="systems">
 		<text
 			class="timeStamp"
 			x="32"
-			y="80"
-			font-size="72"
-			font-family="Arial">Study 3 sketch 1 page 2, Thursday 02.03.2017, 10:31:14</text>
+			y="72">Study 3 sketch 1 page 2, Saturday 08.07.2017, 17:11:07</text>
 		<g
 			class="system">
 			<score:leftToRight
-				systemTop="380,56"
-				systemBottom="3337,974" />
+				systemTop="380.56"
+				systemBottom="3337.974" />
 			<g
-				class="outputStaff"
+				class="staff"
 				score:staffName="pal. 8">
 				<g
 					class="stafflines">
 					<line
+						class="staffline"
 						x1="400"
 						y1="640"
 						x2="7680"
-						y2="640"
-						style="stroke:black; stroke-width:4px" />
+						y2="640" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="672"
 						x2="7680"
-						y2="672"
-						style="stroke:black; stroke-width:4px" />
+						y2="672" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="704"
 						x2="7680"
-						y2="704"
-						style="stroke:black; stroke-width:4px" />
+						y2="704" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="736"
 						x2="7680"
-						y2="736"
-						style="stroke:black; stroke-width:4px" />
+						y2="736" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="768"
 						x2="7680"
-						y2="768"
-						style="stroke:black; stroke-width:4px" />
+						y2="768" />
 				</g>
 				<g
-					class="outputVoice">
+					class="voice">
+					<text
+						class="staffName"
+						x="232"
+						y="729.6">pal. 8</text>
+					<g
+						class="barNumber">
+						<text
+							class="barNumberNumber"
+							x="503.2"
+							y="448">3</text>
+						<rect
+							class="barNumberFrame"
+							x="457.456"
+							y="380.56"
+							width="91.488"
+							height="89.44" />
+					</g>
 					<use
 						class="clef"
-						xlink:href="#trebleClef"
-						x="0"
-						y="0"
-						transform="translate(400,736) scale(125.44)" />
+						href="#trebleClef"
+						x="400"
+						y="736" />
 					<line
 						class="barline"
 						x1="503.2"
 						y1="640"
 						x2="503.2"
-						y2="768"
-						style="stroke:black; stroke-width:8px" />
-					<text
-						class="staffName"
-						x="232"
-						y="729.6"
-						text-anchor="middle"
-						font-size="70.4"
-						font-family="Arial">pal. 8</text>
+						y2="768" />
 					<g
-						class="barNumber">
-						<text
-							class="number"
-							x="503.2"
-							y="448"
-							text-anchor="middle"
-							font-size="64"
-							font-family="Arial">3</text>
-						<rect
-							x="457.456"
-							y="380.56"
-							width="91.48798"
-							height="89.44"
-							style="stroke:black; stroke-width:4.8px; fill:none" />
-					</g>
-					<g
-						class="outputRest"
-						score:alignment="575.9849">
+						class="rest"
+						score:alignment="563.9849">
 						<score:midi>
 							<moments>
 								<moment
 									msDuration="5904" />
 							</moments>
 						</score:midi>
-						<text
-							x="557.7056"
-							y="704"
-							font-size="125.44"
-							font-family="CLicht">∑</text>
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="545.7056"
+								y="704">∑</text>
+						</g>
 					</g>
 					<line
 						class="barline"
-						x1="3121.794"
+						x1="3119.042"
 						y1="640"
-						x2="3121.794"
-						y2="768"
-						style="stroke:black; stroke-width:8px" />
+						x2="3119.042"
+						y2="768" />
 					<g
-						class="outputRest"
-						score:alignment="3211.859">
+						class="rest"
+						score:alignment="3197.107">
 						<score:midi>
 							<moments>
 								<moment
 									msDuration="4596" />
 							</moments>
 						</score:midi>
-						<text
-							x="3193.58"
-							y="704"
-							font-size="125.44"
-							font-family="CLicht">∑</text>
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="3178.828"
+								y="704">∑</text>
+						</g>
 					</g>
 					<line
 						class="barline"
-						x1="5132.246"
+						x1="5131.703"
 						y1="640"
-						x2="5132.246"
-						y2="768"
-						style="stroke:black; stroke-width:8px" />
+						x2="5131.703"
+						y2="768" />
 					<g
 						class="beamBlock">
 						<path
-							fill="white"
-							opacity="0.65"
-							d="M 5491.079 613.12 L 5529.479 613.12 5529.479 633.28 5491.079 633.28 z" />
+							class="opaqueBeam"
+							d="M 5482.818 613.12 L 5521.218 613.12 5521.218 633.28 5482.818 633.28 z" />
 						<path
-							stroke="black"
-							stroke-width="4px"
-							fill="black"
-							d="M 5491.079 626.56 L 5529.479 626.56 5529.479 640 5491.079 640 z" />
+							class="beam"
+							d="M 5482.818 626.56 L 5521.218 626.56 5521.218 640 5482.818 640 z" />
 						<path
-							fill="white"
-							opacity="0.65"
-							d="M 5891.917 613.12 L 5930.317 613.12 5930.317 633.28 5891.917 633.28 z" />
+							class="opaqueBeam"
+							d="M 5889.476 613.12 L 5927.875 613.12 5927.875 633.28 5889.476 633.28 z" />
 						<path
-							stroke="black"
-							stroke-width="4px"
-							fill="black"
-							d="M 5891.917 626.56 L 5930.317 626.56 5930.317 640 5891.917 640 z" />
+							class="beam"
+							d="M 5889.476 626.56 L 5927.875 626.56 5927.875 640 5889.476 640 z" />
 						<path
-							fill="white"
-							opacity="0.65"
-							d="M 6282.727 613.12 L 6321.126 613.12 6321.126 633.28 6282.727 633.28 z" />
+							class="opaqueBeam"
+							d="M 6285.957 613.12 L 6324.357 613.12 6324.357 633.28 6285.957 633.28 z" />
 						<path
-							stroke="black"
-							stroke-width="4px"
-							fill="black"
-							d="M 6282.727 626.56 L 6321.126 626.56 6321.126 640 6282.727 640 z" />
+							class="beam"
+							d="M 6285.957 626.56 L 6324.357 626.56 6324.357 640 6285.957 640 z" />
 						<path
-							fill="white"
-							opacity="0.65"
-							d="M 6665.511 613.12 L 6703.911 613.12 6703.911 633.28 6665.511 633.28 z" />
+							class="opaqueBeam"
+							d="M 6674.296 613.12 L 6712.696 613.12 6712.696 633.28 6674.296 633.28 z" />
 						<path
-							stroke="black"
-							stroke-width="4px"
-							fill="black"
-							d="M 6665.511 626.56 L 6703.911 626.56 6703.911 640 6665.511 640 z" />
+							class="beam"
+							d="M 6674.296 626.56 L 6712.696 626.56 6712.696 640 6674.296 640 z" />
 						<path
-							stroke="black"
-							stroke-width="4px"
-							fill="black"
-							d="M 5234.566 594.56 L 7455.434 594.56 7455.434 608 5234.566 608 z" />
+							class="beam"
+							d="M 5222.023 594.56 L 7475.13 594.56 7475.13 608 5222.023 608 z" />
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="5218.153">
+						class="chord"
+						score:alignment="5205.61">
 						<score:midi>
 							<moments>
 								<moment
@@ -564,32 +447,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="5234.566"
+								class="stem"
+								x1="5222.023"
 								y1="594.56"
-								x2="5234.566"
-								y2="716.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="5222.023"
+								y2="716.304" />
 							<text
-								x="5199.741"
-								y="720"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="5187.198"
+								y="720">œ</text>
 							<text
-								x="5160.568"
-								y="720"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="5148.025"
+								y="720">#</text>
 							<text
-								x="5218.153"
-								y="575.36"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~1</text>
+								class="ornament"
+								x="5205.61"
+								y="575.36">~1</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="5513.066">
+						class="chord"
+						score:alignment="5504.805">
 						<score:midi>
 							<moments>
 								<moment
@@ -683,32 +562,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="5529.479"
+								class="stem"
+								x1="5521.218"
 								y1="594.56"
-								x2="5529.479"
-								y2="716.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="5521.218"
+								y2="716.304" />
 							<text
-								x="5494.653"
-								y="720"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="5486.393"
+								y="720">œ</text>
 							<text
-								x="5455.481"
-								y="720"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="5447.22"
+								y="720">#</text>
 							<text
-								x="5513.066"
-								y="575.36"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~7</text>
+								class="ornament"
+								x="5504.805"
+								y="575.36">~7</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="5640.259">
+						class="chord"
+						score:alignment="5633.844">
 						<score:midi>
 							<moments>
 								<moment
@@ -832,32 +707,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="5656.671"
+								class="stem"
+								x1="5650.257"
 								y1="594.56"
-								x2="5656.671"
-								y2="716.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="5650.257"
+								y2="716.304" />
 							<text
-								x="5621.846"
-								y="720"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="5615.432"
+								y="720">œ</text>
 							<text
-								x="5582.674"
-								y="720"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="5576.259"
+								y="720">#</text>
 							<text
-								x="5640.259"
-								y="575.36"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~8</text>
+								class="ornament"
+								x="5633.844"
+								y="575.36">~8</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="5913.905">
+						class="chord"
+						score:alignment="5911.463">
 						<score:midi>
 							<moments>
 								<moment
@@ -940,32 +811,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="5930.317"
+								class="stem"
+								x1="5927.875"
 								y1="594.56"
-								x2="5930.317"
-								y2="716.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="5927.875"
+								y2="716.304" />
 							<text
-								x="5895.492"
-								y="720"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="5893.05"
+								y="720">œ</text>
 							<text
-								x="5856.32"
-								y="720"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="5853.878"
+								y="720">#</text>
 							<text
-								x="5913.905"
-								y="575.36"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~5</text>
+								class="ornament"
+								x="5911.463"
+								y="575.36">~5</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="6051.129">
+						class="chord"
+						score:alignment="6050.679">
 						<score:midi>
 							<moments>
 								<moment
@@ -1108,32 +975,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="6067.542"
+								class="stem"
+								x1="6067.092"
 								y1="594.56"
-								x2="6067.542"
-								y2="716.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="6067.092"
+								y2="716.304" />
 							<text
-								x="6032.716"
-								y="720"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="6032.267"
+								y="720">œ</text>
 							<text
-								x="5993.544"
-								y="720"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="5993.094"
+								y="720">#</text>
 							<text
-								x="6051.129"
-								y="575.36"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~9</text>
+								class="ornament"
+								x="6050.679"
+								y="575.36">~9</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="6304.714">
+						class="chord"
+						score:alignment="6307.944">
 						<score:midi>
 							<moments>
 								<moment
@@ -1205,32 +1068,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="6321.126"
+								class="stem"
+								x1="6324.357"
 								y1="594.56"
-								x2="6321.126"
-								y2="716.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="6324.357"
+								y2="716.304" />
 							<text
-								x="6286.301"
-								y="720"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="6289.532"
+								y="720">œ</text>
 							<text
-								x="6247.129"
-								y="720"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="6250.359"
+								y="720">#</text>
 							<text
-								x="6304.714"
-								y="575.36"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~4</text>
+								class="ornament"
+								x="6307.944"
+								y="575.36">~4</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="6452.772">
+						class="chord"
+						score:alignment="6458.151">
 						<score:midi>
 							<moments>
 								<moment
@@ -1368,32 +1227,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="6469.185"
+								class="stem"
+								x1="6474.563"
 								y1="594.56"
-								x2="6469.185"
-								y2="716.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="6474.563"
+								y2="716.304" />
 							<text
-								x="6434.359"
-								y="720"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="6439.738"
+								y="720">œ</text>
 							<text
-								x="6395.187"
-								y="720"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="6400.566"
+								y="720">#</text>
 							<text
-								x="6452.772"
-								y="575.36"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~10</text>
+								class="ornament"
+								x="6458.151"
+								y="575.36">~10</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="6687.498">
+						class="chord"
+						score:alignment="6696.284">
 						<score:midi>
 							<moments>
 								<moment
@@ -1454,32 +1309,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="6703.911"
+								class="stem"
+								x1="6712.696"
 								y1="594.56"
-								x2="6703.911"
-								y2="716.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="6712.696"
+								y2="716.304" />
 							<text
-								x="6669.085"
-								y="720"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="6677.871"
+								y="720">œ</text>
 							<text
-								x="6629.913"
-								y="720"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="6638.699"
+								y="720">#</text>
 							<text
-								x="6687.498"
-								y="575.36"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~3</text>
+								class="ornament"
+								x="6696.284"
+								y="575.36">~3</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="6847.593">
+						class="chord"
+						score:alignment="6858.703">
 						<score:midi>
 							<moments>
 								<moment
@@ -1640,32 +1491,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="6864.005"
+								class="stem"
+								x1="6875.115"
 								y1="594.56"
-								x2="6864.005"
-								y2="716.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="6875.115"
+								y2="716.304" />
 							<text
-								x="6829.18"
-								y="720"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="6840.29"
+								y="720">œ</text>
 							<text
-								x="6790.008"
-								y="720"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="6801.118"
+								y="720">#</text>
 							<text
-								x="6847.593"
-								y="575.36"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~11</text>
+								class="ornament"
+								x="6858.703"
+								y="575.36">~11</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="7064.664">
+						class="chord"
+						score:alignment="7078.925">
 						<score:midi>
 							<moments>
 								<moment
@@ -1715,32 +1562,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="7081.077"
+								class="stem"
+								x1="7095.338"
 								y1="594.56"
-								x2="7081.077"
-								y2="716.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="7095.338"
+								y2="716.304" />
 							<text
-								x="7046.251"
-								y="720"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="7060.513"
+								y="720">œ</text>
 							<text
-								x="7007.079"
-								y="720"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="7021.34"
+								y="720">#</text>
 							<text
-								x="7064.664"
-								y="575.36"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~2</text>
+								class="ornament"
+								x="7078.925"
+								y="575.36">~2</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="7237.599">
+						class="chord"
+						score:alignment="7254.371">
 						<score:midi>
 							<moments>
 								<moment
@@ -1900,32 +1743,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="7254.011"
+								class="stem"
+								x1="7270.783"
 								y1="594.56"
-								x2="7254.011"
-								y2="716.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="7270.783"
+								y2="716.304" />
 							<text
-								x="7219.186"
-								y="720"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="7235.958"
+								y="720">œ</text>
 							<text
-								x="7180.014"
-								y="720"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="7196.786"
+								y="720">#</text>
 							<text
-								x="7237.599"
-								y="575.36"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~12</text>
+								class="ornament"
+								x="7254.371"
+								y="575.36">~12</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="7439.021">
+						class="chord"
+						score:alignment="7458.717">
 						<score:midi>
 							<moments>
 								<moment
@@ -2008,187 +1847,168 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="7455.434"
+								class="stem"
+								x1="7475.13"
 								y1="594.56"
-								x2="7455.434"
-								y2="716.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="7475.13"
+								y2="716.304" />
 							<text
-								x="7420.609"
-								y="720"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="7440.305"
+								y="720">œ</text>
 							<text
-								x="7381.437"
-								y="720"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="7401.132"
+								y="720">#</text>
 							<text
-								x="7439.021"
-								y="575.36"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~6</text>
+								class="ornament"
+								x="7458.717"
+								y="575.36">~6</text>
 						</g>
 					</g>
-					<line
-						class="endBarlineLeft"
-						x1="7655.998"
-						y1="638"
-						x2="7655.998"
-						y2="770"
-						style="stroke:black; stroke-width:8px" />
-					<line
-						class="endBarlineRight"
-						x1="7679.998"
-						y1="638"
-						x2="7679.998"
-						y2="770"
-						style="stroke:black; stroke-width:16px" />
+					<g
+						class="endBarline">
+						<line
+							class="barline"
+							x1="7648.002"
+							y1="638"
+							x2="7648.002"
+							y2="770" />
+						<line
+							class="thickBarline"
+							x1="7672.002"
+							y1="638"
+							x2="7672.002"
+							y2="770" />
+					</g>
 				</g>
 			</g>
 			<g
-				class="outputStaff"
+				class="staff"
 				score:staffName="pal. 7">
 				<g
 					class="stafflines">
 					<line
+						class="staffline"
 						x1="400"
 						y1="992"
 						x2="7680"
-						y2="992"
-						style="stroke:black; stroke-width:4px" />
+						y2="992" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="1024"
 						x2="7680"
-						y2="1024"
-						style="stroke:black; stroke-width:4px" />
+						y2="1024" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="1056"
 						x2="7680"
-						y2="1056"
-						style="stroke:black; stroke-width:4px" />
+						y2="1056" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="1088"
 						x2="7680"
-						y2="1088"
-						style="stroke:black; stroke-width:4px" />
+						y2="1088" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="1120"
 						x2="7680"
-						y2="1120"
-						style="stroke:black; stroke-width:4px" />
+						y2="1120" />
 				</g>
 				<g
-					class="outputVoice">
+					class="voice">
+					<text
+						class="staffName"
+						x="232"
+						y="1081.6">pal. 7</text>
 					<use
 						class="clef"
-						xlink:href="#trebleClef"
-						x="0"
-						y="0"
-						transform="translate(400,1088) scale(125.44)" />
+						href="#trebleClef"
+						x="400"
+						y="1088" />
 					<line
 						class="barline"
 						x1="503.2"
 						y1="992"
 						x2="503.2"
-						y2="1120"
-						style="stroke:black; stroke-width:8px" />
-					<text
-						class="staffName"
-						x="232"
-						y="1081.6"
-						text-anchor="middle"
-						font-size="70.4"
-						font-family="Arial">pal. 7</text>
+						y2="1120" />
 					<g
-						class="outputRest"
-						score:alignment="575.9849">
+						class="rest"
+						score:alignment="563.9849">
 						<score:midi>
 							<moments>
 								<moment
 									msDuration="5904" />
 							</moments>
 						</score:midi>
-						<text
-							x="557.7056"
-							y="1056"
-							font-size="125.44"
-							font-family="CLicht">∑</text>
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="545.7056"
+								y="1056">∑</text>
+						</g>
 					</g>
 					<line
 						class="barline"
-						x1="3121.794"
+						x1="3119.042"
 						y1="992"
-						x2="3121.794"
-						y2="1120"
-						style="stroke:black; stroke-width:8px" />
+						x2="3119.042"
+						y2="1120" />
 					<g
-						class="outputRest"
-						score:alignment="3225.619">
+						class="rest"
+						score:alignment="3210.867">
 						<score:midi>
 							<moments>
 								<moment
 									msDuration="3096" />
 							</moments>
 						</score:midi>
-						<text
-							x="3201.869"
-							y="1056"
-							font-size="125.44"
-							font-family="CLicht">Ó</text>
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="3187.117"
+								y="1056">Ó</text>
+						</g>
 					</g>
 					<g
 						class="beamBlock">
 						<path
-							fill="white"
-							opacity="0.65"
-							d="M 4794.532 919.6183 L 4832.932 919.9709 4832.932 940.1309 4794.532 939.7783 z" />
+							class="opaqueBeam"
+							d="M 4801.637 919.709 L 4840.037 920.06 4840.037 940.22 4801.637 939.869 z" />
 						<path
-							stroke="black"
-							stroke-width="4px"
-							fill="black"
-							d="M 4794.532 933.0583 L 4832.932 933.4109 4832.932 946.8509 4794.532 946.4984 z" />
+							class="beam"
+							d="M 4801.637 933.149 L 4840.037 933.5 4840.037 946.94 4801.637 946.589 z" />
 						<path
-							fill="white"
-							opacity="0.65"
-							d="M 5298.082 924.2408 L 5336.481 924.5933 5336.481 944.7532 5298.082 944.4008 z" />
+							class="opaqueBeam"
+							d="M 5287.018 924.149 L 5325.417 924.5 5325.417 944.66 5287.018 944.309 z" />
 						<path
-							stroke="black"
-							stroke-width="4px"
-							fill="black"
-							d="M 5298.082 937.6808 L 5336.481 938.0333 5336.481 951.4733 5298.082 951.1208 z" />
+							class="beam"
+							d="M 5287.018 937.589 L 5325.417 937.94 5325.417 951.38 5287.018 951.029 z" />
 						<path
-							fill="white"
-							opacity="0.65"
-							d="M 5688.087 927.8209 L 5726.487 928.1734 5726.487 948.3334 5688.087 947.9808 z" />
+							class="opaqueBeam"
+							d="M 5682.687 927.768 L 5721.087 928.119 5721.087 948.279 5682.687 947.928 z" />
 						<path
-							stroke="black"
-							stroke-width="4px"
-							fill="black"
-							d="M 5688.087 941.2609 L 5726.487 941.6134 5726.487 955.0534 5688.087 954.7009 z" />
+							class="beam"
+							d="M 5682.687 941.208 L 5721.087 941.559 5721.087 954.999 5682.687 954.648 z" />
 						<path
-							fill="white"
-							opacity="0.65"
-							d="M 6069.667 931.3237 L 6108.067 931.6761 6108.067 951.8361 6069.667 951.4836 z" />
+							class="opaqueBeam"
+							d="M 6069.806 931.309 L 6108.206 931.66 6108.206 951.82 6069.806 951.469 z" />
 						<path
-							stroke="black"
-							stroke-width="4px"
-							fill="black"
-							d="M 6069.667 944.7637 L 6108.067 945.1161 6108.067 958.5562 6069.667 958.2037 z" />
+							class="beam"
+							d="M 6069.806 944.749 L 6108.206 945.1 6108.206 958.54 6069.806 958.189 z" />
 						<path
-							stroke="black"
-							stroke-width="4px"
-							fill="black"
-							d="M 4530.797 898.6373 L 6854.777 919.9707 6854.777 933.4107 4530.797 912.0773 z" />
+							class="beam"
+							d="M 4533.516 898.697 L 6865.752 920.03 6865.752 933.47 4533.516 912.137 z" />
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="4514.384">
+						class="chord"
+						score:alignment="4517.103">
 						<score:midi>
 							<moments>
 								<moment
@@ -2325,32 +2145,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="4530.797"
-								y1="898.6373"
-								x2="4530.797"
-								y2="1020.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="4533.516"
+								y1="898.6965"
+								x2="4533.516"
+								y2="1020.304" />
 							<text
-								x="4495.972"
-								y="1024"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="4498.69"
+								y="1024">œ</text>
 							<text
-								x="4456.799"
-								y="1024"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="4459.518"
+								y="1024">#</text>
 							<text
-								x="4514.384"
-								y="879.4374"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~7</text>
+								class="ornament"
+								x="4517.103"
+								y="879.4965">~7</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="4816.519">
+						class="chord"
+						score:alignment="4823.625">
 						<score:midi>
 							<moments>
 								<moment
@@ -2444,32 +2260,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="4832.932"
-								y1="901.4109"
-								x2="4832.932"
-								y2="1084.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="4840.037"
+								y1="901.5002"
+								x2="4840.037"
+								y2="1084.304" />
 							<text
-								x="4798.106"
-								y="1088"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="4805.212"
+								y="1088">œ</text>
 							<text
-								x="4758.934"
-								y="1088"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="4766.04"
+								y="1088">#</text>
 							<text
-								x="4816.519"
-								y="882.2109"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~6</text>
+								class="ornament"
+								x="4823.625"
+								y="882.3003">~6</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="4939.299">
+						class="chord"
+						score:alignment="4948.187">
 						<score:midi>
 							<moments>
 								<moment
@@ -2593,32 +2405,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="4955.712"
-								y1="902.538"
-								x2="4955.712"
-								y2="1084.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="4964.599"
+								y1="902.6396"
+								x2="4964.599"
+								y2="1084.304" />
 							<text
-								x="4920.887"
-								y="1088"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="4929.774"
+								y="1088">œ</text>
 							<text
-								x="4881.714"
-								y="1088"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="4890.602"
+								y="1088">#</text>
 							<text
-								x="4939.299"
-								y="883.338"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~8</text>
+								class="ornament"
+								x="4948.187"
+								y="883.4396">~8</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="5320.069">
+						class="chord"
+						score:alignment="5309.005">
 						<score:midi>
 							<moments>
 								<moment
@@ -2701,32 +2509,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="5336.481"
-								y1="906.0333"
-								x2="5336.481"
-								y2="1084.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="5325.417"
+								y1="905.9401"
+								x2="5325.417"
+								y2="1084.304" />
 							<text
-								x="5301.656"
-								y="1088"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="5290.592"
+								y="1088">œ</text>
 							<text
-								x="5262.484"
-								y="1088"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="5251.42"
+								y="1088">#</text>
 							<text
-								x="5320.069"
-								y="886.8333"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~5</text>
+								class="ornament"
+								x="5309.005"
+								y="886.7401">~5</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="5453.281">
+						class="chord"
+						score:alignment="5444.152">
 						<score:midi>
 							<moments>
 								<moment
@@ -2869,32 +2673,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="5469.693"
-								y1="907.2561"
-								x2="5469.693"
-								y2="1084.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="5460.564"
+								y1="907.1763"
+								x2="5460.564"
+								y2="1084.304" />
 							<text
-								x="5434.868"
-								y="1088"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="5425.739"
+								y="1088">œ</text>
 							<text
-								x="5395.696"
-								y="1088"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="5386.567"
+								y="1088">#</text>
 							<text
-								x="5453.281"
-								y="888.0561"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~9</text>
+								class="ornament"
+								x="5444.152"
+								y="887.9763">~9</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="5710.075">
+						class="chord"
+						score:alignment="5704.674">
 						<score:midi>
 							<moments>
 								<moment
@@ -2966,32 +2766,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="5726.487"
-								y1="909.6134"
-								x2="5726.487"
-								y2="1084.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="5721.087"
+								y1="909.5593"
+								x2="5721.087"
+								y2="1084.304" />
 							<text
-								x="5691.662"
-								y="1088"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="5686.262"
+								y="1088">œ</text>
 							<text
-								x="5652.49"
-								y="1088"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="5647.089"
+								y="1088">#</text>
 							<text
-								x="5710.075"
-								y="890.4134"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~4</text>
+								class="ornament"
+								x="5704.674"
+								y="890.3594">~4</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="5854.922">
+						class="chord"
+						score:alignment="5851.625">
 						<score:midi>
 							<moments>
 								<moment
@@ -3129,32 +2925,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="5871.335"
-								y1="910.9431"
-								x2="5871.335"
-								y2="1132.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="5868.037"
+								y1="910.9036"
+								x2="5868.037"
+								y2="1132.304" />
 							<text
-								x="5836.51"
-								y="1136"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="5833.212"
+								y="1136">œ</text>
 							<text
-								x="5797.337"
-								y="1136"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="5794.04"
+								y="1136">#</text>
 							<text
-								x="5854.922"
-								y="891.743"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~10</text>
+								class="ornament"
+								x="5851.625"
+								y="891.7036">~10</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="6091.654">
+						class="chord"
+						score:alignment="6091.793">
 						<score:midi>
 							<moments>
 								<moment
@@ -3215,32 +3007,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="6108.067"
-								y1="913.1161"
-								x2="6108.067"
-								y2="1084.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="6108.206"
+								y1="913.1004"
+								x2="6108.206"
+								y2="1084.304" />
 							<text
-								x="6073.242"
-								y="1088"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="6073.38"
+								y="1088">œ</text>
 							<text
-								x="6034.069"
-								y="1088"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="6034.208"
+								y="1088">#</text>
 							<text
-								x="6091.654"
-								y="893.9161"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~3</text>
+								class="ornament"
+								x="6091.793"
+								y="893.9004">~3</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="6248.941">
+						class="chord"
+						score:alignment="6251.362">
 						<score:midi>
 							<moments>
 								<moment
@@ -3401,32 +3189,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="6265.354"
+								class="stem"
+								x1="6267.775"
 								y1="914.56"
-								x2="6265.354"
-								y2="1020.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="6267.775"
+								y2="1020.304" />
 							<text
-								x="6230.529"
-								y="1024"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="6232.95"
+								y="1024">œ</text>
 							<text
-								x="6191.356"
-								y="1024"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="6193.777"
+								y="1024">#</text>
 							<text
-								x="6248.941"
-								y="895.36"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~11</text>
+								class="ornament"
+								x="6251.362"
+								y="895.36">~11</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="6466.815">
+						class="chord"
+						score:alignment="6472.398">
 						<score:midi>
 							<moments>
 								<moment
@@ -3476,32 +3260,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="6483.228"
-								y1="916.56"
-								x2="6483.228"
-								y2="1084.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="6488.811"
+								y1="916.5818"
+								x2="6488.811"
+								y2="1084.304" />
 							<text
-								x="6448.403"
-								y="1088"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="6453.985"
+								y="1088">œ</text>
 							<text
-								x="6409.23"
-								y="1088"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="6414.813"
+								y="1088">#</text>
 							<text
-								x="6466.815"
-								y="897.36"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~2</text>
+								class="ornament"
+								x="6472.398"
+								y="897.3818">~2</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="6637.343">
+						class="chord"
+						score:alignment="6645.401">
 						<score:midi>
 							<moments>
 								<moment
@@ -3661,32 +3441,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="6653.755"
-								y1="918.1254"
-								x2="6653.755"
-								y2="1084.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="6661.813"
+								y1="918.1643"
+								x2="6661.813"
+								y2="1084.304" />
 							<text
-								x="6618.93"
-								y="1088"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="6626.988"
+								y="1088">œ</text>
 							<text
-								x="6579.758"
-								y="1088"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="6587.816"
+								y="1088">#</text>
 							<text
-								x="6637.343"
-								y="898.9254"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~12</text>
+								class="ornament"
+								x="6645.401"
+								y="898.9644">~12</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="6838.365">
+						class="chord"
+						score:alignment="6849.34">
 						<score:midi>
 							<moments>
 								<moment
@@ -3736,32 +3512,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="6854.777"
-								y1="919.9707"
-								x2="6854.777"
-								y2="1084.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="6865.752"
+								y1="920.0298"
+								x2="6865.752"
+								y2="1084.304" />
 							<text
-								x="6819.952"
-								y="1088"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="6830.927"
+								y="1088">œ</text>
 							<text
-								x="6780.78"
-								y="1088"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="6791.755"
+								y="1088">#</text>
 							<text
-								x="6838.365"
-								y="900.7707"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~2</text>
+								class="ornament"
+								x="6849.34"
+								y="900.8298">~2</text>
 						</g>
 					</g>
 					<g
-						class="outputRest"
-						score:alignment="7023.738">
+						class="rest"
+						score:alignment="7037.405">
 						<score:midi>
 							<moments>
 								<moment
@@ -3773,152 +3545,145 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								</moment>
 							</moments>
 						</score:midi>
-						<text
-							x="7004.258"
-							y="1056"
-							font-size="125.44"
-							font-family="CLicht">Œ</text>
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="7017.925"
+								y="1056">Œ</text>
+						</g>
 					</g>
-					<line
-						class="endBarlineLeft"
-						x1="7655.998"
-						y1="990"
-						x2="7655.998"
-						y2="1122"
-						style="stroke:black; stroke-width:8px" />
-					<line
-						class="endBarlineRight"
-						x1="7679.998"
-						y1="990"
-						x2="7679.998"
-						y2="1122"
-						style="stroke:black; stroke-width:16px" />
+					<g
+						class="endBarline">
+						<line
+							class="barline"
+							x1="7648.002"
+							y1="990"
+							x2="7648.002"
+							y2="1122" />
+						<line
+							class="thickBarline"
+							x1="7672.002"
+							y1="990"
+							x2="7672.002"
+							y2="1122" />
+					</g>
 				</g>
 			</g>
 			<g
-				class="outputStaff"
+				class="staff"
 				score:staffName="pal. 6">
 				<g
 					class="stafflines">
 					<line
+						class="staffline"
 						x1="400"
 						y1="1280"
 						x2="7680"
-						y2="1280"
-						style="stroke:black; stroke-width:4px" />
+						y2="1280" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="1312"
 						x2="7680"
-						y2="1312"
-						style="stroke:black; stroke-width:4px" />
+						y2="1312" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="1344"
 						x2="7680"
-						y2="1344"
-						style="stroke:black; stroke-width:4px" />
+						y2="1344" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="1376"
 						x2="7680"
-						y2="1376"
-						style="stroke:black; stroke-width:4px" />
+						y2="1376" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="1408"
 						x2="7680"
-						y2="1408"
-						style="stroke:black; stroke-width:4px" />
+						y2="1408" />
 				</g>
 				<g
-					class="outputVoice">
+					class="voice">
+					<text
+						class="staffName"
+						x="232"
+						y="1369.6">pal. 6</text>
 					<use
 						class="clef"
-						xlink:href="#trebleClef"
-						x="0"
-						y="0"
-						transform="translate(400,1376) scale(125.44)" />
+						href="#trebleClef"
+						x="400"
+						y="1376" />
 					<line
 						class="barline"
 						x1="503.2"
 						y1="1280"
 						x2="503.2"
-						y2="1408"
-						style="stroke:black; stroke-width:8px" />
-					<text
-						class="staffName"
-						x="232"
-						y="1369.6"
-						text-anchor="middle"
-						font-size="70.4"
-						font-family="Arial">pal. 6</text>
+						y2="1408" />
 					<g
-						class="outputRest"
-						score:alignment="575.9849">
+						class="rest"
+						score:alignment="563.9849">
 						<score:midi>
 							<moments>
 								<moment
 									msDuration="5904" />
 							</moments>
 						</score:midi>
-						<text
-							x="557.7056"
-							y="1344"
-							font-size="125.44"
-							font-family="CLicht">∑</text>
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="545.7056"
+								y="1344">∑</text>
+						</g>
 					</g>
 					<line
 						class="barline"
-						x1="3121.794"
+						x1="3119.042"
 						y1="1280"
-						x2="3121.794"
-						y2="1408"
-						style="stroke:black; stroke-width:8px" />
+						x2="3119.042"
+						y2="1408" />
 					<g
-						class="outputRest"
-						score:alignment="3219.859">
+						class="rest"
+						score:alignment="3205.107">
 						<score:midi>
 							<moments>
 								<moment
 									msDuration="1596" />
 							</moments>
 						</score:midi>
-						<text
-							x="3200.379"
-							y="1344"
-							font-size="125.44"
-							font-family="CLicht">Œ</text>
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="3185.627"
+								y="1344">Œ</text>
+						</g>
 					</g>
 					<g
 						class="beamBlock">
 						<path
-							fill="white"
-							opacity="0.65"
-							d="M 4234.399 1253.12 L 4272.799 1253.12 4272.799 1273.28 4234.399 1273.28 z" />
+							class="opaqueBeam"
+							d="M 4233.373 1253.12 L 4271.773 1253.12 4271.773 1273.28 4233.373 1273.28 z" />
 						<path
-							stroke="black"
-							stroke-width="4px"
-							fill="black"
-							d="M 4234.399 1266.56 L 4272.799 1266.56 4272.799 1280 4234.399 1280 z" />
+							class="beam"
+							d="M 4233.373 1266.56 L 4271.773 1266.56 4271.773 1280 4233.373 1280 z" />
 						<path
-							fill="white"
-							opacity="0.65"
-							d="M 5540.03 1253.12 L 5578.43 1253.12 5578.43 1273.28 5540.03 1273.28 z" />
+							class="opaqueBeam"
+							d="M 5532.479 1253.12 L 5570.879 1253.12 5570.879 1273.28 5532.479 1273.28 z" />
 						<path
-							stroke="black"
-							stroke-width="4px"
-							fill="black"
-							d="M 5540.03 1266.56 L 5578.43 1266.56 5578.43 1280 5540.03 1280 z" />
+							class="beam"
+							d="M 5532.479 1266.56 L 5570.879 1266.56 5570.879 1280 5532.479 1280 z" />
 						<path
-							stroke="black"
-							stroke-width="4px"
-							fill="black"
-							d="M 3928.935 1234.56 L 6229.242 1234.56 6229.242 1248 3928.935 1248 z" />
+							class="beam"
+							d="M 3922.918 1234.56 L 6231.139 1234.56 6231.139 1248 3922.918 1248 z" />
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="3912.522">
+						class="chord"
+						score:alignment="3906.505">
 						<score:midi>
 							<moments>
 								<moment
@@ -4042,26 +3807,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="3928.935"
+								class="stem"
+								x1="3922.918"
 								y1="1234.56"
-								x2="3928.935"
-								y2="1356.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="3922.918"
+								y2="1356.304" />
 							<text
-								x="3894.11"
-								y="1360"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="3888.093"
+								y="1360">œ</text>
 							<text
-								x="3854.938"
-								y="1360"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="3848.92"
+								y="1360">#</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="4073.019">
+						class="chord"
+						score:alignment="4069.332">
 						<score:midi>
 							<moments>
 								<moment
@@ -4160,26 +3923,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="4089.432"
+								class="stem"
+								x1="4085.744"
 								y1="1234.56"
-								x2="4089.432"
-								y2="1356.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="4085.744"
+								y2="1356.304" />
 							<text
-								x="4054.607"
-								y="1360"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="4050.919"
+								y="1360">œ</text>
 							<text
-								x="4015.434"
-								y="1360"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="4011.747"
+								y="1360">#</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="4256.386">
+						class="chord"
+						score:alignment="4255.36">
 						<score:midi>
 							<moments>
 								<moment
@@ -4270,26 +4031,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="4272.799"
+								class="stem"
+								x1="4271.773"
 								y1="1234.56"
-								x2="4272.799"
-								y2="1356.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="4271.773"
+								y2="1356.304" />
 							<text
-								x="4237.974"
-								y="1360"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="4236.948"
+								y="1360">œ</text>
 							<text
-								x="4198.801"
-								y="1360"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="4197.775"
+								y="1360">#</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="4397.221">
+						class="chord"
+						score:alignment="4398.24">
 						<score:midi>
 							<moments>
 								<moment
@@ -4410,26 +4169,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="4413.634"
+								class="stem"
+								x1="4414.653"
 								y1="1234.56"
-								x2="4413.634"
-								y2="1356.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="4414.653"
+								y2="1356.304" />
 							<text
-								x="4378.809"
-								y="1360"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="4379.828"
+								y="1360">œ</text>
 							<text
-								x="4339.636"
-								y="1360"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="4340.655"
+								y="1360">#</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="4635.56">
+						class="chord"
+						score:alignment="4640.037">
 						<score:midi>
 							<moments>
 								<moment
@@ -4530,26 +4287,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="4651.972"
+								class="stem"
+								x1="4656.449"
 								y1="1234.56"
-								x2="4651.972"
-								y2="1356.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="4656.449"
+								y2="1356.304" />
 							<text
-								x="4617.147"
-								y="1360"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="4621.624"
+								y="1360">œ</text>
 							<text
-								x="4577.975"
-								y="1360"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="4582.452"
+								y="1360">#</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="4907.2">
+						class="chord"
+						score:alignment="4915.621">
 						<score:midi>
 							<moments>
 								<moment
@@ -4652,33 +4407,30 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="4923.612"
+								class="stem"
+								x1="4932.034"
 								y1="1234.56"
-								x2="4923.612"
-								y2="1356.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="4932.034"
+								y2="1356.304" />
 							<text
-								x="4888.787"
-								y="1360"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="4897.208"
+								y="1360">œ</text>
 							<text
-								x="4849.615"
-								y="1360"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="4858.036"
+								y="1360">#</text>
 						</g>
 					</g>
 					<line
 						class="barline"
-						x1="5132.246"
+						x1="5131.703"
 						y1="1280"
-						x2="5132.246"
-						y2="1408"
-						style="stroke:black; stroke-width:8px" />
+						x2="5131.703"
+						y2="1408" />
 					<g
-						class="outputChord"
-						score:alignment="5218.153">
+						class="chord"
+						score:alignment="5205.61">
 						<score:midi>
 							<moments>
 								<moment
@@ -4789,26 +4541,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="5234.566"
+								class="stem"
+								x1="5222.023"
 								y1="1234.56"
-								x2="5234.566"
-								y2="1356.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="5222.023"
+								y2="1356.304" />
 							<text
-								x="5199.741"
-								y="1360"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="5187.198"
+								y="1360">œ</text>
 							<text
-								x="5160.568"
-								y="1360"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="5148.025"
+								y="1360">#</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="5378.65">
+						class="chord"
+						score:alignment="5368.438">
 						<score:midi>
 							<moments>
 								<moment
@@ -4907,26 +4657,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="5395.063"
+								class="stem"
+								x1="5384.85"
 								y1="1234.56"
-								x2="5395.063"
-								y2="1356.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="5384.85"
+								y2="1356.304" />
 							<text
-								x="5360.237"
-								y="1360"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="5350.025"
+								y="1360">œ</text>
 							<text
-								x="5321.065"
-								y="1360"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="5310.853"
+								y="1360">#</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="5562.017">
+						class="chord"
+						score:alignment="5554.467">
 						<score:midi>
 							<moments>
 								<moment
@@ -5017,26 +4765,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="5578.43"
+								class="stem"
+								x1="5570.879"
 								y1="1234.56"
-								x2="5578.43"
-								y2="1356.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="5570.879"
+								y2="1356.304" />
 							<text
-								x="5543.604"
-								y="1360"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="5536.054"
+								y="1360">œ</text>
 							<text
-								x="5504.432"
-								y="1360"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="5496.882"
+								y="1360">#</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="5702.852">
+						class="chord"
+						score:alignment="5697.347">
 						<score:midi>
 							<moments>
 								<moment
@@ -5151,26 +4897,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="5719.265"
+								class="stem"
+								x1="5713.759"
 								y1="1234.56"
-								x2="5719.265"
-								y2="1356.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="5713.759"
+								y2="1356.304" />
 							<text
-								x="5684.439"
-								y="1360"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="5678.934"
+								y="1360">œ</text>
 							<text
-								x="5645.267"
-								y="1360"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="5639.762"
+								y="1360">#</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="5941.189">
+						class="chord"
+						score:alignment="5939.144">
 						<score:midi>
 							<moments>
 								<moment
@@ -5265,26 +5009,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="5957.602"
+								class="stem"
+								x1="5955.556"
 								y1="1234.56"
-								x2="5957.602"
-								y2="1356.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="5955.556"
+								y2="1356.304" />
 							<text
-								x="5922.776"
-								y="1360"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="5920.731"
+								y="1360">œ</text>
 							<text
-								x="5883.604"
-								y="1360"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="5881.559"
+								y="1360">#</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="6212.83">
+						class="chord"
+						score:alignment="6214.727">
 						<score:midi>
 							<moments>
 								<moment
@@ -5387,26 +5129,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="6229.242"
+								class="stem"
+								x1="6231.139"
 								y1="1234.56"
-								x2="6229.242"
-								y2="1356.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="6231.139"
+								y2="1356.304" />
 							<text
-								x="6194.417"
-								y="1360"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="6196.314"
+								y="1360">œ</text>
 							<text
-								x="6155.245"
-								y="1360"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="6157.142"
+								y="1360">#</text>
 						</g>
 					</g>
 					<g
-						class="outputRest"
-						score:alignment="6427.637">
+						class="rest"
+						score:alignment="6432.567">
 						<score:midi>
 							<moments>
 								<moment
@@ -5418,152 +5158,145 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								</moment>
 							</moments>
 						</score:midi>
-						<text
-							x="6403.887"
-							y="1344"
-							font-size="125.44"
-							font-family="CLicht">Ó</text>
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="6408.817"
+								y="1344">Ó</text>
+						</g>
 					</g>
-					<line
-						class="endBarlineLeft"
-						x1="7655.998"
-						y1="1278"
-						x2="7655.998"
-						y2="1410"
-						style="stroke:black; stroke-width:8px" />
-					<line
-						class="endBarlineRight"
-						x1="7679.998"
-						y1="1278"
-						x2="7679.998"
-						y2="1410"
-						style="stroke:black; stroke-width:16px" />
+					<g
+						class="endBarline">
+						<line
+							class="barline"
+							x1="7648.002"
+							y1="1278"
+							x2="7648.002"
+							y2="1410" />
+						<line
+							class="thickBarline"
+							x1="7672.002"
+							y1="1278"
+							x2="7672.002"
+							y2="1410" />
+					</g>
 				</g>
 			</g>
 			<g
-				class="outputStaff"
+				class="staff"
 				score:staffName="pal. 5">
 				<g
 					class="stafflines">
 					<line
+						class="staffline"
 						x1="400"
 						y1="1568"
 						x2="7680"
-						y2="1568"
-						style="stroke:black; stroke-width:4px" />
+						y2="1568" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="1600"
 						x2="7680"
-						y2="1600"
-						style="stroke:black; stroke-width:4px" />
+						y2="1600" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="1632"
 						x2="7680"
-						y2="1632"
-						style="stroke:black; stroke-width:4px" />
+						y2="1632" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="1664"
 						x2="7680"
-						y2="1664"
-						style="stroke:black; stroke-width:4px" />
+						y2="1664" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="1696"
 						x2="7680"
-						y2="1696"
-						style="stroke:black; stroke-width:4px" />
+						y2="1696" />
 				</g>
 				<g
-					class="outputVoice">
+					class="voice">
+					<text
+						class="staffName"
+						x="232"
+						y="1657.6">pal. 5</text>
 					<use
 						class="clef"
-						xlink:href="#trebleClef"
-						x="0"
-						y="0"
-						transform="translate(400,1664) scale(125.44)" />
+						href="#trebleClef"
+						x="400"
+						y="1664" />
 					<line
 						class="barline"
 						x1="503.2"
 						y1="1568"
 						x2="503.2"
-						y2="1696"
-						style="stroke:black; stroke-width:8px" />
-					<text
-						class="staffName"
-						x="232"
-						y="1657.6"
-						text-anchor="middle"
-						font-size="70.4"
-						font-family="Arial">pal. 5</text>
+						y2="1696" />
 					<g
-						class="outputRest"
-						score:alignment="575.9849">
+						class="rest"
+						score:alignment="563.9849">
 						<score:midi>
 							<moments>
 								<moment
 									msDuration="5904" />
 							</moments>
 						</score:midi>
-						<text
-							x="557.7056"
-							y="1632"
-							font-size="125.44"
-							font-family="CLicht">∑</text>
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="545.7056"
+								y="1632">∑</text>
+						</g>
 					</g>
 					<line
 						class="barline"
-						x1="3121.794"
+						x1="3119.042"
 						y1="1568"
-						x2="3121.794"
-						y2="1696"
-						style="stroke:black; stroke-width:8px" />
+						x2="3119.042"
+						y2="1696" />
 					<g
-						class="outputRest"
-						score:alignment="3219.859">
+						class="rest"
+						score:alignment="3205.107">
 						<score:midi>
 							<moments>
 								<moment
 									msDuration="96" />
 							</moments>
 						</score:midi>
-						<text
-							x="3201.313"
-							y="1664"
-							font-size="125.44"
-							font-family="CLicht">Ù</text>
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="3186.561"
+								y="1664">Ù</text>
+						</g>
 					</g>
 					<g
 						class="beamBlock">
 						<path
-							fill="white"
-							opacity="0.65"
-							d="M 3632.537 1541.12 L 3670.937 1541.12 3670.937 1561.28 3632.537 1561.28 z" />
+							class="opaqueBeam"
+							d="M 3622.775 1541.12 L 3661.175 1541.12 3661.175 1561.28 3622.775 1561.28 z" />
 						<path
-							stroke="black"
-							stroke-width="4px"
-							fill="black"
-							d="M 3632.537 1554.56 L 3670.937 1554.56 3670.937 1568 3632.537 1568 z" />
+							class="beam"
+							d="M 3622.775 1554.56 L 3661.175 1554.56 3661.175 1568 3622.775 1568 z" />
 						<path
-							fill="white"
-							opacity="0.65"
-							d="M 4836.261 1541.12 L 4874.661 1541.12 4874.661 1561.28 4836.261 1561.28 z" />
+							class="opaqueBeam"
+							d="M 4843.972 1541.12 L 4882.372 1541.12 4882.372 1561.28 4843.972 1561.28 z" />
 						<path
-							stroke="black"
-							stroke-width="4px"
-							fill="black"
-							d="M 4836.261 1554.56 L 4874.661 1554.56 4874.661 1568 4836.261 1568 z" />
+							class="beam"
+							d="M 4843.972 1554.56 L 4882.372 1554.56 4882.372 1568 4843.972 1568 z" />
 						<path
-							stroke="black"
-							stroke-width="4px"
-							fill="black"
-							d="M 3327.072 1522.56 L 5627.381 1522.56 5627.381 1536 3327.072 1536 z" />
+							class="beam"
+							d="M 3312.32 1522.56 L 5620.541 1522.56 5620.541 1536 3312.32 1536 z" />
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="3310.659">
+						class="chord"
+						score:alignment="3295.907">
 						<score:midi>
 							<moments>
 								<moment
@@ -5630,26 +5363,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="3327.072"
+								class="stem"
+								x1="3312.32"
 								y1="1522.56"
-								x2="3327.072"
-								y2="1644.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="3312.32"
+								y2="1644.304" />
 							<text
-								x="3292.247"
-								y="1648"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="3277.495"
+								y="1648">œ</text>
 							<text
-								x="3253.074"
-								y="1648"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="3238.323"
+								y="1648">#</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="3471.156">
+						class="chord"
+						score:alignment="3458.734">
 						<score:midi>
 							<moments>
 								<moment
@@ -5696,26 +5427,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="3487.569"
+								class="stem"
+								x1="3475.146"
 								y1="1522.56"
-								x2="3487.569"
-								y2="1644.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="3475.146"
+								y2="1644.304" />
 							<text
-								x="3452.744"
-								y="1648"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="3440.321"
+								y="1648">œ</text>
 							<text
-								x="3413.571"
-								y="1648"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="3401.149"
+								y="1648">#</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="3654.524">
+						class="chord"
+						score:alignment="3644.763">
 						<score:midi>
 							<moments>
 								<moment
@@ -5754,26 +5483,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="3670.937"
+								class="stem"
+								x1="3661.175"
 								y1="1522.56"
-								x2="3670.937"
-								y2="1644.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="3661.175"
+								y2="1644.304" />
 							<text
-								x="3636.112"
-								y="1648"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="3626.35"
+								y="1648">œ</text>
 							<text
-								x="3596.939"
-								y="1648"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="3587.178"
+								y="1648">#</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="3795.36">
+						class="chord"
+						score:alignment="3787.642">
 						<score:midi>
 							<moments>
 								<moment
@@ -5828,26 +5555,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="3811.773"
+								class="stem"
+								x1="3804.055"
 								y1="1522.56"
-								x2="3811.773"
-								y2="1644.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="3804.055"
+								y2="1644.304" />
 							<text
-								x="3776.948"
-								y="1648"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="3769.23"
+								y="1648">œ</text>
 							<text
-								x="3737.775"
-								y="1648"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="3730.057"
+								y="1648">#</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="4033.697">
+						class="chord"
+						score:alignment="4029.439">
 						<score:midi>
 							<moments>
 								<moment
@@ -5890,26 +5615,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="4050.11"
+								class="stem"
+								x1="4045.852"
 								y1="1522.56"
-								x2="4050.11"
-								y2="1644.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="4045.852"
+								y2="1644.304" />
 							<text
-								x="4015.285"
-								y="1648"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="4011.027"
+								y="1648">œ</text>
 							<text
-								x="3976.112"
-								y="1648"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="3971.854"
+								y="1648">#</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="4305.337">
+						class="chord"
+						score:alignment="4305.022">
 						<score:midi>
 							<moments>
 								<moment
@@ -5948,26 +5671,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="4321.75"
+								class="stem"
+								x1="4321.435"
 								y1="1522.56"
-								x2="4321.75"
-								y2="1644.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="4321.435"
+								y2="1644.304" />
 							<text
-								x="4286.925"
-								y="1648"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="4286.609"
+								y="1648">œ</text>
 							<text
-								x="4247.752"
-								y="1648"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="4247.437"
+								y="1648">#</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="4514.384">
+						class="chord"
+						score:alignment="4517.103">
 						<score:midi>
 							<moments>
 								<moment
@@ -6014,26 +5735,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="4530.797"
+								class="stem"
+								x1="4533.516"
 								y1="1522.56"
-								x2="4530.797"
-								y2="1644.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="4533.516"
+								y2="1644.304" />
 							<text
-								x="4495.972"
-								y="1648"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="4498.69"
+								y="1648">œ</text>
 							<text
-								x="4456.799"
-								y="1648"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="4459.518"
+								y="1648">#</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="4674.881">
+						class="chord"
+						score:alignment="4679.93">
 						<score:midi>
 							<moments>
 								<moment
@@ -6080,26 +5799,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="4691.293"
+								class="stem"
+								x1="4696.342"
 								y1="1522.56"
-								x2="4691.293"
-								y2="1644.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="4696.342"
+								y2="1644.304" />
 							<text
-								x="4656.468"
-								y="1648"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="4661.517"
+								y="1648">œ</text>
 							<text
-								x="4617.296"
-								y="1648"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="4622.345"
+								y="1648">#</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="4858.249">
+						class="chord"
+						score:alignment="4865.959">
 						<score:midi>
 							<moments>
 								<moment
@@ -6138,26 +5855,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="4874.661"
+								class="stem"
+								x1="4882.372"
 								y1="1522.56"
-								x2="4874.661"
-								y2="1644.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="4882.372"
+								y2="1644.304" />
 							<text
-								x="4839.836"
-								y="1648"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="4847.547"
+								y="1648">œ</text>
 							<text
-								x="4800.664"
-								y="1648"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="4808.375"
+								y="1648">#</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="4999.084">
+						class="chord"
+						score:alignment="5008.84">
 						<score:midi>
 							<moments>
 								<moment
@@ -6212,26 +5927,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="5015.497"
+								class="stem"
+								x1="5025.252"
 								y1="1522.56"
-								x2="5015.497"
-								y2="1644.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="5025.252"
+								y2="1644.304" />
 							<text
-								x="4980.672"
-								y="1648"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="4990.427"
+								y="1648">œ</text>
 							<text
-								x="4941.5"
-								y="1648"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="4951.255"
+								y="1648">#</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="5339.329">
+						class="chord"
+						score:alignment="5328.544">
 						<score:midi>
 							<moments>
 								<moment
@@ -6274,26 +5987,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="5355.741"
+								class="stem"
+								x1="5344.957"
 								y1="1522.56"
-								x2="5355.741"
-								y2="1644.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="5344.957"
+								y2="1644.304" />
 							<text
-								x="5320.916"
-								y="1648"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="5310.132"
+								y="1648">œ</text>
 							<text
-								x="5281.744"
-								y="1648"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="5270.959"
+								y="1648">#</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="5610.968">
+						class="chord"
+						score:alignment="5604.128">
 						<score:midi>
 							<moments>
 								<moment
@@ -6332,26 +6043,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="5627.381"
+								class="stem"
+								x1="5620.541"
 								y1="1522.56"
-								x2="5627.381"
-								y2="1644.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="5620.541"
+								y2="1644.304" />
 							<text
-								x="5592.556"
-								y="1648"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="5585.716"
+								y="1648">œ</text>
 							<text
-								x="5553.383"
-								y="1648"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="5546.543"
+								y="1648">#</text>
 						</g>
 					</g>
 					<g
-						class="outputRest"
-						score:alignment="5812.015">
+						class="rest"
+						score:alignment="5808.21">
 						<score:midi>
 							<moments>
 								<moment
@@ -6363,121 +6072,116 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								</moment>
 							</moments>
 						</score:midi>
-						<text
-							x="5793.735"
-							y="1632"
-							font-size="125.44"
-							font-family="CLicht">∑</text>
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="5789.931"
+								y="1632">∑</text>
+						</g>
 					</g>
-					<line
-						class="endBarlineLeft"
-						x1="7655.998"
-						y1="1566"
-						x2="7655.998"
-						y2="1698"
-						style="stroke:black; stroke-width:8px" />
-					<line
-						class="endBarlineRight"
-						x1="7679.998"
-						y1="1566"
-						x2="7679.998"
-						y2="1698"
-						style="stroke:black; stroke-width:16px" />
+					<g
+						class="endBarline">
+						<line
+							class="barline"
+							x1="7648.002"
+							y1="1566"
+							x2="7648.002"
+							y2="1698" />
+						<line
+							class="thickBarline"
+							x1="7672.002"
+							y1="1566"
+							x2="7672.002"
+							y2="1698" />
+					</g>
 				</g>
 			</g>
 			<g
-				class="outputStaff"
+				class="staff"
 				score:staffName="pal. 4">
 				<g
 					class="stafflines">
 					<line
+						class="staffline"
 						x1="400"
 						y1="1856"
 						x2="7680"
-						y2="1856"
-						style="stroke:black; stroke-width:4px" />
+						y2="1856" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="1888"
 						x2="7680"
-						y2="1888"
-						style="stroke:black; stroke-width:4px" />
+						y2="1888" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="1920"
 						x2="7680"
-						y2="1920"
-						style="stroke:black; stroke-width:4px" />
+						y2="1920" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="1952"
 						x2="7680"
-						y2="1952"
-						style="stroke:black; stroke-width:4px" />
+						y2="1952" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="1984"
 						x2="7680"
-						y2="1984"
-						style="stroke:black; stroke-width:4px" />
+						y2="1984" />
 				</g>
 				<g
-					class="outputVoice">
+					class="voice">
+					<text
+						class="staffName"
+						x="232"
+						y="1945.6">pal. 4</text>
 					<use
 						class="clef"
-						xlink:href="#bassClef8"
-						x="0"
-						y="0"
-						transform="translate(400,1888) scale(125.44)" />
+						href="#bassClef8"
+						x="400"
+						y="1888" />
 					<line
 						class="barline"
 						x1="503.2"
 						y1="1856"
 						x2="503.2"
-						y2="1984"
-						style="stroke:black; stroke-width:8px" />
-					<text
-						class="staffName"
-						x="232"
-						y="1945.6"
-						text-anchor="middle"
-						font-size="70.4"
-						font-family="Arial">pal. 4</text>
+						y2="1984" />
 					<g
-						class="outputRest"
-						score:alignment="575.9849">
+						class="rest"
+						score:alignment="563.9849">
 						<score:midi>
 							<moments>
 								<moment
 									msDuration="4500" />
 							</moments>
 						</score:midi>
-						<text
-							x="557.7056"
-							y="1920"
-							font-size="125.44"
-							font-family="CLicht">∑</text>
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="545.7056"
+								y="1920">∑</text>
+						</g>
 					</g>
 					<g
 						class="beamBlock">
 						<path
-							fill="white"
-							opacity="0.65"
-							d="M 2538.591 1924.249 L 2894.893 1927.156 2894.893 1947.316 2538.591 1944.409 z" />
+							class="opaqueBeam"
+							d="M 2540.558 1924.237 L 2902.033 1927.185 2902.033 1947.345 2540.558 1944.397 z" />
 						<path
-							stroke="black"
-							stroke-width="4px"
-							fill="black"
-							d="M 2538.591 1937.689 L 2894.893 1940.596 2894.893 1954.036 2538.591 1951.129 z" />
+							class="beam"
+							d="M 2540.558 1937.677 L 2902.033 1940.625 2902.033 1954.065 2540.558 1951.117 z" />
 						<path
-							stroke="black"
-							stroke-width="4px"
-							fill="black"
-							d="M 2538.591 1905.689 L 4499.901 1921.689 4499.901 1935.129 2538.591 1919.129 z" />
+							class="beam"
+							d="M 2540.558 1905.677 L 4502.172 1921.677 4502.172 1935.117 2540.558 1919.117 z" />
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="2522.179">
+						class="chord"
+						score:alignment="2524.146">
 						<score:midi>
 							<moments>
 								<moment
@@ -6587,33 +6291,33 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="2538.591"
-								y1="1905.689"
-								x2="2538.591"
-								y2="2028.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="2540.558"
+								y1="1905.677"
+								x2="2540.558"
+								y2="2028.304" />
 							<text
-								x="2503.766"
-								y="2032"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
-							<line
-								x1="2489.354"
-								y1="2016"
-								x2="2555.004"
-								y2="2016"
-								style="stroke:black; stroke-width:4px" />
+								class="notehead"
+								x="2505.733"
+								y="2032">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2491.32"
+									y1="2016"
+									x2="2556.971"
+									y2="2016" />
+							</g>
 							<text
-								x="2522.179"
-								y="1836.8"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~6</text>
+								class="ornament"
+								x="2524.146"
+								y="1836.8">~6</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="2628.908">
+						class="chord"
+						score:alignment="2632.425">
 						<score:midi>
 							<moments>
 								<moment
@@ -6707,33 +6411,33 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="2645.321"
+								class="stem"
+								x1="2648.838"
 								y1="1906.56"
-								x2="2645.321"
-								y2="2028.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="2648.838"
+								y2="2028.304" />
 							<text
-								x="2610.496"
-								y="2032"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
-							<line
-								x1="2596.083"
-								y1="2016"
-								x2="2661.734"
-								y2="2016"
-								style="stroke:black; stroke-width:4px" />
+								class="notehead"
+								x="2614.012"
+								y="2032">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2599.6"
+									y1="2016"
+									x2="2665.25"
+									y2="2016" />
+							</g>
 							<text
-								x="2628.908"
-								y="1836.8"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~7</text>
+								class="ornament"
+								x="2632.425"
+								y="1836.8">~7</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="2746.874">
+						class="chord"
+						score:alignment="2752.102">
 						<score:midi>
 							<moments>
 								<moment
@@ -6838,44 +6542,43 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="2763.286"
-								y1="1907.522"
-								x2="2763.286"
-								y2="2044.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="2768.515"
+								y1="1907.536"
+								x2="2768.515"
+								y2="2044.304" />
 							<text
-								x="2728.461"
-								y="2048"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="2733.69"
+								y="2048">œ</text>
 							<text
-								x="2675.894"
-								y="2048"
-								font-size="125.44"
-								font-family="CLicht">#</text>
-							<line
-								x1="2714.048"
-								y1="2016"
-								x2="2779.699"
-								y2="2016"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="2714.048"
-								y1="2048"
-								x2="2779.699"
-								y2="2048"
-								style="stroke:black; stroke-width:4px" />
+								class="accidental"
+								x="2681.122"
+								y="2048">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2719.277"
+									y1="2016"
+									x2="2784.927"
+									y2="2016" />
+								<line
+									class="ledgerline"
+									x1="2719.277"
+									y1="2048"
+									x2="2784.927"
+									y2="2048" />
+							</g>
 							<text
-								x="2746.874"
-								y="1836.8"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~8</text>
+								class="ornament"
+								x="2752.102"
+								y="1836.8">~8</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="2878.48">
+						class="chord"
+						score:alignment="2885.62">
 						<score:midi>
 							<moments>
 								<moment
@@ -6991,44 +6694,43 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="2894.893"
-								y1="1908.596"
-								x2="2894.893"
-								y2="2044.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="2902.033"
+								y1="1908.625"
+								x2="2902.033"
+								y2="2044.304" />
 							<text
-								x="2860.068"
-								y="2048"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="2867.208"
+								y="2048">œ</text>
 							<text
-								x="2807.5"
-								y="2048"
-								font-size="125.44"
-								font-family="CLicht">#</text>
-							<line
-								x1="2845.655"
-								y1="2016"
-								x2="2911.306"
-								y2="2016"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="2845.655"
-								y1="2048"
-								x2="2911.306"
-								y2="2048"
-								style="stroke:black; stroke-width:4px" />
+								class="accidental"
+								x="2814.64"
+								y="2048">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2852.795"
+									y1="2016"
+									x2="2918.445"
+									y2="2016" />
+								<line
+									class="ledgerline"
+									x1="2852.795"
+									y1="2048"
+									x2="2918.445"
+									y2="2048" />
+							</g>
 							<text
-								x="2878.48"
-								y="1836.8"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~9</text>
+								class="ornament"
+								x="2885.62"
+								y="1836.8">~9</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="3023.73">
+						class="chord"
+						score:alignment="3032.978">
 						<score:midi>
 							<moments>
 								<moment
@@ -7155,44 +6857,43 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="3040.143"
-								y1="1909.781"
-								x2="3040.143"
-								y2="2044.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="3049.391"
+								y1="1909.827"
+								x2="3049.391"
+								y2="2044.304" />
 							<text
-								x="3005.317"
-								y="2048"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="3014.565"
+								y="2048">œ</text>
 							<text
-								x="2961.292"
-								y="2048"
-								font-size="125.44"
-								font-family="CLicht">n</text>
-							<line
-								x1="2990.905"
-								y1="2016"
-								x2="3056.555"
-								y2="2016"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="2990.905"
-								y1="2048"
-								x2="3056.555"
-								y2="2048"
-								style="stroke:black; stroke-width:4px" />
+								class="accidental"
+								x="2970.54"
+								y="2048">n</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="3000.153"
+									y1="2016"
+									x2="3065.803"
+									y2="2016" />
+								<line
+									class="ledgerline"
+									x1="3000.153"
+									y1="2048"
+									x2="3065.803"
+									y2="2048" />
+							</g>
 							<text
-								x="3023.73"
-								y="1836.8"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~10</text>
+								class="ornament"
+								x="3032.978"
+								y="1836.8">~10</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="3372.049">
+						class="chord"
+						score:alignment="3358.188">
 						<score:midi>
 							<moments>
 								<moment
@@ -7330,39 +7031,39 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="3388.462"
-								y1="1912.622"
-								x2="3388.462"
-								y2="2044.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="3374.601"
+								y1="1912.48"
+								x2="3374.601"
+								y2="2044.304" />
 							<text
-								x="3353.637"
-								y="2048"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
-							<line
-								x1="3339.224"
-								y1="2016"
-								x2="3404.875"
-								y2="2016"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="3339.224"
-								y1="2048"
-								x2="3404.875"
-								y2="2048"
-								style="stroke:black; stroke-width:4px" />
+								class="notehead"
+								x="3339.776"
+								y="2048">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="3325.363"
+									y1="2016"
+									x2="3391.014"
+									y2="2016" />
+								<line
+									class="ledgerline"
+									x1="3325.363"
+									y1="2048"
+									x2="3391.014"
+									y2="2048" />
+							</g>
 							<text
-								x="3372.049"
-								y="1836.8"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~11</text>
+								class="ornament"
+								x="3358.188"
+								y="1836.8">~11</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="3550.602">
+						class="chord"
+						score:alignment="3539.333">
 						<score:midi>
 							<moments>
 								<moment
@@ -7511,39 +7212,39 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="3567.015"
-								y1="1914.079"
-								x2="3567.015"
-								y2="2060.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="3555.745"
+								y1="1913.957"
+								x2="3555.745"
+								y2="2060.304" />
 							<text
-								x="3532.189"
-								y="2064"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
-							<line
-								x1="3517.777"
-								y1="2016"
-								x2="3583.427"
-								y2="2016"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="3517.777"
-								y1="2048"
-								x2="3583.427"
-								y2="2048"
-								style="stroke:black; stroke-width:4px" />
+								class="notehead"
+								x="3520.92"
+								y="2064">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="3506.507"
+									y1="2016"
+									x2="3572.158"
+									y2="2016" />
+								<line
+									class="ledgerline"
+									x1="3506.507"
+									y1="2048"
+									x2="3572.158"
+									y2="2048" />
+							</g>
 							<text
-								x="3550.602"
-								y="1836.8"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~12</text>
+								class="ornament"
+								x="3539.333"
+								y="1836.8">~12</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="3749.217">
+						class="chord"
+						score:alignment="3740.83">
 						<score:midi>
 							<moments>
 								<moment
@@ -7692,39 +7393,39 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="3765.63"
-								y1="1915.699"
-								x2="3765.63"
-								y2="2060.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="3757.243"
+								y1="1915.601"
+								x2="3757.243"
+								y2="2060.304" />
 							<text
-								x="3730.804"
-								y="2064"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
-							<line
-								x1="3716.392"
-								y1="2016"
-								x2="3782.042"
-								y2="2016"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="3716.392"
-								y1="2048"
-								x2="3782.042"
-								y2="2048"
-								style="stroke:black; stroke-width:4px" />
+								class="notehead"
+								x="3722.417"
+								y="2064">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="3708.005"
+									y1="2016"
+									x2="3773.655"
+									y2="2016" />
+								<line
+									class="ledgerline"
+									x1="3708.005"
+									y1="2048"
+									x2="3773.655"
+									y2="2048" />
+							</g>
 							<text
-								x="3749.217"
-								y="1836.8"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~12</text>
+								class="ornament"
+								x="3740.83"
+								y="1836.8">~12</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="3969.097">
+						class="chord"
+						score:alignment="3963.902">
 						<score:midi>
 							<moments>
 								<moment
@@ -7873,50 +7574,49 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="3985.51"
-								y1="1917.493"
-								x2="3985.51"
-								y2="2076.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="3980.314"
+								y1="1917.42"
+								x2="3980.314"
+								y2="2076.304" />
 							<text
-								x="3950.685"
-								y="2080"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="3945.489"
+								y="2080">œ</text>
 							<text
-								x="3898.117"
-								y="2080"
-								font-size="125.44"
-								font-family="CLicht">#</text>
-							<line
-								x1="3936.272"
-								y1="2016"
-								x2="4001.923"
-								y2="2016"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="3936.272"
-								y1="2048"
-								x2="4001.923"
-								y2="2048"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="3936.272"
-								y1="2080"
-								x2="4001.923"
-								y2="2080"
-								style="stroke:black; stroke-width:4px" />
+								class="accidental"
+								x="3892.922"
+								y="2080">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="3931.076"
+									y1="2016"
+									x2="3996.727"
+									y2="2016" />
+								<line
+									class="ledgerline"
+									x1="3931.076"
+									y1="2048"
+									x2="3996.727"
+									y2="2048" />
+								<line
+									class="ledgerline"
+									x1="3931.076"
+									y1="2080"
+									x2="3996.727"
+									y2="2080" />
+							</g>
 							<text
-								x="3969.097"
-								y="1836.8"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~12</text>
+								class="ornament"
+								x="3963.902"
+								y="1836.8">~12</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="4213.052">
+						class="chord"
+						score:alignment="4211.397">
 						<score:midi>
 							<moments>
 								<moment
@@ -8065,50 +7765,49 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="4229.465"
-								y1="1919.483"
-								x2="4229.465"
-								y2="2076.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="4227.81"
+								y1="1919.439"
+								x2="4227.81"
+								y2="2076.304" />
 							<text
-								x="4194.64"
-								y="2080"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="4192.985"
+								y="2080">œ</text>
 							<text
-								x="4142.072"
-								y="2080"
-								font-size="125.44"
-								font-family="CLicht">#</text>
-							<line
-								x1="4180.227"
-								y1="2016"
-								x2="4245.877"
-								y2="2016"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="4180.227"
-								y1="2048"
-								x2="4245.877"
-								y2="2048"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="4180.227"
-								y1="2080"
-								x2="4245.877"
-								y2="2080"
-								style="stroke:black; stroke-width:4px" />
+								class="accidental"
+								x="4140.417"
+								y="2080">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="4178.572"
+									y1="2016"
+									x2="4244.223"
+									y2="2016" />
+								<line
+									class="ledgerline"
+									x1="4178.572"
+									y1="2048"
+									x2="4244.223"
+									y2="2048" />
+								<line
+									class="ledgerline"
+									x1="4178.572"
+									y1="2080"
+									x2="4244.223"
+									y2="2080" />
+							</g>
 							<text
-								x="4213.052"
-								y="1836.8"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~12</text>
+								class="ornament"
+								x="4211.397"
+								y="1836.8">~12</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="4483.489">
+						class="chord"
+						score:alignment="4485.759">
 						<score:midi>
 							<moments>
 								<moment
@@ -8257,50 +7956,49 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="4499.901"
-								y1="1921.689"
-								x2="4499.901"
-								y2="2076.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="4502.172"
+								y1="1921.677"
+								x2="4502.172"
+								y2="2076.304" />
 							<text
-								x="4465.076"
-								y="2080"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="4467.347"
+								y="2080">œ</text>
 							<text
-								x="4421.05"
-								y="2080"
-								font-size="125.44"
-								font-family="CLicht">n</text>
-							<line
-								x1="4450.664"
-								y1="2016"
-								x2="4516.314"
-								y2="2016"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="4450.664"
-								y1="2048"
-								x2="4516.314"
-								y2="2048"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="4450.664"
-								y1="2080"
-								x2="4516.314"
-								y2="2080"
-								style="stroke:black; stroke-width:4px" />
+								class="accidental"
+								x="4423.321"
+								y="2080">n</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="4452.934"
+									y1="2016"
+									x2="4518.584"
+									y2="2016" />
+								<line
+									class="ledgerline"
+									x1="4452.934"
+									y1="2048"
+									x2="4518.584"
+									y2="2048" />
+								<line
+									class="ledgerline"
+									x1="4452.934"
+									y1="2080"
+									x2="4518.584"
+									y2="2080" />
+							</g>
 							<text
-								x="4483.489"
-								y="1836.8"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~12</text>
+								class="ornament"
+								x="4485.759"
+								y="1836.8">~12</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="4783.618">
+						class="chord"
+						score:alignment="4790.245">
 						<score:midi>
 							<moments>
 								<moment
@@ -8449,52 +8147,51 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="4800.03"
+								class="stem"
+								x1="4806.657"
 								y1="1916.8"
-								x2="4800.03"
-								y2="2076.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="4806.657"
+								y2="2076.304" />
 							<text
-								x="4765.205"
-								y="2080"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
-							<line
-								x1="4750.792"
-								y1="2016"
-								x2="4816.443"
-								y2="2016"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="4750.792"
-								y1="2048"
-								x2="4816.443"
-								y2="2048"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="4750.792"
-								y1="2080"
-								x2="4816.443"
-								y2="2080"
-								style="stroke:black; stroke-width:4px" />
+								class="notehead"
+								x="4771.832"
+								y="2080">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="4757.419"
+									y1="2016"
+									x2="4823.07"
+									y2="2016" />
+								<line
+									class="ledgerline"
+									x1="4757.419"
+									y1="2048"
+									x2="4823.07"
+									y2="2048" />
+								<line
+									class="ledgerline"
+									x1="4757.419"
+									y1="2080"
+									x2="4823.07"
+									y2="2080" />
+							</g>
 							<text
-								x="4783.618"
-								y="1836.8"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~12</text>
+								class="ornament"
+								x="4790.245"
+								y="1836.8">~12</text>
 						</g>
 					</g>
 					<line
 						class="barline"
-						x1="5132.246"
+						x1="5131.703"
 						y1="1856"
-						x2="5132.246"
-						y2="1984"
-						style="stroke:black; stroke-width:8px" />
+						x2="5131.703"
+						y2="1984" />
 					<g
-						class="outputRest"
-						score:alignment="5210.153">
+						class="rest"
+						score:alignment="5197.61">
 						<score:midi>
 							<moments>
 								<moment
@@ -8506,130 +8203,122 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								</moment>
 							</moments>
 						</score:midi>
-						<text
-							x="5191.874"
-							y="1920"
-							font-size="125.44"
-							font-family="CLicht">∑</text>
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="5179.331"
+								y="1920">∑</text>
+						</g>
 					</g>
-					<line
-						class="endBarlineLeft"
-						x1="7655.998"
-						y1="1854"
-						x2="7655.998"
-						y2="1986"
-						style="stroke:black; stroke-width:8px" />
-					<line
-						class="endBarlineRight"
-						x1="7679.998"
-						y1="1854"
-						x2="7679.998"
-						y2="1986"
-						style="stroke:black; stroke-width:16px" />
+					<g
+						class="endBarline">
+						<line
+							class="barline"
+							x1="7648.002"
+							y1="1854"
+							x2="7648.002"
+							y2="1986" />
+						<line
+							class="thickBarline"
+							x1="7672.002"
+							y1="1854"
+							x2="7672.002"
+							y2="1986" />
+					</g>
 				</g>
 			</g>
 			<g
-				class="outputStaff"
+				class="staff"
 				score:staffName="pal. 3">
 				<g
 					class="stafflines">
 					<line
+						class="staffline"
 						x1="400"
 						y1="2240"
 						x2="7680"
-						y2="2240"
-						style="stroke:black; stroke-width:4px" />
+						y2="2240" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="2272"
 						x2="7680"
-						y2="2272"
-						style="stroke:black; stroke-width:4px" />
+						y2="2272" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="2304"
 						x2="7680"
-						y2="2304"
-						style="stroke:black; stroke-width:4px" />
+						y2="2304" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="2336"
 						x2="7680"
-						y2="2336"
-						style="stroke:black; stroke-width:4px" />
+						y2="2336" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="2368"
 						x2="7680"
-						y2="2368"
-						style="stroke:black; stroke-width:4px" />
+						y2="2368" />
 				</g>
 				<g
-					class="outputVoice">
+					class="voice">
+					<text
+						class="staffName"
+						x="232"
+						y="2329.6">pal. 3</text>
 					<use
 						class="clef"
-						xlink:href="#bassClef8"
-						x="0"
-						y="0"
-						transform="translate(400,2272) scale(125.44)" />
+						href="#bassClef8"
+						x="400"
+						y="2272" />
 					<line
 						class="barline"
 						x1="503.2"
 						y1="2240"
 						x2="503.2"
-						y2="2368"
-						style="stroke:black; stroke-width:8px" />
-					<text
-						class="staffName"
-						x="232"
-						y="2329.6"
-						text-anchor="middle"
-						font-size="70.4"
-						font-family="Arial">pal. 3</text>
+						y2="2368" />
 					<g
-						class="outputRest"
-						score:alignment="589.7449">
+						class="rest"
+						score:alignment="577.7449">
 						<score:midi>
 							<moments>
 								<moment
 									msDuration="3000" />
 							</moments>
 						</score:midi>
-						<text
-							x="565.9952"
-							y="2304"
-							font-size="125.44"
-							font-family="CLicht">Ó</text>
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="553.9952"
+								y="2304">Ó</text>
+						</g>
 					</g>
 					<g
 						class="beamBlock">
 						<path
-							fill="white"
-							opacity="0.65"
-							d="M 1868.319 2245.12 L 1906.719 2246.405 1906.719 2266.565 1868.319 2265.28 z" />
+							class="opaqueBeam"
+							d="M 1865.299 2245.12 L 1903.699 2246.413 1903.699 2266.573 1865.299 2265.28 z" />
 						<path
-							stroke="black"
-							stroke-width="4px"
-							fill="black"
-							d="M 1868.319 2258.56 L 1906.719 2259.845 1906.719 2273.285 1868.319 2272 z" />
+							class="beam"
+							d="M 1865.299 2258.56 L 1903.699 2259.853 1903.699 2273.293 1865.299 2272 z" />
 						<path
-							fill="white"
-							opacity="0.65"
-							d="M 1868.319 2213.12 L 2449.115 2232.558 2449.115 2252.718 1868.319 2233.28 z" />
+							class="opaqueBeam"
+							d="M 1865.299 2213.12 L 2449.782 2232.802 2449.782 2252.962 1865.299 2233.28 z" />
 						<path
-							stroke="black"
-							stroke-width="4px"
-							fill="black"
-							d="M 1868.319 2226.56 L 2449.115 2245.998 2449.115 2259.438 1868.319 2240 z" />
+							class="beam"
+							d="M 1865.299 2226.56 L 2449.782 2246.242 2449.782 2259.682 1865.299 2240 z" />
 						<path
-							stroke="black"
-							stroke-width="4px"
-							fill="black"
-							d="M 1868.319 2194.56 L 3461.889 2247.894 3461.889 2261.333 1868.319 2208 z" />
+							class="beam"
+							d="M 1865.299 2194.56 L 3449.094 2247.894 3449.094 2261.333 1865.299 2208 z" />
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="1851.906">
+						class="chord"
+						score:alignment="1848.886">
 						<score:midi>
 							<moments>
 								<moment
@@ -8750,32 +8439,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="1868.319"
+								class="stem"
+								x1="1865.299"
 								y1="2194.56"
-								x2="1868.319"
-								y2="2348.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="1865.299"
+								y2="2348.304" />
 							<text
-								x="1833.494"
-								y="2352"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="1830.474"
+								y="2352">œ</text>
 							<text
-								x="1794.321"
-								y="2352"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="1791.301"
+								y="2352">#</text>
 							<text
-								x="1851.906"
-								y="2175.36"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~7</text>
+								class="ornament"
+								x="1848.886"
+								y="2175.36">~7</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="1960.843">
+						class="chord"
+						score:alignment="1957.823">
 						<score:midi>
 							<moments>
 								<moment
@@ -8869,32 +8554,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="1977.256"
-								y1="2198.206"
-								x2="1977.256"
-								y2="2364.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="1974.235"
+								y1="2198.229"
+								x2="1974.235"
+								y2="2364.304" />
 							<text
-								x="1942.43"
-								y="2368"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="1939.41"
+								y="2368">œ</text>
 							<text
-								x="1903.258"
-								y="2368"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="1900.238"
+								y="2368">#</text>
 							<text
-								x="1960.843"
-								y="2179.006"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~7</text>
+								class="ornament"
+								x="1957.823"
+								y="2179.028">~7</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="2069.78">
+						class="chord"
+						score:alignment="2066.76">
 						<score:midi>
 							<moments>
 								<moment
@@ -8999,32 +8680,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="2086.192"
-								y1="2201.852"
-								x2="2086.192"
-								y2="2380.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="2083.172"
+								y1="2201.897"
+								x2="2083.172"
+								y2="2380.304" />
 							<text
-								x="2051.367"
-								y="2384"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="2048.347"
+								y="2384">œ</text>
 							<text
-								x="2012.195"
-								y="2384"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="2009.175"
+								y="2384">#</text>
 							<text
-								x="2069.78"
-								y="2182.652"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~8</text>
+								class="ornament"
+								x="2066.76"
+								y="2182.697">~8</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="2178.716">
+						class="chord"
+						score:alignment="2175.697">
 						<score:midi>
 							<moments>
 								<moment
@@ -9129,33 +8806,33 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="2195.129"
-								y1="2205.498"
-								x2="2195.129"
-								y2="2396.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="2192.109"
+								y1="2205.565"
+								x2="2192.109"
+								y2="2396.304" />
 							<text
-								x="2160.304"
-								y="2400"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
-							<line
-								x1="2145.891"
-								y1="2400"
-								x2="2211.542"
-								y2="2400"
-								style="stroke:black; stroke-width:4px" />
+								class="notehead"
+								x="2157.284"
+								y="2400">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2142.871"
+									y1="2400"
+									x2="2208.522"
+									y2="2400" />
+							</g>
 							<text
-								x="2178.716"
-								y="2186.298"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~8</text>
+								class="ornament"
+								x="2175.697"
+								y="2186.365">~8</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="2295.879">
+						class="chord"
+						score:alignment="2294.56">
 						<score:midi>
 							<moments>
 								<moment
@@ -9271,33 +8948,33 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="2312.291"
-								y1="2209.419"
-								x2="2312.291"
-								y2="2412.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="2310.972"
+								y1="2209.568"
+								x2="2310.972"
+								y2="2412.304" />
 							<text
-								x="2277.466"
-								y="2416"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
-							<line
-								x1="2263.053"
-								y1="2400"
-								x2="2328.704"
-								y2="2400"
-								style="stroke:black; stroke-width:4px" />
+								class="notehead"
+								x="2276.147"
+								y="2416">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2261.734"
+									y1="2400"
+									x2="2327.385"
+									y2="2400" />
+							</g>
 							<text
-								x="2295.879"
-								y="2190.219"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~9</text>
+								class="ornament"
+								x="2294.56"
+								y="2190.368">~9</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="2432.702">
+						class="chord"
+						score:alignment="2433.37">
 						<score:midi>
 							<moments>
 								<moment
@@ -9413,39 +9090,39 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="2449.115"
-								y1="2213.998"
-								x2="2449.115"
-								y2="2428.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="2449.782"
+								y1="2214.242"
+								x2="2449.782"
+								y2="2428.304" />
 							<text
-								x="2414.289"
-								y="2432"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
-							<line
-								x1="2399.877"
-								y1="2400"
-								x2="2465.527"
-								y2="2400"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="2399.877"
-								y1="2432"
-								x2="2465.527"
-								y2="2432"
-								style="stroke:black; stroke-width:4px" />
+								class="notehead"
+								x="2414.957"
+								y="2432">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2400.544"
+									y1="2400"
+									x2="2466.195"
+									y2="2400" />
+								<line
+									class="ledgerline"
+									x1="2400.544"
+									y1="2432"
+									x2="2466.195"
+									y2="2432" />
+							</g>
 							<text
-								x="2432.702"
-								y="2194.798"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~9</text>
+								class="ornament"
+								x="2433.37"
+								y="2195.042">~9</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="2592.797">
+						class="chord"
+						score:alignment="2595.789">
 						<score:midi>
 							<moments>
 								<moment
@@ -9572,50 +9249,49 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="2609.209"
-								y1="2219.356"
-								x2="2609.209"
-								y2="2460.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="2612.202"
+								y1="2219.711"
+								x2="2612.202"
+								y2="2460.304" />
 							<text
-								x="2574.384"
-								y="2464"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="2577.377"
+								y="2464">œ</text>
 							<text
-								x="2521.817"
-								y="2464"
-								font-size="125.44"
-								font-family="CLicht">#</text>
-							<line
-								x1="2559.972"
-								y1="2400"
-								x2="2625.622"
-								y2="2400"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="2559.972"
-								y1="2432"
-								x2="2625.622"
-								y2="2432"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="2559.972"
-								y1="2464"
-								x2="2625.622"
-								y2="2464"
-								style="stroke:black; stroke-width:4px" />
+								class="accidental"
+								x="2524.809"
+								y="2464">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2562.964"
+									y1="2400"
+									x2="2628.615"
+									y2="2400" />
+								<line
+									class="ledgerline"
+									x1="2562.964"
+									y1="2432"
+									x2="2628.615"
+									y2="2432" />
+								<line
+									class="ledgerline"
+									x1="2562.964"
+									y1="2464"
+									x2="2628.615"
+									y2="2464" />
+							</g>
 							<text
-								x="2592.797"
-								y="2200.156"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~10</text>
+								class="ornament"
+								x="2595.789"
+								y="2200.512">~10</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="2780.979">
+						class="chord"
+						score:alignment="2786.703">
 						<score:midi>
 							<moments>
 								<moment
@@ -9742,50 +9418,49 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="2797.391"
-								y1="2225.654"
-								x2="2797.391"
-								y2="2476.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="2803.116"
+								y1="2226.141"
+								x2="2803.116"
+								y2="2476.304" />
 							<text
-								x="2762.566"
-								y="2480"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="2768.291"
+								y="2480">œ</text>
 							<text
-								x="2709.999"
-								y="2480"
-								font-size="125.44"
-								font-family="CLicht">#</text>
-							<line
-								x1="2748.154"
-								y1="2400"
-								x2="2813.804"
-								y2="2400"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="2748.154"
-								y1="2432"
-								x2="2813.804"
-								y2="2432"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="2748.154"
-								y1="2464"
-								x2="2813.804"
-								y2="2464"
-								style="stroke:black; stroke-width:4px" />
+								class="accidental"
+								x="2715.723"
+								y="2480">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2753.878"
+									y1="2400"
+									x2="2819.528"
+									y2="2400" />
+								<line
+									class="ledgerline"
+									x1="2753.878"
+									y1="2432"
+									x2="2819.528"
+									y2="2432" />
+								<line
+									class="ledgerline"
+									x1="2753.878"
+									y1="2464"
+									x2="2819.528"
+									y2="2464" />
+							</g>
 							<text
-								x="2780.979"
-								y="2206.454"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~10</text>
+								class="ornament"
+								x="2786.703"
+								y="2206.94">~10</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="3001.26">
+						class="chord"
+						score:alignment="3010.182">
 						<score:midi>
 							<moments>
 								<moment
@@ -9923,56 +9598,55 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="3017.673"
-								y1="2233.026"
-								x2="3017.673"
-								y2="2492.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="3026.595"
+								y1="2233.666"
+								x2="3026.595"
+								y2="2492.304" />
 							<text
-								x="2982.848"
-								y="2496"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="2991.77"
+								y="2496">œ</text>
 							<text
-								x="2930.281"
-								y="2496"
-								font-size="125.44"
-								font-family="CLicht">#</text>
-							<line
-								x1="2968.435"
-								y1="2400"
-								x2="3034.086"
-								y2="2400"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="2968.435"
-								y1="2432"
-								x2="3034.086"
-								y2="2432"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="2968.435"
-								y1="2464"
-								x2="3034.086"
-								y2="2464"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="2968.435"
-								y1="2496"
-								x2="3034.086"
-								y2="2496"
-								style="stroke:black; stroke-width:4px" />
+								class="accidental"
+								x="2939.202"
+								y="2496">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2977.357"
+									y1="2400"
+									x2="3043.007"
+									y2="2400" />
+								<line
+									class="ledgerline"
+									x1="2977.357"
+									y1="2432"
+									x2="3043.007"
+									y2="2432" />
+								<line
+									class="ledgerline"
+									x1="2977.357"
+									y1="2464"
+									x2="3043.007"
+									y2="2464" />
+								<line
+									class="ledgerline"
+									x1="2977.357"
+									y1="2496"
+									x2="3043.007"
+									y2="2496" />
+							</g>
 							<text
-								x="3001.26"
-								y="2213.827"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~11</text>
+								class="ornament"
+								x="3010.182"
+								y="2214.466">~11</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="3445.477">
+						class="chord"
+						score:alignment="3432.681">
 						<score:midi>
 							<moments>
 								<moment
@@ -10110,51 +9784,51 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="3461.889"
+								class="stem"
+								x1="3449.094"
 								y1="2247.894"
-								x2="3461.889"
-								y2="2508.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="3449.094"
+								y2="2508.304" />
 							<text
-								x="3427.064"
-								y="2512"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
-							<line
-								x1="3412.652"
-								y1="2400"
-								x2="3478.302"
-								y2="2400"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="3412.652"
-								y1="2432"
-								x2="3478.302"
-								y2="2432"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="3412.652"
-								y1="2464"
-								x2="3478.302"
-								y2="2464"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="3412.652"
-								y1="2496"
-								x2="3478.302"
-								y2="2496"
-								style="stroke:black; stroke-width:4px" />
+								class="notehead"
+								x="3414.269"
+								y="2512">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="3399.856"
+									y1="2400"
+									x2="3465.507"
+									y2="2400" />
+								<line
+									class="ledgerline"
+									x1="3399.856"
+									y1="2432"
+									x2="3465.507"
+									y2="2432" />
+								<line
+									class="ledgerline"
+									x1="3399.856"
+									y1="2464"
+									x2="3465.507"
+									y2="2464" />
+								<line
+									class="ledgerline"
+									x1="3399.856"
+									y1="2496"
+									x2="3465.507"
+									y2="2496" />
+							</g>
 							<text
-								x="3445.477"
-								y="2220.8"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~11</text>
+								class="ornament"
+								x="3432.681"
+								y="2220.8">~11</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="3747.211">
+						class="chord"
+						score:alignment="3738.795">
 						<score:midi>
 							<moments>
 								<moment
@@ -10303,62 +9977,61 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="3763.624"
+								class="stem"
+								x1="3755.208"
 								y1="2300.8"
-								x2="3763.624"
-								y2="2524.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="3755.208"
+								y2="2524.304" />
 							<text
-								x="3728.798"
-								y="2528"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="3720.382"
+								y="2528">œ</text>
 							<text
-								x="3676.231"
-								y="2528"
-								font-size="125.44"
-								font-family="CLicht">#</text>
-							<line
-								x1="3714.386"
-								y1="2400"
-								x2="3780.036"
-								y2="2400"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="3714.386"
-								y1="2432"
-								x2="3780.036"
-								y2="2432"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="3714.386"
-								y1="2464"
-								x2="3780.036"
-								y2="2464"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="3714.386"
-								y1="2496"
-								x2="3780.036"
-								y2="2496"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="3714.386"
-								y1="2528"
-								x2="3780.036"
-								y2="2528"
-								style="stroke:black; stroke-width:4px" />
+								class="accidental"
+								x="3667.815"
+								y="2528">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="3705.97"
+									y1="2400"
+									x2="3771.62"
+									y2="2400" />
+								<line
+									class="ledgerline"
+									x1="3705.97"
+									y1="2432"
+									x2="3771.62"
+									y2="2432" />
+								<line
+									class="ledgerline"
+									x1="3705.97"
+									y1="2464"
+									x2="3771.62"
+									y2="2464" />
+								<line
+									class="ledgerline"
+									x1="3705.97"
+									y1="2496"
+									x2="3771.62"
+									y2="2496" />
+								<line
+									class="ledgerline"
+									x1="3705.97"
+									y1="2528"
+									x2="3771.62"
+									y2="2528" />
+							</g>
 							<text
-								x="3747.211"
-								y="2220.8"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~12</text>
+								class="ornament"
+								x="3738.795"
+								y="2220.8">~12</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="4100.304">
+						class="chord"
+						score:alignment="4097.012">
 						<score:midi>
 							<moments>
 								<moment
@@ -10507,62 +10180,61 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="4116.716"
+								class="stem"
+								x1="4113.425"
 								y1="2300.8"
-								x2="4116.716"
-								y2="2524.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="4113.425"
+								y2="2524.304" />
 							<text
-								x="4081.891"
-								y="2528"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="4078.6"
+								y="2528">œ</text>
 							<text
-								x="4037.865"
-								y="2528"
-								font-size="125.44"
-								font-family="CLicht">n</text>
-							<line
-								x1="4067.479"
-								y1="2400"
-								x2="4133.129"
-								y2="2400"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="4067.479"
-								y1="2432"
-								x2="4133.129"
-								y2="2432"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="4067.479"
-								y1="2464"
-								x2="4133.129"
-								y2="2464"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="4067.479"
-								y1="2496"
-								x2="4133.129"
-								y2="2496"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="4067.479"
-								y1="2528"
-								x2="4133.129"
-								y2="2528"
-								style="stroke:black; stroke-width:4px" />
+								class="accidental"
+								x="4034.574"
+								y="2528">n</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="4064.187"
+									y1="2400"
+									x2="4129.837"
+									y2="2400" />
+								<line
+									class="ledgerline"
+									x1="4064.187"
+									y1="2432"
+									x2="4129.837"
+									y2="2432" />
+								<line
+									class="ledgerline"
+									x1="4064.187"
+									y1="2464"
+									x2="4129.837"
+									y2="2464" />
+								<line
+									class="ledgerline"
+									x1="4064.187"
+									y1="2496"
+									x2="4129.837"
+									y2="2496" />
+								<line
+									class="ledgerline"
+									x1="4064.187"
+									y1="2528"
+									x2="4129.837"
+									y2="2528" />
+							</g>
 							<text
-								x="4100.304"
-								y="2220.8"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~12</text>
+								class="ornament"
+								x="4097.012"
+								y="2220.8">~12</text>
 						</g>
 					</g>
 					<g
-						class="outputRest"
-						score:alignment="4514.384">
+						class="rest"
+						score:alignment="4517.103">
 						<score:midi>
 							<moments>
 								<moment
@@ -10574,143 +10246,139 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								</moment>
 							</moments>
 						</score:midi>
-						<text
-							x="4494.904"
-							y="2304"
-							font-size="125.44"
-							font-family="CLicht">Œ</text>
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="4497.623"
+								y="2304">Œ</text>
+						</g>
 					</g>
 					<line
 						class="barline"
-						x1="5132.246"
+						x1="5131.703"
 						y1="2240"
-						x2="5132.246"
-						y2="2368"
-						style="stroke:black; stroke-width:8px" />
+						x2="5131.703"
+						y2="2368" />
 					<g
-						class="outputRest"
-						score:alignment="5210.153">
+						class="rest"
+						score:alignment="5197.61">
 						<score:midi>
 							<moments>
 								<moment
 									msDuration="6000" />
 							</moments>
 						</score:midi>
-						<text
-							x="5191.874"
-							y="2304"
-							font-size="125.44"
-							font-family="CLicht">∑</text>
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="5179.331"
+								y="2304">∑</text>
+						</g>
 					</g>
-					<line
-						class="endBarlineLeft"
-						x1="7655.998"
-						y1="2238"
-						x2="7655.998"
-						y2="2370"
-						style="stroke:black; stroke-width:8px" />
-					<line
-						class="endBarlineRight"
-						x1="7679.998"
-						y1="2238"
-						x2="7679.998"
-						y2="2370"
-						style="stroke:black; stroke-width:16px" />
+					<g
+						class="endBarline">
+						<line
+							class="barline"
+							x1="7648.002"
+							y1="2238"
+							x2="7648.002"
+							y2="2370" />
+						<line
+							class="thickBarline"
+							x1="7672.002"
+							y1="2238"
+							x2="7672.002"
+							y2="2370" />
+					</g>
 				</g>
 			</g>
 			<g
-				class="outputStaff"
+				class="staff"
 				score:staffName="pal. 2">
 				<g
 					class="stafflines">
 					<line
+						class="staffline"
 						x1="400"
 						y1="2656"
 						x2="7680"
-						y2="2656"
-						style="stroke:black; stroke-width:4px" />
+						y2="2656" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="2688"
 						x2="7680"
-						y2="2688"
-						style="stroke:black; stroke-width:4px" />
+						y2="2688" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="2720"
 						x2="7680"
-						y2="2720"
-						style="stroke:black; stroke-width:4px" />
+						y2="2720" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="2752"
 						x2="7680"
-						y2="2752"
-						style="stroke:black; stroke-width:4px" />
+						y2="2752" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="2784"
 						x2="7680"
-						y2="2784"
-						style="stroke:black; stroke-width:4px" />
+						y2="2784" />
 				</g>
 				<g
-					class="outputVoice">
+					class="voice">
+					<text
+						class="staffName"
+						x="232"
+						y="2745.6">pal. 2</text>
 					<use
 						class="clef"
-						xlink:href="#bassClef8"
-						x="0"
-						y="0"
-						transform="translate(400,2688) scale(125.44)" />
+						href="#bassClef8"
+						x="400"
+						y="2688" />
 					<line
 						class="barline"
 						x1="503.2"
 						y1="2656"
 						x2="503.2"
-						y2="2784"
-						style="stroke:black; stroke-width:8px" />
-					<text
-						class="staffName"
-						x="232"
-						y="2745.6"
-						text-anchor="middle"
-						font-size="70.4"
-						font-family="Arial">pal. 2</text>
+						y2="2784" />
 					<g
-						class="outputRest"
-						score:alignment="583.9849">
+						class="rest"
+						score:alignment="571.9849">
 						<score:midi>
 							<moments>
 								<moment
 									msDuration="1500" />
 							</moments>
 						</score:midi>
-						<text
-							x="564.5048"
-							y="2720"
-							font-size="125.44"
-							font-family="CLicht">Œ</text>
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="552.5048"
+								y="2720">Œ</text>
+						</g>
 					</g>
 					<g
 						class="beamBlock">
 						<path
-							fill="white"
-							opacity="0.65"
-							d="M 1261.843 2644.237 L 1760.385 2648.277 1760.385 2668.437 1261.843 2664.397 z" />
+							class="opaqueBeam"
+							d="M 1254.701 2644.259 L 1755.798 2648.335 1755.798 2668.495 1254.701 2664.419 z" />
 						<path
-							stroke="black"
-							stroke-width="4px"
-							fill="black"
-							d="M 1261.843 2657.677 L 1760.385 2661.717 1760.385 2675.157 1261.843 2671.117 z" />
+							class="beam"
+							d="M 1254.701 2657.699 L 1755.798 2661.775 1755.798 2675.215 1254.701 2671.139 z" />
 						<path
-							stroke="black"
-							stroke-width="4px"
-							fill="black"
-							d="M 1261.843 2625.677 L 3236.271 2641.677 3236.271 2655.117 1261.843 2639.117 z" />
+							class="beam"
+							d="M 1254.701 2625.699 L 3221.52 2641.699 3221.52 2655.139 1254.701 2639.139 z" />
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="1245.431">
+						class="chord"
+						score:alignment="1238.288">
 						<score:midi>
 							<moments>
 								<moment
@@ -10837,27 +10505,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="1261.843"
-								y1="2625.677"
-								x2="1261.843"
-								y2="2748.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="1254.701"
+								y1="2625.699"
+								x2="1254.701"
+								y2="2748.304" />
 							<text
-								x="1227.018"
-								y="2752"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="1219.875"
+								y="2752">œ</text>
 							<text
-								x="1245.431"
-								y="2606.477"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~7</text>
+								class="ornament"
+								x="1238.288"
+								y="2606.499">~7</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="1354.367">
+						class="chord"
+						score:alignment="1344.125">
 						<score:midi>
 							<moments>
 								<moment
@@ -10964,27 +10629,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="1370.78"
+								class="stem"
+								x1="1360.538"
 								y1="2626.56"
-								x2="1370.78"
-								y2="2748.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="1360.538"
+								y2="2748.304" />
 							<text
-								x="1335.955"
-								y="2752"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="1325.713"
+								y="2752">œ</text>
 							<text
-								x="1354.367"
-								y="2607.36"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~7</text>
+								class="ornament"
+								x="1344.125"
+								y="2607.36">~7</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="1470.727">
+						class="chord"
+						score:alignment="1462.174">
 						<score:midi>
 							<moments>
 								<moment
@@ -11102,32 +10764,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="1487.14"
-								y1="2627.503"
-								x2="1487.14"
-								y2="2764.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="1478.587"
+								y1="2627.521"
+								x2="1478.587"
+								y2="2764.304" />
 							<text
-								x="1452.315"
-								y="2768"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="1443.762"
+								y="2768">œ</text>
 							<text
-								x="1413.142"
-								y="2768"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="1404.589"
+								y="2768">#</text>
 							<text
-								x="1470.727"
-								y="2608.303"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~8</text>
+								class="ornament"
+								x="1462.174"
+								y="2608.32">~8</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="1600.328">
+						class="chord"
+						score:alignment="1593.656">
 						<score:midi>
 							<moments>
 								<moment
@@ -11245,32 +10903,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="1616.741"
-								y1="2628.553"
-								x2="1616.741"
-								y2="2764.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="1610.069"
+								y1="2628.59"
+								x2="1610.069"
+								y2="2764.304" />
 							<text
-								x="1581.916"
-								y="2768"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="1575.244"
+								y="2768">œ</text>
 							<text
-								x="1542.743"
-								y="2768"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="1536.071"
+								y="2768">#</text>
 							<text
-								x="1600.328"
-								y="2609.353"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~8</text>
+								class="ornament"
+								x="1593.656"
+								y="2609.39">~8</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="1743.972">
+						class="chord"
+						score:alignment="1739.385">
 						<score:midi>
 							<moments>
 								<moment
@@ -11399,32 +11053,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="1760.385"
-								y1="2629.717"
-								x2="1760.385"
-								y2="2764.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="1755.798"
+								y1="2629.775"
+								x2="1755.798"
+								y2="2764.304" />
 							<text
-								x="1725.56"
-								y="2768"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="1720.973"
+								y="2768">œ</text>
 							<text
-								x="1694.929"
-								y="2768"
-								font-size="125.44"
-								font-family="CLicht">n</text>
+								class="accidental"
+								x="1690.342"
+								y="2768">n</text>
 							<text
-								x="1743.972"
-								y="2610.517"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~9</text>
+								class="ornament"
+								x="1739.385"
+								y="2610.576">~9</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="1930.148">
+						class="chord"
+						score:alignment="1927.128">
 						<score:midi>
 							<moments>
 								<moment
@@ -11553,27 +11203,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="1946.561"
-								y1="2631.226"
-								x2="1946.561"
-								y2="2764.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="1943.54"
+								y1="2631.303"
+								x2="1943.54"
+								y2="2764.304" />
 							<text
-								x="1911.735"
-								y="2768"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="1908.715"
+								y="2768">œ</text>
 							<text
-								x="1930.148"
-								y="2612.026"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~9</text>
+								class="ornament"
+								x="1927.128"
+								y="2612.103">~9</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="2148.214">
+						class="chord"
+						score:alignment="2145.194">
 						<score:midi>
 							<moments>
 								<moment
@@ -11713,32 +11360,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="2164.626"
-								y1="2632.993"
-								x2="2164.626"
-								y2="2780.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="2161.607"
+								y1="2633.077"
+								x2="2161.607"
+								y2="2780.304" />
 							<text
-								x="2129.802"
-								y="2784"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="2126.782"
+								y="2784">œ</text>
 							<text
-								x="2090.629"
-								y="2784"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="2087.609"
+								y="2784">#</text>
 							<text
-								x="2148.214"
-								y="2613.793"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~10</text>
+								class="ornament"
+								x="2145.194"
+								y="2613.877">~10</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="2348.441">
+						class="chord"
+						score:alignment="2347.885">
 						<score:midi>
 							<moments>
 								<moment
@@ -11878,32 +11521,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="2364.854"
-								y1="2634.616"
-								x2="2364.854"
-								y2="2780.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="2364.298"
+								y1="2634.726"
+								x2="2364.298"
+								y2="2780.304" />
 							<text
-								x="2330.029"
-								y="2784"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="2329.473"
+								y="2784">œ</text>
 							<text
-								x="2290.856"
-								y="2784"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="2290.301"
+								y="2784">#</text>
 							<text
-								x="2348.441"
-								y="2615.416"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~10</text>
+								class="ornament"
+								x="2347.885"
+								y="2615.526">~10</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="2568.722">
+						class="chord"
+						score:alignment="2571.365">
 						<score:midi>
 							<moments>
 								<moment
@@ -12054,32 +11693,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="2585.135"
-								y1="2636.401"
-								x2="2585.135"
-								y2="2780.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="2587.778"
+								y1="2636.543"
+								x2="2587.778"
+								y2="2780.304" />
 							<text
-								x="2550.31"
-								y="2784"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="2552.953"
+								y="2784">œ</text>
 							<text
-								x="2519.679"
-								y="2784"
-								font-size="125.44"
-								font-family="CLicht">n</text>
+								class="accidental"
+								x="2522.322"
+								y="2784">n</text>
 							<text
-								x="2568.722"
-								y="2617.201"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~11</text>
+								class="ornament"
+								x="2571.365"
+								y="2617.344">~11</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="2813.479">
+						class="chord"
+						score:alignment="2819.675">
 						<score:midi>
 							<moments>
 								<moment
@@ -12230,34 +11865,30 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="2829.892"
-								y1="2638.384"
-								x2="2829.892"
-								y2="2780.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="2836.088"
+								y1="2638.563"
+								x2="2836.088"
+								y2="2780.304" />
 							<text
-								x="2795.067"
-								y="2784"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="2801.263"
+								y="2784">œ</text>
 							<text
-								x="2813.479"
-								y="2619.184"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~11</text>
+								class="ornament"
+								x="2819.675"
+								y="2619.364">~11</text>
 						</g>
 					</g>
 					<line
 						class="barline"
-						x1="3121.794"
+						x1="3119.042"
 						y1="2656"
-						x2="3121.794"
-						y2="2784"
-						style="stroke:black; stroke-width:8px" />
+						x2="3119.042"
+						y2="2784" />
 					<g
-						class="outputChord"
-						score:alignment="3219.859">
+						class="chord"
+						score:alignment="3205.107">
 						<score:midi>
 							<moments>
 								<moment
@@ -12419,32 +12050,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="3236.271"
-								y1="2641.677"
-								x2="3236.271"
-								y2="2796.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="3221.52"
+								y1="2641.699"
+								x2="3221.52"
+								y2="2796.304" />
 							<text
-								x="3201.446"
-								y="2800"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="3186.694"
+								y="2800">œ</text>
 							<text
-								x="3162.274"
-								y="2800"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="3147.522"
+								y="2800">#</text>
 							<text
-								x="3219.859"
-								y="2622.477"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~12</text>
+								class="ornament"
+								x="3205.107"
+								y="2622.499">~12</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="3575.479">
+						class="chord"
+						score:alignment="3564.571">
 						<score:midi>
 							<moments>
 								<moment
@@ -12606,32 +12233,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="3591.892"
+								class="stem"
+								x1="3580.983"
 								y1="2684.8"
-								x2="3591.892"
-								y2="2796.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="3580.983"
+								y2="2796.304" />
 							<text
-								x="3557.067"
-								y="2800"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="3546.158"
+								y="2800">œ</text>
 							<text
-								x="3517.894"
-								y="2800"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="3506.986"
+								y="2800">#</text>
 							<text
-								x="3575.479"
-								y="2636.8"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~12</text>
+								class="ornament"
+								x="3564.571"
+								y="2636.8">~12</text>
 						</g>
 					</g>
 					<g
-						class="outputRest"
-						score:alignment="3918.282">
+						class="rest"
+						score:alignment="3912.265">
 						<score:midi>
 							<moments>
 								<moment
@@ -12643,137 +12266,128 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								</moment>
 							</moments>
 						</score:midi>
-						<text
-							x="3894.533"
-							y="2720"
-							font-size="125.44"
-							font-family="CLicht">Ó</text>
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="3888.516"
+								y="2720">Ó</text>
+						</g>
 					</g>
 					<line
 						class="barline"
-						x1="5132.246"
+						x1="5131.703"
 						y1="2656"
-						x2="5132.246"
-						y2="2784"
-						style="stroke:black; stroke-width:8px" />
+						x2="5131.703"
+						y2="2784" />
 					<g
-						class="outputRest"
-						score:alignment="5210.153">
+						class="rest"
+						score:alignment="5197.61">
 						<score:midi>
 							<moments>
 								<moment
 									msDuration="6000" />
 							</moments>
 						</score:midi>
-						<text
-							x="5191.874"
-							y="2720"
-							font-size="125.44"
-							font-family="CLicht">∑</text>
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="5179.331"
+								y="2720">∑</text>
+						</g>
 					</g>
-					<line
-						class="endBarlineLeft"
-						x1="7655.998"
-						y1="2654"
-						x2="7655.998"
-						y2="2786"
-						style="stroke:black; stroke-width:8px" />
-					<line
-						class="endBarlineRight"
-						x1="7679.998"
-						y1="2654"
-						x2="7679.998"
-						y2="2786"
-						style="stroke:black; stroke-width:16px" />
+					<g
+						class="endBarline">
+						<line
+							class="barline"
+							x1="7648.002"
+							y1="2654"
+							x2="7648.002"
+							y2="2786" />
+						<line
+							class="thickBarline"
+							x1="7672.002"
+							y1="2654"
+							x2="7672.002"
+							y2="2786" />
+					</g>
 				</g>
 			</g>
 			<g
-				class="outputStaff"
+				class="staff"
 				score:staffName="pal. 1">
 				<g
 					class="stafflines">
 					<line
+						class="staffline"
 						x1="400"
 						y1="3072"
 						x2="7680"
-						y2="3072"
-						style="stroke:black; stroke-width:4px" />
+						y2="3072" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="3104"
 						x2="7680"
-						y2="3104"
-						style="stroke:black; stroke-width:4px" />
+						y2="3104" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="3136"
 						x2="7680"
-						y2="3136"
-						style="stroke:black; stroke-width:4px" />
+						y2="3136" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="3168"
 						x2="7680"
-						y2="3168"
-						style="stroke:black; stroke-width:4px" />
+						y2="3168" />
 					<line
+						class="staffline"
 						x1="400"
 						y1="3200"
 						x2="7680"
-						y2="3200"
-						style="stroke:black; stroke-width:4px" />
+						y2="3200" />
 				</g>
 				<g
-					class="outputVoice">
+					class="voice">
+					<text
+						class="staffName"
+						x="232"
+						y="3161.6">pal. 1</text>
 					<use
 						class="clef"
-						xlink:href="#bassClef8"
-						x="0"
-						y="0"
-						transform="translate(400,3104) scale(125.44)" />
+						href="#bassClef8"
+						x="400"
+						y="3104" />
 					<line
 						class="barline"
 						x1="503.2"
 						y1="3072"
 						x2="503.2"
-						y2="3200"
-						style="stroke:black; stroke-width:8px" />
-					<text
-						class="staffName"
-						x="232"
-						y="3161.6"
-						text-anchor="middle"
-						font-size="70.4"
-						font-family="Arial">pal. 1</text>
+						y2="3200" />
 					<g
 						class="beamBlock">
 						<path
-							fill="white"
-							opacity="0.65"
-							d="M 600.3975 2965.12 L 638.7975 2966.506 638.7975 2986.666 600.3975 2985.28 z" />
+							class="opaqueBeam"
+							d="M 588.398 2965.12 L 626.798 2966.497 626.798 2986.657 588.398 2985.28 z" />
 						<path
-							stroke="black"
-							stroke-width="4px"
-							fill="black"
-							d="M 600.3975 2978.56 L 638.7975 2979.946 638.7975 2993.385 600.3975 2992 z" />
+							class="beam"
+							d="M 588.398 2978.56 L 626.798 2979.937 626.798 2993.377 588.398 2992 z" />
 						<path
-							fill="white"
-							opacity="0.65"
-							d="M 600.3975 2933.12 L 1047.179 2949.241 1047.179 2969.401 600.3975 2953.28 z" />
+							class="opaqueBeam"
+							d="M 588.398 2933.12 L 1036.921 2949.206 1036.921 2969.366 588.398 2953.28 z" />
 						<path
-							stroke="black"
-							stroke-width="4px"
-							fill="black"
-							d="M 600.3975 2946.56 L 1047.179 2962.681 1047.179 2976.121 600.3975 2960 z" />
+							class="beam"
+							d="M 588.398 2946.56 L 1036.921 2962.646 1036.921 2976.086 588.398 2960 z" />
 						<path
-							stroke="black"
-							stroke-width="4px"
-							fill="black"
-							d="M 600.3975 2914.56 L 2078.521 2967.894 2078.521 2981.333 600.3975 2928 z" />
+							class="beam"
+							d="M 588.398 2914.56 L 2075.501 2967.894 2075.501 2981.333 588.398 2928 z" />
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="583.9849">
+						class="chord"
+						score:alignment="571.9849">
 						<score:midi>
 							<moments>
 								<moment
@@ -12894,32 +12508,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="600.3975"
+								class="stem"
+								x1="588.3975"
 								y1="2914.56"
-								x2="600.3975"
-								y2="3084.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="588.3975"
+								y2="3084.304" />
 							<text
-								x="565.5722"
-								y="3088"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="553.5722"
+								y="3088">œ</text>
 							<text
-								x="526.4"
-								y="3088"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="514.4"
+								y="3088">#</text>
 							<text
-								x="583.9849"
-								y="2895.36"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~7</text>
+								class="ornament"
+								x="571.9849"
+								y="2895.36">~7</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="692.9218">
+						class="chord"
+						score:alignment="680.9218">
 						<score:midi>
 							<moments>
 								<moment
@@ -13013,32 +12623,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="709.3344"
-								y1="2918.491"
-								x2="709.3344"
-								y2="3100.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="697.3344"
+								y1="2918.467"
+								x2="697.3344"
+								y2="3100.304" />
 							<text
-								x="674.5091"
-								y="3104"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="662.5091"
+								y="3104">œ</text>
 							<text
-								x="635.3369"
-								y="3104"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="623.3369"
+								y="3104">#</text>
 							<text
-								x="692.9218"
-								y="2899.291"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~7</text>
+								class="ornament"
+								x="680.9218"
+								y="2899.267">~7</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="801.8586">
+						class="chord"
+						score:alignment="789.8586">
 						<score:midi>
 							<moments>
 								<moment
@@ -13143,27 +12749,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="818.2713"
-								y1="2922.421"
-								x2="818.2713"
-								y2="3116.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="806.2713"
+								y1="2922.374"
+								x2="806.2713"
+								y2="3116.304" />
 							<text
-								x="783.446"
-								y="3120"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="771.446"
+								y="3120">œ</text>
 							<text
-								x="801.8586"
-								y="2903.221"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~8</text>
+								class="ornament"
+								x="789.8586"
+								y="2903.174">~8</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="910.7955">
+						class="chord"
+						score:alignment="898.7955">
 						<score:midi>
 							<moments>
 								<moment
@@ -13268,27 +12871,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="927.2082"
-								y1="2926.352"
-								x2="927.2082"
-								y2="3132.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="915.2082"
+								y1="2926.281"
+								x2="915.2082"
+								y2="3132.304" />
 							<text
-								x="892.3829"
-								y="3136"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="880.3829"
+								y="3136">œ</text>
 							<text
-								x="910.7955"
-								y="2907.152"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~8</text>
+								class="ornament"
+								x="898.7955"
+								y="2907.081">~8</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="1030.767">
+						class="chord"
+						score:alignment="1020.508">
 						<score:midi>
 							<moments>
 								<moment
@@ -13404,27 +13004,24 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="1047.179"
-								y1="2930.681"
-								x2="1047.179"
-								y2="3148.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="1036.921"
+								y1="2930.646"
+								x2="1036.921"
+								y2="3148.304" />
 							<text
-								x="1012.354"
-								y="3152"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="1002.095"
+								y="3152">œ</text>
 							<text
-								x="1030.767"
-								y="2911.481"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~9</text>
+								class="ornament"
+								x="1020.508"
+								y="2911.446">~9</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="1170.399">
+						class="chord"
+						score:alignment="1162.167">
 						<score:midi>
 							<moments>
 								<moment
@@ -13540,32 +13137,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="1186.811"
-								y1="2935.719"
-								x2="1186.811"
-								y2="3180.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="1178.579"
+								y1="2935.726"
+								x2="1178.579"
+								y2="3180.304" />
 							<text
-								x="1151.986"
-								y="3184"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="1143.754"
+								y="3184">œ</text>
 							<text
-								x="1112.814"
-								y="3184"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="1104.582"
+								y="3184">#</text>
 							<text
-								x="1170.399"
-								y="2916.519"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~9</text>
+								class="ornament"
+								x="1162.167"
+								y="2916.526">~9</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="1336.77">
+						class="chord"
+						score:alignment="1327.028">
 						<score:midi>
 							<moments>
 								<moment
@@ -13692,32 +13285,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="1353.182"
-								y1="2941.722"
-								x2="1353.182"
-								y2="3196.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="1343.441"
+								y1="2941.639"
+								x2="1343.441"
+								y2="3196.304" />
 							<text
-								x="1318.357"
-								y="3200"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="1308.616"
+								y="3200">œ</text>
 							<text
-								x="1279.185"
-								y="3200"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="1269.443"
+								y="3200">#</text>
 							<text
-								x="1336.77"
-								y="2922.522"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~10</text>
+								class="ornament"
+								x="1327.028"
+								y="2922.439">~10</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="1526.901">
+						class="chord"
+						score:alignment="1519.163">
 						<score:midi>
 							<moments>
 								<moment
@@ -13844,32 +13433,28 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="1543.314"
-								y1="2948.582"
-								x2="1543.314"
-								y2="3212.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="1535.576"
+								y1="2948.53"
+								x2="1535.576"
+								y2="3212.304" />
 							<text
-								x="1508.488"
-								y="3216"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="1500.751"
+								y="3216">œ</text>
 							<text
-								x="1469.316"
-								y="3216"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="1461.578"
+								y="3216">#</text>
 							<text
-								x="1526.901"
-								y="2929.382"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~10</text>
+								class="ornament"
+								x="1519.163"
+								y="2929.33">~10</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="1747.182">
+						class="chord"
+						score:alignment="1742.642">
 						<score:midi>
 							<moments>
 								<moment
@@ -14007,33 +13592,33 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="1763.595"
-								y1="2956.53"
-								x2="1763.595"
-								y2="3228.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								class="stem"
+								x1="1759.055"
+								y1="2956.544"
+								x2="1759.055"
+								y2="3228.304" />
 							<text
-								x="1728.77"
-								y="3232"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
-							<line
-								x1="1714.357"
-								y1="3232"
-								x2="1780.008"
-								y2="3232"
-								style="stroke:black; stroke-width:4px" />
+								class="notehead"
+								x="1724.229"
+								y="3232">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="1709.817"
+									y1="3232"
+									x2="1775.467"
+									y2="3232" />
+							</g>
 							<text
-								x="1747.182"
-								y="2937.33"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~11</text>
+								class="ornament"
+								x="1742.642"
+								y="2937.344">~11</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="2062.108">
+						class="chord"
+						score:alignment="2059.088">
 						<score:midi>
 							<moments>
 								<moment
@@ -14171,33 +13756,33 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="2078.521"
+								class="stem"
+								x1="2075.501"
 								y1="2967.894"
-								x2="2078.521"
-								y2="3244.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="2075.501"
+								y2="3244.304" />
 							<text
-								x="2043.696"
-								y="3248"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
-							<line
-								x1="2029.283"
-								y1="3232"
-								x2="2094.933"
-								y2="3232"
-								style="stroke:black; stroke-width:4px" />
+								class="notehead"
+								x="2040.676"
+								y="3248">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2026.263"
+									y1="3232"
+									x2="2091.914"
+									y2="3232" />
+							</g>
 							<text
-								x="2062.108"
-								y="2948.693"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~11</text>
+								class="ornament"
+								x="2059.088"
+								y="2948.693">~11</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="2370.911">
+						class="chord"
+						score:alignment="2370.681">
 						<score:midi>
 							<moments>
 								<moment
@@ -14346,39 +13931,39 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="2387.323"
+								class="stem"
+								x1="2387.094"
 								y1="3132.8"
-								x2="2387.323"
-								y2="3260.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="2387.094"
+								y2="3260.304" />
 							<text
-								x="2352.498"
-								y="3264"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
-							<line
-								x1="2338.085"
-								y1="3232"
-								x2="2403.736"
-								y2="3232"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="2338.085"
-								y1="3264"
-								x2="2403.736"
-								y2="3264"
-								style="stroke:black; stroke-width:4px" />
+								class="notehead"
+								x="2352.269"
+								y="3264">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2337.856"
+									y1="3232"
+									x2="2403.507"
+									y2="3232" />
+								<line
+									class="ledgerline"
+									x1="2337.856"
+									y1="3264"
+									x2="2403.507"
+									y2="3264" />
+							</g>
 							<text
-								x="2370.911"
-								y="3052.8"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~12</text>
+								class="ornament"
+								x="2370.681"
+								y="3052.8">~12</text>
 						</g>
 					</g>
 					<g
-						class="outputChord"
-						score:alignment="2718.787">
+						class="chord"
+						score:alignment="2723.608">
 						<score:midi>
 							<moments>
 								<moment
@@ -14527,56 +14112,55 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 						<g
 							class="graphics">
 							<line
-								x1="2735.199"
+								class="stem"
+								x1="2740.02"
 								y1="3132.8"
-								x2="2735.199"
-								y2="3292.304"
-								style="stroke:black; stroke-width:4px; stroke-linecap:round" />
+								x2="2740.02"
+								y2="3292.304" />
 							<text
-								x="2700.374"
-								y="3296"
-								font-size="125.44"
-								font-family="CLicht">œ</text>
+								class="notehead"
+								x="2705.195"
+								y="3296">œ</text>
 							<text
-								x="2647.807"
-								y="3296"
-								font-size="125.44"
-								font-family="CLicht">#</text>
+								class="accidental"
+								x="2652.628"
+								y="3296">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2690.782"
+									y1="3232"
+									x2="2756.433"
+									y2="3232" />
+								<line
+									class="ledgerline"
+									x1="2690.782"
+									y1="3264"
+									x2="2756.433"
+									y2="3264" />
+								<line
+									class="ledgerline"
+									x1="2690.782"
+									y1="3296"
+									x2="2756.433"
+									y2="3296" />
+							</g>
+							<text
+								class="ornament"
+								x="2723.608"
+								y="3052.8">~12</text>
 							<line
-								x1="2685.961"
-								y1="3232"
-								x2="2751.612"
-								y2="3232"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="2685.961"
-								y1="3264"
-								x2="2751.612"
-								y2="3264"
-								style="stroke:black; stroke-width:4px" />
-							<line
-								x1="2685.961"
+								class="noteExtender"
+								x1="2764.433"
 								y1="3296"
-								x2="2751.612"
-								y2="3296"
-								style="stroke:black; stroke-width:4px" />
-							<text
-								x="2718.787"
-								y="3052.8"
-								text-anchor="middle"
-								font-size="68.992"
-								font-family="Open Sans Condensed">~12</text>
-							<line
-								x1="2759.612"
-								y1="3296"
-								x2="3279.58"
-								y2="3296"
-								style="stroke:black; stroke-width:13.6px; stroke-linecap:butt" />
+								x2="3264.828"
+								y2="3296" />
 						</g>
 					</g>
 					<g
-						class="outputRest"
-						score:alignment="3302.659">
+						class="rest"
+						score:alignment="3287.907">
 						<score:midi>
 							<moments>
 								<moment
@@ -14588,245 +14172,262 @@ Annotations, if there are any, have been made using Inkscape.</dc:title>
 								</moment>
 							</moments>
 						</score:midi>
-						<text
-							x="3284.38"
-							y="3136"
-							font-size="125.44"
-							font-family="CLicht">∑</text>
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="3269.628"
+								y="3136">∑</text>
+						</g>
 					</g>
 					<line
 						class="barline"
-						x1="5132.246"
+						x1="5131.703"
 						y1="3072"
-						x2="5132.246"
-						y2="3200"
-						style="stroke:black; stroke-width:8px" />
+						x2="5131.703"
+						y2="3200" />
 					<g
-						class="outputRest"
-						score:alignment="5210.153">
+						class="rest"
+						score:alignment="5197.61">
 						<score:midi>
 							<moments>
 								<moment
 									msDuration="6000" />
 							</moments>
 						</score:midi>
-						<text
-							x="5191.874"
-							y="3136"
-							font-size="125.44"
-							font-family="CLicht">∑</text>
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="5179.331"
+								y="3136">∑</text>
+						</g>
 					</g>
-					<line
-						class="endBarlineLeft"
-						x1="7655.998"
-						y1="3070"
-						x2="7655.998"
-						y2="3202"
-						style="stroke:black; stroke-width:8px" />
-					<line
-						class="endBarlineRight"
-						x1="7679.998"
-						y1="3070"
-						x2="7679.998"
-						y2="3202"
-						style="stroke:black; stroke-width:16px" />
+					<g
+						class="endBarline">
+						<line
+							class="barline"
+							x1="7648.002"
+							y1="3070"
+							x2="7648.002"
+							y2="3202" />
+						<line
+							class="thickBarline"
+							x1="7672.002"
+							y1="3070"
+							x2="7672.002"
+							y2="3202" />
+					</g>
 				</g>
 			</g>
 			<g
 				class="staffConnectors">
 				<line
+					class="barline"
 					x1="503.2"
 					y1="768"
 					x2="503.2"
-					y2="992"
-					style="stroke:black; stroke-width:8px" />
+					y2="992" />
 				<line
-					x1="3121.794"
+					class="barline"
+					x1="3119.042"
 					y1="768"
-					x2="3121.794"
-					y2="992"
-					style="stroke:black; stroke-width:8px" />
+					x2="3119.042"
+					y2="992" />
 				<line
-					x1="5132.246"
+					class="barline"
+					x1="5131.703"
 					y1="768"
-					x2="5132.246"
-					y2="901.6849"
-					style="stroke:black; stroke-width:8px" />
+					x2="5131.703"
+					y2="901.7441" />
+				<g
+					class="endBarline">
+					<line
+						class="barline"
+						x1="7648.002"
+						y1="766"
+						x2="7648.002"
+						y2="994" />
+					<line
+						class="thickBarline"
+						x1="7672.002"
+						y1="766"
+						x2="7672.002"
+						y2="994" />
+				</g>
 				<line
-					x1="7655.998"
-					y1="768"
-					x2="7655.998"
-					y2="992"
-					style="stroke:black; stroke-width:8px" />
-				<line
-					x1="7679.998"
-					y1="768"
-					x2="7679.998"
-					y2="992"
-					style="stroke:black; stroke-width:16px" />
-				<line
+					class="barline"
 					x1="503.2"
 					y1="1120"
 					x2="503.2"
-					y2="1280"
-					style="stroke:black; stroke-width:8px" />
+					y2="1280" />
 				<line
-					x1="3121.794"
+					class="barline"
+					x1="3119.042"
 					y1="1120"
-					x2="3121.794"
-					y2="1280"
-					style="stroke:black; stroke-width:8px" />
+					x2="3119.042"
+					y2="1280" />
 				<line
-					x1="5132.246"
+					class="barline"
+					x1="5131.703"
 					y1="1120"
-					x2="5132.246"
-					y2="1280"
-					style="stroke:black; stroke-width:8px" />
+					x2="5131.703"
+					y2="1280" />
+				<g
+					class="endBarline">
+					<line
+						class="barline"
+						x1="7648.002"
+						y1="1118"
+						x2="7648.002"
+						y2="1282" />
+					<line
+						class="thickBarline"
+						x1="7672.002"
+						y1="1118"
+						x2="7672.002"
+						y2="1282" />
+				</g>
 				<line
-					x1="7655.998"
-					y1="1120"
-					x2="7655.998"
-					y2="1280"
-					style="stroke:black; stroke-width:8px" />
-				<line
-					x1="7679.998"
-					y1="1120"
-					x2="7679.998"
-					y2="1280"
-					style="stroke:black; stroke-width:16px" />
-				<line
+					class="barline"
 					x1="503.2"
 					y1="1408"
 					x2="503.2"
-					y2="1568"
-					style="stroke:black; stroke-width:8px" />
+					y2="1568" />
 				<line
-					x1="3121.794"
+					class="barline"
+					x1="3119.042"
 					y1="1408"
-					x2="3121.794"
-					y2="1568"
-					style="stroke:black; stroke-width:8px" />
+					x2="3119.042"
+					y2="1568" />
 				<line
-					x1="5132.246"
+					class="barline"
+					x1="5131.703"
 					y1="1408"
-					x2="5132.246"
-					y2="1568"
-					style="stroke:black; stroke-width:8px" />
+					x2="5131.703"
+					y2="1568" />
+				<g
+					class="endBarline">
+					<line
+						class="barline"
+						x1="7648.002"
+						y1="1406"
+						x2="7648.002"
+						y2="1570" />
+					<line
+						class="thickBarline"
+						x1="7672.002"
+						y1="1406"
+						x2="7672.002"
+						y2="1570" />
+				</g>
 				<line
-					x1="7655.998"
-					y1="1408"
-					x2="7655.998"
-					y2="1568"
-					style="stroke:black; stroke-width:8px" />
-				<line
-					x1="7679.998"
-					y1="1408"
-					x2="7679.998"
-					y2="1568"
-					style="stroke:black; stroke-width:16px" />
-				<line
+					class="barline"
 					x1="503.2"
 					y1="1696"
 					x2="503.2"
-					y2="1856"
-					style="stroke:black; stroke-width:8px" />
+					y2="1856" />
 				<line
+					class="barline"
 					x1="503.2"
 					y1="1984"
 					x2="503.2"
-					y2="2240"
-					style="stroke:black; stroke-width:8px" />
+					y2="2240" />
 				<line
-					x1="3121.794"
+					class="barline"
+					x1="3119.042"
 					y1="2064"
-					x2="3121.794"
-					y2="2233.86"
-					style="stroke:black; stroke-width:8px" />
+					x2="3119.042"
+					y2="2236.667" />
 				<line
-					x1="5132.246"
+					class="barline"
+					x1="5131.703"
 					y1="1984"
-					x2="5132.246"
-					y2="2240"
-					style="stroke:black; stroke-width:8px" />
+					x2="5131.703"
+					y2="2240" />
+				<g
+					class="endBarline">
+					<line
+						class="barline"
+						x1="7648.002"
+						y1="1982"
+						x2="7648.002"
+						y2="2242" />
+					<line
+						class="thickBarline"
+						x1="7672.002"
+						y1="1982"
+						x2="7672.002"
+						y2="2242" />
+				</g>
 				<line
-					x1="7655.998"
-					y1="1984"
-					x2="7655.998"
-					y2="2240"
-					style="stroke:black; stroke-width:8px" />
-				<line
-					x1="7679.998"
-					y1="1984"
-					x2="7679.998"
-					y2="2240"
-					style="stroke:black; stroke-width:16px" />
-				<line
+					class="barline"
 					x1="503.2"
 					y1="2368"
 					x2="503.2"
-					y2="2656"
-					style="stroke:black; stroke-width:8px" />
+					y2="2656" />
 				<line
-					x1="3121.794"
+					class="barline"
+					x1="3119.042"
 					y1="2512"
-					x2="3121.794"
-					y2="2638.477"
-					style="stroke:black; stroke-width:8px" />
+					x2="3119.042"
+					y2="2638.499" />
 				<line
-					x1="5132.246"
+					class="barline"
+					x1="5131.703"
 					y1="2368"
-					x2="5132.246"
-					y2="2656"
-					style="stroke:black; stroke-width:8px" />
+					x2="5131.703"
+					y2="2656" />
+				<g
+					class="endBarline">
+					<line
+						class="barline"
+						x1="7648.002"
+						y1="2366"
+						x2="7648.002"
+						y2="2658" />
+					<line
+						class="thickBarline"
+						x1="7672.002"
+						y1="2366"
+						x2="7672.002"
+						y2="2658" />
+				</g>
 				<line
-					x1="7655.998"
-					y1="2368"
-					x2="7655.998"
-					y2="2656"
-					style="stroke:black; stroke-width:8px" />
-				<line
-					x1="7679.998"
-					y1="2368"
-					x2="7679.998"
-					y2="2656"
-					style="stroke:black; stroke-width:16px" />
-				<line
+					class="barline"
 					x1="503.2"
 					y1="2784"
 					x2="503.2"
-					y2="3072"
-					style="stroke:black; stroke-width:8px" />
+					y2="3072" />
 				<line
-					x1="3121.794"
+					class="barline"
+					x1="3119.042"
 					y1="2784"
-					x2="3121.794"
-					y2="3072"
-					style="stroke:black; stroke-width:8px" />
+					x2="3119.042"
+					y2="3072" />
 				<line
-					x1="5132.246"
+					class="barline"
+					x1="5131.703"
 					y1="2784"
-					x2="5132.246"
-					y2="3072"
-					style="stroke:black; stroke-width:8px" />
-				<line
-					x1="7655.998"
-					y1="2784"
-					x2="7655.998"
-					y2="3072"
-					style="stroke:black; stroke-width:8px" />
-				<line
-					x1="7679.998"
-					y1="2784"
-					x2="7679.998"
-					y2="3072"
-					style="stroke:black; stroke-width:16px" />
+					x2="5131.703"
+					y2="3072" />
+				<g
+					class="endBarline">
+					<line
+						class="barline"
+						x1="7648.002"
+						y1="2782"
+						x2="7648.002"
+						y2="3074" />
+					<line
+						class="thickBarline"
+						x1="7672.002"
+						y1="2782"
+						x2="7672.002"
+						y2="3074" />
+				</g>
 			</g>
 		</g>
 	</g>
-	<g
-		inkscape:groupmode="layer"
-		id="layer3"
-		inkscape:label="user annotations"
-		style="display:inline"
-		sodipodi:insensitive="true" />
+	<!-- Annotations that are added here will be ignored by the AssistantPerformer. -->
 </svg>

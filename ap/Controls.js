@@ -55,29 +55,20 @@ _AP.controls = (function(document, window)
 
     scoreHasJustBeenSelected = false,
 
-    // deletes the 'save' button created by createSaveMIDIFileButton() 
-    deleteSaveMIDIFileButton = function()
+    // deletes the 'save' button created by createSaveMIDIFileLink() 
+    deleteSaveLink = function()
     {
-        var
-        downloadLinkDiv = document.getElementById("downloadLinkDiv"), // the Element which will contain the link
-        downloadLink, i;
+        let
+        downloadLinkDiv = document.getElementById("downloadLinkDiv"), 
+        saveLink = document.getElementById("saveLink");
 
-        for(i = 0; i < downloadLinkDiv.childNodes.length; ++i)
-        {
-            if(downloadLinkDiv.childNodes[i].id === "downloadLink")
-            {
-                downloadLink = downloadLinkDiv.childNodes[i];
-                break;
-            }
-        }
-
-        if(downloadLink !== undefined)
+        if(downloadLinkDiv !== null && saveLink !== null)
         {
             // Need a small delay for the revokeObjectURL to work properly.
             window.setTimeout(function()
             {
-                window.URL.revokeObjectURL(downloadLink.href); // window.URL is set in Main.js
-                downloadLinkDiv.removeChild(downloadLink);
+                window.URL.revokeObjectURL(saveLink.href); // window.URL is set in Main.js
+                downloadLinkDiv.removeChild(saveLink);
             }, 1500);
         }
     },
@@ -143,37 +134,30 @@ _AP.controls = (function(document, window)
     // sequenceMsDuration is the total duration of the sequenceRecording in milliseconds (an integer).
     //      and determines the timing of the end-of-track events. When this is a recorded sequenceRecording,
     //      this value is simply the duration between the start and end markers.
-    createSaveMIDIFileButton = function(scoreName, sequenceRecording, sequenceMsDuration)
+    createSaveMIDIFileLink = function(scoreName, sequenceRecording, sequenceMsDuration)
     {
         var
         standardMidiFile,
         downloadName,
-        downloadLinkDiv, downloadLinkFound = false, i, a,
+        downloadLinkDiv, saveLink, i, a,
         nOutputVoices = sequenceRecording.trackRecordings.length;
 
         if(hasData(nOutputVoices, sequenceRecording.trackRecordings))
         {
             downloadLinkDiv = document.getElementById("downloadLinkDiv"); // the Element which will contain the link
 
-            if(downloadLinkDiv !== undefined)
+            if(downloadLinkDiv !== null)
             {
-                for(i = 0; i < downloadLinkDiv.childNodes.length; ++i)
-                {
-                    if(downloadLinkDiv.childNodes[i].id === "downloadLink")
-                    {
-                        downloadLinkFound = true;
-                    }
-                }
+                saveLink = document.getElementById("saveLink");
 
-                if(downloadLinkFound === false)
+                if(saveLink === null) // It doesn't exist, so can be created and added to downloadLinkDiv.
                 {
-
                     downloadName = getMIDIFileName(scoreName);
 
                     standardMidiFile = sequenceToSMF(sequenceRecording, sequenceMsDuration);
 
                     a = document.createElement('a');
-                    a.id = "downloadLink";
+                    a.id = "saveLink";
                     a.download = downloadName;
                     a.href = window.URL.createObjectURL(standardMidiFile); // window.URL is set in Main.js
                     a.innerHTML = '<img id="saveImg" border="0" src="images/saveMouseOut.png" alt="saveMouseOutImage" width="56" height="31">';
@@ -196,7 +180,8 @@ _AP.controls = (function(document, window)
 
                     a.onclick = function() // there is an event argument, but it is ignored
                     {
-                        deleteSaveMIDIFileButton();
+                        // The link's download field has been set, so the file is downloaded here.
+                        deleteSaveLink();
                     };
 
                     downloadLinkDiv.appendChild(a);
@@ -457,7 +442,7 @@ _AP.controls = (function(document, window)
 
         if(setTimestampsRelativeToSequenceRecording(sequenceRecording))
         {
-            createSaveMIDIFileButton(scoreName, sequenceRecording, performanceMsDuration);
+            createSaveMIDIFileLink(scoreName, sequenceRecording, performanceMsDuration);
         }
 
         // The moment.timestamps do not need to be restored to their original values here
@@ -484,7 +469,7 @@ _AP.controls = (function(document, window)
         var startMarkerMsPosition, endMarkerMsPosition, baseSpeed,
         sequenceRecording, trackIsOnArray = [];
 
-        deleteSaveMIDIFileButton();
+        deleteSaveLink();
 
         if(isLivePerformance === false && player.isPaused())
         {
@@ -1518,7 +1503,7 @@ _AP.controls = (function(document, window)
 
         if(controlID === "gotoOptions")
         {
-            deleteSaveMIDIFileButton();
+            deleteSaveLink();
 
             if(midiAccess !== null)
             {

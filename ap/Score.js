@@ -49,6 +49,7 @@ _AP.score = (function (document)
     // The frames around each svgPage
     markersLayers = [],
 
+
     // See comments in the publicAPI definition at the bottom of this file.
     systemElems = [], // an array of all the systemElems
     systems = [], // an array of all the systems
@@ -697,7 +698,7 @@ _AP.score = (function (document)
         {
             var i, j,
                 systemDy, staffDy,
-                staffElems, staffElem, stafflinesElems,
+                staffElems, staffElem, stafflinesElem,
                 outputVoiceElem, outputVoiceElems, inputVoiceElem, inputVoiceElems,                
                 staff, stafflineInfo,
                 voice;
@@ -725,13 +726,12 @@ _AP.score = (function (document)
             function getStafflineInfo(stafflinesElem, dy)
             {
                 var i, rStafflineInfo = {}, stafflineYs = [], left, right, stafflineY,
-                lineElem, svgStafflines = [], staffLinesElemChildren = stafflinesElem.children;
+                lineElem, staffLinesElemChildren = stafflinesElem.children;
 
                 for (i = 0; i < staffLinesElemChildren.length; ++i)
                 {
                     console.assert(staffLinesElemChildren[i].nodeName === "line");
                     lineElem = staffLinesElemChildren[i];
-                    svgStafflines.push(lineElem);
                     stafflineY = parseFloat(lineElem.getAttribute('y1')) + dy;
                     stafflineYs.push((stafflineY / viewBoxScale));
                     left = parseFloat(lineElem.getAttribute('x1'));
@@ -739,10 +739,10 @@ _AP.score = (function (document)
                     right = parseFloat(lineElem.getAttribute('x2'));
                     right /= viewBoxScale;
                 }
+
                 rStafflineInfo.left = left;
                 rStafflineInfo.right = right;
                 rStafflineInfo.stafflineYs = stafflineYs;
-                rStafflineInfo.svgStafflines = svgStafflines;
 
                 return rStafflineInfo;
             }
@@ -762,7 +762,7 @@ _AP.score = (function (document)
 
             function setStaffColours(staff, isLivePerformance)
             {
-                function setTitle(staff, titleColor)
+                function setStaffNameStyle(staff, titleColor)
                 {
                     staff.nameElem.style.fill = titleColor;
 
@@ -773,40 +773,41 @@ _AP.score = (function (document)
                     else
                     {
                         staff.nameElem.style.fontWeight = 'normal';
-                    }
+                    } 
                 }
 
-                function setStafflines(staff, colour)
+                function setStafflinesColor(staff, color)
                 {
-                    var i, nLines = staff.svgStafflines.length;
-                    for(i = 0; i < nLines; ++i) // could be any number of lines
+                    let stafflines = staff.stafflines;
+                    let nStafflines = stafflines.length;
+                    for(let i = 0; i < nStafflines; ++i)
                     {
-                        staff.svgStafflines[i].style.stroke = colour;
+                        stafflines[i].style.stroke = color;
                     }
                 }
 
                 function setGreyDisplay(staff)
                 {
-                    setTitle(staff, GREY_COLOR);
-                    setStafflines(staff, GREY_COLOR);
+                    setStaffNameStyle(staff, GREY_COLOR);                    
+                    setStafflinesColor(staff, GREY_COLOR);
                 }
 
                 function setBlackDisplay(staff)
                 {
-                    setTitle(staff, BLACK_COLOR);
-                    setStafflines(staff, BLACK_COLOR);
+                    setStaffNameStyle(staff, BLACK_COLOR);
+                    setStafflinesColor(staff, BLACK_COLOR);
                 }
 
                 function setLiveInputDisplay(staff)
                 {
-                    setTitle(staff, ENABLED_INPUT_TITLE_COLOR);
-                    setStafflines(staff, BLACK_COLOR);
+                    setStaffNameStyle(staff, ENABLED_INPUT_TITLE_COLOR);
+                    setStafflinesColor(staff, BLACK_COLOR);
                 }
 
                 function setDisabledInputDisplay(staff)
                 {
-                    setTitle(staff, DISABLED_PINK_COLOR);
-                    setStafflines(staff, DISABLED_PINK_COLOR);
+                    setStaffNameStyle(staff, DISABLED_PINK_COLOR);
+                    setStafflinesColor(staff, DISABLED_PINK_COLOR);
                 }
 
                 if(staff.isOutput === true)
@@ -901,21 +902,22 @@ _AP.score = (function (document)
 
             system.staves = [];
 
-            staffElems = getElems(systemElem, "outputStaff", "inputStaff");
+            staffElems = getElems(systemElem, "staff", "inputStaff");
 
             for(i = 0; i < staffElems.length; ++i)
             {
                 staffElem = staffElems[i];
                 staff = {};
                 staffDy = systemDy + getDy(staffElem);
-                staff.isOutput = (staffElem.getAttribute("class") === "outputStaff");
+                staff.isOutput = (staffElem.getAttribute("class") === "staff");
                 staff.isVisible = ((staffElem.getAttribute("score:invisible") === "1") === false);
                 staff.voices = [];
                 system.staves.push(staff);
 
                 if(staff.isOutput === true)
                 {
-                    outputVoiceElems = staffElem.getElementsByClassName("outputVoice");
+                    outputVoiceElems = staffElem.getElementsByClassName("voice");
+                    stafflinesElem = staffElem.getElementsByClassName("stafflines")[0];
                     for(j = 0; j < outputVoiceElems.length; ++j)
                     {
                         outputVoiceElem = outputVoiceElems[j];
@@ -928,6 +930,7 @@ _AP.score = (function (document)
                 else // input staff
                 {
                     inputVoiceElems = staffElem.getElementsByClassName("inputVoice");
+                    stafflinesElem = staffElem.getElementsByClassName("inputStafflines")[0];
                     for(j = 0; j < inputVoiceElems.length; ++j)
                     {
                         inputVoiceElem = inputVoiceElems[j];
@@ -940,17 +943,16 @@ _AP.score = (function (document)
 
                 if(staff.isVisible)
                 {
-                    stafflinesElems = staffElem.getElementsByClassName("stafflines");
-                    if(stafflinesElems !== undefined && stafflinesElems.length > 0)
+                    if(stafflinesElem !== undefined)
                     {
-                        stafflineInfo = getStafflineInfo(stafflinesElems[0], staffDy);
+                        stafflineInfo = getStafflineInfo(stafflinesElem, staffDy);
                         system.left = stafflineInfo.left;
                         system.right = stafflineInfo.right;
 
+                        staff.stafflines = stafflinesElem.children;
                         staff.topLineY = stafflineInfo.stafflineYs[0];
                         staff.bottomLineY = stafflineInfo.stafflineYs[stafflineInfo.stafflineYs.length - 1];
-                        staff.svgStafflines = stafflineInfo.svgStafflines; // top down
-
+                        
                         setStaffColours(staff, isLivePerformance);
                         setVoiceCentreYs(staff.topLineY, staff.bottomLineY, staff.voices);
 
@@ -1332,7 +1334,7 @@ _AP.score = (function (document)
 
             function getStaffElems(systemElem)
             {
-                var outputStaffElems = systemElem.getElementsByClassName("outputStaff"),
+                var outputStaffElems = systemElem.getElementsByClassName("staff"),
                     inputStaffElems = systemElem.getElementsByClassName("inputStaff"),
                     i, staffElems = [];
 
@@ -1361,7 +1363,7 @@ _AP.score = (function (document)
                     noteObjectClass = noteObjectElem.getAttribute('class');
                     noteObjectAlignment = noteObjectElem.getAttribute('score:alignment'); // null if this is not a chord or rest
                                                                    
-                    if(noteObjectClass === 'outputChord' || noteObjectClass === 'outputRest')
+                    if(noteObjectClass === 'chord' || noteObjectClass === 'rest')
                     {
                         noteObjectChildren = noteObjectElem.children;
                         for(j = 0; j < noteObjectChildren.length; ++j)
@@ -1369,7 +1371,7 @@ _AP.score = (function (document)
                             if(noteObjectChildren[j].nodeName === "score:midi")
                             {
                                 scoreMidiElem = noteObjectChildren[j];
-                                if(noteObjectClass === 'outputChord')
+                                if(noteObjectClass === 'chord')
                                 {
                                     timeObject = new MidiChord(scoreMidiElem, systemIndex);
                                 }
@@ -1415,13 +1417,22 @@ _AP.score = (function (document)
 
                 noteObjectElems = voiceElem.children;
                 for(i = 0; i < noteObjectElems.length; ++i)
-                {
+                {                                                                 
                     noteObjectElem = noteObjectElems[i];
                     type = noteObjectElem.getAttribute('class');
-                    if(type === 'outputChord' || type === 'inputChord' || type === 'cautionaryChord'
-                    || type === 'inputRest' || type === 'outputRest'
-                    || type === 'clef' || type === 'barline' || type === 'staffName' || type === 'beamBlock' || type === 'clefChange'
-                    || type === 'endBarlineLeft' || type === 'endBarlineRight')
+                    if(type === 'staffName'
+                    || type === 'clef'
+                    || type === 'cautionaryChord'
+                    || type === 'beamBlock'
+                    || type === 'chord' || type === 'rest'
+                    || type === 'smallClef'
+                    || type === 'barline'                     
+                    || type === 'endBarline' // note that this is a group (a barline and a thickBarline)
+                    || type === 'inputStaffName'
+                    || type === 'inputClef'
+                    || type === 'inputBeamBlock'
+                    || type === 'inputChord' || type === 'inputRest'
+                    || type === 'inputSmallClef')
                     {
                         graphicElements.push(noteObjectElem);
                     }
@@ -1530,7 +1541,7 @@ _AP.score = (function (document)
                         break;
                     }
                     staffElem = staffElems[staffIndex];
-                    setVoices(systemIndex, staff, staffElem, "outputVoice", viewBoxScale1);
+                    setVoices(systemIndex, staff, staffElem, "voice", viewBoxScale1);
                     staffIndex++;
                 }
 
