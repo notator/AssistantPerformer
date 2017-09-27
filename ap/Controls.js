@@ -136,10 +136,10 @@ _AP.controls = (function(document, window)
     //      this value is simply the duration between the start and end markers.
     createSaveMIDIFileLink = function(scoreName, sequenceRecording, sequenceMsDuration)
     {
-        var
+    	var
         standardMidiFile,
         downloadName,
-        downloadLinkDiv, saveLink, i, a,
+        downloadLinkDiv, saveLink, a,
         nOutputVoices = sequenceRecording.trackRecordings.length;
 
         if(hasData(nOutputVoices, sequenceRecording.trackRecordings))
