@@ -25,19 +25,31 @@ _AP.sequenceRecording = (function ()
     var
     TrackRecording = _AP.trackRecording.TrackRecording,
 
-    // An empty sequenceRecording is created. It contains an empty array of _AP.trackRecording.TrackRecordings.
-    SequenceRecording = function (nTracks)
+    // An empty sequenceRecording is created.
+	// It has an array of empty _AP.trackRecording.TrackRecording objects allocated per channel index.
+	// Note that the trackRecordings.length will always be maximum channel index + 1, but that the array
+	// can contain undefined members (e.g. if the outputTracks argument contains a single track in channel 2).
+    SequenceRecording = function (outputTracks)
     {
-        var i;
+    	let i, j, channel, nOutputTracks = outputTracks.length;
+
         if (!(this instanceof SequenceRecording))
         {
-            return new SequenceRecording(nTracks);
+        	return new SequenceRecording(outputTracks);
         }
 
-        this.trackRecordings = []; // an array of TrackRecordings
-        for (i = 0; i < nTracks; ++i)
+        this.trackRecordings = [];
+        for(i = 0; i < nOutputTracks; ++i)
         {
-            this.trackRecordings.push(new TrackRecording());
+        	for(j = 0; j < outputTracks[i].midiObjects.length; ++j)
+        	{
+        		if(outputTracks[i].midiObjects[j].moments[0].messages.length > 0)
+        		{
+        			channel = outputTracks[i].midiObjects[j].moments[0].messages[0].channel();
+        			break;
+        		}
+        	}
+            this.trackRecordings[channel] = new TrackRecording();
         }
     },
 
@@ -50,7 +62,7 @@ _AP.sequenceRecording = (function ()
 	// The data argument is a Uint8Array 
     SequenceRecording.prototype.addLiveMessage = function(data, timestamp)
     {
-    	var trackIndex = data[0] & 0xF,
+    	var channelIndex = data[0] & 0xF,
     		message;
 		
     	switch(data.length)
@@ -65,7 +77,7 @@ _AP.sequenceRecording = (function ()
     			message = new _AP.message.Message(data[0], data[1], data[2]);
     			break;
     	}
-    	this.trackRecordings[trackIndex].addLiveMessage(message, timestamp);
+    	this.trackRecordings[channelIndex].addLiveMessage(message, timestamp);
     };
 
     return publicSequenceRecordingAPI;

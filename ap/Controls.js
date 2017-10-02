@@ -59,10 +59,10 @@ _AP.controls = (function(document, window)
     deleteSaveLink = function()
     {
         let
-        downloadLinkDiv = document.getElementById("downloadLinkDiv"), 
-        saveLink = document.getElementById("saveLink");
+        saveLink = document.getElementById("saveLink"),
+        downloadLinkDiv = document.getElementById("downloadLinkDiv"); // the div containing the saveLink
 
-        if(downloadLinkDiv !== null && saveLink !== null)
+        if(saveLink !== null)
         {
             // Need a small delay for the revokeObjectURL to work properly.
             window.setTimeout(function()
@@ -73,14 +73,14 @@ _AP.controls = (function(document, window)
         }
     },
 
-    // Returns true if any of the trackRecordings contain moments, otherwise false.
+    // Returns true if any of the defined trackRecordings contain moments, otherwise false.
     // Used to prevent the creation of a 'save' button when there is nothing to save.
     hasData = function(nOutputVoices, trackRecordings)
     {
         var i, has = false;
         for(i = 0; i < nOutputVoices; ++i)
         {
-            if(trackRecordings[i].moments.length > 0)
+        	if(trackRecordings[i] !== undefined && trackRecordings[i].moments.length > 0)
             {
                 has = true;
                 break;
@@ -136,7 +136,7 @@ _AP.controls = (function(document, window)
     //      this value is simply the duration between the start and end markers.
     createSaveMIDIFileLink = function(scoreName, sequenceRecording, sequenceMsDuration)
     {
-    	var
+        var
         standardMidiFile,
         downloadName,
         downloadLinkDiv, saveLink, a,
@@ -406,8 +406,9 @@ _AP.controls = (function(document, window)
                     nTrks = sequenceRecording.trackRecordings.length;
                     for(k = 0; k < nTrks; ++k)
                     {
-                        trackRec = sequenceRecording.trackRecordings[k];
-                        if(trackRec.moments.length > 0)
+                    	trackRec = sequenceRecording.trackRecordings[k];
+						// trackRec can be undefined, e.g. if a single track has channel > 0.
+                        if(trackRec !== undefined && trackRec.moments.length > 0)
                         {
                             timestamp = trackRec.moments[0].timestamp;
                             rOffset = (rOffset < timestamp) ? rOffset : timestamp;
@@ -428,13 +429,17 @@ _AP.controls = (function(document, window)
             {
                 for(i = 0; i < nOutputVoices; ++i)
                 {
-                    trackRecording = sequenceRecording.trackRecordings[i];
-                    nMoments = trackRecording.moments.length;
-                    for(j = 0; j < nMoments; ++j)
-                    {
-                        moment = trackRecording.moments[j];
-                        moment.timestamp -= offset;
-                    }
+                	trackRecording = sequenceRecording.trackRecordings[i];
+                	// trackRecording can be undefined, e.g. if a single track has channel > 0.
+                	if(trackRecording !== undefined)
+                	{
+                		nMoments = trackRecording.moments.length;
+                		for(j = 0; j < nMoments; ++j)
+                		{
+                			moment = trackRecording.moments[j];
+                			moment.timestamp -= offset;
+                		}
+                	}
                 }
             }
             return success;
@@ -477,7 +482,7 @@ _AP.controls = (function(document, window)
         }
         else if(player.isStopped())
         {
-            sequenceRecording = new SequenceRecording(player.outputTracks.length);
+            sequenceRecording = new SequenceRecording(player.outputTracks);
 
             // the running marker is at its correct position:
             // either at the start marker, or somewhere paused.

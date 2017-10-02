@@ -143,7 +143,7 @@ _AP.standardMidiFile = (function ()
 
             for (i = 0; i < nTracks; ++i)
             {
-                if (trackRecordings[i].moments.length > 0)
+            	if(trackRecordings[i] !== undefined && trackRecordings[i].moments.length > 0)
                 {
                     has = true;
                     break;
@@ -479,7 +479,7 @@ _AP.standardMidiFile = (function ()
 
             for (i = 0; i < nTracks; ++i)
             {
-                if (trackRecordings[i].moments.length > 0)
+            	if(trackRecordings[i] !== undefined && trackRecordings[i].moments.length > 0)
                 {
                     trackChunk = getTrackChunk(trackRecordings[i].moments, sequenceMsDuration);
                     trackChunksLength += trackChunk.length;
