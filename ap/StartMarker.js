@@ -22,14 +22,14 @@ _AP.startMarker = (function()
     var 
     // The svgStartMarkerGroup is an svg group with class='startMarker'.
     // It contains an svg line and an svg circle element.
-    StartMarker = function(system, systIndex, svgStartMarkerGroup, vbScale)
+		StartMarker = function(system, systemIndexInScore, svgStartMarkerGroup, vbScale)
     {
         if(!(this instanceof StartMarker))
         {
-            return new StartMarker(system, systIndex, svgStartMarkerGroup, vbScale);
+			return new StartMarker(system, systemIndexInScore, svgStartMarkerGroup, vbScale);
         }
 
-        this._setAttributes(this, system, systIndex, svgStartMarkerGroup, vbScale);
+			this._setAttributes(this, system, systemIndexInScore, svgStartMarkerGroup, vbScale);
 
         this.setVisible(false);
 
@@ -43,11 +43,11 @@ _AP.startMarker = (function()
     };
 
     // private function (used only in constructor)
-    StartMarker.prototype._setAttributes = function(that, system, systIndex, svgStartMarkerGroup, vbScale)
+	StartMarker.prototype._setAttributes = function(that, system, systemIndexInScore, svgStartMarkerGroup, vbScale)
     {
         var p;
         // returns an object having circle, line, viewBoxScale and yCoordinates attributes;
-        function getParams(system, svgStartMarkerGroup, vbScale)
+		function getParams(system, svgStartMarkerGroup, vbScale)
         {
             var EXTRA_TOP_AND_BOTTOM = 45, // user html pixels
                 CIRCLE_RADIUS = 5, // user html pixels
@@ -98,9 +98,9 @@ _AP.startMarker = (function()
             return params;
         }
 
-        Object.defineProperty(that, "systemIndex", { value: systIndex, writable: false });
+		Object.defineProperty(that, "systemIndexInScore", { value: systemIndexInScore, writable: false });
 
-        p = getParams(system, svgStartMarkerGroup, vbScale);
+		p = getParams(system, svgStartMarkerGroup, vbScale);
         Object.defineProperty(that, "circle", { value: p.circle, writable: false });
         Object.defineProperty(that, "line", { value: p.line, writable: false });
         Object.defineProperty(that, "viewBoxScale", { value: p.viewBoxScale, writable: false });

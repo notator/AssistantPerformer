@@ -147,10 +147,10 @@ _AP.inputObjectDef = (function ()
                 attr = attributes[i];
                 switch(attr.name)
                 {
-                    case "midiChannel":
+                    case "trkIndex":
                         if(gettingDefault)
                         {
-                            console.assert(false, "Error: Default ccSettings may not have a midiChannel attribute.");
+                            console.assert(false, "Error: Default ccSettings may not have a trkIndex attribute.");
                         }
                         settings.trackIndex = outputTrackPerMidiChannel[parseInt(attr.value, 10)];
                         if(settings.trackIndex < 0)
@@ -266,7 +266,7 @@ _AP.inputObjectDef = (function ()
                             attr = trkRefNode.attributes[i];
                             switch(attr.name)
                             {
-                                case "midiChannel":
+                                case "trkIndex":
                                     Object.defineProperty(seqTrk, "trackIndex", { value: outputTrackPerMidiChannel[parseInt(attr.value, 10)], writable: false });
                                     break;
                                 case "nMidiObjects":

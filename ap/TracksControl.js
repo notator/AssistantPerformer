@@ -227,33 +227,8 @@ _AP.tracksControl = (function (document)
 	    	trackCtlElems.push(trackCtlElem);
 	    	trackCtlElems[i].isOutput = (i < nOutputTracks);
 
-	    	if(i < nOutputTracks)
-	    	{
-	    		if(outputTracks[i].isVisible === true)
-	    		{
-	    			setTrackCtlState(i, "on");
-	    			trackCtlElems[i].previousState = "on";
-	    		}
-	    		else
-	    		{
-	    			setTrackCtlState(i, "disabled");
-	    			trackCtlElems[i].previousState = "disabled";
-	    		}
-	    	}
-	    	else
-	    	{
-	    		inputIndex = nTrackControls - i - 1;
-	    		if(inputTracks[inputIndex].isVisible === true)
-	    		{
-	    			setTrackCtlState(i, "on");
-	    			trackCtlElems[i].previousState = "on";
-	    		}
-	    		else
-	    		{
-	    			setTrackCtlState(i, "disabled");
-	    			trackCtlElems[i].previousState = "disabled";
-	    		}
-	    	}
+	    	setTrackCtlState(i, "on");
+	    	trackCtlElems[i].previousState = "on";
 	    }
 
 	    if(isLivePerformance === false)

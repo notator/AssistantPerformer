@@ -23,14 +23,14 @@ _AP.runningMarker = (function()
 
     // The argument is an svg group with id='runningMarker'.
     // The group contains a single svg line.
-    RunningMarker = function (system, systIndex, svgRunningMarkerGroup, vbScale)
+		RunningMarker = function(system, systemIndexInScore, svgRunningMarkerGroup, vbScale)
     {
         if (!(this instanceof RunningMarker))
         {
-            return new RunningMarker(system, systIndex, svgRunningMarkerGroup, vbScale);
+			return new RunningMarker(system, systemIndexInScore, svgRunningMarkerGroup, vbScale);
         }
 
-        this._setAttributes(this, system, systIndex, svgRunningMarkerGroup, vbScale);
+			this._setAttributes(this, system, systemIndexInScore, svgRunningMarkerGroup, vbScale);
 
         this.setVisible(false);
 
@@ -43,12 +43,12 @@ _AP.runningMarker = (function()
         RunningMarker: RunningMarker
     };
 
-    RunningMarker.prototype._setAttributes = function(that, system, systIndex, svgRunningMarkerGroup, vbScale)
+	RunningMarker.prototype._setAttributes = function(that, system, systemIndexInScore, svgRunningMarkerGroup, vbScale)
     {
         var p;
 
         // returns an object having line, viewBoxScale and yCoordinates attributes;
-        function getParams(system, systIndex, svgRunningMarkerGroup, vbScale)
+        function getParams(system, svgRunningMarkerGroup, vbScale)
         {
             var EXTRA_TOP_AND_BOTTOM = 45, // user html pixels
                 top, bottom, color = '#999999', params = {};
@@ -89,9 +89,9 @@ _AP.runningMarker = (function()
             return params;
         }
 
-        Object.defineProperty(that, "systemIndex", { value: systIndex, writable: false });
+        Object.defineProperty(that, "systemIndexInScore", { value: systemIndexInScore, writable: false });
 
-        p = getParams(system, systIndex, svgRunningMarkerGroup, vbScale);
+        p = getParams(system, svgRunningMarkerGroup, vbScale);
         Object.defineProperty(that, "line", { value: p.line, writable: false });
         Object.defineProperty(that, "viewBoxScale", { value: p.viewBoxScale, writable: false });
         Object.defineProperty(that, "yCoordinates", { value: p.yCoordinates, writable: false });

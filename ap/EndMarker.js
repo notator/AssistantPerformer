@@ -22,14 +22,14 @@ _AP.endMarker = (function()
     var
     // The svgEndMarkerGroup is an svg group with id='endMarker'.
     // It contains an svg line and an svg rect element.
-    EndMarker = function (system, systIndex, svgEndMarkerGroup, vbScale)
+		EndMarker = function(system, systemIndexInScore, svgEndMarkerGroup, vbScale)
     {
         if(!(this instanceof EndMarker))
         {
-            return new EndMarker(system, systIndex, svgEndMarkerGroup, vbScale);
+			return new EndMarker(system, systemIndexInScore, svgEndMarkerGroup, vbScale);
         }
 
-        this._setAttributes(this, system, systIndex, svgEndMarkerGroup, vbScale);
+			this._setAttributes(this, system, systemIndexInScore, svgEndMarkerGroup, vbScale);
 
         this.setVisible(false);
 
@@ -42,7 +42,7 @@ _AP.endMarker = (function()
         EndMarker: EndMarker
     };
 
-    EndMarker.prototype._setAttributes = function(that, system, systIndex, svgEndMarkerGroup, vbScale)
+	EndMarker.prototype._setAttributes = function(that, system, systemIndexInScore, svgEndMarkerGroup, vbScale)
     {
         var p;
 
@@ -104,7 +104,7 @@ _AP.endMarker = (function()
             return params;
         }
 
-        Object.defineProperty(that, "systemIndex", { value: systIndex, writable: false });
+        Object.defineProperty(that, "systemIndexInScore", { value: systemIndexInScore, writable: false });
 
         p = getParams(system, svgEndMarkerGroup, vbScale);
         Object.defineProperty(that, "rect", { value: p.rect, writable: false });
