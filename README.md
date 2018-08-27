@@ -2,7 +2,7 @@
 Introduction
 ------------
 This is an experimental WEB MIDI application, written in HTML5 and Javascript, that gives a single performer control over the performance of music scores displayed in a browser. It uses MIDI input and output devices, and scores stored in an SVG format which has been enhanced to contain MIDI information. The lastest stable version can be tried out on the web at<br />
-http://james-ingram-act-two.de/open-source/assistantPerformer/assistantPerformer.html
+https://james-ingram-act-two.de/open-source/assistantPerformer/assistantPerformer.html
 
 This application is normally tested in the latest version of Chrome on Windows 10.<br />
 I will be testing it again on Firefox, when they have completed their implementation of the Web MIDI API (currently in the pipeline).
@@ -21,14 +21,14 @@ The following <b>mp4 videos featuring Study 2</b> illustrate some of this softwa
 Unfortunately, Study 2 can't yet be performed on the <em>Resident Sf2 Synth</em>:
 
 * A complete performance of Study 2 (at the speed stored in the score):<br />
-<a target="_top" href="http://james-ingram-act-two.de/compositions/study2/study2Video100.html">View online (with comments)</a> /
-<a href="http://james-ingram-act-two.de/compositions/study2/videos/Study_2_100pc_09.06.2017.mp4">right-click to download mp4 (for better rendering)</a>.
+<a target="_top" href="https://james-ingram-act-two.de/compositions/study2/study2Video100.html">View online (with comments)</a> /
+<a href="https://james-ingram-act-two.de/compositions/study2/videos/Study_2_100pc_09.06.2017.mp4">right-click to download mp4 (for better rendering)</a>.
 * A demonstration of the Assistant Performer's basic functions (track selection, speed etc.):<br />
-<a target="_top" href="http://james-ingram-act-two.de/compositions/study2/study2VideoSelectionDemos.html">View online (with comments)</a> /
-<a href="http://james-ingram-act-two.de/compositions/study2/videos/Study_2_selections_09.06.2017.mp4">right-click to download mp4 (for better rendering))</a>.
+<a target="_top" href="https://james-ingram-act-two.de/compositions/study2/study2VideoSelectionDemos.html">View online (with comments)</a> /
+<a href="https://james-ingram-act-two.de/compositions/study2/videos/Study_2_selections_09.06.2017.mp4">right-click to download mp4 (for better rendering))</a>.
 * A demonstration of the Assistant Performer's live conducting option:<br />
-<a target="_top" href="http://james-ingram-act-two.de/compositions/study2/study2VideoSlowBlueSection.html">View online (with comments)</a> /
-<a href="http://james-ingram-act-two.de/compositions/study2/videos/Study_2_slow_conducted_09.06.2017.mp4">right-click to download mp4 (for better rendering)</a>.
+<a target="_top" href="https://james-ingram-act-two.de/compositions/study2/study2VideoSlowBlueSection.html">View online (with comments)</a> /
+<a href="https://james-ingram-act-two.de/compositions/study2/videos/Study_2_slow_conducted_09.06.2017.mp4">right-click to download mp4 (for better rendering)</a>.
 <br />
 12th June 2017<br />
 James Ingram

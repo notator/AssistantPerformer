@@ -1,6 +1,6 @@
 ﻿/*
  *  copyright 2012 James Ingram
- *  http://james-ingram-act-two.de/
+ *  https://james-ingram-act-two.de/
  *
  *  Code licensed under MIT
  *  https://github.com/notator/assistant-performer/blob/master/License.md

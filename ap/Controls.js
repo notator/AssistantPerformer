@@ -1,6 +1,6 @@
 /*
 *  copyright 2012 James Ingram
-*  http://james-ingram-act-two.de/
+*  https://james-ingram-act-two.de/
 *
 *  Code licensed under MIT
 *  https://github.com/notator/assistant-performer/blob/master/License.md
@@ -280,21 +280,21 @@ _AP.controls = (function(document, window)
 						for(i = 0; i < s.markersLayers.length; ++i)
 						{
 							s.markersLayers[i].addEventListener('click', s.setStartMarkerClick, false);
-							s.markersLayers[i].style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setStartCursor.cur'), crosshair";
+							s.markersLayers[i].style.cursor = "url('https://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setStartCursor.cur'), crosshair";
 						}
 						break;
 					case 'settingEnd':
 						for(i = 0; i < s.markersLayers.length; ++i)
 						{
 							s.markersLayers[i].addEventListener('click', s.setEndMarkerClick, false);
-							s.markersLayers[i].style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setEndCursor.cur'), pointer";
+							s.markersLayers[i].style.cursor = "url('https://james-ingram-act-two.de/open-source/assistantPerformer/cursors/setEndCursor.cur'), pointer";
 						}
 						break;
 					case 'conducting':
 						globalElements.conductingLayer.style.visibility = "visible";
 						globalElements.conductingLayer.addEventListener('mousemove', s.conduct, false);
 						globalElements.conductingLayer.addEventListener('click', setConductorControlClicked, false);
-						globalElements.conductingLayer.style.cursor = "url('http://james-ingram-act-two.de/open-source/assistantPerformer/cursors/conductor.cur'), move";
+						globalElements.conductingLayer.style.cursor = "url('https://james-ingram-act-two.de/open-source/assistantPerformer/cursors/conductor.cur'), move";
 						break;
 					case 'stopped':
 						// According to
@@ -857,25 +857,25 @@ _AP.controls = (function(document, window)
 							[
 								//{
 								//    name: "SongSix",
-								//    url: "http://james-ingram-act-two.de/soundFonts/Arachno/SongSix.sf2",
+								//    url: "https://james-ingram-act-two.de/soundFonts/Arachno/SongSix.sf2",
 								//    presetIndices: [60, 67, 72, 74, 76, 78, 79, 115, 117, 122, 123, 124, 125, 126, 127],
 								//    scoreSelectIndices: [1]
 								//},
 								//{
 								//    name: "Study2",
-								//    url: "http://james-ingram-act-two.de/soundFonts/Arachno/Study2.sf2",
+								//    url: "https://james-ingram-act-two.de/soundFonts/Arachno/Study2.sf2",
 								//    presetIndices: [8, 9, 10, 11, 12, 13, 14, 15, 24, 25, 26, 27],
 								//    scoreSelectIndices: [2]
 								//},
 								//{
 								//    name: "Study3Sketch",
-								//    url: "http://james-ingram-act-two.de/soundFonts/Arachno/Study3Sketch.sf2",
+								//    url: "https://james-ingram-act-two.de/soundFonts/Arachno/Study3Sketch.sf2",
 								//    presetIndices: [72, 78, 79, 113, 115, 117, 118],
 								//    scoreSelectIndices: [3, 4, 5, 6]
 								//},
 								{
 									name: "Grand Piano",
-									url: "http://james-ingram-act-two.de/soundFonts/Arachno/Arachno1.0selection-grand piano.sf2",
+									url: "https://james-ingram-act-two.de/soundFonts/Arachno/Arachno1.0selection-grand piano.sf2",
 									presetIndices: [0],
 									scoreSelectIndices: [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX, PIANOLA_MUSIC_3STAVES_SCORE_INDEX]
 								}
@@ -1132,61 +1132,61 @@ _AP.controls = (function(document, window)
 							scoreInfo.path = "Pianola Music/Pianola Music (scroll)";
 							scoreInfo.inputHandler = "none";
 							scoreInfo.aboutText = "about Pianola Music";
-							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/pianolaMusic/aboutPianolaMusic.html";
+							scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/pianolaMusic/aboutPianolaMusic.html";
 							break;
 						case PIANOLA_MUSIC_3STAVES_SCORE_INDEX:
 							scoreInfo.path = "Pianola Music - 3 staves/Pianola Music (scroll)";
 							scoreInfo.inputHandler = "none";
 							scoreInfo.aboutText = "about Pianola Music";
-							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/pianolaMusic/aboutPianolaMusic.html";
+							scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/pianolaMusic/aboutPianolaMusic.html";
 							break;
 						case STUDY1_SCORE_INDEX:
 							scoreInfo.path = "Study 1/Study 1 (scroll)";
 							scoreInfo.inputHandler = "none";
 							scoreInfo.aboutText = "about Study 1";
-							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/study1/aboutStudy1.html";
+							scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study1/aboutStudy1.html";
 							break;
 						case STUDY2_SCORE_INDEX:
 							scoreInfo.path = "Study 2/Study 2 (scroll)";
 							scoreInfo.inputHandler = "none";
 							scoreInfo.aboutText = "about Study 2";
-							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/study2/aboutStudy2.html";
+							scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study2/aboutStudy2.html";
 							break;
 						case STUDY2_2STAVES_SCORE_INDEX:
 							scoreInfo.path = "Study 2 - 2 staves/Study 2 (scroll)";
 							scoreInfo.inputHandler = "none";
 							scoreInfo.aboutText = "about Study 2";
-							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/study2/aboutStudy2.html";
+							scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/study2/aboutStudy2.html";
 							break;
 						case STUDY3_SKETCH1_SCORE_INDEX:
 							scoreInfo.path = "Study 3 sketch 1/Study 3 sketch 1 (scroll)";
 							scoreInfo.inputHandler = "none";
 							scoreInfo.aboutText = "about Study 3 Sketch";
-							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
+							scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
 							break;
 						case STUDY3_SKETCH1_PAGES_SCORE_INDEX:
 							scoreInfo.path = "Study 3 sketch 1/Study 3 sketch 1 (2 pages)";
 							scoreInfo.inputHandler = "none";
 							scoreInfo.aboutText = "about Study 3 Sketch";
-							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
+							scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
 							break;
 						case STUDY3_SKETCH1_4STAVES_SCORE_INDEX:
 							scoreInfo.path = "Study 3 sketch 1 - 4 staves/Study 3 sketch 1 (scroll)";
 							scoreInfo.inputHandler = "none";
 							scoreInfo.aboutText = "about Study 3 Sketch";
-							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
+							scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
 							break;
 						case STUDY3_SKETCH2_SCORE_WITH_INPUT_INDEX:
 							scoreInfo.path = "Study 3 sketch 2.1 - with input/Study 3 sketch 2 (scroll)";
 							scoreInfo.inputHandler = "keyboard1";
 							scoreInfo.aboutText = "about Study 3 Sketch";
-							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
+							scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/sketches/study3Sketch/aboutStudy3Sketch.html";
 							break;
 						case TOMBEAU1_SCORE_INDEX:
 							scoreInfo.path = "Tombeau 1/Tombeau 1 (scroll)";
 							scoreInfo.inputHandler = "none";
 							scoreInfo.aboutText = "about Tombeau 1";
-							scoreInfo.aboutURL = "http://james-ingram-act-two.de/compositions/tombeau1/aboutTombeau1.html";
+							scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/tombeau1/aboutTombeau1.html";
 							break;
 						default:
 							break;
@@ -1272,7 +1272,7 @@ _AP.controls = (function(document, window)
 				// served from IIS:
 				// e.g. "http://localhost:49560/james-ingram-act-two.de/open-source/assistantPerformer/scores/"
 				// or on the web:
-				// e.g. "http://james-ingram-act-two.de/open-source/assistantPerformer/scores/"
+				// e.g. "https://james-ingram-act-two.de/open-source/assistantPerformer/scores/"
 				// Note that Chrome needs to be started with its --allow-file-access-from-files flag to use the first of these.
 				function getScoresURL()
 				{
