@@ -46,7 +46,9 @@ _AP.controls = (function(document, window)
 		STUDY3_SKETCH1_PAGES_SCORE_INDEX = 7,
 		STUDY3_SKETCH1_4STAVES_SCORE_INDEX = 8,
 		STUDY3_SKETCH2_SCORE_WITH_INPUT_INDEX = 9,
-		TOMBEAU1_SCORE_INDEX = 10,
+		ERRATUM_MUSICAL_I_VIII = 10,
+		THREE_CRASHES = 11,
+		TOMBEAU1_SCORE_INDEX = 12,
 
 		RESIDENT_SYNTH_INDEX = 1,
 
@@ -195,7 +197,7 @@ _AP.controls = (function(document, window)
 		residentSynthCanPlayScore = function(scoreIndex)
 		{
 			var rval = false,
-				playableScores = [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX, PIANOLA_MUSIC_3STAVES_SCORE_INDEX];
+				playableScores = [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX, PIANOLA_MUSIC_3STAVES_SCORE_INDEX, ERRATUM_MUSICAL_I_VIII, THREE_CRASHES];
 
 			console.assert(scoreIndex > 0, "This function should only be called with valid score indices.");
 
@@ -877,7 +879,7 @@ _AP.controls = (function(document, window)
 									name: "Grand Piano",
 									url: "https://james-ingram-act-two.de/soundFonts/Arachno/Arachno1.0selection-grand piano.sf2",
 									presetIndices: [0],
-									scoreSelectIndices: [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX, PIANOLA_MUSIC_3STAVES_SCORE_INDEX]
+									scoreSelectIndices: [PIANOLA_MUSIC_SCORE_INDEX, STUDY1_SCORE_INDEX, TOMBEAU1_SCORE_INDEX, PIANOLA_MUSIC_3STAVES_SCORE_INDEX, ERRATUM_MUSICAL_I_VIII, THREE_CRASHES]
 								}
 							];
 
@@ -1187,6 +1189,18 @@ _AP.controls = (function(document, window)
 							scoreInfo.inputHandler = "none";
 							scoreInfo.aboutText = "about Tombeau 1";
 							scoreInfo.aboutURL = "https://james-ingram-act-two.de/compositions/tombeau1/aboutTombeau1.html";
+							break;
+						case ERRATUM_MUSICAL_I_VIII:
+							scoreInfo.path = "Erratum Musical/Erratum Musical (scroll)";
+							scoreInfo.inputHandler = "none";
+							scoreInfo.aboutText = "about Erratum Musical I-VIII";
+							scoreInfo.aboutURL = "https://james-ingram-act-two.de/writings/ErratumMusical/erratumMusical.selectionsI-VIII.html";
+							break;
+						case THREE_CRASHES:
+							scoreInfo.path = "Three Crashes/Three Crashes (scroll)";
+							scoreInfo.inputHandler = "none";
+							scoreInfo.aboutText = "about Three Crashes";
+							scoreInfo.aboutURL = "https://james-ingram-act-two.de/writings/ErratumMusical/erratumMusical.threeCrashes.html";
 							break;
 						default:
 							break;
