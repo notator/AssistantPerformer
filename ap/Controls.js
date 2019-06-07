@@ -1013,7 +1013,7 @@ _AP.controls = (function(document, window)
 			midiAccess = mAccess;
 
 			residentSf2Synth = new WebMIDI.residentSf2Synth.ResidentSf2Synth();
-			residentSf2Synth.init();
+			residentSf2Synth.open();
 
 			getGlobalElements();
 
