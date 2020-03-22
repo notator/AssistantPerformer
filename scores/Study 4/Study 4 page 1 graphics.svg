@@ -1,0 +1,6457 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet href="../../fontsStyleSheet.css" type="text/css"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+	width="1429"
+	height="875"
+	viewBox="0 0 14290 8750">
+	<defs>
+		<style
+			type="text/css"><![CDATA[
+			@font-face
+			{
+				font-family: 'CLicht';
+				src: url('https://james-ingram-act-two.de/fonts/clicht_plain-webfont.eot');
+				src: url('https://james-ingram-act-two.de/fonts/clicht_plain-webfont.eot?#iefix') format('embedded-opentype'),
+				url('https://james-ingram-act-two.de/fonts/clicht_plain-webfont.woff') format('woff'),
+				url('https://james-ingram-act-two.de/fonts/clicht_plain-webfont.ttf') format('truetype'),
+				url('https://james-ingram-act-two.de/fonts/clicht_plain-webfont.svg#webfontl9D2oOyX') format('svg');
+				font-weight: normal;
+				font-style: normal;
+			}
+			@font-face
+			{
+				font-family: 'Arial';
+				src: url('https://james-ingram-act-two.de/fonts/arial.ttf') format('truetype');
+				font-weight:400;
+				font-style: normal;
+			}
+			@font-face
+			{
+				font-family: 'Open Sans';
+				src: url('https://james-ingram-act-two.de/fonts/OpenSans-Regular.ttf') format('truetype');
+				font-weight:400;
+				font-style: normal;
+			}
+			@font-face
+			{
+				font-family: 'Open Sans Condensed';
+				src: url('https://james-ingram-act-two.de/fonts/OpenSans-CondBold.ttf') format('truetype');
+				font-weight:600;
+				font-style: normal;
+			}
+		    .mainTitle
+            {
+                font-family:"Open Sans";
+                font-size:320px;
+                text-anchor:middle
+            }
+            .author
+            {
+                font-family:"Open Sans";
+                font-size:160px;
+                text-anchor:end
+            }
+            .rest, .notehead, .accidental, .clef
+            {
+                font-family:CLicht
+            }
+            .rest, .notehead, .accidental, .clef
+            {
+                font-size:156.8px
+            }
+            .fffColor
+			{
+			    fill:#FF0000
+			}
+			.ffColor
+			{
+			    fill:#D50055
+			}
+			.fColor
+			{
+			    fill:#B5007E
+			}
+			.mfColor
+			{
+			    fill:#8800B5
+			}
+			.mpColor
+			{
+			    fill:#0000CA
+			}
+			.pColor
+			{
+			    fill:#0069A8
+			}
+			.ppColor
+			{
+			    fill:#008474
+			}
+			.pppColor
+			{
+			    fill:#009F28
+			}
+			.timeStamp, .staffName, .barNumberNumber, .regionInfoString
+            {
+                font-family:Arial
+            }
+            .timeStamp
+            {
+                font-size:90px
+            }
+            .staffName
+            {
+                font-size:88px;
+                text-anchor:middle
+            }
+            .barNumberNumber
+            {
+                font-size:79.968px;
+                text-anchor:middle
+            }
+            .regionInfoString
+            {
+                font-size:120px;
+                text-anchor:middle
+            }
+            .staffline, .ledgerline, .stem, .regionFrameConnector, .beam
+            {
+                stroke:black;
+                stroke-width:5px;
+                fill:black
+            }
+            .stem
+            {
+                stroke-linecap:round                
+            }
+            .normalBarline
+            {
+                stroke:black;
+                stroke-width:10px
+            }
+            .thinBarline
+            {
+                stroke:black;
+                stroke-width:5px
+            }
+            .thickBarline
+            {
+                stroke:black;
+                stroke-width:20px
+            }
+            .barNumberFrame
+            {
+                stroke:black;
+                stroke-width:6px;
+                fill:none
+            }
+            .regionInfoFrame
+            {
+                stroke:black;
+                stroke-width:9px;
+                fill:none
+            }
+            .frame
+            {
+                stroke:black;
+                stroke-width:5px;
+                fill:white                
+            }
+            .opaqueBeam
+            {
+                stroke:white;
+                stroke-width:5px;
+                fill:white;
+                opacity:0.65                
+            }
+            ]]></style>
+		<g
+			id="trebleClef">
+			<text
+				class="clef">&amp;</text>
+		</g>
+		<g
+			id="bassClef">
+			<text
+				class="clef">?</text>
+		</g>
+	</defs>
+	<rect
+		class="frame"
+		x="0"
+		y="0"
+		width="14290"
+		height="8720" />
+	<g
+		class="systems">
+		<text
+			class="timeStamp"
+			x="32"
+			y="90">Study 4 page 1 graphics, Thursday 19.12.2019, 12:35:50</text>
+		<g
+			class="titles">
+			<text
+				class="mainTitle"
+				x="7145"
+				y="500">Study 4</text>
+			<text
+				class="author"
+				x="13790"
+				y="500">James Ingram</text>
+		</g>
+		<g
+			class="system">
+			<g
+				class="staff"
+				staffName="0">
+				<g
+					class="stafflines">
+					<line
+						class="staffline"
+						x1="500"
+						y1="1920"
+						x2="13790"
+						y2="1920" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="1960"
+						x2="13790"
+						y2="1960" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="2000"
+						x2="13790"
+						y2="2000" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="2040"
+						x2="13790"
+						y2="2040" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="2080"
+						x2="13790"
+						y2="2080" />
+				</g>
+				<g
+					class="voice">
+					<use
+						class="clef"
+						href="#bassClef"
+						x="500"
+						y="1960" />
+					<g
+						class="startRegionBarline">
+						<line
+							class="thickBarline"
+							x1="639"
+							y1="1920"
+							x2="639"
+							y2="2080" />
+						<line
+							class="thinBarline"
+							x1="666.5"
+							y1="1920"
+							x2="666.5"
+							y2="2080" />
+					</g>
+					<text
+						class="staffName"
+						x="290"
+						y="2032">0</text>
+					<line
+						class="regionFrameConnector"
+						x1="639"
+						y1="1456.072"
+						x2="639"
+						y2="1920" />
+					<g
+						class="framedRegionInfo">
+						<rect
+							class="regionInfoFrame"
+							x="639"
+							y="1194.372"
+							width="215.2"
+							height="261.7001" />
+						<text
+							class="regionInfoString"
+							x="709.5"
+							y="1305.372">A</text>
+						<text
+							class="regionInfoString"
+							x="746.6"
+							y="1426.072">A1</text>
+					</g>
+					<g
+						class="beamBlock">
+						<path
+							class="opaqueBeam"
+							d="M 883.275 1598.931 L 1952.828 1595.894 1952.828 1621.094 883.275 1624.131 z" />
+						<path
+							class="beam"
+							d="M 883.275 1615.731 L 1952.828 1612.694 1952.828 1629.494 883.275 1632.531 z" />
+						<path
+							class="opaqueBeam"
+							d="M 2169.8 1595.277 L 2837.348 1593.382 2837.348 1618.582 2169.8 1620.477 z" />
+						<path
+							class="beam"
+							d="M 2169.8 1612.078 L 2837.348 1610.182 2837.348 1626.982 2169.8 1628.878 z" />
+						<path
+							class="opaqueBeam"
+							d="M 3162.453 1592.458 L 4232.005 1589.421 4232.005 1614.621 3162.453 1617.658 z" />
+						<path
+							class="beam"
+							d="M 3162.453 1609.258 L 4232.005 1606.221 4232.005 1623.021 3162.453 1626.058 z" />
+						<path
+							class="opaqueBeam"
+							d="M 4448.978 1588.804 L 5583.109 1585.583 5583.109 1610.783 4448.978 1614.004 z" />
+						<path
+							class="beam"
+							d="M 4448.978 1605.604 L 5583.109 1602.383 5583.109 1619.183 4448.978 1622.405 z" />
+						<path
+							class="opaqueBeam"
+							d="M 5800.082 1584.967 L 7200.613 1580.99 7200.613 1606.189 5800.082 1610.167 z" />
+						<path
+							class="beam"
+							d="M 5800.082 1601.767 L 7200.613 1597.79 7200.613 1614.59 5800.082 1618.567 z" />
+						<path
+							class="opaqueBeam"
+							d="M 7417.585 1580.373 L 8515.399 1577.255 8515.399 1602.455 7417.585 1605.573 z" />
+						<path
+							class="beam"
+							d="M 7417.585 1597.173 L 8515.399 1594.056 8515.399 1610.856 7417.585 1613.973 z" />
+						<path
+							class="opaqueBeam"
+							d="M 8695.264 1576.745 L 9563.645 1574.278 9563.645 1599.478 8695.264 1601.945 z" />
+						<path
+							class="beam"
+							d="M 8695.264 1593.545 L 9563.645 1591.078 9563.645 1607.878 8695.264 1610.345 z" />
+						<path
+							class="opaqueBeam"
+							d="M 9743.509 1573.768 L 11544.9 1568.651 11544.9 1593.851 9743.509 1598.968 z" />
+						<path
+							class="beam"
+							d="M 9743.509 1590.568 L 11544.9 1585.452 11544.9 1602.252 9743.509 1607.368 z" />
+						<path
+							class="opaqueBeam"
+							d="M 11724.76 1568.141 L 13493.94 1563.116 13493.94 1588.316 11724.76 1593.341 z" />
+						<path
+							class="beam"
+							d="M 11724.76 1584.941 L 13493.94 1579.916 13493.94 1596.716 11724.76 1601.741 z" />
+						<path
+							class="opaqueBeam"
+							d="M 13625.81 1562.741 L 13673.81 1562.605 13673.81 1587.805 13625.81 1587.941 z" />
+						<path
+							class="beam"
+							d="M 13625.81 1579.542 L 13673.81 1579.405 13673.81 1596.205 13625.81 1596.342 z" />
+						<path
+							class="beam"
+							d="M 763.366 1576.072 L 13673.81 1539.405 13673.81 1556.205 763.366 1592.872 z" />
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="763.3655"
+								y1="1576.072"
+								x2="763.3655"
+								y2="2155.38" />
+							<text
+								class="notehead fffColor"
+								x="719.8339"
+								y="2160">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="701.8181"
+									y1="2120"
+									x2="783.8813"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="701.8181"
+									y1="2160"
+									x2="783.8813"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="883.2748"
+								y1="1575.731"
+								x2="883.2748"
+								y2="2155.38" />
+							<text
+								class="notehead fColor"
+								x="839.7432"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="839.7432"
+								y="2160">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="821.7274"
+									y1="2120"
+									x2="903.7906"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="821.7274"
+									y1="2160"
+									x2="903.7906"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="989.9941"
+								y1="1575.428"
+								x2="989.9941"
+								y2="2155.38" />
+							<text
+								class="notehead fColor"
+								x="946.4623"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="946.4623"
+								y="2160">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="928.4466"
+									y1="2120"
+									x2="1010.51"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="928.4466"
+									y1="2160"
+									x2="1010.51"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="1090.718"
+								y1="1575.142"
+								x2="1090.718"
+								y2="2155.38" />
+							<text
+								class="notehead mpColor"
+								x="1047.186"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="1047.186"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="1047.186"
+								y="2160">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="1029.17"
+									y1="2120"
+									x2="1111.234"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="1029.17"
+									y1="2160"
+									x2="1111.234"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="1185.746"
+								y1="1574.872"
+								x2="1185.746"
+								y2="2155.38" />
+							<text
+								class="notehead mpColor"
+								x="1142.214"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="1142.214"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="1142.214"
+								y="2160">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="1124.198"
+									y1="2120"
+									x2="1206.262"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="1124.198"
+									y1="2160"
+									x2="1206.262"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="1275.678"
+								y1="1574.617"
+								x2="1275.678"
+								y2="2155.38" />
+							<text
+								class="notehead mpColor"
+								x="1232.146"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="1232.146"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="1232.146"
+								y="2160">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="1214.13"
+									y1="2120"
+									x2="1296.193"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="1214.13"
+									y1="2160"
+									x2="1296.193"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="1360.514"
+								y1="1574.376"
+								x2="1360.514"
+								y2="2155.38" />
+							<text
+								class="notehead pColor"
+								x="1316.982"
+								y="1920">œ</text>
+							<text
+								class="notehead mpColor"
+								x="1316.982"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="1316.982"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="1316.982"
+								y="2160">œ</text>
+							<text
+								class="accidental pColor"
+								x="1268.017"
+								y="1920">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="1298.966"
+									y1="2120"
+									x2="1381.029"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="1298.966"
+									y1="2160"
+									x2="1381.029"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="1440.553"
+								y1="1574.149"
+								x2="1440.553"
+								y2="2155.38" />
+							<text
+								class="notehead pColor"
+								x="1397.021"
+								y="1920">œ</text>
+							<text
+								class="notehead mpColor"
+								x="1397.021"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="1397.021"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="1397.021"
+								y="2160">œ</text>
+							<text
+								class="accidental pColor"
+								x="1348.056"
+								y="1920">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="1379.005"
+									y1="2120"
+									x2="1461.069"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="1379.005"
+									y1="2160"
+									x2="1461.069"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="1550.822"
+								y1="1573.835"
+								x2="1550.822"
+								y2="2155.38" />
+							<text
+								class="notehead pColor"
+								x="1507.29"
+								y="1920">œ</text>
+							<text
+								class="notehead mpColor"
+								x="1507.29"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="1507.29"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="1507.29"
+								y="2160">œ</text>
+							<text
+								class="accidental pColor"
+								x="1458.325"
+								y="1920">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="1489.274"
+									y1="2120"
+									x2="1571.338"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="1489.274"
+									y1="2160"
+									x2="1571.338"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="1673.661"
+								y1="1573.487"
+								x2="1673.661"
+								y2="2155.38" />
+							<text
+								class="notehead ppColor"
+								x="1630.13"
+								y="1860">œ</text>
+							<text
+								class="notehead pColor"
+								x="1630.13"
+								y="1900">œ</text>
+							<text
+								class="notehead mpColor"
+								x="1630.13"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="1630.13"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="1630.13"
+								y="2160">œ</text>
+							<text
+								class="accidental pColor"
+								x="1565.09"
+								y="1900">b</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="1612.114"
+									y1="1880"
+									x2="1694.177"
+									y2="1880" />
+							</g>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="1612.114"
+									y1="2120"
+									x2="1694.177"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="1612.114"
+									y1="2160"
+									x2="1694.177"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="1813.244"
+								y1="1573.09"
+								x2="1813.244"
+								y2="2155.38" />
+							<text
+								class="notehead ppColor"
+								x="1769.713"
+								y="1860">œ</text>
+							<text
+								class="notehead pColor"
+								x="1769.713"
+								y="1900">œ</text>
+							<text
+								class="notehead mpColor"
+								x="1769.713"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="1769.713"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="1769.713"
+								y="2160">œ</text>
+							<text
+								class="accidental pColor"
+								x="1704.673"
+								y="1900">b</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="1751.697"
+									y1="1880"
+									x2="1833.76"
+									y2="1880" />
+							</g>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="1751.697"
+									y1="2120"
+									x2="1833.76"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="1751.697"
+									y1="2160"
+									x2="1833.76"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="1952.828"
+								y1="1572.694"
+								x2="1952.828"
+								y2="2155.38" />
+							<text
+								class="notehead ppColor"
+								x="1909.296"
+								y="1860">œ</text>
+							<text
+								class="notehead pColor"
+								x="1909.296"
+								y="1900">œ</text>
+							<text
+								class="notehead mpColor"
+								x="1909.296"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="1909.296"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="1909.296"
+								y="2160">œ</text>
+							<text
+								class="accidental pColor"
+								x="1844.257"
+								y="1900">b</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="1891.28"
+									y1="1880"
+									x2="1973.343"
+									y2="1880" />
+							</g>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="1891.28"
+									y1="2120"
+									x2="1973.343"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="1891.28"
+									y1="2160"
+									x2="1973.343"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="2049.891"
+								y1="1572.418"
+								x2="2049.891"
+								y2="2155.38" />
+							<text
+								class="notehead fffColor"
+								x="2006.359"
+								y="2160">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="1988.343"
+									y1="2120"
+									x2="2070.407"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="1988.343"
+									y1="2160"
+									x2="2070.407"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="2169.8"
+								y1="1572.078"
+								x2="2169.8"
+								y2="2155.38" />
+							<text
+								class="notehead fColor"
+								x="2126.269"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="2126.269"
+								y="2160">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2108.253"
+									y1="2120"
+									x2="2190.316"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="2108.253"
+									y1="2160"
+									x2="2190.316"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="2276.52"
+								y1="1571.774"
+								x2="2276.52"
+								y2="2155.38" />
+							<text
+								class="notehead fColor"
+								x="2232.988"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="2232.988"
+								y="2160">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2214.972"
+									y1="2120"
+									x2="2297.035"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="2214.972"
+									y1="2160"
+									x2="2297.035"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="2377.243"
+								y1="1571.488"
+								x2="2377.243"
+								y2="2155.38" />
+							<text
+								class="notehead mpColor"
+								x="2333.711"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="2333.711"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="2333.711"
+								y="2160">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2315.696"
+									y1="2120"
+									x2="2397.759"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="2315.696"
+									y1="2160"
+									x2="2397.759"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="2472.271"
+								y1="1571.219"
+								x2="2472.271"
+								y2="2155.38" />
+							<text
+								class="notehead mpColor"
+								x="2428.74"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="2428.74"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="2428.74"
+								y="2160">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2410.724"
+									y1="2120"
+									x2="2492.787"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="2410.724"
+									y1="2160"
+									x2="2492.787"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="2562.203"
+								y1="1570.963"
+								x2="2562.203"
+								y2="2155.38" />
+							<text
+								class="notehead mpColor"
+								x="2518.672"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="2518.672"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="2518.672"
+								y="2160">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2500.656"
+									y1="2120"
+									x2="2582.719"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="2500.656"
+									y1="2160"
+									x2="2582.719"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="2647.039"
+								y1="1570.722"
+								x2="2647.039"
+								y2="2155.38" />
+							<text
+								class="notehead pColor"
+								x="2603.508"
+								y="1920">œ</text>
+							<text
+								class="notehead mpColor"
+								x="2603.508"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="2603.508"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="2603.508"
+								y="2160">œ</text>
+							<text
+								class="accidental pColor"
+								x="2554.542"
+								y="1920">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2585.492"
+									y1="2120"
+									x2="2667.555"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="2585.492"
+									y1="2160"
+									x2="2667.555"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="2727.079"
+								y1="1570.495"
+								x2="2727.079"
+								y2="2155.38" />
+							<text
+								class="notehead pColor"
+								x="2683.547"
+								y="1920">œ</text>
+							<text
+								class="notehead mpColor"
+								x="2683.547"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="2683.547"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="2683.547"
+								y="2160">œ</text>
+							<text
+								class="accidental pColor"
+								x="2634.582"
+								y="1920">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2665.531"
+									y1="2120"
+									x2="2747.595"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="2665.531"
+									y1="2160"
+									x2="2747.595"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="2837.348"
+								y1="1570.182"
+								x2="2837.348"
+								y2="2155.38" />
+							<text
+								class="notehead pColor"
+								x="2793.816"
+								y="1920">œ</text>
+							<text
+								class="notehead mpColor"
+								x="2793.816"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="2793.816"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="2793.816"
+								y="2160">œ</text>
+							<text
+								class="accidental pColor"
+								x="2744.851"
+								y="1920">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2775.8"
+									y1="2120"
+									x2="2857.864"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="2775.8"
+									y1="2160"
+									x2="2857.864"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="endAndStartRegionBarline">
+						<line
+							class="thinBarline"
+							x1="2890.678"
+							y1="1920"
+							x2="2890.678"
+							y2="2080" />
+						<line
+							class="thickBarline"
+							x1="2918.178"
+							y1="1920"
+							x2="2918.178"
+							y2="2080" />
+						<line
+							class="thinBarline"
+							x1="2945.678"
+							y1="1920"
+							x2="2945.678"
+							y2="2080" />
+					</g>
+					<line
+						class="regionFrameConnector"
+						x1="2918.178"
+						y1="1129.587"
+						x2="2918.178"
+						y2="1920" />
+					<g
+						class="framedRegionInfo">
+						<rect
+							class="regionInfoFrame"
+							x="2413.278"
+							y="869.4796"
+							width="504.8999"
+							height="261.7001" />
+						<text
+							class="regionInfoString"
+							x="2732.228"
+							y="980.4796">A➔B</text>
+						<text
+							class="regionInfoString"
+							x="2665.728"
+							y="1101.18">A1 end</text>
+					</g>
+					<g
+						class="framedRegionInfo">
+						<rect
+							class="regionInfoFrame"
+							x="2918.178"
+							y="988.5869"
+							width="141"
+							height="141" />
+						<text
+							class="regionInfoString"
+							x="2988.678"
+							y="1099.587">B</text>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="3042.544"
+								y1="1569.599"
+								x2="3042.544"
+								y2="2155.38" />
+							<text
+								class="notehead fffColor"
+								x="2999.012"
+								y="2160">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="2980.996"
+									y1="2120"
+									x2="3063.06"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="2980.996"
+									y1="2160"
+									x2="3063.06"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="3162.453"
+								y1="1569.258"
+								x2="3162.453"
+								y2="2155.38" />
+							<text
+								class="notehead fColor"
+								x="3118.921"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="3118.921"
+								y="2160">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="3100.905"
+									y1="2120"
+									x2="3182.969"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="3100.905"
+									y1="2160"
+									x2="3182.969"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="3269.172"
+								y1="1568.955"
+								x2="3269.172"
+								y2="2155.38" />
+							<text
+								class="notehead fColor"
+								x="3225.64"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="3225.64"
+								y="2160">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="3207.625"
+									y1="2120"
+									x2="3289.688"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="3207.625"
+									y1="2160"
+									x2="3289.688"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="3369.896"
+								y1="1568.669"
+								x2="3369.896"
+								y2="2155.38" />
+							<text
+								class="notehead mpColor"
+								x="3326.364"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="3326.364"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="3326.364"
+								y="2160">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="3308.348"
+									y1="2120"
+									x2="3390.412"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="3308.348"
+									y1="2160"
+									x2="3390.412"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="3464.924"
+								y1="1568.399"
+								x2="3464.924"
+								y2="2155.38" />
+							<text
+								class="notehead mpColor"
+								x="3421.392"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="3421.392"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="3421.392"
+								y="2160">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="3403.376"
+									y1="2120"
+									x2="3485.44"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="3403.376"
+									y1="2160"
+									x2="3485.44"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="3554.855"
+								y1="1568.144"
+								x2="3554.855"
+								y2="2155.38" />
+							<text
+								class="notehead mpColor"
+								x="3511.324"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="3511.324"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="3511.324"
+								y="2160">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="3493.308"
+									y1="2120"
+									x2="3575.372"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="3493.308"
+									y1="2160"
+									x2="3575.372"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="3639.691"
+								y1="1567.903"
+								x2="3639.691"
+								y2="2155.38" />
+							<text
+								class="notehead pColor"
+								x="3596.16"
+								y="1920">œ</text>
+							<text
+								class="notehead mpColor"
+								x="3596.16"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="3596.16"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="3596.16"
+								y="2160">œ</text>
+							<text
+								class="accidental pColor"
+								x="3547.195"
+								y="1920">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="3578.144"
+									y1="2120"
+									x2="3660.207"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="3578.144"
+									y1="2160"
+									x2="3660.207"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="3719.73"
+								y1="1567.676"
+								x2="3719.73"
+								y2="2155.38" />
+							<text
+								class="notehead pColor"
+								x="3676.199"
+								y="1920">œ</text>
+							<text
+								class="notehead mpColor"
+								x="3676.199"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="3676.199"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="3676.199"
+								y="2160">œ</text>
+							<text
+								class="accidental pColor"
+								x="3627.234"
+								y="1920">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="3658.183"
+									y1="2120"
+									x2="3740.247"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="3658.183"
+									y1="2160"
+									x2="3740.247"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="3829.999"
+								y1="1567.362"
+								x2="3829.999"
+								y2="2155.38" />
+							<text
+								class="notehead pColor"
+								x="3786.468"
+								y="1920">œ</text>
+							<text
+								class="notehead mpColor"
+								x="3786.468"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="3786.468"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="3786.468"
+								y="2160">œ</text>
+							<text
+								class="accidental pColor"
+								x="3737.502"
+								y="1920">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="3768.452"
+									y1="2120"
+									x2="3850.515"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="3768.452"
+									y1="2160"
+									x2="3850.515"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="3952.838"
+								y1="1567.014"
+								x2="3952.838"
+								y2="2155.38" />
+							<text
+								class="notehead ppColor"
+								x="3909.307"
+								y="1860">œ</text>
+							<text
+								class="notehead pColor"
+								x="3909.307"
+								y="1900">œ</text>
+							<text
+								class="notehead mpColor"
+								x="3909.307"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="3909.307"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="3909.307"
+								y="2160">œ</text>
+							<text
+								class="accidental pColor"
+								x="3844.268"
+								y="1900">b</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="3891.291"
+									y1="1880"
+									x2="3973.354"
+									y2="1880" />
+							</g>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="3891.291"
+									y1="2120"
+									x2="3973.354"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="3891.291"
+									y1="2160"
+									x2="3973.354"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="4092.422"
+								y1="1566.617"
+								x2="4092.422"
+								y2="2155.38" />
+							<text
+								class="notehead ppColor"
+								x="4048.891"
+								y="1860">œ</text>
+							<text
+								class="notehead pColor"
+								x="4048.891"
+								y="1900">œ</text>
+							<text
+								class="notehead mpColor"
+								x="4048.891"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="4048.891"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="4048.891"
+								y="2160">œ</text>
+							<text
+								class="accidental pColor"
+								x="3983.851"
+								y="1900">b</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="4030.875"
+									y1="1880"
+									x2="4112.938"
+									y2="1880" />
+							</g>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="4030.875"
+									y1="2120"
+									x2="4112.938"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="4030.875"
+									y1="2160"
+									x2="4112.938"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="4232.005"
+								y1="1566.221"
+								x2="4232.005"
+								y2="2155.38" />
+							<text
+								class="notehead ppColor"
+								x="4188.474"
+								y="1860">œ</text>
+							<text
+								class="notehead pColor"
+								x="4188.474"
+								y="1900">œ</text>
+							<text
+								class="notehead mpColor"
+								x="4188.474"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="4188.474"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="4188.474"
+								y="2160">œ</text>
+							<text
+								class="accidental pColor"
+								x="4123.435"
+								y="1900">b</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="4170.458"
+									y1="1880"
+									x2="4252.521"
+									y2="1880" />
+							</g>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="4170.458"
+									y1="2120"
+									x2="4252.521"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="4170.458"
+									y1="2160"
+									x2="4252.521"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="4329.069"
+								y1="1565.945"
+								x2="4329.069"
+								y2="2155.38" />
+							<text
+								class="notehead fffColor"
+								x="4285.538"
+								y="2160">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="4267.521"
+									y1="2120"
+									x2="4349.585"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="4267.521"
+									y1="2160"
+									x2="4349.585"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="4448.978"
+								y1="1565.604"
+								x2="4448.978"
+								y2="2155.38" />
+							<text
+								class="notehead fColor"
+								x="4405.447"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="4405.447"
+								y="2160">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="4387.431"
+									y1="2120"
+									x2="4469.494"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="4387.431"
+									y1="2160"
+									x2="4469.494"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="4555.697"
+								y1="1565.301"
+								x2="4555.697"
+								y2="2155.38" />
+							<text
+								class="notehead fColor"
+								x="4512.166"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="4512.166"
+								y="2160">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="4494.15"
+									y1="2120"
+									x2="4576.213"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="4494.15"
+									y1="2160"
+									x2="4576.213"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="4656.421"
+								y1="1565.015"
+								x2="4656.421"
+								y2="2155.38" />
+							<text
+								class="notehead mpColor"
+								x="4612.89"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="4612.89"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="4612.89"
+								y="2160">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="4594.874"
+									y1="2120"
+									x2="4676.938"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="4594.874"
+									y1="2160"
+									x2="4676.938"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="4751.449"
+								y1="1564.745"
+								x2="4751.449"
+								y2="2155.38" />
+							<text
+								class="notehead mpColor"
+								x="4707.918"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="4707.918"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="4707.918"
+								y="2160">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="4689.902"
+									y1="2120"
+									x2="4771.965"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="4689.902"
+									y1="2160"
+									x2="4771.965"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="4841.381"
+								y1="1564.49"
+								x2="4841.381"
+								y2="2155.38" />
+							<text
+								class="notehead mpColor"
+								x="4797.85"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="4797.85"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="4797.85"
+								y="2160">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="4779.833"
+									y1="2120"
+									x2="4861.897"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="4779.833"
+									y1="2160"
+									x2="4861.897"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="4926.216"
+								y1="1564.249"
+								x2="4926.216"
+								y2="2155.38" />
+							<text
+								class="notehead pColor"
+								x="4882.685"
+								y="1920">œ</text>
+							<text
+								class="notehead mpColor"
+								x="4882.685"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="4882.685"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="4882.685"
+								y="2160">œ</text>
+							<text
+								class="accidental pColor"
+								x="4833.72"
+								y="1920">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="4864.669"
+									y1="2120"
+									x2="4946.732"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="4864.669"
+									y1="2160"
+									x2="4946.732"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="5006.256"
+								y1="1564.022"
+								x2="5006.256"
+								y2="2155.38" />
+							<text
+								class="notehead pColor"
+								x="4962.725"
+								y="1920">œ</text>
+							<text
+								class="notehead mpColor"
+								x="4962.725"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="4962.725"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="4962.725"
+								y="2160">œ</text>
+							<text
+								class="accidental pColor"
+								x="4913.759"
+								y="1920">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="4944.708"
+									y1="2120"
+									x2="5026.772"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="4944.708"
+									y1="2160"
+									x2="5026.772"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="5116.524"
+								y1="1563.709"
+								x2="5116.524"
+								y2="2155.38" />
+							<text
+								class="notehead pColor"
+								x="5072.993"
+								y="1920">œ</text>
+							<text
+								class="notehead mpColor"
+								x="5072.993"
+								y="1980">œ</text>
+							<text
+								class="notehead fColor"
+								x="5072.993"
+								y="2080">œ</text>
+							<text
+								class="notehead fffColor"
+								x="5072.993"
+								y="2160">œ</text>
+							<text
+								class="accidental pColor"
+								x="5024.028"
+								y="1920">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="5054.977"
+									y1="2120"
+									x2="5137.041"
+									y2="2120" />
+								<line
+									class="ledgerline"
+									x1="5054.977"
+									y1="2160"
+									x2="5137.041"
+									y2="2160" />
+							</g>
+						</g>
+					</g>
+					<line
+						class="normalBarline"
+						x1="5172.355"
+						y1="1920"
+						x2="5172.355"
+						y2="2080" />
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="5295.596"
+								y1="1563.2"
+								x2="5295.596"
+								y2="2115.38" />
+							<text
+								class="notehead ppColor"
+								x="5252.064"
+								y="1740">œ</text>
+							<text
+								class="notehead pColor"
+								x="5252.064"
+								y="1860">œ</text>
+							<text
+								class="notehead mpColor"
+								x="5252.064"
+								y="1940">œ</text>
+							<text
+								class="notehead fColor"
+								x="5252.064"
+								y="2060">œ</text>
+							<text
+								class="notehead fffColor"
+								x="5252.064"
+								y="2120">œ</text>
+							<text
+								class="accidental mpColor"
+								x="5186.355"
+								y="1940">#</text>
+							<text
+								class="accidental fColor"
+								x="5186.355"
+								y="2060">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="5234.048"
+									y1="1760"
+									x2="5316.112"
+									y2="1760" />
+								<line
+									class="ledgerline"
+									x1="5234.048"
+									y1="1800"
+									x2="5316.112"
+									y2="1800" />
+								<line
+									class="ledgerline"
+									x1="5234.048"
+									y1="1840"
+									x2="5316.112"
+									y2="1840" />
+								<line
+									class="ledgerline"
+									x1="5234.048"
+									y1="1880"
+									x2="5316.112"
+									y2="1880" />
+							</g>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="5234.048"
+									y1="2120"
+									x2="5316.112"
+									y2="2120" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="5439.353"
+								y1="1562.792"
+								x2="5439.353"
+								y2="2115.38" />
+							<text
+								class="notehead ppColor"
+								x="5395.821"
+								y="1740">œ</text>
+							<text
+								class="notehead pColor"
+								x="5395.821"
+								y="1860">œ</text>
+							<text
+								class="notehead mpColor"
+								x="5395.821"
+								y="1940">œ</text>
+							<text
+								class="notehead fColor"
+								x="5395.821"
+								y="2060">œ</text>
+							<text
+								class="notehead fffColor"
+								x="5395.821"
+								y="2120">œ</text>
+							<text
+								class="accidental mpColor"
+								x="5330.112"
+								y="1940">#</text>
+							<text
+								class="accidental fColor"
+								x="5330.112"
+								y="2060">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="5377.805"
+									y1="1760"
+									x2="5459.869"
+									y2="1760" />
+								<line
+									class="ledgerline"
+									x1="5377.805"
+									y1="1800"
+									x2="5459.869"
+									y2="1800" />
+								<line
+									class="ledgerline"
+									x1="5377.805"
+									y1="1840"
+									x2="5459.869"
+									y2="1840" />
+								<line
+									class="ledgerline"
+									x1="5377.805"
+									y1="1880"
+									x2="5459.869"
+									y2="1880" />
+							</g>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="5377.805"
+									y1="2120"
+									x2="5459.869"
+									y2="2120" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="5583.109"
+								y1="1562.383"
+								x2="5583.109"
+								y2="2115.38" />
+							<text
+								class="notehead ppColor"
+								x="5539.578"
+								y="1740">œ</text>
+							<text
+								class="notehead pColor"
+								x="5539.578"
+								y="1860">œ</text>
+							<text
+								class="notehead mpColor"
+								x="5539.578"
+								y="1940">œ</text>
+							<text
+								class="notehead fColor"
+								x="5539.578"
+								y="2060">œ</text>
+							<text
+								class="notehead fffColor"
+								x="5539.578"
+								y="2120">œ</text>
+							<text
+								class="accidental mpColor"
+								x="5473.869"
+								y="1940">#</text>
+							<text
+								class="accidental fColor"
+								x="5473.869"
+								y="2060">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="5521.562"
+									y1="1760"
+									x2="5603.625"
+									y2="1760" />
+								<line
+									class="ledgerline"
+									x1="5521.562"
+									y1="1800"
+									x2="5603.625"
+									y2="1800" />
+								<line
+									class="ledgerline"
+									x1="5521.562"
+									y1="1840"
+									x2="5603.625"
+									y2="1840" />
+								<line
+									class="ledgerline"
+									x1="5521.562"
+									y1="1880"
+									x2="5603.625"
+									y2="1880" />
+							</g>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="5521.562"
+									y1="2120"
+									x2="5603.625"
+									y2="2120" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="5680.173"
+								y1="1562.108"
+								x2="5680.173"
+								y2="2115.38" />
+							<text
+								class="notehead fffColor"
+								x="5636.642"
+								y="2120">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="5618.625"
+									y1="2120"
+									x2="5700.689"
+									y2="2120" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="5800.082"
+								y1="1561.767"
+								x2="5800.082"
+								y2="2115.38" />
+							<text
+								class="notehead fColor"
+								x="5756.551"
+								y="2060">œ</text>
+							<text
+								class="notehead fffColor"
+								x="5756.551"
+								y="2120">œ</text>
+							<text
+								class="accidental fColor"
+								x="5690.841"
+								y="2060">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="5738.535"
+									y1="2120"
+									x2="5820.598"
+									y2="2120" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="5906.801"
+								y1="1561.464"
+								x2="5906.801"
+								y2="2115.38" />
+							<text
+								class="notehead fColor"
+								x="5863.27"
+								y="2060">œ</text>
+							<text
+								class="notehead fffColor"
+								x="5863.27"
+								y="2120">œ</text>
+							<text
+								class="accidental fColor"
+								x="5797.561"
+								y="2060">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="5845.254"
+									y1="2120"
+									x2="5927.317"
+									y2="2120" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="6050.558"
+								y1="1561.056"
+								x2="6050.558"
+								y2="2115.38" />
+							<text
+								class="notehead mpColor"
+								x="6007.027"
+								y="1940">œ</text>
+							<text
+								class="notehead fColor"
+								x="6007.027"
+								y="2060">œ</text>
+							<text
+								class="notehead fffColor"
+								x="6007.027"
+								y="2120">œ</text>
+							<text
+								class="accidental mpColor"
+								x="5958.062"
+								y="1940">#</text>
+							<text
+								class="accidental fColor"
+								x="5941.317"
+								y="2060">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="5989.011"
+									y1="2120"
+									x2="6071.074"
+									y2="2120" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="6194.315"
+								y1="1560.648"
+								x2="6194.315"
+								y2="2115.38" />
+							<text
+								class="notehead mpColor"
+								x="6150.784"
+								y="1940">œ</text>
+							<text
+								class="notehead fColor"
+								x="6150.784"
+								y="2060">œ</text>
+							<text
+								class="notehead fffColor"
+								x="6150.784"
+								y="2120">œ</text>
+							<text
+								class="accidental mpColor"
+								x="6101.818"
+								y="1940">#</text>
+							<text
+								class="accidental fColor"
+								x="6085.074"
+								y="2060">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="6132.768"
+									y1="2120"
+									x2="6214.831"
+									y2="2120" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="6338.072"
+								y1="1560.239"
+								x2="6338.072"
+								y2="2115.38" />
+							<text
+								class="notehead mpColor"
+								x="6294.541"
+								y="1940">œ</text>
+							<text
+								class="notehead fColor"
+								x="6294.541"
+								y="2060">œ</text>
+							<text
+								class="notehead fffColor"
+								x="6294.541"
+								y="2120">œ</text>
+							<text
+								class="accidental mpColor"
+								x="6245.575"
+								y="1940">#</text>
+							<text
+								class="accidental fColor"
+								x="6228.831"
+								y="2060">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="6276.524"
+									y1="2120"
+									x2="6358.588"
+									y2="2120" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="6481.829"
+								y1="1559.831"
+								x2="6481.829"
+								y2="2115.38" />
+							<text
+								class="notehead pColor"
+								x="6438.297"
+								y="1860">œ</text>
+							<text
+								class="notehead mpColor"
+								x="6438.297"
+								y="1940">œ</text>
+							<text
+								class="notehead fColor"
+								x="6438.297"
+								y="2060">œ</text>
+							<text
+								class="notehead fffColor"
+								x="6438.297"
+								y="2120">œ</text>
+							<text
+								class="accidental mpColor"
+								x="6372.588"
+								y="1940">#</text>
+							<text
+								class="accidental fColor"
+								x="6372.588"
+								y="2060">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="6420.281"
+									y1="1880"
+									x2="6502.345"
+									y2="1880" />
+							</g>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="6420.281"
+									y1="2120"
+									x2="6502.345"
+									y2="2120" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="6625.585"
+								y1="1559.423"
+								x2="6625.585"
+								y2="2115.38" />
+							<text
+								class="notehead pColor"
+								x="6582.054"
+								y="1860">œ</text>
+							<text
+								class="notehead mpColor"
+								x="6582.054"
+								y="1940">œ</text>
+							<text
+								class="notehead fColor"
+								x="6582.054"
+								y="2060">œ</text>
+							<text
+								class="notehead fffColor"
+								x="6582.054"
+								y="2120">œ</text>
+							<text
+								class="accidental mpColor"
+								x="6516.345"
+								y="1940">#</text>
+							<text
+								class="accidental fColor"
+								x="6516.345"
+								y="2060">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="6564.038"
+									y1="1880"
+									x2="6646.102"
+									y2="1880" />
+							</g>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="6564.038"
+									y1="2120"
+									x2="6646.102"
+									y2="2120" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="6769.342"
+								y1="1559.014"
+								x2="6769.342"
+								y2="2115.38" />
+							<text
+								class="notehead pColor"
+								x="6725.811"
+								y="1860">œ</text>
+							<text
+								class="notehead mpColor"
+								x="6725.811"
+								y="1940">œ</text>
+							<text
+								class="notehead fColor"
+								x="6725.811"
+								y="2060">œ</text>
+							<text
+								class="notehead fffColor"
+								x="6725.811"
+								y="2120">œ</text>
+							<text
+								class="accidental mpColor"
+								x="6660.102"
+								y="1940">#</text>
+							<text
+								class="accidental fColor"
+								x="6660.102"
+								y="2060">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="6707.795"
+									y1="1880"
+									x2="6789.858"
+									y2="1880" />
+							</g>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="6707.795"
+									y1="2120"
+									x2="6789.858"
+									y2="2120" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="6913.099"
+								y1="1558.606"
+								x2="6913.099"
+								y2="2115.38" />
+							<text
+								class="notehead ppColor"
+								x="6869.568"
+								y="1740">œ</text>
+							<text
+								class="notehead pColor"
+								x="6869.568"
+								y="1860">œ</text>
+							<text
+								class="notehead mpColor"
+								x="6869.568"
+								y="1940">œ</text>
+							<text
+								class="notehead fColor"
+								x="6869.568"
+								y="2060">œ</text>
+							<text
+								class="notehead fffColor"
+								x="6869.568"
+								y="2120">œ</text>
+							<text
+								class="accidental mpColor"
+								x="6803.858"
+								y="1940">#</text>
+							<text
+								class="accidental fColor"
+								x="6803.858"
+								y="2060">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="6851.552"
+									y1="1760"
+									x2="6933.615"
+									y2="1760" />
+								<line
+									class="ledgerline"
+									x1="6851.552"
+									y1="1800"
+									x2="6933.615"
+									y2="1800" />
+								<line
+									class="ledgerline"
+									x1="6851.552"
+									y1="1840"
+									x2="6933.615"
+									y2="1840" />
+								<line
+									class="ledgerline"
+									x1="6851.552"
+									y1="1880"
+									x2="6933.615"
+									y2="1880" />
+							</g>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="6851.552"
+									y1="2120"
+									x2="6933.615"
+									y2="2120" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="7056.856"
+								y1="1558.198"
+								x2="7056.856"
+								y2="2115.38" />
+							<text
+								class="notehead ppColor"
+								x="7013.325"
+								y="1740">œ</text>
+							<text
+								class="notehead pColor"
+								x="7013.325"
+								y="1860">œ</text>
+							<text
+								class="notehead mpColor"
+								x="7013.325"
+								y="1940">œ</text>
+							<text
+								class="notehead fColor"
+								x="7013.325"
+								y="2060">œ</text>
+							<text
+								class="notehead fffColor"
+								x="7013.325"
+								y="2120">œ</text>
+							<text
+								class="accidental mpColor"
+								x="6947.615"
+								y="1940">#</text>
+							<text
+								class="accidental fColor"
+								x="6947.615"
+								y="2060">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="6995.309"
+									y1="1760"
+									x2="7077.372"
+									y2="1760" />
+								<line
+									class="ledgerline"
+									x1="6995.309"
+									y1="1800"
+									x2="7077.372"
+									y2="1800" />
+								<line
+									class="ledgerline"
+									x1="6995.309"
+									y1="1840"
+									x2="7077.372"
+									y2="1840" />
+								<line
+									class="ledgerline"
+									x1="6995.309"
+									y1="1880"
+									x2="7077.372"
+									y2="1880" />
+							</g>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="6995.309"
+									y1="2120"
+									x2="7077.372"
+									y2="2120" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="7200.613"
+								y1="1557.79"
+								x2="7200.613"
+								y2="2115.38" />
+							<text
+								class="notehead ppColor"
+								x="7157.082"
+								y="1740">œ</text>
+							<text
+								class="notehead pColor"
+								x="7157.082"
+								y="1860">œ</text>
+							<text
+								class="notehead mpColor"
+								x="7157.082"
+								y="1940">œ</text>
+							<text
+								class="notehead fColor"
+								x="7157.082"
+								y="2060">œ</text>
+							<text
+								class="notehead fffColor"
+								x="7157.082"
+								y="2120">œ</text>
+							<text
+								class="accidental mpColor"
+								x="7091.372"
+								y="1940">#</text>
+							<text
+								class="accidental fColor"
+								x="7091.372"
+								y="2060">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="7139.065"
+									y1="1760"
+									x2="7221.129"
+									y2="1760" />
+								<line
+									class="ledgerline"
+									x1="7139.065"
+									y1="1800"
+									x2="7221.129"
+									y2="1800" />
+								<line
+									class="ledgerline"
+									x1="7139.065"
+									y1="1840"
+									x2="7221.129"
+									y2="1840" />
+								<line
+									class="ledgerline"
+									x1="7139.065"
+									y1="1880"
+									x2="7221.129"
+									y2="1880" />
+							</g>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="7139.065"
+									y1="2120"
+									x2="7221.129"
+									y2="2120" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="7297.676"
+								y1="1557.514"
+								x2="7297.676"
+								y2="2115.38" />
+							<text
+								class="notehead fffColor"
+								x="7254.145"
+								y="2120">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="7236.129"
+									y1="2120"
+									x2="7318.192"
+									y2="2120" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="7417.585"
+								y1="1557.173"
+								x2="7417.585"
+								y2="2115.38" />
+							<text
+								class="notehead fColor"
+								x="7374.054"
+								y="2060">œ</text>
+							<text
+								class="notehead fffColor"
+								x="7374.054"
+								y="2120">œ</text>
+							<text
+								class="accidental fColor"
+								x="7308.345"
+								y="2060">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="7356.038"
+									y1="2120"
+									x2="7438.102"
+									y2="2120" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="7524.305"
+								y1="1556.87"
+								x2="7524.305"
+								y2="2115.38" />
+							<text
+								class="notehead fColor"
+								x="7480.773"
+								y="2060">œ</text>
+							<text
+								class="notehead fffColor"
+								x="7480.773"
+								y="2120">œ</text>
+							<text
+								class="accidental fColor"
+								x="7415.064"
+								y="2060">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="7462.757"
+									y1="2120"
+									x2="7544.821"
+									y2="2120" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="7668.062"
+								y1="1556.462"
+								x2="7668.062"
+								y2="2115.38" />
+							<text
+								class="notehead mpColor"
+								x="7624.53"
+								y="1940">œ</text>
+							<text
+								class="notehead fColor"
+								x="7624.53"
+								y="2060">œ</text>
+							<text
+								class="notehead fffColor"
+								x="7624.53"
+								y="2120">œ</text>
+							<text
+								class="accidental mpColor"
+								x="7575.565"
+								y="1940">#</text>
+							<text
+								class="accidental fColor"
+								x="7558.821"
+								y="2060">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="7606.514"
+									y1="2120"
+									x2="7688.578"
+									y2="2120" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="7811.818"
+								y1="1556.054"
+								x2="7811.818"
+								y2="2115.38" />
+							<text
+								class="notehead mpColor"
+								x="7768.287"
+								y="1940">œ</text>
+							<text
+								class="notehead fColor"
+								x="7768.287"
+								y="2060">œ</text>
+							<text
+								class="notehead fffColor"
+								x="7768.287"
+								y="2120">œ</text>
+							<text
+								class="accidental mpColor"
+								x="7719.321"
+								y="1940">#</text>
+							<text
+								class="accidental fColor"
+								x="7702.578"
+								y="2060">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="7750.271"
+									y1="2120"
+									x2="7832.334"
+									y2="2120" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="7955.574"
+								y1="1555.646"
+								x2="7955.574"
+								y2="2115.38" />
+							<text
+								class="notehead mpColor"
+								x="7912.043"
+								y="1940">œ</text>
+							<text
+								class="notehead fColor"
+								x="7912.043"
+								y="2060">œ</text>
+							<text
+								class="notehead fffColor"
+								x="7912.043"
+								y="2120">œ</text>
+							<text
+								class="accidental mpColor"
+								x="7863.077"
+								y="1940">#</text>
+							<text
+								class="accidental fColor"
+								x="7846.334"
+								y="2060">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="7894.027"
+									y1="2120"
+									x2="7976.09"
+									y2="2120" />
+							</g>
+						</g>
+					</g>
+					<line
+						class="normalBarline"
+						x1="8024.895"
+						y1="1920"
+						x2="8024.895"
+						y2="2080" />
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="8124.26"
+								y1="1555.166"
+								x2="8124.26"
+								y2="2075.38" />
+							<text
+								class="notehead pColor"
+								x="8080.729"
+								y="1820">œ</text>
+							<text
+								class="notehead mpColor"
+								x="8080.729"
+								y="1900">œ</text>
+							<text
+								class="notehead fColor"
+								x="8080.729"
+								y="2000">œ</text>
+							<text
+								class="notehead fffColor"
+								x="8080.729"
+								y="2080">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="8062.713"
+									y1="1840"
+									x2="8144.775"
+									y2="1840" />
+								<line
+									class="ledgerline"
+									x1="8062.713"
+									y1="1880"
+									x2="8144.775"
+									y2="1880" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="8204.299"
+								y1="1554.939"
+								x2="8204.299"
+								y2="2075.38" />
+							<text
+								class="notehead pColor"
+								x="8160.768"
+								y="1820">œ</text>
+							<text
+								class="notehead mpColor"
+								x="8160.768"
+								y="1900">œ</text>
+							<text
+								class="notehead fColor"
+								x="8160.768"
+								y="2000">œ</text>
+							<text
+								class="notehead fffColor"
+								x="8160.768"
+								y="2080">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="8142.752"
+									y1="1840"
+									x2="8224.814"
+									y2="1840" />
+								<line
+									class="ledgerline"
+									x1="8142.752"
+									y1="1880"
+									x2="8224.814"
+									y2="1880" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="8279.842"
+								y1="1554.724"
+								x2="8279.842"
+								y2="2075.38" />
+							<text
+								class="notehead pColor"
+								x="8236.311"
+								y="1820">œ</text>
+							<text
+								class="notehead mpColor"
+								x="8236.311"
+								y="1900">œ</text>
+							<text
+								class="notehead fColor"
+								x="8236.311"
+								y="2000">œ</text>
+							<text
+								class="notehead fffColor"
+								x="8236.311"
+								y="2080">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="8218.295"
+									y1="1840"
+									x2="8300.357"
+									y2="1840" />
+								<line
+									class="ledgerline"
+									x1="8218.295"
+									y1="1880"
+									x2="8300.357"
+									y2="1880" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="8351.188"
+								y1="1554.522"
+								x2="8351.188"
+								y2="2075.38" />
+							<text
+								class="notehead ppColor"
+								x="8307.656"
+								y="1780">œ</text>
+							<text
+								class="notehead pColor"
+								x="8307.656"
+								y="1820">œ</text>
+							<text
+								class="notehead mpColor"
+								x="8307.656"
+								y="1900">œ</text>
+							<text
+								class="notehead fColor"
+								x="8307.656"
+								y="2000">œ</text>
+							<text
+								class="notehead fffColor"
+								x="8307.656"
+								y="2080">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="8289.641"
+									y1="1800"
+									x2="8371.703"
+									y2="1800" />
+								<line
+									class="ledgerline"
+									x1="8289.641"
+									y1="1840"
+									x2="8371.703"
+									y2="1840" />
+								<line
+									class="ledgerline"
+									x1="8289.641"
+									y1="1880"
+									x2="8371.703"
+									y2="1880" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="8418.337"
+								y1="1554.331"
+								x2="8418.337"
+								y2="2075.38" />
+							<text
+								class="notehead ppColor"
+								x="8374.806"
+								y="1780">œ</text>
+							<text
+								class="notehead pColor"
+								x="8374.806"
+								y="1820">œ</text>
+							<text
+								class="notehead mpColor"
+								x="8374.806"
+								y="1900">œ</text>
+							<text
+								class="notehead fColor"
+								x="8374.806"
+								y="2000">œ</text>
+							<text
+								class="notehead fffColor"
+								x="8374.806"
+								y="2080">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="8356.79"
+									y1="1800"
+									x2="8438.853"
+									y2="1800" />
+								<line
+									class="ledgerline"
+									x1="8356.79"
+									y1="1840"
+									x2="8438.853"
+									y2="1840" />
+								<line
+									class="ledgerline"
+									x1="8356.79"
+									y1="1880"
+									x2="8438.853"
+									y2="1880" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="8515.399"
+								y1="1554.056"
+								x2="8515.399"
+								y2="2075.38" />
+							<text
+								class="notehead ppColor"
+								x="8471.868"
+								y="1780">œ</text>
+							<text
+								class="notehead pColor"
+								x="8471.868"
+								y="1820">œ</text>
+							<text
+								class="notehead mpColor"
+								x="8471.868"
+								y="1900">œ</text>
+							<text
+								class="notehead fColor"
+								x="8471.868"
+								y="2000">œ</text>
+							<text
+								class="notehead fffColor"
+								x="8471.868"
+								y="2080">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="8453.853"
+									y1="1800"
+									x2="8535.915"
+									y2="1800" />
+								<line
+									class="ledgerline"
+									x1="8453.853"
+									y1="1840"
+									x2="8535.915"
+									y2="1840" />
+								<line
+									class="ledgerline"
+									x1="8453.853"
+									y1="1880"
+									x2="8535.915"
+									y2="1880" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="8575.354"
+								y1="1553.885"
+								x2="8575.354"
+								y2="2075.38" />
+							<text
+								class="notehead fffColor"
+								x="8531.823"
+								y="2080">œ</text>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="8695.264"
+								y1="1553.545"
+								x2="8695.264"
+								y2="2075.38" />
+							<text
+								class="notehead fColor"
+								x="8651.732"
+								y="2000">œ</text>
+							<text
+								class="notehead fffColor"
+								x="8651.732"
+								y="2080">œ</text>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="8801.983"
+								y1="1553.242"
+								x2="8801.983"
+								y2="2075.38" />
+							<text
+								class="notehead fColor"
+								x="8758.452"
+								y="2000">œ</text>
+							<text
+								class="notehead fffColor"
+								x="8758.452"
+								y="2080">œ</text>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="8902.707"
+								y1="1552.956"
+								x2="8902.707"
+								y2="2075.38" />
+							<text
+								class="notehead mpColor"
+								x="8859.176"
+								y="1900">œ</text>
+							<text
+								class="notehead fColor"
+								x="8859.176"
+								y="2000">œ</text>
+							<text
+								class="notehead fffColor"
+								x="8859.176"
+								y="2080">œ</text>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="8997.735"
+								y1="1552.686"
+								x2="8997.735"
+								y2="2075.38" />
+							<text
+								class="notehead mpColor"
+								x="8954.204"
+								y="1900">œ</text>
+							<text
+								class="notehead fColor"
+								x="8954.204"
+								y="2000">œ</text>
+							<text
+								class="notehead fffColor"
+								x="8954.204"
+								y="2080">œ</text>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="9087.668"
+								y1="1552.43"
+								x2="9087.668"
+								y2="2075.38" />
+							<text
+								class="notehead mpColor"
+								x="9044.137"
+								y="1900">œ</text>
+							<text
+								class="notehead fColor"
+								x="9044.137"
+								y="2000">œ</text>
+							<text
+								class="notehead fffColor"
+								x="9044.137"
+								y="2080">œ</text>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="9172.504"
+								y1="1552.189"
+								x2="9172.504"
+								y2="2075.38" />
+							<text
+								class="notehead pColor"
+								x="9128.973"
+								y="1820">œ</text>
+							<text
+								class="notehead mpColor"
+								x="9128.973"
+								y="1900">œ</text>
+							<text
+								class="notehead fColor"
+								x="9128.973"
+								y="2000">œ</text>
+							<text
+								class="notehead fffColor"
+								x="9128.973"
+								y="2080">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="9110.957"
+									y1="1840"
+									x2="9193.02"
+									y2="1840" />
+								<line
+									class="ledgerline"
+									x1="9110.957"
+									y1="1880"
+									x2="9193.02"
+									y2="1880" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="9252.544"
+								y1="1551.962"
+								x2="9252.544"
+								y2="2075.38" />
+							<text
+								class="notehead pColor"
+								x="9209.013"
+								y="1820">œ</text>
+							<text
+								class="notehead mpColor"
+								x="9209.013"
+								y="1900">œ</text>
+							<text
+								class="notehead fColor"
+								x="9209.013"
+								y="2000">œ</text>
+							<text
+								class="notehead fffColor"
+								x="9209.013"
+								y="2080">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="9190.997"
+									y1="1840"
+									x2="9273.06"
+									y2="1840" />
+								<line
+									class="ledgerline"
+									x1="9190.997"
+									y1="1880"
+									x2="9273.06"
+									y2="1880" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="9328.087"
+								y1="1551.747"
+								x2="9328.087"
+								y2="2075.38" />
+							<text
+								class="notehead pColor"
+								x="9284.556"
+								y="1820">œ</text>
+							<text
+								class="notehead mpColor"
+								x="9284.556"
+								y="1900">œ</text>
+							<text
+								class="notehead fColor"
+								x="9284.556"
+								y="2000">œ</text>
+							<text
+								class="notehead fffColor"
+								x="9284.556"
+								y="2080">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="9266.54"
+									y1="1840"
+									x2="9348.603"
+									y2="1840" />
+								<line
+									class="ledgerline"
+									x1="9266.54"
+									y1="1880"
+									x2="9348.603"
+									y2="1880" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="9399.433"
+								y1="1551.545"
+								x2="9399.433"
+								y2="2075.38" />
+							<text
+								class="notehead ppColor"
+								x="9355.901"
+								y="1780">œ</text>
+							<text
+								class="notehead pColor"
+								x="9355.901"
+								y="1820">œ</text>
+							<text
+								class="notehead mpColor"
+								x="9355.901"
+								y="1900">œ</text>
+							<text
+								class="notehead fColor"
+								x="9355.901"
+								y="2000">œ</text>
+							<text
+								class="notehead fffColor"
+								x="9355.901"
+								y="2080">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="9337.886"
+									y1="1800"
+									x2="9419.948"
+									y2="1800" />
+								<line
+									class="ledgerline"
+									x1="9337.886"
+									y1="1840"
+									x2="9419.948"
+									y2="1840" />
+								<line
+									class="ledgerline"
+									x1="9337.886"
+									y1="1880"
+									x2="9419.948"
+									y2="1880" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="9466.582"
+								y1="1551.354"
+								x2="9466.582"
+								y2="2075.38" />
+							<text
+								class="notehead ppColor"
+								x="9423.051"
+								y="1780">œ</text>
+							<text
+								class="notehead pColor"
+								x="9423.051"
+								y="1820">œ</text>
+							<text
+								class="notehead mpColor"
+								x="9423.051"
+								y="1900">œ</text>
+							<text
+								class="notehead fColor"
+								x="9423.051"
+								y="2000">œ</text>
+							<text
+								class="notehead fffColor"
+								x="9423.051"
+								y="2080">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="9405.035"
+									y1="1800"
+									x2="9487.098"
+									y2="1800" />
+								<line
+									class="ledgerline"
+									x1="9405.035"
+									y1="1840"
+									x2="9487.098"
+									y2="1840" />
+								<line
+									class="ledgerline"
+									x1="9405.035"
+									y1="1880"
+									x2="9487.098"
+									y2="1880" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="9563.645"
+								y1="1551.078"
+								x2="9563.645"
+								y2="2075.38" />
+							<text
+								class="notehead ppColor"
+								x="9520.113"
+								y="1780">œ</text>
+							<text
+								class="notehead pColor"
+								x="9520.113"
+								y="1820">œ</text>
+							<text
+								class="notehead mpColor"
+								x="9520.113"
+								y="1900">œ</text>
+							<text
+								class="notehead fColor"
+								x="9520.113"
+								y="2000">œ</text>
+							<text
+								class="notehead fffColor"
+								x="9520.113"
+								y="2080">œ</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="9502.098"
+									y1="1800"
+									x2="9584.16"
+									y2="1800" />
+								<line
+									class="ledgerline"
+									x1="9502.098"
+									y1="1840"
+									x2="9584.16"
+									y2="1840" />
+								<line
+									class="ledgerline"
+									x1="9502.098"
+									y1="1880"
+									x2="9584.16"
+									y2="1880" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="9623.6"
+								y1="1550.908"
+								x2="9623.6"
+								y2="2075.38" />
+							<text
+								class="notehead fffColor"
+								x="9580.068"
+								y="2080">œ</text>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="9743.509"
+								y1="1550.568"
+								x2="9743.509"
+								y2="2075.38" />
+							<text
+								class="notehead fColor"
+								x="9699.978"
+								y="2000">œ</text>
+							<text
+								class="notehead fffColor"
+								x="9699.978"
+								y="2080">œ</text>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="9850.229"
+								y1="1550.265"
+								x2="9850.229"
+								y2="2075.38" />
+							<text
+								class="notehead fColor"
+								x="9806.697"
+								y="2000">œ</text>
+							<text
+								class="notehead fffColor"
+								x="9806.697"
+								y="2080">œ</text>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="9950.952"
+								y1="1549.978"
+								x2="9950.952"
+								y2="2075.38" />
+							<text
+								class="notehead mpColor"
+								x="9907.421"
+								y="1900">œ</text>
+							<text
+								class="notehead fColor"
+								x="9907.421"
+								y="2000">œ</text>
+							<text
+								class="notehead fffColor"
+								x="9907.421"
+								y="2080">œ</text>
+						</g>
+					</g>
+					<line
+						class="normalBarline"
+						x1="10030.46"
+						y1="1920"
+						x2="10030.46"
+						y2="2080" />
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="10136.96"
+								y1="1549.45"
+								x2="10136.96"
+								y2="2075.38" />
+							<text
+								class="notehead mpColor"
+								x="10136.96"
+								y="2000">œ</text>
+							<text
+								class="notehead ffColor"
+								x="10093.43"
+								y="2020">œ</text>
+							<text
+								class="notehead ffColor"
+								x="10093.43"
+								y="2080">œ</text>
+							<text
+								class="accidental ffColor"
+								x="10044.46"
+								y="2020">#</text>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="10290.76"
+								y1="1549.013"
+								x2="10290.76"
+								y2="2075.38" />
+							<text
+								class="notehead mpColor"
+								x="10290.76"
+								y="2000">œ</text>
+							<text
+								class="notehead ffColor"
+								x="10247.23"
+								y="2020">œ</text>
+							<text
+								class="notehead ffColor"
+								x="10247.23"
+								y="2080">œ</text>
+							<text
+								class="accidental ffColor"
+								x="10198.27"
+								y="2020">#</text>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="10491.41"
+								y1="1548.443"
+								x2="10491.41"
+								y2="2075.38" />
+							<text
+								class="notehead pColor"
+								x="10447.88"
+								y="1940">œ</text>
+							<text
+								class="notehead mpColor"
+								x="10491.41"
+								y="2000">œ</text>
+							<text
+								class="notehead ffColor"
+								x="10447.88"
+								y="2020">œ</text>
+							<text
+								class="notehead ffColor"
+								x="10447.88"
+								y="2080">œ</text>
+							<text
+								class="accidental pColor"
+								x="10398.92"
+								y="1940">#</text>
+							<text
+								class="accidental ffColor"
+								x="10352.07"
+								y="2020">#</text>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="10692.06"
+								y1="1547.874"
+								x2="10692.06"
+								y2="2075.38" />
+							<text
+								class="notehead pColor"
+								x="10648.53"
+								y="1940">œ</text>
+							<text
+								class="notehead mpColor"
+								x="10692.06"
+								y="2000">œ</text>
+							<text
+								class="notehead ffColor"
+								x="10648.53"
+								y="2020">œ</text>
+							<text
+								class="notehead ffColor"
+								x="10648.53"
+								y="2080">œ</text>
+							<text
+								class="accidental pColor"
+								x="10599.57"
+								y="1940">#</text>
+							<text
+								class="accidental ffColor"
+								x="10552.72"
+								y="2020">#</text>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="10892.71"
+								y1="1547.304"
+								x2="10892.71"
+								y2="2075.38" />
+							<text
+								class="notehead pColor"
+								x="10849.18"
+								y="1940">œ</text>
+							<text
+								class="notehead mpColor"
+								x="10892.71"
+								y="2000">œ</text>
+							<text
+								class="notehead ffColor"
+								x="10849.18"
+								y="2020">œ</text>
+							<text
+								class="notehead ffColor"
+								x="10849.18"
+								y="2080">œ</text>
+							<text
+								class="accidental pColor"
+								x="10800.22"
+								y="1940">#</text>
+							<text
+								class="accidental ffColor"
+								x="10753.37"
+								y="2020">#</text>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="11110.11"
+								y1="1546.686"
+								x2="11110.11"
+								y2="2075.38" />
+							<text
+								class="notehead ppColor"
+								x="11066.58"
+								y="1880">œ</text>
+							<text
+								class="notehead pColor"
+								x="11066.58"
+								y="1940">œ</text>
+							<text
+								class="notehead mpColor"
+								x="11110.11"
+								y="2000">œ</text>
+							<text
+								class="notehead ffColor"
+								x="11066.58"
+								y="2020">œ</text>
+							<text
+								class="notehead ffColor"
+								x="11066.58"
+								y="2080">œ</text>
+							<text
+								class="accidental pColor"
+								x="11000.87"
+								y="1940">#</text>
+							<text
+								class="accidental ffColor"
+								x="10954.02"
+								y="2020">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="11048.56"
+									y1="1880"
+									x2="11130.62"
+									y2="1880" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="11327.5"
+								y1="1546.069"
+								x2="11327.5"
+								y2="2075.38" />
+							<text
+								class="notehead ppColor"
+								x="11283.97"
+								y="1880">œ</text>
+							<text
+								class="notehead pColor"
+								x="11283.97"
+								y="1940">œ</text>
+							<text
+								class="notehead mpColor"
+								x="11327.5"
+								y="2000">œ</text>
+							<text
+								class="notehead ffColor"
+								x="11283.97"
+								y="2020">œ</text>
+							<text
+								class="notehead ffColor"
+								x="11283.97"
+								y="2080">œ</text>
+							<text
+								class="accidental pColor"
+								x="11218.26"
+								y="1940">#</text>
+							<text
+								class="accidental ffColor"
+								x="11171.41"
+								y="2020">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="11265.96"
+									y1="1880"
+									x2="11348.02"
+									y2="1880" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="11544.9"
+								y1="1545.452"
+								x2="11544.9"
+								y2="2075.38" />
+							<text
+								class="notehead ppColor"
+								x="11501.37"
+								y="1880">œ</text>
+							<text
+								class="notehead pColor"
+								x="11501.37"
+								y="1940">œ</text>
+							<text
+								class="notehead mpColor"
+								x="11544.9"
+								y="2000">œ</text>
+							<text
+								class="notehead ffColor"
+								x="11501.37"
+								y="2020">œ</text>
+							<text
+								class="notehead ffColor"
+								x="11501.37"
+								y="2080">œ</text>
+							<text
+								class="accidental pColor"
+								x="11435.66"
+								y="1940">#</text>
+							<text
+								class="accidental ffColor"
+								x="11388.81"
+								y="2020">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="11483.35"
+									y1="1880"
+									x2="11565.41"
+									y2="1880" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="11604.85"
+								y1="1545.281"
+								x2="11604.85"
+								y2="2075.38" />
+							<text
+								class="notehead ffColor"
+								x="11561.32"
+								y="2080">œ</text>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="11724.76"
+								y1="1544.941"
+								x2="11724.76"
+								y2="2075.38" />
+							<text
+								class="notehead ffColor"
+								x="11681.23"
+								y="2020">œ</text>
+							<text
+								class="notehead ffColor"
+								x="11681.23"
+								y="2080">œ</text>
+							<text
+								class="accidental ffColor"
+								x="11632.26"
+								y="2020">#</text>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="11831.48"
+								y1="1544.638"
+								x2="11831.48"
+								y2="2075.38" />
+							<text
+								class="notehead ffColor"
+								x="11787.95"
+								y="2020">œ</text>
+							<text
+								class="notehead ffColor"
+								x="11787.95"
+								y="2080">œ</text>
+							<text
+								class="accidental ffColor"
+								x="11738.98"
+								y="2020">#</text>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="11932.21"
+								y1="1544.352"
+								x2="11932.21"
+								y2="2075.38" />
+							<text
+								class="notehead mpColor"
+								x="11932.21"
+								y="2000">œ</text>
+							<text
+								class="notehead ffColor"
+								x="11888.67"
+								y="2020">œ</text>
+							<text
+								class="notehead ffColor"
+								x="11888.67"
+								y="2080">œ</text>
+							<text
+								class="accidental ffColor"
+								x="11839.71"
+								y="2020">#</text>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="12086.01"
+								y1="1543.915"
+								x2="12086.01"
+								y2="2075.38" />
+							<text
+								class="notehead mpColor"
+								x="12086.01"
+								y="2000">œ</text>
+							<text
+								class="notehead ffColor"
+								x="12042.47"
+								y="2020">œ</text>
+							<text
+								class="notehead ffColor"
+								x="12042.47"
+								y="2080">œ</text>
+							<text
+								class="accidental ffColor"
+								x="11993.51"
+								y="2020">#</text>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="12239.81"
+								y1="1543.478"
+								x2="12239.81"
+								y2="2075.38" />
+							<text
+								class="notehead mpColor"
+								x="12239.81"
+								y="2000">œ</text>
+							<text
+								class="notehead ffColor"
+								x="12196.28"
+								y="2020">œ</text>
+							<text
+								class="notehead ffColor"
+								x="12196.28"
+								y="2080">œ</text>
+							<text
+								class="accidental ffColor"
+								x="12147.31"
+								y="2020">#</text>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="12440.46"
+								y1="1542.908"
+								x2="12440.46"
+								y2="2075.38" />
+							<text
+								class="notehead pColor"
+								x="12396.93"
+								y="1940">œ</text>
+							<text
+								class="notehead mpColor"
+								x="12440.46"
+								y="2000">œ</text>
+							<text
+								class="notehead ffColor"
+								x="12396.93"
+								y="2020">œ</text>
+							<text
+								class="notehead ffColor"
+								x="12396.93"
+								y="2080">œ</text>
+							<text
+								class="accidental pColor"
+								x="12347.96"
+								y="1940">#</text>
+							<text
+								class="accidental ffColor"
+								x="12301.11"
+								y="2020">#</text>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="12641.11"
+								y1="1542.338"
+								x2="12641.11"
+								y2="2075.38" />
+							<text
+								class="notehead pColor"
+								x="12597.58"
+								y="1940">œ</text>
+							<text
+								class="notehead mpColor"
+								x="12641.11"
+								y="2000">œ</text>
+							<text
+								class="notehead ffColor"
+								x="12597.58"
+								y="2020">œ</text>
+							<text
+								class="notehead ffColor"
+								x="12597.58"
+								y="2080">œ</text>
+							<text
+								class="accidental pColor"
+								x="12548.61"
+								y="1940">#</text>
+							<text
+								class="accidental ffColor"
+								x="12501.76"
+								y="2020">#</text>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="12841.76"
+								y1="1541.768"
+								x2="12841.76"
+								y2="2075.38" />
+							<text
+								class="notehead pColor"
+								x="12798.23"
+								y="1940">œ</text>
+							<text
+								class="notehead mpColor"
+								x="12841.76"
+								y="2000">œ</text>
+							<text
+								class="notehead ffColor"
+								x="12798.23"
+								y="2020">œ</text>
+							<text
+								class="notehead ffColor"
+								x="12798.23"
+								y="2080">œ</text>
+							<text
+								class="accidental pColor"
+								x="12749.26"
+								y="1940">#</text>
+							<text
+								class="accidental ffColor"
+								x="12702.41"
+								y="2020">#</text>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="13059.15"
+								y1="1541.151"
+								x2="13059.15"
+								y2="2075.38" />
+							<text
+								class="notehead ppColor"
+								x="13015.62"
+								y="1880">œ</text>
+							<text
+								class="notehead pColor"
+								x="13015.62"
+								y="1940">œ</text>
+							<text
+								class="notehead mpColor"
+								x="13059.15"
+								y="2000">œ</text>
+							<text
+								class="notehead ffColor"
+								x="13015.62"
+								y="2020">œ</text>
+							<text
+								class="notehead ffColor"
+								x="13015.62"
+								y="2080">œ</text>
+							<text
+								class="accidental pColor"
+								x="12949.91"
+								y="1940">#</text>
+							<text
+								class="accidental ffColor"
+								x="12903.06"
+								y="2020">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="12997.61"
+									y1="1880"
+									x2="13079.67"
+									y2="1880" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="13276.55"
+								y1="1540.533"
+								x2="13276.55"
+								y2="2075.38" />
+							<text
+								class="notehead ppColor"
+								x="13233.02"
+								y="1880">œ</text>
+							<text
+								class="notehead pColor"
+								x="13233.02"
+								y="1940">œ</text>
+							<text
+								class="notehead mpColor"
+								x="13276.55"
+								y="2000">œ</text>
+							<text
+								class="notehead ffColor"
+								x="13233.02"
+								y="2020">œ</text>
+							<text
+								class="notehead ffColor"
+								x="13233.02"
+								y="2080">œ</text>
+							<text
+								class="accidental pColor"
+								x="13167.31"
+								y="1940">#</text>
+							<text
+								class="accidental ffColor"
+								x="13120.46"
+								y="2020">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="13215"
+									y1="1880"
+									x2="13297.06"
+									y2="1880" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="13493.94"
+								y1="1539.916"
+								x2="13493.94"
+								y2="2075.38" />
+							<text
+								class="notehead ppColor"
+								x="13450.41"
+								y="1880">œ</text>
+							<text
+								class="notehead pColor"
+								x="13450.41"
+								y="1940">œ</text>
+							<text
+								class="notehead mpColor"
+								x="13493.94"
+								y="2000">œ</text>
+							<text
+								class="notehead ffColor"
+								x="13450.41"
+								y="2020">œ</text>
+							<text
+								class="notehead ffColor"
+								x="13450.41"
+								y="2080">œ</text>
+							<text
+								class="accidental pColor"
+								x="13384.7"
+								y="1940">#</text>
+							<text
+								class="accidental ffColor"
+								x="13337.85"
+								y="2020">#</text>
+							<g
+								class="ledgerlines">
+								<line
+									class="ledgerline"
+									x1="13432.39"
+									y1="1880"
+									x2="13514.46"
+									y2="1880" />
+							</g>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="13553.9"
+								y1="1539.746"
+								x2="13553.9"
+								y2="2075.38" />
+							<text
+								class="notehead ffColor"
+								x="13510.37"
+								y="2080">œ</text>
+						</g>
+					</g>
+					<g
+						class="chord">
+						<g
+							class="graphics">
+							<line
+								class="stem"
+								x1="13673.81"
+								y1="1539.405"
+								x2="13673.81"
+								y2="2075.38" />
+							<text
+								class="notehead ffColor"
+								x="13630.27"
+								y="2020">œ</text>
+							<text
+								class="notehead ffColor"
+								x="13630.27"
+								y="2080">œ</text>
+							<text
+								class="accidental ffColor"
+								x="13581.31"
+								y="2020">#</text>
+						</g>
+					</g>
+					<g
+						class="endRegionBarline">
+						<line
+							class="thinBarline"
+							x1="13762.51"
+							y1="1917.5"
+							x2="13762.51"
+							y2="2082.5" />
+						<line
+							class="thickBarline"
+							x1="13790.01"
+							y1="1917.5"
+							x2="13790.01"
+							y2="2082.5" />
+					</g>
+					<line
+						class="regionFrameConnector"
+						x1="13790.01"
+						y1="1099.939"
+						x2="13790.01"
+						y2="1920" />
+					<g
+						class="framedRegionInfo">
+						<rect
+							class="regionInfoFrame"
+							x="13410.81"
+							y="958.9387"
+							width="379.2002"
+							height="141" />
+						<text
+							class="regionInfoString"
+							x="13600.41"
+							y="1069.939">B➔C</text>
+					</g>
+				</g>
+			</g>
+			<g
+				class="staff"
+				staffName="1">
+				<g
+					class="stafflines">
+					<line
+						class="staffline"
+						x1="500"
+						y1="2240"
+						x2="13790"
+						y2="2240" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="2280"
+						x2="13790"
+						y2="2280" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="2320"
+						x2="13790"
+						y2="2320" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="2360"
+						x2="13790"
+						y2="2360" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="2400"
+						x2="13790"
+						y2="2400" />
+				</g>
+				<g
+					class="voice">
+					<use
+						class="clef"
+						href="#trebleClef"
+						x="500"
+						y="2360" />
+					<g
+						class="startRegionBarline">
+						<line
+							class="thickBarline"
+							x1="639"
+							y1="2240"
+							x2="639"
+							y2="2400" />
+						<line
+							class="thinBarline"
+							x1="666.5"
+							y1="2240"
+							x2="666.5"
+							y2="2400" />
+					</g>
+					<text
+						class="staffName"
+						x="290"
+						y="2352">1</text>
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="710.0007"
+								y="2320">∑</text>
+						</g>
+					</g>
+					<g
+						class="endAndStartRegionBarline">
+						<line
+							class="thinBarline"
+							x1="2890.678"
+							y1="2240"
+							x2="2890.678"
+							y2="2400" />
+						<line
+							class="thickBarline"
+							x1="2918.178"
+							y1="2240"
+							x2="2918.178"
+							y2="2400" />
+						<line
+							class="thinBarline"
+							x1="2945.678"
+							y1="2240"
+							x2="2945.678"
+							y2="2400" />
+					</g>
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="2989.179"
+								y="2320">∑</text>
+						</g>
+					</g>
+					<line
+						class="normalBarline"
+						x1="5172.355"
+						y1="2240"
+						x2="5172.355"
+						y2="2400" />
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="5242.231"
+								y="2320">∑</text>
+						</g>
+					</g>
+					<line
+						class="normalBarline"
+						x1="8024.895"
+						y1="2240"
+						x2="8024.895"
+						y2="2400" />
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="8070.896"
+								y="2320">∑</text>
+						</g>
+					</g>
+					<line
+						class="normalBarline"
+						x1="10030.46"
+						y1="2240"
+						x2="10030.46"
+						y2="2400" />
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="10083.6"
+								y="2320">∑</text>
+						</g>
+					</g>
+					<g
+						class="endRegionBarline">
+						<line
+							class="thinBarline"
+							x1="13762.51"
+							y1="2237.5"
+							x2="13762.51"
+							y2="2402.5" />
+						<line
+							class="thickBarline"
+							x1="13790.01"
+							y1="2237.5"
+							x2="13790.01"
+							y2="2402.5" />
+					</g>
+				</g>
+			</g>
+			<g
+				class="staff"
+				staffName="2">
+				<g
+					class="stafflines">
+					<line
+						class="staffline"
+						x1="500"
+						y1="2600"
+						x2="13790"
+						y2="2600" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="2640"
+						x2="13790"
+						y2="2640" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="2680"
+						x2="13790"
+						y2="2680" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="2720"
+						x2="13790"
+						y2="2720" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="2760"
+						x2="13790"
+						y2="2760" />
+				</g>
+				<g
+					class="voice">
+					<use
+						class="clef"
+						href="#trebleClef"
+						x="500"
+						y="2720" />
+					<g
+						class="startRegionBarline">
+						<line
+							class="thickBarline"
+							x1="639"
+							y1="2600"
+							x2="639"
+							y2="2760" />
+						<line
+							class="thinBarline"
+							x1="666.5"
+							y1="2600"
+							x2="666.5"
+							y2="2760" />
+					</g>
+					<text
+						class="staffName"
+						x="290"
+						y="2712">2</text>
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="710.0007"
+								y="2680">∑</text>
+						</g>
+					</g>
+					<g
+						class="endAndStartRegionBarline">
+						<line
+							class="thinBarline"
+							x1="2890.678"
+							y1="2600"
+							x2="2890.678"
+							y2="2760" />
+						<line
+							class="thickBarline"
+							x1="2918.178"
+							y1="2600"
+							x2="2918.178"
+							y2="2760" />
+						<line
+							class="thinBarline"
+							x1="2945.678"
+							y1="2600"
+							x2="2945.678"
+							y2="2760" />
+					</g>
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="2989.179"
+								y="2680">∑</text>
+						</g>
+					</g>
+					<line
+						class="normalBarline"
+						x1="5172.355"
+						y1="2600"
+						x2="5172.355"
+						y2="2760" />
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="5242.231"
+								y="2680">∑</text>
+						</g>
+					</g>
+					<line
+						class="normalBarline"
+						x1="8024.895"
+						y1="2600"
+						x2="8024.895"
+						y2="2760" />
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="8070.896"
+								y="2680">∑</text>
+						</g>
+					</g>
+					<line
+						class="normalBarline"
+						x1="10030.46"
+						y1="2600"
+						x2="10030.46"
+						y2="2760" />
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="10083.6"
+								y="2680">∑</text>
+						</g>
+					</g>
+					<g
+						class="endRegionBarline">
+						<line
+							class="thinBarline"
+							x1="13762.51"
+							y1="2597.5"
+							x2="13762.51"
+							y2="2762.5" />
+						<line
+							class="thickBarline"
+							x1="13790.01"
+							y1="2597.5"
+							x2="13790.01"
+							y2="2762.5" />
+					</g>
+				</g>
+			</g>
+			<g
+				class="staff"
+				staffName="3">
+				<g
+					class="stafflines">
+					<line
+						class="staffline"
+						x1="500"
+						y1="2960"
+						x2="13790"
+						y2="2960" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="3000"
+						x2="13790"
+						y2="3000" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="3040"
+						x2="13790"
+						y2="3040" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="3080"
+						x2="13790"
+						y2="3080" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="3120"
+						x2="13790"
+						y2="3120" />
+				</g>
+				<g
+					class="voice">
+					<use
+						class="clef"
+						href="#trebleClef"
+						x="500"
+						y="3080" />
+					<g
+						class="startRegionBarline">
+						<line
+							class="thickBarline"
+							x1="639"
+							y1="2960"
+							x2="639"
+							y2="3120" />
+						<line
+							class="thinBarline"
+							x1="666.5"
+							y1="2960"
+							x2="666.5"
+							y2="3120" />
+					</g>
+					<text
+						class="staffName"
+						x="290"
+						y="3072">3</text>
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="710.0007"
+								y="3040">∑</text>
+						</g>
+					</g>
+					<g
+						class="endAndStartRegionBarline">
+						<line
+							class="thinBarline"
+							x1="2890.678"
+							y1="2960"
+							x2="2890.678"
+							y2="3120" />
+						<line
+							class="thickBarline"
+							x1="2918.178"
+							y1="2960"
+							x2="2918.178"
+							y2="3120" />
+						<line
+							class="thinBarline"
+							x1="2945.678"
+							y1="2960"
+							x2="2945.678"
+							y2="3120" />
+					</g>
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="2989.179"
+								y="3040">∑</text>
+						</g>
+					</g>
+					<line
+						class="normalBarline"
+						x1="5172.355"
+						y1="2960"
+						x2="5172.355"
+						y2="3120" />
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="5242.231"
+								y="3040">∑</text>
+						</g>
+					</g>
+					<line
+						class="normalBarline"
+						x1="8024.895"
+						y1="2960"
+						x2="8024.895"
+						y2="3120" />
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="8070.896"
+								y="3040">∑</text>
+						</g>
+					</g>
+					<line
+						class="normalBarline"
+						x1="10030.46"
+						y1="2960"
+						x2="10030.46"
+						y2="3120" />
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="10083.6"
+								y="3040">∑</text>
+						</g>
+					</g>
+					<g
+						class="endRegionBarline">
+						<line
+							class="thinBarline"
+							x1="13762.51"
+							y1="2957.5"
+							x2="13762.51"
+							y2="3122.5" />
+						<line
+							class="thickBarline"
+							x1="13790.01"
+							y1="2957.5"
+							x2="13790.01"
+							y2="3122.5" />
+					</g>
+				</g>
+			</g>
+			<g
+				class="staff"
+				staffName="4">
+				<g
+					class="stafflines">
+					<line
+						class="staffline"
+						x1="500"
+						y1="3320"
+						x2="13790"
+						y2="3320" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="3360"
+						x2="13790"
+						y2="3360" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="3400"
+						x2="13790"
+						y2="3400" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="3440"
+						x2="13790"
+						y2="3440" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="3480"
+						x2="13790"
+						y2="3480" />
+				</g>
+				<g
+					class="voice">
+					<use
+						class="clef"
+						href="#trebleClef"
+						x="500"
+						y="3440" />
+					<g
+						class="startRegionBarline">
+						<line
+							class="thickBarline"
+							x1="639"
+							y1="3320"
+							x2="639"
+							y2="3480" />
+						<line
+							class="thinBarline"
+							x1="666.5"
+							y1="3320"
+							x2="666.5"
+							y2="3480" />
+					</g>
+					<text
+						class="staffName"
+						x="290"
+						y="3432">4</text>
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="710.0007"
+								y="3400">∑</text>
+						</g>
+					</g>
+					<g
+						class="endAndStartRegionBarline">
+						<line
+							class="thinBarline"
+							x1="2890.678"
+							y1="3320"
+							x2="2890.678"
+							y2="3480" />
+						<line
+							class="thickBarline"
+							x1="2918.178"
+							y1="3320"
+							x2="2918.178"
+							y2="3480" />
+						<line
+							class="thinBarline"
+							x1="2945.678"
+							y1="3320"
+							x2="2945.678"
+							y2="3480" />
+					</g>
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="2989.179"
+								y="3400">∑</text>
+						</g>
+					</g>
+					<line
+						class="normalBarline"
+						x1="5172.355"
+						y1="3320"
+						x2="5172.355"
+						y2="3480" />
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="5242.231"
+								y="3400">∑</text>
+						</g>
+					</g>
+					<line
+						class="normalBarline"
+						x1="8024.895"
+						y1="3320"
+						x2="8024.895"
+						y2="3480" />
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="8070.896"
+								y="3400">∑</text>
+						</g>
+					</g>
+					<line
+						class="normalBarline"
+						x1="10030.46"
+						y1="3320"
+						x2="10030.46"
+						y2="3480" />
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="10083.6"
+								y="3400">∑</text>
+						</g>
+					</g>
+					<g
+						class="endRegionBarline">
+						<line
+							class="thinBarline"
+							x1="13762.51"
+							y1="3317.5"
+							x2="13762.51"
+							y2="3482.5" />
+						<line
+							class="thickBarline"
+							x1="13790.01"
+							y1="3317.5"
+							x2="13790.01"
+							y2="3482.5" />
+					</g>
+				</g>
+			</g>
+			<g
+				class="staff"
+				staffName="5">
+				<g
+					class="stafflines">
+					<line
+						class="staffline"
+						x1="500"
+						y1="3680"
+						x2="13790"
+						y2="3680" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="3720"
+						x2="13790"
+						y2="3720" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="3760"
+						x2="13790"
+						y2="3760" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="3800"
+						x2="13790"
+						y2="3800" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="3840"
+						x2="13790"
+						y2="3840" />
+				</g>
+				<g
+					class="voice">
+					<use
+						class="clef"
+						href="#trebleClef"
+						x="500"
+						y="3800" />
+					<g
+						class="startRegionBarline">
+						<line
+							class="thickBarline"
+							x1="639"
+							y1="3680"
+							x2="639"
+							y2="3840" />
+						<line
+							class="thinBarline"
+							x1="666.5"
+							y1="3680"
+							x2="666.5"
+							y2="3840" />
+					</g>
+					<text
+						class="staffName"
+						x="290"
+						y="3792">5</text>
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="710.0007"
+								y="3760">∑</text>
+						</g>
+					</g>
+					<g
+						class="endAndStartRegionBarline">
+						<line
+							class="thinBarline"
+							x1="2890.678"
+							y1="3680"
+							x2="2890.678"
+							y2="3840" />
+						<line
+							class="thickBarline"
+							x1="2918.178"
+							y1="3680"
+							x2="2918.178"
+							y2="3840" />
+						<line
+							class="thinBarline"
+							x1="2945.678"
+							y1="3680"
+							x2="2945.678"
+							y2="3840" />
+					</g>
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="2989.179"
+								y="3760">∑</text>
+						</g>
+					</g>
+					<line
+						class="normalBarline"
+						x1="5172.355"
+						y1="3680"
+						x2="5172.355"
+						y2="3840" />
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="5242.231"
+								y="3760">∑</text>
+						</g>
+					</g>
+					<line
+						class="normalBarline"
+						x1="8024.895"
+						y1="3680"
+						x2="8024.895"
+						y2="3840" />
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="8070.896"
+								y="3760">∑</text>
+						</g>
+					</g>
+					<line
+						class="normalBarline"
+						x1="10030.46"
+						y1="3680"
+						x2="10030.46"
+						y2="3840" />
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="10083.6"
+								y="3760">∑</text>
+						</g>
+					</g>
+					<g
+						class="endRegionBarline">
+						<line
+							class="thinBarline"
+							x1="13762.51"
+							y1="3677.5"
+							x2="13762.51"
+							y2="3842.5" />
+						<line
+							class="thickBarline"
+							x1="13790.01"
+							y1="3677.5"
+							x2="13790.01"
+							y2="3842.5" />
+					</g>
+				</g>
+			</g>
+			<g
+				class="staff"
+				staffName="6">
+				<g
+					class="stafflines">
+					<line
+						class="staffline"
+						x1="500"
+						y1="4040"
+						x2="13790"
+						y2="4040" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="4080"
+						x2="13790"
+						y2="4080" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="4120"
+						x2="13790"
+						y2="4120" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="4160"
+						x2="13790"
+						y2="4160" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="4200"
+						x2="13790"
+						y2="4200" />
+				</g>
+				<g
+					class="voice">
+					<use
+						class="clef"
+						href="#trebleClef"
+						x="500"
+						y="4160" />
+					<g
+						class="startRegionBarline">
+						<line
+							class="thickBarline"
+							x1="639"
+							y1="4040"
+							x2="639"
+							y2="4200" />
+						<line
+							class="thinBarline"
+							x1="666.5"
+							y1="4040"
+							x2="666.5"
+							y2="4200" />
+					</g>
+					<text
+						class="staffName"
+						x="290"
+						y="4152">6</text>
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="710.0007"
+								y="4120">∑</text>
+						</g>
+					</g>
+					<g
+						class="endAndStartRegionBarline">
+						<line
+							class="thinBarline"
+							x1="2890.678"
+							y1="4040"
+							x2="2890.678"
+							y2="4200" />
+						<line
+							class="thickBarline"
+							x1="2918.178"
+							y1="4040"
+							x2="2918.178"
+							y2="4200" />
+						<line
+							class="thinBarline"
+							x1="2945.678"
+							y1="4040"
+							x2="2945.678"
+							y2="4200" />
+					</g>
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="2989.179"
+								y="4120">∑</text>
+						</g>
+					</g>
+					<line
+						class="normalBarline"
+						x1="5172.355"
+						y1="4040"
+						x2="5172.355"
+						y2="4200" />
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="5242.231"
+								y="4120">∑</text>
+						</g>
+					</g>
+					<line
+						class="normalBarline"
+						x1="8024.895"
+						y1="4040"
+						x2="8024.895"
+						y2="4200" />
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="8070.896"
+								y="4120">∑</text>
+						</g>
+					</g>
+					<line
+						class="normalBarline"
+						x1="10030.46"
+						y1="4040"
+						x2="10030.46"
+						y2="4200" />
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="10083.6"
+								y="4120">∑</text>
+						</g>
+					</g>
+					<g
+						class="endRegionBarline">
+						<line
+							class="thinBarline"
+							x1="13762.51"
+							y1="4037.5"
+							x2="13762.51"
+							y2="4202.5" />
+						<line
+							class="thickBarline"
+							x1="13790.01"
+							y1="4037.5"
+							x2="13790.01"
+							y2="4202.5" />
+					</g>
+				</g>
+			</g>
+			<g
+				class="staff"
+				staffName="7">
+				<g
+					class="stafflines">
+					<line
+						class="staffline"
+						x1="500"
+						y1="4400"
+						x2="13790"
+						y2="4400" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="4440"
+						x2="13790"
+						y2="4440" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="4480"
+						x2="13790"
+						y2="4480" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="4520"
+						x2="13790"
+						y2="4520" />
+					<line
+						class="staffline"
+						x1="500"
+						y1="4560"
+						x2="13790"
+						y2="4560" />
+				</g>
+				<g
+					class="voice">
+					<use
+						class="clef"
+						href="#trebleClef"
+						x="500"
+						y="4520" />
+					<g
+						class="startRegionBarline">
+						<line
+							class="thickBarline"
+							x1="639"
+							y1="4400"
+							x2="639"
+							y2="4560" />
+						<line
+							class="thinBarline"
+							x1="666.5"
+							y1="4400"
+							x2="666.5"
+							y2="4560" />
+					</g>
+					<text
+						class="staffName"
+						x="290"
+						y="4512">7</text>
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="710.0007"
+								y="4480">∑</text>
+						</g>
+					</g>
+					<g
+						class="endAndStartRegionBarline">
+						<line
+							class="thinBarline"
+							x1="2890.678"
+							y1="4400"
+							x2="2890.678"
+							y2="4560" />
+						<line
+							class="thickBarline"
+							x1="2918.178"
+							y1="4400"
+							x2="2918.178"
+							y2="4560" />
+						<line
+							class="thinBarline"
+							x1="2945.678"
+							y1="4400"
+							x2="2945.678"
+							y2="4560" />
+					</g>
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="2989.179"
+								y="4480">∑</text>
+						</g>
+					</g>
+					<line
+						class="normalBarline"
+						x1="5172.355"
+						y1="4400"
+						x2="5172.355"
+						y2="4560" />
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="5242.231"
+								y="4480">∑</text>
+						</g>
+					</g>
+					<line
+						class="normalBarline"
+						x1="8024.895"
+						y1="4400"
+						x2="8024.895"
+						y2="4560" />
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="8070.896"
+								y="4480">∑</text>
+						</g>
+					</g>
+					<line
+						class="normalBarline"
+						x1="10030.46"
+						y1="4400"
+						x2="10030.46"
+						y2="4560" />
+					<g
+						class="rest">
+						<g
+							class="graphics">
+							<text
+								class="rest"
+								x="10083.6"
+								y="4480">∑</text>
+						</g>
+					</g>
+					<g
+						class="endRegionBarline">
+						<line
+							class="thinBarline"
+							x1="13762.51"
+							y1="4397.5"
+							x2="13762.51"
+							y2="4562.5" />
+						<line
+							class="thickBarline"
+							x1="13790.01"
+							y1="4397.5"
+							x2="13790.01"
+							y2="4562.5" />
+					</g>
+				</g>
+			</g>
+			<g
+				class="staffConnectors">
+				<g
+					class="startRegionBarline">
+					<line
+						class="thickBarline"
+						x1="639"
+						y1="2080"
+						x2="639"
+						y2="2240" />
+					<line
+						class="thinBarline"
+						x1="666.5"
+						y1="2080"
+						x2="666.5"
+						y2="2240" />
+				</g>
+				<g
+					class="startRegionBarline">
+					<line
+						class="thickBarline"
+						x1="639"
+						y1="2400"
+						x2="639"
+						y2="2600" />
+					<line
+						class="thinBarline"
+						x1="666.5"
+						y1="2400"
+						x2="666.5"
+						y2="2600" />
+				</g>
+				<g
+					class="endAndStartRegionBarline">
+					<line
+						class="thinBarline"
+						x1="2890.678"
+						y1="2400"
+						x2="2890.678"
+						y2="2600" />
+					<line
+						class="thickBarline"
+						x1="2918.178"
+						y1="2400"
+						x2="2918.178"
+						y2="2600" />
+					<line
+						class="thinBarline"
+						x1="2945.678"
+						y1="2400"
+						x2="2945.678"
+						y2="2600" />
+				</g>
+				<line
+					class="normalBarline"
+					x1="5172.355"
+					y1="2400"
+					x2="5172.355"
+					y2="2600" />
+				<line
+					class="normalBarline"
+					x1="8024.895"
+					y1="2400"
+					x2="8024.895"
+					y2="2600" />
+				<line
+					class="normalBarline"
+					x1="10030.46"
+					y1="2400"
+					x2="10030.46"
+					y2="2600" />
+				<g
+					class="endRegionBarline">
+					<line
+						class="thinBarline"
+						x1="13762.51"
+						y1="2397.5"
+						x2="13762.51"
+						y2="2602.5" />
+					<line
+						class="thickBarline"
+						x1="13790.01"
+						y1="2397.5"
+						x2="13790.01"
+						y2="2602.5" />
+				</g>
+				<g
+					class="startRegionBarline">
+					<line
+						class="thickBarline"
+						x1="639"
+						y1="2760"
+						x2="639"
+						y2="2960" />
+					<line
+						class="thinBarline"
+						x1="666.5"
+						y1="2760"
+						x2="666.5"
+						y2="2960" />
+				</g>
+				<g
+					class="endAndStartRegionBarline">
+					<line
+						class="thinBarline"
+						x1="2890.678"
+						y1="2760"
+						x2="2890.678"
+						y2="2960" />
+					<line
+						class="thickBarline"
+						x1="2918.178"
+						y1="2760"
+						x2="2918.178"
+						y2="2960" />
+					<line
+						class="thinBarline"
+						x1="2945.678"
+						y1="2760"
+						x2="2945.678"
+						y2="2960" />
+				</g>
+				<line
+					class="normalBarline"
+					x1="5172.355"
+					y1="2760"
+					x2="5172.355"
+					y2="2960" />
+				<line
+					class="normalBarline"
+					x1="8024.895"
+					y1="2760"
+					x2="8024.895"
+					y2="2960" />
+				<line
+					class="normalBarline"
+					x1="10030.46"
+					y1="2760"
+					x2="10030.46"
+					y2="2960" />
+				<g
+					class="endRegionBarline">
+					<line
+						class="thinBarline"
+						x1="13762.51"
+						y1="2757.5"
+						x2="13762.51"
+						y2="2962.5" />
+					<line
+						class="thickBarline"
+						x1="13790.01"
+						y1="2757.5"
+						x2="13790.01"
+						y2="2962.5" />
+				</g>
+				<g
+					class="startRegionBarline">
+					<line
+						class="thickBarline"
+						x1="639"
+						y1="3120"
+						x2="639"
+						y2="3320" />
+					<line
+						class="thinBarline"
+						x1="666.5"
+						y1="3120"
+						x2="666.5"
+						y2="3320" />
+				</g>
+				<g
+					class="endAndStartRegionBarline">
+					<line
+						class="thinBarline"
+						x1="2890.678"
+						y1="3120"
+						x2="2890.678"
+						y2="3320" />
+					<line
+						class="thickBarline"
+						x1="2918.178"
+						y1="3120"
+						x2="2918.178"
+						y2="3320" />
+					<line
+						class="thinBarline"
+						x1="2945.678"
+						y1="3120"
+						x2="2945.678"
+						y2="3320" />
+				</g>
+				<line
+					class="normalBarline"
+					x1="5172.355"
+					y1="3120"
+					x2="5172.355"
+					y2="3320" />
+				<line
+					class="normalBarline"
+					x1="8024.895"
+					y1="3120"
+					x2="8024.895"
+					y2="3320" />
+				<line
+					class="normalBarline"
+					x1="10030.46"
+					y1="3120"
+					x2="10030.46"
+					y2="3320" />
+				<g
+					class="endRegionBarline">
+					<line
+						class="thinBarline"
+						x1="13762.51"
+						y1="3117.5"
+						x2="13762.51"
+						y2="3322.5" />
+					<line
+						class="thickBarline"
+						x1="13790.01"
+						y1="3117.5"
+						x2="13790.01"
+						y2="3322.5" />
+				</g>
+				<g
+					class="startRegionBarline">
+					<line
+						class="thickBarline"
+						x1="639"
+						y1="3480"
+						x2="639"
+						y2="3680" />
+					<line
+						class="thinBarline"
+						x1="666.5"
+						y1="3480"
+						x2="666.5"
+						y2="3680" />
+				</g>
+				<g
+					class="endAndStartRegionBarline">
+					<line
+						class="thinBarline"
+						x1="2890.678"
+						y1="3480"
+						x2="2890.678"
+						y2="3680" />
+					<line
+						class="thickBarline"
+						x1="2918.178"
+						y1="3480"
+						x2="2918.178"
+						y2="3680" />
+					<line
+						class="thinBarline"
+						x1="2945.678"
+						y1="3480"
+						x2="2945.678"
+						y2="3680" />
+				</g>
+				<line
+					class="normalBarline"
+					x1="5172.355"
+					y1="3480"
+					x2="5172.355"
+					y2="3680" />
+				<line
+					class="normalBarline"
+					x1="8024.895"
+					y1="3480"
+					x2="8024.895"
+					y2="3680" />
+				<line
+					class="normalBarline"
+					x1="10030.46"
+					y1="3480"
+					x2="10030.46"
+					y2="3680" />
+				<g
+					class="endRegionBarline">
+					<line
+						class="thinBarline"
+						x1="13762.51"
+						y1="3477.5"
+						x2="13762.51"
+						y2="3682.5" />
+					<line
+						class="thickBarline"
+						x1="13790.01"
+						y1="3477.5"
+						x2="13790.01"
+						y2="3682.5" />
+				</g>
+				<g
+					class="startRegionBarline">
+					<line
+						class="thickBarline"
+						x1="639"
+						y1="3840"
+						x2="639"
+						y2="4040" />
+					<line
+						class="thinBarline"
+						x1="666.5"
+						y1="3840"
+						x2="666.5"
+						y2="4040" />
+				</g>
+				<g
+					class="endAndStartRegionBarline">
+					<line
+						class="thinBarline"
+						x1="2890.678"
+						y1="3840"
+						x2="2890.678"
+						y2="4040" />
+					<line
+						class="thickBarline"
+						x1="2918.178"
+						y1="3840"
+						x2="2918.178"
+						y2="4040" />
+					<line
+						class="thinBarline"
+						x1="2945.678"
+						y1="3840"
+						x2="2945.678"
+						y2="4040" />
+				</g>
+				<line
+					class="normalBarline"
+					x1="5172.355"
+					y1="3840"
+					x2="5172.355"
+					y2="4040" />
+				<line
+					class="normalBarline"
+					x1="8024.895"
+					y1="3840"
+					x2="8024.895"
+					y2="4040" />
+				<line
+					class="normalBarline"
+					x1="10030.46"
+					y1="3840"
+					x2="10030.46"
+					y2="4040" />
+				<g
+					class="endRegionBarline">
+					<line
+						class="thinBarline"
+						x1="13762.51"
+						y1="3837.5"
+						x2="13762.51"
+						y2="4042.5" />
+					<line
+						class="thickBarline"
+						x1="13790.01"
+						y1="3837.5"
+						x2="13790.01"
+						y2="4042.5" />
+				</g>
+				<g
+					class="startRegionBarline">
+					<line
+						class="thickBarline"
+						x1="639"
+						y1="4200"
+						x2="639"
+						y2="4400" />
+					<line
+						class="thinBarline"
+						x1="666.5"
+						y1="4200"
+						x2="666.5"
+						y2="4400" />
+				</g>
+				<g
+					class="endAndStartRegionBarline">
+					<line
+						class="thinBarline"
+						x1="2890.678"
+						y1="4200"
+						x2="2890.678"
+						y2="4400" />
+					<line
+						class="thickBarline"
+						x1="2918.178"
+						y1="4200"
+						x2="2918.178"
+						y2="4400" />
+					<line
+						class="thinBarline"
+						x1="2945.678"
+						y1="4200"
+						x2="2945.678"
+						y2="4400" />
+				</g>
+				<line
+					class="normalBarline"
+					x1="5172.355"
+					y1="4200"
+					x2="5172.355"
+					y2="4400" />
+				<line
+					class="normalBarline"
+					x1="8024.895"
+					y1="4200"
+					x2="8024.895"
+					y2="4400" />
+				<line
+					class="normalBarline"
+					x1="10030.46"
+					y1="4200"
+					x2="10030.46"
+					y2="4400" />
+				<g
+					class="endRegionBarline">
+					<line
+						class="thinBarline"
+						x1="13762.51"
+						y1="4197.5"
+						x2="13762.51"
+						y2="4402.5" />
+					<line
+						class="thickBarline"
+						x1="13790.01"
+						y1="4197.5"
+						x2="13790.01"
+						y2="4402.5" />
+				</g>
+			</g>
+		</g>
+	</g>
+	<!-- Annotations that are added here will be ignored by the AssistantPerformer. -->
+</svg>
