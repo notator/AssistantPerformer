@@ -1894,12 +1894,11 @@ let midiChannelPerOutputTrack = [], // only output tracks
 							}
 						}
 					}
-					let lastRegionBarline = barlineObjs[barlineObjs.length - 1];
-					let lastBarlineInVoice = voiceTimeObjects[voiceTimeObjects.length - 1];
-					if(lastRegionBarline.alignment === lastBarlineInVoice.alignment)
-					{
-						lastRegionBarline.msPositionInScore = lastBarlineInVoice.msPositionInScore;
-					}
+                    let lastRegionBarline = barlineObjs[barlineObjs.length - 1],
+                        lastDurationObject = voiceTimeObjects[voiceTimeObjects.length - 2],
+                        lastBarlineMsPos = lastDurationObject.msPositionInScore + lastDurationObject.msDurationInScore;
+
+                    lastRegionBarline.msPositionInScore = lastBarlineMsPos;
 
 					return barlineObjs;
 				}
