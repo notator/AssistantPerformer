@@ -80,23 +80,40 @@
             Note that:<br />
             <ul style="margin-top:0px">
                 <li>
-                    All scores can be played on the <b>ResidentWAFSynth</b> (a <b>software MIDI <i>output</i> device</b>), so the Web MIDI API<br />
-                    only really needs to be implemented by the browser in order to access a <b>hardware MIDI <i>input</i> device</b>.
+                    The <b>ResidentWAFSynth</b> (a <b>software MIDI <i>output</i> device</b>) can play all the scores in this application,<br />
+                    so the Web MIDI API only really needs to be implemented by the browser in order to access a <b>hardware MIDI <i>input</i> device</b>.
+                    This synthesizer is also used by three other applications:
+                    <ul>
+                        <li>
+                            WebMIDISynthHost (<a id="WebMIDISynthHostGitHubLink" target="_blank" href="https://github.com/notator/WebMIDISynthHost">GitHub</a>, <a href="https://james-ingram-act-two.de/open-source/WebMIDISynthHost/host.html">application</a>)
+                        </li>
+                        <li>
+                            SimpleWebAudioFontSynthHost (<a target="_blank" href="https://james-ingram-act-two.de/open-source/SimpleWebAudioFontSynthHost/host.html">application</a>)
+                        </li>
+                        <li>
+                            ResidentWAFSynthHost (<a target="_blank" href="https://github.com/notator/ResidentWAFSynthHost">GitHub</a>, <a href="https://james-ingram-act-two.de/open-source/ResidentWAFSynthHost/host.html">application</a>)
+                        </li>
+                    </ul>
                 </li>
                 <li>
-                    The <b>ResidentSf2Synth</b> can only play the following scores:<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;<i>Pianola Music</i> (1967), <i>Study 1</i> (2005), <i>Erratum Musical I-VIII</i> (2019) and the <i>Three Crashes</i> (2019).
-                </li>
-                <li>
-                    The <b>ResidentWAFSynth</b> and <b>ResidentSf2Synth</b> are being developed on GitHub at
-                    <a id="WebMIDISynthHostGitHubLink" target="_blank" href="https://github.com/notator/WebMIDISynthHost">WebMIDISynthHost</a>.
+                    The <b>ResidentSf2Synth</b> uses a soundFont containing only a single GM Grand Piano preset (to save loading time). It can therefore only play the following scores:<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;<i>Pianola Music</i> (1967), <i>Study 1</i> (2005), <i>Erratum Musical I-VIII</i> (2019) and the <i>Three Crashes</i> (2019).<br />
+                    This synth is also used by two other applications:<br />
+                    <ul>
+                        <li>
+                            WebMIDISynthHost (<a id="WebMIDISynthHostGitHubLink" target="_blank" href="https://github.com/notator/WebMIDISynthHost">GitHub</a>, <a href="https://james-ingram-act-two.de/open-source/WebMIDISynthHost/host.html">application</a>)
+                        </li>
+                        <li>
+                            SimpleSoundFontSynthHost (<a target="_blank" href="https://james-ingram-act-two.de/open-source/SimpleSoundFontSynthHost/host.html">application</a>)
+                        </li>
+                    </ul>
                 </li>
                 <li>
                     On Windows, the free <a id="VirtualMIDISynthLink" target="_blank" href="http://coolsoft.altervista.org/en/virtualmidisynth"><b>Virtual MIDI Synth</b></a> plugin
                     can also be used to play any of the available scores.
                 </li>
             </ul>
-            <span style="font-size:9px">ji www march 2020.</span>
+            <span style="font-size:9px">ji www april 2020.</span>
         </div>
     </div>
     <div id="svgRuntimeControls" class="runtimeDiv" style="top: 2px; width: 1028px; height: 41px;">
