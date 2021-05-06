@@ -3,9 +3,12 @@
       xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<title>Assistant Performer</title>
-
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="assistantPerformerStyleSheet.css"
+		  media="all"
+		  rel="stylesheet"
+		  type="text/css" />
+    <link href="sliderStyleSheet.css"
 		  media="all"
 		  rel="stylesheet"
 		  type="text/css" />
@@ -58,10 +61,8 @@
                             <option value="Erratum Musical">Erratum Musical I-VIII</option>
                             <option value="Three Crashes">Three Crashes</option>
                         </optgroup>
-                        <!--
                             <option>Tombeau 1 (scroll)</option>
                             <option>Study 4 (2019)</option>
-                        -->
                     </select>
                     <select id="outputDeviceSelect"
                             class="deviceSelector" onchange="_AP.controls.doControl('outputDeviceSelect')"></select>
@@ -124,9 +125,9 @@
             <label id="speedControlLabel1" for="speedControlInput" style="position:absolute; top:5px; left:4px; margin:0;">
                 speed:
             </label>
-            <input type="range" id="speedControlInput" value="90" min="0" max="180"
+            <input type="range" class="speedSlider" id="speedControlInput" value="90" min="0" max="180"
                    onmousemove="_AP.controls.doControl('speedControlMousemove')"
-                   style="position:absolute; top:4px; left:45px; width:180px; margin:0;" />
+                   style="position:absolute; top:5px; left:45px;" />
             <label id="speedControlLabel2" for="speedControlInput" style="position:absolute; top:5px; left:227px; margin:0;">
                 100%
             </label>
