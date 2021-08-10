@@ -1165,6 +1165,11 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			}
 
 			// markersLayer is global inside the score namespace
+			if(markersLayer !== undefined)
+			{
+				markersLayer.remove();
+			}
+
 			markersLayer = createMarkersLayer(svgElem);
 
 			let markerYLimitsArray = getMarkerYLimitsArray(systems);
@@ -1287,7 +1292,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 		// markersLayer is a new layer in (on top of) the svg of the score
 		setMarkersLayer(svgElem, systems, regionSequence, viewBox.scale);
-
+		
 		initializeTrackIsOnArray(systems[0]);
 	},
 
@@ -1328,9 +1333,17 @@ let midiChannelPerOutputTrack = [], // only output tracks
 			return endSystemIndex;
 		}
 
+		function getSystemBarlineTimeObjects(system)
+		{
+			var timeObjects = system.staves[0].voices[0].timeObjects,
+				barlineTimeObjects = timeObjects.filter(x => (x.msDurationInScore === 0));
+
+			return barlineTimeObjects;
+        }
+
 		var endMsPosInScore = regionSequence[regionSequence.length - 1].endMsPosInScore,
 			endSystemIndex = getSystemIndex(endMsPosInScore),
-			barlineTimeObjects = systems[endSystemIndex].barlines,
+			barlineTimeObjects = getSystemBarlineTimeObjects(systems[endSystemIndex]),
 			barlineTimeObject = barlineTimeObjects.find(x => x.msPositionInScore === endMsPosInScore); 
 
 		endMarker = systems[endSystemIndex].endMarker;
@@ -1882,7 +1895,7 @@ let midiChannelPerOutputTrack = [], // only output tracks
 					for(let i = 0; i < barlineObjs.length; i++)
 					{
 						let barline = barlineObjs[i];
-						for(var j = jIndex; j < voiceTimeObjects.length; j++)
+						for(var j = jIndex; j < voiceTimeObjects.length - 1; j++)
 						{
 							let voiceTimeObject = voiceTimeObjects[j];
 							if((voiceTimeObject instanceof MidiChord || voiceTimeObject instanceof MidiRest)
@@ -2062,9 +2075,10 @@ let midiChannelPerOutputTrack = [], // only output tracks
 
 			if(regionSequence.length === 1)
 			{
-				let finalSystemBarlines = systems[systems.length - 1].barlines;
+				let finalTimeObjects = systems[systems.length - 1].staves[0].voices[0].timeObjects,
+					finalBarline = finalTimeObjects[finalTimeObjects.length - 1];
 
-				regionSequence[0].endMsPosInScore = finalSystemBarlines[finalSystemBarlines.length - 1].msPositionInScore;
+				regionSequence[0].endMsPosInScore = finalBarline.msPositionInScore;
 			}
 
 			for(let outputTrack of outputTracks)
