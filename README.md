@@ -1,3 +1,9 @@
+Archived 29.08.2023
+--------
+The code in this repository has been moved into the **main** branch of my [AssistantPerformerTestSite repository](https://github.com/notator/AssistantPerformerTestSite)  
+That repository contains two major branches:  
+&nbsp;&nbsp;&nbsp;&nbsp;**main**: the current stable version of the AssistantPerformer, which can be used [here](https://james-ingram-act-two.de/open-source/assistantPerformer/assistantPerformer.html).  
+&nbsp;&nbsp;&nbsp;&nbsp;**testSite**: the unstable development version of the AssistantPerformer, which can be tested [here](https://james-ingram-act-two.de/open-source/assistantPerformerTestSite/assistantPerformer.html).  
 
 Introduction
 ------------
